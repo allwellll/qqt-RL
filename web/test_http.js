@@ -33,11 +33,19 @@ const { createServer } = require('./server.js');
     const manifest = await manifestResponse.json();
     assert.strictEqual(manifest.schema, 'qqt.web-models/v1');
     assert.strictEqual(manifest.models.length, 3);
+    const replayResponse = await fetch(`http://127.0.0.1:${port}/replays.json`);
+    assert.strictEqual(replayResponse.status, 200);
+    const replayCatalog = await replayResponse.json();
+    assert.strictEqual(replayCatalog.schema, 'qqt.replays/v1');
+    assert.strictEqual(replayCatalog.replays.length, 3);
+    const sampleReplay = await fetch(`http://127.0.0.1:${port}/replays/${replayCatalog.replays[0].file}`);
+    assert.strictEqual(sampleReplay.status, 200);
     const workflow = await fs.promises.readFile(path.join(__dirname, '..', '.github', 'workflows', 'pages.yml'), 'utf8');
     assert(workflow.includes('gh release download web-models-v1'));
     assert(workflow.includes('_site/models'));
     for (const asset of [
       'visual_renderer.js',
+      'replay.js',
       'tactical_arena.js',
       'controls.js',
       'model_catalog.js',

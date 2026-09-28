@@ -53,6 +53,20 @@
         </label>
         </details>
         <p id="model-status" class="note" aria-live="polite">尚未加载模型；请从上方已发布模型列表选择。</p>
+        <h2>离线实战录像</h2>
+        <label>固定seed对局
+          <select id="replay-select"><option value="">正在读取录像列表…</option></select>
+        </label>
+        <div class="replay-controls">
+          <button id="replay-toggle" type="button">播放</button>
+          <button id="replay-restart" type="button">从头播放</button>
+          <select id="replay-speed" aria-label="录像速度">
+            <option value="0.5">0.5×</option><option value="1" selected>1×</option>
+            <option value="2">2×</option><option value="4">4×</option>
+          </select>
+        </div>
+        <input id="replay-seek" type="range" min="0" max="0" value="0" step="1" aria-label="录像进度">
+        <p id="replay-status" class="note" aria-live="polite">录像只保存固定seed、模型哈希和每tick双方动作，不重复保存地图或完整状态。</p>
         <h2>状态</h2>
         <pre id="status">正在加载 Bun06…</pre>
         <p class="note">蓝方为真人，红方可选冻结规则 Bot 或本地导出的训练模型。默认复现训练使用的空砖近距竞技场：保留不可炸墙和包子笼，清空可炸砖。</p>
@@ -63,6 +77,7 @@
   <script src="controls.js"></script>
   <script src="model_catalog.js"></script>
   <script src="model_loader.js"></script>
+  <script src="replay.js"></script>
   <script src="tactical_arena.js"></script>
   <script src="bun_rule_bot.js"></script>
   <script src="bot_contract.js"></script>

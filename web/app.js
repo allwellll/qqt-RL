@@ -13,6 +13,12 @@
   const modelProgressText = document.getElementById('model-progress-text');
   const modelFile = document.getElementById('model-file');
   const modelStatus = document.getElementById('model-status');
+  const replaySelect = document.getElementById('replay-select');
+  const replayToggle = document.getElementById('replay-toggle');
+  const replayRestart = document.getElementById('replay-restart');
+  const replaySpeed = document.getElementById('replay-speed');
+  const replaySeek = document.getElementById('replay-seek');
+  const replayStatus = document.getElementById('replay-status');
   const levelList = await fetch('assets/maps/levels.json').then((response) => response.json());
   const baseLevel = levelList.find((item) => item.qqt_id === 806);
   if (!baseLevel) throw new Error('Bun06 level missing');
@@ -27,6 +33,11 @@
   let publishedModels = [];
   let activeBot = null;
   let ticking = false;
+  let replayCatalog = [];
+  let replayDocument = null;
+  let replayIndex = 0;
+  let replayPlaying = false;
+  let replayAccumulator = 0;
   let sim;
 
   function instantiateModel(document) {
@@ -63,6 +74,9 @@
   }
 
   function reset() {
+    replayDocument = null;
+    replayPlaying = false;
+    replayToggle.textContent = '播放';
     sim = new QQT.Sim(Date.now() >>> 0);
     sim.reset(level);
     if (opponentSelect.value === 'bun.browser_model' && !loadedModel) {
@@ -75,6 +89,38 @@
     resetBot();
     bombQueued = false;
     renderer.reset();
+  }
+
+  function resetReplay() {
+    if (!replayDocument) return;
+    sim = new QQT.Sim(replayDocument.meta.seed);
+    sim.reset(level);
+    replayIndex = 0;
+    replayAccumulator = 0;
+    replaySeek.max = String(replayDocument.actions.length);
+    replaySeek.value = '0';
+    renderer.reset();
+  }
+
+  function stepReplay() {
+    if (!replayDocument || replayIndex >= replayDocument.actions.length) {
+      replayPlaying = false;
+      replayToggle.textContent = '播放';
+      return;
+    }
+    const row = replayDocument.actions[replayIndex++];
+    const info = sim.step([[row[0], row[1], row[2]], [row[3], row[4], row[5]]]);
+    renderer.addExplosion(info, performance.now());
+    replaySeek.value = String(replayIndex);
+    if (replayIndex >= replayDocument.actions.length) {
+      replayPlaying = false;
+      replayToggle.textContent = '播放';
+    }
+  }
+
+  function seekReplay(target) {
+    resetReplay();
+    while (replayIndex < target) stepReplay();
   }
 
   function humanAction() {
@@ -128,6 +174,35 @@
     }
   }
 
+  async function loadReplayCatalog() {
+    try {
+      const response = await fetch('replays.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const document = await response.json();
+      if (document.schema !== 'qqt.replays/v1' || !Array.isArray(document.replays)) throw new Error('录像目录格式错误');
+      replayCatalog = document.replays;
+      replaySelect.replaceChildren(new Option('选择离线实战录像', ''));
+      for (const row of replayCatalog) {
+        replaySelect.add(new Option(`${row.model_id} · seed ${row.seed} · ${row.summary.ticks} ticks`, row.id));
+      }
+      replayStatus.textContent = `当前提供 ${replayCatalog.length} 局固定seed离线推理录像；每局仅约数KB动作流。`;
+    } catch (error) {
+      replaySelect.replaceChildren(new Option('录像列表读取失败', ''));
+      replayStatus.textContent = `录像列表读取失败：${error.message}`;
+    }
+  }
+
+  async function loadReplay(row) {
+    const response = await fetch(`replays/${row.file}`, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    replayDocument = QQTReplay.validateReplay(await response.json());
+    resetReplay();
+    replayPlaying = true;
+    replayToggle.textContent = '暂停';
+    const s = replayDocument.summary;
+    replayStatus.textContent = `${row.model_id}｜seed ${row.seed}｜模型/规则Bot放泡 ${s.model_bombs}/${s.rule_bombs}｜活动格 ${s.model_unique_cells}/${s.rule_unique_cells}｜胜者 ${s.winner == null ? '未决' : s.winner}`;
+  }
+
   function render(now = performance.now()) {
     renderer.render(sim, now);
     status.textContent = JSON.stringify({
@@ -145,7 +220,12 @@
     if (ticking) return;
     ticking = true;
     try {
-      if (!sim.done) {
+      if (replayDocument) {
+        if (replayPlaying) {
+          replayAccumulator += Number(replaySpeed.value);
+          while (replayAccumulator >= 1 && replayPlaying) { stepReplay(); replayAccumulator -= 1; }
+        }
+      } else if (!sim.done) {
         const first = matchMode.value === 'model-vs-rule'
           ? await Promise.resolve(loadedModel.act(sim, 0, modelRng)) : humanAction();
         const state = QQTBunRuleBot.stateFromSim(sim);
@@ -175,6 +255,22 @@
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));
   restart.addEventListener('click', reset);
+  replaySelect.addEventListener('change', async () => {
+    const row = replayCatalog.find((item) => item.id === replaySelect.value);
+    if (!row) return;
+    try { await loadReplay(row); } catch (error) { replayStatus.textContent = `录像加载失败：${error.message}`; }
+  });
+  replayToggle.addEventListener('click', () => {
+    if (!replayDocument) return;
+    if (replayIndex >= replayDocument.actions.length) resetReplay();
+    replayPlaying = !replayPlaying;
+    replayToggle.textContent = replayPlaying ? '暂停' : '播放';
+  });
+  replayRestart.addEventListener('click', () => {
+    if (!replayDocument) return;
+    resetReplay(); replayPlaying = true; replayToggle.textContent = '暂停';
+  });
+  replaySeek.addEventListener('input', () => { if (replayDocument) seekReplay(Number(replaySeek.value)); });
   modelFile.addEventListener('change', async () => {
     const file = modelFile.files && modelFile.files[0];
     if (!file) return;
@@ -208,6 +304,7 @@
   opponentSelect.addEventListener('change', reset);
   await loadCatalog();
   reset();
+  await loadReplayCatalog();
   function animationFrame(now) {
     render(now);
     requestAnimationFrame(animationFrame);

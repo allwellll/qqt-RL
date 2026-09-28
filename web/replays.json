@@ -1,0 +1,53 @@
+{
+  "schema": "qqt.replays/v1",
+  "replays": [
+    {
+      "id": "safe-high-c16-seed-202609280032",
+      "model_id": "safe-high-c16",
+      "seed": 202609280032,
+      "file": "safe-high-c16-seed-202609280032.json",
+      "summary": {
+        "ticks": 300,
+        "model_bombs": 4,
+        "rule_bombs": 6,
+        "model_unique_cells": 14,
+        "rule_unique_cells": 17,
+        "model_deaths": 1,
+        "rule_deaths": 1,
+        "winner": null
+      }
+    },
+    {
+      "id": "safe-medium-c16-seed-202609280032",
+      "model_id": "safe-medium-c16",
+      "seed": 202609280032,
+      "file": "safe-medium-c16-seed-202609280032.json",
+      "summary": {
+        "ticks": 300,
+        "model_bombs": 0,
+        "rule_bombs": 3,
+        "model_unique_cells": 11,
+        "rule_unique_cells": 12,
+        "model_deaths": 0,
+        "rule_deaths": 2,
+        "winner": null
+      }
+    },
+    {
+      "id": "safe-high-c24-seed-202609280032",
+      "model_id": "safe-high-c24",
+      "seed": 202609280032,
+      "file": "safe-high-c24-seed-202609280032.json",
+      "summary": {
+        "ticks": 300,
+        "model_bombs": 4,
+        "rule_bombs": 5,
+        "model_unique_cells": 9,
+        "rule_unique_cells": 17,
+        "model_deaths": 0,
+        "rule_deaths": 2,
+        "winner": null
+      }
+    }
+  ]
+}
