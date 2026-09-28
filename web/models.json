@@ -1,0 +1,41 @@
+{
+  "schema": "qqt.web-models/v1",
+  "models": [
+    {
+      "id": "safe-high-c16",
+      "display_name": "Safe High · 周期16（综合最佳）",
+      "file": "safe-high-c16.json",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/safe-high-c16.json",
+      "sha256": "cabd0dad115cd888dec4f715d999f862296ef4ce3dc1e6bfad7c0aea70d37aa1",
+      "bytes": 40294224,
+      "candidate": "safe_high",
+      "cycle": 16,
+      "score": 0.0390625,
+      "source_sha256": "fb2ffef79ffc0a7cf26360b325fab3513d7d1f63db9723f963635a488e080514"
+    },
+    {
+      "id": "safe-medium-c16",
+      "display_name": "Safe Medium · 周期16（安全均衡）",
+      "file": "safe-medium-c16.json",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/safe-medium-c16.json",
+      "sha256": "9908caa24d39fab7d34ab0047754c22a78ae2be267142290fbaad41a09bfe3f8",
+      "bytes": 40294230,
+      "candidate": "safe_medium",
+      "cycle": 16,
+      "score": -0.0296875,
+      "source_sha256": "971ed291924222f01e3980eb3ebb1ca4d3403bdc520661249e5cb2d4544fd83c"
+    },
+    {
+      "id": "safe-high-c24",
+      "display_name": "Safe High · 周期24（低自爆）",
+      "file": "safe-high-c24.json",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/safe-high-c24.json",
+      "sha256": "9ba571c45791aa01dc03ddc8b1a5ae7916be1f5f24e30dec86bdc0c4f8700b5b",
+      "bytes": 40294224,
+      "candidate": "safe_high",
+      "cycle": 24,
+      "score": -0.030026830808080773,
+      "source_sha256": "ae0c0ca6310ac9125dc3d77dfd1b8512f822cddba95e8821bd3b685e7581a072"
+    }
+  ]
+}

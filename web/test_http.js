@@ -18,15 +18,23 @@ const { createServer } = require('./server.js');
     assert(html.includes('抢包子真人测试'));
     assert(html.includes('app.js'));
     assert(html.includes('model-file'));
+    assert(html.includes('published-model'));
+    assert(html.includes('model-vs-rule'));
     const app = await fetch(`http://127.0.0.1:${port}/app.js`);
     assert.strictEqual(app.status, 200);
     const appSource = await app.text();
     assert(appSource.includes('BunRuleTacticalBot'));
     assert(appSource.includes('TransformerModel'));
+    const manifestResponse = await fetch(`http://127.0.0.1:${port}/models.json`);
+    assert.strictEqual(manifestResponse.status, 200);
+    const manifest = await manifestResponse.json();
+    assert.strictEqual(manifest.schema, 'qqt.web-models/v1');
+    assert.strictEqual(manifest.models.length, 3);
     for (const asset of [
       'visual_renderer.js',
       'tactical_arena.js',
       'controls.js',
+      'model_catalog.js',
       'assets/bg/抢包子.png',
       'assets/%E8%A7%92%E8%89%B24%C3%974%E7%B2%BE%E7%81%B5%E5%9B%BE.png',
       'assets/bomb-custom/%E7%BB%8F%E5%85%B8%E9%BB%84%E6%B3%A1%E6%B3%A1.png',

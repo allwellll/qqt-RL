@@ -23,6 +23,12 @@
         <p><kbd>Space</kbd> 放泡</p>
         <p><kbd>R</kbd> 重新开局</p>
         <h2>对手</h2>
+        <label>对局模式
+          <select id="match-mode">
+            <option value="human-vs-opponent">真人 vs 对手</option>
+            <option value="model-vs-rule">模型 vs 规则Bot（观战）</option>
+          </select>
+        </label>
         <label>策略
           <select id="opponent">
             <option value="bun.tactical_v2">安全战术规则 Bot</option>
@@ -30,6 +36,12 @@
             <option value="bun.browser_model">本地导出模型</option>
           </select>
         </label>
+        <label class="file-label">已发布模型
+          <select id="published-model">
+            <option value="">正在读取模型列表…</option>
+          </select>
+        </label>
+        <p id="model-details" class="note">选择模型后按需下载；模型权重不进入Git历史。</p>
         <label class="file-label">模型 JSON
           <input id="model-file" type="file" accept="application/json,.json">
         </label>
@@ -42,6 +54,7 @@
   </main>
   <script src="sim.js"></script>
   <script src="controls.js"></script>
+  <script src="model_catalog.js"></script>
   <script src="tactical_arena.js"></script>
   <script src="bun_rule_bot.js"></script>
   <script src="bot_contract.js"></script>
