@@ -16,7 +16,9 @@
     level.item_field = 0;
     level.no_items = true;
     level.brick = Array(level.brick.length).fill(0);
-    if (level.layers && level.layers[1]) level.layers[1] = Array(level.layers[1].length).fill(0);
+    if (level.layers && level.layers[1]) {
+      level.layers[1] = level.layers[1].map((value, cell) => level.wall[cell] ? value : 0);
+    }
     level.spawns = [
       [9.5, 4.5], [9.5, 4.5], [9.5, 4.5], [9.5, 4.5],
       [9.5, 8.5], [9.5, 8.5], [9.5, 8.5], [9.5, 8.5],

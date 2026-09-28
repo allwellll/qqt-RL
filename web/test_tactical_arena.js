@@ -10,7 +10,13 @@ const levels = JSON.parse(fs.readFileSync(require('path').join(__dirname, 'asset
 const base = levels.find((level) => level.qqt_id === 806);
 const arena = buildTacticalArena(base);
 assert(arena.brick.every((value) => value === 0), '网页战术对局必须清空可炸砖，匹配训练竞技场');
-assert(arena.layers[1].every((value) => value === 0), '网页视觉砖层也必须清空');
+for (let cell = 0; cell < base.brick.length; cell++) {
+  if (base.brick[cell]) assert.strictEqual(arena.layers[1][cell], 0, `可炸砖视觉必须清除: ${cell}`);
+  if (base.wall[cell] && base.layers[1][cell]) {
+    assert.strictEqual(arena.layers[1][cell], base.layers[1][cell], `不可炸墙视觉必须保留: ${cell}`);
+  }
+}
+assert(arena.layers[1].some((value) => value !== 0), '空砖竞技场仍必须显示不可炸墙体');
 
 function run(seed, humanPolicy) {
   const sim = new QQT.Sim(seed);
