@@ -1,0 +1,278 @@
+'use strict';
+
+(function initVisualRenderer(root, factory) {
+  const api = factory();
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  if (root) root.QQTVisual = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function visualRendererFactory() {
+  const CELL = 60;
+  const SOURCE_CELL = 40;
+  const SCALE = CELL / SOURCE_CELL;
+  const BOARD_OFFSET = 20 * SCALE;
+  const Z_ROW_STRIDE = 24;
+  const DIR_KEYS = ['U', 'D', 'L', 'R'];
+  const MOVE_TO_SPRITE_ROW = [3, 0, 1, 2];
+
+  const BUN_ELEMENT_IDS = [8001, 8002, 8003, 8004, 8005, 8006, 8009, 8010, 8011, 8012, 8013, 8028];
+
+  function levelElementIds(level) {
+    const found = new Set();
+    if (level && level.layers) {
+      for (const layer of level.layers) for (const value of layer) if (value) found.add(Math.abs(value));
+    }
+    return Array.from(found).sort((a, b) => a - b);
+  }
+
+  function bombFrame(ageSeconds, count) {
+    return Math.floor(Math.max(0, ageSeconds) * count) % count;
+  }
+
+  function bombAgeSeconds(fuseTicks, fuseMaxTicks = 30, tickHz = 10) {
+    return Math.max(0, fuseMaxTicks - fuseTicks) / tickHz;
+  }
+
+  function playerVisualY(gridY, imageHeight, radius = 0.36) {
+    return gridY * CELL + radius * CELL - imageHeight - 2;
+  }
+
+  function bunTokens(sim) {
+    const tokens = [];
+    if (!sim || !sim.isBun) return tokens;
+    for (let baseTeam = 0; baseTeam < (sim.bunBases || []).length; baseTeam++) {
+      const base = sim.bunBases[baseTeam];
+      for (let team = 0; team < 2; team++) {
+        const count = sim.bunStored && sim.bunStored[baseTeam]
+          ? sim.bunStored[baseTeam][team] || 0 : 0;
+        if (count) tokens.push({
+          row: base[0] + 1, column: base[1] + 1, team, count, size: 0.82,
+          xOffset: (team - 0.5) * 0.26,
+        });
+      }
+    }
+    for (let i = 0; i < 195; i++) for (let team = 0; team < 2; team++) {
+      const count = sim.bunLoose[i * 2 + team] || 0;
+      if (count) tokens.push({
+        row: Math.floor(i / 15), column: i % 15, team, count, size: 0.78,
+        xOffset: (team - 0.5) * 0.24,
+      });
+    }
+    return tokens;
+  }
+
+  function explosionFrame(ageSeconds) {
+    const age = Math.max(0, ageSeconds);
+    let tip = 1;
+    if (age >= 0.20 && age < 0.26) tip = 5;
+    else if (age >= 0.33) tip = 6;
+    const body = age < 0.15 ? 2 : age < 0.24 ? 3 : age < 0.33 ? 4 : 3;
+    return { center: Math.floor(age * 12) % 2 ? 2 : 1, body, tip, activeScale: age < 0.06 || age >= 0.39 ? 1 : Infinity };
+  }
+
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error(`素材加载失败: ${src}`));
+      image.src = src;
+    });
+  }
+
+  function sliceSheet(sheet, rows, columns, target) {
+    const result = [];
+    const sw = sheet.width / columns;
+    const sh = sheet.height / rows;
+    for (let row = 0; row < rows; row++) {
+      const frames = [];
+      for (let column = 0; column < columns; column++) {
+        const frame = document.createElement('canvas');
+        frame.width = target;
+        frame.height = target;
+        frame.getContext('2d').drawImage(sheet, column * sw, row * sh, sw, sh, 0, 0, target, target);
+        frames.push(frame);
+      }
+      result.push(frames);
+    }
+    return result;
+  }
+
+  function scaleImage(image, width = Math.round(image.width * SCALE), height = Math.round(image.height * SCALE)) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width; canvas.height = height;
+    canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+    return canvas;
+  }
+
+  async function loadAssets(level) {
+    const [elements, background, baseBackground, humanSheet, botSheet, bombStrip, shadow] = await Promise.all([
+      fetch('assets/maps/elements.json').then((r) => r.json()),
+      loadImage(level.bg || 'assets/bg/抢包子.png'),
+      loadImage('assets/bg/水面.png'),
+      loadImage('assets/角色4×4精灵图.png'),
+      loadImage('assets/角色c4×4.png'),
+      loadImage('assets/bomb-custom/经典黄泡泡.png'),
+      loadImage('assets/shadow.png'),
+    ]);
+    const humanSize = Math.round((humanSheet.width / 4) * SCALE);
+    const botSize = Math.round((botSheet.width / 4) * SCALE * 0.85);
+    const bombSplits = [0, 38, 73, 112, 156];
+    const bombs = [];
+    for (let i = 0; i < 4; i++) {
+      const sx = bombSplits[i], sw = bombSplits[i + 1] - sx;
+      const frame = document.createElement('canvas');
+      frame.width = Math.round(sw * SCALE);
+      frame.height = Math.round(bombStrip.height * SCALE);
+      frame.getContext('2d').drawImage(bombStrip, sx, 0, sw, bombStrip.height, 0, 0, frame.width, frame.height);
+      bombs.push(frame);
+    }
+    const flames = { C: [], U: [], D: [], L: [], R: [] };
+    for (const f of [1, 2]) flames.C[f] = scaleImage(await loadImage(`assets/flame/flame_C_${f}.png`), CELL, CELL);
+    for (const dir of DIR_KEYS) for (let f = 1; f <= 6; f++) {
+      const scaled = scaleImage(await loadImage(`assets/flame/flame_${dir}_${f}.png`));
+      const frame = document.createElement('canvas');
+      frame.width = CELL; frame.height = CELL;
+      frame.getContext('2d').drawImage(scaled, dir === 'L' ? CELL - scaled.width : 0, dir === 'U' ? CELL - scaled.height : 0);
+      flames[dir][f] = frame;
+    }
+    const elementImages = new Map();
+    for (const id of levelElementIds(level)) {
+      const meta = elements[String(id)] || elements[id];
+      if (meta) elementImages.set(id, scaleImage(await loadImage(meta.file)));
+    }
+    return {
+      elements, background: scaleImage(background), baseBand: scaleImage(baseBackground),
+      players: [sliceSheet(humanSheet, 4, 4, humanSize), sliceSheet(botSheet, 4, 4, botSize)],
+      bombs, flames, shadow: scaleImage(shadow), elementImages,
+    };
+  }
+
+  function createRenderer(canvas, level, assets) {
+    const ctx = canvas.getContext('2d', { alpha: false });
+    ctx.imageSmoothingEnabled = false;
+    const explosions = [];
+    const faces = [1, 1];
+    const movingUntil = [0, 0];
+    let lastPositions = null;
+
+    function tileZ(row, column) { return row * Z_ROW_STRIDE + (15 - 1 - column); }
+    function addExplosion(info, now) {
+      if (info && info.covered && info.triggered && info.covered.some((value) => value > 0)) {
+        explosions.push({ covered: Uint8Array.from(info.covered), triggered: Uint8Array.from(info.triggered), t0: now });
+      }
+    }
+    function reset() {
+      explosions.length = 0;
+      faces[0] = faces[1] = 1;
+      movingUntil[0] = movingUntil[1] = 0;
+      lastPositions = null;
+    }
+    function updateFaces(sim) {
+      const previous = lastPositions;
+      for (let pid = 0; pid < 2; pid++) {
+        const dy = previous ? sim.pos[pid * 2] - previous[pid * 2] : 0;
+        const dx = previous ? sim.pos[pid * 2 + 1] - previous[pid * 2 + 1] : 0;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 1e-5) faces[pid] = dx < 0 ? 2 : 3;
+        else if (Math.abs(dy) > 1e-5) faces[pid] = dy < 0 ? 0 : 1;
+      }
+      lastPositions = Array.from(sim.pos);
+      return previous;
+    }
+    function drawBun(x, y, team, count, size = 1) {
+      const radius = 15 * size;
+      ctx.save(); ctx.translate(x, y); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 4 * size; ctx.shadowOffsetY = 3 * size;
+      ctx.fillStyle = '#f6c745'; ctx.beginPath(); ctx.ellipse(0, 2 * size, radius, radius * .72, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowColor = 'transparent'; ctx.fillStyle = '#ffe78a'; ctx.beginPath(); ctx.ellipse(-4 * size, -3 * size, radius * .52, radius * .36, -.25, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = team ? '#3887e8' : '#e5484d'; ctx.lineWidth = Math.max(2, 3 * size); ctx.beginPath(); ctx.arc(0, size, radius * .72, .15, Math.PI - .15); ctx.stroke();
+      if (count > 1) { ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.arc(radius * .72, -radius * .55, 8 * size, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.round(10 * size)}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(count), radius * .72, -radius * .55); }
+      ctx.restore();
+    }
+    function structureItems(sim, items) {
+      const coveredCells = new Set();
+      for (let layerIndex = 0; layerIndex < 2; layerIndex++) {
+        const layer = level.layers[layerIndex];
+        for (let row = 0; row < 13; row++) for (let column = 0; column < 15; column++) {
+          const index = row * 15 + column, value = layer[index];
+          if (!value || value < 0) continue;
+          if (layerIndex === 1 && !sim.wall[index] && !sim.brick[index] && !sim.cover[index]) continue;
+          const id = Math.abs(value), meta = assets.elements[String(id)] || assets.elements[id], image = assets.elementImages.get(id);
+          if (!meta || !image) continue;
+          for (let rr = row; rr < Math.min(13, row + meta.h); rr++) {
+            for (let cc = column; cc < Math.min(15, column + meta.w); cc++) {
+              coveredCells.add(rr * 15 + cc);
+            }
+          }
+          items.push([tileZ(row, column), image, column * CELL - meta.xo * SCALE, row * CELL - meta.yo * SCALE]);
+        }
+      }
+      return coveredCells;
+    }
+    function drawExplosion(exp, now, items) {
+      const age = (now - exp.t0) / 1000;
+      if (age > 0.45) return false;
+      const frame = explosionFrame(age);
+      for (let i = 0; i < 195; i++) {
+        if (!exp.triggered[i]) continue;
+        const sr = Math.floor(i / 15), sc = i % 15;
+        items.push([sr * Z_ROW_STRIDE + 19, assets.flames.C[frame.center], sc * CELL, sr * CELL]);
+        for (let d = 0; d < 4; d++) {
+          const delta = [[-1,0],[1,0],[0,-1],[0,1]][d], key = DIR_KEYS[d];
+          let length = 0;
+          for (let k = 1; k <= 8; k++) {
+            const row = sr + delta[0] * k, column = sc + delta[1] * k;
+            if (row < 0 || row >= 13 || column < 0 || column >= 15 || !exp.covered[row * 15 + column]) break;
+            length++;
+          }
+          const activeLength = Math.min(length, frame.activeScale);
+          for (let k = 1; k <= activeLength; k++) {
+            const row = sr + delta[0] * k, column = sc + delta[1] * k;
+            if (exp.triggered[row * 15 + column]) continue;
+            const image = assets.flames[key][k === activeLength ? frame.tip : frame.body];
+            items.push([row * Z_ROW_STRIDE + 19, image, column * CELL, row * CELL]);
+          }
+        }
+      }
+      return true;
+    }
+    function render(sim, now = performance.now()) {
+      const previousPositions = updateFaces(sim);
+      ctx.fillStyle = '#0c0e13'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const band = assets.baseBand;
+      ctx.drawImage(band, 0, Math.max(0, (band.height - BOARD_OFFSET) / 2), band.width, BOARD_OFFSET,
+        0, 0, canvas.width, BOARD_OFFSET);
+      ctx.save(); ctx.translate(0, BOARD_OFFSET);
+      ctx.drawImage(assets.background, 0, 0);
+      const items = [];
+      const coveredCells = structureItems(sim, items);
+      for (const token of bunTokens(sim)) items.push([
+        token.row * Z_ROW_STRIDE + 15,
+        () => drawBun((token.column + .5 + token.xOffset) * CELL, (token.row + .62) * CELL,
+          token.team, token.count, token.size),
+      ]);
+      for (let i = explosions.length - 1; i >= 0; i--) if (!drawExplosion(explosions[i], now, items)) explosions.splice(i, 1);
+      for (let i = 0; i < 195; i++) if (sim.fuse[i] > 0) {
+        if (coveredCells.has(i)) continue;
+        const row = Math.floor(i / 15), column = i % 15;
+        const age = bombAgeSeconds(sim.fuse[i]);
+        const image = assets.bombs[bombFrame(age, assets.bombs.length)];
+        items.push([row * Z_ROW_STRIDE + 17, image, column * CELL + (CELL - image.width) / 2, (row + 1) * CELL - image.height]);
+      }
+      for (let pid = 0; pid < 2; pid++) if (sim.alive[pid]) {
+        const gy = sim.pos[pid * 2], gx = sim.pos[pid * 2 + 1], row = MOVE_TO_SPRITE_ROW[faces[pid]];
+        const moved = previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5);
+        if (coveredCells.has(Math.floor(gy) * 15 + Math.floor(gx))) continue;
+        if (moved) movingUntil[pid] = now + 150;
+        const frames = assets.players[pid][row], image = frames[now < movingUntil[pid] ? Math.floor(now / 125) % 4 : 0];
+        const x = Math.round(gx * CELL - image.width / 2), y = Math.min(Math.round(playerVisualY(gy, image.height)), 780 - image.height);
+        const z = Math.floor(gy) * Z_ROW_STRIDE + 18;
+        items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
+        items.push([z, image, x, y]);
+        if (sim.bunCarried[pid] >= 0) items.push([z + 1, () => drawBun(x + image.width / 2, y - 10, sim.bunCarried[pid], 1)]);
+      }
+      items.sort((a, b) => a[0] - b[0]);
+      for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
+      ctx.restore();
+    }
+    return { render, addExplosion, reset };
+  }
+
+  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, bunTokens, explosionFrame, loadAssets, createRenderer };
+});

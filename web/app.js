@@ -2,7 +2,6 @@
 
 (async function startBunArena() {
   const canvas = document.getElementById('game');
-  const context = canvas.getContext('2d');
   const status = document.getElementById('status');
   const restart = document.getElementById('restart');
   const opponentSelect = document.getElementById('opponent');
@@ -11,6 +10,8 @@
   const levelList = await fetch('assets/maps/levels.json').then((response) => response.json());
   const level = levelList.find((item) => item.qqt_id === 806);
   if (!level) throw new Error('Bun06 level missing');
+  const visualAssets = await QQTVisual.loadAssets(level);
+  const renderer = QQTVisual.createRenderer(canvas, level, visualAssets);
 
   const held = new Set();
   const modelRng = QQT.mulberry32(0x515154);
@@ -53,6 +54,7 @@
     }
     resetBot();
     bombQueued = false;
+    renderer.reset();
   }
 
   function humanAction() {
@@ -66,48 +68,8 @@
     return action;
   }
 
-  function drawCell(row, column, color, inset = 0) {
-    const width = canvas.width / QQT.W;
-    const height = canvas.height / QQT.H;
-    context.fillStyle = color;
-    context.fillRect(column * width + inset, row * height + inset,
-      width - inset * 2, height - inset * 2);
-  }
-
-  function render() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    for (let row = 0; row < QQT.H; row++) {
-      for (let column = 0; column < QQT.W; column++) {
-        const index = row * QQT.W + column;
-        drawCell(row, column, (row + column) % 2 ? '#18343c' : '#1b3a43');
-        if (sim.wall[index]) drawCell(row, column, '#546a70', 3);
-        else if (sim.brick[index]) drawCell(row, column, '#a55a37', 5);
-        if (sim.bunLoose[index * 2] || sim.bunLoose[index * 2 + 1]) {
-          drawCell(row, column, '#ffd06a', 17);
-        }
-        if (sim.fuse[index] > 0) {
-          context.fillStyle = '#101010';
-          context.beginPath();
-          context.arc((column + .5) * canvas.width / QQT.W,
-            (row + .5) * canvas.height / QQT.H, 14, 0, Math.PI * 2);
-          context.fill();
-        }
-        if (sim.blastLinger[index] > 0) drawCell(row, column, '#ffb347aa', 2);
-      }
-    }
-    for (let player = 0; player < 2; player++) {
-      if (!sim.alive[player]) continue;
-      const y = sim.pos[player * 2] * canvas.height / QQT.H;
-      const x = sim.pos[player * 2 + 1] * canvas.width / QQT.W;
-      context.fillStyle = player === 0 ? '#54a8ff' : '#ff5f6d';
-      context.beginPath();
-      context.arc(x, y, 18, 0, Math.PI * 2);
-      context.fill();
-      if (sim.bunCarried[player] >= 0) {
-        context.fillStyle = '#ffd06a';
-        context.fillRect(x - 8, y - 30, 16, 12);
-      }
-    }
+  function render(now = performance.now()) {
+    renderer.render(sim, now);
     status.textContent = JSON.stringify({
       tick: sim.t,
       human_alive: sim.alive[0],
@@ -132,13 +94,13 @@
         const action = await Promise.resolve(activeBot.act(observation, 1, modelRng));
         const opponent = [action.move, action.ability];
         const info = sim.step([human, opponent]);
+        renderer.addExplosion(info, performance.now());
         if (activeBot.observe_transition) {
           activeBot.observe_transition(info, {
             ...observation, tick: sim.t, state: QQTBunRuleBot.stateFromSim(sim),
           }, 1);
         }
       }
-      render();
     } finally {
       ticking = false;
     }
@@ -171,6 +133,10 @@
   });
   opponentSelect.addEventListener('change', reset);
   reset();
-  render();
+  function animationFrame(now) {
+    render(now);
+    requestAnimationFrame(animationFrame);
+  }
+  requestAnimationFrame(animationFrame);
   setInterval(tick, 100);
 })();
