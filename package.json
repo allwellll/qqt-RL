@@ -1,0 +1,10 @@
+{
+  "name": "qqt-rl-bun-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bun-only browser human test and Node regression tests",
+  "scripts": {
+    "test": "node web/test_bun06.js && node web/test_bun_rule_bot.js && node web/test_bun_rule_bot_v2.js && node web/test_http.js",
+    "serve": "node web/server.js"
+  }
+}

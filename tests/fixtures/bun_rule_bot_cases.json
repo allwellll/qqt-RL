@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "tick_hz": 10,
+  "horizon_steps": 40,
+  "height": 13,
+  "width": 15,
+  "cases": [
+    {
+      "id": "enemy_bomb_escape",
+      "description": "敌方炸弹即将命中，向右离开未来爆炸覆盖",
+      "state": {
+        "players": [{"row": 6, "col": 8, "alive": true, "bombs": 1, "blast": 3, "speed": 2.4}, {"row": 2, "col": 2, "alive": true, "bombs": 1, "blast": 2}],
+        "bombs": [{"row": 6, "col": 6, "fuse": 6, "blast": 3, "physical_owner": 1, "causal_owner": 1}]
+      },
+      "expected_action": [3, 0]
+    },
+    {
+      "id": "own_safe_drop",
+      "description": "己方落泡后存在向左安全撤离路径",
+      "state": {
+        "players": [{"row": 6, "col": 5, "alive": true, "bombs": 1, "blast": 3}, {"row": 6, "col": 8, "alive": true, "bombs": 1, "blast": 2}],
+        "wall_cells": [[5, 8], [7, 8], [6, 9]]
+      },
+      "expected_action": [2, 1]
+    },
+    {
+      "id": "no_safe_drop",
+      "description": "近敌但落泡后没有爆炸结算后存活的撤离路径",
+      "state": {
+        "players": [{"row": 6, "col": 5, "alive": true, "bombs": 1, "blast": 3}, {"row": 6, "col": 7, "alive": true, "bombs": 1, "blast": 2}],
+        "wall_cells": [[5, 5], [7, 5], [6, 4], [5, 6], [7, 6]],
+        "brick_cells": [[6, 6]]
+      },
+      "expected_action": [4, 0]
+    },
+    {
+      "id": "chain_reaction_escape",
+      "description": "短引信炸弹会链爆远处炸弹，必须按提前后的时刻躲避",
+      "state": {
+        "players": [{"row": 6, "col": 10, "alive": true, "bombs": 1, "blast": 2, "speed": 2.4}, {"row": 2, "col": 2, "alive": true, "bombs": 1, "blast": 2}],
+        "bombs": [
+          {"row": 6, "col": 6, "fuse": 5, "blast": 3, "physical_owner": 1, "causal_owner": 1},
+          {"row": 6, "col": 8, "fuse": 25, "blast": 3, "physical_owner": 0, "causal_owner": 0}
+        ]
+      },
+      "expected_action": [3, 0]
+    },
+    {
+      "id": "bun_cage_chokepoint",
+      "description": "包子笼不可炸墙形成窄口，对手受限时安全落泡并向左撤离",
+      "state": {
+        "players": [{"row": 6, "col": 5, "alive": true, "bombs": 1, "blast": 4}, {"row": 6, "col": 8, "alive": true, "bombs": 1, "blast": 2}],
+        "wall_cells": [[5, 6], [5, 7], [5, 8], [5, 9], [7, 6], [7, 7], [7, 8], [7, 9], [6, 9]],
+        "cage_cells": [[5, 6], [5, 7], [5, 8], [5, 9], [7, 6], [7, 7], [7, 8], [7, 9], [6, 9]]
+      },
+      "expected_action": [2, 1]
+    },
+    {
+      "id": "already_doomed",
+      "description": "所有路径最终被覆盖，选择能最大化存活时间的首步而不宣称可逃",
+      "state": {
+        "players": [{"row": 6, "col": 7, "alive": true, "bombs": 1, "blast": 2}, {"row": 1, "col": 1, "alive": true, "bombs": 1, "blast": 2}],
+        "wall_cells": [[6, 6], [6, 8], [4, 7]],
+        "bombs": [
+          {"row": 8, "col": 7, "fuse": 3, "blast": 4, "physical_owner": 1, "causal_owner": 1},
+          {"row": 3, "col": 7, "fuse": 7, "blast": 4, "physical_owner": 0, "causal_owner": 1}
+        ]
+      },
+      "expected_action": [4, 0]
+    },
+    {
+      "id": "safe_non_trade_kill",
+      "description": "直线覆盖且对手被不可炸墙限制，己方可安全撤离，允许 non-trade 落泡",
+      "state": {
+        "players": [{"row": 6, "col": 5, "alive": true, "bombs": 1, "blast": 4}, {"row": 6, "col": 8, "alive": true, "bombs": 1, "blast": 2}],
+        "wall_cells": [[5, 6], [5, 7], [5, 8], [5, 9], [7, 6], [7, 7], [7, 8], [7, 9], [6, 9]]
+      },
+      "expected_action": [2, 1]
+    },
+    {
+      "id": "trade_attack_rejected",
+      "description": "攻击会导致同 tick trade，拒绝落泡并移动控位",
+      "state": {
+        "players": [{"row": 6, "col": 5, "alive": true, "bombs": 1, "blast": 4}, {"row": 6, "col": 8, "alive": true, "bombs": 1, "blast": 2}],
+        "wall_cells": [[6, 4], [7, 5], [2, 5], [3, 4], [3, 6], [4, 4], [4, 6], [5, 4], [5, 6], [5, 7], [5, 8], [7, 6], [7, 7], [7, 8], [6, 9]],
+        "bombs": [{"row": 3, "col": 5, "fuse": 30, "blast": 1, "physical_owner": 1, "causal_owner": 1}]
+      },
+      "expected_action": [3, 0]
+    }
+  ]
+}

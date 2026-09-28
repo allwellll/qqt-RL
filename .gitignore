@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+node_modules/
+
+# 训练与评估产物必须留在仓库外观可预测、但默认不入 Git 的目录。
+runs/
+data/
+checkpoints/
+web/models/
+web/test-artifacts/
+*.log
+*.tmp

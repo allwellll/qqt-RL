@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>qqt-RL · 抢包子真人测试</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">QQT-RL / BUN ONLY</p>
+        <h1>抢包子06 · 真人对战测试</h1>
+      </div>
+      <button id="restart" type="button">重新开局</button>
+    </header>
+    <section class="arena">
+      <canvas id="game" width="900" height="780" aria-label="抢包子对战画面"></canvas>
+      <aside>
+        <h2>操作</h2>
+        <p><kbd>W A S D</kbd> 移动</p>
+        <p><kbd>Space</kbd> 放泡</p>
+        <p><kbd>R</kbd> 重新开局</p>
+        <h2>对手</h2>
+        <label>策略
+          <select id="opponent">
+            <option value="rule">安全战术规则 Bot</option>
+            <option value="model">本地导出模型</option>
+          </select>
+        </label>
+        <label class="file-label">模型 JSON
+          <input id="model-file" type="file" accept="application/json,.json">
+        </label>
+        <p id="model-status" class="note">尚未加载模型；选择模型模式前请先导出并加载 JSON。</p>
+        <h2>状态</h2>
+        <pre id="status">正在加载 Bun06…</pre>
+        <p class="note">蓝方为真人，红方可选冻结规则 Bot 或本地导出的训练模型。页面不包含其他游戏模式。</p>
+      </aside>
+    </section>
+  </main>
+  <script src="sim.js"></script>
+  <script src="bun_rule_bot.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

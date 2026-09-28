@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "bun_bases": [[1, 1], [1, 11]],
+  "cases": [
+    {
+      "id": "safe_kill_confirms",
+      "initial_phase": "COMBAT",
+      "event": {"causal_kill": [true, false], "credited_kill": [true, false], "mutual_death": false},
+      "state": {"players": [{"row": 6, "col": 7, "alive": true, "bombs": 1, "blast": 4}, {"row": 6, "col": 9, "alive": false, "bombs": 1, "blast": 2}], "bun_respawn": [0, 80]},
+      "expected_phase": "KILL_CONFIRMED",
+      "expected_action": [0, 0]
+    },
+    {
+      "id": "trade_does_not_confirm",
+      "initial_phase": "COMBAT",
+      "event": {"causal_kill": [false, false], "credited_kill": [false, false], "mutual_death": true},
+      "state": {"players": [{"row": 6, "col": 7, "alive": true, "bombs": 1, "blast": 4}, {"row": 6, "col": 9, "alive": false, "bombs": 1, "blast": 2}], "bun_respawn": [0, 80]},
+      "expected_phase": "COMBAT",
+      "expected_action": [4, 0]
+    },
+    {
+      "id": "enemy_self_destruct_not_claimed",
+      "initial_phase": "COMBAT",
+      "event": {"causal_kill": [false, false], "credited_kill": [false, false], "own_bomb_defeat": [false, true], "mutual_death": false},
+      "state": {"players": [{"row": 6, "col": 7, "alive": true, "bombs": 1, "blast": 4}, {"row": 6, "col": 9, "alive": false, "bombs": 1, "blast": 2}], "bun_respawn": [0, 80]},
+      "expected_phase": "COMBAT",
+      "expected_action": [4, 0]
+    },
+    {
+      "id": "kill_then_enemy_cage",
+      "initial_phase": "OBJECTIVE_RUSH",
+      "state": {"players": [{"row": 7, "col": 10, "alive": true, "bombs": 1, "blast": 4}, {"row": 6, "col": 9, "alive": false, "bombs": 1, "blast": 2}], "bun_respawn": [0, 70]},
+      "expected_phase": "OBJECTIVE_RUSH",
+      "expected_action": [0, 0]
+    },
+    {
+      "id": "dangerous_objective_route_detours",
+      "initial_phase": "OBJECTIVE_RUSH",
+      "state": {"players": [{"row": 7, "col": 10, "alive": true, "bombs": 1, "blast": 4}, {"row": 6, "col": 9, "alive": false, "bombs": 1, "blast": 2}], "bun_respawn": [0, 70], "wall_cells": [[7, 11], [8, 10]], "bombs": [{"row": 5, "col": 10, "fuse": 5, "blast": 4, "physical_owner": 1, "causal_owner": 1}]},
+      "expected_phase": "OBJECTIVE_RUSH",
+      "expected_action": [2, 0]
+    },
+    {
+      "id": "carrying_danger_escapes",
+      "initial_phase": "CARRY_RETURN",
+      "state": {"players": [{"row": 7, "col": 10, "alive": true, "bombs": 0, "blast": 4}, {"row": 6, "col": 9, "alive": false, "bombs": 1, "blast": 2}], "bun_carried": [1, -1], "bun_respawn": [0, 60], "wall_cells": [[7, 11], [8, 10]], "bombs": [{"row": 5, "col": 10, "fuse": 5, "blast": 4, "physical_owner": 1, "causal_owner": 1}]},
+      "expected_phase": "CARRY_RETURN",
+      "expected_action": [2, 0]
+    },
+    {
+      "id": "carrying_safe_returns_home",
+      "initial_phase": "CARRY_RETURN",
+      "state": {"players": [{"row": 7, "col": 10, "alive": true, "bombs": 0, "blast": 4}, {"row": 6, "col": 9, "alive": false, "bombs": 1, "blast": 2}], "bun_carried": [1, -1], "bun_respawn": [0, 60]},
+      "expected_phase": "CARRY_RETURN",
+      "expected_action": [0, 0]
+    },
+    {
+      "id": "death_drop_recover",
+      "initial_phase": "CARRY_RETURN",
+      "event": {"death": [true, false], "drop": [true, false]},
+      "state": {"players": [{"row": 7, "col": 10, "alive": false, "bombs": 0, "blast": 4}, {"row": 6, "col": 9, "alive": true, "bombs": 1, "blast": 2}], "bun_carried": [-1, -1], "bun_respawn": [90, 0], "bun_loose_cells": [{"row": 7, "col": 10, "origin": 1, "count": 1}]},
+      "expected_phase": "RECOVER",
+      "expected_action": [4, 0]
+    },
+    {
+      "id": "enemy_respawn_reengages",
+      "initial_phase": "OBJECTIVE_RUSH",
+      "state": {"players": [{"row": 7, "col": 10, "alive": true, "bombs": 1, "blast": 4}, {"row": 7, "col": 12, "alive": true, "bombs": 1, "blast": 3}], "bun_respawn": [0, 0]},
+      "expected_phase": "COMBAT",
+      "expected_action": [2, 1]
+    },
+    {
+      "id": "deliver_terminal",
+      "initial_phase": "CARRY_RETURN",
+      "event": {"capture": [true, false]},
+      "state": {"players": [{"row": 2, "col": 2, "alive": true, "bombs": 0, "blast": 4}, {"row": 7, "col": 12, "alive": false, "bombs": 1, "blast": 3}], "bun_carried": [-1, -1], "bun_respawn": [0, 50]},
+      "expected_phase": "DELIVER",
+      "expected_action": [4, 0]
+    }
+  ]
+}

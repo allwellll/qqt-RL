@@ -1,0 +1,5 @@
+jax>=0.4.30
+numpy>=1.26
+optax>=0.2.3
+scipy>=1.11
+pytest>=8.0

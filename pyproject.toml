@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qqt-rl"
+version = "0.1.0"
+description = "Bun-only QQTang reinforcement learning, simulation, evaluation and human testing"
+requires-python = ">=3.10"
+dependencies = [
+  "jax>=0.4.30",
+  "numpy>=1.26",
+  "optax>=0.2.3",
+  "scipy>=1.11",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[tool.setuptools]
+packages = ["jax_bomb", "qqt_rl", "qqt_rl.training"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
