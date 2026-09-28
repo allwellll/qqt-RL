@@ -8,8 +8,9 @@
   const modelFile = document.getElementById('model-file');
   const modelStatus = document.getElementById('model-status');
   const levelList = await fetch('assets/maps/levels.json').then((response) => response.json());
-  const level = levelList.find((item) => item.qqt_id === 806);
-  if (!level) throw new Error('Bun06 level missing');
+  const baseLevel = levelList.find((item) => item.qqt_id === 806);
+  if (!baseLevel) throw new Error('Bun06 level missing');
+  const level = QQTTacticalArena.buildTacticalArena(baseLevel);
   const visualAssets = await QQTVisual.loadAssets(level);
   const renderer = QQTVisual.createRenderer(canvas, level, visualAssets);
 
