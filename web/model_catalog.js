@@ -21,7 +21,7 @@
     });
   }
 
-  function modelUrl(row) { return row.url || `models/${row.file}`; }
+  function modelUrl(row) { return `models/${row.file}`; }
   function matchLabel(mode) { return mode === 'model-vs-rule' ? '模型 vs 规则Bot' : '真人 vs 对手'; }
   return { validateManifest, modelUrl, matchLabel };
 });

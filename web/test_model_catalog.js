@@ -15,5 +15,9 @@ assert.strictEqual(rows[0].cycle, 16);
 assert.throws(() => catalog.validateManifest({ schema: 'bad', models: [] }), /schema/);
 assert.throws(() => catalog.validateManifest({ schema: 'qqt.web-models/v1', models: [{ ...manifest.models[0], file: '../x' }] }), /file/);
 assert.strictEqual(catalog.modelUrl(rows[0]), 'models/safe-high-c16.json');
+const production = require('./models.json');
+for (const row of catalog.validateManifest(production)) {
+  assert.strictEqual(catalog.modelUrl(row), `models/${row.file}`, '浏览器必须同源加载模型，避免GitHub Release跨域失败');
+}
 assert.strictEqual(catalog.matchLabel('model-vs-rule'), '模型 vs 规则Bot');
 console.log('网页模型目录与观战模式契约通过');

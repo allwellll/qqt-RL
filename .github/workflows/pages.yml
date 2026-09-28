@@ -27,9 +27,24 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Assemble static site
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p _site
           cp -a web/. _site/
+          mkdir -p _site/models
+          gh release download web-models-v1 --repo "${{ github.repository }}" \
+            --pattern 'safe-*.json' --dir _site/models
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          root = pathlib.Path('_site')
+          manifest = json.loads((root / 'models.json').read_text())
+          for row in manifest['models']:
+              data = (root / 'models' / row['file']).read_bytes()
+              assert len(data) == row['bytes'], (row['id'], len(data), row['bytes'])
+              assert hashlib.sha256(data).hexdigest() == row['sha256'], row['id']
+          print(f"verified {len(manifest['models'])} same-origin web models")
+          PY
           touch _site/.nojekyll
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

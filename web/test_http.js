@@ -2,6 +2,8 @@
 'use strict';
 
 const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
 const { createServer } = require('./server.js');
 
 (async () => {
@@ -31,6 +33,9 @@ const { createServer } = require('./server.js');
     const manifest = await manifestResponse.json();
     assert.strictEqual(manifest.schema, 'qqt.web-models/v1');
     assert.strictEqual(manifest.models.length, 3);
+    const workflow = await fs.promises.readFile(path.join(__dirname, '..', '.github', 'workflows', 'pages.yml'), 'utf8');
+    assert(workflow.includes('gh release download web-models-v1'));
+    assert(workflow.includes('_site/models'));
     for (const asset of [
       'visual_renderer.js',
       'tactical_arena.js',
