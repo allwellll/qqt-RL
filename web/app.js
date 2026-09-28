@@ -59,11 +59,7 @@
   }
 
   function humanAction() {
-    let move = QQT.MOVE_IDLE;
-    if (held.has('KeyW')) move = QQT.MOVE_UP;
-    else if (held.has('KeyS')) move = QQT.MOVE_DOWN;
-    else if (held.has('KeyA')) move = QQT.MOVE_LEFT;
-    else if (held.has('KeyD')) move = QQT.MOVE_RIGHT;
+    const move = QQTControls.moveForHeld(held);
     const action = [move, bombQueued ? 1 : 0, 0, 0];
     bombQueued = false;
     return action;
@@ -108,7 +104,7 @@
   }
 
   window.addEventListener('keydown', (event) => {
-    if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(event.code)) event.preventDefault();
+    if ([...QQTControls.MOVEMENT_KEYS, 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(event.code)) event.preventDefault();
     held.add(event.code);
     if (event.code === 'Space') bombQueued = true;
     if (event.code === 'KeyR') reset();

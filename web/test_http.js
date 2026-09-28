@@ -26,6 +26,7 @@ const { createServer } = require('./server.js');
     for (const asset of [
       'visual_renderer.js',
       'tactical_arena.js',
+      'controls.js',
       'assets/bg/抢包子.png',
       'assets/%E8%A7%92%E8%89%B24%C3%974%E7%B2%BE%E7%81%B5%E5%9B%BE.png',
       'assets/bomb-custom/%E7%BB%8F%E5%85%B8%E9%BB%84%E6%B3%A1%E6%B3%A1.png',
