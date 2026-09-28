@@ -8,6 +8,9 @@
   const matchMode = document.getElementById('match-mode');
   const publishedModel = document.getElementById('published-model');
   const modelDetails = document.getElementById('model-details');
+  const modelProgressWrap = document.getElementById('model-progress-wrap');
+  const modelProgress = document.getElementById('model-progress');
+  const modelProgressText = document.getElementById('model-progress-text');
   const modelFile = document.getElementById('model-file');
   const modelStatus = document.getElementById('model-status');
   const levelList = await fetch('assets/maps/levels.json').then((response) => response.json());
@@ -82,15 +85,29 @@
   }
 
   async function loadPublishedModel(row) {
-    modelStatus.textContent = `正在下载：${row.display_name}…`;
+    publishedModel.disabled = true;
+    modelProgressWrap.hidden = false;
+    modelProgress.removeAttribute('value');
+    modelProgressText.textContent = '正在连接模型文件…';
+    modelStatus.textContent = `正在加载：${row.display_name}`;
     const response = await fetch(QQTModelCatalog.modelUrl(row), { cache: 'no-store' });
-    if (!response.ok) throw new Error(`模型下载失败 HTTP ${response.status}`);
-    const buffer = await response.arrayBuffer();
+    const buffer = await QQTModelLoader.readResponseWithProgress(response, (loaded, total) => {
+      if (total > 0) modelProgress.value = loaded * 100 / total;
+      else modelProgress.removeAttribute('value');
+      modelProgressText.textContent = QQTModelLoader.progressText(loaded, total);
+    });
     if (buffer.byteLength !== row.bytes) throw new Error('模型大小校验失败');
+    modelProgress.removeAttribute('value');
+    modelProgressText.textContent = '正在校验模型 SHA-256…';
     const digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', buffer)))
       .map((value) => value.toString(16).padStart(2, '0')).join('');
     if (digest !== row.sha256) throw new Error('模型 SHA-256 校验失败');
+    modelProgressText.textContent = '正在解析并初始化模型…';
+    await new Promise((resolve) => setTimeout(resolve, 0));
     loadedModel = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)));
+    modelProgress.value = 100;
+    modelProgressText.textContent = '模型加载完成，正在开始观战';
+    publishedModel.disabled = false;
     modelStatus.textContent = `已加载：${row.display_name}`;
     modelDetails.textContent = `${row.candidate} · cycle ${row.cycle} · score ${row.score.toFixed(4)} · ${(row.bytes / 1048576).toFixed(1)} MiB`;
     matchMode.value = 'model-vs-rule';
@@ -177,7 +194,15 @@
     const row = publishedModels.find((item) => item.id === publishedModel.value);
     if (!row) return;
     try { await loadPublishedModel(row); }
-    catch (error) { loadedModel = null; modelStatus.textContent = `加载失败：${error.message}`; reset(); }
+    catch (error) {
+      loadedModel = null;
+      publishedModel.disabled = false;
+      modelProgressWrap.hidden = false;
+      modelProgress.removeAttribute('value');
+      modelProgressText.textContent = `加载失败：${error.message}`;
+      modelStatus.textContent = `加载失败：${error.message}`;
+      reset();
+    }
   });
   matchMode.addEventListener('change', reset);
   opponentSelect.addEventListener('change', reset);
