@@ -12,17 +12,46 @@
   const level = levelList.find((item) => item.qqt_id === 806);
   if (!level) throw new Error('Bun06 level missing');
 
-  const bot = new BunRuleTacticalBot();
   const held = new Set();
   const modelRng = QQT.mulberry32(0x515154);
   let bombQueued = false;
   let loadedModel = null;
+  let activeBot = null;
+  let ticking = false;
   let sim;
+
+  function createRegistry() {
+    return QQTBots.createDefaultRegistry({
+      BunRuleTacticalBot,
+      modelFactory: loadedModel ? () => ({
+        reset(context) {},
+        async act(observation, playerId, rng) {
+          const raw = await Promise.resolve(loadedModel.act(sim, playerId, modelRng));
+          return QQTBots.validateAction({ move: Number(raw[0]), ability: Number(raw[1]) });
+        },
+        close() {},
+      }) : null,
+    });
+  }
+
+  function resetBot() {
+    if (activeBot && activeBot.close) activeBot.close();
+    const registry = createRegistry();
+    const botId = opponentSelect.value;
+    activeBot = registry.create(botId, {});
+    activeBot.reset({
+      schema: 'qqt.bot.context/v1', episode_id: `web-${Date.now()}`,
+      seed: 0x515154, ruleset: 'bun', max_ticks: null, metadata: {},
+    });
+  }
 
   function reset() {
     sim = new QQT.Sim(Date.now() >>> 0);
     sim.reset(level);
-    bot.reset();
+    if (opponentSelect.value === 'bun.browser_model' && !loadedModel) {
+      opponentSelect.value = 'bun.tactical_v2';
+    }
+    resetBot();
     bombQueued = false;
   }
 
@@ -89,15 +118,30 @@
     }, null, 2);
   }
 
-  function tick() {
-    if (!sim.done) {
-      const human = humanAction();
-      const useModel = opponentSelect.value === 'model' && loadedModel;
-      const opponent = useModel ? loadedModel.act(sim, 1, modelRng) : bot.act(sim, 1);
-      const info = sim.step([human, opponent]);
-      if (!useModel) bot.observeTransition(info, QQTBunRuleBot.stateFromSim(sim), 1);
+  async function tick() {
+    if (ticking) return;
+    ticking = true;
+    try {
+      if (!sim.done) {
+        const human = humanAction();
+        const state = QQTBunRuleBot.stateFromSim(sim);
+        const observation = {
+          schema: 'qqt.bot.observation/v1', tick: sim.t, state,
+          legal_moves: [0, 1, 2, 3, 4], legal_abilities: [0, 1, 2], metadata: {},
+        };
+        const action = await Promise.resolve(activeBot.act(observation, 1, modelRng));
+        const opponent = [action.move, action.ability];
+        const info = sim.step([human, opponent]);
+        if (activeBot.observe_transition) {
+          activeBot.observe_transition(info, {
+            ...observation, tick: sim.t, state: QQTBunRuleBot.stateFromSim(sim),
+          }, 1);
+        }
+      }
+      render();
+    } finally {
+      ticking = false;
     }
-    render();
   }
 
   window.addEventListener('keydown', (event) => {
@@ -116,15 +160,16 @@
       const arch = document.meta && document.meta.arch;
       loadedModel = arch === 'transformer' ? new QQT.TransformerModel(document)
         : arch === 'cnn' ? new QQT.CNNModel(document) : new QQT.MLPModel(document);
-      opponentSelect.value = 'model';
+      opponentSelect.value = 'bun.browser_model';
       modelStatus.textContent = `已加载：${document.meta.display_name || document.meta.name || file.name}`;
       reset();
     } catch (error) {
       loadedModel = null;
-      opponentSelect.value = 'rule';
+      opponentSelect.value = 'bun.tactical_v2';
       modelStatus.textContent = `加载失败：${error.message}`;
     }
   });
+  opponentSelect.addEventListener('change', reset);
   reset();
   render();
   setInterval(tick, 100);

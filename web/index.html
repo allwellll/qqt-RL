@@ -25,8 +25,9 @@
         <h2>对手</h2>
         <label>策略
           <select id="opponent">
-            <option value="rule">安全战术规则 Bot</option>
-            <option value="model">本地导出模型</option>
+            <option value="bun.tactical_v2">安全战术规则 Bot</option>
+            <option value="bun.random_roam">随机漫游 Bot</option>
+            <option value="bun.browser_model">本地导出模型</option>
           </select>
         </label>
         <label class="file-label">模型 JSON
@@ -41,6 +42,7 @@
   </main>
   <script src="sim.js"></script>
   <script src="bun_rule_bot.js"></script>
+  <script src="bot_contract.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
