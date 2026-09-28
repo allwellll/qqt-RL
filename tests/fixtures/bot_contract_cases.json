@@ -1,0 +1,44 @@
+{
+  "schema": "qqt.bot.fixture/v1",
+  "tactical_identity_payload": {
+    "contract": "qqt.bot/v1",
+    "id": "bun.tactical_v2",
+    "semantic_fixture": "bun_rule_bot_v2",
+    "version": "2.0.0"
+  },
+  "tactical_identity_hash": "b77820adcfefa02bd4ab4d0efddad405aae7a6c77b3c235088f9af2f80cb4f83",
+  "fixture_hash": "72812b6f7a0009c2df7f68e294d6d33132fa4d2e240954ec34cdc6d47585abe9",
+  "action_cases": [
+    {
+      "id": "adjacent_safe_attack",
+      "player_id": 0,
+      "expected_action": {"move": 2, "ability": 1},
+      "state": {
+        "height": 5,
+        "width": 7,
+        "wall": [
+          [1, 1, 1, 1, 1, 1, 1],
+          [1, 0, 0, 0, 0, 0, 1],
+          [1, 0, 0, 0, 0, 0, 1],
+          [1, 0, 0, 0, 0, 0, 1],
+          [1, 1, 1, 1, 1, 1, 1]
+        ],
+        "brick": [
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0]
+        ],
+        "players": [
+          {"row": 2, "col": 2, "alive": true, "bombs": 1, "blast": 2, "speed": 1.0},
+          {"row": 2, "col": 4, "alive": true, "bombs": 1, "blast": 2, "speed": 1.0}
+        ],
+        "bombs": [],
+        "bun_bases": [[1, 1], [3, 5]],
+        "bun_carried": [-1, -1],
+        "bun_respawn": [0, 0]
+      }
+    }
+  ]
+}
