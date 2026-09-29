@@ -5,6 +5,7 @@
   const status = document.getElementById('status');
   const restart = document.getElementById('restart');
   const opponentSelect = document.getElementById('opponent');
+  const mapSelect = document.getElementById('map-select');
   const matchMode = document.getElementById('match-mode');
   const publishedModel = document.getElementById('published-model');
   const modelDetails = document.getElementById('model-details');
@@ -22,9 +23,18 @@
   const levelList = await fetch('assets/maps/levels.json').then((response) => response.json());
   const baseLevel = levelList.find((item) => item.qqt_id === 806);
   if (!baseLevel) throw new Error('Bun06 level missing');
-  const level = QQTTacticalArena.buildTacticalArena(baseLevel);
-  const visualAssets = await QQTVisual.loadAssets(level);
-  const renderer = QQTVisual.createRenderer(canvas, level, visualAssets);
+  const trainingLevel = baseLevel;                                    // 训练实际采样的真实 806 抢包子图（带砖/道具/包子屋）
+  const arenaLevel = QQTTacticalArena.buildTacticalArena(baseLevel);  // 清空砖块的空场能力测试
+  let level = trainingLevel;
+  let renderer = null;
+  function selectedLevel() { return mapSelect.value === 'arena' ? arenaLevel : trainingLevel; }
+  // 切换地图需重建资源与渲染器（不同图砖块/精灵集合不同）；调用方随后自行 reset。
+  async function useMap(target) {
+    level = target;
+    const visualAssets = await QQTVisual.loadAssets(level);
+    renderer = QQTVisual.createRenderer(canvas, level, visualAssets);
+  }
+  await useMap(trainingLevel);
 
   const held = new Set();
   const modelRng = QQT.mulberry32(0x515154);
@@ -73,10 +83,11 @@
     });
   }
 
-  function reset() {
+  async function reset() {
     replayDocument = null;
     replayPlaying = false;
     replayToggle.textContent = '播放';
+    if (level !== selectedLevel()) await useMap(selectedLevel());
     sim = new QQT.Sim(Date.now() >>> 0);
     sim.reset(level);
     if (opponentSelect.value === 'bun.browser_model' && !loadedModel) {
@@ -196,6 +207,7 @@
     const response = await fetch(`replays/${row.file}`, { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     replayDocument = QQTReplay.validateReplay(await response.json());
+    await useMap(arenaLevel);   // 离线录像在空场竞技场上生成，回放必须用同一张图
     resetReplay();
     replayPlaying = true;
     replayToggle.textContent = '暂停';
@@ -302,6 +314,7 @@
   });
   matchMode.addEventListener('change', reset);
   opponentSelect.addEventListener('change', reset);
+  mapSelect.addEventListener('change', reset);
   await loadCatalog();
   reset();
   await loadReplayCatalog();
