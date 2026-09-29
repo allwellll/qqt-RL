@@ -53,7 +53,8 @@
   function instantiateModel(document) {
     const arch = document.meta && document.meta.arch;
     const model = arch === 'transformer' ? new QQT.TransformerModel(document)
-      : arch === 'cnn' ? new QQT.CNNModel(document) : new QQT.MLPModel(document);
+      : arch === 'cnn' ? new QQT.CNNModel(document)
+      : arch === 'mlp4' ? new QQT.MLP4Model(document) : new QQT.MLPModel(document);
     model.greedy = true;
     return model;
   }

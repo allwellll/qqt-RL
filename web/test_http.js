@@ -32,7 +32,7 @@ const { createServer } = require('./server.js');
     assert.strictEqual(manifestResponse.status, 200);
     const manifest = await manifestResponse.json();
     assert.strictEqual(manifest.schema, 'qqt.web-models/v1');
-    assert.strictEqual(manifest.models.length, 3);
+    assert.strictEqual(manifest.models.length, 4);
     const replayResponse = await fetch(`http://127.0.0.1:${port}/replays.json`);
     assert.strictEqual(replayResponse.status, 200);
     const replayCatalog = await replayResponse.json();

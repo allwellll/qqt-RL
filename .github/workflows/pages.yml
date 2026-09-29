@@ -34,7 +34,7 @@ jobs:
           cp -a web/. _site/
           mkdir -p _site/models
           gh release download web-models-v1 --repo "${{ github.repository }}" \
-            --pattern 'safe-*.json' --dir _site/models
+            --pattern 'safe-*.json' --pattern 'bun-kill-*.json' --dir _site/models
           python3 - <<'PY'
           import hashlib, json, pathlib
           root = pathlib.Path('_site')

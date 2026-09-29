@@ -2778,6 +2778,119 @@
     }
   }
 
+  // ---------------------------------------------------------------- MLP-4 模型
+  // jax_bomb/jax_net.py::init_mlp4 / mlp4_forward 的浏览器移植（正式版 5 层
+  // 全连接 + 每层 LayerNorm，hidden=768）。与 Transformer 同一份**每玩家视角**
+  // obs（encodeObsJAX，24 通道），但不使用 global_vec（mlp4_forward 只吃 obs）。
+  // 每层：Linear(in→768) → LN(eps 1e-5) → ReLU；三头均为单层 Linear。
+  // 数值口径：LN 用总体方差（ddof=0）、eps=1e-5、LN 在 ReLU 之前（对齐 _ln）。
+  // 权重经 export_bun_web_model.py 转置为行主序 [out, in]（W[o*in+j]）。
+  class MLP4Model extends MLPModel {
+    constructor(doc, skipWeights = false) {
+      super(doc, skipWeights);
+      this.hidden = Number((this.meta && this.meta.hidden) || 768);
+      this.depth = Number((this.meta && this.meta.depth) || 5);
+      this.rule = (this.meta && this.meta.rule) || 'bun';
+      this.abilityActions = Number((this.meta && this.meta.ability_actions) || 3);
+      this.isBunModel = this.rule === 'bun' || this.abilityActions === 3;
+      this._cSim = null; this._cGen = -1; this._cT = [-1, -1]; this._cA = [null, null];
+    }
+
+    // obs: Float32Array(C*h*w) 每玩家视角 → { move:[5], bomb:[abilityActions], value:number }
+    forward(obs) {
+      const [C, h, w] = this.obsShape;
+      const H = this.hidden;
+      let inDim = C * h * w;
+      let x = new Float64Array(inDim);
+      for (let i = 0; i < inDim; i++) x[i] = obs[i];
+      for (let L = 1; L <= this.depth; L++) {
+        const Wt = this.T('w' + L), bt = this.T('b' + L);
+        const lng = this.T('ln' + L + '_g'), lnb = this.T('ln' + L + '_b');
+        const y = new Float64Array(H);
+        for (let o = 0; o < H; o++) {
+          let s = bt[o];
+          const base = o * inDim;
+          for (let j = 0; j < inDim; j++) s += Wt[base + j] * x[j];
+          y[o] = s;
+        }
+        this._lnRelu(y, lng, lnb);      // LN(eps 1e-5) 后 ReLU，对齐 _ln + relu
+        x = y; inDim = H;
+      }
+      const linHead = (Wt, bt, outDim) => {
+        const out = new Float64Array(outDim);
+        for (let o = 0; o < outDim; o++) {
+          let s = bt[o];
+          const base = o * H;
+          for (let j = 0; j < H; j++) s += Wt[base + j] * x[j];
+          out[o] = s;
+        }
+        return out;
+      };
+      const move = linHead(this.T('wm'), this.T('bm'), 5);
+      const bomb = linHead(this.T('wb'), this.T('bb'), this.abilityActions);
+      // value：HL-Gauss 128 bins → 期望标量
+      const vLogits = linHead(this.T('wv'), this.T('bv'), 128);
+      let mx = -Infinity;
+      for (let b = 0; b < 128; b++) if (vLogits[b] > mx) mx = vLogits[b];
+      let sum = 0;
+      const exps = new Float64Array(128);
+      for (let b = 0; b < 128; b++) { exps[b] = Math.exp(vLogits[b] - mx); sum += exps[b]; }
+      const vmin = Number.isFinite(this.meta.value_min) ? this.meta.value_min : -20.0;
+      const vmax = Number.isFinite(this.meta.value_max) ? this.meta.value_max : 20.0;
+      let value = 0;
+      for (let b = 0; b < 128; b++) value += (exps[b] / sum) * (vmin + (vmax - vmin) * b / 127.0);
+      return { move, bomb, value };
+    }
+
+    // 每玩家视角 obs（encodeObsJAX）+ inferEvery 视觉延迟（自身坐标 ch0 实时）。
+    _getObs(sim, pid) {
+      const every = this.inferEvery || 1;
+      const lagTicks = Math.max(0, Math.round(every - 1.0));
+      const currObs = sim.encodeObsJAX(pid, this.obsShape[0]);
+      if (lagTicks <= 0) return currObs;
+      if (!this._obsHistory) this._obsHistory = [[], []];
+      if (!this._obsHistory[pid]) this._obsHistory[pid] = [];
+      const buf = this._obsHistory[pid];
+      buf.push(currObs);
+      if (buf.length > lagTicks + 1) buf.shift();
+      const lagged = new Float32Array(buf[0]);
+      for (let i = 0; i < N; i++) lagged[i] = currObs[i];   // ch0 自身坐标实时
+      return lagged;
+    }
+
+    _abilityMask(sim, masks, pid) {
+      if (this.abilityActions <= 2) return masks.bm[pid];
+      if (masks.am && masks.am[pid]) return masks.am[pid].slice(0, this.abilityActions);
+      const canBomb = masks.bm[pid][1] ? 1 : 0;
+      const canUseItem = sim.alive[pid] && sim.heldItem && sim.heldItem[pid] > ITEM_NONE ? 1 : 0;
+      return [1, canBomb, canUseItem];
+    }
+
+    _decodeAbility(move, ability) {
+      if (this.abilityActions <= 2) return [move, ability];
+      return [move, ability === 1 ? 1 : 0, ability === 2 ? 1 : 0];
+    }
+
+    act(sim, pid, rng) {
+      const changed = sim !== this._cSim || sim._gen !== this._cGen;
+      if (changed || !this._cT) {
+        this._cSim = sim; this._cGen = sim._gen;
+        this._cT = [-1, -1]; this._cA = [null, null]; this._obsHistory = [[], []];
+      }
+      if (this._cT[pid] === sim.t && this._cA[pid]) return this._cA[pid];
+      const masks = sim.legalMask();
+      const obs = this._getObs(sim, pid);
+      const logits = this.forward(obs);
+      if (!this._lastVal) this._lastVal = [0, 0];
+      this._lastVal[pid] = logits.value;
+      const move = this._sampleMasked(logits.move, masks.mm[pid], rng);
+      const ability = this._sampleMasked(logits.bomb, this._abilityMask(sim, masks, pid), rng);
+      this._cA[pid] = this._decodeAbility(move, ability);
+      this._cT[pid] = sim.t;
+      return this._cA[pid];
+    }
+  }
+
   // ---------------------------------------------------------------- ORT Transformer 模型
   // onnxruntime-web 推理（WebGPU EP 优先，WASM 回退；session 由 main.js 创建，
   // 创建失败时直接用上面的纯 JS TransformerModel 兜底）。与 JS 版同一套
@@ -3547,7 +3660,7 @@
     CRATE_BANANA, CRATE_SLOW_GLUE, CRATE_FAST_SHOE,
     MOVE_STATUS_NONE, MOVE_STATUS_SLOW, MOVE_STATUS_SLIDE, MOVE_STATUS_FAST,
     DIRS, EPS, CFG,
-    Sim, MLPModel, CNNModel, TransformerModel, ORTTransformerModel,
+    Sim, MLPModel, CNNModel, TransformerModel, MLP4Model, ORTTransformerModel,
     HunterAI, TimeAStarAI, NukemanAI,
     StationaryDefenseAI, FleeBotAI, RoamBotAI,
     mulberry32, resolveAxis, decodeB64,

@@ -2,6 +2,18 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun-kill-mlp4",
+      "display_name": "Bun 击杀 · MLP4（vs jax-bot 自对弈验收）",
+      "file": "bun-kill-mlp4-1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70.json",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/bun-kill-mlp4-1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70.json",
+      "sha256": "1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70",
+      "bytes": 32372445,
+      "candidate": "bun_kill_mlp4",
+      "cycle": 0,
+      "score": 0.609375,
+      "source_sha256": "77248246133cbfb38ccd28420d0b762c01ce7960cc29aca4af54e5b93411f207"
+    },
+    {
       "id": "safe-high-c16",
       "display_name": "Safe High · 周期16（综合最佳）",
       "file": "safe-high-c16.json",
