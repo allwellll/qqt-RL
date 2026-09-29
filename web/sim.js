@@ -136,6 +136,10 @@
       this.seed = seed == null ? 1 : (seed >>> 0);
       this.rng = mulberry32(this.seed);
       this.playerModes = (opts && opts.playerModes) ? opts.playerModes.slice() : ['new', 'new'];
+      // 每玩家「降敏拐角滑移」：true 时 _steer 只在真正外拐角(单侧开口)被动滑一下，
+      // 去掉「目标格是通路时朝门框中线归中」这条（人类手感对齐原 gpu sim，减少贴墙/贴泡误滑）。
+      // 默认 false → 与训练/模型口径完全一致（模型对手不受影响）。
+      this.steerReduced = (opts && opts.steerReduced) ? opts.steerReduced.slice() : [false, false];
       this.reset('open', opts);
     }
 
@@ -146,6 +150,7 @@
     // opts.playerModes: 可选 ['new', 'old'] 或 ['old', 'new'] 供新旧物理/mask 对抗评测
     reset(mode, opts) {
       this.playerModes = (opts && opts.playerModes) ? opts.playerModes.slice() : (this.playerModes || ['new', 'new']);
+      this.steerReduced = (opts && opts.steerReduced) ? opts.steerReduced.slice() : (this.steerReduced || [false, false]);
       this.oldMode = !!(opts && opts.oldMode);
       // 可推箱运行时状态(所有模式都初始化; 关卡模式在 _loadLevel 填充)
       this.pushable = new Uint8Array(N);
@@ -1894,20 +1899,22 @@
       if (tr0 < 0 || tr0 >= H || tc0 < 0 || tc0 >= W) return [ny, nx];
 
       let perp;
+      const reduced = this.steerReduced && this.steerReduced[p];
       if (mv < 2) {
         // 上/下：目标行 tr；
         const tr = tr0;
         // 凹角阻断检测：斜向格 (tr, c0±1) 开阔的同时，同轴侧向格 (r0, c0±1) 也必须开阔！
         const leftOpen = open(tr, c0 - 1) && open(r0, c0 - 1);
         const rightOpen = open(tr, c0 + 1) && open(r0, c0 + 1);
-        if (targetOpen) {
+        if (targetOpen && !reduced) {
           // 目标格开口：若直走受阻，说明身体边缘卡在门框两壁，朝目标格中心滑动进门
           perp = x < c0 + 0.5 ? [3, 2] : [2, 3];
-        } else if (leftOpen !== rightOpen) {
+        } else if (!targetOpen && leftOpen !== rightOpen) {
           // 目标格受阻且外拐角单侧开放：朝开放侧被动切向滑移（仅单向，不向阻断侧回退）
           perp = rightOpen ? [3] : [2];
         } else {
-          // 目标格受阻且两侧同开（开阔地撞单障碍）或同堵（平墙/凹角）：坚决不主动向障碍归中，保留直走位置
+          // 目标格受阻且两侧同开（开阔地撞单障碍）或同堵（平墙/凹角）：坚决不主动向障碍归中，保留直走位置。
+          // reduced 模式下，目标格是通路(卡门框)也不再主动归中——由玩家自行对齐，减少误滑。
           return moved > 2 * EPS ? [ny, nx] : [y, x];
         }
       } else {
@@ -1916,14 +1923,15 @@
         // 凹角阻断检测：斜向格 (r0±1, tc) 开阔的同时，同轴侧向格 (r0±1, c0) 也必须开阔！
         const upOpen = open(r0 - 1, tc) && open(r0 - 1, c0);
         const downOpen = open(r0 + 1, tc) && open(r0 + 1, c0);
-        if (targetOpen) {
+        if (targetOpen && !reduced) {
           // 目标格开口：若直走受阻，说明身体边缘卡在门框两壁，朝目标格中心滑动进门
           perp = y < r0 + 0.5 ? [1, 0] : [0, 1];
-        } else if (upOpen !== downOpen) {
+        } else if (!targetOpen && upOpen !== downOpen) {
           // 目标格受阻且外拐角单侧开放：朝开放侧被动切向滑移（仅单向，不向阻断侧回退）
           perp = downOpen ? [1] : [0];
         } else {
-          // 目标格受阻且两侧同开（开阔地撞单障碍）或同堵（平墙/凹角）：坚决不主动向障碍归中，保留直走位置
+          // 目标格受阻且两侧同开（开阔地撞单障碍）或同堵（平墙/凹角）：坚决不主动向障碍归中，保留直走位置。
+          // reduced 模式下，目标格是通路(卡门框)也不再主动归中——由玩家自行对齐，减少误滑。
           return moved > 2 * EPS ? [ny, nx] : [y, x];
         }
       }

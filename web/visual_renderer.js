@@ -232,8 +232,11 @@
       }
       return true;
     }
-    function render(sim, now = performance.now()) {
+    function render(sim, now = performance.now(), motion = null) {
       const previousPositions = updateFaces(sim);
+      // 逻辑节拍 10Hz，渲染 60Hz：在两个 sim tick 之间线性插值角色位置 → 顺滑。
+      // 本地人类玩家(motion.humanPid)不插值，保留输入即时响应；复活/传送(位移过大)时不插值直接吸附。
+      const alpha = motion ? Math.min(1, Math.max(0, (now - motion.lastTickT) / motion.tickMs)) : 1;
       ctx.fillStyle = '#0c0e13'; ctx.fillRect(0, 0, canvas.width, canvas.height);
       const band = assets.baseBand;
       ctx.drawImage(band, 0, Math.max(0, (band.height - BOARD_OFFSET) / 2), band.width, BOARD_OFFSET,
@@ -256,7 +259,15 @@
         items.push([row * Z_ROW_STRIDE + 17, image, column * CELL + (CELL - image.width) / 2, (row + 1) * CELL - image.height]);
       }
       for (let pid = 0; pid < 2; pid++) if (sim.alive[pid]) {
-        const gy = sim.pos[pid * 2], gx = sim.pos[pid * 2 + 1], row = MOVE_TO_SPRITE_ROW[faces[pid]];
+        let gy = sim.pos[pid * 2], gx = sim.pos[pid * 2 + 1];
+        if (motion && pid !== motion.humanPid) {
+          const py = motion.prevPos[pid * 2], px = motion.prevPos[pid * 2 + 1];
+          const cy = motion.curPos[pid * 2], cx = motion.curPos[pid * 2 + 1];
+          // 位移过大（复活/传送）不插值，避免角色横扫全图
+          if (Math.abs(cy - py) + Math.abs(cx - px) <= 1.0) { gy = py + (cy - py) * alpha; gx = px + (cx - px) * alpha; }
+          else { gy = cy; gx = cx; }
+        }
+        const row = MOVE_TO_SPRITE_ROW[faces[pid]];
         const moved = previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5);
         if (coveredCells.has(Math.floor(gy) * 15 + Math.floor(gx))) continue;
         if (moved) movingUntil[pid] = now + 150;
@@ -269,6 +280,12 @@
       }
       items.sort((a, b) => a[0] - b[0]);
       for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
+      // 玩家(pid0)被炸掉→复活期间压暗画面：alpha 随复活倒计时消退，复活瞬间恢复。
+      if (sim.isBun && !sim.alive[0] && sim.bunRespawn[0] > 0) {
+        const frac = Math.max(0, Math.min(1, sim.bunRespawn[0] / (sim.bunRespawnTicks || 1)));
+        ctx.fillStyle = `rgba(0,0,0,${(0.62 * frac).toFixed(3)})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height - BOARD_OFFSET);
+      }
       ctx.restore();
     }
     return { render, addExplosion, reset };

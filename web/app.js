@@ -49,6 +49,17 @@
   let replayPlaying = false;
   let replayAccumulator = 0;
   let sim;
+  // 渲染插值：两个逻辑 tick(100ms) 之间线性插值角色位置 → 60fps 顺滑。
+  const TICK_MS = 100;
+  const prevPos = new Float64Array(4);
+  const curPos = new Float64Array(4);
+  let lastTickT = performance.now();
+  function snapMotion() { prevPos.set(sim.pos); curPos.set(sim.pos); lastTickT = performance.now(); }
+  function motionState() {
+    // model-vs-rule 观战 / 回放无本地人类 → 两个角色都插值；人类对战时 pid0 不插值(输入即时)。
+    const humanPid = (replayDocument || matchMode.value === 'model-vs-rule') ? -1 : 0;
+    return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid };
+  }
 
   function instantiateModel(document) {
     const arch = document.meta && document.meta.arch;
@@ -91,6 +102,9 @@
     if (level !== selectedLevel()) await useMap(selectedLevel());
     sim = new QQT.Sim(Date.now() >>> 0);
     sim.reset(level);
+    // 人类手动控制 pid0 时启用降敏拐角滑移（对齐原 gpu sim 手感，减少贴墙/贴泡误滑）；
+    // 观战(model-vs-rule) pid0 是模型 → 保持完整 _steer 与训练一致。
+    sim.steerReduced = [matchMode.value !== 'model-vs-rule', false];
     if (opponentSelect.value === 'bun.browser_model' && !loadedModel) {
       opponentSelect.value = 'bun.tactical_v2';
     }
@@ -100,6 +114,7 @@
     }
     resetBot();
     bombQueued = false;
+    snapMotion();
     renderer.reset();
   }
 
@@ -111,6 +126,7 @@
     replayAccumulator = 0;
     replaySeek.max = String(replayDocument.actions.length);
     replaySeek.value = '0';
+    snapMotion();
     renderer.reset();
   }
 
@@ -121,7 +137,9 @@
       return;
     }
     const row = replayDocument.actions[replayIndex++];
+    prevPos.set(sim.pos);
     const info = sim.step([[row[0], row[1], row[2]], [row[3], row[4], row[5]]]);
+    curPos.set(sim.pos); lastTickT = performance.now();
     renderer.addExplosion(info, performance.now());
     replaySeek.value = String(replayIndex);
     if (replayIndex >= replayDocument.actions.length) {
@@ -217,7 +235,7 @@
   }
 
   function render(now = performance.now()) {
-    renderer.render(sim, now);
+    renderer.render(sim, now, motionState());
     status.textContent = JSON.stringify({
       mode: QQTModelCatalog.matchLabel(matchMode.value),
       tick: sim.t,
@@ -247,7 +265,9 @@
           legal_moves: [0, 1, 2, 3, 4], legal_abilities: [0, 1, 2], metadata: {},
         };
         const action = await Promise.resolve(activeBot.act(observation, 1, modelRng));
+        prevPos.set(sim.pos);
         const info = sim.step([[Number(first[0]), Number(first[1])], [action.move, action.ability]]);
+        curPos.set(sim.pos); lastTickT = performance.now();
         renderer.addExplosion(info, performance.now());
         if (activeBot.observe_transition) {
           activeBot.observe_transition(info, {
