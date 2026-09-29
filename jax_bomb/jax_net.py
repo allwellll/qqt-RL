@@ -189,7 +189,7 @@ def _attn(q, k, v, mask=None):
 
 
 def init_transformer(key, c, h, w, embed=392, depth=4, heads=4, ff_factor=4,
-                     patch=3, state_dim=24):
+                     patch=3, state_dim=24, aux_heads=False):
     """ViT 风格。patch>1 时按 patch 切块（Average Joe patchify 机制）：
     token 数 = (h//patch)²，attention 计算量 ∝ token²，patch 2/3 对 13×13
     地图把 attention 降 10-100 倍（参数在 ffn，几乎不变）。
@@ -230,6 +230,14 @@ def init_transformer(key, c, h, w, embed=392, depth=4, heads=4, ff_factor=4,
     p["heads"]["wm"] = _linear_init(km, embed, N_MOVES, scale=0.01)
     p["heads"]["wb"] = _linear_init(kb, embed, N_BOMB, scale=0.01)
     p["heads"]["wv"] = _linear_init(kv, embed, NUM_VALUE_BINS)
+    if aux_heads:
+        # 辅助监督头：safe-action(N_MOVES*N_BOMB)/escape(1)/margin(1)，全部读同一
+        # 池化特征 g，梯度经共享 backbone 回流 —— 审计发现旧 pipeline 的
+        # counterfactual/安全 label 从不进 actor 梯度，这是修复的核心机制。
+        ks, ke, kg = random.split(random.fold_in(key, 0xA11), 3)
+        p["heads"]["wsafe"] = _linear_init(ks, embed, N_MOVES * N_BOMB, scale=0.01)
+        p["heads"]["wesc"] = _linear_init(ke, embed, 1, scale=0.01)
+        p["heads"]["wmargin"] = _linear_init(kg, embed, 1, scale=0.01)
     # 全局状态向量 → state token（论文式双序列第二路）
     p["state_w"], p["state_b"] = _linear_init(keys[i], state_dim, embed)
     return p
@@ -265,19 +273,15 @@ def _tf_block(x, blk, heads):
     return x
 
 
-def transformer_forward(params, obs, state=None):
-    """ViT 风格。计算走 bf16（DCU fp32 融合缺陷，同 CNN），softmax/输出保 fp32。
+def _transformer_pool(params, obs, state=None):
+    """patchify + attention blocks -> 池化 patch-token 特征 g (N, embed) fp32。
 
-    patch 切块（Average Joe patchify）：obs (N, C, H, W) → 每 patch 展平
-    (C*P*P) 经 tok 投影 → (N, n_tok, embed)。P=1 退化为逐格 token。
-    13×13 非 P 倍数 → pad 到 ceil(13/P)*P（右/下补零）。pad 量是 Python
-    静态量（H/W 是常量），scan 内不依赖 tracer。
+    所有 head（policy/value/aux）共享这一份特征，是 aux 监督梯度回流到
+    backbone 的唯一路径。
     """
     n = obs.shape[0]
     c, h, w = obs.shape[1], obs.shape[2], obs.shape[3]
     bf = jnp.bfloat16
-    # patch 从 tok 权重 shape 反推（shape 恒静态，避免 jit 参数里 int 被
-    # 动态化——DCU 的 JAX 与本地行为不同，dict int 会被 tracer）
     pd = params["tok"][0].shape[0]
     P = int(round((pd / c) ** 0.5))
     gh = -(-h // P)
@@ -286,28 +290,56 @@ def transformer_forward(params, obs, state=None):
     hp, wp = gh * P, gw * P
     x = obs.astype(bf)
     if hp != h or wp != w:
-        # 静态 pad（Python 层求值：h/w/gp/P 都是编译期常量）
         x = jnp.pad(x, [(0, 0), (0, 0), (0, hp - h), (0, wp - w)])
-    # (N, C, gp, P, gp, P) -> (N, gp*gp, C*P*P)
     x = x.reshape(n, c, gh, P, gw, P)
     x = x.transpose(0, 2, 4, 1, 3, 5).reshape(n, gh * gw, c * P * P)
     tok_w, tok_b = params["tok"]
-    pos = params["pos"].astype(bf)                 # (1, n_tok+1, E)
+    pos = params["pos"].astype(bf)
     x = x @ tok_w.astype(bf) + tok_b.astype(bf) + pos[:, :n_tok]
     if state is not None:
-        # 论文式双序列：全局状态向量 → state token，与 patch tokens 一起
-        # 过 attention（血量/速度/属性与空间信息交叉推理；微操输入）
         st = (state.astype(bf) @ params["state_w"].astype(bf)
-              + params["state_b"].astype(bf))      # (N, E)
+              + params["state_b"].astype(bf))
         x = jnp.concatenate([x, st[:, None] + pos[:, -1:]], axis=1)
     for blk in params["blocks"]:
         x = _tf_block(x, blk, 4)
-    g = x[:, :n_tok].mean(1).astype(jnp.float32)   # 池化只用 patch tokens
+    return x[:, :n_tok].mean(1).astype(jnp.float32)
+
+
+def transformer_forward(params, obs, state=None):
+    """ViT 风格。计算走 bf16（DCU fp32 融合缺陷，同 CNN），softmax/输出保 fp32。
+
+    patch 切块（Average Joe patchify）：obs (N, C, H, W) → 每 patch 展平
+    (C*P*P) 经 tok 投影 → (N, n_tok, embed)。P=1 退化为逐格 token。
+    13×13 非 P 倍数 → pad 到 ceil(13/P)*P（右/下补零）。pad 量是 Python
+    静态量（H/W 是常量），scan 内不依赖 tracer。
+    """
+    g = _transformer_pool(params, obs, state)
     mv = g @ params["heads"]["wm"][0] + params["heads"]["wm"][1]
     bm = g @ params["heads"]["wb"][0] + params["heads"]["wb"][1]
     v, v_logits = _value_head(g, params["heads"]["wv"][0],
                               params["heads"]["wv"][1])
     return mv, bm, v, v_logits
+
+
+def transformer_aux_forward(params, obs, state=None):
+    """与 transformer_forward 同一 backbone，额外返回 aux 头 logits。
+
+    返回 (mv, bm, v, v_logits, aux)；aux 是 dict:
+      safe_action (N, N_MOVES*N_BOMB) / escape (N,) / margin (N,) —— 均为 logits
+    （margin 走 sigmoid 目标在 [0,1]）。若模型未初始化 aux 头则 aux={}。
+    """
+    g = _transformer_pool(params, obs, state)
+    heads = params["heads"]
+    mv = g @ heads["wm"][0] + heads["wm"][1]
+    bm = g @ heads["wb"][0] + heads["wb"][1]
+    v, v_logits = _value_head(g, heads["wv"][0], heads["wv"][1])
+    aux = {}
+    if "wsafe" in heads:
+        aux["safe_action"] = g @ heads["wsafe"][0] + heads["wsafe"][1]
+        aux["escape"] = (g @ heads["wesc"][0] + heads["wesc"][1])[:, 0]
+        aux["margin"] = (g @ heads["wmargin"][0] + heads["wmargin"][1])[:, 0]
+    return mv, bm, v, v_logits, aux
+
 
 
 # ---------------- MLP-Mixer（保留 patch 感受野，无 attention） ----------------
@@ -418,6 +450,14 @@ def net_forward(params, arch, obs, state=None):
     if arch == "transformer":
         return transformer_forward(params, obs, state)
     return FWD[arch](params, obs)
+
+
+def net_aux_forward(params, arch, obs, state=None):
+    """返回 (mv, bm, v, v_logits, aux)。仅 transformer 支持 aux；其余 aux={}。"""
+    if arch == "transformer":
+        return transformer_aux_forward(params, obs, state)
+    mv, bm, v, v_logits = FWD[arch](params, obs)
+    return mv, bm, v, v_logits, {}
 
 
 def count_params(params):
