@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import atexit
 import hashlib
 import json
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -25,20 +27,47 @@ from qqt_rl.training.io import (
     sha256_file as digest,
 )
 from qqt_rl.training.process import run_logged
+from qqt_rl.training.jax_cache import cache_environment
+from qqt_rl.training.worker import PersistentWorkerPool, WORKER_OPERATIONS
 
 REPO = Path(os.environ.get("QQT_REPO_ROOT", Path.cwd())).resolve()
 RUN = Path(os.environ["BUN_V2_RUN_ROOT"]).resolve()
 CKPT = Path(os.environ["BUN_V2_CKPT_ROOT"]).resolve()
 DATA = Path(os.environ["BUN_V2_DATA_ROOT"]).resolve()
 FROZEN = Path(os.environ["BUN_V2_FROZEN_ROOT"]).resolve()
-PYTHON = str(REPO / ".venv/bin/python")
+# 子进程沿用当前候选所用的解释器 (supervisor 以 manifest["python"] 启动本进程)，
+# 而非假定 REPO/.venv 存在，保证在无 colocated venv 的新项目目录下也能运行。
+PYTHON = os.environ.get("BUN_V2_PYTHON") or sys.executable
+_WORKER = None
+_CACHE_ROOT = None
+
+
 def run(command, log, environment):
-    run_logged(command, log, environment, REPO)
+    if _WORKER is not None and _WORKER.run_command(command, log, environment):
+        return
+    script_index = 2 if len(command) > 2 and command[1] == "-u" else 1
+    operation = WORKER_OPERATIONS.get(Path(command[script_index]).name)
+    stage_environment = dict(environment)
+    if operation is not None and _CACHE_ROOT is not None:
+        stage_environment["JAX_COMPILATION_CACHE_DIR"] = str(
+            (Path(_CACHE_ROOT) / operation).resolve())
+    run_logged(command, log, stage_environment, REPO)
 
 
 def family_identity(base_hash, family_hash, config):
     payload = {"base_sha256": base_hash, "family_sha256": family_hash,
                "config": config}
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def registered_bot_identity(bot_record, bot_config):
+    payload = {
+        "identity_hash": bot_record["spec"]["identity_hash"],
+        "implementation_hash": bot_record["implementation_hash"],
+        "fixture_hash": bot_record["fixture_hash"],
+        "config": bot_config,
+    }
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(encoded).hexdigest()
 
@@ -79,14 +108,30 @@ def main():
         "config": str(Path(args.config).resolve()), "candidate": name,
     })
     environment = os.environ.copy()
+    cache_dir = config.get("jax_cache_dir") or str(cache / "jax")
     environment.update({
         "CUDA_VISIBLE_DEVICES": gpu, "JAX_PLATFORM_NAME": "gpu",
         "JAXBOMB_RULE": "bun", "XLA_PYTHON_CLIENT_PREALLOCATE": "false",
-        "JAX_COMPILATION_CACHE_DIR": str(cache), "PYTHONPATH": str(FROZEN),
+        "PYTHONPATH": str(FROZEN),
         "BUN_TACTICAL_BOT_PATH": str(FROZEN / "jax_bomb/bun_rule_bot.py"),
         "BUN_TACTICAL_BOT_EXPECTED_SHA256": config["bot_sha256"],
+        "BUN_OPPONENT_BOT_ID": config.get("opponent_bot", {}).get(
+            "spec", {}).get("id", "bun.tactical_v2"),
     })
+    environment.update(cache_environment(
+        explicit=cache_dir,
+        min_compile_time_secs=float(
+            config.get("jax_cache_min_compile_time_secs", 0.0)),
+        min_entry_size_bytes=int(
+            config.get("jax_cache_min_entry_size_bytes", 0))))
     scripts = FROZEN / "scripts"
+    global _WORKER, _CACHE_ROOT
+    _CACHE_ROOT = cache_dir
+    if config.get("persistent_worker", True):
+        _WORKER = PersistentWorkerPool(
+            PYTHON, scripts / "bun_training_worker.py", REPO, environment,
+            cache_dir)
+        atexit.register(_WORKER.close)
     inputs = Path(os.environ.get("BUN_V2_INPUT_ROOT", RUN / "frozen_inputs")).resolve()
     prefix = config["initial_bc"]
     reference = str(inputs / config.get("reference_actor", "ambush_c2_actor.pt"))
@@ -134,6 +179,15 @@ def main():
     segment_root.mkdir(exist_ok=True)
 
     family_module_hash = digest(FROZEN / "jax_bomb/bun_tactical_family.py")
+    bot_record = config["opponent_bot"]
+
+    def bot_config_for(family):
+        source = config.get("opponent_bot_config_source", "static")
+        if source == "static":
+            return bot_record["config"]
+        if source == "family":
+            return family
+        raise ValueError(f"unknown opponent_bot_config_source: {source}")
 
     def write_status(state, cycle, phase, **extra):
         tactical_updates = tactical_updates_through(config, cycle)
@@ -154,17 +208,20 @@ def main():
                   ("v2_structural_heldout", 3700000, HELDOUT_FAMILY))
         summaries = {}
         for label, offset, family in strata:
+            resolved_bot_config = bot_config_for(family)
             eval_environment = environment.copy()
             eval_environment["JAX_COMPILATION_CACHE_DIR"] = str(
-                cache / f"cycle_{cycle:03d}" / "eval")
+                Path(cache_dir) / "eval")
             eval_environment["BUN_TACTICAL_FAMILY_JSON"] = json.dumps(family, sort_keys=True)
+            eval_environment["BUN_OPPONENT_BOT_CONFIG_JSON"] = json.dumps(
+                resolved_bot_config, sort_keys=True)
             output = cycle_dir / f"{label}.json"
             run([PYTHON, str(scripts / "eval_bun_tactical_opponent.py"), actor_path,
                  "--games", "64", "--seed", str(paired_eval_seed + offset),
                  "--max-steps", "300", "--json-out", str(output)],
                 cycle_dir / f"{label}.log", eval_environment)
             payload = json.loads(output.read_text())
-            summaries[label] = {"family": family,
+            summaries[label] = {"family": family, "bot_config": resolved_bot_config,
                                 "opponent_identity_hash": payload["opponent"]["opponent_identity_hash"],
                                 "metrics": payload["summary"]}
         train_diag = (json.loads((cycle_dir / "train.json").read_text())["heldout"]
@@ -208,11 +265,13 @@ def main():
             attempt = cycle_dir / f"attempt_{len(list(cycle_dir.glob('attempt_*'))) + 1:02d}"
             attempt.mkdir()
             family = family_for_cycle(config, cycle)
-            identity = family_identity(config["bot_sha256"], family_module_hash, family)
+            resolved_bot_config = bot_config_for(family)
+            identity = registered_bot_identity(bot_record, resolved_bot_config)
             cycle_environment = environment.copy()
-            cycle_environment["JAX_COMPILATION_CACHE_DIR"] = str(
-                cache / f"cycle_{cycle:03d}" / "training")
+            cycle_environment["JAX_COMPILATION_CACHE_DIR"] = cache_dir
             cycle_environment["BUN_TACTICAL_FAMILY_JSON"] = json.dumps(family, sort_keys=True)
+            cycle_environment["BUN_OPPONENT_BOT_CONFIG_JSON"] = json.dumps(
+                resolved_bot_config, sort_keys=True)
             schedule = mixed_schedule(cycle) if config["historical_mix"] else ["tactical"] * 4
             critic_seed_base = critic_seed_base_v7(
                 int(config.get("candidate_slot", config["gpu"])), seed, cycle)
@@ -223,6 +282,8 @@ def main():
                 "critic": critic, "critic_sha256": digest(critic),
                 "target_critic": target, "target_critic_sha256": digest(target),
                 "opponent_schedule": schedule, "family": family,
+                "bot_config": resolved_bot_config,
+                "bot": config.get("opponent_bot"),
                 "rollout_opponent_hash": identity,
                 "critic_data_opponent_hash": identity,
                 "eval_opponent_hash": identity, "hash_alignment": True,
@@ -243,7 +304,11 @@ def main():
                  "--train-states", str(config["cf_train_states"]),
                  "--validation-states", "1", "--test-states", "1",
                  "--mc-samples", str(config["cf_mc_samples"]),
-                 "--mc-horizon", str(config["cf_horizon"])],
+                 "--mc-horizon", str(config["cf_horizon"]),
+                 "--engine", config.get("counterfactual_engine", "batched"),
+                 "--state-batch-size", str(config.get(
+                     "counterfactual_state_batch_size", 4)),
+                 "--jax-cache-dir", cache_dir],
                 attempt / "critic_data.log", cycle_environment)
             critic_manifest = json.loads(cf_manifest.read_text())
             hashes = {critic_manifest["rollout_opponent_hash"],
@@ -263,7 +328,8 @@ def main():
             run([PYTHON, str(scripts / "train_bun_critic.py"), "--data", str(merged),
                  "--actor", actor, "--initial-critic", critic,
                  "--output-dir", str(calibration), "--seed", str(seed + cycle * 10000 + 101),
-                 "--epochs", str(config["critic_epochs"]), "--batch-size", "64",
+                 "--epochs", str(config["critic_epochs"]), "--batch-size", str(
+                     config.get("critic_batch_size", 64)),
                  "--eval-every", "10", "--lr", str(config["critic_calibration_lr"]),
                  "--aux-coef", str(config["aux_coef"])],
                 attempt / "critic_calibration.log", cycle_environment)

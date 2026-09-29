@@ -23,6 +23,12 @@ def test_prepare_enables_repaired_v7_seed_namespace():
     config = build_common_config(360, 90)
     assert config["critic_seed_namespace_version"] == "v7"
     assert config["total_cycles"] == 360
+    assert config["persistent_worker"] is True
+    assert config["counterfactual_engine"] == "batched"
+    assert config["counterfactual_state_batch_size"] == 4
+    assert config["critic_batch_size"] == 64
+    assert config["jax_cache_min_compile_time_secs"] == 0.0
+    assert config["opponent_bot"]["spec"]["id"] == "bun.tactical_v2"
 
 
 def test_manifest_paths_cannot_escape_repository(tmp_path):

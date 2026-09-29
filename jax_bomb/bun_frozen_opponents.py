@@ -9,10 +9,8 @@ checkpoint opponents.
 from __future__ import annotations
 
 import hashlib
-import importlib.util
 import json
 import os
-import sys
 from dataclasses import asdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -21,7 +19,8 @@ from typing import Any, Sequence
 import jax
 import jax.numpy as jnp
 import numpy as np
-from .bun_tactical_family import TacticalFamilyBot, TacticalFamilyConfig
+from . import bun_rule_bot
+from .bun_tactical_family import TacticalFamilyConfig
 
 DEFAULT_EXPECTED_TACTICAL_BOT_SHA256 = (
     "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
@@ -36,19 +35,14 @@ DEFAULT_FROZEN_TACTICAL_BOT = (
 
 
 def _load_tactical_bot():
-    source = Path(os.environ.get(
-        "BUN_TACTICAL_BOT_PATH", DEFAULT_FROZEN_TACTICAL_BOT)).resolve()
+    source = DEFAULT_FROZEN_TACTICAL_BOT.resolve()
+    requested = Path(os.environ.get("BUN_TACTICAL_BOT_PATH", source)).resolve()
+    if requested != source:
+        raise RuntimeError(
+            "arbitrary tactical bot module paths are forbidden; register a BotSpec instead")
     if not source.is_file():
         raise RuntimeError(f"frozen tactical bot source missing: {source}")
-    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()[:16]
-    module_name = f"jax_bomb._bun_rule_bot_frozen_{source_hash}"
-    spec = importlib.util.spec_from_file_location(module_name, source)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"cannot load frozen tactical bot source: {source}")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[module_name] = module
-    spec.loader.exec_module(module)
-    return module, source
+    return bun_rule_bot, source
 
 
 bun_rule_bot, _TACTICAL_BOT_SOURCE = _load_tactical_bot()
@@ -63,21 +57,47 @@ def _module_sha256() -> str:
 
 
 def tactical_bot_provenance() -> dict[str, Any]:
+    from qqt_rl.bots import create_default_registry
+
     sha256 = _module_sha256()
-    family_config = TacticalFamilyConfig.from_mapping(json.loads(
-        os.environ.get("BUN_TACTICAL_FAMILY_JSON", "{}")))
+    bot_id = os.environ.get("BUN_OPPONENT_BOT_ID", "bun.tactical_v2")
+    config_text = os.environ.get(
+        "BUN_OPPONENT_BOT_CONFIG_JSON",
+        os.environ.get("BUN_TACTICAL_FAMILY_JSON", "{}"))
+    config = json.loads(config_text)
+    family_config = (TacticalFamilyConfig.from_mapping(config)
+                     if bot_id == "bun.tactical_v2" else None)
+    bot_record = create_default_registry("python").describe(
+        bot_id, asdict(family_config) if family_config is not None else config)
     family_path = Path(__file__).with_name("bun_tactical_family.py")
     family_sha256 = hashlib.sha256(family_path.read_bytes()).hexdigest()
+    module_sha256 = sha256 if bot_id == "bun.tactical_v2" else bot_record["implementation_hash"]
+    expected_sha256 = (EXPECTED_TACTICAL_BOT_SHA256
+                       if bot_id == "bun.tactical_v2" else module_sha256)
+    identity_payload = {
+        "identity_hash": bot_record["spec"]["identity_hash"],
+        "implementation_hash": bot_record["implementation_hash"],
+        "fixture_hash": bot_record["fixture_hash"],
+        "config": bot_record["config"],
+    }
+    identity_hash = hashlib.sha256(json.dumps(
+        identity_payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     return {
-        "name": "bun_rule_tactical_40tick",
-        "module": "jax_bomb.bun_rule_bot",
+        "name": bot_record["spec"]["display_name"],
+        "module": bot_record["spec"]["id"],
         "source_path": str(_TACTICAL_BOT_SOURCE),
-        "module_sha256": sha256,
-        "expected_sha256": EXPECTED_TACTICAL_BOT_SHA256,
-        "hash_verified": sha256 == EXPECTED_TACTICAL_BOT_SHA256,
-        "family_config": asdict(family_config),
+        "module_sha256": module_sha256,
+        "expected_sha256": expected_sha256,
+        "hash_verified": module_sha256 == expected_sha256,
+        "family_config": (asdict(family_config)
+                          if family_config is not None else config),
         "family_module_sha256": family_sha256,
-        "opponent_identity_hash": family_config.identity(sha256, family_sha256),
+        "opponent_identity_hash": identity_hash,
+        "bot_id": bot_id,
+        "bot_spec": bot_record["spec"],
+        "bot_config": bot_record["config"],
+        "implementation_hash": bot_record["implementation_hash"],
+        "fixture_hash": bot_record["fixture_hash"],
         "horizon_steps": bun_rule_bot.HORIZON_STEPS,
         "tick_hz": bun_rule_bot.TICK_HZ,
         "jittable": False,
@@ -118,9 +138,20 @@ class FrozenTacticalOpponent:
             raise RuntimeError(
                 "frozen tactical bot hash changed: "
                 f"{provenance['module_sha256']}")
-        self._family_config = TacticalFamilyConfig.from_mapping(json.loads(
-            os.environ.get("BUN_TACTICAL_FAMILY_JSON", "{}")))
-        self._family_bot = TacticalFamilyBot(self._family_config)
+        bot_id = os.environ.get("BUN_OPPONENT_BOT_ID", "bun.tactical_v2")
+        config_text = os.environ.get(
+            "BUN_OPPONENT_BOT_CONFIG_JSON",
+            os.environ.get("BUN_TACTICAL_FAMILY_JSON", "{}"))
+        config = json.loads(config_text)
+        self._family_config = (TacticalFamilyConfig.from_mapping(config)
+                               if bot_id == "bun.tactical_v2" else None)
+        from qqt_rl.bots import BotContext, create_default_registry
+        self._bot = create_default_registry("python").create(
+            bot_id, asdict(self._family_config) if self._family_config is not None else config,
+            required_capabilities={"frozen": True})
+        self._bot.reset(BotContext(
+            episode_id="frozen-opponent", seed=0,
+            metadata={"learner_gradient": False}))
 
     @property
     def provenance(self) -> dict[str, Any]:
@@ -130,12 +161,16 @@ class FrozenTacticalOpponent:
         mappings = [bun_rule_bot.state_from_bun_state(state)
                     for state in _unbatch(states)]
         player_ids = np.full((len(mappings),), self.player_id, np.int32)
-        if self._family_config.name == "full_v2":
-            return bun_rule_bot.decide_batch(mappings, player_ids)
-        return np.stack([
-            self._family_bot.decide(mapping, int(player_id))
-            for mapping, player_id in zip(mappings, player_ids)
-        ]).astype(np.int32, copy=False)
+        from qqt_rl.bots import BotObservation
+        observations = [BotObservation(tick=0, state=mapping) for mapping in mappings]
+        if hasattr(self._bot, "act_batch"):
+            return self._bot.act_batch(observations, player_ids)
+        actions = [
+            self._bot.act(observation, int(player_id), index)
+            for index, (observation, player_id) in enumerate(
+                zip(observations, player_ids))
+        ]
+        return np.asarray([[action.move, action.ability] for action in actions], np.int32)
 
 
 __all__ = [

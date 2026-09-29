@@ -46,6 +46,24 @@ def digest(path):
     return result.hexdigest()
 
 
+def padded_index_batches(indices, batch_size):
+    """固定 batch shape；尾部 padding 的 loss 权重严格为零。"""
+    indices = np.asarray(indices, np.int32)
+    if batch_size < 1:
+        raise ValueError("batch_size must be positive")
+    for start in range(0, len(indices), batch_size):
+        batch = indices[start:start + batch_size]
+        valid = np.ones((len(batch),), np.float32)
+        if len(batch) < batch_size:
+            if len(batch) == 0:
+                continue
+            padding = np.full((batch_size - len(batch),), batch[-1], np.int32)
+            batch = np.concatenate([batch, padding])
+            valid = np.concatenate([
+                valid, np.zeros((len(padding),), np.float32)])
+        yield batch, valid
+
+
 def load_params(path):
     with open(path, "rb") as file:
         value = pickle.load(file)
@@ -297,14 +315,17 @@ def train_head(features, next_features, data, train_mask, validation_mask, args,
     train_indices = np.flatnonzero(train_mask)
 
     @jax.jit
-    def step(params, opt_state, indices):
+    def step(params, opt_state, indices, valid_mask):
         def loss_fn(current):
             _, logits, win_logit = frozen_feature_critic_forward(current, features[indices])
+            sample_weights = weights[indices] * valid_mask
             value_loss = weighted_hl_gauss_loss(
-                logits, data["value_target"][indices], weights[indices])
+                logits, data["value_target"][indices], sample_weights)
             win_loss = optax.sigmoid_binary_cross_entropy(
                 win_logit, data["win_target"][indices])
-            return value_loss + args.win_coef * jnp.average(win_loss, weights=weights[indices])
+            win_loss = jnp.sum(win_loss * sample_weights) / jnp.maximum(
+                sample_weights.sum(), 1e-8)
+            return value_loss + args.win_coef * win_loss
         loss, grads = jax.value_and_grad(loss_fn)(params)
         updates, opt_state = optimizer.update(grads, opt_state, params)
         return optax.apply_updates(params, updates), opt_state, loss
@@ -314,9 +335,9 @@ def train_head(features, next_features, data, train_mask, validation_mask, args,
     rng = np.random.default_rng(args.seed)
     for epoch in range(args.epochs):
         shuffled = rng.permutation(train_indices)
-        for start in range(0, len(shuffled), args.batch_size):
-            batch = jnp.asarray(shuffled[start:start + args.batch_size])
-            params, opt_state, _ = step(params, opt_state, batch)
+        for batch, valid_mask in padded_index_batches(shuffled, args.batch_size):
+            params, opt_state, _ = step(
+                params, opt_state, jnp.asarray(batch), jnp.asarray(valid_mask))
         if epoch % args.eval_every == 0 or epoch + 1 == args.epochs:
             prediction = np.asarray(frozen_feature_critic_forward(params, features)[0])
             rmse = regression_metrics(
@@ -348,20 +369,23 @@ def train_independent(inputs, next_inputs, data, train_mask, validation_mask, ar
     aux_targets = jnp.asarray(action_aux_targets(data), jnp.float32)
 
     @jax.jit
-    def step(params, opt_state, indices):
+    def step(params, opt_state, indices, valid_mask):
         def loss_fn(current):
             _, logits, win_logit, q = independent_critic_forward(current, inputs[indices])
             aux_logits = independent_critic_aux_forward(current, inputs[indices])
-            sample_weights = weights[indices]
+            sample_weights = weights[indices] * valid_mask
             value_loss = weighted_hl_gauss_loss(
                 logits, data["value_target"][indices], sample_weights)
             win_loss = optax.sigmoid_binary_cross_entropy(
                 win_logit, data["win_target"][indices])
             q_error = optax.huber_loss(q, data["q"][indices], delta=2.0)
-            q_loss = jnp.sum(q_error * legal[indices]) / jnp.maximum(legal[indices].sum(), 1.0)
+            legal_weights = legal[indices] * valid_mask[:, None]
+            q_loss = jnp.sum(q_error * legal_weights) / jnp.maximum(
+                legal_weights.sum(), 1.0)
             good = data["good_action"][indices]
             bad = data["bad_action"][indices]
-            pair_mask = (good >= 0) & (bad >= 0)
+            pair_mask = ((good >= 0) & (bad >= 0)
+                         & valid_mask.astype(jnp.bool_))
             safe_good = jnp.maximum(good, 0)
             safe_bad = jnp.maximum(bad, 0)
             rows = jnp.arange(len(indices))
@@ -371,10 +395,12 @@ def train_independent(inputs, next_inputs, data, train_mask, validation_mask, ar
             aux_error = optax.sigmoid_binary_cross_entropy(
                 aux_logits, aux_targets[indices])
             aux_loss = jnp.sum(
-                aux_error * legal[indices, :, None]
-            ) / jnp.maximum(legal[indices].sum() * aux_error.shape[-1], 1.0)
+                aux_error * legal_weights[:, :, None]
+            ) / jnp.maximum(legal_weights.sum() * aux_error.shape[-1], 1.0)
+            weighted_win = jnp.sum(win_loss * sample_weights) / jnp.maximum(
+                sample_weights.sum(), 1e-8)
             return (value_loss
-                    + args.win_coef * jnp.average(win_loss, weights=sample_weights)
+                    + args.win_coef * weighted_win
                     + args.q_coef * q_loss + args.pair_coef * pair_loss
                     + args.aux_coef * aux_loss)
         loss, grads = jax.value_and_grad(loss_fn)(params)
@@ -386,9 +412,9 @@ def train_independent(inputs, next_inputs, data, train_mask, validation_mask, ar
     rng = np.random.default_rng(args.seed + 1)
     for epoch in range(args.epochs):
         shuffled = rng.permutation(train_indices)
-        for start in range(0, len(shuffled), args.batch_size):
-            batch = jnp.asarray(shuffled[start:start + args.batch_size])
-            params, opt_state, _ = step(params, opt_state, batch)
+        for batch, valid_mask in padded_index_batches(shuffled, args.batch_size):
+            params, opt_state, _ = step(
+                params, opt_state, jnp.asarray(batch), jnp.asarray(valid_mask))
         if epoch % args.eval_every == 0 or epoch + 1 == args.epochs:
             prediction = np.asarray(independent_critic_forward(params, inputs)[0])
             rmse = regression_metrics(
@@ -455,7 +481,7 @@ def critic_micro_update_smoke(params, inputs, data, train_mask, validation_mask,
     }
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", required=True)
     parser.add_argument("--actor", action="append", required=True)
@@ -472,7 +498,12 @@ def main():
     parser.add_argument("--q-coef", type=float, default=0.25)
     parser.add_argument("--pair-coef", type=float, default=0.20)
     parser.add_argument("--aux-coef", type=float, default=0.20)
-    args = parser.parse_args()
+    parser.add_argument("--jax-cache-dir")
+    args = parser.parse_args(argv)
+
+    if args.jax_cache_dir:
+        from qqt_rl.training.jax_cache import configure_persistent_cache
+        configure_persistent_cache(explicit=args.jax_cache_dir)
 
     started = time.time()
     output_dir = Path(args.output_dir)

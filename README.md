@@ -19,7 +19,8 @@ GPU 环境请按机器 CUDA/JAX 版本安装匹配的 JAX wheel；仓库不固�
 ## 目录
 
 - `jax_bomb/`：Bun 环境、网络、PPO/GAE、安全动作分析、规则 Bot 与 Critic 核心。
-- `qqt_rl/training/`：配置、seed、进程日志、哈希和原子 checkpoint 发布辅助层。
+- `qqt_rl/training/`：配置、seed、持久 JAX cache、常驻 worker、进程日志和原子 checkpoint 发布辅助层。
+- `qqt_rl/bots/`：Python/浏览器共享语义的 Bot schema、生命周期和显式注册表。
 - `scripts/`：数据生成、Critic/Actor 训练、评估、单 candidate runner 与四卡 supervisor。
 - `tests/`：环境、奖励归因、安全性、Critic、seed namespace 和模块化回归测试。
 - `web/`：只含 Bun06 真人测试、规则 Bot、HTTP server 与 Node 测试。
@@ -76,6 +77,8 @@ python scripts/launch_bun_safe_aggression_v7.py \
   --manifest runs/safe-aggression-360/manifest.json
 ```
 
+新 run 默认使用固定 shape 的 `--counterfactual-state-batch-size 4`、Critic batch `64`、每阶段常驻 worker，以及 candidate 级稳定 JAX 编译缓存。可用 `--jax-cache-dir /shared/path` 指定显式共享根目录；缓存目录始终不提交 Git。
+
 runner 保留全局 cycle `1..360`、90-cycle 可恢复分段、固定 milestone 评估、strict train/validation/test seed 泄漏检查，以及 Actor/Critic/Target Critic 的有限值与哈希校验。checkpoint 使用同目录临时文件后 `os.replace` 原子发布。
 
 ## 模型评估
@@ -107,6 +110,17 @@ npm run serve
 ```
 
 浏览器访问终端打印的本地地址。蓝方使用 `W/A/S/D` 移动、`Space` 放泡、`R` 重开；红方可使用冻结安全战术 Bot，或在页面中加载上一步导出的模型 JSON。服务健康检查为 `/healthz`。
+
+Bot 扩展契约和 Python/JavaScript 最小插件见 `docs/bot_plugins_zh.md`。
+
+## v2 性能基准
+
+```bash
+python scripts/benchmark_v2_pipeline.py \
+  --output-dir runs/benchmarks/v2-pipeline
+```
+
+基准输出 `benchmark.json`，包含持久缓存冷/热启动、legacy 与固定 shape 反事实 states/s、Critic batch 64/128/256 samples/s、真实 PPO smoke steps/s、逐字段 replay 等价报告和 GPU 利用率采样状态。默认使用 CPU，避免争抢仍在旧仓库运行的四卡任务。
 
 ## 训练语义
 

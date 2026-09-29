@@ -262,7 +262,7 @@ def load_counterfactual(paths, context_dim=44):
             for key in rows[0]}
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--actor", required=True)
     parser.add_argument("--critic", required=True)
@@ -307,7 +307,12 @@ def main():
     parser.add_argument("--tactical-bomb-resolution-reward", type=float,
                         default=0.0)
     parser.add_argument("--carry-rollout-state", action="store_true")
-    args = parser.parse_args()
+    parser.add_argument("--jax-cache-dir")
+    args = parser.parse_args(argv)
+
+    if args.jax_cache_dir:
+        from qqt_rl.training.jax_cache import configure_persistent_cache
+        configure_persistent_cache(explicit=args.jax_cache_dir)
 
     started = time.time()
     env.prepare()

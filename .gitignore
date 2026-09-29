@@ -5,6 +5,7 @@ __pycache__/
 .coverage
 htmlcov/
 node_modules/
+.jax_cache/
 
 # 训练与评估产物必须留在仓库外观可预测、但默认不入 Git 的目录。
 runs/
