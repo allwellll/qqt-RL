@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
-// 针对三项网页手感修复的定向回归：
-//  1) 降敏拐角滑移（sim.steerReduced，人类 pid0）——去掉门框归中误滑，保留真外拐角圆角。
-//  2) 渲染插值（visual_renderer 在 10Hz tick 间线性插值 → 60fps；本地人类不插值；大位移吸附）。
-//  3) 复活压暗（isBun 且 pid0 阵亡复活倒计时中，画面变暗；复活后恢复）。
-// 三者均不得改动模型推理数值（parity 由 test_mlp4_parity.js 独立守护）。
+// 网页手感回归（连续逐帧移动重做）：
+//  1) sim.frameStep：本地人类逐帧连续移动（真实 dt 缩放 / 撞墙夹紧 / realtime 位跳过 10Hz 移动）。
+//  2) sim.probeMoveDist：三态判定（完全可走 / 部分可走 / 贴墙被挡）——autoTurn 侧滑门控的基石。
+//  3) 渲染：本地人类(humanPid)raw 不插值、对手 10Hz 插值、大位移吸附、复活压暗。
+//  4) app.js 接线契约：humanAction 第4位=1、rAF frameStep、autoTurn+MIN_OFF=0.25、无 steerReduced。
+//  5) parity 隔离：_steer 默认 new 口径不变（真外拐角仍侧滑），sim.js 已无 steerReduced。
+// 模型推理数值 parity 由 test_mlp4_parity.js 独立守护，本测试不得触碰 step/_steer/legalMask。
 
 const assert = require('assert');
 const fs = require('fs');
@@ -13,56 +15,79 @@ const path = require('path');
 const QQT = require('./sim.js');
 const visual = require('./visual_renderer.js');
 
-const W = 15, N = 195, DIST = 0.3;
+const { MOVE_UP, MOVE_RIGHT, MOVE_IDLE, N, W, CFG } = QQT;
 
-// ---------- 1) steerReduced 行为回归 ----------
-function blockedGrid(cells) {
-  const b = new Uint8Array(N);
-  for (const [r, c] of cells) b[r * W + c] = 1;
-  return b;
+function openSim() {
+  const s = new QQT.Sim(1);
+  s.reset('open');
+  s.wall.fill(0); s.brick.fill(0); s.fuse.fill(0);
+  return s;
 }
 
-const sim = new QQT.Sim(1);
+// ---------- 1) frameStep 连续逐帧移动 ----------
+{
+  // 位移随 dt 线性缩放：dt=0.1 应约为 dt=0.05 的 2 倍（同一起点开阔地向右）。
+  const a = openSim(); a.pos[0] = 5.5; a.pos[1] = 5.5;
+  a.frameStep(0, MOVE_RIGHT, 0.1);
+  const d1 = a.pos[1] - 5.5;
+  const b = openSim(); b.pos[0] = 5.5; b.pos[1] = 5.5;
+  b.frameStep(0, MOVE_RIGHT, 0.05);
+  const d2 = b.pos[1] - 5.5;
+  assert(d1 > 0 && d2 > 0, 'frameStep 必须在开阔地向前推进 pos');
+  assert(Math.abs(d1 / d2 - 2) < 0.05, `位移应随 dt 线性缩放(≈2x)，实得 ${(d1 / d2).toFixed(3)}`);
+  // dt 上限 0.1：dt=0.5 与 dt=0.1 位移相同（防丢帧瞬移穿墙）。
+  const c = openSim(); c.pos[0] = 5.5; c.pos[1] = 5.5;
+  c.frameStep(0, MOVE_RIGHT, 0.5);
+  assert(Math.abs((c.pos[1] - 5.5) - d1) < 1e-9, 'dt 应被夹到 0.1 上限，大 dt 不得瞬移');
+}
 
-// 门框卡位：向右走，目标格 (5,6) 是通路，但 (4,6) 挡住上半身贴门框 → 直行受阻。
-// 完整 _steer（模型/训练口径）朝行中心竖直归中滑入；降敏模式不再竖直归中，改为沿原轴继续。
-const doorway = blockedGrid([[4, 6]]);
-sim.steerReduced = [false, false];
-const doorFull = sim._steer(5.1, 5.5, 3, doorway, DIST, 0);
-sim.steerReduced = [true, true];
-const doorReduced = sim._steer(5.1, 5.5, 3, doorway, DIST, 0);
-assert(Math.abs(doorFull[0] - 5.1) > 0.1,
-  '完整 _steer 必须在门框卡位时竖直归中滑移（模型/训练口径不变）');
-assert(Math.abs(doorReduced[0] - 5.1) < 1e-6,
-  '降敏模式必须取消门框归中误滑（人类朝前走贴泡/贴墙不再侧滑）');
-assert(doorReduced[1] > 5.5 + 1e-3,
-  '降敏模式仍应沿原前进轴推进，而非原地卡死');
+{
+  // 撞墙夹紧：右侧贴墙(box 前缘顶墙)时 frameStep 不得穿墙。
+  const s = openSim();
+  s.pos[0] = 5.5; s.pos[1] = 6 - CFG.radius - 1e-4;
+  s.wall[5 * W + 6] = 1;
+  s.frameStep(0, MOVE_RIGHT, 0.1);
+  assert(s.pos[1] <= 6 - CFG.radius + 1e-6, '贴墙时 frameStep 不得穿墙');
+}
 
-// 真外拐角：目标格 (5,6) 被堵、仅下侧 (6,6)/(6,5) 开放 → 两种模式都应被动向下圆角滑移。
-const corner = blockedGrid([[4, 6], [5, 6]]);
-sim.steerReduced = [false, false];
-const cornerFull = sim._steer(5.1, 5.5, 3, corner, DIST, 0);
-sim.steerReduced = [true, true];
-const cornerReduced = sim._steer(5.1, 5.5, 3, corner, DIST, 0);
-assert(Math.abs(cornerFull[0] - cornerReduced[0]) < 1e-9 &&
-       Math.abs(cornerFull[1] - cornerReduced[1]) < 1e-9,
-  '真外拐角圆角滑移不得被降敏模式误删（正常走仍会侧滑）');
-assert(cornerReduced[0] > 5.1 + 0.1,
-  '真外拐角必须仍向开放侧滑移');
+{
+  // realtime 位=1 → 10Hz step 不移动该玩家（移动交给 rAF frameStep）；=0 → 正常移动。
+  const skip = openSim(); skip.pos[0] = 5.5; skip.pos[1] = 5.5;
+  skip.step([[MOVE_RIGHT, 0, 0, 1], [MOVE_IDLE, 0, 0, 1]]);
+  assert(Math.abs(skip.pos[1] - 5.5) < 1e-9, 'realtime 位=1 时 step 不得移动 pid0');
+  const move = openSim(); move.pos[0] = 5.5; move.pos[1] = 5.5;
+  move.step([[MOVE_RIGHT, 0, 0, 0], [MOVE_IDLE, 0, 0, 1]]);
+  assert(move.pos[1] > 5.5 + 1e-3, 'realtime 位=0 时 step 应照常移动 pid0（模型/训练口径）');
+}
 
-// 默认（未设 steerReduced 或 [false,false]）＝完整口径，保证模型对手/训练一致。
-const simDefault = new QQT.Sim(1);
-assert.deepStrictEqual(Array.from(simDefault.steerReduced), [false, false],
-  'Sim 默认 steerReduced 必须为 [false,false]（模型/训练不受影响）');
-const defaultOut = simDefault._steer(5.1, 5.5, 3, doorway, DIST, 0);
-assert.deepStrictEqual(defaultOut, doorFull,
-  '默认口径必须与完整 _steer 逐位一致（parity 前提）');
+// ---------- 2) probeMoveDist 三态 ----------
+{
+  const s = openSim(); s.pos[0] = 5.5; s.pos[1] = 5.5;
+  const full = s.probeMoveDist(0, MOVE_RIGHT);
+  const stepLen = CFG.stepLen * s.spdG[0] * s.playerMoveScale(0);
+  assert(Math.abs(full - stepLen) < 1e-6, '完全可走：probe ≈ 满步长');
+  s.wall[5 * W + 6] = 1;
+  const partial = s.probeMoveDist(0, MOVE_RIGHT);
+  assert(partial > stepLen * 0.05 && partial < stepLen * 0.95, `部分可走：5%~95% 步长，实得 ${partial.toFixed(3)}`);
+  s.pos[1] = 6 - CFG.radius - 1e-4;
+  const blocked = s.probeMoveDist(0, MOVE_RIGHT);
+  assert(blocked < stepLen * 0.05, `贴墙被挡：probe < 5% 步长，实得 ${blocked.toFixed(4)}`);
+}
 
-// ---------- 渲染插值 + 复活压暗（mock canvas） ----------
+// ---------- 3) parity 隔离：_steer 默认 new 口径不变 ----------
+{
+  // 真外拐角(目标格被堵、仅下侧开放)：默认 _steer 仍应被动向开放侧圆角滑移。
+  const s = new QQT.Sim(1); s.reset('open'); s.wall.fill(0); s.brick.fill(0); s.fuse.fill(0);
+  const DIST = 0.3;
+  const blocked = new Uint8Array(N);
+  blocked[4 * W + 6] = 1; blocked[5 * W + 6] = 1;  // (5,6) 目标堵、(4,6) 上侧堵 → 仅下侧开放
+  const out = s._steer(5.1, 5.5, 3, blocked, DIST, 0);
+  assert(out[0] > 5.1 + 0.05, '真外拐角：默认 _steer 仍向开放(下)侧被动滑移（parity 口径不变）');
+}
+
+// ---------- 4) 渲染（mock canvas）：人类 raw / 对手插值 / 大位移吸附 / 复活压暗 ----------
 const CELL = visual.CELL;
-
 function tagImg(tag, w = 40, h = 40) { return { tag, width: w, height: h }; }
-
 function mockAssets() {
   const players = [];
   for (let pid = 0; pid < 2; pid++) {
@@ -81,7 +106,6 @@ function mockAssets() {
     players, bombs: [tagImg('bomb')], flames, shadow: tagImg('shadow', 30, 20),
   };
 }
-
 function mockCanvas() {
   const draws = [];
   const rects = [];
@@ -98,7 +122,6 @@ function mockCanvas() {
   };
   return { canvas: { width: 900, height: 810, getContext: () => ctx }, draws, rects };
 }
-
 function fakeSim(opts) {
   return {
     pos: Float64Array.from(opts.pos),
@@ -111,31 +134,29 @@ function fakeSim(opts) {
     bunRespawn: opts.bunRespawn || [0, 0], bunRespawnTicks: 20,
   };
 }
-
 const level = { layers: [new Int16Array(N), new Int16Array(N)] };
-
 function playerGx(draws, pid) {
   const hit = draws.find((d) => d.tag === `p${pid}`);
   assert(hit, `pid${pid} 精灵必须被绘制`);
-  return (hit.x + hit.w / 2) / CELL; // 反解 gx：x = round(gx*CELL - w/2)
+  return (hit.x + hit.w / 2) / CELL;
 }
 
-// 2a) 观战/回放（humanPid=-1）：两个角色都按 alpha 插值。
+// 4a) 本地人类(humanPid=0)raw 不插值；对手(pid1)按 alpha 插值。
 {
   const { canvas, draws } = mockCanvas();
   const r = visual.createRenderer(canvas, level, mockAssets());
-  const s = fakeSim({ pos: [5.0, 3.0, 5.0, 6.8] }); // 当前(=cur)位置；两角色位移均 <=1.0 格
+  const s = fakeSim({ pos: [5.0, 3.0, 5.0, 6.8] });   // sim.pos = 每帧连续真实位置
   const motion = {
     prevPos: Float64Array.from([5.0, 2.0, 5.0, 6.0]),
     curPos: Float64Array.from([5.0, 3.0, 5.0, 6.8]),
-    lastTickT: 1000, tickMs: 100, humanPid: -1,
+    lastTickT: 1000, tickMs: 100, humanPid: 0,
   };
-  r.render(s, 1050, motion); // alpha = (1050-1000)/100 = 0.5
-  assert(Math.abs(playerGx(draws, 0) - 2.5) < 0.02, 'pid0 观战应插值到 prev/cur 中点(2.5)');
-  assert(Math.abs(playerGx(draws, 1) - 6.4) < 0.02, 'pid1 观战应插值到 prev/cur 中点(6.4)');
+  r.render(s, 1050, motion);                            // alpha = 0.5
+  assert(Math.abs(playerGx(draws, 0) - 3.0) < 0.02, 'pid0(本地人类)必须用 sim.pos 原始值(3.0)，不插值');
+  assert(Math.abs(playerGx(draws, 1) - 6.4) < 0.02, 'pid1(对手)应插值到中点(6.4)');
 }
 
-// 2b) 人类对战（humanPid=0）：pid0 用原始 sim.pos（输入即时），pid1 插值。
+// 4b) 观战/回放(humanPid=-1)：两方都插值。
 {
   const { canvas, draws } = mockCanvas();
   const r = visual.createRenderer(canvas, level, mockAssets());
@@ -143,28 +164,28 @@ function playerGx(draws, pid) {
   const motion = {
     prevPos: Float64Array.from([5.0, 2.0, 5.0, 6.0]),
     curPos: Float64Array.from([5.0, 3.0, 5.0, 6.8]),
-    lastTickT: 1000, tickMs: 100, humanPid: 0,
+    lastTickT: 1000, tickMs: 100, humanPid: -1,
   };
   r.render(s, 1050, motion);
-  assert(Math.abs(playerGx(draws, 0) - 3.0) < 0.02, 'pid0 人类不插值，须用原始 sim.pos(3.0)');
-  assert(Math.abs(playerGx(draws, 1) - 6.4) < 0.02, 'pid1 对手仍插值(6.4)');
+  assert(Math.abs(playerGx(draws, 0) - 2.5) < 0.02, '观战 pid0 应插值到中点(2.5)');
+  assert(Math.abs(playerGx(draws, 1) - 6.4) < 0.02, '观战 pid1 应插值到中点(6.4)');
 }
 
-// 2c) 大位移（复活/传送 > 1.0 格）不插值，直接吸附 curPos，避免横扫全图。
+// 4c) 大位移(复活/传送 >1格)不插值，直接吸附 curPos。
 {
   const { canvas, draws } = mockCanvas();
   const r = visual.createRenderer(canvas, level, mockAssets());
   const s = fakeSim({ pos: [5.0, 3.0, 5.0, 12.0] });
   const motion = {
-    prevPos: Float64Array.from([5.0, 3.0, 5.0, 2.0]),  // pid1 位移 10 格
+    prevPos: Float64Array.from([5.0, 3.0, 5.0, 2.0]),
     curPos: Float64Array.from([5.0, 3.0, 5.0, 12.0]),
-    lastTickT: 1000, tickMs: 100, humanPid: -1,
+    lastTickT: 1000, tickMs: 100, humanPid: 0,
   };
   r.render(s, 1050, motion);
-  assert(Math.abs(playerGx(draws, 1) - 12.0) < 0.02, '大位移必须吸附 curPos(12.0)，不得插值到中点');
+  assert(Math.abs(playerGx(draws, 1) - 12.0) < 0.02, '大位移必须吸附 curPos(12.0)');
 }
 
-// 2d) 无 motion（回退）：使用原始 sim.pos，alpha=1。
+// 4d) 无 motion（回退）：使用原始 sim.pos。
 {
   const { canvas, draws } = mockCanvas();
   const r = visual.createRenderer(canvas, level, mockAssets());
@@ -175,12 +196,11 @@ function playerGx(draws, pid) {
 }
 
 function dimRects(rects, canvas) {
-  // 复活压暗：覆盖整块棋盘、fillStyle 为半透明黑的 fillRect。
   return rects.filter((rc) => /^rgba\(0,0,0,/.test(String(rc.fillStyle)) &&
     rc.x === 0 && rc.y === 0 && rc.w === canvas.width);
 }
 
-// 3a) pid0 阵亡且复活倒计时中 → 压暗一层。
+// 4e) pid0 阵亡且复活倒计时中 → 压暗一层。
 {
   const { canvas, rects } = mockCanvas();
   const r = visual.createRenderer(canvas, level, mockAssets());
@@ -192,7 +212,7 @@ function dimRects(rects, canvas) {
   assert(alphaVal > 0 && alphaVal <= 0.62, `压暗透明度应在 (0,0.62]，实得 ${alphaVal}`);
 }
 
-// 3b) 存活时不压暗。
+// 4f) 存活时不压暗 / 复活倒计时归零瞬间恢复亮度。
 {
   const { canvas, rects } = mockCanvas();
   const r = visual.createRenderer(canvas, level, mockAssets());
@@ -200,8 +220,6 @@ function dimRects(rects, canvas) {
   r.render(s, 1050, null);
   assert(dimRects(rects, canvas).length === 0, '存活时不得压暗');
 }
-
-// 3c) 复活瞬间（倒计时归 0）恢复亮度。
 {
   const { canvas, rects } = mockCanvas();
   const r = visual.createRenderer(canvas, level, mockAssets());
@@ -210,14 +228,23 @@ function dimRects(rects, canvas) {
   assert(dimRects(rects, canvas).length === 0, '复活倒计时归零瞬间必须恢复亮度');
 }
 
-// ---------- app.js 接线契约 ----------
-const appSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
-assert(/sim\.steerReduced = \[matchMode\.value !== 'model-vs-rule', false\]/.test(appSource),
-  'app 必须仅对人类 pid0 启用降敏，观战(模型)保持完整 _steer');
-assert(/humanPid = \(replayDocument \|\| matchMode\.value === 'model-vs-rule'\) \? -1 : 0/.test(appSource),
-  'app 观战/回放须令 humanPid=-1（两角色都插值），人类对战 humanPid=0');
-assert(appSource.includes('renderer.render(sim, now, motionState())'),
-  'app 必须把 motion 传入 renderer 以启用插值');
-assert(appSource.includes('snapMotion()'), 'reset/回放必须吸附 motion，避免首帧横扫');
+// ---------- 5) sim.js / app.js 接线契约 ----------
+const simSource = fs.readFileSync(path.join(__dirname, 'sim.js'), 'utf8');
+assert(!/steerReduced/.test(simSource), 'sim.js 必须已彻底移除 steerReduced（连续移动下作废）');
+assert(/frameStep\s*\(pid, mv, dtSec\)/.test(simSource), 'sim.js 必须提供 frameStep(pid, mv, dtSec)');
+assert(/probeMoveDist\s*\(pid, mv\)/.test(simSource), 'sim.js 必须提供 probeMoveDist(pid, mv)');
 
-console.log('网页手感修复（降敏侧滑 / 渲染插值 / 复活压暗）定向回归通过');
+const appSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
+assert(!/steerReduced/.test(appSource), 'app.js 必须已移除 steerReduced 接线');
+assert(/\[QQT\.MOVE_IDLE, bombQueued \? 1 : 0, 0, 1\]/.test(appSource),
+  'humanAction 必须返回第4位=1（跳过 10Hz 移动，改由 rAF frameStep）');
+assert(/const MIN_OFF = 0\.25;/.test(appSource), 'autoTurn 触发阈值 MIN_OFF 必须为 0.25（对齐边长 1/4）');
+assert(/if \(off >= MIN_OFF\) return move;/.test(appSource), 'autoTurn：偏移≥MIN_OFF(居中/正前方)不得侧滑');
+assert(/if \(moved > stepLen \* 0\.05\) return move;/.test(appSource),
+  'autoTurn：仅贴墙被挡(<5%步长)才触发，部分可走不侧滑');
+assert(/sim\.frameStep\(0, eff, dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
+assert(/humanPid: localHumanControls\(\) \? 0 : -1/.test(appSource),
+  'motionState 必须传 humanPid（本地人类 raw / 观战回放插值）');
+assert(/stepHumanFrame\(now\)/.test(appSource), 'rAF 回调必须先驱动 stepHumanFrame(now)');
+
+console.log('网页手感回归（连续逐帧移动 / autoTurn 侧滑 / 人类raw渲染 / 复活压暗）通过');

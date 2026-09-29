@@ -136,10 +136,6 @@
       this.seed = seed == null ? 1 : (seed >>> 0);
       this.rng = mulberry32(this.seed);
       this.playerModes = (opts && opts.playerModes) ? opts.playerModes.slice() : ['new', 'new'];
-      // 每玩家「降敏拐角滑移」：true 时 _steer 只在真正外拐角(单侧开口)被动滑一下，
-      // 去掉「目标格是通路时朝门框中线归中」这条（人类手感对齐原 gpu sim，减少贴墙/贴泡误滑）。
-      // 默认 false → 与训练/模型口径完全一致（模型对手不受影响）。
-      this.steerReduced = (opts && opts.steerReduced) ? opts.steerReduced.slice() : [false, false];
       this.reset('open', opts);
     }
 
@@ -150,7 +146,6 @@
     // opts.playerModes: 可选 ['new', 'old'] 或 ['old', 'new'] 供新旧物理/mask 对抗评测
     reset(mode, opts) {
       this.playerModes = (opts && opts.playerModes) ? opts.playerModes.slice() : (this.playerModes || ['new', 'new']);
-      this.steerReduced = (opts && opts.steerReduced) ? opts.steerReduced.slice() : (this.steerReduced || [false, false]);
       this.oldMode = !!(opts && opts.oldMode);
       // 可推箱运行时状态(所有模式都初始化; 关卡模式在 _loadLevel 填充)
       this.pushable = new Uint8Array(N);
@@ -1821,6 +1816,106 @@
       return [ny, nx];
     }
 
+    // 本地人类专用「逐帧连续移动」(对齐旧 qqt-gpu-sim frameMove)：在 rAF 里按真实 dt
+    // 推进 pos，实现零延迟 60Hz 手感。模型/训练走 step+_steer 的 10Hz 口径，不经过此路径 → parity 不变。
+    _blockedGrid() {
+      const b = new Uint8Array(N);
+      for (let i = 0; i < N; i++) b[i] = this.wall[i] || this.brick[i] || this.fuse[i] > 0 ? 1 : 0;
+      return b;
+    }
+
+    // 探测该方向实际能移动的距离(格)。三态: <5%步长=贴墙; 5%~95%=部分可走; ≥95%=完全可走。
+    probeMoveDist(pid, mv) {
+      if (mv >= 4) return 0;
+      const y = this.pos[pid * 2], x = this.pos[pid * 2 + 1];
+      const blocked = this._blockedGrid();
+      const dist = CFG.stepLen * this.spdG[pid] * this.playerMoveScale(pid);
+      const [dy, dx] = DIRS[mv];
+      if (dy !== 0) {
+        const ny = resolveAxis(y + dy * dist, dy * dist, x, y, x, blocked, CFG.radius, H, W, true);
+        return Math.abs(ny - y);
+      }
+      const nx = resolveAxis(x + dx * dist, dx * dist, y, y, x, blocked, CFG.radius, H, W, false);
+      return Math.abs(nx - x);
+    }
+
+    // 逐帧移动一步(移植 frameMove)：dist 按真实 dt 缩放; forcedSlide 走 _tryMove 口径;
+    // 推箱按 dt 累计; 双轴 resolveAxis + 中心路径硬约束; 边界夹紧。
+    frameStep(pid, mv, dtSec) {
+      const forcedSlide = this.movementStatus && this.movementStatus[pid] === MOVE_STATUS_SLIDE;
+      mv = this.playerMoveDirection(pid, mv);
+      if (mv === MOVE_IDLE || !this.alive[pid]) return;
+      this.lastMoveDir[pid] = mv;
+      const dist = CFG.speed * this.spdG[pid] * this.playerMoveScale(pid) * Math.min(dtSec, 0.1);
+      if (dist <= 0) return;
+      const y = this.pos[pid * 2], x = this.pos[pid * 2 + 1];
+      const [dy, dx] = DIRS[mv];
+      if (!forcedSlide && this.pushBoxAt && (dy !== 0 || dx !== 0)) {
+        const R = CFG.radius;
+        const pr = dy !== 0 ? (dy > 0 ? Math.floor(y + R + EPS * 8) : Math.floor(y - R - EPS * 8)) : Math.floor(y);
+        const pc = dx !== 0 ? (dx > 0 ? Math.floor(x + R + EPS * 8) : Math.floor(x - R - EPS * 8)) : Math.floor(x);
+        const pi = pr * W + pc;
+        const bi = pi >= 0 && pi < N ? this.pushBoxAt[pi] : -1;
+        if (bi >= 0) {
+          const box = this.pushBoxes[bi];
+          let ok = true;
+          const targetCells = [];
+          for (const cell of box.cells) {
+            const rr = (cell / W) | 0, cc = cell % W;
+            const tr = rr + dy, tc = cc + dx;
+            if (tr < 0 || tr >= H || tc < 0 || tc >= W) { ok = false; break; }
+            const ti = tr * W + tc;
+            if (this.wall[ti] || this.brick[ti] || this.fuse[ti] > 0 || this.crate[ti] || this.pushable[ti] || this._cellOccupiedByPlayer(ti, pid)) { ok = false; break; }
+            targetCells.push(ti);
+          }
+          if (ok) {
+            this.pushT[box.o] += dtSec;
+            if (this.pushT[box.o] >= PUSH_TIME) {
+              for (let k = 0; k < box.cells.length; k++) {
+                const ci = box.cells[k], ti = targetCells[k];
+                this.brick[ci] = 0; this.brick[ti] = 1;
+                this.pushable[ci] = 0; this.pushable[ti] = 1;
+                this.pushBoxAt[ci] = -1; this.pushBoxAt[ti] = bi;
+                this.pushSprite[ti] = this.pushSprite[ci]; this.pushSprite[ci] = -1;
+                this.brickLinger[ci] = 0; this.brickLinger[ti] = 0;
+              }
+              box.cells = targetCells;
+              box.o = targetCells[0];
+              this.pushT[box.o] = 0;
+            }
+          } else {
+            this.pushT[box.o] = 0;
+          }
+        }
+      }
+      const blocked = this._blockedGrid();
+      const startR = Math.max(0, Math.min(H - 1, Math.floor(y)));
+      const startC = Math.max(0, Math.min(W - 1, Math.floor(x)));
+      let ny = y, nx = x;
+      if (dy !== 0) {
+        ny = resolveAxis(y + dy * dist, dy * dist, x, y, x, blocked, CFG.radius, H, W, true);
+        const yLo = Math.max(0, Math.min(H - 1, Math.floor(Math.min(y, ny))));
+        const yHi = Math.max(0, Math.min(H - 1, Math.floor(Math.max(y, ny))));
+        for (let r = yLo; r <= yHi; r++) {
+          if (r === startR) continue;
+          if (blocked[r * W + startC]) { ny = y; break; }
+        }
+      }
+      if (dx !== 0) {
+        nx = resolveAxis(x + dx * dist, dx * dist, y, ny, x, blocked, CFG.radius, H, W, false);
+        const xLo = Math.max(0, Math.min(W - 1, Math.floor(Math.min(x, nx))));
+        const xHi = Math.max(0, Math.min(W - 1, Math.floor(Math.max(x, nx))));
+        const cy0 = Math.max(0, Math.min(H - 1, Math.floor(ny)));
+        for (let c = xLo; c <= xHi; c++) {
+          if (c === startC && cy0 === startR) continue;
+          if (blocked[cy0 * W + c]) { nx = x; break; }
+        }
+      }
+      this.pos[pid * 2] = Math.min(Math.max(ny, CFG.radius), H - CFG.radius);
+      this.pos[pid * 2 + 1] = Math.min(Math.max(nx, CFG.radius), W - CFG.radius);
+      if (forcedSlide && Math.abs(ny - y) + Math.abs(nx - x) <= 2 * EPS) this._clearMovementStatus(pid);
+    }
+
     // 贪婪转向适配器（对齐 JAX _steer）：模型输出=目标相邻格，选第一个能动的
     // 方向依次尝试。
     // playerModes[p] === 'old': 老版主动向中线归中逻辑；
@@ -1899,14 +1994,13 @@
       if (tr0 < 0 || tr0 >= H || tc0 < 0 || tc0 >= W) return [ny, nx];
 
       let perp;
-      const reduced = this.steerReduced && this.steerReduced[p];
       if (mv < 2) {
         // 上/下：目标行 tr；
         const tr = tr0;
         // 凹角阻断检测：斜向格 (tr, c0±1) 开阔的同时，同轴侧向格 (r0, c0±1) 也必须开阔！
         const leftOpen = open(tr, c0 - 1) && open(r0, c0 - 1);
         const rightOpen = open(tr, c0 + 1) && open(r0, c0 + 1);
-        if (targetOpen && !reduced) {
+        if (targetOpen) {
           // 目标格开口：若直走受阻，说明身体边缘卡在门框两壁，朝目标格中心滑动进门
           perp = x < c0 + 0.5 ? [3, 2] : [2, 3];
         } else if (!targetOpen && leftOpen !== rightOpen) {
@@ -1914,7 +2008,6 @@
           perp = rightOpen ? [3] : [2];
         } else {
           // 目标格受阻且两侧同开（开阔地撞单障碍）或同堵（平墙/凹角）：坚决不主动向障碍归中，保留直走位置。
-          // reduced 模式下，目标格是通路(卡门框)也不再主动归中——由玩家自行对齐，减少误滑。
           return moved > 2 * EPS ? [ny, nx] : [y, x];
         }
       } else {
@@ -1923,7 +2016,7 @@
         // 凹角阻断检测：斜向格 (r0±1, tc) 开阔的同时，同轴侧向格 (r0±1, c0) 也必须开阔！
         const upOpen = open(r0 - 1, tc) && open(r0 - 1, c0);
         const downOpen = open(r0 + 1, tc) && open(r0 + 1, c0);
-        if (targetOpen && !reduced) {
+        if (targetOpen) {
           // 目标格开口：若直走受阻，说明身体边缘卡在门框两壁，朝目标格中心滑动进门
           perp = y < r0 + 0.5 ? [1, 0] : [0, 1];
         } else if (!targetOpen && upOpen !== downOpen) {
@@ -1931,7 +2024,6 @@
           perp = downOpen ? [1] : [0];
         } else {
           // 目标格受阻且两侧同开（开阔地撞单障碍）或同堵（平墙/凹角）：坚决不主动向障碍归中，保留直走位置。
-          // reduced 模式下，目标格是通路(卡门框)也不再主动归中——由玩家自行对齐，减少误滑。
           return moved > 2 * EPS ? [ny, nx] : [y, x];
         }
       }

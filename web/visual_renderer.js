@@ -234,8 +234,9 @@
     }
     function render(sim, now = performance.now(), motion = null) {
       const previousPositions = updateFaces(sim);
-      // 逻辑节拍 10Hz，渲染 60Hz：在两个 sim tick 之间线性插值角色位置 → 顺滑。
-      // 本地人类玩家(motion.humanPid)不插值，保留输入即时响应；复活/传送(位移过大)时不插值直接吸附。
+      // 逻辑节拍 10Hz，渲染 60Hz：对手(10Hz)在两个 sim tick 之间线性插值位置 → 顺滑。
+      // 本地人类(motion.humanPid)不插值：由 rAF 逐帧 frameStep 连续移动，sim.pos 本身即每帧真实位置。
+      // 复活/传送(位移>1格)时不插值直接吸附。
       const alpha = motion ? Math.min(1, Math.max(0, (now - motion.lastTickT) / motion.tickMs)) : 1;
       ctx.fillStyle = '#0c0e13'; ctx.fillRect(0, 0, canvas.width, canvas.height);
       const band = assets.baseBand;
