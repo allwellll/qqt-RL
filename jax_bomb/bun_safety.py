@@ -38,6 +38,7 @@ class SelectedSafety(NamedTuple):
 class TacticalBombAnalysis(NamedTuple):
     safe: jnp.ndarray
     tactical: jnp.ndarray
+    forces_kill: jnp.ndarray
     newly_threatens_enemy: jnp.ndarray
     enemy_safe_moves_before: jnp.ndarray
     enemy_safe_moves_after: jnp.ndarray
@@ -388,6 +389,7 @@ def analyze_tactical_bomb_placements(
     base_all_deadline = base_deadlines.min(axis=0)
     safe = []
     tactical = []
+    forces = []
     threatens = []
     before_counts = []
     after_counts = []
@@ -414,13 +416,16 @@ def analyze_tactical_bomb_placements(
         is_safe = (state.core.alive[player] & (ability == 1)
                    & legal_bomb & selected_survivable[player])
         is_tactical = newly_threatens | (after < before)
+        forces_kill = is_safe & (after == 0) & state.core.alive[enemy]
         safe.append(is_safe)
         tactical.append(is_safe & is_tactical)
+        forces.append(forces_kill)
         threatens.append(newly_threatens)
         before_counts.append(before)
         after_counts.append(after)
     return TacticalBombAnalysis(
         safe=jnp.stack(safe), tactical=jnp.stack(tactical),
+        forces_kill=jnp.stack(forces),
         newly_threatens_enemy=jnp.stack(threatens),
         enemy_safe_moves_before=jnp.stack(before_counts),
         enemy_safe_moves_after=jnp.stack(after_counts))

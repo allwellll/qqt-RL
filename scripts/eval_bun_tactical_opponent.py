@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from jax_bomb import bun_env as env
+from jax_bomb import bun_safety
 from jax_bomb import jax_train
 from jax_bomb.bun_frozen_opponents import (
     FrozenTacticalOpponent,
@@ -62,7 +63,9 @@ def main() -> None:
     env.configure_training(
         "danger_arena=1", 1, reward_profile="danger_arena",
         tactical_bomb_placement_reward=1.0,
-        tactical_bomb_resolution_reward=1.0)
+        tactical_bomb_resolution_reward=1.0,
+        base_bomb_reward=1.0,
+        forced_kill_reward=1.0)
     params = load_params(args.checkpoint)
     opponent = FrozenTacticalOpponent(player_id=1)
     key = jax.random.PRNGKey(np.uint32(args.seed & 0xFFFFFFFF))
@@ -79,7 +82,9 @@ def main() -> None:
             "safe_resolution", "danger_death", "avoidable_danger_death",
             "steal", "capture", "bomb_opportunities",
             "placements_on_opportunity", "safe_tactical_placements",
-            "tactical_safe_resolutions")
+            "tactical_safe_resolutions", "forced_kill_opportunities",
+            "forced_kill_created", "placements_on_forced_kill",
+            "rule_safe_attack_available", "rule_placements_on_safe_attack")
     }
     funnel = {name: np.zeros((args.games,), np.bool_) for name in (
         "encounter", "safe_attack_opportunity", "attack", "restricted_escape",
@@ -116,6 +121,18 @@ def main() -> None:
             state, action, rng, auto_reset=False, return_info=True))(
                 current_states, actions, keys)
 
+    probe_actions = jnp.asarray([[4, 1], [4, 0]], jnp.int32)
+
+    @jax.jit
+    def tactical_probe(current_states):
+        """Env-native opportunity probe: would a player0 bomb here be
+        tactical / a forced kill? Same analyzer the training reward uses."""
+        def one(state):
+            analysis = bun_safety.analyze_tactical_bomb_placements(
+                state, probe_actions)
+            return analysis.tactical[0], analysis.forces_kill[0]
+        return jax.vmap(one)(current_states)
+
     warm_actions, _ = policy(states)
     jax.block_until_ready(warm_actions)
     started = time.time()
@@ -132,6 +149,9 @@ def main() -> None:
         candidate, done, info = step_batch(states, actions, step_key)
         jax.block_until_ready(done)
         host_info = jax.device_get(info)
+        env_tactical, env_forced = tactical_probe(states)
+        env_tactical = np.asarray(env_tactical)
+        env_forced = np.asarray(env_forced)
         host_actions = np.asarray(actions)
         host_positions = np.asarray(states.core.pos)
         old_distance = np.abs(host_positions[:, 0] - host_positions[:, 1]).sum(axis=-1)
@@ -140,21 +160,27 @@ def main() -> None:
         safe_available = np.asarray([label.safe_attack_available for label in labels])
         enemy_escape_count = np.asarray([label.enemy_escape_count for label in labels])
         self_escape = np.asarray([label.safe_escape_exists for label in labels])
+        forced_kill_created = np.asarray(host_info["forced_kill_created"])[:, 0]
         missing = first_contact < 0
         first_contact[active & missing & (old_distance <= 3.0)] = tick
         funnel["encounter"] |= active & (old_distance <= 3.0)
-        funnel["safe_attack_opportunity"] |= active & safe_available
+        funnel["safe_attack_opportunity"] |= active & env_forced
         placed = active & (host_actions[:, 0, 1] == 1)
         funnel["attack"] |= placed
         funnel["restricted_escape"] |= placed & (enemy_escape_count <= 1)
-        funnel["forced_kill_created"] |= placed & safe_available
+        funnel["forced_kill_created"] |= active & forced_kill_created
         funnel["self_safe_escape_exists"] |= placed & self_escape
         cells = np.asarray(host_info["cell"])
         active_indices = np.flatnonzero(active)
         visited[active_indices, cells[active_indices, 0, 0], cells[active_indices, 0, 1]] = True
         counters["bombs"] += active * (host_actions[:, 0, 1] == 1)
-        counters["bomb_opportunities"] += active * safe_available
-        counters["placements_on_opportunity"] += active * placed * safe_available
+        counters["bomb_opportunities"] += active * env_tactical
+        counters["placements_on_opportunity"] += active * placed * env_tactical
+        counters["forced_kill_opportunities"] += active * env_forced
+        counters["placements_on_forced_kill"] += active * placed * env_forced
+        counters["forced_kill_created"] += active * forced_kill_created
+        counters["rule_safe_attack_available"] += active * safe_available
+        counters["rule_placements_on_safe_attack"] += active * placed * safe_available
         counters["safe_tactical_placements"] += active * np.asarray(
             host_info["safe_tactical_bomb_placed"])[:, 0]
         counters["tactical_safe_resolutions"] += active * np.asarray(
@@ -211,6 +237,26 @@ def main() -> None:
         "p0_conditional_tactical_placement_rate": float(
             counters["placements_on_opportunity"].sum()
             / max(counters["bomb_opportunities"].sum(), 1)),
+        "p0_forced_kill_opportunities": int(
+            counters["forced_kill_opportunities"].sum()),
+        "p0_conditional_forced_kill_placement_rate": float(
+            counters["placements_on_forced_kill"].sum()
+            / max(counters["forced_kill_opportunities"].sum(), 1)),
+        "p0_forced_kill_created_count": int(counters["forced_kill_created"].sum()),
+        "p0_forced_kill_created_rate": float(
+            np.mean(counters["forced_kill_created"] > 0)),
+        "secondary_rule_bot_labels": {
+            "note": ("rule-bot 40-tick lookahead label, kept for cross-check "
+                     "only; headline metrics use env-native signals"),
+            "safe_attack_available_ticks": int(
+                counters["rule_safe_attack_available"].sum()),
+            "conditional_placement_rate": float(
+                counters["rule_placements_on_safe_attack"].sum()
+                / max(counters["rule_safe_attack_available"].sum(), 1)),
+            "env_vs_rule_opportunity_gap": int(
+                counters["forced_kill_opportunities"].sum()
+                - counters["rule_safe_attack_available"].sum()),
+        },
         "p0_safe_tactical_placement_count": int(
             counters["safe_tactical_placements"].sum()),
         "p0_safe_tactical_placements_per_game": float(

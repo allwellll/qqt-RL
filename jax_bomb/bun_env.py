@@ -71,6 +71,8 @@ _DANGER_ESCAPE_REWARD = 0.75
 _AVOIDABLE_DANGER_DEATH_PENALTY = 4.0
 _TACTICAL_BOMB_PLACEMENT_REWARD = 0.0
 _TACTICAL_BOMB_RESOLUTION_REWARD = 0.0
+_BASE_BOMB_REWARD = 0.0
+_FORCED_KILL_REWARD = 0.0
 _DANGER_TRACKING = False
 _START_STATE_BANK = None
 _START_STATE_BUCKETS = None
@@ -217,11 +219,14 @@ def configure_training(curriculum: str | None = None,
                        danger_escape_reward: float = 0.75,
                        avoidable_danger_death_penalty: float = 4.0,
                        tactical_bomb_placement_reward: float = 0.0,
-                       tactical_bomb_resolution_reward: float = 0.0) -> None:
+                       tactical_bomb_resolution_reward: float = 0.0,
+                       base_bomb_reward: float = 0.0,
+                       forced_kill_reward: float = 0.0) -> None:
     """配置 Bun 训练 reset；评估/网页未调用时保持完整地图与原 HP。"""
     global _CURRICULUM_WEIGHTS, _TRAIN_HP, _KILL_WINDOW_REWARD, _REWARD_PROFILE
     global _DANGER_ESCAPE_REWARD, _AVOIDABLE_DANGER_DEATH_PENALTY
     global _TACTICAL_BOMB_PLACEMENT_REWARD, _TACTICAL_BOMB_RESOLUTION_REWARD
+    global _BASE_BOMB_REWARD, _FORCED_KILL_REWARD
     global _DANGER_TRACKING
     if curriculum:
         parsed = {name: 0.0 for name in LESSON_NAMES}
@@ -249,6 +254,8 @@ def configure_training(curriculum: str | None = None,
         avoidable_danger_death_penalty)
     _TACTICAL_BOMB_PLACEMENT_REWARD = float(tactical_bomb_placement_reward)
     _TACTICAL_BOMB_RESOLUTION_REWARD = float(tactical_bomb_resolution_reward)
+    _BASE_BOMB_REWARD = float(base_bomb_reward)
+    _FORCED_KILL_REWARD = float(forced_kill_reward)
 
 
 def configure_start_state_curriculum(path: str | None = None,
@@ -700,7 +707,9 @@ def step(state: BunState, actions: jnp.ndarray, key, auto_reset: bool = True,
         jnp.where(state.bun_carried >= 0, 0, base_actions[:, 1]))
     tactical_bomb_tracking = (
         _TACTICAL_BOMB_PLACEMENT_REWARD != 0.0
-        or _TACTICAL_BOMB_RESOLUTION_REWARD != 0.0)
+        or _TACTICAL_BOMB_RESOLUTION_REWARD != 0.0
+        or _BASE_BOMB_REWARD != 0.0
+        or _FORCED_KILL_REWARD != 0.0)
     if _DANGER_TRACKING or tactical_bomb_tracking:
         from . import bun_safety
         needs_analysis = ((state.core.fuse > 0).any()
@@ -728,6 +737,7 @@ def step(state: BunState, actions: jnp.ndarray, key, auto_reset: bool = True,
                 lambda _: bun_safety.TacticalBombAnalysis(
                     safe=jnp.zeros((2,), jnp.bool_),
                     tactical=jnp.zeros((2,), jnp.bool_),
+                    forces_kill=jnp.zeros((2,), jnp.bool_),
                     newly_threatens_enemy=jnp.zeros((2,), jnp.bool_),
                     enemy_safe_moves_before=jnp.zeros((2,), jnp.int16),
                     enemy_safe_moves_after=jnp.zeros((2,), jnp.int16)),
@@ -748,8 +758,18 @@ def step(state: BunState, actions: jnp.ndarray, key, auto_reset: bool = True,
             refreshed,
             jnp.minimum(danger_pending_ticks, exposure_ticks),
             danger_pending_ticks)
-        danger_pending_avoidable = (
-            state.danger_pending_avoidable | danger_analysis.avoidable)
+        # Reflect the currently-live hazard rather than sticky-OR. Re-capture
+        # avoidability whenever a danger is newly established or refreshed, but
+        # only on ticks where the player still had a choice (exposed yet not
+        # doomed). Freezing once doomed keeps the verdict from the last tick an
+        # escape existed, so a later unavoidable hazard resets a stale
+        # "avoidable" flag left by an earlier exposure the player survived,
+        # without the death tick (always doomed) erasing a genuine verdict.
+        choiceful = danger_analysis.exposed & ~danger_analysis.doomed
+        danger_pending_avoidable = jnp.where(
+            (new_exposure | refreshed) & choiceful,
+            danger_analysis.avoidable,
+            state.danger_pending_avoidable)
         danger_chain_active = state.danger_chain_active | new_exposure
         danger_moved = jnp.where(
             new_exposure, False,
@@ -772,6 +792,9 @@ def step(state: BunState, actions: jnp.ndarray, key, auto_reset: bool = True,
     safe_bomb_placed = bomb_placed & (pre_move_mask[:, :4].sum(axis=-1) >= 2)
     safe_tactical_bomb_placed = (
         bomb_placed & tactical_analysis.tactical
+        if tactical_analysis is not None else jnp.zeros((2,), jnp.bool_))
+    forced_kill_created = (
+        bomb_placed & tactical_analysis.forces_kill
         if tactical_analysis is not None else jnp.zeros((2,), jnp.bool_))
     tactical_bomb_marks = state.tactical_bomb_marks
     placement_cells = jnp.clip(
@@ -1226,6 +1249,7 @@ def step(state: BunState, actions: jnp.ndarray, key, auto_reset: bool = True,
         "bomb_placed": bomb_placed,
         "safe_bomb_placed": safe_bomb_placed,
         "safe_tactical_bomb_placed": safe_tactical_bomb_placed,
+        "forced_kill_created": forced_kill_created,
         "tactical_bomb_safe_resolution": tactical_bomb_safe_resolution,
         "tactical_bomb_newly_threatens_enemy": (
             tactical_analysis.newly_threatens_enemy
@@ -1310,6 +1334,12 @@ def step(state: BunState, actions: jnp.ndarray, key, auto_reset: bool = True,
         jnp.minimum(
             info["tactical_bomb_safe_resolution"].astype(jnp.float32), 1.0)
         * _TACTICAL_BOMB_RESOLUTION_REWARD)
+    info["base_bomb_reward"] = jnp.where(
+        blocked_shaping, 0.0,
+        info["bomb_placed"].astype(jnp.float32) * _BASE_BOMB_REWARD)
+    info["forced_kill_reward"] = jnp.where(
+        blocked_shaping, 0.0,
+        info["forced_kill_created"].astype(jnp.float32) * _FORCED_KILL_REWARD)
     if return_info:
         return out, done, info
     return out, done
@@ -1560,7 +1590,8 @@ def reward_from_events(dmg, alive_before, alive_after, hp_after, done,
         "danger_safe_resolution"].astype(jnp.float32)
     danger_arena_reward += tactical_bomb_shaping_from_events(
         info, _TACTICAL_BOMB_PLACEMENT_REWARD,
-        _TACTICAL_BOMB_RESOLUTION_REWARD)
+        _TACTICAL_BOMB_RESOLUTION_REWARD,
+        _BASE_BOMB_REWARD, _FORCED_KILL_REWARD)
     danger_arena_reward = jnp.where(
         info["mutual_death"][:, None], -6.0, danger_arena_reward)
 
@@ -1621,13 +1652,26 @@ def reward_from_events(dmg, alive_before, alive_after, hp_after, done,
 
 
 def tactical_bomb_shaping_from_events(
-        info, placement_reward: float, resolution_reward: float):
-    """Return capped one-shot safe tactical bomb shaping by player."""
+        info, placement_reward: float, resolution_reward: float,
+        base_bomb_reward: float = 0.0, forced_kill_reward: float = 0.0):
+    """Return capped one-shot safe tactical bomb shaping by player.
+
+    Every newly placed bomb earns ``base_bomb_reward`` (activity lift), a
+    pressure placement adds ``placement_reward``, a forced-kill placement adds
+    ``forced_kill_reward``, and a survived resolution adds ``resolution_reward``.
+    All positive shaping is zeroed on self-detonation or a trade so suicide /
+    trade bombs cannot farm reward.
+    """
+    bomb = info["bomb_placed"].astype(jnp.float32)
     placed = info["safe_tactical_bomb_placed"].astype(jnp.float32)
+    forced = info["forced_kill_created"].astype(jnp.float32)
     resolved = info["tactical_bomb_safe_resolution"].astype(jnp.float32)
     trade = jnp.asarray(info["mutual_death"])
     while trade.ndim < placed.ndim:
         trade = trade[..., None]
     blocked = info["own_bomb_defeat"] | trade
-    reward = placement_reward * placed + resolution_reward * resolved
+    reward = (base_bomb_reward * bomb
+              + placement_reward * placed
+              + forced_kill_reward * forced
+              + resolution_reward * resolved)
     return jnp.where(blocked, 0.0, reward)

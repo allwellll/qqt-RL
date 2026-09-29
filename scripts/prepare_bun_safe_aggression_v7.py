@@ -119,7 +119,7 @@ def build_common_config(cycles: int, segment_size: int, *,
         avoidable_penalty=4.0, critic_epochs=20, critic_calibration_lr=1e-4,
         cf_train_states=2, cf_mc_samples=2, cf_horizon=40,
         family_curriculum=True, historical_mix=False, use_bc=True,
-        aux_coef=0.20, total_cycles=cycles, segment_size=segment_size,
+        aux_coef=0.20, actor_aux_coef=0.20, total_cycles=cycles, segment_size=segment_size,
         paired_eval_seed=202609280000,
         transitions_per_update=TRANSITIONS_PER_UPDATE,
         critic_seed_namespace_version="v7",
@@ -195,13 +195,14 @@ def main() -> None:
         critic_batch_size=args.critic_batch_size,
         persistent_worker=not args.no_persistent_worker)
     arm_specs = (
-        ("control", 202609280001, 0.0, 0.0),
-        ("safe_low", 202609280101, 0.05, 0.35),
-        ("safe_medium", 202609280201, 0.10, 0.75),
-        ("safe_high", 202609280301, 0.20, 1.50),
+        ("control", 202609280001, 0.0, 0.0, 0.0, 0.0),
+        ("safe_low", 202609280101, 0.05, 0.35, 0.03, 1.0),
+        ("safe_medium", 202609280201, 0.10, 0.75, 0.06, 2.0),
+        ("safe_high", 202609280301, 0.20, 1.50, 0.10, 2.0),
     )
     candidates = []
-    for slot, ((name, seed, placement, resolution), gpu) in enumerate(zip(arm_specs, gpu_ids)):
+    for slot, ((name, seed, placement, resolution, base_bomb, forced_kill),
+               gpu) in enumerate(zip(arm_specs, gpu_ids)):
         # 准备阶段扫描完整 horizon；runner 生成每个 cycle 数据后仍会严格检查
         # train/validation/test 集合交叉，禁止 raw seed 与 uint32 seed 泄漏。
         for cycle in range(1, cycles + 1):
@@ -223,7 +224,11 @@ def main() -> None:
             common, name=name, candidate_slot=slot, gpu=gpu, seed=seed,
             tactical_bomb_placement_reward=placement,
             tactical_bomb_resolution_reward=resolution,
-            reward_variant=f"placement={placement},resolution={resolution}",
+            base_bomb_reward=base_bomb,
+            forced_kill_reward=forced_kill,
+            reward_variant=(
+                f"placement={placement},resolution={resolution},"
+                f"base_bomb={base_bomb},forced_kill={forced_kill}"),
             required_tactical_transitions=transition_budget,
             total_transition_budget=transition_budget,
             tactical_transition_budget=transition_budget,

@@ -1444,8 +1444,21 @@ def main():
     ap.add_argument("--bun-start-state-bank", default=None)
     ap.add_argument("--bun-start-state-weights", default="")
     ap.add_argument("--bun-reward-profile",
-                    choices=["legacy", "auto_sparse", "combat_evolution"],
+                    choices=["legacy", "auto_sparse", "combat_evolution",
+                             "danger_arena"],
                     default="legacy")
+    # Reward V2 安全进攻塑形系数（仅 danger_arena profile 生效）。默认 0
+    # 保持与旧 danger_arena 逐位一致；非 0 时在设备端 scan 内打开 tactical
+    # bomb 追踪 / forces_kill 分析。
+    ap.add_argument("--bun-danger-escape-reward", type=float, default=0.75)
+    ap.add_argument("--bun-avoidable-danger-death-penalty", type=float,
+                    default=4.0)
+    ap.add_argument("--bun-tactical-bomb-placement-reward", type=float,
+                    default=0.0)
+    ap.add_argument("--bun-tactical-bomb-resolution-reward", type=float,
+                    default=0.0)
+    ap.add_argument("--bun-base-bomb-reward", type=float, default=0.0)
+    ap.add_argument("--bun-forced-kill-reward", type=float, default=0.0)
     ap.add_argument(
         "--bun-curriculum",
         default="carry_home=0.4,near_steal=0.3,route_break=0.2,full=0.1",
@@ -1517,7 +1530,16 @@ def main():
         active_levels = prepare_environment(args.levels)
         configure_training(
             args.bun_curriculum, args.bun_hp, args.bun_kill_window_reward,
-            args.bun_reward_profile)
+            args.bun_reward_profile,
+            danger_escape_reward=args.bun_danger_escape_reward,
+            avoidable_danger_death_penalty=(
+                args.bun_avoidable_danger_death_penalty),
+            tactical_bomb_placement_reward=(
+                args.bun_tactical_bomb_placement_reward),
+            tactical_bomb_resolution_reward=(
+                args.bun_tactical_bomb_resolution_reward),
+            base_bomb_reward=args.bun_base_bomb_reward,
+            forced_kill_reward=args.bun_forced_kill_reward)
         configure_start_state_curriculum(
             args.bun_start_state_bank, args.bun_start_state_weights)
         if args.distill_data:
@@ -1525,7 +1547,14 @@ def main():
         print(f"rule=bun map=806 levels={active_levels} obs={N_OBS_CH} ability={N_BOMB} "
               f"hp={args.bun_hp} curriculum={args.bun_curriculum} "
               f"kill_window_reward={args.bun_kill_window_reward} "
-              f"reward_profile={args.bun_reward_profile}", flush=True)
+              f"reward_profile={args.bun_reward_profile} "
+              f"v2_coeffs=(base_bomb={args.bun_base_bomb_reward},"
+              f"forced_kill={args.bun_forced_kill_reward},"
+              f"placement={args.bun_tactical_bomb_placement_reward},"
+              f"resolution={args.bun_tactical_bomb_resolution_reward},"
+              f"escape={args.bun_danger_escape_reward},"
+              f"avoidable={args.bun_avoidable_danger_death_penalty})",
+              flush=True)
     elif args.levels:
         from . import levels as level_catalog
         level_catalog.set_active(args.levels, args.level_weights)

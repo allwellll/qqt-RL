@@ -360,13 +360,18 @@ def main():
                        "--target-tau", str(config["target_tau"]),
                        "--counterfactual-coef", str(config["counterfactual_coef"]),
                        "--counterfactual-aux-coef", str(config["aux_coef"]),
+                       "--actor-aux-coef", str(config.get("actor_aux_coef", 0.0)),
                        "--reward-profile", "danger_arena",
                        "--danger-escape-reward", str(config["danger_escape_reward"]),
                        "--avoidable-danger-death-penalty", str(config["avoidable_penalty"]),
                        "--tactical-bomb-placement-reward", str(
                            config.get("tactical_bomb_placement_reward", 0.0)),
                        "--tactical-bomb-resolution-reward", str(
-                           config.get("tactical_bomb_resolution_reward", 0.0))]
+                           config.get("tactical_bomb_resolution_reward", 0.0)),
+                       "--base-bomb-reward", str(
+                           config.get("base_bomb_reward", 0.0)),
+                       "--forced-kill-reward", str(
+                           config.get("forced_kill_reward", 0.0))]
             run(command, cycle_dir / "train.log", cycle_environment)
             if not all(finite(path) for path in (out_actor, out_critic, out_target)):
                 raise RuntimeError("non-finite cycle checkpoint")
