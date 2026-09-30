@@ -15,6 +15,7 @@ _INF_TICK = jnp.int32(1 << 14)
 _NEG_LOGIT = -1e9
 _ALL_MOVES = jnp.arange(env.N_MOVES, dtype=jnp.int32)
 _ALL_ABILITIES = jnp.arange(env.N_BOMB, dtype=jnp.int32)
+_RELAX_STEPS = min(env.H * env.W, base.FUSE + 2)
 
 
 class SafetyAnalysis(NamedTuple):
@@ -38,6 +39,7 @@ class SelectedSafety(NamedTuple):
 class TacticalBombAnalysis(NamedTuple):
     safe: jnp.ndarray
     tactical: jnp.ndarray
+    forces_kill: jnp.ndarray
     newly_threatens_enemy: jnp.ndarray
     enemy_safe_moves_before: jnp.ndarray
     enemy_safe_moves_after: jnp.ndarray
@@ -217,7 +219,11 @@ def _can_escape(position, passable, deadline, speed_scale, margin_ticks):
             candidate, _INF_TICK)
         return jnp.minimum(current, candidate), None
 
-    arrival, _ = jax.lax.scan(relax, arrival, None, length=env.H * env.W)
+    # Finite deadlines are <= FUSE + 1 and every relaxation adds >= 1 tick to
+    # an arrival that already started >= 1, so no hazard cell can be entered
+    # after FUSE relaxations; one more reaches any adjoining safe cell. The
+    # fixed point (and thus the escape verdict) equals the H*W-step scan.
+    arrival, _ = jax.lax.scan(relax, arrival, None, length=_RELAX_STEPS)
     permanent_safe = deadline >= _INF_TICK
     escaped = ((arrival < _INF_TICK) & permanent_safe).any()
     return start_permanently_safe | escaped
@@ -388,6 +394,7 @@ def analyze_tactical_bomb_placements(
     base_all_deadline = base_deadlines.min(axis=0)
     safe = []
     tactical = []
+    forces = []
     threatens = []
     before_counts = []
     after_counts = []
@@ -414,13 +421,17 @@ def analyze_tactical_bomb_placements(
         is_safe = (state.core.alive[player] & (ability == 1)
                    & legal_bomb & selected_survivable[player])
         is_tactical = newly_threatens | (after < before)
+        forces_kill = (is_safe & (before > 0) & (after == 0)
+                       & state.core.alive[enemy])
         safe.append(is_safe)
         tactical.append(is_safe & is_tactical)
+        forces.append(forces_kill)
         threatens.append(newly_threatens)
         before_counts.append(before)
         after_counts.append(after)
     return TacticalBombAnalysis(
         safe=jnp.stack(safe), tactical=jnp.stack(tactical),
+        forces_kill=jnp.stack(forces),
         newly_threatens_enemy=jnp.stack(threatens),
         enemy_safe_moves_before=jnp.stack(before_counts),
         enemy_safe_moves_after=jnp.stack(after_counts))

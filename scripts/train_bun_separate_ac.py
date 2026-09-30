@@ -198,8 +198,11 @@ def collect_tactical_rollout(current_actor, states, key, num_steps):
         audit = jnp.stack([
             info["bomb_placed"][:, 0].astype(jnp.float32),
             info["safe_tactical_bomb_placed"][:, 0].astype(jnp.float32),
+            info["forced_kill_created"][:, 0].astype(jnp.float32),
             info["tactical_bomb_safe_resolution"][:, 0].astype(jnp.float32),
+            info["base_bomb_reward"][:, 0],
             info["tactical_bomb_placement_reward"][:, 0],
+            info["forced_kill_reward"][:, 0],
             info["tactical_bomb_resolution_reward"][:, 0],
             info["own_bomb_defeat"][:, 0].astype(jnp.float32),
             info["mutual_death"].astype(jnp.float32),
@@ -356,6 +359,8 @@ def main(argv=None):
                         default=0.0)
     parser.add_argument("--tactical-bomb-resolution-reward", type=float,
                         default=0.0)
+    parser.add_argument("--base-bomb-reward", type=float, default=0.0)
+    parser.add_argument("--forced-kill-reward", type=float, default=0.0)
     parser.add_argument("--carry-rollout-state", action="store_true")
     parser.add_argument("--jax-cache-dir")
     args = parser.parse_args(argv)
@@ -371,7 +376,9 @@ def main(argv=None):
         danger_escape_reward=args.danger_escape_reward,
         avoidable_danger_death_penalty=args.avoidable_danger_death_penalty,
         tactical_bomb_placement_reward=args.tactical_bomb_placement_reward,
-        tactical_bomb_resolution_reward=args.tactical_bomb_resolution_reward)
+        tactical_bomb_resolution_reward=args.tactical_bomb_resolution_reward,
+        base_bomb_reward=args.base_bomb_reward,
+        forced_kill_reward=args.forced_kill_reward)
     actor, actor_opt_state = load_checkpoint(args.actor)
     reference, _ = load_checkpoint(args.reference_actor)
     critic, critic_opt_state = load_checkpoint(args.critic)
@@ -661,8 +668,11 @@ def main(argv=None):
             audit_values = np.asarray(jax.device_get(rollout_audit), np.float64)
             record["reward_audit"] = dict(zip((
                 "bomb_placed", "safe_tactical_bomb_placed",
+                "forced_kill_created",
                 "tactical_bomb_safe_resolution",
+                "base_bomb_reward",
                 "tactical_bomb_placement_reward",
+                "forced_kill_reward",
                 "tactical_bomb_resolution_reward", "own_bomb_defeat",
                 "mutual_death"), map(float, audit_values)))
         history.append(record)
@@ -727,6 +737,8 @@ def main(argv=None):
                 "avoidable_danger_death_penalty": args.avoidable_danger_death_penalty,
                 "tactical_bomb_placement_reward": args.tactical_bomb_placement_reward,
                 "tactical_bomb_resolution_reward": args.tactical_bomb_resolution_reward,
+                "base_bomb_reward": args.base_bomb_reward,
+                "forced_kill_reward": args.forced_kill_reward,
                 "carry_rollout_state": args.carry_rollout_state}
     save_checkpoint(args.save_actor, actor, actor_opt_state, metadata)
     save_checkpoint(args.save_critic, critic, critic_opt_state, metadata)
