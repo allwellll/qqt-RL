@@ -2,6 +2,18 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun-tf-it4000",
+      "display_name": "Bun Transformer · 自对弈 it4000（vs Tactical v2 击杀 0.418）",
+      "file": "bun-tf-it4000-830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084.json",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/bun-tf-it4000-830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084.json",
+      "sha256": "830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084",
+      "bytes": 9907406,
+      "candidate": "overnight_tf_v2_phase2",
+      "cycle": 4000,
+      "score": 0.418,
+      "source_sha256": "6e190b009f180f2e449fd19941c930c0d1a86d680071eeb02262aadb6808ebd0"
+    },
+    {
       "id": "bun-kill-mlp4",
       "display_name": "Bun 击杀 · MLP4（vs jax-bot 自对弈验收）",
       "file": "bun-kill-mlp4-1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70.json",
