@@ -91,7 +91,51 @@ python scripts/eval_bun_tactical_opponent.py checkpoints/model.pt \
   --json-out runs/eval/model-vs-tactical.json
 ```
 
-评估结果写入 `runs/`。如需导出浏览器模型，应将生成文件放入被忽略的 `web/models/`；本仓库不提交大模型权重。
+评估结果写入 `runs/`。加 `--per-episode` 会额外保存逐局结果与出生格（用于配对比较）；`--host-workers N` 把规则 Bot 决策与漏斗标签分到 N 个进程，结果与串行逐位一致。如需导出浏览器模型，应将生成文件放入被忽略的 `web/models/`；本仓库不提交大模型权重。
+
+## Transformer checkpoint 对战能力评估
+
+目的：沿训练进程扫描 checkpoint，看战斗能力（安全击杀、自炸、被杀、危险处理）是在提升还是回退。这是 danger_arena 近身战斗探针，**不代表完整抢包子能力**（不含偷包/运包/回家）。
+
+固定协议（与历史 `runs/eval_v2/*.json` 同口径，schema `bun_tactical_opponent_eval_v1`）：
+
+- 课程 `danger_arena=1`，清空可破坏砖块，HP=1，最长 300 tick。
+- Actor 固定为玩家 0、argmax 动作、无安全屏蔽；对手固定为玩家 1 的冻结 `bun.tactical_v2`（哈希校验）。
+- 出生点由 seed 决定，环境内部随机交换两侧出生位置；同一 seed 下所有 checkpoint 的出生格完全相同（`spawns_identical_across_checkpoints` 核验），因此可做逐局配对比较。
+
+```bash
+# 64 局探索性全曲线（phase1 + 全部 phase2_itN + phase2.pt）
+python scripts/eval_transformer_checkpoint_sweep.py \
+  --run-dir runs/overnight_tf_v2 \
+  --out-dir runs/transformer_sweep/overnight_tf_v2/seed20260930_g64 \
+  --seed 20260930 --games 64 --device 0 \
+  --teacher-json runs/eval_v2/rulebot_baseline.json
+
+# 大样本确认：换 seed，只挑关键点
+python scripts/eval_transformer_checkpoint_sweep.py \
+  --run-dir runs/overnight_tf_v2 \
+  --out-dir runs/transformer_sweep/overnight_tf_v2/confirm_seed20261001_g1024 \
+  --checkpoints phase1,3500,4000,6000,final \
+  --seed 20261001 --games 1024 --host-workers 48 --device 0
+```
+
+`--checkpoints` 支持 `all`、`phase1`、`final`、文件名、单个 iter（`4000`）和区间（`5500-8000`），可组合。所有 checkpoint 在同一进程串行评估，`env.step` 只编译一次；持久 JAX 编译缓存默认放在 `<out-dir>/../.jax_cache`，重跑时跳过编译。已存在且 checkpoint sha256、seed、局数、步数全匹配的 JSON 会被复用（`--reuse-dir` 可指向旧结果目录，`--force` 强制重跑），`--plot-only` 只重画图。参考耗时（单卡 H200）：64 局约 28 秒/点，1024 局约 60 秒/点；首个点多约 70 秒编译。
+
+输出目录：
+
+- `checkpoints/<name>.json`：逐 checkpoint 完整结果（含 `per_episode` 逐局结果与出生格、`runtime` 耗时拆分）。
+- `summary.json` / `summary.csv`：汇总指标、Wilson 95% 区间，以及相对 `--reference`（默认 phase1）的逐局配对差值。
+- `capability_curves.png`：9 宫格曲线，包括存活安全击杀、安全引爆比、自炸、被对手击杀（物理或因果，取并集）、可避免危险死亡、danger→death、场均放泡、战术解决率、策略熵。红色虚线是规则 Bot 自对弈基线。
+- 可选 `--flee-probe`：另在 GPU 上整局跑对 JAX flee bot（阶段 1 训练对手，以逃跑/静止为主）的补充探针，输出 `flee_probe/`、`flee_probe_summary.json`、`flee_probe_curves.png`。它只测追击补刀，params 以 jit 参数传入，数值与主口径不同，不能与主曲线混比。
+
+横轴：阶段 2 iteration。phase1 终点记为 0，`phase2_itN` 记为 N，`phase2.pt` 记为 `phase2.json` 中的 `ppo_iterations`（本次为 8000）。
+
+解读：
+
+- 误差线是局级二元比率的 Wilson 95% 区间。64 局时区间半宽约 ±0.10 到 0.12，相邻点差 0.1 以内基本是噪声，全曲线只用于找候选点和趋势。
+- 安全引爆比、战术解决率按事件汇总，场均放泡和熵是均值，这几项不画区间。
+- 结论以大样本确认为准：换一个未用于挑点的 seed，局数 ≥1024（区间半宽约 ±0.03）。比较两个 checkpoint 时看 `paired_vs_reference` 的配对差值区间，它扣除了出生格带来的方差，比两个独立区间是否重叠更灵敏。
+- 如果某个点只在 64 局扫描里高，大样本下不再高，就是挑点偏差，不能称为提升。
 
 导出一份可信的本地 Transformer checkpoint：
 
