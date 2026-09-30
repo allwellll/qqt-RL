@@ -235,6 +235,9 @@
       // 被炸砖体的残骸计时：砖外观可在爆炸时进入 _die，但碰撞要等余威结束。
       // 与 blastLinger 分开，避免把普通地面火区错误地当成墙体。
       this.brickLinger = new Int8Array(N);
+      // 砖被炸瞬间就掷出的道具（-1=无）：渲染立即显示，砖残骸到期、开放通行时才落为 crate。
+      this.pendingCrateType = new Int8Array(N).fill(-1);
+      this.pendingSuperCrate = new Uint8Array(N);
       this.pos = new Float64Array(4);
       this.alive = [true, true];
       this.hp = [CFG.maxHp, CFG.maxHp];
@@ -366,6 +369,8 @@
         playerBombStyle: this.playerBombStyle,
         blastLinger: arr(this.blastLinger),
         brickLinger: arr(this.brickLinger),
+        pendingCrateType: arr(this.pendingCrateType),
+        pendingSuperCrate: arr(this.pendingSuperCrate),
         pushable: arr(this.pushable),
         pushT: arr(this.pushT),
         pushBoxAt: arr(this.pushBoxAt),
@@ -432,6 +437,8 @@
       if (frame.playerBombStyle != null) this.playerBombStyle = frame.playerBombStyle & 1;
       if (frame.blastLinger == null) this.blastLinger.fill(0);
       if (frame.brickLinger == null) this.brickLinger.fill(0);
+      this.pendingCrateType = frame.pendingCrateType != null ? new Int8Array(frame.pendingCrateType) : new Int8Array(N).fill(-1);
+      this.pendingSuperCrate = frame.pendingSuperCrate != null ? new Uint8Array(frame.pendingSuperCrate) : new Uint8Array(N);
       if (frame.crateType != null) this.crateType = new Int8Array(frame.crateType);
       if (frame.fieldItem != null) this.fieldItem = new Uint8Array(frame.fieldItem);
       if (frame.fieldOwner != null) this.fieldOwner = new Int8Array(frame.fieldOwner);
@@ -721,11 +728,15 @@
       return true;
     }
 
-    _placeHeldItem(player) {
+    _actionCell(requested, fallback) {
+      return Number.isInteger(requested) && requested >= 0 && requested < N ? requested : fallback;
+    }
+
+    _placeHeldItem(player, requestedCell) {
       const item = this.heldItem[player];
       if (item === ITEM_NONE || !this.alive[player]) return false;
       const [row, column] = this.centerCell(player);
-      const cell = row * W + column;
+      const cell = this._actionCell(requestedCell, row * W + column);
       if (this.wall[cell] || this.brick[cell] || this.fuse[cell] > 0 || this.fieldItem[cell]) return false;
       this.fieldItem[cell] = item;
       this.fieldOwner[cell] = player;
@@ -895,7 +906,8 @@
       const placed = [false, false];
       for (let p = 0; p < 2; p++) {
         const [r, c] = this.centerCell(p);
-        const i = r * W + c;
+        // actions[p][4]：真人按键瞬间所在格。逐帧移动下 tick 时人可能已走开，泡要落在按键处。
+        const i = this._actionCell(actions[p][4], r * W + c);
         const ok = alive0[p] && actions[p][1] === 1 && this.fuse[i] <= 0 &&
           !this.brick[i] && (!this.isBun || this.bunCarried[p] < 0) &&
           this.liveBombs(p) < this.bombsCap[p];
@@ -910,7 +922,7 @@
         }
       }
       for (let p = 0; p < 2; p++) {
-        if (actions[p][2] === 1) this._placeHeldItem(p);
+        if (actions[p][2] === 1) this._placeHeldItem(p, actions[p][5]);
       }
       // Keep event masks with the logical frame for deterministic replay.
       this.lastReplayPlaced = placed.slice();
@@ -1002,6 +1014,11 @@
           // 已在残威中的砖若再次被覆盖只刷新计时，不重复生成宝箱/死亡特效。
           if (this.brickLinger[i] > 0) continue;
           destroyedBrick[i] = 1;
+          if (this.rng() < this.crateRate && !this.wall[i]) {
+            const rolled = this._rollCrateType();
+            this.pendingCrateType[i] = rolled.type;
+            this.pendingSuperCrate[i] = rolled.isSuper ? 1 : 0;
+          }
           // 被炸的可推箱: 整箱移除(足迹清空)
           const biX = this.pushBoxAt[i];
           if (biX >= 0 && !this.pushBoxes[biX].dead) {
@@ -1093,12 +1110,13 @@
         this.brickLinger[i] = nextBrickLinger;
         if (oldBrickLinger > 0 && nextBrickLinger === 0 && !coveredBrick[i]) {
           this.brick[i] = 0;
-          // 砖体真正消除、变成可以通行的瞬间才刷出道具（避免 AI 在不可通行墙体上看到道具/道具上墙）
-          if (this.rng() < this.crateRate && !this.wall[i]) {
-            const rolled = this._rollCrateType();
+          // 道具在炸砖瞬间已掷定（画面立即可见）；落为可拾取 crate 仍等砖体开放通行，观测口径不变。
+          if (this.pendingCrateType[i] >= 0) {
             this.crate[i] = 1;
-            this.superCrate[i] = rolled.isSuper ? 1 : 0;
-            this.crateType[i] = rolled.type;
+            this.superCrate[i] = this.pendingSuperCrate[i];
+            this.crateType[i] = this.pendingCrateType[i];
+            this.pendingCrateType[i] = -1;
+            this.pendingSuperCrate[i] = 0;
           }
         }
       }

@@ -66,12 +66,32 @@
   const HELD_ITEM_SPRITES = [null, 'banana_pickup', 'glue_pickup'];
   function heldItemSpriteKey(item) { return HELD_ITEM_SPRITES[item] || null; }
 
-  // 顶部溢出带直接取本图地面最上一行原纹理，作为首行元件上溢的衬底。
+  // 顶部溢出带：本图地面最上一行原纹理 + 半透明黑，表示界外；首行元件上溢仍画在它上面。
+  const TOP_BAND_SHADE = 0.5;
   function makeTopBand(background) {
     const band = document.createElement('canvas');
     band.width = background.width; band.height = BOARD_OFFSET;
-    band.getContext('2d').drawImage(background, 0, 0, background.width, BOARD_OFFSET, 0, 0, band.width, BOARD_OFFSET);
+    const g = band.getContext('2d');
+    g.drawImage(background, 0, 0, background.width, BOARD_OFFSET, 0, 0, band.width, BOARD_OFFSET);
+    g.fillStyle = `rgba(0,0,0,${TOP_BAND_SHADE})`;
+    g.fillRect(0, 0, band.width, BOARD_OFFSET);
     return band;
+  }
+
+  // 终局结果（以 viewerPid 视角）：win/lose/draw；viewerPid<0（观战）时报蓝/红方胜。
+  function matchResult(sim, viewerPid = 0) {
+    if (!sim || !sim.done) return null;
+    const timeout = sim.maxSteps != null && sim.t >= sim.maxSteps;
+    const reason = !sim.isBun ? '' : timeout ? '时间到' : '运包成功';
+    // 超时按基地存包总数判胜负，运包成功按夺包数；比分与判定口径一致。
+    const tally = !sim.isBun ? null : timeout && sim.bunStored
+      ? sim.bunStored.map((row) => row.reduce((sum, count) => sum + count, 0)) : sim.bunScore;
+    const score = tally ? `${tally[0]} : ${tally[1]}` : '';
+    if (sim.winner == null) return { kind: 'draw', title: '平局', reason, score };
+    if (viewerPid < 0) return { kind: 'win', title: sim.winner === 0 ? '蓝方胜利' : '红方胜利', reason, score };
+    return sim.winner === viewerPid
+      ? { kind: 'win', title: '胜利', reason, score }
+      : { kind: 'lose', title: '失败', reason, score };
   }
 
   function respawnSeconds(ticks, tickHz = 10) {
@@ -127,10 +147,15 @@
     for (let row = 0; row < rows; row++) {
       const frames = [];
       for (let column = 0; column < columns; column++) {
+        // 先按原尺寸裁出单帧再缩放：直接从整张图缩放采样时，插值会把上一行帧贴底的脚
+        // 渗进本帧顶边，形成头顶一条横线。
+        const cell = document.createElement('canvas');
+        cell.width = sw; cell.height = sh;
+        cell.getContext('2d').drawImage(sheet, column * sw, row * sh, sw, sh, 0, 0, sw, sh);
         const frame = document.createElement('canvas');
         frame.width = target;
         frame.height = target;
-        frame.getContext('2d').drawImage(sheet, column * sw, row * sh, sw, sh, 0, 0, target, target);
+        frame.getContext('2d').drawImage(cell, 0, 0, sw, sh, 0, 0, target, target);
         frames.push(frame);
       }
       result.push(frames);
@@ -280,7 +305,8 @@
     function groundItems(sim, now, items, coveredCells) {
       if (!assets.items) return;
       for (let i = 0; i < 195; i++) {
-        if (coveredCells.has(i) || (sim.brick && sim.brick[i]) || (sim.wall && sim.wall[i])) continue;
+        const debris = brickDebris(sim, i);
+        if (coveredCells.has(i) || (sim.brick && sim.brick[i] && !debris) || (sim.wall && sim.wall[i])) continue;
         const row = Math.floor(i / 15), column = i % 15;
         const fieldKey = sim.fieldItem ? FIELD_SPRITES[sim.fieldItem[i]] : null;
         const place = (sprite, z) => {
@@ -291,8 +317,15 @@
         if (sim.crate && sim.crate[i]) {
           const sprite = assets.items[crateSpriteKey(sim.crateType ? sim.crateType[i] : -1, sim.superCrate && sim.superCrate[i] === 1)];
           if (sprite) place(sprite, row * Z_ROW_STRIDE + 16);
+        } else if (debris && sim.pendingCrateType && sim.pendingCrateType[i] >= 0) {
+          const sprite = assets.items[crateSpriteKey(sim.pendingCrateType[i], sim.pendingSuperCrate && sim.pendingSuperCrate[i] === 1)];
+          if (sprite) place(sprite, row * Z_ROW_STRIDE + 16);
         }
       }
+    }
+    // 被炸砖在残骸期仍是碰撞体，但画面上立即消失。
+    function brickDebris(sim, i) {
+      return !!(sim.brick && sim.brick[i] && sim.brickLinger && sim.brickLinger[i] > 0);
     }
     function structureItems(sim, items) {
       const coveredCells = new Set();
@@ -302,6 +335,7 @@
           const index = row * 15 + column, value = layer[index];
           if (!value || value < 0) continue;
           if (layerIndex === 1 && !sim.wall[index] && !sim.brick[index] && !sim.cover[index]) continue;
+          if (layerIndex === 1 && !sim.wall[index] && brickDebris(sim, index)) continue;
           const id = Math.abs(value), meta = assets.elements[String(id)] || assets.elements[id], image = assets.elementImages.get(id);
           if (!meta || !image) continue;
           for (let rr = row; rr < Math.min(13, row + meta.h); rr++) {
@@ -403,7 +437,25 @@
         ctx.fillStyle = `rgba(0,0,0,${(0.62 * frac).toFixed(3)})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height - BOARD_OFFSET);
       }
-      if (sim.isBun) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0);
+      if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0);
+      ctx.restore();
+      drawResult(matchResult(sim, motion ? motion.humanPid : 0));
+    }
+    const RESULT_COLORS = { win: '#ffd54a', lose: '#ff7a7a', draw: '#d8e6ea' };
+    function drawResult(result) {
+      if (!result) return;
+      const cx = canvas.width / 2, cy = canvas.height / 2;
+      ctx.save();
+      ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      ctx.font = 'bold 96px sans-serif'; ctx.lineWidth = 10; ctx.strokeStyle = 'rgba(0,0,0,0.85)';
+      ctx.fillStyle = RESULT_COLORS[result.kind];
+      ctx.strokeText(result.title, cx, cy - 30); ctx.fillText(result.title, cx, cy - 30);
+      const sub = [result.reason, result.score && `包子 ${result.score}`].filter(Boolean).join('  ·  ');
+      ctx.font = 'bold 28px sans-serif'; ctx.lineWidth = 6; ctx.fillStyle = '#ffffff';
+      if (sub) { ctx.strokeText(sub, cx, cy + 50); ctx.fillText(sub, cx, cy + 50); }
+      ctx.font = 'bold 20px sans-serif'; ctx.lineWidth = 5; ctx.fillStyle = '#cfe9ee';
+      ctx.strokeText('按 R 重新开局', cx, cy + 100); ctx.fillText('按 R 重新开局', cx, cy + 100);
       ctx.restore();
     }
     // 本地玩家阵亡：画面中央大字倒计时；其余阵亡者：在复活点显示小号秒数。
@@ -438,5 +490,5 @@
     return { render, addExplosion, reset };
   }
 
-  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, heldItemSpriteKey, bunTokens, explosionFrame, loadAssets, createRenderer };
+  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, heldItemSpriteKey, matchResult, bunTokens, explosionFrame, loadAssets, createRenderer };
 });

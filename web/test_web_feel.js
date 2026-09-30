@@ -366,6 +366,65 @@ function dimRects(rects, canvas) {
 const controls = require('./controls.js');
 assert(controls.ITEM_KEYS.includes('KeyE') && controls.ITEM_KEYS.includes('ShiftLeft'), 'E/Shift 必须是放道具键');
 
+// 4k) 终局提示：运包成功/时间到 → 胜利/失败/平局。
+{
+  const base = { isBun: true, done: true, t: 50, maxSteps: 2400, bunScore: [1, 0], bunStored: [[1, 1], [1, 0]] };
+  assert.deepEqual(visual.matchResult({ ...base, winner: 0 }, 0), { kind: 'win', title: '胜利', reason: '运包成功', score: '1 : 0' });
+  assert.equal(visual.matchResult({ ...base, winner: 1 }, 0).title, '失败');
+  const timeout = visual.matchResult({ ...base, t: 2400, winner: null, bunStored: [[1, 0], [0, 1]] }, 0);
+  assert.deepEqual([timeout.title, timeout.reason, timeout.score], ['平局', '时间到', '1 : 1']);
+  assert.equal(visual.matchResult({ ...base, winner: 1 }, -1).title, '红方胜利', '观战按阵营报胜者');
+  assert.equal(visual.matchResult({ ...base, done: false, winner: null }, 0), null, '未结束不提示');
+  const { canvas, texts } = mockCanvas();
+  const r = visual.createRenderer(canvas, level, mockAssets());
+  const sim = fakeSim({ pos: [5.5, 3.5, 5.5, 8.5], isBun: true });
+  Object.assign(sim, { done: true, winner: 0, t: 30, maxSteps: 2400, bunScore: [1, 0] });
+  r.render(sim, 1000, null);
+  assert(texts.some((t) => t.text === '胜利') && texts.some((t) => t.text === '按 R 重新开局'), '终局必须在画面显示结果');
+}
+
+// 4l) 炸砖：砖体残骸期仍挡路，但画面立即不画砖；掷出的道具立即可见，残骸结束才可拾取。
+{
+  const s = new QQT.Sim(3); s.reset('open');
+  s.wall.fill(0); s.brick.fill(0); s.fuse.fill(0); s.crate.fill(0);
+  s.crateRate = 1; s.itemsEnabled = true;
+  const cell = 5 * W + 7;
+  s.brick[cell] = 1; s.pos[0] = 5.5; s.pos[1] = 4.5; s.pos[2] = 11.5; s.pos[3] = 11.5;
+  s.fuse[5 * W + 6] = 1; s.owner[5 * W + 6] = 1; s.bombBlast[5 * W + 6] = 2;
+  s.step([[MOVE_IDLE, 0, 0, 1], [MOVE_IDLE, 0, 0, 1]]);
+  assert(s.brick[cell] === 1 && s.brickLinger[cell] > 0, '炸砖后残骸期内砖仍是碰撞体');
+  assert(s.pendingCrateType[cell] >= 0 && !s.crate[cell], '道具在炸砖瞬间掷定但尚不可拾取');
+  const lv = { layers: [new Int16Array(N), new Int16Array(N)] };
+  lv.layers[1][cell] = 8001;
+  const { canvas, draws } = mockCanvas();
+  const assets = mockAssets();
+  assets.elements = { 8001: { w: 1, h: 1, xo: 0, yo: 0 } };
+  assets.elementImages = new Map([[8001, tagImg('brick')]]);
+  const key = visual.crateSpriteKey(s.pendingCrateType[cell], s.pendingSuperCrate[cell] === 1);
+  assets.items = { [key]: { ox: 0, oy: 0, frames: [tagImg('crateItem')] } };
+  const r = visual.createRenderer(canvas, lv, assets);
+  r.render(s, 1000, null);
+  assert(!draws.some((d) => d.tag === 'brick'), '被炸砖在残骸期内不得再画出');
+  assert(draws.some((d) => d.tag === 'crateItem'), '炸出的道具必须立即显示');
+  for (let k = 0; k < QQT.CFG.brickLingerTicks; k++) s.step([[MOVE_IDLE, 0, 0, 1], [MOVE_IDLE, 0, 0, 1]]);
+  assert(s.brick[cell] === 0 && s.crate[cell] === 1 && s.pendingCrateType[cell] === -1, '残骸结束后才开放通行并落为可拾取道具');
+}
+
+// 4m) 放泡落在按键瞬间的格子：按空格后在同一 tick 内走回右格，泡仍放在左格。
+{
+  const s = openSim(); s.pos[0] = 5.5; s.pos[1] = 4.5; s.pos[2] = 1.5; s.pos[3] = 1.5;
+  const pressCell = 5 * W + 4;
+  s.pos[1] = 5.5;                                   // tick 前已回到右格
+  s.step([[MOVE_IDLE, 1, 0, 1, pressCell, -1], [MOVE_IDLE, 0, 0, 1]]);
+  assert(s.fuse[pressCell] > 0 && !(s.fuse[5 * W + 5] > 0), '泡必须落在按键时的左格');
+  const d = openSim(); d.pos[0] = 5.5; d.pos[1] = 5.5;
+  d.step([[MOVE_IDLE, 1, 0, 1], [MOVE_IDLE, 0, 0, 1]]);
+  assert(d.fuse[5 * W + 5] > 0, '未给按键格时仍按当前中心格放泡（训练/模型口径不变）');
+  const it = openSim(); it.pos[0] = 5.5; it.pos[1] = 5.5; it.heldItem[0] = 1;
+  it.step([[MOVE_IDLE, 0, 1, 1, -1, pressCell], [MOVE_IDLE, 0, 0, 1]]);
+  assert.equal(it.fieldItem[pressCell], 1, '道具同样落在按键时的格子');
+}
+
 // ---------- 5) sim.js / app.js 接线契约 ----------
 const simSource = fs.readFileSync(path.join(__dirname, 'sim.js'), 'utf8');
 assert(!/steerReduced/.test(simSource), 'sim.js 必须已彻底移除 steerReduced（连续移动下作废）');
@@ -375,7 +434,7 @@ assert(/NATIVE_HALF_PX = 19/.test(simSource) && /NATIVE_CORNER_TOLERANCE_PX = 6/
 
 const appSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
 assert(!/steerReduced/.test(appSource), 'app.js 必须已移除 steerReduced 接线');
-assert(/\[QQT\.MOVE_IDLE, bombQueued \? 1 : 0, itemQueued \? 1 : 0, 1\]/.test(appSource),
+assert(/\[QQT\.MOVE_IDLE, bombCell >= 0 \? 1 : 0, itemCell >= 0 \? 1 : 0, 1, bombCell, itemCell\]/.test(appSource),
   'humanAction 必须返回第4位=1（跳过 10Hz 移动，改由 rAF frameStep）');
 assert(!/autoTurn|turnSlide/.test(appSource), 'app.js 必须移除 autoTurn（拐角修正由原版物理负责）');
 assert(/const move = QQTControls\.moveForHeld\(held\);[\s\S]*?sim\.frameStep\(0, move, dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
@@ -384,4 +443,5 @@ assert(/humanPid: localHumanControls\(\) \? 0 : -1/.test(appSource),
   'motionState 必须传 humanPid（本地人类 raw / 观战回放插值）');
 assert(/stepHumanFrame\(now\)/.test(appSource), 'rAF 回调必须先驱动 stepHumanFrame(now)');
 
+assert(/if \(QQTControls\.BOMB_KEYS\.includes\(event\.code\) && bombCell < 0\) bombCell = humanCell\(\);/.test(appSource), '放泡键按下瞬间必须记录所在格');
 console.log('网页手感回归（连续逐帧移动 / 原版像素物理 / 人类raw渲染 / 复活压暗）通过');

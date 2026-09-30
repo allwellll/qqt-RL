@@ -38,8 +38,9 @@
 
   const held = new Set();
   const modelRng = QQT.mulberry32(0x515154);
-  let bombQueued = false;
-  let itemQueued = false;
+  // 按键瞬间记下所在格（-1=未按）；下一个 10Hz tick 在该格放泡/放道具。
+  let bombCell = -1;
+  let itemCell = -1;
   let loadedModel = null;
   let publishedModels = [];
   let activeBot = null;
@@ -132,8 +133,8 @@
       modelStatus.textContent = '请先从模型列表选择并加载一个模型';
     }
     resetBot();
-    bombQueued = false;
-    itemQueued = false;
+    bombCell = -1;
+    itemCell = -1;
     intents[0] = intents[1] = QQT.MOVE_IDLE;
     snapMotion();
     renderer.reset();
@@ -189,11 +190,17 @@
     while (replayIndex < target) stepReplay(true);
   }
 
+  function humanCell() {
+    if (!sim || !localHumanControls() || !sim.alive[0]) return -1;
+    const [row, column] = sim.centerCell(0);
+    return row * 15 + column;
+  }
+
   function humanAction() {
     // 第4位=1：跳过 10Hz 逻辑移动（移动改由 rAF 逐帧 frameStep 连续处理）；放泡仍在中心格生效。
-    const action = [QQT.MOVE_IDLE, bombQueued ? 1 : 0, itemQueued ? 1 : 0, 1];
-    bombQueued = false;
-    itemQueued = false;
+    const action = [QQT.MOVE_IDLE, bombCell >= 0 ? 1 : 0, itemCell >= 0 ? 1 : 0, 1, bombCell, itemCell];
+    bombCell = -1;
+    itemCell = -1;
     return action;
   }
 
@@ -308,7 +315,8 @@
         prevPos.set(sim.pos);
         const before = QQTSound.snapshot(sim);
         const info = sim.step([
-          [Number(first[0]), Number(first[1]), Number(first[2]) || 0, Number(first[3]) || 0],
+          [Number(first[0]), Number(first[1]), Number(first[2]) || 0, Number(first[3]) || 0,
+            first[4] == null ? -1 : first[4], first[5] == null ? -1 : first[5]],
           [action.move, action.ability === 1 ? 1 : 0, action.ability === 2 ? 1 : 0],
         ]);
         curPos.set(sim.pos); lastTickT = performance.now();
@@ -331,10 +339,11 @@
   window.addEventListener('pointerdown', unlockAudio);
   window.addEventListener('keydown', (event) => {
     unlockAudio();
-    if ([...QQTControls.MOVEMENT_KEYS, ...QQTControls.ITEM_KEYS, 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(event.code)) event.preventDefault();
+    if ([...QQTControls.MOVEMENT_KEYS, ...QQTControls.ITEM_KEYS, ...QQTControls.BOMB_KEYS].includes(event.code)) event.preventDefault();
     held.add(event.code);
-    if (event.code === 'Space') bombQueued = true;
-    if (QQTControls.ITEM_KEYS.includes(event.code)) itemQueued = true;
+    // 同一 tick 内多次按键只保留第一次的位置。
+    if (QQTControls.BOMB_KEYS.includes(event.code) && bombCell < 0) bombCell = humanCell();
+    if (QQTControls.ITEM_KEYS.includes(event.code) && itemCell < 0) itemCell = humanCell();
     if (event.code === 'KeyR') reset();
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));
