@@ -29,6 +29,8 @@ if IS_BUN:
                           legal_mask, make_obs, prepare as prepare_environment,
                           reward_from_events as _bun_reward_from_events, step)
     from .bun_safety import adjusted_joint_logits, both_avoidable_masks
+    from . import bun_jax_bots
+    JAX_BOT_NAMES = bun_jax_bots.TIER_NAMES + ("legacy_flee",)
 else:
     from .jax_env import (H, W, MAX_HP, MAX_STEPS, N_BOMB, N_MOVES,
                           N_OBS_CH, _danger_map, global_vec, init_batch,
@@ -356,6 +358,44 @@ def flee_bot_actions(p_bot, p_opp, mm, bm, key, idle_ratio=0.25, roam_ratio=0.05
     return jnp.stack([move_act, bomb_act], axis=-1)
 
 
+def jax_bot_seat_actions(states, key, kinds, n_bot, enabled):
+    """Graded device-side rule bots for the first `n_bot` envs.
+
+    Seat layout matches the flee-bot split (and `mask_bot_advantages`): envs
+    `[:n_bot//2]` have the bot on P1, envs `[n_bot//2:n_bot]` on P0, so the
+    learner practises both seats. `kinds` (n_bot,) index `JAX_BOT_NAMES`;
+    `enabled` is a static numpy bool mask used only to prune unused branches.
+    Returns `(n_bot, 2)` actions for the bot seats.
+    """
+    weights = np.asarray(enabled, np.float32)
+    half = n_bot // 2
+    sub = jax.tree_util.tree_map(lambda x: x[:n_bot], states)
+    rows = jnp.arange(n_bot)
+    seats = (rows < half).astype(jnp.int32)
+    move_mask, ability_mask = jax.vmap(legal_mask)(sub)
+    bot_mm, bot_bm = move_mask[rows, seats], ability_mask[rows, seats]
+    k_rule, k_flee = jrandom.split(key)
+    legacy = len(JAX_BOT_NAMES) - 1
+    use_rule = bool(np.asarray(weights)[:legacy].sum() > 0)
+    use_flee = bool(np.asarray(weights)[legacy] > 0)
+    acts = None
+    if use_rule:
+        acts = bun_jax_bots.rule_bot_actions(
+            sub, seats, bot_mm, bot_bm, k_rule, jnp.minimum(kinds, legacy - 1))
+    if use_flee:
+        flee = flee_bot_actions(
+            sub.pos[rows, seats], sub.pos[rows, 1 - seats], bot_mm, bot_bm, k_flee)
+        acts = flee if acts is None else jnp.where(
+            (kinds == legacy)[:, None], flee, acts)
+    return acts
+
+
+def apply_jax_bot_actions(a0, a1, bot_acts, n_bot):
+    half = n_bot // 2
+    return (a0.at[half:n_bot].set(bot_acts[half:]),
+            a1.at[:half].set(bot_acts[:half]))
+
+
 def bun_opponent_actions(states, obs, gv, masks, arch, key, kinds,
                          weak_params, old_params, recent_params):
     """Return P1 actions for the real asymmetric Bun opponent pool."""
@@ -400,8 +440,18 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
                     bun_opponent_weights=None,
                     bun_opponent_weak_params=None,
                     bun_opponent_old_params=None,
-                    bun_opponent_recent_params=None):
+                    bun_opponent_recent_params=None,
+                    jax_bot_pool=None,
+                    jax_bot_enabled=None,
+                    return_bot_stats=False):
     """自对弈：同一网络打两边，可选混入部分逃跑对手环境。states (N, ...)。返回 (new_states, batch, nov, kills)。
+
+    jax_bot_pool：`JAX_BOT_NAMES` 顺序的权重（可为 traced jnp，便于自适应课程
+    每 iter 改权重不重编译）；jax_bot_enabled：静态 bool 掩码（numpy，裁剪未用
+    分支，默认 = pool>0）。给定时前 flee_bot_ratio 比例的 env 由分级规则 bot
+    （bun_jax_bots）替代 flee-bot，每局结束按权重重采样难度；
+    return_bot_stats=True 时额外返回 (K,4) 每档
+    [局数, 学习者胜, 学习者负, 学习者自炸] 计数。
 
     nov：每 env/玩家的 novelty 计数（未加权，与 batch.rew 同口径窗口累计）。
     训练侧除以 num_steps × coef 即得"探索分/帧"，与 rew 均值直接对比——
@@ -461,9 +511,23 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
             opponent_key, n, bun_opponent_weights)
     else:
         opponent_kinds0 = jnp.zeros((n,), jnp.int8)
+    use_jax_bots = jax_bot_pool is not None and n_flee > 0 and not use_bun_opponents
+    n_kinds = len(JAX_BOT_NAMES) if IS_BUN else 1
+    if use_jax_bots and jax_bot_enabled is None:
+        jax_bot_enabled = np.asarray(jax_bot_pool) > 0
+    if use_jax_bots:
+        key, bot_key = jrandom.split(key)
+        bot_kinds0 = jnp.zeros((n,), jnp.int8).at[:n_flee].set(
+            sample_bun_opponent_kinds(bot_key, n_flee, jax_bot_pool))
+    else:
+        bot_kinds0 = jnp.zeros((n,), jnp.int8)
+    bot_stats0 = jnp.zeros((n_kinds, 4), jnp.float32)
+    # Learner seat in bot envs: P0 where the bot is P1 (first half), else P1.
+    learner_seat = jnp.where(jnp.arange(n_flee) < n_flee // 2, 0, 1)
 
     def one_step(carry, _):
-        states, key, visited, nov, kills, opponent_kinds = carry
+        (states, key, visited, nov, kills, opponent_kinds,
+         bot_kinds, bot_stats) = carry
         key, k0, k1, kstep = jrandom.split(key, 4)
         obs = both_perspectives(states)               # (2N, C, H, W)
         masks = (ones_m, ones_b) if no_mask else both_masks(states)
@@ -482,6 +546,11 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
                 states, obs, gv, masks, arch, opponent_action_key,
                 opponent_kinds, bun_opponent_weak_params,
                 bun_opponent_old_params, bun_opponent_recent_params)
+        elif use_jax_bots:
+            key, k_bot = jrandom.split(key)
+            bot_acts = jax_bot_seat_actions(
+                states, k_bot, bot_kinds[:n_flee], n_flee, jax_bot_enabled)
+            a0, a1 = apply_jax_bot_actions(a0, a1, bot_acts, n_flee)
         elif n_flee > 0:
             key, k_bot1, k_bot0 = jrandom.split(key, 3)
             mm_all, bm_all = masks
@@ -546,6 +615,11 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
                     opponent_kinds, bun_opponent_weak_params,
                     bun_opponent_old_params, bun_opponent_recent_params)
                 a1_2 = a1_2.at[:, 1].set(0)
+            elif use_jax_bots:
+                bot_acts2 = jax_bot_seat_actions(
+                    new_states, k_bot1_2, bot_kinds[:n_flee], n_flee,
+                    jax_bot_enabled)
+                a0_2, a1_2 = apply_jax_bot_actions(a0_2, a1_2, bot_acts2, n_flee)
             elif n_flee > 0:
                 mm2_all, bm2_all = both_masks(new_states)
                 if n_flee_half > 0:
@@ -588,6 +662,25 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
             sampled_kinds = sample_bun_opponent_kinds(
                 next_opponent_key, n, bun_opponent_weights)
             opponent_kinds = jnp.where(done, sampled_kinds, opponent_kinds)
+        if use_jax_bots:
+            if return_bot_stats and IS_BUN:
+                # 按 tick 事件统计（danger_arena 死亡复活、仅超时终局，winner 无信息）
+                rows = jnp.arange(n_flee)
+
+                def seat(name):
+                    return info[name][:n_flee][rows, learner_seat].astype(jnp.float32)
+
+                ended = jnp.ones((n_flee,), jnp.float32)
+                kill = jnp.maximum(seat("surviving_causal_kill"),
+                                   seat("surviving_physical_kill"))
+                death = seat("death")
+                self_kill = seat("own_bomb_defeat")
+                upd = jnp.stack([ended, kill, death, self_kill], axis=-1)  # ticks,kill,death,self
+                bot_stats = bot_stats.at[bot_kinds[:n_flee].astype(jnp.int32)].add(upd)
+            key, next_bot_key = jrandom.split(key)
+            resampled = sample_bun_opponent_kinds(next_bot_key, n_flee, jax_bot_pool)
+            bot_kinds = bot_kinds.at[:n_flee].set(
+                jnp.where(done[:n_flee], resampled, bot_kinds[:n_flee]))
         d = jnp.concatenate([done, done])
         rew = jnp.concatenate([rew[:, 0], rew[:, 1]])
         obs_s = (jnp.round(obs * 255.0).astype(jnp.uint8)
@@ -597,13 +690,18 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
         acts_exec = jnp.concatenate([a0, a1], axis=0)
         stored_masks = (masks[0], masks[1], joint_unsafe)
         data = (obs_s, state_s, acts_exec, lps, vals, rew, d, stored_masks)
-        return (new_states, key, new_visited, nov, kills, opponent_kinds), data
+        return (new_states, key, new_visited, nov, kills, opponent_kinds,
+                bot_kinds, bot_stats), data
     body = (jax.checkpoint(one_step) if checkpoint else one_step)
-    (final_states, _, _, nov, kills, _), data = jax.lax.scan(
-        body, (states, key, visited0, nov0, kills0, opponent_kinds0), None,
+    (final_states, _, _, nov, kills, _, _, bot_stats), data = jax.lax.scan(
+        body, (states, key, visited0, nov0, kills0, opponent_kinds0,
+               bot_kinds0, bot_stats0), None,
         length=num_steps)
     obs, state, acts, lps, vals, rew, done, masks = data
-    return final_states, (obs, state, acts, lps, vals, rew, done, masks), nov, kills
+    batch = (obs, state, acts, lps, vals, rew, done, masks)
+    if return_bot_stats:
+        return final_states, batch, nov, kills, bot_stats
+    return final_states, batch, nov, kills
 
 
 def collect_rollout_two(params_a, params_b, arch, states, key, num_steps,
@@ -1228,6 +1326,9 @@ def save_run_metadata(path: str, args) -> None:
         "bun_opponent_old": getattr(args, "bun_opponent_old", None),
         "bun_opponent_recent": getattr(args, "bun_opponent_recent", None),
         "bun_opponent_history": getattr(args, "bun_opponent_history", None),
+        "flee_bot_ratio": getattr(args, "flee_bot_ratio", 0.0),
+        "jax_bot_pool": getattr(args, "jax_bot_pool", ""),
+        "jax_bot_adaptive": getattr(args, "jax_bot_adaptive", False),
     }
     with open(metadata_path, "w", encoding="utf-8") as file:
         json.dump(metadata, file, ensure_ascii=False, indent=2)
@@ -1256,16 +1357,21 @@ def _lsgd_updater(args):
 
 
 def build_one_iter(params, opt, opt_state, states, key, args,
-                   reference_params=None, bun_opponent_pool=None):
+                   reference_params=None, bun_opponent_pool=None,
+                   jax_bot_enabled=None):
     """返回 jitted one_iter：(params, opt_state, states, key) -> 同形四元组。
 
     与训练主循环完全同构：collect_rollout → bootstrap → GAE → PPO update。
+    jax_bot_enabled（静态 bool 掩码）给定时签名变为
+    (params, opt_state, states, key, bot_weights) -> (..., bot_stats)：
+    bot_weights 是 traced 输入，自适应课程改权重不触发重编译。
     """
     n = states.pos.shape[0]
     steps = args.num_steps
+    use_pool = jax_bot_enabled is not None
 
-    def one_iter(params, opt_state, states, key):
-        states, batch, _nov, _kills = collect_rollout(
+    def one_iter(params, opt_state, states, key, bot_weights=None):
+        rollout = collect_rollout(
             params, args.arch, states, key, steps,
             getattr(args, "no_mask", False),
             getattr(args, "obs_quant", False),
@@ -1281,7 +1387,11 @@ def build_one_iter(params, opt, opt_state, states, key, args,
             bun_opponent_old_params=(None if bun_opponent_pool is None
                                      else bun_opponent_pool[2]),
             bun_opponent_recent_params=(None if bun_opponent_pool is None
-                                        else bun_opponent_pool[3]))
+                                        else bun_opponent_pool[3]),
+            jax_bot_pool=bot_weights if use_pool else None,
+            jax_bot_enabled=jax_bot_enabled,
+            return_bot_stats=use_pool)
+        states, batch = rollout[0], rollout[1]
         obs, state, acts, lps, vals, rew, done, masks = batch
         # bootstrap：rollout 尾部状态价值（全局状态向量同步传入）
         fobs = both_perspectives(states)
@@ -1327,24 +1437,84 @@ def build_one_iter(params, opt, opt_state, states, key, args,
                 key, args.minibatch, args.clip_eps, args.vf_coef,
                 args.ent_coef, args.epochs, **kw)
         key = jrandom.split(key)[0]
+        if use_pool:
+            return params, opt_state, states, key, rollout[4]
         return params, opt_state, states, key
 
     return jax.jit(one_iter)
 
 
-def compile_warmup(one_iter_j, params, opt_state, states, key, repeats=2):
+def compile_warmup(one_iter_j, params, opt_state, states, key, repeats=2,
+                   extra=()):
     """Compile and exercise one iteration without committing training state."""
     warm_params = params
     warm_opt_state = opt_state
     warm_states = states
     warm_key = key
     for _ in range(repeats):
-        warm_params, warm_opt_state, warm_states, warm_key = one_iter_j(
-            warm_params, warm_opt_state, warm_states, warm_key)
+        out = one_iter_j(warm_params, warm_opt_state, warm_states, warm_key,
+                         *extra)
+        warm_params, warm_opt_state, warm_states, warm_key = out[:4]
     jax.block_until_ready(warm_params)
 
 
-def build_dp_one_iter(params, opt, opt_state, states, key, args, n_dev):
+class JaxBotCurriculum:
+    """Host-side per-tier outcome tracker + optional adaptive pool weights.
+
+    stats rows = [ticks, learner surviving kills, learner deaths, self-kills].
+    Adaptive mode keeps the learner where it still gets signal: a tier's
+    weight is base * (floor + 4·p·(1-p)), p = EMA of kills/(kills+deaths),
+    so mastered (p→1) and hopeless (p→0) tiers fade but never vanish.
+    """
+
+    PER = 300.0   # 汇报口径：每 300 tick（= danger_arena 一局）
+
+    def __init__(self, base_weights, adaptive=False, ema=0.9, floor=0.1):
+        self.base = np.asarray(base_weights, np.float64)
+        self.adaptive = adaptive
+        self.ema = ema
+        self.floor = floor
+        self.win = np.full(self.base.shape, 0.5)
+        self.totals = np.zeros((self.base.shape[0], 4))
+
+    def weights(self):
+        if not self.adaptive:
+            return (self.base / self.base.sum()).astype(np.float32)
+        w = self.base * (self.floor + 4.0 * self.win * (1.0 - self.win))
+        return (w / w.sum()).astype(np.float32)
+
+    def update(self, stats):
+        stats = np.asarray(stats, np.float64)
+        self.totals += stats
+        events = stats[:, 1] + stats[:, 2]
+        seen = events > 0
+        rate = np.where(seen, stats[:, 1] / np.maximum(events, 1), self.win)
+        self.win = np.where(seen, self.ema * self.win + (1 - self.ema) * rate,
+                            self.win)
+
+    def summary(self, stats):
+        stats = np.asarray(stats)
+        parts = []
+        for i, name in enumerate(JAX_BOT_NAMES):
+            if self.base[i] <= 0:
+                continue
+            ep = stats[i, 0] / self.PER
+            if ep > 0:
+                parts.append(f"{name}:ep={ep:.0f} kill={stats[i,1]/ep:.2f} "
+                             f"death={stats[i,2]/ep:.2f} "
+                             f"self={stats[i,3]/ep:.2f} p={self.win[i]:.2f}")
+            else:
+                parts.append(f"{name}:ep=0")
+        if self.adaptive:
+            w = self.weights()
+            parts.append("w=" + ",".join(
+                f"{JAX_BOT_NAMES[i]}={w[i]:.2f}"
+                for i in range(len(w)) if self.base[i] > 0))
+        return " | ".join(parts)
+
+
+def build_dp_one_iter(params, opt, opt_state, states, key, args, n_dev,
+                      jax_bot_enabled=None):
     """数据并行（DP）one_iter：每卡 envs 切片独立 collect，更新时梯度
     pmean allreduce。n_dev 为卡数，states/key 首维须为 n_dev（pmap 切片）。
 
@@ -1358,14 +1528,19 @@ def build_dp_one_iter(params, opt, opt_state, states, key, args, n_dev):
     steps = args.num_steps
     mb_local = args.minibatch // n_dev
     assert mb_local >= 1, "minibatch 必须 >= 卡数"
+    use_pool = jax_bot_enabled is not None
 
-    def one_iter_shard(params, opt_state, states, key):
-        states, batch, _nov, _kills = collect_rollout(
+    def one_iter_shard(params, opt_state, states, key, bot_weights=None):
+        rollout = collect_rollout(
             params, args.arch, states, key, steps,
             getattr(args, "no_mask", False),
             getattr(args, "obs_quant", False),
             getattr(args, "checkpoint", False),
-            flee_bot_ratio=getattr(args, "flee_bot_ratio", 0.0))
+            flee_bot_ratio=getattr(args, "flee_bot_ratio", 0.0),
+            jax_bot_pool=bot_weights if use_pool else None,
+            jax_bot_enabled=jax_bot_enabled,
+            return_bot_stats=use_pool)
+        states, batch = rollout[0], rollout[1]
         obs, state, acts, lps, vals, rew, done, masks = batch
         fobs = both_perspectives(states)
         fmasks = both_masks(states)
@@ -1395,8 +1570,13 @@ def build_dp_one_iter(params, opt, opt_state, states, key, args, n_dev):
                 key, mb_local, args.clip_eps, args.vf_coef, args.ent_coef,
                 args.epochs, axis_name="dev", **kw)
         key = jrandom.split(key)[0]
+        if use_pool:
+            return params, opt_state, states, key, rollout[4]
         return params, opt_state, states, key
 
+    if use_pool:
+        return jax.pmap(one_iter_shard, axis_name="dev",
+                        in_axes=(None, None, 0, 0, None))
     return jax.pmap(one_iter_shard, axis_name="dev",
                     in_axes=(None, None, 0, 0))
 
@@ -1407,7 +1587,7 @@ def _unreplicate(tree):
 
 
 def run_dp_training(params, opt, opt_state, args, key, devs,
-                    bun_opponent_pool, reference_params):
+                    bun_opponent_pool, reference_params, bot_curriculum=None):
     """pmap 数据并行主循环：每卡 num_envs/devices 个 env，梯度 pmean 同步。
 
     build_dp_one_iter 的 pmap in_axes=(None,None,0,0)：params/opt_state 广播、
@@ -1436,11 +1616,18 @@ def run_dp_training(params, opt, opt_state, args, key, devs,
           f"flee_bot_ratio={getattr(args, 'flee_bot_ratio', 0.0)}", flush=True)
 
     one_iter_dp = build_dp_one_iter(
-        params, opt, opt_state, states, iter_keys, args, n_dev)
+        params, opt, opt_state, states, iter_keys, args, n_dev,
+        jax_bot_enabled=(None if bot_curriculum is None
+                         else bot_curriculum.base > 0))
+
+    def extra():
+        if bot_curriculum is None:
+            return ()
+        return (jnp.asarray(bot_curriculum.weights()),)
 
     # warmup（首次编译，不计入训练更新）
     t0 = time.time()
-    wp, wo, ws, wk = one_iter_dp(params, opt_state, states, iter_keys)
+    wp = one_iter_dp(params, opt_state, states, iter_keys, *extra())[0]
     jax.block_until_ready(wp)
     print(f"warmup done ({time.time()-t0:.1f}s)", flush=True)
 
@@ -1449,8 +1636,12 @@ def run_dp_training(params, opt, opt_state, args, key, devs,
     offset = int(getattr(args, "iter_offset", 0))   # 续跑全局步偏移
     for it in range(args.iters):
         t1 = time.time()
-        params, opt_state, states, iter_keys = one_iter_dp(
-            params, opt_state, states, iter_keys)
+        out = one_iter_dp(params, opt_state, states, iter_keys, *extra())
+        params, opt_state, states, iter_keys = out[:4]
+        if bot_curriculum is not None:
+            bot_stats = np.asarray(jax.device_get(out[4])).sum(axis=0)
+            bot_curriculum.update(bot_stats)
+            print(f"  bots: {bot_curriculum.summary(bot_stats)}", flush=True)
         params = _unreplicate(params)
         opt_state = _unreplicate(opt_state)
         jax.block_until_ready(params)
@@ -1508,6 +1699,14 @@ def main():
     ap.add_argument("--flee-bot-ratio", type=float,
                     default=0.0 if IS_BUN else 0.20,
                     help="规则 Bot 环境比例；抢包子默认关闭，保持纯自博弈")
+    ap.add_argument(
+        "--jax-bot-pool", default="",
+        help="分级 JAX 规则 bot 池（替代 flee-bot 席位，需 --flee-bot-ratio>0）："
+             "dodge_easy/dodge/bomber_easy/hunter/hunter_hard/legacy_flee 权重，"
+             "如 dodge=1,bomber_easy=1,hunter=2")
+    ap.add_argument("--jax-bot-adaptive", action="store_true",
+                    help="按学习者对各难度的 EMA 胜率自适应调权重 "
+                         "(w∝base·(0.1+4p(1-p)))，聚焦仍有信号的难度")
     ap.add_argument(
         "--bun-opponent-pool", default="",
         help="真实非对称 P1 对手池：idle/roam/rule_combat/weak/old/recent 权重")
@@ -1700,19 +1899,41 @@ def main():
               f"weak={args.bun_opponent_weak} "
               f"old={old_path} recent={recent_path}", flush=True)
 
+    bot_curriculum = None
+    if args.jax_bot_pool:
+        if not IS_BUN:
+            raise ValueError("--jax-bot-pool 仅支持抢包子规则（JAXBOMB_RULE=bun）")
+        if bun_opponent_pool is not None:
+            raise ValueError("--jax-bot-pool 与 --bun-opponent-pool 不能同时启用")
+        if not args.flee_bot_ratio or int(n * args.flee_bot_ratio) < 2:
+            raise ValueError("--jax-bot-pool 需要 --flee-bot-ratio>0（bot 席位比例）")
+        base = np.asarray(bun_jax_bots.parse_tier_names(
+            args.jax_bot_pool, JAX_BOT_NAMES), np.float64)
+        bot_curriculum = JaxBotCurriculum(base, adaptive=args.jax_bot_adaptive)
+        print(f"jax bot pool={dict(zip(JAX_BOT_NAMES, map(float, base)))} "
+              f"adaptive={args.jax_bot_adaptive} "
+              f"bot_envs={int(n * args.flee_bot_ratio)}/{n}", flush=True)
+
     # ---- 数据并行（pmap DP）：--devices>1 时接管整个训练并直接返回 ----
     if args.devices > 1:
         run_dp_training(params, opt, opt_state, args, key, devs,
-                        bun_opponent_pool, reference_params)
+                        bun_opponent_pool, reference_params, bot_curriculum)
         return
 
     one_iter_j = build_one_iter(
         params, opt, opt_state, states, key, args, reference_params,
-        bun_opponent_pool)
+        bun_opponent_pool,
+        jax_bot_enabled=(None if bot_curriculum is None
+                         else bot_curriculum.base > 0))
+
+    def extra():
+        if bot_curriculum is None:
+            return ()
+        return (jnp.asarray(bot_curriculum.weights()),)
 
     # warmup（首次编译，不计入训练更新）
     t0 = time.time()
-    compile_warmup(one_iter_j, params, opt_state, states, key)
+    compile_warmup(one_iter_j, params, opt_state, states, key, extra=extra())
     print(f"warmup done ({time.time()-t0:.1f}s)", flush=True)
 
     # 计时
@@ -1720,8 +1941,13 @@ def main():
     rollout_agents = 1 if bun_opponent_pool is not None else 2
     for it in range(args.iters):
         t1 = time.time()
-        params, opt_state, states, key = one_iter_j(params, opt_state, states, key)
+        out = one_iter_j(params, opt_state, states, key, *extra())
+        params, opt_state, states, key = out[:4]
         jax.block_until_ready(params)
+        if bot_curriculum is not None:
+            bot_stats = np.asarray(jax.device_get(out[4]))
+            bot_curriculum.update(bot_stats)
+            print(f"  bots: {bot_curriculum.summary(bot_stats)}", flush=True)
         dt = time.time() - t1
         sps = rollout_agents * n * steps / dt
         if args.save and args.save_every and it and it % args.save_every == 0:
