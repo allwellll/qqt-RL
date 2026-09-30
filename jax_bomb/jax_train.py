@@ -1393,6 +1393,76 @@ def build_dp_one_iter(params, opt, opt_state, states, key, args, n_dev):
                     in_axes=(None, None, 0, 0))
 
 
+def _unreplicate(tree):
+    """Drop the leading device axis (params identical across devices post-pmean)."""
+    return jax.tree_util.tree_map(lambda x: x[0], tree)
+
+
+def run_dp_training(params, opt, opt_state, args, key, devs,
+                    bun_opponent_pool, reference_params):
+    """pmap 数据并行主循环：每卡 num_envs/devices 个 env，梯度 pmean 同步。
+
+    build_dp_one_iter 的 pmap in_axes=(None,None,0,0)：params/opt_state 广播、
+    states/key 按卡切片。每次 one_iter 返回值带 device 轴，参数经 pmean 逐卡
+    一致，故下一轮前用 _unreplicate 取 [0] 复原为无设备轴（再次广播）。
+    """
+    n_dev = args.devices
+    if len(devs) < n_dev:
+        raise SystemExit(f"--devices {n_dev} 超过可用设备数 {len(devs)}")
+    if args.num_envs % n_dev != 0:
+        raise SystemExit(f"--num-envs {args.num_envs} 必须能被 --devices {n_dev} 整除")
+    if args.minibatch % n_dev != 0:
+        raise SystemExit(f"--minibatch {args.minibatch} 必须能被 --devices {n_dev} 整除")
+    if bun_opponent_pool is not None:
+        raise SystemExit("DP（--devices>1）暂不支持 --bun-opponent-pool（DP 路径仅 flee-bot 自对弈）")
+    if getattr(args, "safety_mode", "off") != "off" or reference_params is not None:
+        raise SystemExit("DP（--devices>1）暂不支持 safety / reference-KL")
+
+    n_per = args.num_envs // n_dev
+    steps = args.num_steps
+    key, sk, ik = jrandom.split(key, 3)
+    states = jax.vmap(lambda k: init_batch(k, n_per))(jrandom.split(sk, n_dev))
+    iter_keys = jrandom.split(ik, n_dev)
+    print(f"DP: devices={n_dev} envs/dev={n_per} (total={args.num_envs}) "
+          f"minibatch/dev={args.minibatch // n_dev} "
+          f"flee_bot_ratio={getattr(args, 'flee_bot_ratio', 0.0)}", flush=True)
+
+    one_iter_dp = build_dp_one_iter(
+        params, opt, opt_state, states, iter_keys, args, n_dev)
+
+    # warmup（首次编译，不计入训练更新）
+    t0 = time.time()
+    wp, wo, ws, wk = one_iter_dp(params, opt_state, states, iter_keys)
+    jax.block_until_ready(wp)
+    print(f"warmup done ({time.time()-t0:.1f}s)", flush=True)
+
+    t0 = time.time()
+    rollout_agents = 2                       # 自对弈：两席都产出可训练样本
+    offset = int(getattr(args, "iter_offset", 0))   # 续跑全局步偏移
+    for it in range(args.iters):
+        t1 = time.time()
+        params, opt_state, states, iter_keys = one_iter_dp(
+            params, opt_state, states, iter_keys)
+        params = _unreplicate(params)
+        opt_state = _unreplicate(opt_state)
+        jax.block_until_ready(params)
+        dt = time.time() - t1
+        sps = rollout_agents * args.num_envs * steps / dt
+        gstep = it + offset
+        if args.save and args.save_every and it and gstep % args.save_every == 0:
+            mid = f"{os.path.splitext(args.save)[0]}_it{gstep}.pt"
+            save_params(params, mid)
+            save_run_metadata(mid, args)
+        print(f"[iter {gstep}] {dt:.2f}s  sps={sps:,.0f}", flush=True)
+    tot = rollout_agents * args.num_envs * steps * args.iters / (time.time() - t0)
+    print(f"FINAL end-to-end sps = {tot:,.0f} "
+          f"({rollout_agents*args.num_envs*steps*args.iters:,} trainable-agent steps)",
+          flush=True)
+    if args.save:
+        save_params(params, args.save)
+        save_run_metadata(args.save, args)
+
+
 # ---------------- main ----------------
 
 
@@ -1506,6 +1576,15 @@ def main():
     ap.add_argument("--save-every", type=int, default=0,
                     help="每 N 迭代存一次中间 ckpt（0=不存）。文件名 = "
                          "--save 去掉扩展名 + _it{N}，供中途评估/续跑")
+    ap.add_argument("--devices", type=int, default=1,
+                    help="数据并行卡数：>1 走 pmap DP（每卡 num-envs/devices 个 "
+                         "env，梯度 pmean allreduce，参数逐卡一致）。仅支持 "
+                         "flee-bot 自对弈（--flee-bot-ratio），与 opponent-pool/"
+                         "safety/distill 互斥")
+    ap.add_argument("--iter-offset", type=int, default=0,
+                    help="DP 续跑用：中间 ckpt 命名/日志的全局步偏移。从 "
+                         "actor_it{N}.pt 续跑时传 N，使新 ckpt 仍按全局步连号 "
+                         "（it{N+200}...），不覆盖已存在的历史 ckpt")
     args = ap.parse_args()
     if args.hidden is None:
         args.hidden = 768 if args.arch == "mlp4" else 256
@@ -1580,6 +1659,13 @@ def main():
               f"{dict(zip(BUN_OPPONENT_NAMES, map(float, weights)))} "
               f"weak={args.bun_opponent_weak} "
               f"old={old_path} recent={recent_path}", flush=True)
+
+    # ---- 数据并行（pmap DP）：--devices>1 时接管整个训练并直接返回 ----
+    if args.devices > 1:
+        run_dp_training(params, opt, opt_state, args, key, devs,
+                        bun_opponent_pool, reference_params)
+        return
+
     one_iter_j = build_one_iter(
         params, opt, opt_state, states, key, args, reference_params,
         bun_opponent_pool)
