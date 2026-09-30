@@ -56,89 +56,21 @@
   const curPos = new Float64Array(4);
   let lastTickT = performance.now();
   let prevFrame = performance.now();
-  function snapMotion() { prevPos.set(sim.pos); curPos.set(sim.pos); lastTickT = performance.now(); prevFrame = performance.now(); clearTurnSlide(); }
+  function snapMotion() { prevPos.set(sim.pos); curPos.set(sim.pos); lastTickT = performance.now(); prevFrame = performance.now(); }
   // 本地人类操控 pid0（非回放、非观战 model-vs-rule）时 humanPid=0 → 渲染 raw；否则 -1（两方皆插值）。
   function localHumanControls() { return !replayDocument && matchMode.value !== 'model-vs-rule'; }
   function motionState() {
     return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1 };
   }
 
-  // ---- 本地人类逐帧移动的自动转向（对齐旧 qqt-gpu-sim autoTurn；只作用于人类 pid0）----
-  // 触发条件：直走被挡(移动<5%步长) 且 碰撞盒横跨格边界 且 偏移<MIN_OFF 且 缺口侧开放。
-  // 偏移越接近 0 越贴角越该转，0.5=正中央不转 → 正前方(居中)不侧滑；靠角(~1/4)朝空缺侧滑。
-  const MIN_OFF = 0.25;
-  let turnInput = -1, turnSlide = -1;
-  let turnSlideTarget = null;
-  function clearTurnSlide() { turnSlide = -1; turnSlideTarget = null; }
-  function autoTurn(pid, move) {
-    const stepLen = QQT.CFG.stepLen * sim.playerMoveScale(pid);
-    const moved = move >= 4 ? stepLen : sim.probeMoveDist(pid, move);
-    if (move >= 4 || moved >= stepLen * 0.95) { clearTurnSlide(); return move; }
-    if (move !== turnInput) clearTurnSlide();
-    turnInput = move;
-    const R = QQT.CFG.radius;
-    const y = sim.pos[pid * 2], x = sim.pos[pid * 2 + 1];
-    const r = Math.floor(y), c = Math.floor(x);
-    const open = (cr, cc) => cr >= 0 && cr < QQT.H && cc >= 0 && cc < QQT.W &&
-      !sim.wall[cr * QQT.W + cc] && !sim.brick[cr * QQT.W + cc] && sim.fuse[cr * QQT.W + cc] <= 0;
-    if (turnSlide !== -1) {
-      if (sim.probeMoveDist(pid, turnSlide) > stepLen * 0.05) return turnSlide;
-      clearTurnSlide();
-      return move;
-    }
-    if (moved > stepLen * 0.05) return move;
-    let dir2 = -1, off = 99, okSlide = false;
-    if (move === QQT.MOVE_UP || move === QQT.MOVE_DOWN) {
-      const cl = Math.floor(x - R), cr = Math.floor(x + R);
-      if (cl !== cr) {
-        const lo = (x + R) - cr, ro = (cl + 1) - (x - R);
-        const dy = move === QQT.MOVE_UP ? -1 : 1;
-        if (lo <= ro) { dir2 = QQT.MOVE_LEFT; off = lo; okSlide = open(r + dy, cl) && (cl === c || open(r, cl)); }
-        else { dir2 = QQT.MOVE_RIGHT; off = ro; okSlide = open(r + dy, cr) && (cr === c || open(r, cr)); }
-      }
-    } else {
-      const rl = Math.floor(y - R), rr2 = Math.floor(y + R);
-      if (rl !== rr2) {
-        const uo = (y + R) - rr2, do2 = (rl + 1) - (y - R);
-        const dx = move === QQT.MOVE_LEFT ? -1 : 1;
-        if (uo <= do2) { dir2 = QQT.MOVE_UP; off = uo; okSlide = open(rl, c + dx) && (rl === r || open(rl, c)); }
-        else { dir2 = QQT.MOVE_DOWN; off = do2; okSlide = open(rr2, c + dx) && (rr2 === r || open(rr2, c)); }
-      }
-    }
-    if (dir2 === -1 || !okSlide) { clearTurnSlide(); return move; }
-    if (off >= MIN_OFF) return move;
-    turnSlide = dir2;
-    if (move === QQT.MOVE_UP || move === QQT.MOVE_DOWN) {
-      const targetCol = dir2 === QQT.MOVE_LEFT ? Math.floor(x - R) : Math.floor(x + R);
-      turnSlideTarget = { axis: 'x', value: targetCol + 0.5 };
-    } else {
-      const targetRow = dir2 === QQT.MOVE_UP ? Math.floor(y - R) : Math.floor(y + R);
-      turnSlideTarget = { axis: 'y', value: targetRow + 0.5 };
-    }
-    return dir2;
-  }
-  // rAF 逐帧推进本地人类 pid0：真实 dt + autoTurn + turnSlide 中心线钳制。
+  // rAF 逐帧推进本地人类 pid0：sim.frameStep 内走原版像素移动（含 6px 拐角修正、泡泡 3px 入口带），
+  // 空闲帧也调用以推进穿泡计时。
   function stepHumanFrame(now) {
     if (!sim || !localHumanControls()) { prevFrame = now; return; }
     const dt = Math.min((now - prevFrame) / 1000 || 0, 0.25);
     prevFrame = now;
-    if (sim.done || !sim.alive[0]) { clearTurnSlide(); return; }
-    const mv = QQTControls.moveForHeld(held);
-    const forcedSlide = sim.movementStatus[0] === QQT.MOVE_STATUS_SLIDE;
-    if (mv === QQT.MOVE_IDLE && !forcedSlide) { clearTurnSlide(); return; }
-    const eff = forcedSlide ? sim.playerMoveDirection(0, mv) : autoTurn(0, mv);
-    sim.frameStep(0, eff, dt);
-    if (turnSlideTarget && eff === turnSlide) {
-      if (turnSlideTarget.axis === 'x') {
-        sim.pos[1] = eff === QQT.MOVE_LEFT
-          ? Math.max(sim.pos[1], turnSlideTarget.value)
-          : Math.min(sim.pos[1], turnSlideTarget.value);
-      } else {
-        sim.pos[0] = eff === QQT.MOVE_UP
-          ? Math.max(sim.pos[0], turnSlideTarget.value)
-          : Math.min(sim.pos[0], turnSlideTarget.value);
-      }
-    }
+    if (sim.done) return;
+    sim.frameStep(0, QQTControls.moveForHeld(held), dt);
   }
 
   function instantiateModel(document) {

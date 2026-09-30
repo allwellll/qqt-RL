@@ -50,8 +50,20 @@ assert.equal(visual.bombFrame(1.01, 4), 0);
 assert.equal(visual.bombAgeSeconds(30, 30, 10), 0);
 assert.equal(visual.bombAgeSeconds(25, 30, 10), 0.5);
 assert.equal(visual.bombAgeSeconds(1, 30, 10), 2.9);
-assert.equal(visual.playerVisualY(6.5, 127), 282.6,
-  'player sprite feet must align to the simulator collision radius');
+assert.equal(visual.playerVisualY(6.5, 127), 291.5,
+  'player sprite feet must align to the native +19px collision edge');
+const items = JSON.parse(fs.readFileSync(path.join(web, 'assets/item/items.json')));
+for (const key of ['bun', 'banana_pickup', 'glue_pickup', 'banana_field', 'glue_field', 'random', 'bomb', 'power', 'speed', 'fast_shoe']) {
+  assert(items[key] && fs.existsSync(path.join(web, items[key].file)), `missing client item sprite: ${key}`);
+}
+assert.equal(items.bun.source, 'object/item/item11_stand.img');
+assert.equal(items.banana_field.source, 'object/item/item42_stand.img');
+assert.equal(items.glue_field.source, 'object/item/item43_stand.img');
+assert.equal(visual.crateSpriteKey(-1, false), 'random');
+assert.equal(visual.crateSpriteKey(0, true), 'bomb_super');
+assert.equal(visual.crateSpriteKey(3, false), 'banana_pickup');
+assert.equal(visual.crateSpriteKey(4, false), 'glue_pickup');
+assert.equal(visual.crateSpriteKey(5, false), 'fast_shoe');
 
 const bunSim = {
   isBun: true,

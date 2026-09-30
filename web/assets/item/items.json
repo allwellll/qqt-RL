@@ -1,0 +1,119 @@
+{
+ "bomb": {
+  "file": "assets/item/bomb.png",
+  "w": 37,
+  "h": 41,
+  "ox": 2,
+  "oy": 9,
+  "frames": 8,
+  "source": "object/item/item1_stand.img"
+ },
+ "power": {
+  "file": "assets/item/power.png",
+  "w": 30,
+  "h": 53,
+  "ox": 5,
+  "oy": 5,
+  "frames": 7,
+  "source": "object/item/item2_stand.img"
+ },
+ "speed": {
+  "file": "assets/item/speed.png",
+  "w": 40,
+  "h": 47,
+  "ox": 0,
+  "oy": 9,
+  "frames": 7,
+  "source": "object/item/item3_stand.img"
+ },
+ "random": {
+  "file": "assets/item/random.png",
+  "w": 25,
+  "h": 43,
+  "ox": 7,
+  "oy": 8,
+  "frames": 6,
+  "source": "object/item/item5_stand.img"
+ },
+ "bomb_super": {
+  "file": "assets/item/bomb_super.png",
+  "w": 41,
+  "h": 46,
+  "ox": 0,
+  "oy": 5,
+  "frames": 8,
+  "source": "object/item/item6_stand.img"
+ },
+ "power_super": {
+  "file": "assets/item/power_super.png",
+  "w": 36,
+  "h": 45,
+  "ox": 2,
+  "oy": 10,
+  "frames": 8,
+  "source": "object/item/item7_stand.img"
+ },
+ "speed_super": {
+  "file": "assets/item/speed_super.png",
+  "w": 40,
+  "h": 45,
+  "ox": 0,
+  "oy": 5,
+  "frames": 8,
+  "source": "object/item/item8_stand.img"
+ },
+ "banana_pickup": {
+  "file": "assets/item/banana_pickup.png",
+  "w": 40,
+  "h": 46,
+  "ox": 0,
+  "oy": 5,
+  "frames": 7,
+  "source": "object/item/item23_stand.img"
+ },
+ "glue_pickup": {
+  "file": "assets/item/glue_pickup.png",
+  "w": 40,
+  "h": 42,
+  "ox": 0,
+  "oy": 12,
+  "frames": 7,
+  "source": "object/item/item25_stand.img"
+ },
+ "fast_shoe": {
+  "file": "assets/item/fast_shoe.png",
+  "w": 40,
+  "h": 50,
+  "ox": 0,
+  "oy": 5,
+  "frames": 6,
+  "source": "object/item/Item47_stand.img"
+ },
+ "banana_field": {
+  "file": "assets/item/banana_field.png",
+  "w": 35,
+  "h": 31,
+  "ox": 3,
+  "oy": 20,
+  "frames": 1,
+  "source": "object/item/item42_stand.img"
+ },
+ "glue_field": {
+  "file": "assets/item/glue_field.png",
+  "w": 40,
+  "h": 42,
+  "ox": 0,
+  "oy": 12,
+  "frames": 7,
+  "source": "object/item/item43_stand.img"
+ },
+ "bun": {
+  "file": "assets/item/bun.png",
+  "w": 35,
+  "h": 42,
+  "ox": 3,
+  "oy": 12,
+  "frames": 7,
+  "source": "object/item/item11_stand.img"
+ }
+}

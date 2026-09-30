@@ -32,6 +32,43 @@
   const DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1]];
   const EPS = 1e-4;
 
+  // 原版像素移动常量（battleengine/types.go）
+  const NATIVE_CELL_PX = 40, NATIVE_HALF_PX = 19, NATIVE_CORNER_TOLERANCE_PX = 6;
+  const NATIVE_ENTRY_STRIP_PX = 3, NATIVE_MAX_STEP_PX = 40, NATIVE_PROJECTION_STEP_MS = 25;
+  const NATIVE_CONTACT_OFFSET_PX = 22;
+  const NATIVE_PASS_CHARGE_MIN_MS = 500, NATIVE_PASS_CHARGE_MAX_MS = 600, NATIVE_PASS_FRESH_MS = 100;
+  const NATIVE_HIT_NONE = 0, NATIVE_HIT_STATIC = 1, NATIVE_HIT_BOMB = 2;
+
+  function nativeMod(value) {
+    const r = value % NATIVE_CELL_PX;
+    return r < 0 ? r + NATIVE_CELL_PX : r;
+  }
+
+  // 前缘两角点，固定 (负侧, 正侧) 几何顺序。
+  function nativeLeadingEdgePoints(x, y, mv) {
+    const h = NATIVE_HALF_PX;
+    if (mv === MOVE_RIGHT) return [[x + h, y - h], [x + h, y + h]];
+    if (mv === MOVE_UP) return [[x - h, y - h], [x + h, y - h]];
+    if (mv === MOVE_LEFT) return [[x - h, y - h], [x - h, y + h]];
+    return [[x - h, y + h], [x + h, y + h]];
+  }
+
+  function nativeEntryStripBlocks(px, py, mv) {
+    const remainder = nativeMod(mv === MOVE_LEFT || mv === MOVE_RIGHT ? px : py);
+    if (mv === MOVE_RIGHT || mv === MOVE_DOWN) return remainder < NATIVE_ENTRY_STRIP_PX;
+    return remainder >= NATIVE_CELL_PX - NATIVE_ENTRY_STRIP_PX;
+  }
+
+  function nativeDistanceToCenter(x, y, mv, distance) {
+    const vertical = mv === MOVE_UP || mv === MOVE_DOWN;
+    const coordinate = vertical ? y : x;
+    const sign = mv === MOVE_LEFT || mv === MOVE_UP ? -1 : 1;
+    const center = coordinate - nativeMod(coordinate) + NATIVE_CELL_PX / 2;
+    let remaining = (center - coordinate) * sign;
+    if (remaining <= 0) remaining += NATIVE_CELL_PX;
+    return remaining < distance ? remaining : distance;
+  }
+
   // duel.py 的配置（map_mode=corridor + open_fraction=1.0 即 open 关；
   // corridor 关用 growth_*_start 起步 + 顶墙/侧砖）。
   const CFG = {
@@ -174,6 +211,7 @@
       this.movementStatusTicks = [0, 0];
       this.slideDir = [MOVE_DOWN, MOVE_DOWN];
       this.lastMoveDir = [MOVE_DOWN, MOVE_DOWN];
+      this.nativeMove = null;
       this.tacticalItemFraction = 0;
       this.graveyard = [];                 // 道具墓地：存储被水泡炸毁以及满属性溢出的道具 { type, isSuper }
       this.airdropTotal = 0;
@@ -868,6 +906,7 @@
           // 我方样式在 reset 时已随机一次，整局固定；数组保留用于录像兼容。
           this.bombStyle[i] = p === 0 ? this.playerBombStyle : -1;
           placed[p] = true;
+          this._activateNativePass(p);
         }
       }
       for (let p = 0; p < 2; p++) {
@@ -1816,104 +1855,228 @@
       return [ny, nx];
     }
 
-    // 本地人类专用「逐帧连续移动」(对齐旧 qqt-gpu-sim frameMove)：在 rAF 里按真实 dt
-    // 推进 pos，实现零延迟 60Hz 手感。模型/训练走 step+_steer 的 10Hz 口径，不经过此路径 → parity 不变。
-    _blockedGrid() {
-      const b = new Uint8Array(N);
-      for (let i = 0; i < N; i++) b[i] = this.wall[i] || this.brick[i] || this.fuse[i] > 0 ? 1 : 0;
-      return b;
-    }
-
-    // 探测该方向实际能移动的距离(格)。三态: <5%步长=贴墙; 5%~95%=部分可走; ≥95%=完全可走。
-    probeMoveDist(pid, mv) {
-      if (mv >= 4) return 0;
-      const y = this.pos[pid * 2], x = this.pos[pid * 2 + 1];
-      const blocked = this._blockedGrid();
-      const dist = CFG.stepLen * this.spdG[pid] * this.playerMoveScale(pid);
-      const [dy, dx] = DIRS[mv];
-      if (dy !== 0) {
-        const ny = resolveAxis(y + dy * dist, dy * dist, x, y, x, blocked, CFG.radius, H, W, true);
-        return Math.abs(ny - y);
+    // ---- 本地人类原版像素移动（移植 kuuhaku1314/qqtang battleengine/movement.go） ----
+    // 40px/格、±19px 前缘双角点、6px 拐角容差、泡泡 3px 入口带、单次 ≤40px、25ms 投影步长。
+    // 仅 frameStep 使用；训练/模型的 step+_steer 口径不变。
+    _nativeState(pid) {
+      if (!this.nativeMove) this.nativeMove = [];
+      if (!this.nativeMove[pid]) {
+        this.nativeMove[pid] = {
+          clock: 0, remainder: 0,
+          touchValid: false, touchCell: -1, touchStart: 0, touchLast: 0,
+          passActive: false, passStart: 0, passDuration: 0,
+        };
       }
-      const nx = resolveAxis(x + dx * dist, dx * dist, y, y, x, blocked, CFG.radius, H, W, false);
-      return Math.abs(nx - x);
+      return this.nativeMove[pid];
     }
 
-    // 逐帧移动一步(移植 frameMove)：dist 按真实 dt 缩放; forcedSlide 走 _tryMove 口径;
-    // 推箱按 dt 累计; 双轴 resolveAxis + 中心路径硬约束; 边界夹紧。
+    _nativeSpeedPx(pid) {
+      return CFG.speed * this.spdG[pid] * this.playerMoveScale(pid) * NATIVE_CELL_PX;
+    }
+
+    _nativeStaticBlocked(row, col) {
+      if (row < 0 || row >= H || col < 0 || col >= W) return true;
+      const i = row * W + col;
+      return !!(this.wall[i] || this.brick[i]);
+    }
+
+    _nativePointCollision(st, px, py, mv) {
+      const row = Math.trunc(py / NATIVE_CELL_PX), col = Math.trunc(px / NATIVE_CELL_PX);
+      const cell = { row, col };
+      if (px < 0 || py < 0 || row >= H || col >= W) return { cell, kind: NATIVE_HIT_STATIC };
+      const i = row * W + col;
+      if (this.fuse[i] > 0 && (st.passActive || nativeEntryStripBlocks(px, py, mv))) return { cell, kind: NATIVE_HIT_BOMB };
+      if (this.wall[i] || this.brick[i]) return { cell, kind: NATIVE_HIT_STATIC };
+      return { cell, kind: NATIVE_HIT_NONE };
+    }
+
+    _nativeCollisions(st, x, y, mv) {
+      return nativeLeadingEdgePoints(x, y, mv).map(([px, py]) => this._nativePointCollision(st, px, py, mv));
+    }
+
+    _nativeTouch(st, cell) {
+      const key = cell.row * W + cell.col;
+      if (!st.touchValid || st.touchCell !== key) {
+        st.touchValid = true; st.touchCell = key; st.touchStart = st.clock;
+      }
+      st.touchLast = st.clock;
+    }
+
+    _nativeBeyondPassable(cell, mv) {
+      const [dy, dx] = DIRS[mv];
+      const row = cell.row + dy, col = cell.col + dx;
+      if (this._nativeStaticBlocked(row, col)) return false;
+      return !(this.fuse[row * W + col] > 0);
+    }
+
+    _nativePositionWalkable(st, x, y, mv) {
+      const hits = this._nativeCollisions(st, x, y, mv);
+      for (const hit of hits) {
+        if (hit.cell.row < 0 || hit.cell.row >= H || hit.cell.col < 0 || hit.cell.col >= W) return false;
+      }
+      const reversed = mv === MOVE_RIGHT || mv === MOVE_UP;
+      const order = reversed ? [1, 0] : [0, 1];
+      for (const index of order) {
+        const hit = hits[index];
+        if (hit.kind === NATIVE_HIT_NONE) continue;
+        if (hit.kind !== NATIVE_HIT_BOMB) return false;
+        if (st.passActive) return hits.every((h) => this._nativeBeyondPassable(h.cell, mv));
+        // 原版对两个前缘格都记接触；两角跨不同格时计时每帧重置，贴角蹭泡攒不满穿泡。
+        for (const touchIndex of order) this._nativeTouch(st, hits[touchIndex].cell);
+        return false;
+      }
+      return true;
+    }
+
+    _nativeSegmentCollision(st, x, y, mv, distance) {
+      const [dy, dx] = DIRS[mv];
+      let anyBomb = false;
+      for (let i = 0; i < N; i++) if (this.fuse[i] > 0) { anyBomb = true; break; }
+      for (let partial = 1; partial <= distance; partial++) {
+        const cx = x + dx * partial, cy = y + dy * partial;
+        if (partial !== distance) {
+          // 静态地形只判终点；中间点仅扫泡泡 3px 入口带，防高速跨过入口带。
+          if (st.passActive || !anyBomb) continue;
+          const hits = this._nativeCollisions(st, cx, cy, mv);
+          if (hits[0].kind !== NATIVE_HIT_BOMB && hits[1].kind !== NATIVE_HIT_BOMB) continue;
+        }
+        if (!this._nativePositionWalkable(st, cx, cy, mv)) return [cx, cy];
+      }
+      return null;
+    }
+
+    _nativeCornerCorrection(st, x, y, blocked, mv, distance) {
+      const hits = this._nativeCollisions(st, blocked[0], blocked[1], mv);
+      const negativeBlocked = hits[0].kind !== NATIVE_HIT_NONE;
+      const positiveBlocked = hits[1].kind !== NATIVE_HIT_NONE;
+      if (negativeBlocked === positiveBlocked) return null;
+      const vertical = mv === MOVE_UP || mv === MOVE_DOWN;
+      const coordinate = vertical ? x : y;
+      const negativeDir = vertical ? MOVE_LEFT : MOVE_UP;
+      const positiveDir = vertical ? MOVE_RIGHT : MOVE_DOWN;
+      const remainder = nativeMod(coordinate);
+      const sideOpen = (dir) => {
+        const [dy, dx] = DIRS[dir];
+        return !this._nativeStaticBlocked(Math.trunc(y / NATIVE_CELL_PX) + dy, Math.trunc(x / NATIVE_CELL_PX) + dx);
+      };
+      let correction = -1;
+      if (negativeBlocked && remainder < NATIVE_CELL_PX / 2) correction = positiveDir;
+      else if (negativeBlocked && remainder >= NATIVE_CELL_PX - NATIVE_CORNER_TOLERANCE_PX && sideOpen(positiveDir)) correction = positiveDir;
+      else if (positiveBlocked && remainder >= NATIVE_CELL_PX / 2) correction = negativeDir;
+      else if (positiveBlocked && remainder <= NATIVE_CORNER_TOLERANCE_PX && sideOpen(negativeDir)) correction = negativeDir;
+      else return null;
+      const [dy, dx] = DIRS[correction];
+      const step = nativeDistanceToCenter(x, y, correction, distance);
+      return [x + dx * step, y + dy * step];
+    }
+
+    // 一次原版位移解算：整步 → 前方可走格中心截停 → 垂直拐角修正。返回新像素坐标。
+    _nativeResolve(st, x, y, mv, distance, allowCorner) {
+      const [dy, dx] = DIRS[mv];
+      const blocked = this._nativeSegmentCollision(st, x, y, mv, distance);
+      if (!blocked) return [x + dx * distance, y + dy * distance];
+      const partial = nativeDistanceToCenter(x, y, mv, distance);
+      if (partial < distance && !this._nativeSegmentCollision(st, x, y, mv, partial)) {
+        return [x + dx * partial, y + dy * partial];
+      }
+      if (allowCorner) return this._nativeCornerCorrection(st, x, y, blocked, mv, distance) || [x, y];
+      return [x, y];
+    }
+
+    // 放泡成功后调用（FUN_005d33ab）：接触同一泡泡 500~600ms 且 100ms 内仍在接触 → 获得一格穿泡。
+    _activateNativePass(pid) {
+      const st = this.nativeMove && this.nativeMove[pid];
+      if (!st || !st.touchValid) return false;
+      const charged = st.clock - st.touchStart;
+      const since = st.clock - st.touchLast;
+      if (charged <= NATIVE_PASS_CHARGE_MIN_MS || charged >= NATIVE_PASS_CHARGE_MAX_MS || since >= NATIVE_PASS_FRESH_MS) return false;
+      const speed = this._nativeSpeedPx(pid);
+      if (speed <= 0) return false;
+      st.passActive = true;
+      st.passStart = st.clock;
+      st.passDuration = Math.max(1, Math.floor(NATIVE_CELL_PX * 1000 / speed));
+      return true;
+    }
+
+    _expireNativePass(st) {
+      if (!st.passActive || st.clock - st.passStart < st.passDuration) return;
+      st.passActive = false;
+      st.touchStart = 0;
+    }
+
+    // 本地人类逐帧移动：真实 dt(≤0.1s) 按 25ms 投影步切分，每步走原版像素解算。
+    // 空闲帧也要调用以推进穿泡计时。
     frameStep(pid, mv, dtSec) {
+      const st = this._nativeState(pid);
       const forcedSlide = this.movementStatus && this.movementStatus[pid] === MOVE_STATUS_SLIDE;
       mv = this.playerMoveDirection(pid, mv);
-      if (mv === MOVE_IDLE || !this.alive[pid]) return;
+      let remainingMs = Math.max(0, Math.min(dtSec, 0.1)) * 1000;
+      if (!this.alive[pid] || mv === MOVE_IDLE) {
+        st.clock += remainingMs; st.remainder = 0;
+        this._expireNativePass(st);
+        return;
+      }
       this.lastMoveDir[pid] = mv;
-      const dist = CFG.speed * this.spdG[pid] * this.playerMoveScale(pid) * Math.min(dtSec, 0.1);
-      if (dist <= 0) return;
-      const y = this.pos[pid * 2], x = this.pos[pid * 2 + 1];
+      const y0 = this.pos[pid * 2], x0 = this.pos[pid * 2 + 1];
+      let x = Math.round(x0 * NATIVE_CELL_PX), y = Math.round(y0 * NATIVE_CELL_PX);
+      let moved = false;
+      while (remainingMs > 1e-6) {
+        const chunk = Math.min(NATIVE_PROJECTION_STEP_MS, remainingMs);
+        remainingMs -= chunk;
+        st.clock += chunk;
+        this._expireNativePass(st);
+        const total = this._nativeSpeedPx(pid) * chunk / 1000 + st.remainder;
+        const distance = Math.min(Math.floor(total), NATIVE_MAX_STEP_PX);
+        st.remainder = total - Math.floor(total);
+        if (distance <= 0) continue;
+        const allowCorner = forcedSlide ? false : !this._nativePushContact(pid, x, y, mv, chunk / 1000);
+        const [nx, ny] = this._nativeResolve(st, x, y, mv, distance, allowCorner);
+        if (nx !== x || ny !== y) { x = nx; y = ny; moved = true; }
+      }
+      if (moved) {
+        this.pos[pid * 2] = y / NATIVE_CELL_PX;
+        this.pos[pid * 2 + 1] = x / NATIVE_CELL_PX;
+      } else if (forcedSlide) {
+        this._clearMovementStatus(pid);
+      }
+    }
+
+    // 原版 22px 方向接触点进入可推箱格时累计推动；接触成立时本步不做拐角修正。
+    _nativePushContact(pid, x, y, mv, dtSec) {
+      if (!this.pushBoxAt) return false;
       const [dy, dx] = DIRS[mv];
-      if (!forcedSlide && this.pushBoxAt && (dy !== 0 || dx !== 0)) {
-        const R = CFG.radius;
-        const pr = dy !== 0 ? (dy > 0 ? Math.floor(y + R + EPS * 8) : Math.floor(y - R - EPS * 8)) : Math.floor(y);
-        const pc = dx !== 0 ? (dx > 0 ? Math.floor(x + R + EPS * 8) : Math.floor(x - R - EPS * 8)) : Math.floor(x);
-        const pi = pr * W + pc;
-        const bi = pi >= 0 && pi < N ? this.pushBoxAt[pi] : -1;
-        if (bi >= 0) {
-          const box = this.pushBoxes[bi];
-          let ok = true;
-          const targetCells = [];
-          for (const cell of box.cells) {
-            const rr = (cell / W) | 0, cc = cell % W;
-            const tr = rr + dy, tc = cc + dx;
-            if (tr < 0 || tr >= H || tc < 0 || tc >= W) { ok = false; break; }
-            const ti = tr * W + tc;
-            if (this.wall[ti] || this.brick[ti] || this.fuse[ti] > 0 || this.crate[ti] || this.pushable[ti] || this._cellOccupiedByPlayer(ti, pid)) { ok = false; break; }
-            targetCells.push(ti);
-          }
-          if (ok) {
-            this.pushT[box.o] += dtSec;
-            if (this.pushT[box.o] >= PUSH_TIME) {
-              for (let k = 0; k < box.cells.length; k++) {
-                const ci = box.cells[k], ti = targetCells[k];
-                this.brick[ci] = 0; this.brick[ti] = 1;
-                this.pushable[ci] = 0; this.pushable[ti] = 1;
-                this.pushBoxAt[ci] = -1; this.pushBoxAt[ti] = bi;
-                this.pushSprite[ti] = this.pushSprite[ci]; this.pushSprite[ci] = -1;
-                this.brickLinger[ci] = 0; this.brickLinger[ti] = 0;
-              }
-              box.cells = targetCells;
-              box.o = targetCells[0];
-              this.pushT[box.o] = 0;
-            }
-          } else {
-            this.pushT[box.o] = 0;
-          }
+      const fx = x + dx * NATIVE_CONTACT_OFFSET_PX, fy = y + dy * NATIVE_CONTACT_OFFSET_PX;
+      const pr = Math.trunc(fy / NATIVE_CELL_PX), pc = Math.trunc(fx / NATIVE_CELL_PX);
+      if (fx < 0 || fy < 0 || pr >= H || pc >= W) return false;
+      if (pr === Math.trunc(y / NATIVE_CELL_PX) && pc === Math.trunc(x / NATIVE_CELL_PX)) return false;
+      const bi = this.pushBoxAt[pr * W + pc];
+      if (bi < 0) return false;
+      const box = this.pushBoxes[bi];
+      const targetCells = [];
+      for (const cell of box.cells) {
+        const tr = ((cell / W) | 0) + dy, tc = cell % W + dx;
+        if (tr < 0 || tr >= H || tc < 0 || tc >= W) { this.pushT[box.o] = 0; return false; }
+        const ti = tr * W + tc;
+        if (this.wall[ti] || this.brick[ti] || this.fuse[ti] > 0 || this.crate[ti] || this.pushable[ti] || this._cellOccupiedByPlayer(ti, pid)) {
+          this.pushT[box.o] = 0; return false;
         }
+        targetCells.push(ti);
       }
-      const blocked = this._blockedGrid();
-      const startR = Math.max(0, Math.min(H - 1, Math.floor(y)));
-      const startC = Math.max(0, Math.min(W - 1, Math.floor(x)));
-      let ny = y, nx = x;
-      if (dy !== 0) {
-        ny = resolveAxis(y + dy * dist, dy * dist, x, y, x, blocked, CFG.radius, H, W, true);
-        const yLo = Math.max(0, Math.min(H - 1, Math.floor(Math.min(y, ny))));
-        const yHi = Math.max(0, Math.min(H - 1, Math.floor(Math.max(y, ny))));
-        for (let r = yLo; r <= yHi; r++) {
-          if (r === startR) continue;
-          if (blocked[r * W + startC]) { ny = y; break; }
+      this.pushT[box.o] += dtSec;
+      if (this.pushT[box.o] >= PUSH_TIME) {
+        for (let k = 0; k < box.cells.length; k++) {
+          const ci = box.cells[k], ti = targetCells[k];
+          this.brick[ci] = 0; this.brick[ti] = 1;
+          this.pushable[ci] = 0; this.pushable[ti] = 1;
+          this.pushBoxAt[ci] = -1; this.pushBoxAt[ti] = bi;
+          this.pushSprite[ti] = this.pushSprite[ci]; this.pushSprite[ci] = -1;
+          this.brickLinger[ci] = 0; this.brickLinger[ti] = 0;
         }
+        box.cells = targetCells;
+        box.o = targetCells[0];
+        this.pushT[box.o] = 0;
       }
-      if (dx !== 0) {
-        nx = resolveAxis(x + dx * dist, dx * dist, y, ny, x, blocked, CFG.radius, H, W, false);
-        const xLo = Math.max(0, Math.min(W - 1, Math.floor(Math.min(x, nx))));
-        const xHi = Math.max(0, Math.min(W - 1, Math.floor(Math.max(x, nx))));
-        const cy0 = Math.max(0, Math.min(H - 1, Math.floor(ny)));
-        for (let c = xLo; c <= xHi; c++) {
-          if (c === startC && cy0 === startR) continue;
-          if (blocked[cy0 * W + c]) { nx = x; break; }
-        }
-      }
-      this.pos[pid * 2] = Math.min(Math.max(ny, CFG.radius), H - CFG.radius);
-      this.pos[pid * 2 + 1] = Math.min(Math.max(nx, CFG.radius), W - CFG.radius);
-      if (forcedSlide && Math.abs(ny - y) + Math.abs(nx - x) <= 2 * EPS) this._clearMovementStatus(pid);
+      return true;
     }
 
     // 贪婪转向适配器（对齐 JAX _steer）：模型输出=目标相邻格，选第一个能动的
@@ -3760,6 +3923,7 @@
     CRATE_BANANA, CRATE_SLOW_GLUE, CRATE_FAST_SHOE,
     MOVE_STATUS_NONE, MOVE_STATUS_SLOW, MOVE_STATUS_SLIDE, MOVE_STATUS_FAST,
     DIRS, EPS, CFG,
+    NATIVE_CELL_PX, NATIVE_HALF_PX, NATIVE_CORNER_TOLERANCE_PX, NATIVE_ENTRY_STRIP_PX,
     Sim, MLPModel, CNNModel, TransformerModel, MLP4Model, ORTTransformerModel,
     HunterAI, TimeAStarAI, NukemanAI,
     StationaryDefenseAI, FleeBotAI, RoamBotAI,

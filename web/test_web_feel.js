@@ -3,9 +3,9 @@
 
 // 网页手感回归（连续逐帧移动重做）：
 //  1) sim.frameStep：本地人类逐帧连续移动（真实 dt 缩放 / 撞墙夹紧 / realtime 位跳过 10Hz 移动）。
-//  2) sim.probeMoveDist：三态判定（完全可走 / 部分可走 / 贴墙被挡）——autoTurn 侧滑门控的基石。
+//  2) frameStep 原版像素物理：±19px 前缘、6px 拐角修正、泡泡 3px 入口带、穿泡计时。
 //  3) 渲染：本地人类(humanPid)raw 不插值、对手 10Hz 插值、大位移吸附、复活压暗。
-//  4) app.js 接线契约：humanAction 第4位=1、rAF frameStep、autoTurn+MIN_OFF=0.25、无 steerReduced。
+//  4) app.js 接线契约：humanAction 第4位=1、rAF frameStep、无 autoTurn/steerReduced。
 //  5) parity 隔离：_steer 默认 new 口径不变（真外拐角仍侧滑），sim.js 已无 steerReduced。
 // 模型推理数值 parity 由 test_mlp4_parity.js 独立守护，本测试不得触碰 step/_steer/legalMask。
 
@@ -42,12 +42,12 @@ function openSim() {
 }
 
 {
-  // 撞墙夹紧：右侧贴墙(box 前缘顶墙)时 frameStep 不得穿墙。
+  // 撞墙夹紧：前缘 +19px 顶墙即停，停在格中心 +1px（x=260px）。
   const s = openSim();
-  s.pos[0] = 5.5; s.pos[1] = 6 - CFG.radius - 1e-4;
-  s.wall[5 * W + 6] = 1;
-  s.frameStep(0, MOVE_RIGHT, 0.1);
-  assert(s.pos[1] <= 6 - CFG.radius + 1e-6, '贴墙时 frameStep 不得穿墙');
+  s.pos[0] = 5.5; s.pos[1] = 5.5;
+  s.wall[5 * W + 7] = 1;
+  for (let k = 0; k < 20; k++) s.frameStep(0, MOVE_RIGHT, 0.05);
+  assert.equal(Math.round(s.pos[1] * QQT.NATIVE_CELL_PX), 260, '贴墙时 frameStep 必须停在 260px，不得穿墙');
 }
 
 {
@@ -60,18 +60,47 @@ function openSim() {
   assert(move.pos[1] > 5.5 + 1e-3, 'realtime 位=0 时 step 应照常移动 pid0（模型/训练口径）');
 }
 
-// ---------- 2) probeMoveDist 三态 ----------
+// ---------- 2) 原版像素物理 ----------
+const PX = QQT.NATIVE_CELL_PX;
+function hold(s, mv, ms) { for (let t = 0; t < ms; t += 16) s.frameStep(0, mv, 0.016); }
 {
-  const s = openSim(); s.pos[0] = 5.5; s.pos[1] = 5.5;
-  const full = s.probeMoveDist(0, MOVE_RIGHT);
-  const stepLen = CFG.stepLen * s.spdG[0] * s.playerMoveScale(0);
-  assert(Math.abs(full - stepLen) < 1e-6, '完全可走：probe ≈ 满步长');
-  s.wall[5 * W + 6] = 1;
-  const partial = s.probeMoveDist(0, MOVE_RIGHT);
-  assert(partial > stepLen * 0.05 && partial < stepLen * 0.95, `部分可走：5%~95% 步长，实得 ${partial.toFixed(3)}`);
-  s.pos[1] = 6 - CFG.radius - 1e-4;
-  const blocked = s.probeMoveDist(0, MOVE_RIGHT);
-  assert(blocked < stepLen * 0.05, `贴墙被挡：probe < 5% 步长，实得 ${blocked.toFixed(4)}`);
+  // 6px 拐角容差：x=236px 向上，左角点在被堵格(4,5)、右角点已进开放格(4,6)，余数 36≥34 → 滑到 260 再上行。
+  const s = openSim(); s.pos[0] = 5.5; s.pos[1] = 236 / PX;
+  s.wall[4 * W + 5] = 1;
+  hold(s, MOVE_UP, 600);
+  assert(Math.abs(s.pos[1] * PX - 260) <= 1 && s.pos[0] * PX < 200, `6px 容差内必须拐角滑入开放列，实得 (${s.pos[1] * PX}, ${s.pos[0] * PX})`);
+}
+{
+  // 超出容差(x=230px)：两个角点都在被堵格 → 原版不修正，顶墙停在格中心行。
+  const s = openSim(); s.pos[0] = 5.5; s.pos[1] = 230 / PX;
+  s.wall[4 * W + 5] = 1;
+  hold(s, MOVE_UP, 600);
+  assert(Math.abs(s.pos[1] * PX - 230) <= 1 && Math.abs(s.pos[0] * PX - 220) <= 1, '两角都被挡时不得侧滑');
+}
+{
+  // 只有一个角被挡且余数 <20：向开放侧修正到格中心（x=210 → 220 后上行需前方开放）。
+  const s = openSim(); s.pos[0] = 5.5; s.pos[1] = 210 / PX;
+  s.wall[4 * W + 4] = 1;
+  hold(s, MOVE_UP, 600);
+  assert(Math.abs(s.pos[1] * PX - 220) <= 1 && s.pos[0] * PX < 200, '单角被挡时必须修正到本格中心后前进');
+}
+{
+  // 泡泡 3px 入口带：脚下泡可走出；正前方泡在前缘 +19px 处挡住（x=220px）。
+  const own = openSim(); own.pos[0] = 5.5; own.pos[1] = 5.5; own.fuse[5 * W + 5] = 30;
+  hold(own, MOVE_RIGHT, 400);
+  assert(own.pos[1] * PX > 300, '必须能走出脚下刚放的泡泡');
+  const ahead = openSim(); ahead.pos[0] = 5.5; ahead.pos[1] = 5.5; ahead.fuse[5 * W + 6] = 30;
+  hold(ahead, MOVE_RIGHT, 800);
+  assert.equal(Math.round(ahead.pos[1] * PX), 220, '正前方泡泡必须在入口带挡住');
+  // 顶泡 500~600ms 后放泡 → 获得一格穿泡。
+  const pass = openSim(); pass.pos[0] = 5.5; pass.pos[1] = 5.5; pass.fuse[5 * W + 6] = 30;
+  hold(pass, MOVE_RIGHT, 560);
+  assert(pass._activateNativePass(0), '顶泡 500~600ms 后放泡必须激活穿泡');
+  hold(pass, MOVE_RIGHT, 400);
+  assert(pass.pos[1] * PX > 260, '穿泡激活后必须能穿过前方泡泡');
+  const early = openSim(); early.pos[0] = 5.5; early.pos[1] = 5.5; early.fuse[5 * W + 6] = 30;
+  hold(early, MOVE_RIGHT, 300);
+  assert(!early._activateNativePass(0), '顶泡不足 500ms 不得激活穿泡');
 }
 
 // ---------- 3) parity 隔离：_steer 默认 new 口径不变 ----------
@@ -232,19 +261,17 @@ function dimRects(rects, canvas) {
 const simSource = fs.readFileSync(path.join(__dirname, 'sim.js'), 'utf8');
 assert(!/steerReduced/.test(simSource), 'sim.js 必须已彻底移除 steerReduced（连续移动下作废）');
 assert(/frameStep\s*\(pid, mv, dtSec\)/.test(simSource), 'sim.js 必须提供 frameStep(pid, mv, dtSec)');
-assert(/probeMoveDist\s*\(pid, mv\)/.test(simSource), 'sim.js 必须提供 probeMoveDist(pid, mv)');
+assert(/NATIVE_HALF_PX = 19/.test(simSource) && /NATIVE_CORNER_TOLERANCE_PX = 6/.test(simSource),
+  'sim.js 必须使用原版 ±19px 前缘与 6px 拐角容差');
 
 const appSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
 assert(!/steerReduced/.test(appSource), 'app.js 必须已移除 steerReduced 接线');
 assert(/\[QQT\.MOVE_IDLE, bombQueued \? 1 : 0, 0, 1\]/.test(appSource),
   'humanAction 必须返回第4位=1（跳过 10Hz 移动，改由 rAF frameStep）');
-assert(/const MIN_OFF = 0\.25;/.test(appSource), 'autoTurn 触发阈值 MIN_OFF 必须为 0.25（对齐边长 1/4）');
-assert(/if \(off >= MIN_OFF\) return move;/.test(appSource), 'autoTurn：偏移≥MIN_OFF(居中/正前方)不得侧滑');
-assert(/if \(moved > stepLen \* 0\.05\) return move;/.test(appSource),
-  'autoTurn：仅贴墙被挡(<5%步长)才触发，部分可走不侧滑');
-assert(/sim\.frameStep\(0, eff, dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
+assert(!/autoTurn|turnSlide/.test(appSource), 'app.js 必须移除 autoTurn（拐角修正由原版物理负责）');
+assert(/sim\.frameStep\(0, QQTControls\.moveForHeld\(held\), dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
 assert(/humanPid: localHumanControls\(\) \? 0 : -1/.test(appSource),
   'motionState 必须传 humanPid（本地人类 raw / 观战回放插值）');
 assert(/stepHumanFrame\(now\)/.test(appSource), 'rAF 回调必须先驱动 stepHumanFrame(now)');
 
-console.log('网页手感回归（连续逐帧移动 / autoTurn 侧滑 / 人类raw渲染 / 复活压暗）通过');
+console.log('网页手感回归（连续逐帧移动 / 原版像素物理 / 人类raw渲染 / 复活压暗）通过');

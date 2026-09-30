@@ -14,6 +14,30 @@
   const MOVE_TO_SPRITE_ROW = [3, 0, 1, 2];
 
   const BUN_ELEMENT_IDS = [8001, 8002, 8003, 8004, 8005, 8006, 8009, 8010, 8011, 8012, 8013, 8028];
+  // DIMG 无逐帧时长；与上游 GM 预览一致取 100ms/帧。
+  const ITEM_FRAME_MS = 100;
+  const CRATE_SPRITES = ['bomb', 'power', 'speed', 'banana_pickup', 'glue_pickup', 'fast_shoe'];
+  const SUPER_CRATE_SPRITES = ['bomb_super', 'power_super', 'speed_super'];
+  const FIELD_SPRITES = [null, 'banana_field', 'glue_field'];
+
+  function crateSpriteKey(crateType, isSuper) {
+    if (crateType < 0) return 'random';
+    if (isSuper && crateType < 3) return SUPER_CRATE_SPRITES[crateType];
+    return CRATE_SPRITES[crateType] || 'random';
+  }
+
+  // 道具 DIMG 帧坐标相对格子左上、画布原点为 (ox, oy)；原版帧底边落在格底下方 10~18px（含浮动余量），
+  // 上移 14px 使其与泡泡/地图元素的格底对齐。
+  const ITEM_ANCHOR_DY = 14;
+
+  function itemFrame(sprite, now) {
+    return sprite.frames[Math.floor(Math.max(0, now) / ITEM_FRAME_MS) % sprite.frames.length];
+  }
+
+  // 源像素坐标下，道具画布左上相对格子左上的位置。
+  function itemCanvasOrigin(sprite) {
+    return [sprite.ox, sprite.oy - ITEM_ANCHOR_DY];
+  }
 
   function levelElementIds(level) {
     const found = new Set();
@@ -31,8 +55,10 @@
     return Math.max(0, fuseMaxTicks - fuseTicks) / tickHz;
   }
 
-  function playerVisualY(gridY, imageHeight, radius = 0.36) {
-    return gridY * CELL + radius * CELL - imageHeight - 2;
+  // 原版角色碰撞为中心 ±19px：精灵脚底对齐碰撞盒下沿（格中心站位时即格底上方 1px）。
+  const NATIVE_HALF_PX = 19;
+  function playerVisualY(gridY, imageHeight) {
+    return gridY * CELL + NATIVE_HALF_PX * SCALE - imageHeight;
   }
 
   function bunTokens(sim) {
@@ -133,6 +159,19 @@
       frame.getContext('2d').drawImage(scaled, dir === 'L' ? CELL - scaled.width : 0, dir === 'U' ? CELL - scaled.height : 0);
       flames[dir][f] = frame;
     }
+    const itemMeta = await fetch('assets/item/items.json').then((r) => r.json());
+    const items = {};
+    for (const [key, meta] of Object.entries(itemMeta)) {
+      const strip = await loadImage(meta.file);
+      items[key] = { ox: meta.ox || 0, oy: meta.oy || 0, frames: [] };
+      for (let f = 0; f < meta.frames; f++) {
+        const frame = document.createElement('canvas');
+        frame.width = Math.round(meta.w * SCALE);
+        frame.height = Math.round(meta.h * SCALE);
+        frame.getContext('2d').drawImage(strip, f * meta.w, 0, meta.w, meta.h, 0, 0, frame.width, frame.height);
+        items[key].frames.push(frame);
+      }
+    }
     const elementImages = new Map();
     for (const id of levelElementIds(level)) {
       const meta = elements[String(id)] || elements[id];
@@ -141,7 +180,7 @@
     return {
       elements, background: scaleImage(background), baseBand: scaleImage(baseBackground),
       players: [sliceSheet(humanSheet, 4, 4, humanSize), sliceSheet(botSheet, 4, 4, botSize)],
-      bombs, flames, shadow: scaleImage(shadow), elementImages,
+      bombs, flames, shadow: scaleImage(shadow), elementImages, items,
     };
   }
 
@@ -176,7 +215,19 @@
       lastPositions = Array.from(sim.pos);
       return previous;
     }
-    function drawBun(x, y, team, count, size = 1) {
+    // (x, bottom) = 所在格底边中点（像素）。原版包子 item11 按道具锚点绘制并以格底为缩放基准，保留自带浮动帧。
+    function drawBun(x, bottom, team, count, size = 1, now = 0) {
+      const bun = assets.items && assets.items.bun;
+      if (bun) {
+        const image = itemFrame(bun, now);
+        const [ox, oy] = itemCanvasOrigin(bun);
+        const k = SCALE * size;
+        const left = x + (ox - SOURCE_CELL / 2) * k, top = bottom + (oy - SOURCE_CELL) * k;
+        ctx.drawImage(image, Math.round(left), Math.round(top), Math.round(image.width * size), Math.round(image.height * size));
+        drawBunBadge(left + image.width * size * 0.82, top + image.height * size * 0.3, team, count);
+        return;
+      }
+      const y = bottom - CELL * 0.38;
       const radius = 15 * size;
       ctx.save(); ctx.translate(x, y); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 4 * size; ctx.shadowOffsetY = 3 * size;
       ctx.fillStyle = '#f6c745'; ctx.beginPath(); ctx.ellipse(0, 2 * size, radius, radius * .72, 0, 0, Math.PI * 2); ctx.fill();
@@ -184,6 +235,33 @@
       ctx.strokeStyle = team ? '#3887e8' : '#e5484d'; ctx.lineWidth = Math.max(2, 3 * size); ctx.beginPath(); ctx.arc(0, size, radius * .72, .15, Math.PI - .15); ctx.stroke();
       if (count > 1) { ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.arc(radius * .72, -radius * .55, 8 * size, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.round(10 * size)}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(count), radius * .72, -radius * .55); }
       ctx.restore();
+    }
+    function drawBunBadge(x, y, team, count) {
+      ctx.save();
+      ctx.fillStyle = team ? '#3887e8' : '#e5484d';
+      ctx.beginPath(); ctx.arc(x, y, count > 1 ? 9 : 5, 0, Math.PI * 2); ctx.fill();
+      if (count > 1) {
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(String(count), x, y);
+      }
+      ctx.restore();
+    }
+    function groundItems(sim, now, items, coveredCells) {
+      if (!assets.items) return;
+      for (let i = 0; i < 195; i++) {
+        if (coveredCells.has(i) || (sim.brick && sim.brick[i]) || (sim.wall && sim.wall[i])) continue;
+        const row = Math.floor(i / 15), column = i % 15;
+        const fieldKey = sim.fieldItem ? FIELD_SPRITES[sim.fieldItem[i]] : null;
+        const place = (sprite, z) => {
+          const [ox, oy] = itemCanvasOrigin(sprite);
+          items.push([z, itemFrame(sprite, now), Math.round(column * CELL + ox * SCALE), Math.round(row * CELL + oy * SCALE)]);
+        };
+        if (fieldKey && assets.items[fieldKey]) place(assets.items[fieldKey], row * Z_ROW_STRIDE + 14);
+        if (sim.crate && sim.crate[i]) {
+          const sprite = assets.items[crateSpriteKey(sim.crateType ? sim.crateType[i] : -1, sim.superCrate && sim.superCrate[i] === 1)];
+          if (sprite) place(sprite, row * Z_ROW_STRIDE + 16);
+        }
+      }
     }
     function structureItems(sim, items) {
       const coveredCells = new Set();
@@ -246,10 +324,11 @@
       ctx.drawImage(assets.background, 0, 0);
       const items = [];
       const coveredCells = structureItems(sim, items);
+      groundItems(sim, now, items, coveredCells);
       for (const token of bunTokens(sim)) items.push([
         token.row * Z_ROW_STRIDE + 15,
-        () => drawBun((token.column + .5 + token.xOffset) * CELL, (token.row + .62) * CELL,
-          token.team, token.count, token.size),
+        () => drawBun((token.column + .5 + token.xOffset) * CELL, (token.row + 1) * CELL,
+          token.team, token.count, token.size, now),
       ]);
       for (let i = explosions.length - 1; i >= 0; i--) if (!drawExplosion(explosions[i], now, items)) explosions.splice(i, 1);
       for (let i = 0; i < 195; i++) if (sim.fuse[i] > 0) {
@@ -277,7 +356,7 @@
         const z = Math.floor(gy) * Z_ROW_STRIDE + 18;
         items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
         items.push([z, image, x, y]);
-        if (sim.bunCarried[pid] >= 0) items.push([z + 1, () => drawBun(x + image.width / 2, y - 10, sim.bunCarried[pid], 1)]);
+        if (sim.bunCarried[pid] >= 0) items.push([z + 1, () => drawBun(x + image.width / 2, y + 8, sim.bunCarried[pid], 1, 0.8, now)]);
       }
       items.sort((a, b) => a[0] - b[0]);
       for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
@@ -292,5 +371,5 @@
     return { render, addExplosion, reset };
   }
 
-  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, bunTokens, explosionFrame, loadAssets, createRenderer };
+  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, bunTokens, explosionFrame, loadAssets, createRenderer };
 });
