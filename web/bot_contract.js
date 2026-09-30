@@ -103,6 +103,23 @@
     close() {}
   }
 
+  // 猎手 Bot 需要连续坐标/道具等完整局面，由宿主经 observation.metadata.sim 提供。
+  class HunterAdapter {
+    constructor(hunterApi, config) {
+      this.bot = new hunterApi.BunHunterBot({ difficulty: config.difficulty });
+      this.stateFromSim = hunterApi.hunterStateFromSim;
+    }
+    reset(context) { this.bot.reset(context && context.seed); }
+    act(observation, playerId, rng) {
+      const sim = observation.metadata && observation.metadata.sim;
+      if (!sim) throw new Error('bun.hunter requires observation.metadata.sim');
+      const decision = this.bot.analyze(this.stateFromSim(sim), playerId);
+      return validateAction({ move: decision.action[0], ability: decision.action[1] },
+        observation.legal_moves, observation.legal_abilities);
+    }
+    close() {}
+  }
+
   function createDefaultRegistry(dependencies = {}) {
     const registry = new BotRegistry('browser');
     const commonFixtureHash = '72812b6f7a0009c2df7f68e294d6d33132fa4d2e240954ec34cdc6d47585abe9';
@@ -134,6 +151,14 @@
       fixture_hash: commonFixtureHash,
       provenance_hash: 'f5e0883238166c13ee6a71b6393438c8e07097a68559825673e42daaa5f1496a',
     }, (config) => new RandomRoamBot(config));
+    registry.register({
+      id: 'bun.hunter', version: '1.0.0', display_name: '猎手 Bot（躲泡/进攻/偷包）',
+      runtime: ['browser'], capabilities: { deterministic: true, batched: 'none',
+        jittable: false, async: false, transition_observer: false, frozen: false },
+      config_schema: { type: 'object', additionalProperties: false, properties: {
+        difficulty: { type: 'string', enum: ['easy', 'normal', 'hard'] } } },
+      defaults: { difficulty: 'normal' },
+    }, dependencies.hunter ? (config) => new HunterAdapter(dependencies.hunter, config) : null);
     registry.register({
       id: 'bun.browser_model', version: '1.0.0', display_name: '浏览器模型 Bot',
       runtime: ['browser'], capabilities: { deterministic: true, batched: 'none',

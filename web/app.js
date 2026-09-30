@@ -92,6 +92,7 @@
   function createRegistry() {
     return QQTBots.createDefaultRegistry({
       BunRuleTacticalBot,
+      hunter: QQTBunHunterBot,
       modelFactory: loadedModel ? () => ({
         reset(context) {},
         async act(observation, playerId, rng) {
@@ -106,11 +107,12 @@
   function resetBot() {
     if (activeBot && activeBot.close) activeBot.close();
     const registry = createRegistry();
-    const botId = matchMode.value === 'model-vs-rule' ? 'bun.tactical_v2' : opponentSelect.value;
-    activeBot = registry.create(botId, {});
+    // 选项值形如 "bun.hunter@hard"：@ 后为难度配置。
+    const [botId, difficulty] = (matchMode.value === 'model-vs-rule' ? 'bun.tactical_v2' : opponentSelect.value).split('@');
+    activeBot = registry.create(botId, difficulty ? { difficulty } : {});
     activeBot.reset({
       schema: 'qqt.bot.context/v1', episode_id: `web-${Date.now()}`,
-      seed: 0x515154, ruleset: 'bun', max_ticks: null, metadata: {},
+      seed: Date.now() >>> 0, ruleset: 'bun', max_ticks: null, metadata: {},
     });
   }
 
@@ -122,7 +124,7 @@
     sim = new QQT.Sim(Date.now() >>> 0);
     sim.reset(level);
     if (opponentSelect.value === 'bun.browser_model' && !loadedModel) {
-      opponentSelect.value = 'bun.tactical_v2';
+      opponentSelect.value = 'bun.hunter@normal';
     }
     if (matchMode.value === 'model-vs-rule' && !loadedModel) {
       matchMode.value = 'human-vs-opponent';
@@ -275,6 +277,8 @@
       rule_bot_alive: sim.alive[1],
       bun_score: sim.bunScore,
       carrying: sim.bunCarried,
+      bot: activeBot && activeBot.bot && activeBot.bot.lastDecision
+        ? `${activeBot.bot.lastDecision.mode} / ${activeBot.bot.lastDecision.reason}` : undefined,
       winner: sim.done ? sim.winner : null,
     }, null, 2);
   }
@@ -294,7 +298,7 @@
         const state = QQTBunRuleBot.stateFromSim(sim);
         const observation = {
           schema: 'qqt.bot.observation/v1', tick: sim.t, state,
-          legal_moves: [0, 1, 2, 3, 4], legal_abilities: [0, 1, 2], metadata: {},
+          legal_moves: [0, 1, 2, 3, 4], legal_abilities: [0, 1, 2], metadata: { sim },
         };
         const action = await Promise.resolve(activeBot.act(observation, 1, modelRng));
         prevPos.set(sim.pos);
@@ -355,7 +359,7 @@
       reset();
     } catch (error) {
       loadedModel = null;
-      opponentSelect.value = 'bun.tactical_v2';
+      opponentSelect.value = 'bun.hunter@normal';
       modelStatus.textContent = `加载失败：${error.message}`;
     }
   });
