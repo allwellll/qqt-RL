@@ -24,6 +24,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from jax_bomb import bun_env as env
+from jax_bomb import bun_supervision
+from jax_bomb import jax_net
 from jax_bomb import jax_train
 from jax_bomb.bun_frozen_opponents import (
     FrozenTacticalOpponent,
@@ -36,7 +38,7 @@ from jax_bomb.bun_critic import (
     independent_critic_forward,
     weighted_hl_gauss_loss,
 )
-from jax_bomb.jax_net import transformer_forward
+from jax_bomb.jax_net import transformer_aux_forward, transformer_forward
 from scripts.adapt_bun_critic_onpolicy import diagnostics, migrate_critic
 from scripts.train_bun_bc import _expand, _load
 
@@ -51,6 +53,28 @@ BUCKET_BY_LESSON = {
     env.LESSON_CARRY_RETURN: 11,
     env.LESSON_DANGER_ARENA: 8,
 }
+
+
+def ensure_actor_aux_heads(actor, key):
+    """Graft safe-action/escape/margin heads onto a policy backbone in place.
+
+    The audit found the danger/escape supervision only ever reached the critic
+    or a sidecar NPZ, never the actor's shared transformer backbone. Adding these
+    heads (reading the same pooled feature as the policy head) is what lets the
+    BCE gradient train the backbone. Grafting starts a NEW actor lineage: the
+    obs/backbone are unchanged, only three consequence-prediction heads are added.
+    """
+    heads = actor.get("heads")
+    if not isinstance(heads, dict) or "wsafe" in heads:
+        return actor
+    embed = heads["wm"][0].shape[0]
+    ks, ke, kg = jax.random.split(key, 3)
+    grafted = dict(heads)
+    grafted["wsafe"] = jax_net._linear_init(
+        ks, embed, env.N_MOVES * env.N_BOMB, scale=0.01)
+    grafted["wesc"] = jax_net._linear_init(ke, embed, 1, scale=0.01)
+    grafted["wmargin"] = jax_net._linear_init(kg, embed, 1, scale=0.01)
+    return {**actor, "heads": grafted}
 
 
 def file_hash(path):
@@ -131,6 +155,9 @@ def collect_tactical_rollout(current_actor, states, key, num_steps):
     ability_masks = []
     unsafe_masks = []
     audit_rows = []
+    safe_labels = []
+    escape_labels = []
+    margin_labels = []
 
     @jax.jit
     def policy_step(params, current_states, sample_key):
@@ -142,6 +169,18 @@ def collect_tactical_rollout(current_actor, states, key, num_steps):
             (masks[0][:num_envs], masks[1][:num_envs]), sample_key,
             state=global_state[:num_envs])
         return obs[:num_envs], global_state[:num_envs], masks, learner_actions, learner_logp, learner_value
+
+    @jax.jit
+    def supervision_step(current_states):
+        """Learner (player 0) deterministic safety labels for the current board.
+
+        Pure function of the public state via the safety oracle; no opponent
+        policy or future rollout is consulted, so it is an admissible gradient
+        target for the actor's shared backbone.
+        """
+        labels = jax.vmap(bun_supervision.actor_supervision_labels)(current_states)
+        return (labels["safe_action"][:, 0], labels["escape"][:, 0],
+                labels["margin"][:, 0])
 
     @jax.jit
     def environment_step(current_states, env_actions, step_key):
@@ -171,6 +210,7 @@ def collect_tactical_rollout(current_actor, states, key, num_steps):
         key, policy_key, step_key = jax.random.split(key, 3)
         obs, global_state, masks, learner_action, learner_logp, learner_value = (
             policy_step(current_actor, states, policy_key))
+        safe_label, escape_label, margin_label = supervision_step(states)
         tactical_action = jnp.asarray(opponent.decide_batch(states), jnp.int32)
         env_actions = jnp.stack([learner_action, tactical_action], axis=1)
         states, done, reward, audit = environment_step(
@@ -187,6 +227,9 @@ def collect_tactical_rollout(current_actor, states, key, num_steps):
         unsafe_masks.append(jnp.zeros(
             (num_envs, env.N_MOVES, env.N_BOMB), jnp.bool_))
         audit_rows.append(audit)
+        safe_labels.append(safe_label)
+        escape_labels.append(escape_label)
+        margin_labels.append(margin_label)
 
     batch = (
         jnp.stack(observations), jnp.stack(global_states),
@@ -195,8 +238,10 @@ def collect_tactical_rollout(current_actor, states, key, num_steps):
         (jnp.stack(move_masks), jnp.stack(ability_masks),
          jnp.stack(unsafe_masks)),
     )
+    supervision = (jnp.stack(safe_labels), jnp.stack(escape_labels),
+                   jnp.stack(margin_labels))
     audit = jnp.stack(audit_rows).sum(axis=(0, 1))
-    return states, batch, audit, jnp.zeros((num_envs,), jnp.float32)
+    return states, batch, audit, jnp.zeros((num_envs,), jnp.float32), supervision
 
 
 def make_inputs(obs, global_state, lessons, opponent_name):
@@ -296,6 +341,11 @@ def main(argv=None):
     parser.add_argument("--counterfactual-q-coef", type=float, default=0.40)
     parser.add_argument("--counterfactual-pair-coef", type=float, default=0.15)
     parser.add_argument("--counterfactual-aux-coef", type=float, default=0.20)
+    parser.add_argument("--actor-aux-coef", type=float, default=0.0,
+                        help="Weight for the actor's danger/escape/margin/"
+                             "safe-action BCE supervision on the shared "
+                             "backbone. >0 grafts aux heads and starts a new "
+                             "actor lineage; 0 keeps the legacy actor untouched.")
     parser.add_argument("--reward-profile", default="combat_evolution",
                         choices=("legacy", "auto_sparse", "combat_evolution",
                                  "danger_arena"))
@@ -328,6 +378,13 @@ def main(argv=None):
     critic_had_aux = isinstance(critic, dict) and "aux" in critic
     actor = jax.tree.map(jnp.asarray, actor)
     reference = jax.tree.map(jnp.asarray, reference)
+    actor_grafted_aux = False
+    if args.actor_aux_coef > 0.0:
+        before = "wsafe" in actor.get("heads", {})
+        actor = ensure_actor_aux_heads(
+            actor, jax.random.PRNGKey(np.uint32((args.seed ^ 0xA11) & 0xFFFFFFFF)))
+        actor_grafted_aux = not before and "wsafe" in actor["heads"]
+    has_actor_aux = isinstance(actor.get("heads"), dict) and "wsafe" in actor["heads"]
     weak = jax.tree.map(jnp.asarray, load_checkpoint(args.weak)[0])
     old = jax.tree.map(jnp.asarray, load_checkpoint(args.old)[0])
     recent = jax.tree.map(jnp.asarray, load_checkpoint(args.recent)[0])
@@ -342,7 +399,9 @@ def main(argv=None):
         target_critic = jax.tree.map(lambda value: jnp.array(value), critic)
     actor_optimizer = optax.adam(args.actor_lr)
     critic_optimizer = optax.adam(args.critic_lr)
-    if actor_opt_state is None:
+    if actor_opt_state is None or actor_grafted_aux:
+        # grafting new heads changes the param tree → optimizer moments must be
+        # re-initialised so apply_updates sees a matching structure.
         actor_opt_state = actor_optimizer.init(actor)
     if critic_opt_state is None or not critic_had_aux:
         critic_opt_state = critic_optimizer.init(critic)
@@ -368,7 +427,15 @@ def main(argv=None):
                     bun_opponent_weak_params=weak,
                     bun_opponent_old_params=old,
                     bun_opponent_recent_params=recent)
-            return collect
+
+            def collect_with_supervision(current_actor, states, key):
+                # jax-opponent rollouts don't retain per-transition boards, so no
+                # deterministic safety labels are produced; aux supervision is a
+                # tactical-danger_arena-only signal (supervision=None here).
+                final_states, batch, nov, kills = collect(
+                    current_actor, states, key)
+                return final_states, batch, nov, kills, None
+            return collect_with_supervision
         jax_collectors[opponent_name] = build_collect(weights)
 
     def collect_for(opponent_name, current_actor, states, key):
@@ -386,9 +453,10 @@ def main(argv=None):
 
     @jax.jit
     def actor_update(params, opt_state, obs, global_state, actions, old_logp,
-                     advantages, move_mask, ability_mask, bc_idx):
+                     advantages, move_mask, ability_mask, bc_idx,
+                     safe_label, escape_label, margin_label, aux_scale):
         def loss_fn(current):
-            move_logits, ability_logits, _, _ = transformer_forward(
+            move_logits, ability_logits, _, _, aux = transformer_aux_forward(
                 current, obs, global_state)
             joint = jax_train.adjusted_joint_logits(
                 move_logits, ability_logits, move_mask, ability_mask,
@@ -420,8 +488,22 @@ def main(argv=None):
             rows = jnp.arange(len(bc_idx))
             bc_loss = (-jax.nn.log_softmax(bc_move)[rows, jnp.asarray(bc["move_action"])[bc_idx]].mean()
                        -jax.nn.log_softmax(bc_ability)[rows, jnp.asarray(bc["ability_action"])[bc_idx]].mean())
-            total = policy_loss - args.entropy * entropy + args.kl * kl + args.bc_coef * bc_loss
-            return total, (policy_loss, entropy, kl, bc_loss)
+            # 审计根因修复：安全/逃生/margin 监督经共享 backbone 回流 actor 梯度
+            # （旧 pipeline 只训 critic/sidecar）。aux_scale 为 0 时（非 tactical
+            # rollout 或未开启）梯度贡献恒为 0，不改变原策略行为。
+            if "wsafe" in current["heads"]:
+                safe_bce = optax.sigmoid_binary_cross_entropy(
+                    aux["safe_action"], safe_label).mean()
+                escape_bce = optax.sigmoid_binary_cross_entropy(
+                    aux["escape"], escape_label).mean()
+                margin_mse = ((jax.nn.sigmoid(aux["margin"])
+                               - margin_label) ** 2).mean()
+                aux_loss = safe_bce + escape_bce + margin_mse
+            else:
+                aux_loss = jnp.asarray(0.0, jnp.float32)
+            total = (policy_loss - args.entropy * entropy + args.kl * kl
+                     + args.bc_coef * bc_loss + aux_scale * aux_loss)
+            return total, (policy_loss, entropy, kl, bc_loss, aux_loss)
         (loss, aux), gradients = jax.value_and_grad(loss_fn, has_aux=True)(params)
         updates, opt_state = actor_optimizer.update(gradients, opt_state, params)
         return optax.apply_updates(params, updates), opt_state, (loss,) + aux
@@ -479,7 +561,7 @@ def main(argv=None):
             states = env.init_batch(key, args.num_envs)
         lessons = np.asarray(states.lesson)
         collect_started = time.time()
-        final_states, batch, rollout_audit, _ = collect_for(
+        final_states, batch, rollout_audit, _, supervision = collect_for(
             current_opponent, actor, states, key)
         jax.block_until_ready(batch[5])
         obs, global_state, actions, old_logp, _, reward, done, masks = batch
@@ -511,6 +593,26 @@ def main(argv=None):
         returns = advantages + values
         flat_count = args.num_steps * args.num_envs
         bc_idx = jnp.asarray(rng.choice(len(bc["obs"]), min(512, flat_count), replace=True))
+        # Learner safety labels align 1:1 with the rollout obs rows. Absent them
+        # (jax-opponent rollout or aux disabled) feed zeros with aux_scale=0 so
+        # the traced multiplier zeroes the gradient without recompilation.
+        if supervision is not None and has_actor_aux:
+            safe_label = jnp.asarray(
+                np.asarray(supervision[0][:, :args.num_envs], np.float32)
+                .reshape(flat_count, -1))
+            escape_label = jnp.asarray(
+                np.asarray(supervision[1][:, :args.num_envs], np.float32)
+                .reshape(flat_count))
+            margin_label = jnp.asarray(
+                np.asarray(supervision[2][:, :args.num_envs], np.float32)
+                .reshape(flat_count))
+            aux_scale = jnp.asarray(args.actor_aux_coef, jnp.float32)
+        else:
+            safe_label = jnp.zeros((flat_count, env.N_MOVES * env.N_BOMB),
+                                   jnp.float32)
+            escape_label = jnp.zeros((flat_count,), jnp.float32)
+            margin_label = jnp.zeros((flat_count,), jnp.float32)
+            aux_scale = jnp.asarray(0.0, jnp.float32)
         actor, actor_opt_state, actor_metrics = actor_update(
             actor, actor_opt_state,
             jnp.asarray(obs.reshape(flat_count, *obs.shape[2:])),
@@ -519,7 +621,8 @@ def main(argv=None):
             jnp.asarray(old_logp.reshape(flat_count)),
             jnp.asarray(advantages.reshape(flat_count)),
             jnp.asarray(move_mask.reshape(flat_count, -1)),
-            jnp.asarray(ability_mask.reshape(flat_count, -1)), bc_idx)
+            jnp.asarray(ability_mask.reshape(flat_count, -1)), bc_idx,
+            safe_label, escape_label, margin_label, aux_scale)
         cf_idx = jnp.asarray(rng.choice(cf_train, min(256, len(cf_train)), replace=True))
         critic, critic_opt_state, critic_metrics = critic_update(
             critic, critic_opt_state,
@@ -541,7 +644,8 @@ def main(argv=None):
             "opponent": current_opponent,
             "lesson_counts": {env.LESSON_NAMES[index]: int((lessons == index).sum())
                               for index in np.unique(lessons)},
-            "actor": dict(zip(("loss", "policy_loss", "entropy", "kl", "bc_loss"), actor_values)),
+            "actor": dict(zip(("loss", "policy_loss", "entropy", "kl",
+                                "bc_loss", "aux_loss"), actor_values)),
             "critic": dict(zip((
                 "loss", "onpolicy_loss", "counterfactual_value_loss",
                 "counterfactual_q_loss", "counterfactual_pair_loss",
@@ -572,7 +676,7 @@ def main(argv=None):
     heldout_lessons = np.asarray(heldout_states.lesson)
     actor_hash_before_heldout = hashlib.sha256(pickle.dumps(
         jax.device_get(actor), protocol=4)).hexdigest()
-    heldout_final, heldout_batch, _, _ = collect_for(
+    heldout_final, heldout_batch, _, _, _ = collect_for(
         "tactical", actor, heldout_states, heldout_key)
     h_obs, h_global, _, _, _, h_reward, h_done, _ = heldout_batch
     h_obs = np.asarray(h_obs[:, :args.num_envs], np.float32)

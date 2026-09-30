@@ -360,6 +360,7 @@ def main():
                        "--target-tau", str(config["target_tau"]),
                        "--counterfactual-coef", str(config["counterfactual_coef"]),
                        "--counterfactual-aux-coef", str(config["aux_coef"]),
+                       "--actor-aux-coef", str(config.get("actor_aux_coef", 0.0)),
                        "--reward-profile", "danger_arena",
                        "--danger-escape-reward", str(config["danger_escape_reward"]),
                        "--avoidable-danger-death-penalty", str(config["avoidable_penalty"]),
