@@ -6,6 +6,8 @@
   if (root) root.QQTControls = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function buildControls() {
   const MOVEMENT_KEYS = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+  // 原版用 Ctrl 放道具，但浏览器里 Ctrl+W/R 会关闭/刷新页面，改用 E / Shift。
+  const ITEM_KEYS = ['KeyE', 'ShiftLeft', 'ShiftRight'];
 
   function moveForHeld(held) {
     if (held.has('ArrowUp') || held.has('KeyW')) return 0;
@@ -15,5 +17,5 @@
     return 4;
   }
 
-  return { MOVEMENT_KEYS, moveForHeld };
+  return { MOVEMENT_KEYS, ITEM_KEYS, moveForHeld };
 });

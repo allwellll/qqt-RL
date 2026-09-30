@@ -63,6 +63,17 @@
     return gridY * CELL + FOOT_BELOW_CENTER_PX * SCALE - imageHeight;
   }
 
+  const HELD_ITEM_SPRITES = [null, 'banana_pickup', 'glue_pickup'];
+  function heldItemSpriteKey(item) { return HELD_ITEM_SPRITES[item] || null; }
+
+  // 顶部溢出带直接取本图地面最上一行原纹理，作为首行元件上溢的衬底。
+  function makeTopBand(background) {
+    const band = document.createElement('canvas');
+    band.width = background.width; band.height = BOARD_OFFSET;
+    band.getContext('2d').drawImage(background, 0, 0, background.width, BOARD_OFFSET, 0, 0, band.width, BOARD_OFFSET);
+    return band;
+  }
+
   function respawnSeconds(ticks, tickHz = 10) {
     return Math.max(0, Math.ceil(ticks / tickHz));
   }
@@ -135,10 +146,9 @@
   }
 
   async function loadAssets(level) {
-    const [elements, background, baseBackground, humanSheet, botSheet, bombStrip, shadow] = await Promise.all([
+    const [elements, background, humanSheet, botSheet, bombStrip, shadow] = await Promise.all([
       fetch('assets/maps/elements.json').then((r) => r.json()),
       loadImage(level.bg || 'assets/bg/抢包子.png'),
-      loadImage('assets/bg/水面.png'),
       loadImage('assets/角色4×4精灵图.png'),
       loadImage('assets/角色c4×4.png'),
       loadImage('assets/bomb-custom/经典黄泡泡.png'),
@@ -183,8 +193,9 @@
       const meta = elements[String(id)] || elements[id];
       if (meta) elementImages.set(id, scaleImage(await loadImage(meta.file)));
     }
+    const scaledBackground = scaleImage(background);
     return {
-      elements, background: scaleImage(background), baseBand: scaleImage(baseBackground),
+      elements, background: scaledBackground, baseBand: makeTopBand(scaledBackground),
       players: [sliceSheet(humanSheet, 4, 4, humanSize), sliceSheet(botSheet, 4, 4, botSize)],
       bombs, flames, shadow: scaleImage(shadow), elementImages, items,
     };
@@ -243,6 +254,17 @@
       ctx.shadowColor = 'transparent'; ctx.fillStyle = '#ffe78a'; ctx.beginPath(); ctx.ellipse(-4 * size, -3 * size, radius * .52, radius * .36, -.25, 0, Math.PI * 2); ctx.fill();
       ctx.strokeStyle = team ? '#3887e8' : '#e5484d'; ctx.lineWidth = Math.max(2, 3 * size); ctx.beginPath(); ctx.arc(0, size, radius * .72, .15, Math.PI - .15); ctx.stroke();
       if (count > 1) { ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.arc(radius * .72, -radius * .55, 8 * size, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.round(10 * size)}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(count), radius * .72, -radius * .55); }
+      ctx.restore();
+    }
+    // 手持道具：角色右上角的小图标 + 白底圆框，提示按 E/Shift 放置。
+    function drawHeldItem(sprite, cx, cy, now) {
+      const image = itemFrame(sprite, now);
+      const size = 30, k = size / Math.max(image.width, image.height);
+      ctx.save();
+      ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.strokeStyle = 'rgba(40,30,10,0.8)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(cx, cy, size * 0.62, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.drawImage(image, Math.round(cx - image.width * k / 2), Math.round(cy - image.height * k / 2),
+        Math.round(image.width * k), Math.round(image.height * k));
       ctx.restore();
     }
     function drawBunBadge(x, y, team, count) {
@@ -368,6 +390,10 @@
         items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
         items.push([z, image, x, y]);
         if (sim.bunCarried[pid] >= 0) items.push([z + 1, () => drawBun(x + image.width / 2, y + 8, sim.bunCarried[pid], 1, 0.8, now)]);
+        const heldKey = sim.heldItem ? heldItemSpriteKey(sim.heldItem[pid]) : null;
+        if (heldKey && assets.items && assets.items[heldKey]) {
+          items.push([z + 2, () => drawHeldItem(assets.items[heldKey], x + image.width * 0.8, y + image.height * 0.25, now)]);
+        }
       }
       items.sort((a, b) => a[0] - b[0]);
       for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
@@ -412,5 +438,5 @@
     return { render, addExplosion, reset };
   }
 
-  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, bunTokens, explosionFrame, loadAssets, createRenderer };
+  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, heldItemSpriteKey, bunTokens, explosionFrame, loadAssets, createRenderer };
 });

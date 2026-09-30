@@ -1880,18 +1880,27 @@
       return !!(this.wall[i] || this.brick[i]);
     }
 
-    _nativePointCollision(st, px, py, mv) {
+    // 泡泡阻挡：前缘点落在入口带；或角色中心已离开泡泡格、正朝它回走（泡泡是移动方向上的相邻格）。
+    // 后者让刚放的泡泡在中心越过格边界后即变实体，不必整个身体走出才挡住。
+    _nativeBombBlocks(st, px, py, mv, x, y, row, col) {
+      if (st.passActive || nativeEntryStripBlocks(px, py, mv)) return true;
+      if (x == null) return false;
+      const [dy, dx] = DIRS[mv];
+      return Math.trunc(y / NATIVE_CELL_PX) + dy === row && Math.trunc(x / NATIVE_CELL_PX) + dx === col;
+    }
+
+    _nativePointCollision(st, px, py, mv, x, y) {
       const row = Math.trunc(py / NATIVE_CELL_PX), col = Math.trunc(px / NATIVE_CELL_PX);
       const cell = { row, col };
       if (px < 0 || py < 0 || row >= H || col >= W) return { cell, kind: NATIVE_HIT_STATIC };
       const i = row * W + col;
-      if (this.fuse[i] > 0 && (st.passActive || nativeEntryStripBlocks(px, py, mv))) return { cell, kind: NATIVE_HIT_BOMB };
+      if (this.fuse[i] > 0 && this._nativeBombBlocks(st, px, py, mv, x, y, row, col)) return { cell, kind: NATIVE_HIT_BOMB };
       if (this.wall[i] || this.brick[i]) return { cell, kind: NATIVE_HIT_STATIC };
       return { cell, kind: NATIVE_HIT_NONE };
     }
 
     _nativeCollisions(st, x, y, mv) {
-      return nativeLeadingEdgePoints(x, y, mv).map(([px, py]) => this._nativePointCollision(st, px, py, mv));
+      return nativeLeadingEdgePoints(x, y, mv).map(([px, py]) => this._nativePointCollision(st, px, py, mv, x, y));
     }
 
     _nativeTouch(st, cell) {

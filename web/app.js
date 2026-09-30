@@ -39,6 +39,7 @@
   const held = new Set();
   const modelRng = QQT.mulberry32(0x515154);
   let bombQueued = false;
+  let itemQueued = false;
   let loadedModel = null;
   let publishedModels = [];
   let activeBot = null;
@@ -132,6 +133,7 @@
     }
     resetBot();
     bombQueued = false;
+    itemQueued = false;
     intents[0] = intents[1] = QQT.MOVE_IDLE;
     snapMotion();
     renderer.reset();
@@ -189,8 +191,9 @@
 
   function humanAction() {
     // 第4位=1：跳过 10Hz 逻辑移动（移动改由 rAF 逐帧 frameStep 连续处理）；放泡仍在中心格生效。
-    const action = [QQT.MOVE_IDLE, bombQueued ? 1 : 0, 0, 1];
+    const action = [QQT.MOVE_IDLE, bombQueued ? 1 : 0, itemQueued ? 1 : 0, 1];
     bombQueued = false;
+    itemQueued = false;
     return action;
   }
 
@@ -277,6 +280,7 @@
       rule_bot_alive: sim.alive[1],
       bun_score: sim.bunScore,
       carrying: sim.bunCarried,
+      held_item: sim.heldItem.map((item) => ['无', '香蕉皮', '慢慢胶'][item] || '无'),
       bot: activeBot && activeBot.bot && activeBot.bot.lastDecision
         ? `${activeBot.bot.lastDecision.mode} / ${activeBot.bot.lastDecision.reason}` : undefined,
       winner: sim.done ? sim.winner : null,
@@ -303,7 +307,10 @@
         const action = await Promise.resolve(activeBot.act(observation, 1, modelRng));
         prevPos.set(sim.pos);
         const before = QQTSound.snapshot(sim);
-        const info = sim.step([[Number(first[0]), Number(first[1]), 0, Number(first[3]) || 0], [action.move, action.ability]]);
+        const info = sim.step([
+          [Number(first[0]), Number(first[1]), Number(first[2]) || 0, Number(first[3]) || 0],
+          [action.move, action.ability === 1 ? 1 : 0, action.ability === 2 ? 1 : 0],
+        ]);
         curPos.set(sim.pos); lastTickT = performance.now();
         if (localHumanControls()) intents[1] = sim.alive[1] ? sim.playerMoveDirection(1, action.move) : QQT.MOVE_IDLE;
         else setTickIntents(first[0], action.move);
@@ -324,9 +331,10 @@
   window.addEventListener('pointerdown', unlockAudio);
   window.addEventListener('keydown', (event) => {
     unlockAudio();
-    if ([...QQTControls.MOVEMENT_KEYS, 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(event.code)) event.preventDefault();
+    if ([...QQTControls.MOVEMENT_KEYS, ...QQTControls.ITEM_KEYS, 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(event.code)) event.preventDefault();
     held.add(event.code);
     if (event.code === 'Space') bombQueued = true;
+    if (QQTControls.ITEM_KEYS.includes(event.code)) itemQueued = true;
     if (event.code === 'KeyR') reset();
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));

@@ -92,6 +92,29 @@ function hold(s, mv, ms) { for (let t = 0; t < ms; t += 16) s.frameStep(0, mv, 0
   const ahead = openSim(); ahead.pos[0] = 5.5; ahead.pos[1] = 5.5; ahead.fuse[5 * W + 6] = 30;
   hold(ahead, MOVE_RIGHT, 800);
   assert.equal(Math.round(ahead.pos[1] * PX), 220, '正前方泡泡必须在入口带挡住');
+  // 刚放的泡泡：中心还在泡泡格内可自由来回；中心越过格边界后回走即被挡住（无需整个身体离开）。
+  const stepOff = (px) => {
+    const s = openSim(); s.pos[0] = 5.5; s.pos[1] = 5.5; s.fuse[5 * W + 5] = 30;
+    while (s.pos[1] * PX < px) s.frameStep(0, MOVE_RIGHT, 0.004);
+    return s;
+  };
+  const inside = stepOff(236);
+  hold(inside, QQT.MOVE_LEFT, 300);
+  assert(inside.pos[1] * PX < 215, `中心仍在泡泡格内时必须能往回走，实得 ${inside.pos[1] * PX}`);
+  const edge = stepOff(242);
+  const edgeX = edge.pos[1] * PX;
+  assert(edgeX - 19 < 240, '前提：身体仍与泡泡格重叠');
+  hold(edge, QQT.MOVE_LEFT, 400);
+  assert(Math.abs(edge.pos[1] * PX - edgeX) <= 1, `中心越过边界后回走必须被泡泡挡住，实得 ${edge.pos[1] * PX}`);
+  for (const [mv, dy, dx] of [[QQT.MOVE_UP, -1, 0], [QQT.MOVE_DOWN, 1, 0], [QQT.MOVE_LEFT, 0, -1]]) {
+    const s = openSim(); s.pos[0] = 5.5; s.pos[1] = 5.5; s.fuse[5 * W + 5] = 30;
+    const back = [QQT.MOVE_DOWN, MOVE_UP, MOVE_RIGHT][[QQT.MOVE_UP, QQT.MOVE_DOWN, QQT.MOVE_LEFT].indexOf(mv)];
+    const axis = dy ? 0 : 1;
+    while (Math.abs(s.pos[axis] - 5.5) * PX < 23) s.frameStep(0, mv, 0.004);
+    const at = s.pos[axis];
+    hold(s, back, 400);
+    assert(Math.abs(s.pos[axis] - at) * PX <= 1, `方向 ${mv} 离开后回走必须被挡`);
+  }
   // 顶泡 500~600ms 后放泡 → 获得一格穿泡。
   const pass = openSim(); pass.pos[0] = 5.5; pass.pos[1] = 5.5; pass.fuse[5 * W + 6] = 30;
   hold(pass, MOVE_RIGHT, 560);
@@ -313,6 +336,36 @@ function dimRects(rects, canvas) {
   assert(sound.detectEvents(null, s, { covered: Uint8Array.from([0, 1]) }, 0).includes('boom'), '有火焰覆盖应触发 boom');
 }
 
+// 4j) 香蕉皮/慢慢胶：拾取后手持，真人动作第3位=1 放到脚下格；角色旁绘制手持图标。
+{
+  const s = openSim(); s.isBun = false; s.pos[0] = 5.5; s.pos[1] = 5.5; s.pos[2] = 1.5; s.pos[3] = 1.5;
+  for (const [crate, held, field] of [[3, 1, 1], [4, 2, 2]]) {
+    const cell = 5 * W + 5;
+    s.crate[cell] = 1; s.crateType[cell] = crate; s.heldItem[0] = 0; s.fieldItem[cell] = 0;
+    s.step([[MOVE_IDLE, 0, 0, 1], [MOVE_IDLE, 0, 0, 1]]);
+    assert.equal(s.heldItem[0], held, `拾取道具 ${crate} 后必须手持 ${held}`);
+    s.step([[MOVE_IDLE, 0, 1, 1], [MOVE_IDLE, 0, 0, 1]]);
+    assert.equal(s.heldItem[0], 0, '按放置键后手持道具清空');
+    assert.equal(s.fieldItem[cell], field, '道具必须落在脚下格');
+  }
+  assert.equal(visual.heldItemSpriteKey(1), 'banana_pickup');
+  assert.equal(visual.heldItemSpriteKey(2), 'glue_pickup');
+  assert.equal(visual.heldItemSpriteKey(0), null);
+  const { canvas, draws } = mockCanvas();
+  const assets = mockAssets();
+  assets.items = { banana_pickup: { ox: 0, oy: 0, frames: [tagImg('heldBanana', 40, 46)] } };
+  const r = visual.createRenderer(canvas, level, assets);
+  const sim = fakeSim({ pos: [5.5, 3.5, 5.5, 8.5] });
+  sim.heldItem = [1, 0];
+  const origDraw = canvas.getContext().drawImage;
+  let heldDrawn = 0;
+  canvas.getContext().drawImage = function (img) { if (img && img.tag === 'heldBanana') heldDrawn++; return origDraw.apply(this, arguments); };
+  r.render(sim, 1000, null);
+  assert.equal(heldDrawn, 1, '手持香蕉皮必须在角色旁绘制一次图标');
+}
+const controls = require('./controls.js');
+assert(controls.ITEM_KEYS.includes('KeyE') && controls.ITEM_KEYS.includes('ShiftLeft'), 'E/Shift 必须是放道具键');
+
 // ---------- 5) sim.js / app.js 接线契约 ----------
 const simSource = fs.readFileSync(path.join(__dirname, 'sim.js'), 'utf8');
 assert(!/steerReduced/.test(simSource), 'sim.js 必须已彻底移除 steerReduced（连续移动下作废）');
@@ -322,7 +375,7 @@ assert(/NATIVE_HALF_PX = 19/.test(simSource) && /NATIVE_CORNER_TOLERANCE_PX = 6/
 
 const appSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
 assert(!/steerReduced/.test(appSource), 'app.js 必须已移除 steerReduced 接线');
-assert(/\[QQT\.MOVE_IDLE, bombQueued \? 1 : 0, 0, 1\]/.test(appSource),
+assert(/\[QQT\.MOVE_IDLE, bombQueued \? 1 : 0, itemQueued \? 1 : 0, 1\]/.test(appSource),
   'humanAction 必须返回第4位=1（跳过 10Hz 移动，改由 rAF frameStep）');
 assert(!/autoTurn|turnSlide/.test(appSource), 'app.js 必须移除 autoTurn（拐角修正由原版物理负责）');
 assert(/const move = QQTControls\.moveForHeld\(held\);[\s\S]*?sim\.frameStep\(0, move, dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
