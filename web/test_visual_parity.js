@@ -50,8 +50,17 @@ assert.equal(visual.bombFrame(1.01, 4), 0);
 assert.equal(visual.bombAgeSeconds(30, 30, 10), 0);
 assert.equal(visual.bombAgeSeconds(25, 30, 10), 0.5);
 assert.equal(visual.bombAgeSeconds(1, 30, 10), 2.9);
-assert.equal(visual.playerVisualY(6.5, 127), 291.5,
-  'player sprite feet must align to the native +19px collision edge');
+assert.equal(visual.playerVisualY(6.5, 127), 276.5,
+  'player feet sit 9 source px below the logical center so the shadow stays inside the occupied cell');
+assert.equal(visual.respawnSeconds(100), 10);
+assert.equal(visual.respawnSeconds(91), 10);
+assert.equal(visual.respawnSeconds(90), 9);
+assert.equal(visual.respawnSeconds(1), 1);
+for (const name of ['放炮', '爆炸', '吃道具音效']) {
+  assert(fs.existsSync(path.join(web, `assets/snd/${name}.wav`)), `missing sound: ${name}`);
+}
+assert(htmlSource.includes('sound.js') && htmlSource.includes('sound-toggle'), 'page must load sound effects with a toggle');
+assert(appSource.includes('QQTSound.detectEvents'), 'app must play sounds from step events');
 const items = JSON.parse(fs.readFileSync(path.join(web, 'assets/item/items.json')));
 for (const key of ['bun', 'banana_pickup', 'glue_pickup', 'banana_field', 'glue_field', 'random', 'bomb', 'power', 'speed', 'fast_shoe']) {
   assert(items[key] && fs.existsSync(path.join(web, items[key].file)), `missing client item sprite: ${key}`);

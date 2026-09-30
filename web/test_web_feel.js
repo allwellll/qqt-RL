@@ -123,7 +123,7 @@ function mockAssets() {
     const rows = [];
     for (let r = 0; r < 4; r++) {
       const frames = [];
-      for (let c = 0; c < 4; c++) frames.push(tagImg(`p${pid}`, 40, 40));
+      for (let c = 0; c < 4; c++) { const img = tagImg(`p${pid}`, 40, 40); img.row = r; frames.push(img); }
       rows.push(frames);
     }
     players.push(rows);
@@ -138,6 +138,7 @@ function mockAssets() {
 function mockCanvas() {
   const draws = [];
   const rects = [];
+  const texts = [];
   let fillStyle = '';
   const ctx = {
     set fillStyle(v) { fillStyle = v; }, get fillStyle() { return fillStyle; },
@@ -145,11 +146,12 @@ function mockCanvas() {
     shadowColor: '', shadowBlur: 0, shadowOffsetY: 0,
     strokeStyle: '', lineWidth: 0, font: '', textAlign: '', textBaseline: '',
     save() {}, restore() {}, translate() {}, beginPath() {}, ellipse() {},
-    fill() {}, arc() {}, stroke() {}, fillText() {},
-    drawImage(img, a, b) { if (arguments.length === 3 && img && img.tag) draws.push({ tag: img.tag, x: a, y: b, w: img.width }); },
+    fill() {}, arc() {}, stroke() {}, strokeText() {},
+    fillText(text, x, y) { texts.push({ text: String(text), x, y }); },
+    drawImage(img, a, b) { if (arguments.length === 3 && img && img.tag) draws.push({ tag: img.tag, x: a, y: b, w: img.width, row: img.row }); },
     fillRect(x, y, w, h) { rects.push({ fillStyle, x, y, w, h }); },
   };
-  return { canvas: { width: 900, height: 810, getContext: () => ctx }, draws, rects };
+  return { canvas: { width: 900, height: 810, getContext: () => ctx }, draws, rects, texts };
 }
 function fakeSim(opts) {
   return {
@@ -161,6 +163,7 @@ function fakeSim(opts) {
     isBun: !!opts.isBun,
     bunBases: [], bunStored: [], bunLoose: new Uint8Array(N * 2),
     bunRespawn: opts.bunRespawn || [0, 0], bunRespawnTicks: 20,
+    bunSpawnPos: [[6.5, 2.5], [6.5, 12.5]],
   };
 }
 const level = { layers: [new Int16Array(N), new Int16Array(N)] };
@@ -257,6 +260,59 @@ function dimRects(rects, canvas) {
   assert(dimRects(rects, canvas).length === 0, '复活倒计时归零瞬间必须恢复亮度');
 }
 
+// 4g) 复活倒计时：本地玩家阵亡显示中央秒数；对手阵亡在复活点显示秒数。
+{
+  const { canvas, texts } = mockCanvas();
+  const r = visual.createRenderer(canvas, level, mockAssets());
+  const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [0, 0], isBun: true, bunRespawn: [15, 42] });
+  r.render(s, 1050, { prevPos: s.pos, curPos: s.pos, lastTickT: 1000, tickMs: 100, humanPid: 0 });
+  assert(texts.some((t) => t.text === '2'), '本地玩家剩 15 tick 应显示 2 秒');
+  assert(texts.some((t) => t.text === '秒后复活'), '本地玩家阵亡应显示复活提示');
+  const bot = texts.find((t) => t.text === '5');
+  assert(bot && Math.abs(bot.x - 12.5 * CELL) < 1e-6, '对手倒计时(42 tick→5 秒)应画在其复活点');
+}
+{
+  const { canvas, texts } = mockCanvas();
+  const r = visual.createRenderer(canvas, level, mockAssets());
+  const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [1, 1], isBun: true });
+  r.render(s, 1050, null);
+  assert.equal(texts.length, 0, '双方存活时不显示倒计时');
+}
+
+// 4h) 朝向跟随移动意图：顶墙不动时按上也必须面朝上（精灵行 3），松手后保持朝向。
+{
+  const { canvas, draws } = mockCanvas();
+  const r = visual.createRenderer(canvas, level, mockAssets());
+  const s = fakeSim({ pos: [5.5, 3.5, 5.5, 8.5] });
+  const motion = (intents) => ({ prevPos: s.pos, curPos: s.pos, lastTickT: 1000, tickMs: 100, humanPid: 0, intents });
+  const faceRow = (pid) => draws.filter((d) => d.tag === `p${pid}`).pop().row;
+  r.render(s, 1000, motion([QQT.MOVE_IDLE, QQT.MOVE_IDLE]));
+  assert.equal(faceRow(0), 0, '初始朝下');
+  for (const [mv, row] of [[QQT.MOVE_UP, 3], [QQT.MOVE_LEFT, 1], [QQT.MOVE_RIGHT, 2], [QQT.MOVE_DOWN, 0]]) {
+    r.render(s, 1016, motion([mv, mv]));
+    assert.equal(faceRow(0), row, `位置不变(顶墙)时意图 ${mv} 必须朝向精灵行 ${row}`);
+    assert.equal(faceRow(1), row, `对手顶墙时意图 ${mv} 同样须转向`);
+  }
+  r.render(s, 1032, motion([QQT.MOVE_UP, QQT.MOVE_IDLE]));
+  r.render(s, 1048, motion([QQT.MOVE_IDLE, QQT.MOVE_IDLE]));
+  assert.equal(faceRow(0), 3, '松手后保持最后朝向');
+}
+
+// ---------- 4i) 音效事件：放泡/爆炸全场可闻，拾取只对监听者 ----------
+{
+  const sound = require('./sound.js');
+  const s = openSim(); s.pos[0] = 5.5; s.pos[1] = 5.5; s.pos[2] = 1.5; s.pos[3] = 1.5;
+  s.crate[5 * W + 5] = 1; s.crateType[5 * W + 5] = 0;
+  const before = sound.snapshot(s);
+  const info = s.step([[MOVE_IDLE, 1, 0, 1], [MOVE_IDLE, 0, 0, 1]]);
+  const events = sound.detectEvents(before, s, info, 0);
+  assert(events.includes('place'), '放泡应触发 place 音效');
+  assert(events.includes('pickup'), '踩到道具应触发 pickup 音效');
+  assert(!events.includes('boom'), '未爆炸不应触发 boom');
+  assert(!sound.detectEvents(before, s, info, 1).includes('pickup'), '对手的拾取不对监听者播放');
+  assert(sound.detectEvents(null, s, { covered: Uint8Array.from([0, 1]) }, 0).includes('boom'), '有火焰覆盖应触发 boom');
+}
+
 // ---------- 5) sim.js / app.js 接线契约 ----------
 const simSource = fs.readFileSync(path.join(__dirname, 'sim.js'), 'utf8');
 assert(!/steerReduced/.test(simSource), 'sim.js 必须已彻底移除 steerReduced（连续移动下作废）');
@@ -269,7 +325,8 @@ assert(!/steerReduced/.test(appSource), 'app.js 必须已移除 steerReduced 接
 assert(/\[QQT\.MOVE_IDLE, bombQueued \? 1 : 0, 0, 1\]/.test(appSource),
   'humanAction 必须返回第4位=1（跳过 10Hz 移动，改由 rAF frameStep）');
 assert(!/autoTurn|turnSlide/.test(appSource), 'app.js 必须移除 autoTurn（拐角修正由原版物理负责）');
-assert(/sim\.frameStep\(0, QQTControls\.moveForHeld\(held\), dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
+assert(/const move = QQTControls\.moveForHeld\(held\);[\s\S]*?sim\.frameStep\(0, move, dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
+assert(/intents\[0\] = sim\.alive\[0\] \? sim\.playerMoveDirection\(0, move\)/.test(appSource), 'rAF 必须把按键意图交给渲染器定朝向');
 assert(/humanPid: localHumanControls\(\) \? 0 : -1/.test(appSource),
   'motionState 必须传 humanPid（本地人类 raw / 观战回放插值）');
 assert(/stepHumanFrame\(now\)/.test(appSource), 'rAF 回调必须先驱动 stepHumanFrame(now)');

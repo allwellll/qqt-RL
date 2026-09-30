@@ -49,6 +49,11 @@
   let replayPlaying = false;
   let replayAccumulator = 0;
   let sim;
+  const sound = QQTSound.createPlayer();
+  sound.load();
+  const soundToggle = document.getElementById('sound-toggle');
+  // 每名玩家当前的移动意图（MOVE_*），渲染器据此定朝向：顶墙时也面朝按键方向。
+  const intents = [QQT.MOVE_IDLE, QQT.MOVE_IDLE];
   // 渲染插值：对手(pid1，10Hz)在两个逻辑 tick 间线性插值 → 60fps 顺滑。
   // 本地人类(pid0)不插值：由 rAF 逐帧 frameStep 连续移动，本身就是每帧真实位置。
   const TICK_MS = 100;
@@ -60,7 +65,7 @@
   // 本地人类操控 pid0（非回放、非观战 model-vs-rule）时 humanPid=0 → 渲染 raw；否则 -1（两方皆插值）。
   function localHumanControls() { return !replayDocument && matchMode.value !== 'model-vs-rule'; }
   function motionState() {
-    return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1 };
+    return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1, intents };
   }
 
   // rAF 逐帧推进本地人类 pid0：sim.frameStep 内走原版像素移动（含 6px 拐角修正、泡泡 3px 入口带），
@@ -70,7 +75,9 @@
     const dt = Math.min((now - prevFrame) / 1000 || 0, 0.25);
     prevFrame = now;
     if (sim.done) return;
-    sim.frameStep(0, QQTControls.moveForHeld(held), dt);
+    const move = QQTControls.moveForHeld(held);
+    intents[0] = sim.alive[0] ? sim.playerMoveDirection(0, move) : QQT.MOVE_IDLE;
+    sim.frameStep(0, move, dt);
   }
 
   function instantiateModel(document) {
@@ -123,6 +130,7 @@
     }
     resetBot();
     bombQueued = false;
+    intents[0] = intents[1] = QQT.MOVE_IDLE;
     snapMotion();
     renderer.reset();
   }
@@ -135,11 +143,23 @@
     replayAccumulator = 0;
     replaySeek.max = String(replayDocument.actions.length);
     replaySeek.value = '0';
+    intents[0] = intents[1] = QQT.MOVE_IDLE;
     snapMotion();
     renderer.reset();
   }
 
-  function stepReplay() {
+  function setTickIntents(move0, move1) {
+    const moves = [move0, move1];
+    for (let pid = 0; pid < 2; pid++) {
+      intents[pid] = sim.alive[pid] ? sim.playerMoveDirection(pid, Number(moves[pid])) : QQT.MOVE_IDLE;
+    }
+  }
+
+  function playEvents(before, info, listenerPid) {
+    for (const name of QQTSound.detectEvents(before, sim, info, listenerPid)) sound.play(name);
+  }
+
+  function stepReplay(silent = false) {
     if (!replayDocument || replayIndex >= replayDocument.actions.length) {
       replayPlaying = false;
       replayToggle.textContent = '播放';
@@ -147,9 +167,12 @@
     }
     const row = replayDocument.actions[replayIndex++];
     prevPos.set(sim.pos);
+    const before = QQTSound.snapshot(sim);
     const info = sim.step([[row[0], row[1], row[2]], [row[3], row[4], row[5]]]);
     curPos.set(sim.pos); lastTickT = performance.now();
+    setTickIntents(row[0], row[3]);
     renderer.addExplosion(info, performance.now());
+    if (!silent) playEvents(before, info, 0);
     replaySeek.value = String(replayIndex);
     if (replayIndex >= replayDocument.actions.length) {
       replayPlaying = false;
@@ -159,7 +182,7 @@
 
   function seekReplay(target) {
     resetReplay();
-    while (replayIndex < target) stepReplay();
+    while (replayIndex < target) stepReplay(true);
   }
 
   function humanAction() {
@@ -275,9 +298,13 @@
         };
         const action = await Promise.resolve(activeBot.act(observation, 1, modelRng));
         prevPos.set(sim.pos);
+        const before = QQTSound.snapshot(sim);
         const info = sim.step([[Number(first[0]), Number(first[1]), 0, Number(first[3]) || 0], [action.move, action.ability]]);
         curPos.set(sim.pos); lastTickT = performance.now();
+        if (localHumanControls()) intents[1] = sim.alive[1] ? sim.playerMoveDirection(1, action.move) : QQT.MOVE_IDLE;
+        else setTickIntents(first[0], action.move);
         renderer.addExplosion(info, performance.now());
+        playEvents(before, info, 0);
         if (activeBot.observe_transition) {
           activeBot.observe_transition(info, {
             ...observation, tick: sim.t, state: QQTBunRuleBot.stateFromSim(sim),
@@ -289,7 +316,10 @@
     }
   }
 
+  const unlockAudio = () => sound.unlock();
+  window.addEventListener('pointerdown', unlockAudio);
   window.addEventListener('keydown', (event) => {
+    unlockAudio();
     if ([...QQTControls.MOVEMENT_KEYS, 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(event.code)) event.preventDefault();
     held.add(event.code);
     if (event.code === 'Space') bombQueued = true;
@@ -297,6 +327,7 @@
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));
   restart.addEventListener('click', reset);
+  soundToggle.addEventListener('change', () => sound.setEnabled(soundToggle.checked));
   replaySelect.addEventListener('change', async () => {
     const row = replayCatalog.find((item) => item.id === replaySelect.value);
     if (!row) return;

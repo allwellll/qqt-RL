@@ -12,6 +12,7 @@
   const Z_ROW_STRIDE = 24;
   const DIR_KEYS = ['U', 'D', 'L', 'R'];
   const MOVE_TO_SPRITE_ROW = [3, 0, 1, 2];
+  const MOVE_IDLE = 4;
 
   const BUN_ELEMENT_IDS = [8001, 8002, 8003, 8004, 8005, 8006, 8009, 8010, 8011, 8012, 8013, 8028];
   // DIMG 无逐帧时长；与上游 GM 预览一致取 100ms/帧。
@@ -55,10 +56,15 @@
     return Math.max(0, fuseMaxTicks - fuseTicks) / tickHz;
   }
 
-  // 原版角色碰撞为中心 ±19px：精灵脚底对齐碰撞盒下沿（格中心站位时即格底上方 1px）。
-  const NATIVE_HALF_PX = 19;
+  // 脚底落在逻辑中心下方 9 源像素：若贴碰撞盒下沿(+19px)，脚和影子会比逻辑格低近半格，
+  // 玩家按脚判断所在格，放泡就会看起来落在上一格。
+  const FOOT_BELOW_CENTER_PX = 9;
   function playerVisualY(gridY, imageHeight) {
-    return gridY * CELL + NATIVE_HALF_PX * SCALE - imageHeight;
+    return gridY * CELL + FOOT_BELOW_CENTER_PX * SCALE - imageHeight;
+  }
+
+  function respawnSeconds(ticks, tickHz = 10) {
+    return Math.max(0, Math.ceil(ticks / tickHz));
   }
 
   function bunTokens(sim) {
@@ -204,9 +210,12 @@
       movingUntil[0] = movingUntil[1] = 0;
       lastPositions = null;
     }
-    function updateFaces(sim) {
+    // 有移动意图时朝向跟随意图（顶墙也要面朝墙）；无意图时才按位移推断（如香蕉皮滑行）。
+    function updateFaces(sim, intents) {
       const previous = lastPositions;
       for (let pid = 0; pid < 2; pid++) {
+        const intent = intents ? intents[pid] : MOVE_IDLE;
+        if (intent >= 0 && intent < MOVE_IDLE) { faces[pid] = intent; continue; }
         const dy = previous ? sim.pos[pid * 2] - previous[pid * 2] : 0;
         const dx = previous ? sim.pos[pid * 2 + 1] - previous[pid * 2 + 1] : 0;
         if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 1e-5) faces[pid] = dx < 0 ? 2 : 3;
@@ -311,7 +320,8 @@
       return true;
     }
     function render(sim, now = performance.now(), motion = null) {
-      const previousPositions = updateFaces(sim);
+      const intents = motion && motion.intents ? motion.intents : null;
+      const previousPositions = updateFaces(sim, intents);
       // 逻辑节拍 10Hz，渲染 60Hz：对手(10Hz)在两个 sim tick 之间线性插值位置 → 顺滑。
       // 本地人类(motion.humanPid)不插值：由 rAF 逐帧 frameStep 连续移动，sim.pos 本身即每帧真实位置。
       // 复活/传送(位移>1格)时不插值直接吸附。
@@ -348,7 +358,8 @@
           else { gy = cy; gx = cx; }
         }
         const row = MOVE_TO_SPRITE_ROW[faces[pid]];
-        const moved = previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5);
+        const pushing = intents && intents[pid] >= 0 && intents[pid] < MOVE_IDLE;
+        const moved = pushing || (previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5));
         if (coveredCells.has(Math.floor(gy) * 15 + Math.floor(gx))) continue;
         if (moved) movingUntil[pid] = now + 150;
         const frames = assets.players[pid][row], image = frames[now < movingUntil[pid] ? Math.floor(now / 125) % 4 : 0];
@@ -366,10 +377,40 @@
         ctx.fillStyle = `rgba(0,0,0,${(0.62 * frac).toFixed(3)})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height - BOARD_OFFSET);
       }
+      if (sim.isBun) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0);
       ctx.restore();
+    }
+    // 本地玩家阵亡：画面中央大字倒计时；其余阵亡者：在复活点显示小号秒数。
+    function drawRespawnCountdowns(sim, humanPid) {
+      for (let pid = 0; pid < 2; pid++) {
+        if (sim.alive[pid] || !(sim.bunRespawn[pid] > 0)) continue;
+        const seconds = respawnSeconds(sim.bunRespawn[pid]);
+        ctx.save();
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.lineJoin = 'round';
+        if (pid === humanPid) {
+          const cx = canvas.width / 2, cy = (canvas.height - BOARD_OFFSET) / 2;
+          ctx.font = 'bold 34px sans-serif';
+          ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(0,0,0,0.75)'; ctx.fillStyle = '#ffffff';
+          ctx.strokeText('你被炸中了', cx, cy - 48); ctx.fillText('你被炸中了', cx, cy - 48);
+          ctx.font = 'bold 72px sans-serif'; ctx.lineWidth = 8; ctx.fillStyle = '#ffd54a';
+          ctx.strokeText(String(seconds), cx, cy + 20); ctx.fillText(String(seconds), cx, cy + 20);
+          ctx.font = 'bold 22px sans-serif'; ctx.lineWidth = 5; ctx.fillStyle = '#ffffff';
+          ctx.strokeText('秒后复活', cx, cy + 78); ctx.fillText('秒后复活', cx, cy + 78);
+        } else {
+          const spawn = (sim.bunSpawnPos && sim.bunSpawnPos[pid]) || null;
+          if (!spawn) { ctx.restore(); continue; }
+          const x = spawn[1] * CELL, y = spawn[0] * CELL - CELL * 0.35;
+          ctx.fillStyle = 'rgba(0,0,0,0.6)';
+          ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI * 2); ctx.fill();
+          ctx.font = 'bold 22px sans-serif'; ctx.fillStyle = '#ff8a8a';
+          ctx.fillText(String(seconds), x, y + 1);
+        }
+        ctx.restore();
+      }
     }
     return { render, addExplosion, reset };
   }
 
-  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, bunTokens, explosionFrame, loadAssets, createRenderer };
+  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, bunTokens, explosionFrame, loadAssets, createRenderer };
 });

@@ -10,6 +10,8 @@ h2 { margin: 22px 0 10px; font-size: 16px; color: #77e7de; }
 button { border: 1px solid #4fd2cf; border-radius: 8px; padding: 11px 18px; color: #07191d; background: #65e8dc; font-weight: 800; cursor: pointer; }
 select, input { width: 100%; margin-top: 7px; padding: 8px; color: #eafcff; background: #102a33; border: 1px solid #42616a; border-radius: 6px; }
 .file-label { display: block; margin-top: 12px; }
+.check-label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.check-label input { width: auto; margin: 0; }
 .arena { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 18px; align-items: start; }
 canvas { width: 100%; height: auto; border: 1px solid #31545f; border-radius: 12px; background: #10252d; image-rendering: pixelated; box-shadow: 0 20px 55px #0008; }
 aside { padding: 8px 18px 20px; border: 1px solid #294752; border-radius: 12px; background: #0c2028e8; }
