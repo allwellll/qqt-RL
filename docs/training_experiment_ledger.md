@@ -29,12 +29,16 @@
 
 ## 2. 统一评估口径
 
-当前至少保留以下两条独立轴：
+当前统一快速筛选协议固定为四类对手，每个 checkpoint、每类对手 64 局：
 
-- JAX Bot ladder：固定 seed，逐档报告 kill、death、self、trade、bombs、`kill/(kill+death)`；必须单列 hunter 与 hunter_hard。
-- Tactical v2：固定 seed 与相同出生，报告 surviving non-trade kill、own-bomb death、danger-to-death、mutual death、safe detonation、tactical resolution 和 bombs/game。
+- `bun.tactical_v2`：冻结 Python Tactical v2；
+- `bun.hunter@hard`：真实网页猎手困难；
+- `bun.hunter@normal`：真实网页猎手普通；
+- `bun.hunter@easy`：真实网页猎手简单。
 
-探索性小样本只用于筛点；晋升结论必须由预声明 seed 的更大固定样本确认。
+固定 seed `20261001`、相同出生、greedy、`max_steps=300`，逐类报告 surviving non-trade kill、被Bot击杀、own-bomb death、mutual death、W-L 与 bombs/game。网页猎手必须运行 `web/sim.js` + `web/bun_hunter_bot.js`，禁止用设备端 JAX 同名 Bot 代替。Tactical 与网页猎手是不同模拟器/协议，只能在同一对手列内比较。
+
+JAX Bot ladder 可作为训练专项能力的旁路诊断，但不能替代上述四Bot统一快筛。64局只用于快速筛点；晋升结论必须由预声明 seed 的更大固定样本确认。
 
 ## 3. 实验索引
 
