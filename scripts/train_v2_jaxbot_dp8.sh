@@ -158,15 +158,15 @@ git log -5 --oneline > "$RUN_DIR/git_log.txt"
   nvidia-smi
 } > "$RUN_DIR/env.txt" 2>&1
 
-# ---------------- 启动（后台、脱离终端）----------------
+# ---------------- 启动（前台运行，保持训练机器任务存活）----------------
 export JAXBOMB_RULE=bun
-setsid nohup bash -c '
-  run_dir=$1; shift
-  "$@"; rc=$?
-  echo "rc=$rc end=$(date -Is)" > "$run_dir/exit_status"
-' _ "$RUN_DIR" timeout --signal=TERM "${MAX_HOURS}h" "$TRAIN_PY" -m jax_bomb.jax_train "${TRAIN_ARGS[@]}" \
-  > "$RUN_DIR/train.log" 2>&1 < /dev/null &
-echo $! > "$RUN_DIR/train.pid"
-
-echo "started: $RUN_DIR (pid $(cat "$RUN_DIR/train.pid"), code $CODE_SHA)"
-echo "monitor: tail -f $RUN_DIR/train.log"
+{
+  echo $$ > "$RUN_DIR/train.pid"
+  set +e
+  timeout --signal=TERM "${MAX_HOURS}h" "$TRAIN_PY" -m jax_bomb.jax_train "${TRAIN_ARGS[@]}" \
+    2>&1 | tee "$RUN_DIR/train.log"
+  rc=${PIPESTATUS[0]}
+  set -e
+  echo "rc=$rc end=$(date -Is)" > "$RUN_DIR/exit_status"
+  exit "$rc"
+}
