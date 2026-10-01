@@ -9,6 +9,8 @@
   // 原版用 Ctrl 放道具，但浏览器里 Ctrl+W/R 会关闭/刷新页面，改用 E / Shift。
   const ITEM_KEYS = ['KeyE', 'ShiftLeft', 'ShiftRight'];
   const BOMB_KEYS = ['Space', 'KeyW'];
+  // 数字键 1-7 对应道具栏格位；E / Shift 使用第 1 格。
+  const ITEM_SLOT_KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7'];
 
   function moveForHeld(held) {
     if (held.has('ArrowUp')) return 0;
@@ -18,5 +20,5 @@
     return 4;
   }
 
-  return { MOVEMENT_KEYS, ITEM_KEYS, BOMB_KEYS, moveForHeld };
+  return { MOVEMENT_KEYS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld };
 });

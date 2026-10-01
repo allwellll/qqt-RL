@@ -16,12 +16,21 @@
       <button id="restart" type="button">重新开局</button>
     </header>
     <section class="arena">
-      <canvas id="game" width="900" height="810" aria-label="抢包子对战画面"></canvas>
+      <div class="stage">
+        <canvas id="game" width="900" height="810" aria-label="抢包子对战画面"></canvas>
+        <div id="loading" class="loading" role="status" aria-live="polite">
+          <div class="loading-bubble" aria-hidden="true"></div>
+          <p id="loading-text">正在加载地图与素材…</p>
+          <progress id="loading-progress" max="100" value="0"></progress>
+        </div>
+      </div>
       <aside>
         <h2>操作</h2>
         <p><kbd>方向键</kbd> 移动</p>
         <p><kbd>Space / W</kbd> 放泡</p>
-        <p><kbd>E / Shift</kbd> 放香蕉皮/慢慢胶</p>
+        <p><kbd>1 - 7</kbd> 使用道具栏对应格（右上角）</p>
+        <p><kbd>E / Shift</kbd> 使用道具栏第 1 格</p>
+        <p>被炸会被糖泡包住：6 秒后爆破，敌人碰到立即爆破</p>
         <p><kbd>R</kbd> 重新开局</p>
         <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效（放泡 / 爆炸 / 拾取）</label>
         <h2>对手</h2>

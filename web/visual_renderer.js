@@ -63,8 +63,13 @@
     return gridY * CELL + FOOT_BELOW_CENTER_PX * SCALE - imageHeight;
   }
 
+  // 角色帧顶部约 30% 为透明留白（精灵图 26/85）；point.png 箭头尖在图高 75% 处（30/40）。
+  const SPRITE_HEAD_FRAC = 0.3;
+  const POINT_TIP_FRAC = 0.75;
+
   const HELD_ITEM_SPRITES = [null, 'banana_pickup', 'glue_pickup'];
   function heldItemSpriteKey(item) { return HELD_ITEM_SPRITES[item] || null; }
+  const ITEM_SLOT_COUNT = 7;
 
   // 顶部溢出带：本图地面最上一行原纹理 + 半透明黑，表示界外；首行元件上溢仍画在它上面。
   const TOP_BAND_SHADE = 0.5;
@@ -170,15 +175,36 @@
     return canvas;
   }
 
-  async function loadAssets(level) {
-    const [elements, background, humanSheet, botSheet, bombStrip, shadow] = await Promise.all([
+  // 素材并行下载：原先逐张串行 await，首屏要等几十次往返。onProgress(done, total) 驱动加载动画。
+  async function loadAssets(level, onProgress = null) {
+    const [elements, itemMeta] = await Promise.all([
       fetch('assets/maps/elements.json').then((r) => r.json()),
-      loadImage(level.bg || 'assets/bg/抢包子.png'),
-      loadImage('assets/角色4×4精灵图.png'),
-      loadImage('assets/角色c4×4.png'),
-      loadImage('assets/bomb-custom/经典黄泡泡.png'),
-      loadImage('assets/shadow.png'),
+      fetch('assets/item/items.json').then((r) => r.json()),
     ]);
+    const elementIds = levelElementIds(level).filter((id) => elements[String(id)] || elements[id]);
+    const flameFiles = ['C_1', 'C_2'];
+    for (const dir of DIR_KEYS) for (let f = 1; f <= 6; f++) flameFiles.push(`${dir}_${f}`);
+    const sources = [
+      level.bg || 'assets/bg/抢包子.png', 'assets/角色4×4精灵图.png', 'assets/角色c4×4.png',
+      'assets/bomb-custom/经典黄泡泡.png', 'assets/shadow.png', 'assets/point.png',
+      ...flameFiles.map((name) => `assets/flame/flame_${name}.png`),
+      ...Object.values(itemMeta).map((meta) => meta.file),
+      ...elementIds.map((id) => (elements[String(id)] || elements[id]).file),
+    ];
+    let done = 0;
+    const total = sources.length;
+    if (onProgress) onProgress(0, total);
+    const images = await Promise.all(sources.map((src) => loadImage(src).then((image) => {
+      done++;
+      if (onProgress) onProgress(done, total);
+      return image;
+    })));
+    let cursor = 0;
+    const take = (count) => images.slice(cursor, (cursor += count));
+    const [background, humanSheet, botSheet, bombStrip, shadow, point] = take(6);
+    const flameImages = take(flameFiles.length);
+    const itemImages = take(Object.keys(itemMeta).length);
+    const elementSheets = take(elementIds.length);
     const humanSize = Math.round((humanSheet.width / 4) * SCALE);
     const botSize = Math.round((botSheet.width / 4) * SCALE * 0.85);
     const bombSplits = [0, 38, 73, 112, 156];
@@ -192,18 +218,18 @@
       bombs.push(frame);
     }
     const flames = { C: [], U: [], D: [], L: [], R: [] };
-    for (const f of [1, 2]) flames.C[f] = scaleImage(await loadImage(`assets/flame/flame_C_${f}.png`), CELL, CELL);
-    for (const dir of DIR_KEYS) for (let f = 1; f <= 6; f++) {
-      const scaled = scaleImage(await loadImage(`assets/flame/flame_${dir}_${f}.png`));
+    flameFiles.forEach((name, index) => {
+      const [dir, f] = name.split('_');
+      if (dir === 'C') { flames.C[Number(f)] = scaleImage(flameImages[index], CELL, CELL); return; }
+      const scaled = scaleImage(flameImages[index]);
       const frame = document.createElement('canvas');
       frame.width = CELL; frame.height = CELL;
       frame.getContext('2d').drawImage(scaled, dir === 'L' ? CELL - scaled.width : 0, dir === 'U' ? CELL - scaled.height : 0);
-      flames[dir][f] = frame;
-    }
-    const itemMeta = await fetch('assets/item/items.json').then((r) => r.json());
+      flames[dir][Number(f)] = frame;
+    });
     const items = {};
-    for (const [key, meta] of Object.entries(itemMeta)) {
-      const strip = await loadImage(meta.file);
+    Object.entries(itemMeta).forEach(([key, meta], index) => {
+      const strip = itemImages[index];
       items[key] = { ox: meta.ox || 0, oy: meta.oy || 0, frames: [] };
       for (let f = 0; f < meta.frames; f++) {
         const frame = document.createElement('canvas');
@@ -212,17 +238,15 @@
         frame.getContext('2d').drawImage(strip, f * meta.w, 0, meta.w, meta.h, 0, 0, frame.width, frame.height);
         items[key].frames.push(frame);
       }
-    }
+    });
     const elementImages = new Map();
-    for (const id of levelElementIds(level)) {
-      const meta = elements[String(id)] || elements[id];
-      if (meta) elementImages.set(id, scaleImage(await loadImage(meta.file)));
-    }
+    elementIds.forEach((id, index) => elementImages.set(id, scaleImage(elementSheets[index])));
     const scaledBackground = scaleImage(background);
     return {
       elements, background: scaledBackground, baseBand: makeTopBand(scaledBackground),
       players: [sliceSheet(humanSheet, 4, 4, humanSize), sliceSheet(botSheet, 4, 4, botSize)],
       bombs, flames, shadow: scaleImage(shadow), elementImages, items,
+      point: scaleImage(point, Math.round(point.width * SCALE * 0.5), Math.round(point.height * SCALE * 0.5)),
     };
   }
 
@@ -290,6 +314,55 @@
       ctx.beginPath(); ctx.arc(cx, cy, size * 0.62, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
       ctx.drawImage(image, Math.round(cx - image.width * k / 2), Math.round(cy - image.height * k / 2),
         Math.round(image.width * k), Math.round(image.height * k));
+      ctx.restore();
+    }
+    // 原版糖泡：半透明泡泡罩住角色，高光 + 剩余秒数；越临近爆破抖动越明显。
+    function drawTrapBubble(cx, cy, ticks, now) {
+      const r = CELL * 0.62;
+      const urgency = 1 - Math.min(1, ticks / 60);
+      const wobble = 1 + Math.sin(now / (120 - urgency * 70)) * (0.03 + urgency * 0.04);
+      ctx.save(); ctx.translate(cx, cy); ctx.scale(wobble, 2 - wobble);
+      const fill = ctx.createRadialGradient(-r * 0.3, -r * 0.35, r * 0.1, 0, 0, r);
+      fill.addColorStop(0, 'rgba(255,255,255,0.55)');
+      fill.addColorStop(0.55, 'rgba(150,215,255,0.28)');
+      fill.addColorStop(1, 'rgba(90,170,255,0.5)');
+      ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.beginPath(); ctx.ellipse(-r * 0.4, -r * 0.45, r * 0.18, r * 0.1, -0.6, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+      ctx.save();
+      ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,0.75)'; ctx.fillStyle = urgency > 0.65 ? '#ff7a7a' : '#ffffff';
+      const label = String(respawnSeconds(ticks));
+      ctx.strokeText(label, cx, cy - r - 8); ctx.fillText(label, cx, cy - r - 8);
+      ctx.restore();
+    }
+    // 道具栏：画在顶部界外带右侧，7 格，格内道具图标 + 右下角数量，左上角数字键提示。
+    function drawItemBar(slots, now) {
+      const size = 26, gap = 3, count = ITEM_SLOT_COUNT;
+      const left = canvas.width - count * (size + gap) - 6, top = Math.round((BOARD_OFFSET - size) / 2);
+      ctx.save();
+      ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      for (let i = 0; i < count; i++) {
+        const x = left + i * (size + gap), slot = slots[i];
+        ctx.fillStyle = slot ? 'rgba(255,248,220,0.9)' : 'rgba(0,0,0,0.45)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1;
+        ctx.fillRect(x, top, size, size); ctx.strokeRect(x + 0.5, top + 0.5, size - 1, size - 1);
+        const key = slot ? heldItemSpriteKey(slot.item) : null;
+        if (key && assets.items && assets.items[key]) {
+          const image = itemFrame(assets.items[key], now), k = (size - 4) / Math.max(image.width, image.height);
+          ctx.drawImage(image, Math.round(x + (size - image.width * k) / 2), Math.round(top + (size - image.height * k) / 2),
+            Math.round(image.width * k), Math.round(image.height * k));
+        }
+        ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'left';
+        ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.fillStyle = '#ffffff';
+        ctx.strokeText(String(i + 1), x + 2, top + 6); ctx.fillText(String(i + 1), x + 2, top + 6);
+        if (slot) {
+          ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'right'; ctx.lineWidth = 3; ctx.fillStyle = '#ffd54a';
+          ctx.strokeText(String(slot.count), x + size - 2, top + size - 6); ctx.fillText(String(slot.count), x + size - 2, top + size - 6);
+        }
+      }
       ctx.restore();
     }
     function drawBunBadge(x, y, team, count) {
@@ -404,6 +477,9 @@
         const image = assets.bombs[bombFrame(age, assets.bombs.length)];
         items.push([row * Z_ROW_STRIDE + 17, image, column * CELL + (CELL - image.width) / 2, (row + 1) * CELL - image.height]);
       }
+      // 本地玩家头顶的原版 point.png 箭头；观战/回放时不画。
+      const arrowPid = motion ? motion.humanPid : 0;
+      let arrow = null;
       for (let pid = 0; pid < 2; pid++) if (sim.alive[pid]) {
         let gy = sim.pos[pid * 2], gx = sim.pos[pid * 2 + 1];
         if (motion && pid !== motion.humanPid) {
@@ -416,21 +492,26 @@
         const row = MOVE_TO_SPRITE_ROW[faces[pid]];
         const pushing = intents && intents[pid] >= 0 && intents[pid] < MOVE_IDLE;
         const moved = pushing || (previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5));
-        if (coveredCells.has(Math.floor(gy) * 15 + Math.floor(gx))) continue;
         if (moved) movingUntil[pid] = now + 150;
-        const frames = assets.players[pid][row], image = frames[now < movingUntil[pid] ? Math.floor(now / 125) % 4 : 0];
+        const trapTicks = sim.trapped ? sim.trapped[pid] : 0;
+        const frames = assets.players[pid][row], image = frames[!trapTicks && now < movingUntil[pid] ? Math.floor(now / 125) % 4 : 0];
         const x = Math.round(gx * CELL - image.width / 2), y = Math.min(Math.round(playerVisualY(gy, image.height)), 780 - image.height);
+        // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
+        if (pid === arrowPid) arrow = { x: gx * CELL, y: y + image.height * SPRITE_HEAD_FRAC };
+        if (coveredCells.has(Math.floor(gy) * 15 + Math.floor(gx))) continue;
         const z = Math.floor(gy) * Z_ROW_STRIDE + 18;
         items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
         items.push([z, image, x, y]);
         if (sim.bunCarried[pid] >= 0) items.push([z + 1, () => drawBun(x + image.width / 2, y + 8, sim.bunCarried[pid], 1, 0.8, now)]);
         const heldKey = sim.heldItem ? heldItemSpriteKey(sim.heldItem[pid]) : null;
-        if (heldKey && assets.items && assets.items[heldKey]) {
+        if (heldKey && assets.items && assets.items[heldKey] && !trapTicks) {
           items.push([z + 2, () => drawHeldItem(assets.items[heldKey], x + image.width * 0.8, y + image.height * 0.25, now)]);
         }
+        if (trapTicks > 0) items.push([z + 3, () => drawTrapBubble(gx * CELL, y + image.height * 0.58, trapTicks, now)]);
       }
       items.sort((a, b) => a[0] - b[0]);
       for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
+      if (arrow && assets.point) drawArrow(arrow, now);
       // 玩家(pid0)被炸掉→复活期间压暗画面：alpha 随复活倒计时消退，复活瞬间恢复。
       if (sim.isBun && !sim.alive[0] && sim.bunRespawn[0] > 0) {
         const frac = Math.max(0, Math.min(1, sim.bunRespawn[0] / (sim.bunRespawnTicks || 1)));
@@ -439,6 +520,8 @@
       }
       if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0);
       ctx.restore();
+      const barPid = motion ? motion.humanPid : 0;
+      if (sim.nativeItems && sim.itemSlots && barPid >= 0) drawItemBar(sim.itemSlots[barPid], now);
       drawResult(matchResult(sim, motion ? motion.humanPid : 0));
     }
     const RESULT_COLORS = { win: '#ffd54a', lose: '#ff7a7a', draw: '#d8e6ea' };
@@ -457,6 +540,14 @@
       ctx.font = 'bold 20px sans-serif'; ctx.lineWidth = 5; ctx.fillStyle = '#cfe9ee';
       ctx.strokeText('按 R 重新开局', cx, cy + 100); ctx.fillText('按 R 重新开局', cx, cy + 100);
       ctx.restore();
+    }
+    // 箭头不参与 Z 排序，永远画在所有地图元件之上；轻微上下浮动便于辨认。
+    function drawArrow(anchor, now) {
+      const image = assets.point;
+      const bob = Math.round(Math.sin(now / 160) * 3);
+      const ax = Math.round(anchor.x - image.width / 2);
+      const ay = Math.max(-BOARD_OFFSET, Math.round(anchor.y - 3 - image.height * POINT_TIP_FRAC + bob));
+      ctx.drawImage(image, ax, ay);
     }
     // 本地玩家阵亡：画面中央大字倒计时；其余阵亡者：在复活点显示小号秒数。
     function drawRespawnCountdowns(sim, humanPid) {

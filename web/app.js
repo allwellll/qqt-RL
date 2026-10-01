@@ -20,6 +20,21 @@
   const replaySpeed = document.getElementById('replay-speed');
   const replaySeek = document.getElementById('replay-seek');
   const replayStatus = document.getElementById('replay-status');
+  const loading = document.getElementById('loading');
+  const loadingText = document.getElementById('loading-text');
+  const loadingProgress = document.getElementById('loading-progress');
+  function showLoading(text) {
+    loading.classList.remove('done');
+    loadingText.textContent = text;
+    loadingProgress.value = 0;
+  }
+  function loadingStep(done, total) {
+    loadingProgress.value = total ? done * 100 / total : 0;
+    loadingText.textContent = `正在加载素材 ${done}/${total}`;
+  }
+  // 首帧真正画出后才撤掉遮罩，避免先露出一块黑画布。
+  let assetsPending = true;
+  function hideLoading() { if (!assetsPending) loading.classList.add('done'); }
   const levelList = await fetch('assets/maps/levels.json').then((response) => response.json());
   const baseLevel = levelList.find((item) => item.qqt_id === 806);
   if (!baseLevel) throw new Error('Bun06 level missing');
@@ -31,8 +46,17 @@
   // 切换地图需重建资源与渲染器（不同图砖块/精灵集合不同）；调用方随后自行 reset。
   async function useMap(target) {
     level = target;
-    const visualAssets = await QQTVisual.loadAssets(level);
-    renderer = QQTVisual.createRenderer(canvas, level, visualAssets);
+    assetsPending = true;
+    showLoading('正在加载地图与素材…');
+    try {
+      const visualAssets = await QQTVisual.loadAssets(level, loadingStep);
+      renderer = QQTVisual.createRenderer(canvas, level, visualAssets);
+    } catch (error) {
+      loadingText.textContent = `加载失败：${error.message}，请刷新重试`;
+      throw error;
+    }
+    loadingText.textContent = '素材就绪，正在开局…';
+    assetsPending = false;
   }
   await useMap(trainingLevel);
 
@@ -41,6 +65,7 @@
   // 按键瞬间记下所在格（-1=未按）；下一个 10Hz tick 在该格放泡/放道具。
   let bombCell = -1;
   let itemCell = -1;
+  let itemSlot = 0;
   let loadedModel = null;
   let publishedModels = [];
   let activeBot = null;
@@ -124,7 +149,6 @@
     replayToggle.textContent = '播放';
     if (level !== selectedLevel()) await useMap(selectedLevel());
     sim = new QQT.Sim(Date.now() >>> 0);
-    sim.reset(level);
     if (opponentSelect.value === 'bun.browser_model' && !loadedModel) {
       opponentSelect.value = 'bun.hunter@normal';
     }
@@ -132,9 +156,13 @@
       matchMode.value = 'human-vs-opponent';
       modelStatus.textContent = '请先从模型列表选择并加载一个模型';
     }
+    // 原版道具栏/糖泡只在真人对局开启；模型评测与录像保持训练规则。
+    const native = localHumanControls();
+    sim.reset(level, { nativeItems: native, nativeTrap: native });
     resetBot();
     bombCell = -1;
     itemCell = -1;
+    itemSlot = 0;
     intents[0] = intents[1] = QQT.MOVE_IDLE;
     snapMotion();
     renderer.reset();
@@ -198,9 +226,10 @@
 
   function humanAction() {
     // 第4位=1：跳过 10Hz 逻辑移动（移动改由 rAF 逐帧 frameStep 连续处理）；放泡仍在中心格生效。
-    const action = [QQT.MOVE_IDLE, bombCell >= 0 ? 1 : 0, itemCell >= 0 ? 1 : 0, 1, bombCell, itemCell];
+    const action = [QQT.MOVE_IDLE, bombCell >= 0 ? 1 : 0, itemCell >= 0 ? 1 : 0, 1, bombCell, itemCell, itemSlot];
     bombCell = -1;
     itemCell = -1;
+    itemSlot = 0;
     return action;
   }
 
@@ -280,6 +309,7 @@
 
   function render(now = performance.now()) {
     renderer.render(sim, now, motionState());
+    hideLoading();
     status.textContent = JSON.stringify({
       mode: QQTModelCatalog.matchLabel(matchMode.value),
       tick: sim.t,
@@ -287,7 +317,10 @@
       rule_bot_alive: sim.alive[1],
       bun_score: sim.bunScore,
       carrying: sim.bunCarried,
-      held_item: sim.heldItem.map((item) => ['无', '香蕉皮', '慢慢胶'][item] || '无'),
+      held_item: sim.nativeItems
+        ? sim.itemSlots.map((slots) => slots.map((slot) => `${['无', '香蕉皮', '慢慢胶'][slot.item] || '?'}×${slot.count}`))
+        : sim.heldItem.map((item) => ['无', '香蕉皮', '慢慢胶'][item] || '无'),
+      trapped: sim.nativeTrap ? sim.trapped : undefined,
       bot: activeBot && activeBot.bot && activeBot.bot.lastDecision
         ? `${activeBot.bot.lastDecision.mode} / ${activeBot.bot.lastDecision.reason}` : undefined,
       winner: sim.done ? sim.winner : null,
@@ -316,7 +349,7 @@
         const before = QQTSound.snapshot(sim);
         const info = sim.step([
           [Number(first[0]), Number(first[1]), Number(first[2]) || 0, Number(first[3]) || 0,
-            first[4] == null ? -1 : first[4], first[5] == null ? -1 : first[5]],
+            first[4] == null ? -1 : first[4], first[5] == null ? -1 : first[5], first[6] == null ? 0 : first[6]],
           [action.move, action.ability === 1 ? 1 : 0, action.ability === 2 ? 1 : 0],
         ]);
         curPos.set(sim.pos); lastTickT = performance.now();
@@ -339,11 +372,14 @@
   window.addEventListener('pointerdown', unlockAudio);
   window.addEventListener('keydown', (event) => {
     unlockAudio();
-    if ([...QQTControls.MOVEMENT_KEYS, ...QQTControls.ITEM_KEYS, ...QQTControls.BOMB_KEYS].includes(event.code)) event.preventDefault();
+    if ([...QQTControls.MOVEMENT_KEYS, ...QQTControls.ITEM_KEYS, ...QQTControls.ITEM_SLOT_KEYS,
+      ...QQTControls.BOMB_KEYS].includes(event.code)) event.preventDefault();
     held.add(event.code);
     // 同一 tick 内多次按键只保留第一次的位置。
     if (QQTControls.BOMB_KEYS.includes(event.code) && bombCell < 0) bombCell = humanCell();
-    if (QQTControls.ITEM_KEYS.includes(event.code) && itemCell < 0) itemCell = humanCell();
+    if (QQTControls.ITEM_KEYS.includes(event.code) && itemCell < 0) { itemCell = humanCell(); itemSlot = 0; }
+    const slotKey = QQTControls.ITEM_SLOT_KEYS.indexOf(event.code);
+    if (slotKey >= 0 && itemCell < 0) { itemCell = humanCell(); itemSlot = slotKey; }
     if (event.code === 'KeyR') reset();
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));

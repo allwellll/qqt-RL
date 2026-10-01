@@ -198,6 +198,77 @@ sim.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
 assert(sim.movementStatus[0] === QQT.MOVE_STATUS_FAST && sim.movementStatusTicks[0] === 100, '超级鞋拾取后生效 10 秒');
 assert(sim.playerMoveScale(0) === 1.6, '超级鞋速度倍率');
 
+// 抢包子战术道具只出香蕉皮/慢慢胶，不出超级鞋。
+sim = fresh();
+sim.tacticalItemFraction = 1;
+sim.rng = () => 0.999;
+assert(sim._rollCrateType().type === QQT.CRATE_SLOW_GLUE, '抢包子不掉落超级鞋');
+
+// 网页原版道具栏：同种叠加，慢慢胶一次 +3，香蕉皮 +1，最多 7 格；按格号放置并扣数量。
+const nativeFresh = () => {
+  const s = new QQT.Sim(level.qqt_id);
+  s.reset(level, { nativeItems: true, nativeTrap: true });
+  return s;
+};
+sim = nativeFresh();
+assert(sim.nativeItems && sim.nativeTrap && !fresh().nativeItems && !fresh().nativeTrap, '原版道具栏/糖泡仅网页开启');
+assert(sim._addItemToSlots(0, QQT.ITEM_SLOW_GLUE) && sim._addItemToSlots(0, QQT.ITEM_BANANA) &&
+  sim._addItemToSlots(0, QQT.ITEM_BANANA), '拾取进入道具栏');
+assert(JSON.stringify(sim.itemSlots[0]) === JSON.stringify([{ item: 2, count: 3 }, { item: 1, count: 2 }]),
+  '慢慢胶 ×3、香蕉皮叠加 ×2');
+assert(sim.heldItem[0] === QQT.ITEM_SLOW_GLUE, 'heldItem 镜像首格');
+sim.pos[0] = 7.5; sim.pos[1] = 8.5;
+sim.pos[2] = 4.5; sim.pos[3] = 14.5;
+sim.step([[QQT.MOVE_IDLE, 0, 1, 0, -1, -1, 1], [QQT.MOVE_IDLE, 0]]);
+assert(sim.fieldItem[fieldCell] === QQT.ITEM_BANANA && sim.itemSlots[0][1].count === 1, '按 2 号格放置香蕉皮');
+sim.fieldItem[fieldCell] = 0;
+sim.step([[QQT.MOVE_IDLE, 0, 1, 0, -1, -1, 1], [QQT.MOVE_IDLE, 0]]);
+assert(sim.itemSlots[0].length === 1 && sim.itemSlots[0][0].item === QQT.ITEM_SLOW_GLUE, '数量用尽移出道具栏');
+sim.itemSlots[0] = Array.from({ length: QQT.ITEM_SLOT_COUNT }, () => ({ item: QQT.ITEM_SLOW_GLUE, count: 1 }));
+sim.itemSlots[0][6].item = 9;
+assert(!sim._addItemToSlots(0, QQT.ITEM_BANANA), '7 格满后拒收新道具');
+sim.itemSlots[0] = [];
+sim.crate[fieldCell] = 1;
+sim.crateType[fieldCell] = QQT.CRATE_SLOW_GLUE;
+sim.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
+assert(sim.itemSlots[0][0].count === 3 && sim.crate[fieldCell] === 0, '地上慢慢胶拾取得 3 个');
+
+// 原版糖泡：被炸后包裹，不能移动/放泡/用道具；6 秒后自动爆破，敌方触碰立即爆破。
+const trapAt = (s, p, cell) => {
+  s.fuse[cell] = 1; s.owner[cell] = 1 - p; s.bombBlast[cell] = 1;
+  s.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
+};
+sim = nativeFresh();
+sim.pos[0] = 7.5; sim.pos[1] = 8.5;
+sim.pos[2] = 4.5; sim.pos[3] = 14.5;
+sim.invuln[0] = 0;
+trapAt(sim, 0, fieldCell);
+assert(sim.alive[0] && sim.trapped[0] === 60, '被炸进入糖泡状态');
+const trappedPos = [sim.pos[0], sim.pos[1]];
+const bombsBefore = sim.fuse.reduce((a, v) => a + (v > 0 ? 1 : 0), 0);
+sim.step([[QQT.MOVE_LEFT, 1, 0], [QQT.MOVE_IDLE, 0]]);
+sim.frameStep(0, QQT.MOVE_LEFT, 0.1);
+assert(sim.pos[0] === trappedPos[0] && sim.pos[1] === trappedPos[1], '糖泡中不能移动');
+assert(sim.fuse.reduce((a, v) => a + (v > 0 ? 1 : 0), 0) === bombsBefore, '糖泡中不能放泡');
+for (let i = 0; i < 58; i++) sim.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
+assert(sim.alive[0] && sim.trapped[0] === 1, '倒计时未到仍在糖泡中');
+sim.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
+assert(!sim.alive[0] && sim.trapped[0] === 0 && sim.bunRespawn[0] > 0, '倒计时结束自动爆破并进入复活');
+
+sim = nativeFresh();
+sim.pos[0] = 7.5; sim.pos[1] = 8.5;
+sim.pos[2] = 4.5; sim.pos[3] = 14.5;
+sim.invuln[0] = 0;
+sim.bunCarried[0] = 1;
+trapAt(sim, 0, fieldCell);
+// 斜向靠近，避开仍在燃烧的十字火焰格。
+sim.pos[2] = 6.5; sim.pos[3] = 9.6;
+sim.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
+assert(sim.alive[0] && sim.trapped[1] === 0, '44px 超出 41px 接触范围不触发');
+sim.pos[2] = 6.6; sim.pos[3] = 9.4;
+sim.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
+assert(!sim.alive[0] && sim.bunCarried[0] < 0, '敌方触碰糖泡立即爆破并掉包');
+
 // 超时按双方基地现存包子总数比较，不按击杀或仅按夺包次数比较。
 sim = fresh();
 sim.bunStored[1][1] = 0;

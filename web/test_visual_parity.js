@@ -28,7 +28,9 @@ for (const relative of required) {
 const visual = require('./visual_renderer.js');
 const appSource = fs.readFileSync(path.join(web, 'app.js'), 'utf8');
 const htmlSource = fs.readFileSync(path.join(web, 'index.html'), 'utf8');
-assert(appSource.includes('QQTVisual.loadAssets(level)'), 'app must load original visual assets');
+assert(appSource.includes('QQTVisual.loadAssets(level, loadingStep)'), 'app must load original visual assets with progress');
+assert(htmlSource.includes('id="loading"') && htmlSource.includes('loading-progress'), 'page must show a loading overlay');
+assert(fs.existsSync(path.join(web, 'assets/point.png')), 'missing original player arrow point.png');
 assert(appSource.includes('renderer.addExplosion(info'), 'app must forward blast events to renderer');
 assert(appSource.includes('renderer.render(sim'), 'app must use sprite renderer');
 assert(!appSource.includes("context.arc(x, y, 18"), 'legacy circle-player renderer must be removed');

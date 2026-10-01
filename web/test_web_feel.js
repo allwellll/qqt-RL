@@ -168,7 +168,8 @@ function mockCanvas() {
     imageSmoothingEnabled: true,
     shadowColor: '', shadowBlur: 0, shadowOffsetY: 0,
     strokeStyle: '', lineWidth: 0, font: '', textAlign: '', textBaseline: '',
-    save() {}, restore() {}, translate() {}, beginPath() {}, ellipse() {},
+    save() {}, restore() {}, translate() {}, scale() {}, beginPath() {}, ellipse() {}, strokeRect() {},
+    createRadialGradient() { return { addColorStop() {} }; },
     fill() {}, arc() {}, stroke() {}, strokeText() {},
     fillText(text, x, y) { texts.push({ text: String(text), x, y }); },
     drawImage(img, a, b) { if (arguments.length === 3 && img && img.tag) draws.push({ tag: img.tag, x: a, y: b, w: img.width, row: img.row }); },
@@ -363,8 +364,29 @@ function dimRects(rects, canvas) {
   r.render(sim, 1000, null);
   assert.equal(heldDrawn, 1, '手持香蕉皮必须在角色旁绘制一次图标');
 }
+// 4j2) 原版道具栏（顶部带右侧 7 格 + 数量/键位）与糖泡包裹（倒计时秒数）。
+{
+  const { canvas, texts } = mockCanvas();
+  const assets = mockAssets();
+  assets.items = { glue_pickup: { ox: 0, oy: 0, frames: [tagImg('glue', 40, 46)] } };
+  const r = visual.createRenderer(canvas, level, assets);
+  const sim = fakeSim({ pos: [5.5, 3.5, 5.5, 8.5] });
+  sim.heldItem = [2, 0];
+  sim.nativeItems = true;
+  sim.itemSlots = [[{ item: 2, count: 12 }], []];
+  sim.trapped = [0, 45];
+  r.render(sim, 1000, { prevPos: sim.pos, curPos: sim.pos, lastTickT: 1000, tickMs: 100, humanPid: 0, intents: [4, 4] });
+  const labels = texts.map((t) => t.text);
+  for (let i = 1; i <= 7; i++) assert(labels.includes(String(i)), `道具栏必须标出数字键 ${i}`);
+  assert(texts.some((t) => t.text === '12' && t.y < visual.BOARD_OFFSET), '道具栏格内显示数量');
+  assert(texts.some((t) => t.text === '5' && t.y > visual.BOARD_OFFSET * 3), '糖泡在角色头顶显示剩余秒数');
+}
 const controls = require('./controls.js');
 assert(controls.ITEM_KEYS.includes('KeyE') && controls.ITEM_KEYS.includes('ShiftLeft'), 'E/Shift 必须是放道具键');
+assert.deepEqual(controls.ITEM_SLOT_KEYS, ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7'], '数字键 1-7 对应道具栏');
+assert(/ITEM_SLOT_KEYS\.indexOf\(event\.code\)/.test(fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8')), 'app.js 必须把数字键接到道具栏格位');
+assert(/nativeItems: native, nativeTrap: native/.test(fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8')),
+  '真人对局开启原版道具栏/糖泡，模型评测保持训练规则');
 
 // 4k) 终局提示：运包成功/时间到 → 胜利/失败/平局。
 {
@@ -434,7 +456,7 @@ assert(/NATIVE_HALF_PX = 19/.test(simSource) && /NATIVE_CORNER_TOLERANCE_PX = 6/
 
 const appSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
 assert(!/steerReduced/.test(appSource), 'app.js 必须已移除 steerReduced 接线');
-assert(/\[QQT\.MOVE_IDLE, bombCell >= 0 \? 1 : 0, itemCell >= 0 \? 1 : 0, 1, bombCell, itemCell\]/.test(appSource),
+assert(/\[QQT\.MOVE_IDLE, bombCell >= 0 \? 1 : 0, itemCell >= 0 \? 1 : 0, 1, bombCell, itemCell, itemSlot\]/.test(appSource),
   'humanAction 必须返回第4位=1（跳过 10Hz 移动，改由 rAF frameStep）');
 assert(!/autoTurn|turnSlide/.test(appSource), 'app.js 必须移除 autoTurn（拐角修正由原版物理负责）');
 assert(/const move = QQTControls\.moveForHeld\(held\);[\s\S]*?sim\.frameStep\(0, move, dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');

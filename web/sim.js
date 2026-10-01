@@ -26,6 +26,7 @@
   const N_MOVES = 5, N_BOMB = 2;
   const MOVE_UP = 0, MOVE_DOWN = 1, MOVE_LEFT = 2, MOVE_RIGHT = 3, MOVE_IDLE = 4;
   const ITEM_NONE = 0, ITEM_BANANA = 1, ITEM_SLOW_GLUE = 2;
+  const ITEM_SLOT_COUNT = 7;
   const CRATE_BANANA = 3, CRATE_SLOW_GLUE = 4, CRATE_FAST_SHOE = 5;
   const MOVE_STATUS_NONE = 0, MOVE_STATUS_SLOW = 1, MOVE_STATUS_SLIDE = 2, MOVE_STATUS_FAST = 3;
   // (dy, dx)，索引与方向编码对齐
@@ -207,6 +208,13 @@
       this.fieldOwner.fill(-1);
       this.fieldArmed = new Uint8Array(N);
       this.heldItem = [ITEM_NONE, ITEM_NONE];
+      // 网页原版规则（训练/模型默认关闭，保持 parity）：
+      // nativeItems=道具栏(7格叠加，慢慢胶一次+3)；nativeTrap=被炸先进糖泡，敌方碰到或超时才阵亡。
+      this.nativeItems = !!(opts && opts.nativeItems);
+      this.nativeTrap = !!(opts && opts.nativeTrap);
+      this.itemSlots = [[], []];
+      this.trapped = [0, 0];
+      this.trapTicks = 6 * CFG.tickHz;
       this.movementStatus = [MOVE_STATUS_NONE, MOVE_STATUS_NONE];
       this.movementStatusTicks = [0, 0];
       this.slideDir = [MOVE_DOWN, MOVE_DOWN];
@@ -356,6 +364,10 @@
         fieldOwner: arr(this.fieldOwner),
         fieldArmed: arr(this.fieldArmed),
         heldItem: this.heldItem.slice(),
+        nativeItems: this.nativeItems,
+        nativeTrap: this.nativeTrap,
+        itemSlots: this.itemSlots.map((slots) => slots.map((x) => ({ item: x.item, count: x.count }))),
+        trapped: this.trapped.slice(),
         movementStatus: this.movementStatus.slice(),
         movementStatusTicks: this.movementStatusTicks.slice(),
         slideDir: this.slideDir.slice(),
@@ -444,6 +456,10 @@
       if (frame.fieldOwner != null) this.fieldOwner = new Int8Array(frame.fieldOwner);
       if (frame.fieldArmed != null) this.fieldArmed = new Uint8Array(frame.fieldArmed);
       this.heldItem = (frame.heldItem || [ITEM_NONE, ITEM_NONE]).slice();
+      this.nativeItems = !!frame.nativeItems;
+      this.nativeTrap = !!frame.nativeTrap;
+      this.itemSlots = (frame.itemSlots || [[], []]).map((slots) => slots.map((x) => ({ item: x.item, count: x.count })));
+      this.trapped = (frame.trapped || [0, 0]).slice();
       this.movementStatus = (frame.movementStatus || [MOVE_STATUS_NONE, MOVE_STATUS_NONE]).slice();
       this.movementStatusTicks = (frame.movementStatusTicks || [0, 0]).slice();
       this.slideDir = (frame.slideDir || [MOVE_DOWN, MOVE_DOWN]).slice();
@@ -706,16 +722,40 @@
 
     _rollCrateType() {
       if (this.tacticalItemFraction > 0 && this.rng() < this.tacticalItemFraction) {
-        return { type: CRATE_BANANA + Math.floor(this.rng() * 3), isSuper: false };
+        // 抢包子地图没有超级鞋子：只出香蕉皮/慢慢胶。
+        const kinds = this.isBun ? 2 : 3;
+        return { type: CRATE_BANANA + Math.floor(this.rng() * kinds), isSuper: false };
       }
       return { type: Math.floor(this.rng() * 3), isSuper: this.rng() < this.superFraction };
+    }
+
+    // 原版道具栏：同种道具叠在同一格，否则占第一个空格；7 格满则拒收（道具留在地上）。
+    _addItemToSlots(player, item) {
+      const slots = this.itemSlots[player];
+      const gain = item === ITEM_SLOW_GLUE ? 3 : 1;
+      const slot = slots.find((x) => x.item === item);
+      if (slot) slot.count += gain;
+      else if (slots.length < ITEM_SLOT_COUNT) slots.push({ item, count: gain });
+      else return false;
+      this._syncHeldItem(player);
+      return true;
+    }
+
+    _syncHeldItem(player) {
+      const slots = this.itemSlots[player];
+      this.heldItem[player] = slots.length ? slots[0].item : ITEM_NONE;
     }
 
     _collectCrate(player, cell) {
       const type = this.crateType[cell];
       if (type === CRATE_BANANA || type === CRATE_SLOW_GLUE) {
-        if (this.heldItem[player] !== ITEM_NONE) return false;
-        this.heldItem[player] = type === CRATE_BANANA ? ITEM_BANANA : ITEM_SLOW_GLUE;
+        const item = type === CRATE_BANANA ? ITEM_BANANA : ITEM_SLOW_GLUE;
+        if (this.nativeItems) {
+          if (!this._addItemToSlots(player, item)) return false;
+        } else {
+          if (this.heldItem[player] !== ITEM_NONE) return false;
+          this.heldItem[player] = item;
+        }
       } else if (type === CRATE_FAST_SHOE) {
         this._setMovementStatus(player, MOVE_STATUS_FAST);
       } else {
@@ -732,17 +772,50 @@
       return Number.isInteger(requested) && requested >= 0 && requested < N ? requested : fallback;
     }
 
-    _placeHeldItem(player, requestedCell) {
-      const item = this.heldItem[player];
-      if (item === ITEM_NONE || !this.alive[player]) return false;
+    _placeHeldItem(player, requestedCell, requestedSlot) {
+      const slotIndex = Number.isInteger(requestedSlot) && requestedSlot >= 0 ? requestedSlot : 0;
+      const slot = this.nativeItems ? this.itemSlots[player][slotIndex] : null;
+      const item = this.nativeItems ? (slot ? slot.item : ITEM_NONE) : this.heldItem[player];
+      if (item === ITEM_NONE || !this.alive[player] || this.trapped[player] > 0) return false;
       const [row, column] = this.centerCell(player);
       const cell = this._actionCell(requestedCell, row * W + column);
       if (this.wall[cell] || this.brick[cell] || this.fuse[cell] > 0 || this.fieldItem[cell]) return false;
       this.fieldItem[cell] = item;
       this.fieldOwner[cell] = player;
       this.fieldArmed[cell] = 0;
-      this.heldItem[player] = ITEM_NONE;
+      if (this.nativeItems) {
+        if (--slot.count <= 0) this.itemSlots[player].splice(slotIndex, 1);
+        this._syncHeldItem(player);
+      } else {
+        this.heldItem[player] = ITEM_NONE;
+      }
       return true;
+    }
+
+    _killPlayer(player) {
+      this.hp[player] = 0;
+      this.alive[player] = false;
+      this.trapped[player] = 0;
+      this.lastDied[player] = true;
+      this._clearMovementStatus(player);
+      if (this.isBun) {
+        this._bunDrop(player);
+        this.bunRespawn[player] = this.bunRespawnTicks;
+      }
+    }
+
+    // 原版糖泡：敌方中心进入 ±41 原生像素（不含边界）立即爆破，否则倒计时结束自动爆破。
+    _trapStep(newlyTrapped) {
+      const reach = 41 / NATIVE_CELL_PX;
+      for (let p = 0; p < 2; p++) {
+        if (!this.alive[p] || this.trapped[p] <= 0 || newlyTrapped[p]) continue;
+        const e = 1 - p;
+        const touched = this.alive[e] && this.trapped[e] <= 0 &&
+          Math.abs(this.pos[e * 2] - this.pos[p * 2]) < reach &&
+          Math.abs(this.pos[e * 2 + 1] - this.pos[p * 2 + 1]) < reach;
+        if (touched) { this._killPlayer(p); continue; }
+        if (--this.trapped[p] <= 0) this._killPlayer(p);
+      }
     }
 
     _updateFieldItems(actions) {
@@ -754,7 +827,7 @@
         }
         if (!this.fieldArmed[cell]) continue;
         for (let p = 0; p < 2; p++) {
-          if (!this.alive[p]) continue;
+          if (!this.alive[p] || this.trapped[p] > 0) continue;
           const [row, column] = this.centerCell(p);
           if (row * W + column !== cell) continue;
           if (this.fieldItem[cell] === ITEM_BANANA) {
@@ -785,6 +858,7 @@
         this.hp[p] = this.initialHp || 1;
         this.alive[p] = true;
         this.invuln[p] = 10;
+        this.trapped[p] = 0;
         this._clearMovementStatus(p);
       }
     }
@@ -792,7 +866,7 @@
     _bunUpdate() {
       if (!this.isBun) return;
       for (let p = 0; p < 2; p++) {
-        if (!this.alive[p]) continue;
+        if (!this.alive[p] || this.trapped[p] > 0) continue;
         const [r, c] = this.centerCell(p);
         const i = r * W + c;
         const baseTeam = this._bunBaseTeam(r, c);
@@ -908,7 +982,7 @@
         const [r, c] = this.centerCell(p);
         // actions[p][4]：真人按键瞬间所在格。逐帧移动下 tick 时人可能已走开，泡要落在按键处。
         const i = this._actionCell(actions[p][4], r * W + c);
-        const ok = alive0[p] && actions[p][1] === 1 && this.fuse[i] <= 0 &&
+        const ok = alive0[p] && actions[p][1] === 1 && this.fuse[i] <= 0 && !(this.trapped[p] > 0) &&
           !this.brick[i] && (!this.isBun || this.bunCarried[p] < 0) &&
           this.liveBombs(p) < this.bombsCap[p];
         if (ok) {
@@ -922,7 +996,7 @@
         }
       }
       for (let p = 0; p < 2; p++) {
-        if (actions[p][2] === 1) this._placeHeldItem(p, actions[p][5]);
+        if (actions[p][2] === 1) this._placeHeldItem(p, actions[p][5], actions[p][6]);
       }
       // Keep event masks with the logical frame for deterministic replay.
       this.lastReplayPlaced = placed.slice();
@@ -940,7 +1014,7 @@
         const forcedSlide = this.movementStatus[p] === MOVE_STATUS_SLIDE;
         const mv = this.playerMoveDirection(p, actions[p][0]);
         if (actions[p][3] === 1) continue;
-        if (!alive0[p] || mv === MOVE_IDLE) continue;
+        if (!alive0[p] || mv === MOVE_IDLE || this.trapped[p] > 0) continue;
         this.lastMoveDir[p] = mv;
         const y = this.pos[p * 2], x = this.pos[p * 2 + 1];
         const dist = CFG.stepLen * this.spdG[p] * this.playerMoveScale(p);
@@ -1066,10 +1140,17 @@
           }
         }
       }
+      const newlyTrapped = [false, false];
       for (let p = 0; p < 2; p++) {
         if (!alive0[p]) continue;
-        if (this.invuln[p] > 0) continue;
+        if (this.invuln[p] > 0 || this.trapped[p] > 0) continue;
         if (this._isHitByExplosion(p, covered)) {
+          if (this.nativeTrap) {
+            this.trapped[p] = this.trapTicks;
+            newlyTrapped[p] = true;
+            this._clearMovementStatus(p);
+            continue;
+          }
           this.hp[p] = Math.max(0, this.hp[p] - 1);
           if (this.isBun) this.hp[p] = 0;
           if (this.hp[p] === 0) {
@@ -1083,6 +1164,7 @@
           }
         }
       }
+      if (this.nativeTrap) this._trapStep(newlyTrapped);
       // 无敌期递减（≥0）；实际掉血者重新进入无敌期
       this.invuln[0] = Math.max(0, this.invuln[0] - 1);
       this.invuln[1] = Math.max(0, this.invuln[1] - 1);
@@ -1151,7 +1233,7 @@
       this._bunUpdate();
       this._bunRespawnStep();
       for (let p = 0; p < 2; p++) {
-        if (!this.alive[p]) continue;
+        if (!this.alive[p] || this.trapped[p] > 0) continue;
         const [r, c] = this.centerCell(p);
         const i = r * W + c;
         if (!this.crate[i]) continue;
@@ -2038,7 +2120,7 @@
       const forcedSlide = this.movementStatus && this.movementStatus[pid] === MOVE_STATUS_SLIDE;
       mv = this.playerMoveDirection(pid, mv);
       let remainingMs = Math.max(0, Math.min(dtSec, 0.1)) * 1000;
-      if (!this.alive[pid] || mv === MOVE_IDLE) {
+      if (!this.alive[pid] || mv === MOVE_IDLE || (this.trapped && this.trapped[pid] > 0)) {
         st.clock += remainingMs; st.remainder = 0;
         this._expireNativePass(st);
         return;
@@ -3946,7 +4028,7 @@
   const QQT = {
     H, W, N, N_PLAYERS, N_MOVES, N_BOMB,
     MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_IDLE,
-    ITEM_NONE, ITEM_BANANA, ITEM_SLOW_GLUE,
+    ITEM_NONE, ITEM_BANANA, ITEM_SLOW_GLUE, ITEM_SLOT_COUNT,
     CRATE_BANANA, CRATE_SLOW_GLUE, CRATE_FAST_SHOE,
     MOVE_STATUS_NONE, MOVE_STATUS_SLOW, MOVE_STATUS_SLIDE, MOVE_STATUS_FAST,
     DIRS, EPS, CFG,
