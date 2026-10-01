@@ -30,7 +30,7 @@
         <p><kbd>Space / W</kbd> 放泡</p>
         <p><kbd>1 - 7</kbd> 使用道具栏对应格（右上角）</p>
         <p><kbd>E / Shift</kbd> 使用道具栏第 1 格</p>
-        <p>被炸会被糖泡包住：6 秒后爆破，敌人碰到立即爆破</p>
+        <p>被炸会被糖泡包住：6 秒后爆破，敌人碰到立即爆破，队友碰到立即救出</p>
         <p><kbd>R</kbd> 重新开局</p>
         <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效（放泡 / 爆炸 / 拾取）</label>
         <h2>对手</h2>
@@ -44,6 +44,13 @@
           <select id="match-mode">
             <option value="human-vs-opponent">真人 vs 对手</option>
             <option value="model-vs-rule">模型 vs 规则Bot（观战）</option>
+          </select>
+        </label>
+        <label>队伍
+          <select id="team-mode">
+            <option value="1v1" selected>1v1</option>
+            <option value="1v2">1v2（你 vs 两个猎手，可互救）</option>
+            <option value="2v2">2v2（你 + 猎手队友 vs 两个猎手）</option>
           </select>
         </label>
         <label>策略

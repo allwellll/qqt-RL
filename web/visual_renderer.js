@@ -94,11 +94,22 @@
     const score = tally ? `${tally[0]} : ${tally[1]}` : '';
     if (sim.winner == null) return { kind: 'draw', title: '平局', reason, score };
     if (viewerPid < 0) return { kind: 'win', title: sim.winner === 0 ? '蓝方胜利' : '红方胜利', reason, score };
-    return sim.winner === viewerPid
+    const viewerTeam = sim.team ? sim.team[viewerPid] : viewerPid;
+    return sim.winner === viewerTeam
       ? { kind: 'win', title: '胜利', reason, score }
       : { kind: 'lose', title: '失败', reason, score };
   }
 
+  function playerCount(sim) { return sim.nPlayers || 2; }
+  function teamOf(sim, pid) { return sim.team ? sim.team[pid] : pid; }
+  // 名牌：自己=“你”，同队=“队友”，敌方按序号“敌1/敌2”。
+  function playerLabel(sim, pid, humanPid, humanTeam) {
+    if (pid === humanPid) return '你';
+    if (teamOf(sim, pid) === humanTeam) return '队友';
+    let k = 0;
+    for (let q = 0; q <= pid; q++) if (teamOf(sim, q) !== humanTeam) k++;
+    return `敌${k}`;
+  }
   function respawnSeconds(ticks, tickHz = 10) {
     return Math.max(0, Math.ceil(ticks / tickHz));
   }
@@ -254,8 +265,8 @@
     const ctx = canvas.getContext('2d', { alpha: false });
     ctx.imageSmoothingEnabled = false;
     const explosions = [];
-    const faces = [1, 1];
-    const movingUntil = [0, 0];
+    const faces = [1, 1, 1, 1];
+    const movingUntil = [0, 0, 0, 0];
     let lastPositions = null;
 
     function tileZ(row, column) { return row * Z_ROW_STRIDE + (15 - 1 - column); }
@@ -266,14 +277,14 @@
     }
     function reset() {
       explosions.length = 0;
-      faces[0] = faces[1] = 1;
-      movingUntil[0] = movingUntil[1] = 0;
+      faces.fill(1);
+      movingUntil.fill(0);
       lastPositions = null;
     }
     // 有移动意图时朝向跟随意图（顶墙也要面朝墙）；无意图时才按位移推断（如香蕉皮滑行）。
     function updateFaces(sim, intents) {
       const previous = lastPositions;
-      for (let pid = 0; pid < 2; pid++) {
+      for (let pid = 0; pid < playerCount(sim); pid++) {
         const intent = intents ? intents[pid] : MOVE_IDLE;
         if (intent >= 0 && intent < MOVE_IDLE) { faces[pid] = intent; continue; }
         const dy = previous ? sim.pos[pid * 2] - previous[pid * 2] : 0;
@@ -363,6 +374,21 @@
           ctx.strokeText(String(slot.count), x + size - 2, top + size - 6); ctx.fillText(String(slot.count), x + size - 2, top + size - 6);
         }
       }
+      ctx.restore();
+    }
+    function drawTeamRing(cx, cy, team) {
+      ctx.save();
+      ctx.strokeStyle = team ? 'rgba(56,135,232,0.9)' : 'rgba(229,72,77,0.9)';
+      ctx.fillStyle = team ? 'rgba(56,135,232,0.22)' : 'rgba(229,72,77,0.22)';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.ellipse(cx, cy, CELL * 0.4, CELL * 0.16, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.restore();
+    }
+    function drawNameTag(cx, y, label, team) {
+      ctx.save();
+      ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.fillStyle = team ? '#9cc8ff' : '#ffaaa8';
+      ctx.strokeText(label, cx, y); ctx.fillText(label, cx, y);
       ctx.restore();
     }
     function drawBunBadge(x, y, team, count) {
@@ -480,7 +506,8 @@
       // 本地玩家头顶的原版 point.png 箭头；观战/回放时不画。
       const arrowPid = motion ? motion.humanPid : 0;
       let arrow = null;
-      for (let pid = 0; pid < 2; pid++) if (sim.alive[pid]) {
+      const humanTeam = teamOf(sim, motion ? motion.humanPid : 0);
+      for (let pid = 0; pid < playerCount(sim); pid++) if (sim.alive[pid]) {
         let gy = sim.pos[pid * 2], gx = sim.pos[pid * 2 + 1];
         if (motion && pid !== motion.humanPid) {
           const py = motion.prevPos[pid * 2], px = motion.prevPos[pid * 2 + 1];
@@ -494,13 +521,20 @@
         const moved = pushing || (previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5));
         if (moved) movingUntil[pid] = now + 150;
         const trapTicks = sim.trapped ? sim.trapped[pid] : 0;
-        const frames = assets.players[pid][row], image = frames[!trapTicks && now < movingUntil[pid] ? Math.floor(now / 125) % 4 : 0];
+        const team = teamOf(sim, pid);
+        const frames = assets.players[team][row], image = frames[!trapTicks && now < movingUntil[pid] ? Math.floor(now / 125) % 4 : 0];
         const x = Math.round(gx * CELL - image.width / 2), y = Math.min(Math.round(playerVisualY(gy, image.height)), 780 - image.height);
         // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
         if (pid === arrowPid) arrow = { x: gx * CELL, y: y + image.height * SPRITE_HEAD_FRAC };
         if (coveredCells.has(Math.floor(gy) * 15 + Math.floor(gx))) continue;
         const z = Math.floor(gy) * Z_ROW_STRIDE + 18;
         items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
+        // 多人时同队共用精灵：脚下队伍色光圈 + 头顶名牌区分。
+        if (playerCount(sim) > 2) {
+          const label = playerLabel(sim, pid, motion ? motion.humanPid : 0, humanTeam);
+          items.push([z - 1, () => drawTeamRing(gx * CELL, y + image.height - 6, team)]);
+          items.push([z + 4, () => drawNameTag(gx * CELL, y + image.height * SPRITE_HEAD_FRAC - 6, label, team)]);
+        }
         items.push([z, image, x, y]);
         if (sim.bunCarried[pid] >= 0) items.push([z + 1, () => drawBun(x + image.width / 2, y + 8, sim.bunCarried[pid], 1, 0.8, now)]);
         const heldKey = sim.heldItem ? heldItemSpriteKey(sim.heldItem[pid]) : null;
@@ -551,7 +585,7 @@
     }
     // 本地玩家阵亡：画面中央大字倒计时；其余阵亡者：在复活点显示小号秒数。
     function drawRespawnCountdowns(sim, humanPid) {
-      for (let pid = 0; pid < 2; pid++) {
+      for (let pid = 0; pid < playerCount(sim); pid++) {
         if (sim.alive[pid] || !(sim.bunRespawn[pid] > 0)) continue;
         const seconds = respawnSeconds(sim.bunRespawn[pid]);
         ctx.save();
@@ -581,5 +615,5 @@
     return { render, addExplosion, reset };
   }
 
-  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, heldItemSpriteKey, matchResult, bunTokens, explosionFrame, loadAssets, createRenderer };
+  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, heldItemSpriteKey, playerLabel, matchResult, bunTokens, explosionFrame, loadAssets, createRenderer };
 });

@@ -7,6 +7,7 @@
   const opponentSelect = document.getElementById('opponent');
   const mapSelect = document.getElementById('map-select');
   const matchMode = document.getElementById('match-mode');
+  const teamMode = document.getElementById('team-mode');
   const publishedModel = document.getElementById('published-model');
   const modelDetails = document.getElementById('model-details');
   const modelProgressWrap = document.getElementById('model-progress-wrap');
@@ -69,6 +70,8 @@
   let loadedModel = null;
   let publishedModels = [];
   let activeBot = null;
+  // 组队模式下 pid>=2 的猎手（pid1 仍是 activeBot）。
+  let extraBots = [];
   let ticking = false;
   let replayCatalog = [];
   let replayDocument = null;
@@ -80,15 +83,25 @@
   sound.load();
   const soundToggle = document.getElementById('sound-toggle');
   // 每名玩家当前的移动意图（MOVE_*），渲染器据此定朝向：顶墙时也面朝按键方向。
-  const intents = [QQT.MOVE_IDLE, QQT.MOVE_IDLE];
+  let intents = [QQT.MOVE_IDLE, QQT.MOVE_IDLE];
   // 渲染插值：对手(pid1，10Hz)在两个逻辑 tick 间线性插值 → 60fps 顺滑。
   // 本地人类(pid0)不插值：由 rAF 逐帧 frameStep 连续移动，本身就是每帧真实位置。
   const TICK_MS = 100;
-  const prevPos = new Float64Array(4);
-  const curPos = new Float64Array(4);
+  let prevPos = new Float64Array(4);
+  let curPos = new Float64Array(4);
   let lastTickT = performance.now();
   let prevFrame = performance.now();
-  function snapMotion() { prevPos.set(sim.pos); curPos.set(sim.pos); lastTickT = performance.now(); prevFrame = performance.now(); }
+  function snapMotion() {
+    if (prevPos.length !== sim.pos.length) {
+      prevPos = new Float64Array(sim.pos.length); curPos = new Float64Array(sim.pos.length);
+      intents = Array.from({ length: sim.nPlayers }, () => QQT.MOVE_IDLE);
+    }
+    intents.fill(QQT.MOVE_IDLE);
+    prevPos.set(sim.pos); curPos.set(sim.pos); lastTickT = performance.now(); prevFrame = performance.now();
+  }
+  // 1v2 → [红, 蓝, 蓝]；2v2 → [红, 蓝, 红, 蓝]（pid1 恒为第一个敌人）。
+  const TEAM_LAYOUTS = { '1v1': [0, 1], '1v2': [0, 1, 1], '2v2': [0, 1, 0, 1] };
+  function teamLayout() { return localHumanControls() ? (TEAM_LAYOUTS[teamMode.value] || TEAM_LAYOUTS['1v1']) : TEAM_LAYOUTS['1v1']; }
   // 本地人类操控 pid0（非回放、非观战 model-vs-rule）时 humanPid=0 → 渲染 raw；否则 -1（两方皆插值）。
   function localHumanControls() { return !replayDocument && matchMode.value !== 'model-vs-rule'; }
   function motionState() {
@@ -133,14 +146,21 @@
 
   function resetBot() {
     if (activeBot && activeBot.close) activeBot.close();
+    for (const bot of extraBots) if (bot && bot.close) bot.close();
     const registry = createRegistry();
     // 选项值形如 "bun.hunter@hard"：@ 后为难度配置。
     const [botId, difficulty] = (matchMode.value === 'model-vs-rule' ? 'bun.tactical_v2' : opponentSelect.value).split('@');
-    activeBot = registry.create(botId, difficulty ? { difficulty } : {});
-    activeBot.reset({
+    const context = (seed) => ({
       schema: 'qqt.bot.context/v1', episode_id: `web-${Date.now()}`,
-      seed: Date.now() >>> 0, ruleset: 'bun', max_ticks: null, metadata: {},
+      seed, ruleset: 'bun', max_ticks: null, metadata: {},
     });
+    activeBot = registry.create(botId, difficulty ? { difficulty } : {});
+    activeBot.reset(context(Date.now() >>> 0));
+    extraBots = [];
+    for (let pid = 2; pid < sim.nPlayers; pid++) {
+      extraBots[pid] = registry.create(botId, difficulty ? { difficulty } : {});
+      extraBots[pid].reset(context((Date.now() + pid * 7919) >>> 0));
+    }
   }
 
   async function reset() {
@@ -156,14 +176,15 @@
       matchMode.value = 'human-vs-opponent';
       modelStatus.textContent = '请先从模型列表选择并加载一个模型';
     }
+    // 组队模式只支持猎手（其他 Bot/模型只按 1v1 训练）。
+    if (teamMode.value !== '1v1' && !opponentSelect.value.startsWith('bun.hunter')) opponentSelect.value = 'bun.hunter@normal';
     // 原版道具栏/糖泡只在真人对局开启；模型评测与录像保持训练规则。
     const native = localHumanControls();
-    sim.reset(level, { nativeItems: native, nativeTrap: native });
+    sim.reset(level, { nativeItems: native, nativeTrap: native, teams: teamLayout() });
     resetBot();
     bombCell = -1;
     itemCell = -1;
     itemSlot = 0;
-    intents[0] = intents[1] = QQT.MOVE_IDLE;
     snapMotion();
     renderer.reset();
   }
@@ -176,7 +197,6 @@
     replayAccumulator = 0;
     replaySeek.max = String(replayDocument.actions.length);
     replaySeek.value = '0';
-    intents[0] = intents[1] = QQT.MOVE_IDLE;
     snapMotion();
     renderer.reset();
   }
@@ -321,8 +341,9 @@
         ? sim.itemSlots.map((slots) => slots.map((slot) => `${['无', '香蕉皮', '慢慢胶'][slot.item] || '?'}×${slot.count}`))
         : sim.heldItem.map((item) => ['无', '香蕉皮', '慢慢胶'][item] || '无'),
       trapped: sim.nativeTrap ? sim.trapped : undefined,
-      bot: activeBot && activeBot.bot && activeBot.bot.lastDecision
-        ? `${activeBot.bot.lastDecision.mode} / ${activeBot.bot.lastDecision.reason}` : undefined,
+      team: sim.nPlayers > 2 ? sim.team : undefined,
+      bot: [activeBot, ...extraBots.slice(2)].map((bot) => (bot && bot.bot && bot.bot.lastDecision
+        ? `${bot.bot.lastDecision.mode} / ${bot.bot.lastDecision.reason}` : undefined)).filter(Boolean).join(' | ') || undefined,
       winner: sim.done ? sim.winner : null,
     }, null, 2);
   }
@@ -345,16 +366,22 @@
           legal_moves: [0, 1, 2, 3, 4], legal_abilities: [0, 1, 2], metadata: { sim },
         };
         const action = await Promise.resolve(activeBot.act(observation, 1, modelRng));
+        const extra = [];
+        for (let pid = 2; pid < sim.nPlayers; pid++) extra[pid] = await Promise.resolve(extraBots[pid].act(observation, pid, modelRng));
+        const botActions = [null, action, ...extra.slice(2)];
         prevPos.set(sim.pos);
         const before = QQTSound.snapshot(sim);
         const info = sim.step([
           [Number(first[0]), Number(first[1]), Number(first[2]) || 0, Number(first[3]) || 0,
             first[4] == null ? -1 : first[4], first[5] == null ? -1 : first[5], first[6] == null ? 0 : first[6]],
-          [action.move, action.ability === 1 ? 1 : 0, action.ability === 2 ? 1 : 0],
+          ...botActions.slice(1).map((a) => [a.move, a.ability === 1 ? 1 : 0, a.ability === 2 ? 1 : 0]),
         ]);
         curPos.set(sim.pos); lastTickT = performance.now();
-        if (localHumanControls()) intents[1] = sim.alive[1] ? sim.playerMoveDirection(1, action.move) : QQT.MOVE_IDLE;
-        else setTickIntents(first[0], action.move);
+        if (localHumanControls()) {
+          for (let pid = 1; pid < sim.nPlayers; pid++) {
+            intents[pid] = sim.alive[pid] ? sim.playerMoveDirection(pid, botActions[pid].move) : QQT.MOVE_IDLE;
+          }
+        } else setTickIntents(first[0], action.move);
         renderer.addExplosion(info, performance.now());
         playEvents(before, info, 0);
         if (activeBot.observe_transition) {
@@ -431,6 +458,7 @@
     }
   });
   matchMode.addEventListener('change', reset);
+  teamMode.addEventListener('change', reset);
   opponentSelect.addEventListener('change', reset);
   mapSelect.addEventListener('change', reset);
   await loadCatalog();

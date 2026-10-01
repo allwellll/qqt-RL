@@ -66,15 +66,17 @@
     const width = Number(sim.W || (sim.wall.length / height));
     const N = height * width;
     const bombs = [];
-    const live = [0, 0];
+    const count = sim.nPlayers || 2;
+    const teams = sim.team ? sim.team.slice() : [0, 1];
+    const live = new Array(count).fill(0);
     for (let cell = 0; cell < N; cell++) {
       if (sim.fuse[cell] <= 0) continue;
       const owner = Number(sim.owner[cell]);
-      if (owner === 0 || owner === 1) live[owner]++;
+      if (owner >= 0 && owner < count) live[owner]++;
       bombs.push({ cell, row: Math.floor(cell / width), col: cell % width,
         fuse: Number(sim.fuse[cell]), blast: Number(sim.bombBlast[cell] || 2), owner });
     }
-    const players = [0, 1].map((p) => {
+    const players = teams.map((team, p) => {
       const y = Number(sim.pos[p * 2]), x = Number(sim.pos[p * 2 + 1]);
       const row = Math.max(0, Math.min(height - 1, Math.floor(y)));
       const col = Math.max(0, Math.min(width - 1, Math.floor(x)));
@@ -87,6 +89,7 @@
         blast: Number(sim.blastCap[p]), speed: Number(sim.spdG[p]) * scale, carrying,
         invuln: sim.invuln ? Number(sim.invuln[p]) : 0,
         respawn: sim.bunRespawn ? Number(sim.bunRespawn[p]) : 0,
+        team, trapped: sim.trapped ? Number(sim.trapped[p]) || 0 : 0,
       };
     });
     const zeros = new Uint8Array(N);
@@ -95,7 +98,7 @@
       wall: sim.wall, brick: sim.brick, brickLinger: sim.brickLinger || zeros,
       blastLinger: sim.blastLinger || zeros, crate: sim.crate || zeros, fieldItem: sim.fieldItem || zeros,
       crateType: sim.crateType || new Int8Array(N).fill(-1), heldItem: (sim.heldItem || [0, 0]).slice(),
-      bombs, players,
+      bombs, players, teams,
       bunBases: (sim.bunBases || [[1, 4], [1, 8]]).map((b) => b.slice()),
       bunStored: (sim.bunStored || [[1, 0], [0, 1]]).map((b) => b.slice()),
       bunLoose: sim.bunLoose || new Uint8Array(N * 2),
@@ -127,12 +130,48 @@
       return [decision.action[0], decision.action[1], 0];
     }
 
+    // 组队：敌人 = 异队；当前对手 foe = 最近的未被糖泡困住的存活敌人（都不满足时退回第一个敌人）。
+    // 1v1 时恒为 1 - pid，与原行为一致。
+    enemiesOf(state, pid) {
+      const team = state.players[pid].team == null ? pid : state.players[pid].team;
+      const out = [];
+      state.players.forEach((p, q) => { if (q !== pid && (p.team == null ? q : p.team) !== team) out.push(q); });
+      return out;
+    }
+
+    alliesOf(state, pid) {
+      const team = state.players[pid].team;
+      const out = [];
+      state.players.forEach((p, q) => { if (q !== pid && team != null && p.team === team) out.push(q); });
+      return out;
+    }
+
+    foeOf(state, pid) {
+      if (!state._foe) state._foe = {};
+      if (state._foe[pid] != null) return state.players[state._foe[pid]];
+      const me = state.players[pid];
+      const enemies = this.enemiesOf(state, pid);
+      let best = enemies.length ? enemies[0] : 1 - pid, bestD = INF;
+      for (const q of enemies) {
+        const e = state.players[q];
+        if (!e.alive || e.trapped > 0) continue;
+        const d = manhattan(me, e);
+        if (d < bestD) { bestD = d; best = q; }
+      }
+      state._foe[pid] = best;
+      return state.players[best];
+    }
+
     analyze(state, pid) {
       const g = this.geometry(state);
-      const me = state.players[pid], foe = state.players[1 - pid];
+      const me = state.players[pid], foe = this.foeOf(state, pid);
       if (!me.alive) return this.finish(MOVE_IDLE, 0, 'dead', 'DEAD');
+      if (me.trapped > 0) return this.finish(MOVE_IDLE, 0, 'trapped', 'TRAPPED');
       const cfg = this.cfg;
-      const perceive = (bomb) => bomb.owner === pid || bomb.fuse <= BOMB_FUSE - cfg.reactionDelay;
+      // 自己和队友放的泡立即可见（队友间默契），敌方泡按反应延迟感知。
+      const friendly = (owner) => owner === pid ||
+        (state.players[owner] && me.team != null && state.players[owner].team === me.team);
+      const perceive = (bomb) => friendly(bomb.owner) || bomb.fuse <= BOMB_FUSE - cfg.reactionDelay;
       const pred = this.predict(state, g, [], perceive);
       const esc = this.escape(g, pred, me, false);
       const goal = this.chooseGoal(state, g, pid, pred, perceive);
@@ -374,8 +413,14 @@
     }
 
     hypoFoeBombs(state, g, pid) {
-      const me = state.players[pid], foe = state.players[1 - pid];
-      if (!foe.alive || foe.carrying >= 0 || foe.bombsLeft <= 0) return [];
+      const result = [];
+      for (const q of this.enemiesOf(state, pid)) result.push(...this.hypoBombsOf(state, g, pid, state.players[q]));
+      return result;
+    }
+
+    hypoBombsOf(state, g, pid, foe) {
+      const me = state.players[pid];
+      if (!foe.alive || foe.trapped > 0 || foe.carrying >= 0 || foe.bombsLeft <= 0) return [];
       if (manhattan(me, foe) > foe.blast + 4) return [];
       const result = [];
       if (g.bombAt[foe.cell] < 0 && !state.brick[foe.cell]) {
@@ -450,7 +495,7 @@
     }
 
     attackSeeds(state, g, pid, pred, perceive) {
-      const me = state.players[pid], foe = state.players[1 - pid];
+      const me = state.players[pid], foe = this.foeOf(state, pid);
       const cells = new Map();
       const add = (cell, cost) => {
         if (!g.open[cell] || g.bombAt[cell] >= 0) return;
@@ -487,15 +532,20 @@
 
     chooseGoal(state, g, pid, pred, perceive) {
       const cfg = this.cfg;
-      const me = state.players[pid], foe = state.players[1 - pid], enemy = 1 - pid;
-      const ownBase = this.baseCells(state, g, pid).map((cell) => ({ cell, cost: 0 }));
+      const me = state.players[pid], foe = this.foeOf(state, pid);
+      const team = me.team == null ? pid : me.team, enemy = 1 - team;
+      const ownBase = this.baseCells(state, g, team).map((cell) => ({ cell, cost: 0 }));
       const enemyBase = this.baseCells(state, g, enemy).map((cell) => ({ cell, cost: 0 }));
       const looseEnemy = [], looseOwn = [];
       for (let c = 0; c < g.N; c++) {
         if (state.bunLoose[c * 2 + enemy] > 0) looseEnemy.push({ cell: c, cost: 0 });
-        if (state.bunLoose[c * 2 + pid] > 0) looseOwn.push({ cell: c, cost: 0 });
+        if (state.bunLoose[c * 2 + team] > 0) looseOwn.push({ cell: c, cost: 0 });
       }
       const enemyStock = (state.bunStored[enemy] && state.bunStored[enemy][enemy] > 0) ? enemyBase : [];
+      // 糖泡协作：赶得到就去碰被困队友（救出）或被困敌人（爆破）。
+      const rescue = this.trapGoal(state, g, pid, pred, this.alliesOf(state, pid), 'RESCUE');
+      const pop = this.trapGoal(state, g, pid, pred, this.enemiesOf(state, pid), 'POP');
+      if (rescue && (me.carrying < 0 || rescue.steps <= 4)) return rescue;
       if (me.carrying >= 0) {
         // 搬运中不能放泡：回家路被砖堵死时退而求其次，靠近可挖路线等待。
         const home = this.goalField(state, g, ownBase, me, pred, null, true);
@@ -504,12 +554,13 @@
       // 搬运途中无法挖砖，先确保己方包子屋与当前位置连通，再去偷包。
       const homeOpen = this.goalField(state, g, ownBase, me, pred, null, true)[me.cell] < INF;
       const openRoute = { mode: 'OPEN_ROUTE', seeds: ownBase, threat: false };
-      if (!foe.alive) {
+      if (pop) return pop;
+      if (!foe.alive || foe.trapped > 0) {
         const seeds = looseEnemy.concat(enemyStock, looseOwn);
         if (seeds.length) return homeOpen ? { mode: 'RAID', seeds, threat: false } : openRoute;
         return { mode: 'GUARD', seeds: looseOwn.length ? looseOwn : ownBase, threat: false };
       }
-      if (foe.carrying === pid) {
+      if (foe.carrying === team) {
         return { mode: 'INTERCEPT', seeds: this.attackSeeds(state, g, pid, pred, perceive), threat: false };
       }
       if (looseEnemy.length) return homeOpen ? { mode: 'STEAL', seeds: looseEnemy, threat: true } : openRoute;
@@ -522,6 +573,23 @@
       }
       const seeds = this.attackSeeds(state, g, pid, pred, perceive).concat(this.itemSeeds(state, g, me, pid));
       return { mode: 'HUNT', seeds, threat: false };
+    }
+
+    // 以被困目标所在格为目标（进入同格必在 41px 接触范围内；邻格只在靠近中心时才够）；
+    // 只在预计到达时间早于糖泡自动爆破时才追。
+    trapGoal(state, g, pid, pred, candidates, mode) {
+      const me = state.players[pid];
+      let best = null;
+      for (const q of candidates) {
+        const target = state.players[q];
+        if (!target.alive || !(target.trapped > 0)) continue;
+        const seeds = [{ cell: target.cell, cost: 0 }];
+        const steps = this.goalField(state, g, seeds, me, pred, null, true)[me.cell];
+        if (!(steps < INF / 2)) continue;
+        if (steps * this.moveTicks(me, false) >= target.trapped) continue;
+        if (!best || steps < best.steps) best = { mode, seeds, threat: false, noDig: true, steps, target: q };
+      }
+      return best;
     }
 
     threatMap(state, g, foe) {
@@ -601,17 +669,23 @@
 
     considerBomb(state, g, pid, pred, perceive, field) {
       const cfg = this.cfg;
-      const me = state.players[pid], foe = state.players[1 - pid];
+      const me = state.players[pid], foe = this.foeOf(state, pid);
       if (me.carrying >= 0 || me.bombsLeft <= 0 || me.liveBombs >= cfg.maxLiveBombs) return null;
       if (g.bombAt[me.cell] >= 0 || state.brick[me.cell]) return null;
       const dig = this.digTarget(state, g, me, field, pred) >= 0;
-      const foeNear = foe.alive && manhattan(me, foe) <= cfg.attackRadius && foe.invuln < NEW_BOMB_TICK;
+      const foeNear = foe.alive && !(foe.trapped > 0) && manhattan(me, foe) <= cfg.attackRadius && foe.invuln < NEW_BOMB_TICK;
       if (!dig && !foeNear) return null;
       const mine = { cell: me.cell, e: NEW_BOMB_TICK, blast: me.blast };
       const predB = this.predict(state, g, [mine], perceive);
       const escB = this.escape(g, predB, me, false);
       let surv = escB.surv;
       if (!surv) return null;
+      // 友军伤害：这颗泡若让任一活动队友无路可逃（乐观估计）就不放。
+      for (const q of this.alliesOf(state, pid)) {
+        const ally = state.players[q];
+        if (!ally.alive || ally.trapped > 0) continue;
+        if (!this.escape(g, predB, ally, true, FOE_HORIZON).surv) return null;
+      }
       let attack = false, kill = false;
       if (foeNear) {
         const inFoot = predB.lethal[NEW_BOMB_TICK * g.N + foe.cell] === 1;

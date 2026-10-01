@@ -269,6 +269,47 @@ sim.pos[2] = 6.6; sim.pos[3] = 9.4;
 sim.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
 assert(!sim.alive[0] && sim.bunCarried[0] < 0, '敌方触碰糖泡立即爆破并掉包');
 
+// 网页多人组队：2v2 按队伍分配出生点；队友触碰救出糖泡，敌方触碰爆破；同队泡也会困住队友。
+const teamFresh = (teams) => {
+  const s = new QQT.Sim(9);
+  s.reset(level, { nativeItems: true, nativeTrap: true, teams });
+  for (let p = 0; p < s.nPlayers; p++) s.invuln[p] = 0;
+  return s;
+};
+const placeAll = (s, coords) => coords.forEach(([y, x], p) => { s.pos[p * 2] = y; s.pos[p * 2 + 1] = x; });
+const idle = (s) => s.team.map(() => [QQT.MOVE_IDLE, 0]);
+sim = teamFresh([0, 1, 0, 1]);
+assert(sim.nPlayers === 4 && sim.pos.length === 8 && sim.bunCarried.length === 4, '2v2 按人分配状态');
+for (let p = 0; p < 4; p++) {
+  const [row, column] = sim.centerCell(p);
+  const spawns = sim.team[p] ? blueSpawns : redSpawns;
+  assert(spawns.has(spawnKey(row, column)), `2v2 玩家 ${p} 落在本队出生组`);
+}
+assert(new Set([0, 1, 2, 3].map((p) => sim.centerCell(p).join(','))).size === 4, '2v2 同队出生点互不重叠');
+
+placeAll(sim, [[7.5, 8.5], [4.5, 14.5], [6.6, 9.4], [10.5, 2.5]]);
+sim.fuse[fieldCell] = 1; sim.owner[fieldCell] = 2; sim.bombBlast[fieldCell] = 1;
+sim.step(idle(sim));
+assert(sim.trapped[0] === 60 && sim.trapped[2] === 0, '队友的泡也会困住自己（友军伤害）');
+sim.step(idle(sim));
+assert(sim.alive[0] && sim.trapped[0] === 0 && sim.invuln[0] > 0, '队友触碰立即救出并短暂无敌');
+
+sim = teamFresh([0, 1, 0, 1]);
+placeAll(sim, [[7.5, 8.5], [6.6, 9.4], [6.6, 7.6], [10.5, 2.5]]);
+sim.fuse[fieldCell] = 1; sim.owner[fieldCell] = 1; sim.bombBlast[fieldCell] = 1;
+sim.step(idle(sim));
+sim.step(idle(sim));
+assert(!sim.alive[0], '敌我同时接触时按序号先结算敌方 → 爆破');
+
+sim = teamFresh([0, 1, 1]);
+assert(sim.nPlayers === 3 && sim.team[2] === 1, '1v2 配置');
+sim.pos[4] = 2.5; sim.pos[5] = 5.5;
+sim.step(idle(sim));
+assert(sim.bunCarried[2] === 0 && sim.bunStored[0][0] === 0, '敌队第二名队员可从基地取包');
+sim.pos[4] = 2.5; sim.pos[5] = 9.5;
+sim.step(idle(sim));
+assert(sim.bunStored[1][0] === 1 && sim.bunScore[1] === 1 && sim.done && sim.winner === 1, '运包计入队伍得分并按队伍判胜');
+
 // 超时按双方基地现存包子总数比较，不按击杀或仅按夺包次数比较。
 sim = fresh();
 sim.bunStored[1][1] = 0;

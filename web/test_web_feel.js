@@ -364,6 +364,29 @@ function dimRects(rects, canvas) {
   r.render(sim, 1000, null);
   assert.equal(heldDrawn, 1, '手持香蕉皮必须在角色旁绘制一次图标');
 }
+// 4j1) 多人组队：按队伍选精灵，名牌“你/队友/敌1/敌2”，胜负按队伍判。
+{
+  const { canvas, draws, texts } = mockCanvas();
+  const r = visual.createRenderer(canvas, level, mockAssets());
+  const sim = fakeSim({ pos: [5.5, 3.5, 5.5, 8.5, 9.5, 3.5, 9.5, 8.5], alive: [1, 1, 1, 1] });
+  sim.nPlayers = 4; sim.team = [0, 1, 0, 1];
+  sim.bunCarried = [-1, -1, -1, -1]; sim.bunRespawn = [0, 0, 0, 0];
+  const motion = { prevPos: sim.pos, curPos: sim.pos, lastTickT: 1000, tickMs: 100, humanPid: 0, intents: [4, 4, 4, 4] };
+  r.render(sim, 1000, motion);
+  assert.equal(draws.filter((d) => d.tag === 'p0').length, 2, '红队两人共用红方精灵');
+  assert.equal(draws.filter((d) => d.tag === 'p1').length, 2, '蓝队两人共用蓝方精灵');
+  const labels = texts.map((t) => t.text);
+  for (const label of ['你', '队友', '敌1', '敌2']) assert(labels.includes(label), `多人名牌 ${label}`);
+  assert.equal(visual.playerLabel({ team: [0, 1, 1] }, 2, 0, 0), '敌2');
+  assert.equal(visual.matchResult({ done: true, isBun: true, t: 10, maxSteps: 2400, winner: 0, team: [0, 1, 0, 1], bunScore: [1, 0] }, 0).title, '胜利');
+  assert.equal(visual.matchResult({ done: true, isBun: true, t: 10, maxSteps: 2400, winner: 1, team: [0, 1, 1], bunScore: [0, 1] }, 0).title, '失败');
+  const one = mockCanvas();
+  visual.createRenderer(one.canvas, level, mockAssets()).render(fakeSim({ pos: [5.5, 3.5, 5.5, 8.5] }), 1000, null);
+  assert(!one.texts.some((t) => t.text === '你'), '1v1 不画名牌');
+}
+const appTeamSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
+assert(/teams: teamLayout\(\)/.test(appTeamSource) && /'2v2': \[0, 1, 0, 1\]/.test(appTeamSource), 'app.js 按队伍模式创建多人对局');
+
 // 4j2) 原版道具栏（顶部带右侧 7 格 + 数量/键位）与糖泡包裹（倒计时秒数）。
 {
   const { canvas, texts } = mockCanvas();

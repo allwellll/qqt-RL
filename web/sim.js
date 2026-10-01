@@ -207,18 +207,23 @@
       this.fieldOwner = new Int8Array(N);
       this.fieldOwner.fill(-1);
       this.fieldArmed = new Uint8Array(N);
-      this.heldItem = [ITEM_NONE, ITEM_NONE];
+      // 网页多人组队（1v2/2v2）：team[p] 为队伍号；默认 2 人 [0,1] 即训练/模型口径。
+      const teams = opts && Array.isArray(opts.teams) && opts.teams.length >= 2 ? opts.teams.map((t) => t ? 1 : 0) : [0, 1];
+      this.team = teams;
+      this.nPlayers = teams.length;
+      const per = (value) => Array.from({ length: this.nPlayers }, () => (typeof value === 'function' ? value() : value));
+      this.heldItem = per(ITEM_NONE);
       // 网页原版规则（训练/模型默认关闭，保持 parity）：
       // nativeItems=道具栏(7格叠加，慢慢胶一次+3)；nativeTrap=被炸先进糖泡，敌方碰到或超时才阵亡。
       this.nativeItems = !!(opts && opts.nativeItems);
       this.nativeTrap = !!(opts && opts.nativeTrap);
-      this.itemSlots = [[], []];
-      this.trapped = [0, 0];
+      this.itemSlots = per(() => []);
+      this.trapped = per(0);
       this.trapTicks = 6 * CFG.tickHz;
-      this.movementStatus = [MOVE_STATUS_NONE, MOVE_STATUS_NONE];
-      this.movementStatusTicks = [0, 0];
-      this.slideDir = [MOVE_DOWN, MOVE_DOWN];
-      this.lastMoveDir = [MOVE_DOWN, MOVE_DOWN];
+      this.movementStatus = per(MOVE_STATUS_NONE);
+      this.movementStatusTicks = per(0);
+      this.slideDir = per(MOVE_DOWN);
+      this.lastMoveDir = per(MOVE_DOWN);
       this.nativeMove = null;
       this.tacticalItemFraction = 0;
       this.graveyard = [];                 // 道具墓地：存储被水泡炸毁以及满属性溢出的道具 { type, isSuper }
@@ -246,17 +251,17 @@
       // 砖被炸瞬间就掷出的道具（-1=无）：渲染立即显示，砖残骸到期、开放通行时才落为 crate。
       this.pendingCrateType = new Int8Array(N).fill(-1);
       this.pendingSuperCrate = new Uint8Array(N);
-      this.pos = new Float64Array(4);
-      this.alive = [true, true];
-      this.hp = [CFG.maxHp, CFG.maxHp];
-      this.invuln = [0, 0];
-      this.sinceBomb = [0, 0];
-      this.bombsCap = [0, 0];
-      this.blastCap = [0, 0];
-      this.spdG = [1.0, 1.0];
-      this.loBombs = [0, 0];
-      this.loBlast = [0, 0];
-      this.loSpeed = [1.0, 1.0];
+      this.pos = new Float64Array(this.nPlayers * 2);
+      this.alive = per(true);
+      this.hp = per(CFG.maxHp);
+      this.invuln = per(0);
+      this.sinceBomb = per(0);
+      this.bombsCap = per(0);
+      this.blastCap = per(0);
+      this.spdG = per(1.0);
+      this.loBombs = per(0);
+      this.loBlast = per(0);
+      this.loSpeed = per(1.0);
       this.t = 0;
       this.done = false;
       this.winner = null;        // 0 / 1 / null（平局或未结束）
@@ -267,18 +272,18 @@
       this.bunInitial = [0, 0];
       this.bunStored = [[0, 0], [0, 0]]; // [基地队伍][包子来源队伍]
       this.bunLoose = new Uint8Array(N * 2); // [格子 * 2 + 包子来源队伍] -> 数量
-      this.bunCarried = [-1, -1];
+      this.bunCarried = per(-1);
       this.bunScore = [0, 0];
       this.bunTarget = 1;
-      this.bunRespawn = [0, 0];
+      this.bunRespawn = per(0);
       this.bunRespawnTicks = 10 * CFG.tickHz;
       this.bunCarrySpeedScale = 0.5;
       this.bunSpawnPos = [[6.5, 4.5], [6.5, 8.5]];
       this.lastCovered = null;   // 最近一次爆炸覆盖掩码（渲染用）
-      this.lastDied = [false, false];
+      this.lastDied = per(false);
       this.lastReplayCovered = null;
       this.lastReplayTriggered = null;
-      this.lastReplayPlaced = [false, false];
+      this.lastReplayPlaced = per(false);
       this.spawnCells = null;    // 本局出生点（回收排除用）
       this.itemsEnabled = true;
       // 属性上限默认 = CFG 上限（open/corridor；关卡模式在 _loadLevel 覆盖）
@@ -306,7 +311,7 @@
         this.pos[2] = 8.5; this.pos[3] = 8.5;
         const startB = CFG.growthBombsStart, startZ = CFG.growthBlastStart,
               startS = CFG.growthSpeedStart;
-        for (let p = 0; p < 2; p++) {
+        for (let p = 0; p < this.nPlayers; p++) {
           this.bombsCap[p] = startB; this.blastCap[p] = startZ; this.spdG[p] = startS;
           this.loBombs[p] = startB; this.loBlast[p] = startZ; this.loSpeed[p] = startS;
         }
@@ -319,7 +324,7 @@
         const b = Math.round(CFG.openGrowthBombs + alpha * (CFG.growthBombsMax - CFG.openGrowthBombs));
         const z = Math.round(CFG.openGrowthBlast + alpha * (CFG.growthBlastMax - CFG.openGrowthBlast));
         const s = +(CFG.openGrowthSpeed + alpha * (CFG.growthSpeedMax - CFG.openGrowthSpeed)).toFixed(3);
-        for (let p = 0; p < 2; p++) {
+        for (let p = 0; p < this.nPlayers; p++) {
           this.bombsCap[p] = b; this.blastCap[p] = z; this.spdG[p] = s;
           this.loBombs[p] = b; this.loBlast[p] = z; this.loSpeed[p] = s;
         }
@@ -364,6 +369,8 @@
         fieldOwner: arr(this.fieldOwner),
         fieldArmed: arr(this.fieldArmed),
         heldItem: this.heldItem.slice(),
+        nPlayers: this.nPlayers,
+        team: this.team.slice(),
         nativeItems: this.nativeItems,
         nativeTrap: this.nativeTrap,
         itemSlots: this.itemSlots.map((slots) => slots.map((x) => ({ item: x.item, count: x.count }))),
@@ -419,6 +426,8 @@
         if (frame[name] == null) return;
         this[name] = Type ? new Type(frame[name]) : frame[name].slice();
       };
+      this.team = (frame.team || [0, 1]).slice();
+      this.nPlayers = frame.nPlayers || this.team.length;
       copy('pos', Float64Array);
       this.alive = frame.alive.slice();
       this.hp = frame.hp.slice();
@@ -560,7 +569,7 @@
         initZ = Math.round(st.blast + alpha * (maxZ - st.blast));
         initS = +(st.speed + alpha * (maxS - st.speed)).toFixed(3);
       }
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < this.nPlayers; p++) {
         this.bombsCap[p] = initB;
         this.blastCap[p] = initZ;
         this.spdG[p] = initS;
@@ -580,6 +589,12 @@
           }
         }
         sp = [groups[0][0] || rawSpawns[0], groups[1][0] || rawSpawns[1] || rawSpawns[0]];
+        // 多人：同队第 k 名取本队打乱后的第 k 个出生点（不额外消耗随机数）。
+        const seen = [1, 1];
+        for (let p = 2; p < this.nPlayers; p++) {
+          const team = this.team[p], g = groups[team];
+          sp.push(g[seen[team]++ % Math.max(1, g.length)] || rawSpawns[p % rawSpawns.length]);
+        }
       } else {
         for (let i = sp.length - 1; i > 0; i--) {
           const j = Math.floor(this.rng() * (i + 1));
@@ -589,9 +604,12 @@
       const s0 = sp[0], s1 = sp.length > 1 ? sp[1] : sp[0];
       this.pos[0] = s0[0] + 0.5; this.pos[1] = s0[1] + 0.5;
       this.pos[2] = s1[0] + 0.5; this.pos[3] = s1[1] + 0.5;
+      for (let p = 2; p < this.nPlayers; p++) {
+        this.pos[p * 2] = sp[p][0] + 0.5; this.pos[p * 2 + 1] = sp[p][1] + 0.5;
+      }
       this.spawnCells = sp;
       // 强制清除出生点脚下的砖块与墙体（消除原版关卡出生点卡在障碍中的缺陷）
-      for (const [r, c] of [s0, s1]) {
+      for (const [r, c] of [s0, s1, ...sp.slice(2, this.nPlayers)]) {
         const idx = r * W + c;
         if (idx >= 0 && idx < N) {
           this.brick[idx] = 0;
@@ -633,17 +651,17 @@
       this.bunInitial = [1, 1];
       this.bunStored = [[1, 0], [0, 1]];
       this.bunLoose.fill(0);
-      this.bunCarried = [-1, -1];
+      this.bunCarried = this.team.map(() => -1);
       this.bunScore = [0, 0];
       this.bunTarget = Math.max(1, Number(level.bun_target || 1));
-      this.bunRespawn = [0, 0];
+      this.bunRespawn = this.team.map(() => 0);
       this.bunRespawnTicks = Math.max(1, Number(level.bun_respawn_ticks || 10 * CFG.tickHz));
       this.bunCarrySpeedScale = Math.max(0.1, Math.min(1, Number(level.bun_carry_speed_scale || 0.5)));
       const groups = level.bun_spawns || [level.spawns.slice(0, 4), level.spawns.slice(4, 8)];
-      const picked = [this.pos.slice(0, 2), this.pos.slice(2, 4)];
+      const picked = this.team.map((_, p) => this.pos.slice(p * 2, p * 2 + 2));
       this.bunSpawnPos = picked.map((p) => [p[0], p[1]]);
-      for (let p = 0; p < 2; p++) {
-        if (groups[p] && groups[p].length === 0) this.bunSpawnPos[p] = [picked[p][0], picked[p][1]];
+      for (let p = 0; p < this.nPlayers; p++) {
+        if (groups[this.team[p]] && groups[this.team[p]].length === 0) this.bunSpawnPos[p] = [picked[p][0], picked[p][1]];
       }
       this.maxSteps = Math.round(Number(level.round_duration_ms || 240000) * CFG.tickHz / 1000);
     }
@@ -701,7 +719,7 @@
     }
 
     _movementStatusStep() {
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < this.nPlayers; p++) {
         if (this.movementStatus[p] !== MOVE_STATUS_SLOW && this.movementStatus[p] !== MOVE_STATUS_FAST) continue;
         if (this.movementStatusTicks[p] > 0) this.movementStatusTicks[p]--;
         if (this.movementStatusTicks[p] <= 0) this._clearMovementStatus(p);
@@ -804,16 +822,25 @@
       }
     }
 
-    // 原版糖泡：敌方中心进入 ±41 原生像素（不含边界）立即爆破，否则倒计时结束自动爆破。
+    // 原版糖泡（actor_state.go resolveActorContacts）：其他角色中心进入 ±41 原生像素（不含边界）时，
+    // 同队立即救出、敌方立即爆破；都没有则倒计时结束自动爆破。
     _trapStep(newlyTrapped) {
       const reach = 41 / NATIVE_CELL_PX;
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < this.nPlayers; p++) {
         if (!this.alive[p] || this.trapped[p] <= 0 || newlyTrapped[p]) continue;
-        const e = 1 - p;
-        const touched = this.alive[e] && this.trapped[e] <= 0 &&
-          Math.abs(this.pos[e * 2] - this.pos[p * 2]) < reach &&
-          Math.abs(this.pos[e * 2 + 1] - this.pos[p * 2 + 1]) < reach;
-        if (touched) { this._killPlayer(p); continue; }
+        let outcome = null;
+        for (let q = 0; q < this.nPlayers && !outcome; q++) {
+          if (q === p || !this.alive[q] || this.trapped[q] > 0) continue;
+          if (Math.abs(this.pos[q * 2] - this.pos[p * 2]) >= reach ||
+              Math.abs(this.pos[q * 2 + 1] - this.pos[p * 2 + 1]) >= reach) continue;
+          outcome = this.team[q] === this.team[p] ? 'rescue' : 'pop';
+        }
+        if (outcome === 'pop') { this._killPlayer(p); continue; }
+        if (outcome === 'rescue') {
+          this.trapped[p] = 0;
+          this.invuln[p] = Math.max(this.invuln[p], CFG.tickHz);
+          continue;
+        }
         if (--this.trapped[p] <= 0) this._killPlayer(p);
       }
     }
@@ -826,7 +853,7 @@
           this.fieldArmed[cell] = 1;
         }
         if (!this.fieldArmed[cell]) continue;
-        for (let p = 0; p < 2; p++) {
+        for (let p = 0; p < this.nPlayers; p++) {
           if (!this.alive[p] || this.trapped[p] > 0) continue;
           const [row, column] = this.centerCell(p);
           if (row * W + column !== cell) continue;
@@ -848,7 +875,7 @@
 
     _bunRespawnStep() {
       if (!this.isBun) return;
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < this.nPlayers; p++) {
         if (this.lastDied && this.lastDied[p]) continue;
         if (this.alive[p] || this.bunRespawn[p] <= 0) continue;
         this.bunRespawn[p]--;
@@ -865,26 +892,27 @@
 
     _bunUpdate() {
       if (!this.isBun) return;
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < this.nPlayers; p++) {
         if (!this.alive[p] || this.trapped[p] > 0) continue;
         const [r, c] = this.centerCell(p);
         const i = r * W + c;
         const baseTeam = this._bunBaseTeam(r, c);
-        if (baseTeam === p && this.bunCarried[p] >= 0) {
+        const team = this.team[p];
+        if (baseTeam === team && this.bunCarried[p] >= 0) {
           const origin = this.bunCarried[p];
-          this.bunStored[p][origin]++;
+          this.bunStored[team][origin]++;
           this.bunCarried[p] = -1;
-          this._bunRefreshScore(p);
-          if (this._bunHasCapturedAll(p)) {
-            this.done = true; this.winner = p;
+          this._bunRefreshScore(team);
+          if (this._bunHasCapturedAll(team)) {
+            this.done = true; this.winner = team;
           }
           continue;
         }
         if (this.bunCarried[p] >= 0) continue;
 
         // 散包可被任意一方拾取；优先拿敌方包子，避免同格双包时反复捡回己方。
-        const enemy = 1 - p;
-        for (const origin of [enemy, p]) {
+        const enemy = 1 - team;
+        for (const origin of [enemy, team]) {
           const looseIndex = i * 2 + origin;
           if (this.bunLoose[looseIndex] <= 0) continue;
           this.bunLoose[looseIndex]--;
@@ -894,7 +922,7 @@
         if (this.bunCarried[p] >= 0) continue;
 
         // BunID=0 只表示仍存放在其原属队伍基地的包子；己方不能拿自己的库存。
-        if (baseTeam >= 0 && baseTeam !== p && this.bunStored[baseTeam][baseTeam] > 0) {
+        if (baseTeam >= 0 && baseTeam !== team && this.bunStored[baseTeam][baseTeam] > 0) {
           this.bunStored[baseTeam][baseTeam]--;
           this.bunCarried[p] = baseTeam;
         }
@@ -965,20 +993,21 @@
     // ------------------------------------------------------- 一个 tick
     // actions: [[move0, bomb0, useItem0, realtimeMove0], [move1, bomb1, useItem1, realtimeMove1]]
     step(actions) {
-      const alive0 = [this.alive[0], this.alive[1]];
-      const hpBefore = [this.hp[0], this.hp[1]];
-      this.lastDied = [false, false];
+      const nP = this.nPlayers;
+      const alive0 = this.alive.slice();
+      const hpBefore = this.hp.slice();
+      this.lastDied = this.alive.map(() => false);
       this.lastCovered = new Uint8Array(N);
       this.lastReplayCovered = new Uint8Array(N);
       this.lastReplayTriggered = new Uint8Array(N);
-      this.lastReplayPlaced = [false, false];
+      this.lastReplayPlaced = this.alive.map(() => false);
 
       // 1. 引信递减
       for (let i = 0; i < N; i++) if (this.fuse[i] > 0) this.fuse[i]--;
 
       // 2. 放泡（在移动前，落在起始中心格；威力按当前档位快照）
-      const placed = [false, false];
-      for (let p = 0; p < 2; p++) {
+      const placed = this.alive.map(() => false);
+      for (let p = 0; p < this.nPlayers; p++) {
         const [r, c] = this.centerCell(p);
         // actions[p][4]：真人按键瞬间所在格。逐帧移动下 tick 时人可能已走开，泡要落在按键处。
         const i = this._actionCell(actions[p][4], r * W + c);
@@ -995,22 +1024,20 @@
           this._activateNativePass(p);
         }
       }
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < this.nPlayers; p++) {
         if (actions[p][2] === 1) this._placeHeldItem(p, actions[p][5], actions[p][6]);
       }
       // Keep event masks with the logical frame for deterministic replay.
       this.lastReplayPlaced = placed.slice();
       // 被动计时
-      this.sinceBomb[0]++; this.sinceBomb[1]++;
-      if (placed[0]) this.sinceBomb[0] = 0;
-      if (placed[1]) this.sinceBomb[1] = 0;
+      for (let p = 0; p < nP; p++) this.sinceBomb[p] = placed[p] ? 0 : this.sinceBomb[p] + 1;
 
       // 3. 连续移动 + AABB 滑动碰撞（速度 = 基础速 × 成长倍率）
       const blocked = new Uint8Array(N);
       for (let i = 0; i < N; i++) {
         blocked[i] = this.wall[i] || this.brick[i] || this.fuse[i] > 0 ? 1 : 0;
       }
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < this.nPlayers; p++) {
         const forcedSlide = this.movementStatus[p] === MOVE_STATUS_SLIDE;
         const mv = this.playerMoveDirection(p, actions[p][0]);
         if (actions[p][3] === 1) continue;
@@ -1128,20 +1155,20 @@
 
       // 5. 伤害判定：当前爆炸 + 之前 0.3s 余威覆盖区域均可扣血。
       //    半身位微操：单水柱中心线判定（半身避伤），并排连锁相邻格自动扩张连通合并（连泡必伤）。
-      const physicalDamageSource = [[false, false], [false, false]];
-      const causalDamageSource = [[false, false], [false, false]];
+      const physicalDamageSource = this.alive.map(() => this.alive.map(() => false));
+      const causalDamageSource = this.alive.map(() => this.alive.map(() => false));
       for (const source of sources) {
-        for (let p = 0; p < 2; p++) {
+        for (let p = 0; p < this.nPlayers; p++) {
           if (!alive0[p] || !this._isHitByExplosion(
             p, source.covered, source.horzCovered, source.vertCovered, false)) continue;
           if (source.owner >= 0) physicalDamageSource[p][source.owner] = true;
-          for (let actor = 0; actor < 2; actor++) {
+          for (let actor = 0; actor < nP; actor++) {
             if (source.causeMask & (1 << actor)) causalDamageSource[p][actor] = true;
           }
         }
       }
-      const newlyTrapped = [false, false];
-      for (let p = 0; p < 2; p++) {
+      const newlyTrapped = this.alive.map(() => false);
+      for (let p = 0; p < this.nPlayers; p++) {
         if (!alive0[p]) continue;
         if (this.invuln[p] > 0 || this.trapped[p] > 0) continue;
         if (this._isHitByExplosion(p, covered)) {
@@ -1166,9 +1193,8 @@
       }
       if (this.nativeTrap) this._trapStep(newlyTrapped);
       // 无敌期递减（≥0）；实际掉血者重新进入无敌期
-      this.invuln[0] = Math.max(0, this.invuln[0] - 1);
-      this.invuln[1] = Math.max(0, this.invuln[1] - 1);
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < nP; p++) this.invuln[p] = Math.max(0, this.invuln[p] - 1);
+      for (let p = 0; p < this.nPlayers; p++) {
         if (hpBefore[p] > this.hp[p]) this.invuln[p] = CFG.invulnTicks;
       }
 
@@ -1212,7 +1238,7 @@
 
       // 6.5 掉血属性惩罚 + 宝箱回收（每项扣 clamp(round(25%×当前值), 1, 2) 档）
       if (this.itemsEnabled && CFG.hitAttrPenalty > 0) {
-        for (let p = 0; p < 2; p++) {
+        for (let p = 0; p < this.nPlayers; p++) {
           const dmg = hpBefore[p] - this.hp[p];
           if (dmg <= 0 || !alive0[p]) continue;
           // 掉血惩罚：总是每个属性 -1 档（简化并降低惩罚）
@@ -1232,7 +1258,7 @@
       this._movementStatusStep();
       this._bunUpdate();
       this._bunRespawnStep();
-      for (let p = 0; p < 2; p++) {
+      for (let p = 0; p < this.nPlayers; p++) {
         if (!this.alive[p] || this.trapped[p] > 0) continue;
         const [r, c] = this.centerCell(p);
         const i = r * W + c;
@@ -1302,10 +1328,11 @@
         this.winner = this.hp[0] === this.hp[1] ? null : (this.hp[0] > this.hp[1] ? 0 : 1);
       }
       const mutualDeath = this.lastDied[0] && this.lastDied[1];
-      const creditedKill = [false, false];
-      const causalKill = [false, false];
-      const ownBombDefeat = [false, false];
-      for (let actor = 0; actor < 2; actor++) {
+      const creditedKill = this.alive.map(() => false);
+      const causalKill = this.alive.map(() => false);
+      const ownBombDefeat = this.alive.map(() => false);
+      // 击杀归因只服务 1v1 训练奖励；多人网页对局不计算。
+      for (let actor = 0; actor < (nP === 2 ? 2 : 0); actor++) {
         const victim = 1 - actor;
         const physicalCount = Number(physicalDamageSource[victim][0]) + Number(physicalDamageSource[victim][1]);
         const causalCount = Number(causalDamageSource[victim][0]) + Number(causalDamageSource[victim][1]);

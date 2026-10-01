@@ -90,4 +90,66 @@ for (const seed of [1000, 1001]) {
   assert.throws(() => new Hunter.BunHunterBot({ difficulty: 'insane' }), /unknown hunter difficulty/);
 }
 
-console.log('猎手 Bot：躲泡/进攻/偷包搬运/难度注册 回归通过');
+// 5) 组队协作（网页 1v2/2v2，糖泡规则）：救队友、爆破被困敌人、不误伤队友。
+function teamScene(teams, coords) {
+  const sim = new QQT.Sim(11);
+  sim.reset('open', { nativeItems: true, nativeTrap: true, teams });
+  sim.wall.fill(0); sim.brick.fill(0); sim.crate.fill(0); sim.fuse.fill(0);
+  sim.isBun = true;
+  coords.forEach(([y, x], p) => { sim.pos[p * 2] = y; sim.pos[p * 2 + 1] = x; sim.invuln[p] = 0; });
+  return sim;
+}
+function runTeam(sim, bots, ticks, until) {
+  for (let t = 0; t < ticks; t++) {
+    const actions = sim.team.map((_, p) => bots[p] ? bots[p].act(sim, p) : [QQT.MOVE_IDLE, 0, 0]);
+    sim.step(actions.map((a) => [a[0], a[1], 0, 0]));
+    if (until(sim)) return t;
+  }
+  return -1;
+}
+for (const difficulty of ['easy', 'normal', 'hard']) {
+  // 1v2：蓝方 pid1 被困，队友 pid2 必须赶来救出；真人 pid0 远离。
+  const sim = teamScene([0, 1, 1], [[11.5, 1.5], [5.5, 9.5], [5.5, 5.5]]);
+  sim.trapped[1] = 60;
+  const bot = new Hunter.BunHunterBot({ difficulty, seed: 2, overrides: { mistakeRate: 0 } });
+  assert.strictEqual(bot.analyze(Hunter.hunterStateFromSim(sim), 2).mode, 'RESCUE', `${difficulty}: 队友被困时进入 RESCUE`);
+  const t = runTeam(sim, [null, null, bot], 50, (s) => s.trapped[1] === 0);
+  assert(t >= 0 && sim.alive[1], `${difficulty}: 猎手在糖泡爆破前救出队友 (t=${t})`);
+}
+for (const difficulty of ['easy', 'normal', 'hard']) {
+  // 2v2：红方真人 pid0 被困，敌方猎手 pid1 必须去碰爆。
+  const sim = teamScene([0, 1, 0, 1], [[5.5, 4.5], [5.5, 9.5], [11.5, 1.5], [11.5, 13.5]]);
+  sim.trapped[0] = 60;
+  const bot = new Hunter.BunHunterBot({ difficulty, seed: 3, overrides: { mistakeRate: 0 } });
+  assert.strictEqual(bot.analyze(Hunter.hunterStateFromSim(sim), 1).mode, 'POP', `${difficulty}: 敌人被困时进入 POP`);
+  const t = runTeam(sim, [null, bot, null, null], 50, (s) => !s.alive[0]);
+  assert(t >= 0 && sim.trapped[0] === 0, `${difficulty}: 猎手赶在自动爆破前碰爆被困敌人 (t=${t})`);
+}
+{
+  // 赶不到（剩余糖泡时间太短）就不追。
+  const sim = teamScene([0, 1, 1], [[11.5, 1.5], [1.5, 13.5], [11.5, 13.5]]);
+  sim.trapped[1] = 3;
+  const bot = new Hunter.BunHunterBot({ difficulty: 'hard', seed: 4 });
+  assert.notStrictEqual(bot.analyze(Hunter.hunterStateFromSim(sim), 2).mode, 'RESCUE', '赶不到不追');
+}
+{
+  // 友军伤害：敌人 pid0 困在死角、放泡必杀；但队友 pid2 在正上方的死胡同里，出口就在火线上 → 不放。
+  const corridor = (teams) => {
+    const sim = teamScene(teams, [[5.5, 6.5], [5.5, 5.5], [3.5, 5.5]].slice(0, teams.length));
+    for (const [r, c] of [[3, 4], [3, 6], [2, 5], [4, 4], [4, 6], [4, 7], [6, 7], [5, 8], [6, 6], [6, 5]]) sim.wall[r * W + c] = 1;
+    return sim;
+  };
+  const decide = (sim) => {
+    const bot = new Hunter.BunHunterBot({ difficulty: 'hard', seed: 5 });
+    const state = Hunter.hunterStateFromSim(sim);
+    const g = bot.geometry(state);
+    const perceive = () => true;
+    const pred = bot.predict(state, g, [], perceive);
+    const field = bot.goalField(state, g, bot.attackSeeds(state, g, 1, pred, perceive), state.players[1], pred, null);
+    return bot.considerBomb(state, g, 1, pred, perceive, field);
+  };
+  assert.strictEqual(decide(corridor([0, 1])).reason, 'bomb_kill', '对照：无队友时会放泡击杀');
+  assert.strictEqual(decide(corridor([0, 1, 1])), null, '放泡会困死队友时不放');
+}
+
+console.log('猎手 Bot：躲泡/进攻/偷包搬运/难度注册/组队救援 回归通过');
