@@ -8,7 +8,7 @@
   const mapSelect = document.getElementById('map-select');
   const matchMode = document.getElementById('match-mode');
   const teamMode = document.getElementById('team-mode');
-  const publishedModel = document.getElementById('published-model');
+  const modelOptions = document.getElementById('model-options');
   const modelDetails = document.getElementById('model-details');
   const modelProgressWrap = document.getElementById('model-progress-wrap');
   const modelProgress = document.getElementById('model-progress');
@@ -67,6 +67,7 @@
   let itemCell = -1;
   let itemSlot = 0;
   let loadedModel = null;
+  let loadedModelId = null;
   let publishedModels = [];
   let activeBot = null;
   // 组队模式下 pid>=2 的猎手（pid1 仍是 activeBot）。
@@ -143,12 +144,19 @@
     });
   }
 
+  const MODEL_PREFIX = 'model:';
+  const isModelChoice = (value) => value.startsWith(MODEL_PREFIX);
+  // 组队只支持猎手；规则 Bot 与训练模型按 1v1 训练。
+  const teamCapable = (value) => value.startsWith('bun.hunter');
+
   function resetBot() {
     if (activeBot && activeBot.close) activeBot.close();
     for (const bot of extraBots) if (bot && bot.close) bot.close();
     const registry = createRegistry();
     // 选项值形如 "bun.hunter@hard"：@ 后为难度配置。
-    const [botId, difficulty] = (matchMode.value === 'model-vs-rule' ? 'bun.tactical_v2' : opponentSelect.value).split('@');
+    const choice = matchMode.value === 'model-vs-rule' ? 'bun.tactical_v2'
+      : isModelChoice(opponentSelect.value) ? 'bun.browser_model' : opponentSelect.value;
+    const [botId, difficulty] = choice.split('@');
     const context = (seed) => ({
       schema: 'qqt.bot.context/v1', episode_id: `web-${Date.now()}`,
       seed, ruleset: 'bun', max_ticks: null, metadata: {},
@@ -168,15 +176,13 @@
     replayToggle.textContent = '播放';
     if (level !== selectedLevel()) await useMap(selectedLevel());
     sim = new QQT.Sim(Date.now() >>> 0);
-    if (opponentSelect.value === 'bun.browser_model' && !loadedModel) {
-      opponentSelect.value = 'bun.hunter@hard';
-    }
+    const wantModel = isModelChoice(opponentSelect.value);
+    if (wantModel && loadedModelId !== opponentSelect.value.slice(MODEL_PREFIX.length)) opponentSelect.value = 'bun.hunter@hard';
     if (matchMode.value === 'model-vs-rule' && !loadedModel) {
       matchMode.value = 'human-vs-opponent';
-      modelStatus.textContent = '请先从模型列表选择并加载一个模型';
+      modelStatus.textContent = '请先在「策略」中选择一个训练模型';
     }
-    // 组队模式只支持猎手（其他 Bot/模型只按 1v1 训练）。
-    if (teamMode.value !== '1v1' && !opponentSelect.value.startsWith('bun.hunter')) opponentSelect.value = 'bun.hunter@hard';
+    if (teamMode.value !== '1v1' && !teamCapable(opponentSelect.value)) opponentSelect.value = 'bun.hunter@hard';
     // 原版道具栏/糖泡只在真人对局开启；模型评测与录像保持训练规则。
     const native = localHumanControls();
     sim.reset(level, { nativeItems: native, nativeTrap: native, teams: teamLayout() });
@@ -253,7 +259,7 @@
   }
 
   async function loadPublishedModel(row) {
-    publishedModel.disabled = true;
+    opponentSelect.disabled = true;
     modelProgressWrap.hidden = false;
     modelProgress.removeAttribute('value');
     modelProgressText.textContent = '正在连接模型文件…';
@@ -274,12 +280,11 @@
     await new Promise((resolve) => setTimeout(resolve, 0));
     loadedModel = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)));
     modelProgress.value = 100;
-    modelProgressText.textContent = '模型加载完成，正在开始观战';
-    publishedModel.disabled = false;
+    loadedModelId = row.id;
+    modelProgressText.textContent = '模型加载完成';
+    opponentSelect.disabled = false;
     modelStatus.textContent = `已加载：${row.display_name}`;
     modelDetails.textContent = `${row.candidate} · cycle ${row.cycle} · score ${row.score.toFixed(4)} · ${(row.bytes / 1048576).toFixed(1)} MiB`;
-    matchMode.value = 'model-vs-rule';
-    reset();
   }
 
   async function loadCatalog() {
@@ -287,11 +292,10 @@
       const response = await fetch('models.json', { cache: 'no-store' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       publishedModels = QQTModelCatalog.validateManifest(await response.json());
-      publishedModel.replaceChildren(new Option('选择已发布模型', ''));
-      for (const row of publishedModels) publishedModel.add(new Option(row.display_name, row.id));
-      modelDetails.textContent = `当前提供 ${publishedModels.length} 个评估候选；选择后才下载权重。`;
+      modelOptions.replaceChildren(...publishedModels.map((row) => new Option(row.display_name, MODEL_PREFIX + row.id)));
+      modelDetails.textContent = `「策略」中提供 ${publishedModels.length} 个训练模型；选择后才下载权重。`;
     } catch (error) {
-      publishedModel.replaceChildren(new Option('暂无已发布模型', ''));
+      modelOptions.replaceChildren();
       modelDetails.textContent = `模型列表读取失败：${error.message}`;
     }
   }
@@ -427,23 +431,27 @@
     resetReplay(); replayPlaying = true; replayToggle.textContent = '暂停';
   });
   replaySeek.addEventListener('input', () => { if (replayDocument) seekReplay(Number(replaySeek.value)); });
-  publishedModel.addEventListener('change', async () => {
-    const row = publishedModels.find((item) => item.id === publishedModel.value);
-    if (!row) return;
-    try { await loadPublishedModel(row); }
-    catch (error) {
-      loadedModel = null;
-      publishedModel.disabled = false;
-      modelProgressWrap.hidden = false;
-      modelProgress.removeAttribute('value');
-      modelProgressText.textContent = `加载失败：${error.message}`;
-      modelStatus.textContent = `加载失败：${error.message}`;
-      reset();
+  async function onStrategyChange() {
+    const value = opponentSelect.value;
+    if (!teamCapable(value)) teamMode.value = '1v1';
+    const row = isModelChoice(value) ? publishedModels.find((item) => MODEL_PREFIX + item.id === value) : null;
+    if (row && loadedModelId !== row.id) {
+      try { await loadPublishedModel(row); }
+      catch (error) {
+        loadedModel = null;
+        loadedModelId = null;
+        opponentSelect.disabled = false;
+        modelProgressWrap.hidden = false;
+        modelProgress.removeAttribute('value');
+        modelProgressText.textContent = `加载失败：${error.message}`;
+        modelStatus.textContent = `加载失败：${error.message}`;
+      }
     }
-  });
+    reset();
+  }
   matchMode.addEventListener('change', reset);
   teamMode.addEventListener('change', reset);
-  opponentSelect.addEventListener('change', reset);
+  opponentSelect.addEventListener('change', onStrategyChange);
   mapSelect.addEventListener('change', reset);
   await loadCatalog();
   reset();

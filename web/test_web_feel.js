@@ -175,7 +175,7 @@ function mockCanvas() {
     drawImage(img, a, b) { if (arguments.length === 3 && img && img.tag) draws.push({ tag: img.tag, x: a, y: b, w: img.width, row: img.row }); },
     fillRect(x, y, w, h) { rects.push({ fillStyle, x, y, w, h }); },
   };
-  return { canvas: { width: 900, height: 810, getContext: () => ctx }, draws, rects, texts };
+  return { canvas: { width: 900, height: 880, getContext: () => ctx }, draws, rects, texts };
 }
 function fakeSim(opts) {
   return {
@@ -376,7 +376,8 @@ function dimRects(rects, canvas) {
   assert.equal(draws.filter((d) => d.tag === 'p0').length, 2, '红队两人共用红方精灵');
   assert.equal(draws.filter((d) => d.tag === 'p1').length, 2, '蓝队两人共用蓝方精灵');
   const labels = texts.map((t) => t.text);
-  for (const label of ['你', '队友', '敌1', '敌2']) assert(labels.includes(label), `多人名牌 ${label}`);
+  for (const label of ['队友', '敌1', '敌2']) assert(labels.includes(label), `多人名牌 ${label}`);
+  assert(!labels.includes('你'), '真人只画箭头不画名牌');
   assert.equal(visual.playerLabel({ team: [0, 1, 1] }, 2, 0, 0), '敌2');
   assert.equal(visual.matchResult({ done: true, isBun: true, t: 10, maxSteps: 2400, winner: 0, team: [0, 1, 0, 1], bunScore: [1, 0] }, 0).title, '胜利');
   assert.equal(visual.matchResult({ done: true, isBun: true, t: 10, maxSteps: 2400, winner: 1, team: [0, 1, 1], bunScore: [0, 1] }, 0).title, '失败');
@@ -419,12 +420,19 @@ assert(/teams: teamLayout\(\)/.test(appTeamSource) && /'2v2': \[0, 1, 0, 1\]/.te
   sim.heldItem = [2, 0];
   sim.nativeItems = true;
   sim.itemSlots = [[{ item: 2, count: 12 }], []];
+  sim.spdG = [1.3 + 2 * (1.1 / 7), 1.3]; sim.speedMax = 2.4; sim.speedStep = 1.1 / 7;
+  sim.blastCap = [4, 2]; sim.bombsCap = [6, 2];
   sim.trapped = [0, 45];
   r.render(sim, 1000, { prevPos: sim.pos, curPos: sim.pos, lastTickT: 1000, tickMs: 100, humanPid: 0, intents: [4, 4] });
   const labels = texts.map((t) => t.text);
   for (let i = 1; i <= 7; i++) assert(labels.includes(String(i)), `道具栏必须标出数字键 ${i}`);
   const countText = texts.find((t) => t.text === '12');
-  assert(countText && countText.y > canvas.height - 70 && countText.x < 120, '道具栏在画面左下角并显示数量');
+  assert(countText && countText.y > visual.BOARD_OFFSET + 780 && countText.y < canvas.height, '道具栏在地图下方并显示数量');
+  const below = (t) => t.y > visual.BOARD_OFFSET + 780;
+  const xOf = (text) => texts.find((t) => t.text === text && below(t)).x;
+  assert.equal(texts.find((t) => t.text === '3' && below(t) && t.x < xOf('威力')) !== undefined, true, '速度显示档位 3');
+  assert(xOf('速度') < xOf('威力') && xOf('威力') < xOf('糖泡') && xOf('糖泡') < countText.x, '左下依次：速度、威力、糖泡、道具栏');
+  assert(texts.some((t) => t.text === '4' && below(t)) && texts.some((t) => t.text === '6' && below(t)), '显示威力与糖泡数量');
   assert(texts.some((t) => t.text === '5' && t.y > visual.BOARD_OFFSET * 3), '糖泡在角色头顶显示剩余秒数');
 }
 const controls = require('./controls.js');

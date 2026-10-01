@@ -267,7 +267,25 @@ sim.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
 assert(sim.alive[0] && sim.trapped[1] === 0, '44px 超出 41px 接触范围不触发');
 sim.pos[2] = 6.6; sim.pos[3] = 9.4;
 sim.step([[QQT.MOVE_IDLE, 0], [QQT.MOVE_IDLE, 0]]);
-assert(!sim.alive[0] && sim.bunCarried[0] < 0, '敌方触碰糖泡立即爆破并掉包');
+assert(!sim.alive[0] && sim.bunCarried[0] < 0 && sim.bunCarried[1] === 1, '敌方触碰糖泡立即爆破并接走对方携带的包子');
+assert(sim.bunLoose.every((v) => v === 0), '被接走的包子不再掉成散包');
+
+// 网页原版速度：香蕉滑行与超级鞋同速（268px/s），携包与慢慢胶同慢（72px/s），与速度档位无关。
+sim = nativeFresh();
+const pxPerSec = (p) => QQT.CFG.speed * sim.spdG[p] * sim.playerMoveScale(p) * 40;
+const near = (a, b) => Math.abs(a - b) < 1e-6;
+sim._setMovementStatus(0, QQT.MOVE_STATUS_FAST);
+const fastPx = pxPerSec(0);
+sim._setMovementStatus(0, QQT.MOVE_STATUS_SLIDE);
+assert(near(pxPerSec(0), fastPx) && near(fastPx, 268), '香蕉滑行与超级鞋同速');
+sim._setMovementStatus(0, QQT.MOVE_STATUS_SLOW);
+const gluePx = pxPerSec(0);
+sim._clearMovementStatus(0);
+sim.bunCarried[0] = 1;
+assert(near(pxPerSec(0), gluePx) && near(gluePx, 72), '携包与慢慢胶同慢');
+sim.bunCarried[0] = -1; sim.spdG[0] = 2.4;
+sim._setMovementStatus(0, QQT.MOVE_STATUS_SLOW);
+assert(near(pxPerSec(0), 72), '慢慢胶不随速度档位变化');
 
 // 网页多人组队：2v2 按队伍分配出生点；队友触碰救出糖泡，敌方触碰爆破；同队泡也会困住队友。
 const teamFresh = (teams) => {

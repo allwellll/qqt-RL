@@ -35,6 +35,8 @@
 
   // 原版像素移动常量（battleengine/types.go）
   const NATIVE_CELL_PX = 40, NATIVE_HALF_PX = 19, NATIVE_CORNER_TOLERANCE_PX = 6;
+  // 原版 nativeSpeedPixelsPerSecondByRate：慢慢胶=档位2，超级鞋=档位8。
+  const NATIVE_SLOW_PX_PER_SEC = 72, NATIVE_FAST_PX_PER_SEC = 268;
   const NATIVE_ENTRY_STRIP_PX = 3, NATIVE_MAX_STEP_PX = 40, NATIVE_PROJECTION_STEP_MS = 25;
   const NATIVE_CONTACT_OFFSET_PX = 22;
   const NATIVE_PASS_CHARGE_MIN_MS = 500, NATIVE_PASS_CHARGE_MAX_MS = 600, NATIVE_PASS_FRESH_MS = 100;
@@ -731,6 +733,16 @@
     }
 
     playerMoveScale(player) {
+      // 网页原版规则：状态速度按原版绝对档位（慢慢胶 72px/s、超级鞋 268px/s），不随速度道具叠乘；
+      // 香蕉滑行与超级鞋同速，携包与慢慢胶同慢。训练默认路径保持下方旧倍率。
+      if (this.nativeItems) {
+        const status = this.movementStatus[player];
+        let px = 0;
+        if (status === MOVE_STATUS_SLIDE || status === MOVE_STATUS_FAST) px = NATIVE_FAST_PX_PER_SEC;
+        else if (status === MOVE_STATUS_SLOW || (this.isBun && this.bunCarried[player] >= 0)) px = NATIVE_SLOW_PX_PER_SEC;
+        if (px) return px / (CFG.speed * this.spdG[player] * NATIVE_CELL_PX);
+        return 1;
+      }
       let scale = this.isBun && this.bunCarried[player] >= 0 ? this.bunCarrySpeedScale : 1;
       if (this.movementStatus[player] === MOVE_STATUS_SLOW) scale *= 0.5;
       else if (this.movementStatus[player] === MOVE_STATUS_FAST) scale *= 1.6;
@@ -828,14 +840,23 @@
       const reach = 41 / NATIVE_CELL_PX;
       for (let p = 0; p < this.nPlayers; p++) {
         if (!this.alive[p] || this.trapped[p] <= 0 || newlyTrapped[p]) continue;
-        let outcome = null;
+        let outcome = null, popper = -1;
         for (let q = 0; q < this.nPlayers && !outcome; q++) {
           if (q === p || !this.alive[q] || this.trapped[q] > 0) continue;
           if (Math.abs(this.pos[q * 2] - this.pos[p * 2]) >= reach ||
               Math.abs(this.pos[q * 2 + 1] - this.pos[p * 2 + 1]) >= reach) continue;
           outcome = this.team[q] === this.team[p] ? 'rescue' : 'pop';
+          popper = q;
         }
-        if (outcome === 'pop') { this._killPlayer(p); continue; }
+        if (outcome === 'pop') {
+          // 碰爆者空手时直接接走被困者携带的包子（否则照常掉落散包）。
+          if (this.isBun && this.bunCarried[p] >= 0 && this.bunCarried[popper] < 0) {
+            this.bunCarried[popper] = this.bunCarried[p];
+            this.bunCarried[p] = -1;
+          }
+          this._killPlayer(p);
+          continue;
+        }
         if (outcome === 'rescue') {
           this.trapped[p] = 0;
           this.invuln[p] = Math.max(this.invuln[p], CFG.tickHz);

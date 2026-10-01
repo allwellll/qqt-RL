@@ -10,7 +10,7 @@
   <main>
     <section class="arena">
       <div class="stage">
-        <canvas id="game" width="900" height="810" aria-label="抢包子对战画面"></canvas>
+        <canvas id="game" width="900" height="880" aria-label="抢包子对战画面"></canvas>
         <div id="loading" class="loading" role="status" aria-live="polite">
           <div class="loading-bubble" aria-hidden="true"></div>
           <p id="loading-text">正在加载地图与素材…</p>
@@ -54,14 +54,11 @@
               <option value="bun.hunter@normal">猎手 · 普通</option>
               <option value="bun.hunter@hard" selected>猎手 · 困难</option>
             </optgroup>
-            <option value="bun.tactical_v2">安全战术规则 Bot</option>
-            <option value="bun.random_roam">随机漫游 Bot</option>
-            <option value="bun.browser_model">已加载模型（仅 1v1）</option>
-          </select>
-        </label>
-        <label class="file-label">已发布模型
-          <select id="published-model">
-            <option value="">正在读取模型列表…</option>
+            <optgroup label="规则 Bot（仅 1v1）">
+              <option value="bun.tactical_v2">安全战术规则 Bot</option>
+              <option value="bun.random_roam">随机漫游 Bot</option>
+            </optgroup>
+            <optgroup id="model-options" label="训练模型（仅 1v1，选择后下载）"></optgroup>
           </select>
         </label>
         <p id="model-details" class="note">选择模型后按需下载；模型权重不进入Git历史。</p>
@@ -69,7 +66,7 @@
           <progress id="model-progress" max="100" value="0"></progress>
           <span id="model-progress-text">准备下载…</span>
         </div>
-        <p id="model-status" class="note" aria-live="polite">尚未加载模型；请从上方已发布模型列表选择。</p>
+        <p id="model-status" class="note" aria-live="polite">尚未加载模型；可在「策略」中选择训练模型。</p>
         <details class="fold">
         <summary>离线实战录像</summary>
         <label>固定seed对局

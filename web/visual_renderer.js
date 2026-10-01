@@ -9,6 +9,7 @@
   const SOURCE_CELL = 40;
   const SCALE = CELL / SOURCE_CELL;
   const BOARD_OFFSET = 20 * SCALE;
+  const BOARD_H = 13 * CELL;
   const Z_ROW_STRIDE = 24;
   const DIR_KEYS = ['U', 'D', 'L', 'R'];
   const MOVE_TO_SPRITE_ROW = [3, 0, 1, 2];
@@ -352,11 +353,45 @@
       ctx.strokeText(label, cx, cy - r - 8); ctx.fillText(label, cx, cy - r - 8);
       ctx.restore();
     }
-    // 道具栏：画面左下角，7 格，格内道具图标 + 右下角数量，左上角数字键提示。
-    // 半透明底板，避免完全挡住底行地图。
-    function drawItemBar(slots, now) {
+    // 地图下方底栏：左起依次为本人速度 / 威力 / 糖泡数量，随后是 7 格道具栏（格内图标 + 数量 + 数字键）。
+    function speedLevel(sim, pid) {
+      const step = sim.speedStep || 0, base = sim.speedMax !== undefined && step ? sim.speedMax - 7 * step : 0;
+      return step ? 1 + Math.round((sim.spdG[pid] - base) / step) : Number(sim.spdG[pid]).toFixed(1);
+    }
+    function drawStatusBar(sim, pid, now) {
+      const size = ITEM_BAR_SLOT_PX, gap = 4, pad = 6;
+      const top = BOARD_OFFSET + BOARD_H + Math.round((canvas.height - BOARD_OFFSET - BOARD_H - size) / 2);
+      const stats = [
+        ['速度', 'speed', speedLevel(sim, pid)],
+        ['威力', 'power', sim.blastCap ? sim.blastCap[pid] : 0],
+        ['糖泡', 'bomb', sim.bombsCap ? sim.bombsCap[pid] : 0],
+      ];
+      const statW = 76;
+      let x = pad + 4;
+      ctx.save();
+      ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.fillRect(x - pad, top - pad, stats.length * (statW + gap) - gap + pad * 2, size + pad * 2);
+      for (const [label, key, value] of stats) {
+        ctx.fillStyle = 'rgba(20,40,48,0.85)'; ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 1.5;
+        ctx.fillRect(x, top, statW, size); ctx.strokeRect(x + 0.5, top + 0.5, statW - 1, size - 1);
+        const sprite = assets.items && assets.items[key];
+        if (sprite) {
+          const image = itemFrame(sprite, 0), k = (size - 14) / Math.max(image.width, image.height);
+          ctx.drawImage(image, Math.round(x + 4), Math.round(top + (size - image.height * k) / 2),
+            Math.round(image.width * k), Math.round(image.height * k));
+        }
+        ctx.textAlign = 'right'; ctx.fillStyle = '#cfe9ee'; ctx.font = 'bold 12px sans-serif';
+        ctx.fillText(label, x + statW - 6, top + 12);
+        ctx.font = 'bold 22px sans-serif'; ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,0.85)'; ctx.fillStyle = '#ffd54a';
+        ctx.strokeText(String(value), x + statW - 6, top + size - 15); ctx.fillText(String(value), x + statW - 6, top + size - 15);
+        x += statW + gap;
+      }
+      ctx.restore();
+      if (sim.nativeItems && sim.itemSlots) drawItemBar(sim.itemSlots[pid], now, x + pad * 2 + 6, top);
+    }
+    function drawItemBar(slots, now, left, top) {
       const size = ITEM_BAR_SLOT_PX, gap = 4, count = ITEM_SLOT_COUNT, pad = 6;
-      const left = pad + 4, top = canvas.height - size - pad - 4;
       ctx.save();
       ctx.fillStyle = 'rgba(0,0,0,0.35)';
       ctx.fillRect(left - pad, top - pad, count * (size + gap) - gap + pad * 2, size + pad * 2);
@@ -537,9 +572,12 @@
         items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
         // 多人时同队共用精灵：脚下队伍色光圈 + 头顶名牌区分。
         if (playerCount(sim) > 2) {
-          const label = playerLabel(sim, pid, motion ? motion.humanPid : 0, humanTeam);
           items.push([z - 1, () => drawTeamRing(gx * CELL, y + image.height - 6, team)]);
-          items.push([z + 4, () => drawNameTag(gx * CELL, y + image.height * SPRITE_HEAD_FRAC - 6, label, team)]);
+          // 真人只靠箭头标识，不另画名牌。
+          if (pid !== (motion ? motion.humanPid : 0)) {
+            const label = playerLabel(sim, pid, motion ? motion.humanPid : 0, humanTeam);
+            items.push([z + 4, () => drawNameTag(gx * CELL, y + image.height * SPRITE_HEAD_FRAC - 6, label, team)]);
+          }
         }
         items.push([z, image, x, y]);
         // 包子底边落在头顶附近（帧顶约 30% 为透明留白），贴着头顶而不是悬在上方。
@@ -560,18 +598,18 @@
       if (sim.isBun && !sim.alive[0] && sim.bunRespawn[0] > 0) {
         const frac = Math.max(0, Math.min(1, sim.bunRespawn[0] / (sim.bunRespawnTicks || 1)));
         ctx.fillStyle = `rgba(0,0,0,${(0.62 * frac).toFixed(3)})`;
-        ctx.fillRect(0, 0, canvas.width, canvas.height - BOARD_OFFSET);
+        ctx.fillRect(0, 0, canvas.width, BOARD_H);
       }
       if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0);
       ctx.restore();
       const barPid = motion ? motion.humanPid : 0;
-      if (sim.nativeItems && sim.itemSlots && barPid >= 0) drawItemBar(sim.itemSlots[barPid], now);
+      if (barPid >= 0 && sim.spdG) drawStatusBar(sim, barPid, now);
       drawResult(matchResult(sim, motion ? motion.humanPid : 0));
     }
     const RESULT_COLORS = { win: '#ffd54a', lose: '#ff7a7a', draw: '#d8e6ea' };
     function drawResult(result) {
       if (!result) return;
-      const cx = canvas.width / 2, cy = canvas.height / 2;
+      const cx = canvas.width / 2, cy = (BOARD_OFFSET + BOARD_H) / 2;
       ctx.save();
       ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
@@ -602,7 +640,7 @@
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.lineJoin = 'round';
         if (pid === humanPid) {
-          const cx = canvas.width / 2, cy = (canvas.height - BOARD_OFFSET) / 2;
+          const cx = canvas.width / 2, cy = BOARD_H / 2;
           ctx.font = 'bold 34px sans-serif';
           ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(0,0,0,0.75)'; ctx.fillStyle = '#ffffff';
           ctx.strokeText('你被炸中了', cx, cy - 48); ctx.fillText('你被炸中了', cx, cy - 48);

@@ -36,7 +36,7 @@ assert(appSource.includes('renderer.render(sim'), 'app must use sprite renderer'
 assert(!appSource.includes("context.arc(x, y, 18"), 'legacy circle-player renderer must be removed');
 assert(!appSource.includes("drawCell(row, column, '#546a70'"), 'legacy block-map renderer must be removed');
 assert(htmlSource.includes('visual_renderer.js'), 'visual renderer must load before app');
-assert(htmlSource.includes('height="810"'), 'canvas must reserve the original 30px top overflow band');
+assert(htmlSource.includes('height="880"'), 'canvas must reserve the 30px top band + 780px board + 70px item strip below');
 assert.equal(visual.CELL, 60);
 assert.equal(visual.BOARD_OFFSET, 30);
 assert.equal(visual.explosionFrame(0.01).activeScale, 1);
