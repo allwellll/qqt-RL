@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Reward V2 + 分级 JAX Bot 池 + 自对弈，8 卡 pmap DP 正式训练（约一天预算）。
 # 与 2026-10-01 已验证的 4 卡 DP smoke 命令相同，只改 --devices 8 与按卡整除的
-# --num-envs / --minibatch（每卡 256 env、minibatch 512，与 smoke 每卡形状一致）。
+# --num-envs / --minibatch（每卡 256 env、minibatch 512，与 smoke 每卡形状一致），
+# 并默认启用设备端出生位置分桶（--bun-spawn-buckets，SPAWN_BUCKETS 可覆盖，
+# 设为空串则回到原始出生分布）。
 # 预检全部通过才启动；任何一项失败立即非 0 退出。8 卡机器不做 smoke。
 #
 # 用法：bash scripts/train_v2_jaxbot_dp8.sh
@@ -18,17 +20,18 @@ PY=${PY:-/mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python}
 INIT_CKPT=${INIT_CKPT:-/mnt/jpfs/afs/wangyaqi/code_room/qqt-RL/runs/overnight_tf_v2/phase2_it4000.pt}
 INIT_SHA256=6e190b009f180f2e449fd19941c930c0d1a86d680071eeb02262aadb6808ebd0
 # 训练代码必须与已验证提交逐字节一致（按内容比对，rebase/cherry-pick 到 main 后仍可用）。
-VERIFIED_CODE_SHA=${VERIFIED_CODE_SHA:-75619e0}
+VERIFIED_CODE_SHA=${VERIFIED_CODE_SHA:-870b7dd}
 CODE_PATHS=(jax_bomb qqt_rl web/assets/maps)
 RUN_ROOT=${RUN_ROOT:-$REPO/runs}
 N_GPU=8
 MIN_FREE_GB=${MIN_FREE_GB:-50}
 SEED=${SEED:-20261001}
-# 预算：4 卡 smoke 稳态 1.22 s/iter；8 卡每卡负载相同，估计约 1.3 s/iter，
+# 预算：4 卡 smoke（含出生分桶）稳态 1.0–1.05 s/iter；8 卡每卡负载相同，按约 1.3 s/iter 保守估计，
 # 60000 iter ≈ 22 h。MAX_HOURS 为硬上限，到点 SIGTERM（已存 ckpt 保留）。
 ITERS=${ITERS:-60000}
 SAVE_EVERY=${SAVE_EVERY:-500}
 MAX_HOURS=${MAX_HOURS:-24}
+SPAWN_BUCKETS=${SPAWN_BUCKETS-native=0.3,near=0.1,mid=0.15,far=0.1,below=0.15,upper_left=0.1,upper_right=0.1}
 
 die() { echo "PREFLIGHT FAIL: $*" >&2; exit 1; }
 
@@ -60,6 +63,7 @@ TRAIN_ARGS=(
   --bun-base-bomb-reward 0.06 --bun-tactical-bomb-placement-reward 0.6
   --bun-forced-kill-reward 2.0 --bun-tactical-bomb-resolution-reward 1.0
   --bun-enemy-threat-reward 0.4
+  --bun-spawn-buckets "$SPAWN_BUCKETS"
   --save "$RUN_DIR/ckpt/final.pt"
 )
 
@@ -132,6 +136,7 @@ mkdir "$RUN_DIR/ckpt"
   echo "gpus=$N_GPU cuda_visible_devices=$CUDA_VISIBLE_DEVICES"
   echo "seed=$((SEED + ITER_OFFSET)) iters_total=$ITERS iter_offset=$ITER_OFFSET iters_this_run=$REMAINING"
   echo "save_every=$SAVE_EVERY max_hours=$MAX_HOURS"
+  echo "spawn_buckets=${SPAWN_BUCKETS:-native(disabled)}"
   echo "load=$LOAD"
   echo "load_sha256=$(sha256sum "$LOAD" | cut -d' ' -f1)"
   echo "resume_from=${RESUME_CKPT:-none}"
