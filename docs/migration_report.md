@@ -2,8 +2,8 @@
 
 ## 范围与基线
 
-- 源目录：`/mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim`
-- 目标目录：`/mnt/jpfs/afs/wangyaqi/code_room/qqt-RL`
+- 源目录：旧仓库 checkout
+- 目标目录：当前仓库 checkout
 - 正确基线：`logs/bun_safe_aggression_v7_20260928_r6/frozen_runtime_repair_r1_20260928_1515`
 - 修复差异：相对原 r6 frozen runtime，采用修复后的 `jax_bomb/bun_seed_namespace.py` 与 `scripts/run_bun_tactical_v2_candidate.py`，保留严格 split 泄漏检查。
 

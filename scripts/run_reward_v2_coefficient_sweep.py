@@ -75,8 +75,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--bootstrap-dir", type=Path,
-        default=Path("/mnt/jpfs/afs/wangyaqi/code_room/qqt-RL/runs/"
-                     "bun_high_throughput_20260929/frozen_inputs"),
+        default=ROOT / "runs/bun_high_throughput_20260929/frozen_inputs",
         help="dir holding base_actor.pt / base_critic.pkl / etc.")
     parser.add_argument("--run-name",
                         default=f"reward_v2_sweep_{time.strftime('%Y%m%d_%H%M%S')}")
@@ -87,7 +86,7 @@ def main() -> None:
     parser.add_argument("--critic-batch-size", type=int, default=64)
     parser.add_argument(
         "--python", type=Path,
-        default=Path("/mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python"),
+        default=Path(sys.executable),
         help="CUDA-enabled interpreter for the worker/eval subprocess "
              "(the sweep driver itself may run under a CPU-only venv)")
     args = parser.parse_args()

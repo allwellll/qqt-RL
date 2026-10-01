@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Longer run of the gated arm (v2_threat04) vs matched control, lr 3e-4 and 1e-4.
 set -uo pipefail
-PY=/mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python
-cd /mnt/jpfs/afs/wangyaqi/code_room/qqt-reward-v2
+REPO=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+PY=${TRAIN_PY:-python3}
+cd "$REPO"
 OUT=runs/reward_v2_20260930/long
-LOAD=/mnt/jpfs/afs/wangyaqi/code_room/qqt-RL/runs/overnight_tf_v2/phase2_it4000.pt
+LOAD=$REPO/runs/overnight_tf_v2/phase2_it4000.pt
 ITERS=${ITERS:-1500}
 COMMON="--arch transformer --embed 192 --depth 4 --num-envs 1024 --num-steps 128 \
   --minibatch 2048 --epochs 2 --seed 20261002 --flee-bot-ratio 0.3 \

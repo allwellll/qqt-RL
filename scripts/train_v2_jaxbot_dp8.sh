@@ -17,8 +17,8 @@ set -euo pipefail
 
 REPO=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 # 不使用容易被shell/调度系统预设的通用PY变量；需要覆盖解释器时显式设置TRAIN_PY。
-TRAIN_PY=${TRAIN_PY:-/mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python}
-INIT_CKPT=${INIT_CKPT:-/mnt/jpfs/afs/wangyaqi/code_room/qqt-RL/runs/overnight_tf_v2/phase2_it4000.pt}
+TRAIN_PY=${TRAIN_PY:-python3}
+INIT_CKPT=${INIT_CKPT:-$REPO/runs/overnight_tf_v2/phase2_it4000.pt}
 INIT_SHA256=6e190b009f180f2e449fd19941c930c0d1a86d680071eeb02262aadb6808ebd0
 # 训练代码必须与已验证提交逐字节一致（按内容比对，rebase/cherry-pick 到 main 后仍可用）。
 VERIFIED_CODE_SHA=${VERIFIED_CODE_SHA:-870b7dd}

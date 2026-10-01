@@ -7,7 +7,7 @@
 ## 快速开始
 
 ```bash
-cd /mnt/jpfs/afs/wangyaqi/code_room/qqt-RL
+cd /path/to/qqt-RL
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -U pip

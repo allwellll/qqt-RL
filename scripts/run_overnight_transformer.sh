@@ -6,8 +6,9 @@
 # 看门狗在 10:00 硬停：即便仍在跑，最近的中间 ckpt 也是新鲜可用的（含 .json 元数据）。
 set -uo pipefail
 
-PY=/mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python
-cd /mnt/jpfs/afs/wangyaqi/code_room/qqt-RL || exit 1
+REPO=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+PY=${TRAIN_PY:-python3}
+cd "$REPO" || exit 1
 OUT=runs/overnight_tf_v2
 mkdir -p "$OUT"
 

@@ -4,7 +4,9 @@ plus aggregate 'degenerate behaviour' flags (idle ratio, bomb spam without threa
 oscillation). Used only as a stop/continue sanity check for long runs."""
 import os, sys, json, pickle
 os.environ.setdefault("JAXBOMB_RULE", "bun")
-sys.path.insert(0, "/mnt/jpfs/afs/wangyaqi/code_room/qqt-reward-v2")
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 import jax, jax.numpy as jnp, numpy as np
 from jax_bomb import bun_env as env, jax_train
 from jax_bomb.jax_net import transformer_forward

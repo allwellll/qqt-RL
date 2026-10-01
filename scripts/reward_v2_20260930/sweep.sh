@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Reward V2 short sweep: 4 arms x 1 GPU, warm start from overnight_tf_v2 it4000.
 set -uo pipefail
-PY=/mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python
-cd /mnt/jpfs/afs/wangyaqi/code_room/qqt-reward-v2
+REPO=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+PY=${TRAIN_PY:-python3}
+cd "$REPO"
 OUT=runs/reward_v2_20260930/sweep
-LOAD=/mnt/jpfs/afs/wangyaqi/code_room/qqt-RL/runs/overnight_tf_v2/phase2_it4000.pt
+LOAD=$REPO/runs/overnight_tf_v2/phase2_it4000.pt
 ITERS=${ITERS:-300}
 COMMON="--arch transformer --embed 192 --depth 4 --num-envs 1024 --num-steps 128 \
   --minibatch 2048 --epochs 2 --seed 20260930 --flee-bot-ratio 0.3 \
