@@ -16,7 +16,8 @@
 set -euo pipefail
 
 REPO=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-PY=${PY:-/mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python}
+# 不使用容易被shell/调度系统预设的通用PY变量；需要覆盖解释器时显式设置TRAIN_PY。
+TRAIN_PY=${TRAIN_PY:-/mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python}
 INIT_CKPT=${INIT_CKPT:-/mnt/jpfs/afs/wangyaqi/code_room/qqt-RL/runs/overnight_tf_v2/phase2_it4000.pt}
 INIT_SHA256=6e190b009f180f2e449fd19941c930c0d1a86d680071eeb02262aadb6808ebd0
 # 训练代码必须与已验证提交逐字节一致（按内容比对，rebase/cherry-pick 到 main 后仍可用）。
@@ -78,7 +79,9 @@ fi
 cd "$REPO"
 command -v git >/dev/null || die "缺少 git"
 command -v nvidia-smi >/dev/null || die "缺少 nvidia-smi"
-[ -x "$PY" ] || die "Python 不可执行：$PY"
+[ -x "$TRAIN_PY" ] || die "Python 不可执行：$TRAIN_PY"
+"$TRAIN_PY" -c 'import jax' 2>/dev/null \
+  || die "训练Python无法import jax：$TRAIN_PY（如需覆盖请设置TRAIN_PY）"
 
 git cat-file -e "${VERIFIED_CODE_SHA}^{commit}" 2>/dev/null \
   || die "仓库中找不到已验证提交 $VERIFIED_CODE_SHA"
@@ -118,7 +121,7 @@ mkdir -p "$RUN_ROOT"
 free_gb=$(df -BG --output=avail "$RUN_ROOT" | tail -1 | tr -dc 0-9)
 [ "$free_gb" -ge "$MIN_FREE_GB" ] || die "$RUN_ROOT 剩余 ${free_gb}G < ${MIN_FREE_GB}G"
 
-JAXBOMB_RULE=bun XLA_PYTHON_CLIENT_PREALLOCATE=false "$PY" -c \
+JAXBOMB_RULE=bun XLA_PYTHON_CLIENT_PREALLOCATE=false "$TRAIN_PY" -c \
   "import jax, sys; n=jax.device_count(); p=jax.devices()[0].platform; \
 print('jax', jax.__version__, p, n); sys.exit(0 if (p=='gpu' and n==$N_GPU) else 1)" \
   || die "JAX 未看到 $N_GPU 张 GPU"
@@ -145,13 +148,13 @@ git status --short > "$RUN_DIR/git_status.txt"
 git log -5 --oneline > "$RUN_DIR/git_log.txt"
 {
   printf 'cd %q && JAXBOMB_RULE=bun CUDA_VISIBLE_DEVICES=%q timeout --signal=TERM %qh %q -m jax_bomb.jax_train' \
-    "$REPO" "$CUDA_VISIBLE_DEVICES" "$MAX_HOURS" "$PY"
+    "$REPO" "$CUDA_VISIBLE_DEVICES" "$MAX_HOURS" "$TRAIN_PY"
   printf ' %q' "${TRAIN_ARGS[@]}"
   echo
 } > "$RUN_DIR/command.txt"
 {
   env | grep -E '^(CUDA|XLA|JAX|NCCL|TF_|PYTHON|PATH=|HOSTNAME|USER=)' | sort
-  "$PY" -m pip freeze 2>/dev/null | grep -iE '^(jax|jaxlib|jax-cuda|flax|optax|numpy)' || true
+  "$TRAIN_PY" -m pip freeze 2>/dev/null | grep -iE '^(jax|jaxlib|jax-cuda|flax|optax|numpy)' || true
   nvidia-smi
 } > "$RUN_DIR/env.txt" 2>&1
 
@@ -161,7 +164,7 @@ setsid nohup bash -c '
   run_dir=$1; shift
   "$@"; rc=$?
   echo "rc=$rc end=$(date -Is)" > "$run_dir/exit_status"
-' _ "$RUN_DIR" timeout --signal=TERM "${MAX_HOURS}h" "$PY" -m jax_bomb.jax_train "${TRAIN_ARGS[@]}" \
+' _ "$RUN_DIR" timeout --signal=TERM "${MAX_HOURS}h" "$TRAIN_PY" -m jax_bomb.jax_train "${TRAIN_ARGS[@]}" \
   > "$RUN_DIR/train.log" 2>&1 < /dev/null &
 echo $! > "$RUN_DIR/train.pid"
 
