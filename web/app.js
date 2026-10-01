@@ -13,7 +13,6 @@
   const modelProgressWrap = document.getElementById('model-progress-wrap');
   const modelProgress = document.getElementById('model-progress');
   const modelProgressText = document.getElementById('model-progress-text');
-  const modelFile = document.getElementById('model-file');
   const modelStatus = document.getElementById('model-status');
   const replaySelect = document.getElementById('replay-select');
   const replayToggle = document.getElementById('replay-toggle');
@@ -170,14 +169,14 @@
     if (level !== selectedLevel()) await useMap(selectedLevel());
     sim = new QQT.Sim(Date.now() >>> 0);
     if (opponentSelect.value === 'bun.browser_model' && !loadedModel) {
-      opponentSelect.value = 'bun.hunter@normal';
+      opponentSelect.value = 'bun.hunter@hard';
     }
     if (matchMode.value === 'model-vs-rule' && !loadedModel) {
       matchMode.value = 'human-vs-opponent';
       modelStatus.textContent = '请先从模型列表选择并加载一个模型';
     }
     // 组队模式只支持猎手（其他 Bot/模型只按 1v1 训练）。
-    if (teamMode.value !== '1v1' && !opponentSelect.value.startsWith('bun.hunter')) opponentSelect.value = 'bun.hunter@normal';
+    if (teamMode.value !== '1v1' && !opponentSelect.value.startsWith('bun.hunter')) opponentSelect.value = 'bun.hunter@hard';
     // 原版道具栏/糖泡只在真人对局开启；模型评测与录像保持训练规则。
     const native = localHumanControls();
     sim.reset(level, { nativeItems: native, nativeTrap: native, teams: teamLayout() });
@@ -428,21 +427,6 @@
     resetReplay(); replayPlaying = true; replayToggle.textContent = '暂停';
   });
   replaySeek.addEventListener('input', () => { if (replayDocument) seekReplay(Number(replaySeek.value)); });
-  modelFile.addEventListener('change', async () => {
-    const file = modelFile.files && modelFile.files[0];
-    if (!file) return;
-    try {
-      const document = JSON.parse(await file.text());
-      loadedModel = instantiateModel(document);
-      opponentSelect.value = 'bun.browser_model';
-      modelStatus.textContent = `已加载：${document.meta.display_name || document.meta.name || file.name}`;
-      reset();
-    } catch (error) {
-      loadedModel = null;
-      opponentSelect.value = 'bun.hunter@normal';
-      modelStatus.textContent = `加载失败：${error.message}`;
-    }
-  });
   publishedModel.addEventListener('change', async () => {
     const row = publishedModels.find((item) => item.id === publishedModel.value);
     if (!row) return;

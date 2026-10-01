@@ -387,6 +387,28 @@ function dimRects(rects, canvas) {
 const appTeamSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
 assert(/teams: teamLayout\(\)/.test(appTeamSource) && /'2v2': \[0, 1, 0, 1\]/.test(appTeamSource), 'app.js 按队伍模式创建多人对局');
 
+// 4j3) 携带包子贴在头顶：包子底边落在帧顶透明留白以下，而不是悬在帧顶上方。
+{
+  const { canvas } = mockCanvas();
+  const assets = mockAssets();
+  assets.items = { bun: { ox: 3, oy: 12, frames: [tagImg('bun', 52, 63)] } };
+  const r = visual.createRenderer(canvas, level, assets);
+  const sim = fakeSim({ pos: [5.5, 3.5, 5.5, 8.5], isBun: true });
+  sim.bunCarried = [1, -1];
+  const ctx = canvas.getContext();
+  const plain = ctx.drawImage;
+  let bunTop = null, bunH = 0, spriteY = null;
+  ctx.drawImage = function (img, x, y, w, h) {
+    if (img && img.tag === 'bun') { bunTop = y; bunH = h; }
+    if (img && img.tag === 'p0' && spriteY === null) spriteY = y;
+    return plain.apply(this, arguments);
+  };
+  r.render(sim, 1000, null);
+  assert(bunTop !== null && spriteY !== null, '应绘制携带包子与角色');
+  const sink = bunTop + bunH - spriteY;
+  assert(sink > 40 * 0.3 && sink < 40 * 0.5, `携带包子底边应落在头顶附近（实际 ${sink}px）`);
+}
+
 // 4j2) 原版道具栏（顶部带右侧 7 格 + 数量/键位）与糖泡包裹（倒计时秒数）。
 {
   const { canvas, texts } = mockCanvas();
@@ -401,7 +423,8 @@ assert(/teams: teamLayout\(\)/.test(appTeamSource) && /'2v2': \[0, 1, 0, 1\]/.te
   r.render(sim, 1000, { prevPos: sim.pos, curPos: sim.pos, lastTickT: 1000, tickMs: 100, humanPid: 0, intents: [4, 4] });
   const labels = texts.map((t) => t.text);
   for (let i = 1; i <= 7; i++) assert(labels.includes(String(i)), `道具栏必须标出数字键 ${i}`);
-  assert(texts.some((t) => t.text === '12' && t.y < visual.BOARD_OFFSET), '道具栏格内显示数量');
+  const countText = texts.find((t) => t.text === '12');
+  assert(countText && countText.y > canvas.height - 70 && countText.x < 120, '道具栏在画面左下角并显示数量');
   assert(texts.some((t) => t.text === '5' && t.y > visual.BOARD_OFFSET * 3), '糖泡在角色头顶显示剩余秒数');
 }
 const controls = require('./controls.js');

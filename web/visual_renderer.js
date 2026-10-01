@@ -66,10 +66,13 @@
   // 角色帧顶部约 30% 为透明留白（精灵图 26/85）；point.png 箭头尖在图高 75% 处（30/40）。
   const SPRITE_HEAD_FRAC = 0.3;
   const POINT_TIP_FRAC = 0.75;
+  // 携带包子：包子底边压进头顶的比例（相对帧高）。
+  const CARRY_BUN_SINK_FRAC = 0.06;
 
   const HELD_ITEM_SPRITES = [null, 'banana_pickup', 'glue_pickup'];
   function heldItemSpriteKey(item) { return HELD_ITEM_SPRITES[item] || null; }
   const ITEM_SLOT_COUNT = 7;
+  const ITEM_BAR_SLOT_PX = 50;
 
   // 顶部溢出带：本图地面最上一行原纹理 + 半透明黑，表示界外；首行元件上溢仍画在它上面。
   const TOP_BAND_SHADE = 0.5;
@@ -349,29 +352,32 @@
       ctx.strokeText(label, cx, cy - r - 8); ctx.fillText(label, cx, cy - r - 8);
       ctx.restore();
     }
-    // 道具栏：画在顶部界外带右侧，7 格，格内道具图标 + 右下角数量，左上角数字键提示。
+    // 道具栏：画面左下角，7 格，格内道具图标 + 右下角数量，左上角数字键提示。
+    // 半透明底板，避免完全挡住底行地图。
     function drawItemBar(slots, now) {
-      const size = 26, gap = 3, count = ITEM_SLOT_COUNT;
-      const left = canvas.width - count * (size + gap) - 6, top = Math.round((BOARD_OFFSET - size) / 2);
+      const size = ITEM_BAR_SLOT_PX, gap = 4, count = ITEM_SLOT_COUNT, pad = 6;
+      const left = pad + 4, top = canvas.height - size - pad - 4;
       ctx.save();
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.fillRect(left - pad, top - pad, count * (size + gap) - gap + pad * 2, size + pad * 2);
       ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
       for (let i = 0; i < count; i++) {
         const x = left + i * (size + gap), slot = slots[i];
-        ctx.fillStyle = slot ? 'rgba(255,248,220,0.9)' : 'rgba(0,0,0,0.45)';
-        ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1;
+        ctx.fillStyle = slot ? 'rgba(255,248,220,0.82)' : 'rgba(0,0,0,0.4)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1.5;
         ctx.fillRect(x, top, size, size); ctx.strokeRect(x + 0.5, top + 0.5, size - 1, size - 1);
         const key = slot ? heldItemSpriteKey(slot.item) : null;
         if (key && assets.items && assets.items[key]) {
-          const image = itemFrame(assets.items[key], now), k = (size - 4) / Math.max(image.width, image.height);
+          const image = itemFrame(assets.items[key], now), k = (size - 8) / Math.max(image.width, image.height);
           ctx.drawImage(image, Math.round(x + (size - image.width * k) / 2), Math.round(top + (size - image.height * k) / 2),
             Math.round(image.width * k), Math.round(image.height * k));
         }
-        ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'left';
-        ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.fillStyle = '#ffffff';
-        ctx.strokeText(String(i + 1), x + 2, top + 6); ctx.fillText(String(i + 1), x + 2, top + 6);
+        ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'left';
+        ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(0,0,0,0.85)'; ctx.fillStyle = '#ffffff';
+        ctx.strokeText(String(i + 1), x + 4, top + 9); ctx.fillText(String(i + 1), x + 4, top + 9);
         if (slot) {
-          ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'right'; ctx.lineWidth = 3; ctx.fillStyle = '#ffd54a';
-          ctx.strokeText(String(slot.count), x + size - 2, top + size - 6); ctx.fillText(String(slot.count), x + size - 2, top + size - 6);
+          ctx.font = 'bold 17px sans-serif'; ctx.textAlign = 'right'; ctx.lineWidth = 4; ctx.fillStyle = '#ffd54a';
+          ctx.strokeText(String(slot.count), x + size - 4, top + size - 10); ctx.fillText(String(slot.count), x + size - 4, top + size - 10);
         }
       }
       ctx.restore();
@@ -536,7 +542,11 @@
           items.push([z + 4, () => drawNameTag(gx * CELL, y + image.height * SPRITE_HEAD_FRAC - 6, label, team)]);
         }
         items.push([z, image, x, y]);
-        if (sim.bunCarried[pid] >= 0) items.push([z + 1, () => drawBun(x + image.width / 2, y + 8, sim.bunCarried[pid], 1, 0.8, now)]);
+        // 包子底边落在头顶附近（帧顶约 30% 为透明留白），贴着头顶而不是悬在上方。
+        if (sim.bunCarried[pid] >= 0) {
+          const bunBottom = y + image.height * (SPRITE_HEAD_FRAC + CARRY_BUN_SINK_FRAC);
+          items.push([z + 1, () => drawBun(x + image.width / 2, bunBottom, sim.bunCarried[pid], 1, 0.8, now)]);
+        }
         const heldKey = sim.heldItem ? heldItemSpriteKey(sim.heldItem[pid]) : null;
         if (heldKey && assets.items && assets.items[heldKey] && !trapTicks) {
           items.push([z + 2, () => drawHeldItem(assets.items[heldKey], x + image.width * 0.8, y + image.height * 0.25, now)]);

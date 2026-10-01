@@ -8,13 +8,6 @@
 </head>
 <body>
   <main>
-    <header>
-      <div>
-        <p class="eyebrow">QQT-RL / BUN ONLY</p>
-        <h1>抢包子06 · 空砖近距战术真人测试</h1>
-      </div>
-      <button id="restart" type="button">重新开局</button>
-    </header>
     <section class="arena">
       <div class="stage">
         <canvas id="game" width="900" height="810" aria-label="抢包子对战画面"></canvas>
@@ -25,10 +18,11 @@
         </div>
       </div>
       <aside>
+        <button id="restart" type="button">重新开局</button>
         <h2>操作</h2>
         <p><kbd>方向键</kbd> 移动</p>
         <p><kbd>Space / W</kbd> 放泡</p>
-        <p><kbd>1 - 7</kbd> 使用道具栏对应格（右上角）</p>
+        <p><kbd>1 - 7</kbd> 使用道具栏对应格（左下角）</p>
         <p><kbd>E / Shift</kbd> 使用道具栏第 1 格</p>
         <p>被炸会被糖泡包住：6 秒后爆破，敌人碰到立即爆破，队友碰到立即救出</p>
         <p><kbd>R</kbd> 重新开局</p>
@@ -48,8 +42,8 @@
         </label>
         <label>队伍
           <select id="team-mode">
-            <option value="1v1" selected>1v1</option>
-            <option value="1v2">1v2（你 vs 两个猎手，可互救）</option>
+            <option value="1v1">1v1</option>
+            <option value="1v2" selected>1v2（你 vs 两个猎手，可互救）</option>
             <option value="2v2">2v2（你 + 猎手队友 vs 两个猎手）</option>
           </select>
         </label>
@@ -57,12 +51,12 @@
           <select id="opponent">
             <optgroup label="猎手 Bot：躲泡 + 进攻 + 偷包子">
               <option value="bun.hunter@easy">猎手 · 简单</option>
-              <option value="bun.hunter@normal" selected>猎手 · 普通</option>
-              <option value="bun.hunter@hard">猎手 · 困难</option>
+              <option value="bun.hunter@normal">猎手 · 普通</option>
+              <option value="bun.hunter@hard" selected>猎手 · 困难</option>
             </optgroup>
             <option value="bun.tactical_v2">安全战术规则 Bot</option>
             <option value="bun.random_roam">随机漫游 Bot</option>
-            <option value="bun.browser_model">本地导出模型</option>
+            <option value="bun.browser_model">已加载模型（仅 1v1）</option>
           </select>
         </label>
         <label class="file-label">已发布模型
@@ -75,14 +69,9 @@
           <progress id="model-progress" max="100" value="0"></progress>
           <span id="model-progress-text">准备下载…</span>
         </div>
-        <details class="advanced">
-          <summary>高级：加载本地模型 JSON</summary>
-        <label class="file-label">本地模型 JSON
-          <input id="model-file" type="file" accept="application/json,.json">
-        </label>
-        </details>
         <p id="model-status" class="note" aria-live="polite">尚未加载模型；请从上方已发布模型列表选择。</p>
-        <h2>离线实战录像</h2>
+        <details class="fold">
+        <summary>离线实战录像</summary>
         <label>固定seed对局
           <select id="replay-select"><option value="">正在读取录像列表…</option></select>
         </label>
@@ -96,8 +85,11 @@
         </div>
         <input id="replay-seek" type="range" min="0" max="0" value="0" step="1" aria-label="录像进度">
         <p id="replay-status" class="note" aria-live="polite">录像只保存固定seed、模型哈希和每tick双方动作，不重复保存地图或完整状态。</p>
-        <h2>状态</h2>
+        </details>
+        <details class="fold">
+        <summary>状态</summary>
         <pre id="status">正在加载 Bun06…</pre>
+        </details>
         <p class="note">猎手 Bot 三档差异：简单=反应慢半拍、只直线放泡、偶有失误；普通=识别连锁、提防你的反制泡、会捡道具；困难=零延迟、主动围堵封路、趁你走远就偷包。你被炸后它会去你的包子屋搬包子回家。</p>
         <p class="note">蓝方为真人，红方可选冻结规则 Bot 或本地导出的训练模型。默认复现训练使用的空砖近距竞技场：保留不可炸墙和包子笼，清空可炸砖。</p>
       </aside>
