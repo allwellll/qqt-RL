@@ -150,8 +150,12 @@
 - 假设：专项Bot池导致对手过拟合；通过预生成并验证的多种危险局面，让模型学习逃生、走廊处理、连锁爆炸、主动攻击和攻防冲突。
 - 场景：native、escape、corridor、chain、attack、conflict。
 - 实现：设备端JAX/JIT生成与采样；接入reset/auto-reset和DP训练；场景标签不进入模型观测；新增固定seed场景评估器和A/B入口。
-- 当前状态：实现已提交到独立分支；测试、合法性审计、4卡DP smoke、固定seed短A/B与完整评估仍在运行。
-- 当前结果：待回填。
+- 当前状态：实现、合法性审计、4卡DP smoke、两个独立训练seed的短A/B与评估均完成。
+- 4卡 smoke：control与scenario均退出0；warmup约111秒；control中位约110.4k SPS，scenario中位约109.5k SPS。
+- 大样本seed-1结论：scenario显著降低自炸与danger→death，但Tactical v2存活击杀下降；scenario final仅6.3%存活击杀（历史it4000为41.8%），虽自炸为0%、danger→death为2.8%，但属于过度保守和攻击塌缩。
+- 第二seed的64局场景复核方向一致：scenario final在留出场景对hunter/hunter_hard存活约84.1%/83.8%，高于control约65.0%/64.4%，但native对hunter存活击杀仅7.8%（control 18.8%），对hunter_hard为0%。
+- 统一四Bot 64局快速矩阵进一步确认：scenario两seed自炸普遍较低，但对网页猎手困难/普通几乎无存活击杀；结果见`reports/four_bot_matrix_64_20261001/`。64局只作筛点，不替代既有1024局证据。
+- 决策：不晋升当前scenario checkpoint，不启动当前配置长训。下一轮降低scenario比例，并加入native/JAX Bot进攻能力保持约束。
 - 晋升门槛：场景合法性与可解性通过；旧native路径不回归；4卡吞吐可接受；Tactical v2/held-out场景安全与击杀改善，同时JAX Bot专项能力不显著下降。
 
 ## 5. 新实验追加模板

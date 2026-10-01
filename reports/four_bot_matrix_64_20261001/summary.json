@@ -1,0 +1,3593 @@
+{
+ "schema": "four_bot_matrix_64_v1",
+ "seed": 20261001,
+ "games_per_cell": 64,
+ "max_steps": 300,
+ "spawn_manifest": {
+  "sha256": "5436c341f0f1dffd9e8a9b8ecf53a915cb8732252d17936d349fe3a943cc5c46",
+  "source": "jax_bomb.bun_env.init_batch + clear_destructible_bricks"
+ },
+ "bots": [
+  "bun.tactical_v2",
+  "bun.hunter@hard",
+  "bun.hunter@normal",
+  "bun.hunter@easy"
+ ],
+ "node_source_hashes": {
+  "web/sim.js": "97a63c3bb9df1d0a82af73b7d9a68609d662a988de1eab638853d898104b4e4e",
+  "web/bun_hunter_bot.js": "faa82b5f12ffdb1792fd5b81c8dcc21ae6a5bf00069cd4a7fc9c290f33630287",
+  "web/bot_contract.js": "d3f6a1a6781b500b3820eadfe8b5c89b567bad40997d75e8141df901958f1dc1",
+  "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+  "scripts/eval_web_hunter.js": "8b9de453903af9d134278a6a056665c43eca17365551459b5da22dbf66f81706"
+ },
+ "outcome_definitions": {
+  "surviving_kill": "episode has >=1 non-trade kill (causal or physical) with actor alive after it",
+  "killed_by_bot": "episode has >=1 actor death solely sourced by the bot (physical or causal), excluding trades",
+  "own_bomb": "episode has >=1 actor death solely from its own bomb",
+  "mutual": "episode has >=1 same-tick double death (trade)",
+  "win": "surviving_kill and none of killed_by_bot/own_bomb/mutual",
+  "loss": "any of killed_by_bot/own_bomb/mutual and no surviving_kill",
+  "kill_share": "surviving_kill episodes / (surviving_kill + killed_by_bot episodes)"
+ },
+ "timing": null,
+ "checkpoints": [
+  {
+   "name": "exp04_control_s1_it750",
+   "group": "EXP-20261001-04",
+   "label": "EXP04 control s1 it750",
+   "source": "<train_scene_opt>/runs/scene_ab/control_s20261001_1gpu/ckpt/final_it750.pt",
+   "checkpoint_sha256": "35cc050ce29c6327024fa4da880899d9dac12194aaa9ca88840b3d86df0321ae",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 12,
+       "rate": 0.1875
+      },
+      "killed_by_bot": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "own_bomb": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "loss": {
+       "count": 13,
+       "rate": 0.203125
+      },
+      "bombs_per_game": 14.046875,
+      "kill_share": 0.75,
+      "danger_to_death": {
+       "count": 14,
+       "rate": 0.21875
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 87.03876996040344
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "own_bomb": {
+       "count": 12,
+       "rate": 0.1875
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 19,
+       "rate": 0.296875
+      },
+      "bombs_per_game": 11.84375,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 6.515625
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2103.9410000000003,
+     "model_ms_per_tick": 106.64863638321559,
+     "bot_ms_per_tick": 2.7608904520670574,
+     "model_json_sha256": "5b019d0caa4ab3e15ceb1990784fae61f73ea55f364309cd85ed7c36e272ebde"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "own_bomb": {
+       "count": 14,
+       "rate": 0.21875
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 21,
+       "rate": 0.328125
+      },
+      "bombs_per_game": 10.484375,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 6.515625
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 2092.4320000000002,
+     "model_ms_per_tick": 108.00426843325297,
+     "bot_ms_per_tick": 0.8402164538701375,
+     "model_json_sha256": "5b019d0caa4ab3e15ceb1990784fae61f73ea55f364309cd85ed7c36e272ebde"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "killed_by_bot": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "own_bomb": {
+       "count": 16,
+       "rate": 0.25
+      },
+      "mutual": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "win": {
+       "count": 8,
+       "rate": 0.125
+      },
+      "loss": {
+       "count": 19,
+       "rate": 0.296875
+      },
+      "bombs_per_game": 12.390625,
+      "kill_share": 0.7333333333333333,
+      "bot_own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "bot_bombs_per_game": 6.5
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 2139.347,
+     "model_ms_per_tick": 110.6169364130497,
+     "bot_ms_per_tick": 0.6503827067216238,
+     "model_json_sha256": "5b019d0caa4ab3e15ceb1990784fae61f73ea55f364309cd85ed7c36e272ebde"
+    }
+   }
+  },
+  {
+   "name": "exp04_control_s1_final",
+   "group": "EXP-20261001-04",
+   "label": "EXP04 control s1 final",
+   "source": "<train_scene_opt>/runs/scene_ab/control_s20261001_1gpu/ckpt/final.pt",
+   "checkpoint_sha256": "6c083920acb4e4a216251086a3ab29acd8f0f060b100ba6b86ab3aa13752e3ff",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 20,
+       "rate": 0.3125
+      },
+      "killed_by_bot": {
+       "count": 13,
+       "rate": 0.203125
+      },
+      "own_bomb": {
+       "count": 36,
+       "rate": 0.5625
+      },
+      "mutual": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "win": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "loss": {
+       "count": 35,
+       "rate": 0.546875
+      },
+      "bombs_per_game": 84.328125,
+      "kill_share": 0.6060606060606061,
+      "danger_to_death": {
+       "count": 50,
+       "rate": 0.78125
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 18.969281673431396
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 8,
+       "rate": 0.125
+      },
+      "own_bomb": {
+       "count": 31,
+       "rate": 0.484375
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 37,
+       "rate": 0.578125
+      },
+      "bombs_per_game": 12.71875,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 4.828125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2072.074,
+     "model_ms_per_tick": 105.83540997703871,
+     "bot_ms_per_tick": 1.9335147353013356,
+     "model_json_sha256": "bfee61ad9fb447d102251b2c4e0af984c6a4613a2562a07afab83046b81a1104"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 13,
+       "rate": 0.203125
+      },
+      "own_bomb": {
+       "count": 25,
+       "rate": 0.390625
+      },
+      "mutual": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 35,
+       "rate": 0.546875
+      },
+      "bombs_per_game": 13.421875,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 5.640625
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 2086.874,
+     "model_ms_per_tick": 107.70254318038623,
+     "bot_ms_per_tick": 0.836845299800237,
+     "model_json_sha256": "bfee61ad9fb447d102251b2c4e0af984c6a4613a2562a07afab83046b81a1104"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "killed_by_bot": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "own_bomb": {
+       "count": 36,
+       "rate": 0.5625
+      },
+      "mutual": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "win": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "loss": {
+       "count": 47,
+       "rate": 0.734375
+      },
+      "bombs_per_game": 13.0,
+      "kill_share": 0.21428571428571427,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 3.453125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 2076.876,
+     "model_ms_per_tick": 107.42376948873202,
+     "bot_ms_per_tick": 0.5921779990196228,
+     "model_json_sha256": "bfee61ad9fb447d102251b2c4e0af984c6a4613a2562a07afab83046b81a1104"
+    }
+   }
+  },
+  {
+   "name": "exp04_scenario_s1_it750",
+   "group": "EXP-20261001-04",
+   "label": "EXP04 scenario s1 it750",
+   "source": "<train_scene_opt>/runs/scene_ab/scenario_s20261001_1gpu/ckpt/final_it750.pt",
+   "checkpoint_sha256": "896d320302ffa3369f8fdfeeedb0ec382037f0394de91c7126aa7e1a0fcf56ce",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "killed_by_bot": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "loss": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "bombs_per_game": 12.53125,
+      "kill_share": 0.8181818181818182,
+      "danger_to_death": {
+       "count": 3,
+       "rate": 0.046875
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 19.69008755683899
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bombs_per_game": 10.203125,
+      "kill_share": null,
+      "bot_own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "bot_bombs_per_game": 4.859375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2112.933,
+     "model_ms_per_tick": 107.66424597064655,
+     "bot_ms_per_tick": 2.2591770378748577,
+     "model_json_sha256": "4bea6b341c83ead98ede450243633145feb6ffc437926aa6e8c1468121c66c3d"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 6,
+       "rate": 0.09375
+      },
+      "bombs_per_game": 11.21875,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "bot_bombs_per_game": 8.59375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 2050.671,
+     "model_ms_per_tick": 105.72634578267733,
+     "bot_ms_per_tick": 0.9401030393441518,
+     "model_json_sha256": "4bea6b341c83ead98ede450243633145feb6ffc437926aa6e8c1468121c66c3d"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "own_bomb": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 6,
+       "rate": 0.09375
+      },
+      "bombs_per_game": 13.875,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 7.75
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 2020.138,
+     "model_ms_per_tick": 104.3268799161911,
+     "bot_ms_per_tick": 0.7472186458110809,
+     "model_json_sha256": "4bea6b341c83ead98ede450243633145feb6ffc437926aa6e8c1468121c66c3d"
+    }
+   }
+  },
+  {
+   "name": "exp04_scenario_s1_final",
+   "group": "EXP-20261001-04",
+   "label": "EXP04 scenario s1 final",
+   "source": "<train_scene_opt>/runs/scene_ab/scenario_s20261001_1gpu/ckpt/final.pt",
+   "checkpoint_sha256": "43e1d9b622f0c14b955eb18d477901a60426ceaa6868e1ccb336be007cb1cab9",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "killed_by_bot": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "mutual": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "win": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "loss": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "bombs_per_game": 5.34375,
+      "kill_share": 0.75,
+      "danger_to_death": {
+       "count": 3,
+       "rate": 0.046875
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 57.29533576965332
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bombs_per_game": 6.953125,
+      "kill_share": null,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 5.078125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2043.75,
+     "model_ms_per_tick": 102.76319301843643,
+     "bot_ms_per_tick": 3.5197196809450784,
+     "model_json_sha256": "9e1cf376041a6e106663060026caa0da11bb1426d5ea15fa57babd13138a6c0a"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "bombs_per_game": 8.28125,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 10.015625
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 2082.736,
+     "model_ms_per_tick": 107.25216117302577,
+     "bot_ms_per_tick": 1.079203691482544,
+     "model_json_sha256": "9e1cf376041a6e106663060026caa0da11bb1426d5ea15fa57babd13138a6c0a"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "killed_by_bot": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "own_bomb": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "loss": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "bombs_per_game": 11.359375,
+      "kill_share": 1.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 8.390625
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 2068.281,
+     "model_ms_per_tick": 106.80958120107651,
+     "bot_ms_per_tick": 0.7482185669740041,
+     "model_json_sha256": "9e1cf376041a6e106663060026caa0da11bb1426d5ea15fa57babd13138a6c0a"
+    }
+   }
+  },
+  {
+   "name": "exp04_control_s2_it750",
+   "group": "EXP-20261001-04",
+   "label": "EXP04 control s2 it750",
+   "source": "<train_scene_opt>/runs/scene_ab/control_s20261002_1gpu/ckpt/final_it750.pt",
+   "checkpoint_sha256": "ee814d208f210cf686b5eb7bcc68146111f7b9dad64d1eceef39481ebf3d699d",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 22,
+       "rate": 0.34375
+      },
+      "killed_by_bot": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "own_bomb": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "mutual": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "win": {
+       "count": 21,
+       "rate": 0.328125
+      },
+      "loss": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "bombs_per_game": 15.265625,
+      "kill_share": 0.8461538461538461,
+      "danger_to_death": {
+       "count": 10,
+       "rate": 0.15625
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 58.87013077735901
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "own_bomb": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 14,
+       "rate": 0.21875
+      },
+      "bombs_per_game": 10.828125,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 5.828125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2086.931,
+     "model_ms_per_tick": 106.14478644967079,
+     "bot_ms_per_tick": 2.3610454642772676,
+     "model_json_sha256": "06ee8b8ebc3dfb748aae02ef1241ed80e3045ffd6e86c256ec36b81e347d7170"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "own_bomb": {
+       "count": 14,
+       "rate": 0.21875
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 23,
+       "rate": 0.359375
+      },
+      "bombs_per_game": 11.296875,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 5.734375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 1989.889,
+     "model_ms_per_tick": 102.77591790040334,
+     "bot_ms_per_tick": 0.7228423098723094,
+     "model_json_sha256": "06ee8b8ebc3dfb748aae02ef1241ed80e3045ffd6e86c256ec36b81e347d7170"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "killed_by_bot": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "own_bomb": {
+       "count": 8,
+       "rate": 0.125
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "loss": {
+       "count": 10,
+       "rate": 0.15625
+      },
+      "bombs_per_game": 14.515625,
+      "kill_share": 0.5,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 7.140625
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 1993.136,
+     "model_ms_per_tick": 103.0314813474814,
+     "bot_ms_per_tick": 0.6457416315873464,
+     "model_json_sha256": "06ee8b8ebc3dfb748aae02ef1241ed80e3045ffd6e86c256ec36b81e347d7170"
+    }
+   }
+  },
+  {
+   "name": "exp04_control_s2_final",
+   "group": "EXP-20261001-04",
+   "label": "EXP04 control s2 final",
+   "source": "<train_scene_opt>/runs/scene_ab/control_s20261002_1gpu/ckpt/final.pt",
+   "checkpoint_sha256": "f7c52b6ef9415399970010e118973674c417885e7b6cdbe49344a70e0a36efb0",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 12,
+       "rate": 0.1875
+      },
+      "killed_by_bot": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "own_bomb": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "mutual": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "win": {
+       "count": 12,
+       "rate": 0.1875
+      },
+      "loss": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "bombs_per_game": 5.875,
+      "kill_share": 0.9230769230769231,
+      "danger_to_death": {
+       "count": 7,
+       "rate": 0.109375
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 58.29957866668701
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "own_bomb": {
+       "count": 12,
+       "rate": 0.1875
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 16,
+       "rate": 0.25
+      },
+      "bombs_per_game": 5.984375,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 6.875
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2143.139,
+     "model_ms_per_tick": 108.46395929296811,
+     "bot_ms_per_tick": 2.9994582585493723,
+     "model_json_sha256": "e2c072200c298eefd62c27c25cc820fab075cf48bf26ef6241887b09237d7cad"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "own_bomb": {
+       "count": 8,
+       "rate": 0.125
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 13,
+       "rate": 0.203125
+      },
+      "bombs_per_game": 7.015625,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "bot_bombs_per_game": 10.109375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 1997.013,
+     "model_ms_per_tick": 102.92936820586523,
+     "bot_ms_per_tick": 0.9353370634714763,
+     "model_json_sha256": "e2c072200c298eefd62c27c25cc820fab075cf48bf26ef6241887b09237d7cad"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "killed_by_bot": {
+       "count": 10,
+       "rate": 0.15625
+      },
+      "own_bomb": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "mutual": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "win": {
+       "count": 8,
+       "rate": 0.125
+      },
+      "loss": {
+       "count": 19,
+       "rate": 0.296875
+      },
+      "bombs_per_game": 8.21875,
+      "kill_share": 0.47368421052631576,
+      "bot_own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "bot_bombs_per_game": 6.703125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 2054.188,
+     "model_ms_per_tick": 106.10447469870249,
+     "bot_ms_per_tick": 0.7381809631983439,
+     "model_json_sha256": "e2c072200c298eefd62c27c25cc820fab075cf48bf26ef6241887b09237d7cad"
+    }
+   }
+  },
+  {
+   "name": "exp04_scenario_s2_it750",
+   "group": "EXP-20261001-04",
+   "label": "EXP04 scenario s2 it750",
+   "source": "<train_scene_opt>/runs/scene_ab/scenario_s20261002_1gpu/ckpt/final_it750.pt",
+   "checkpoint_sha256": "65b6cc631a8a1e8091dec7c57a21de6d73dfcc42d9d4b6f98ddfd64d1542f790",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 16,
+       "rate": 0.25
+      },
+      "killed_by_bot": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 16,
+       "rate": 0.25
+      },
+      "loss": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "bombs_per_game": 12.703125,
+      "kill_share": 1.0,
+      "danger_to_death": {
+       "count": 1,
+       "rate": 0.015625
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 55.49281144142151
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "bombs_per_game": 12.234375,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "bot_bombs_per_game": 4.921875
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2046.444,
+     "model_ms_per_tick": 103.91686123053233,
+     "bot_ms_per_tick": 2.4950581379731496,
+     "model_json_sha256": "57e864778b84b9ee864bafa4238a56cee7194a5b2f18c37de12d84a0838288b2"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "bombs_per_game": 11.90625,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 10.109375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 2043.531,
+     "model_ms_per_tick": 105.33328393260638,
+     "bot_ms_per_tick": 0.9858654216925303,
+     "model_json_sha256": "57e864778b84b9ee864bafa4238a56cee7194a5b2f18c37de12d84a0838288b2"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "killed_by_bot": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "own_bomb": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "loss": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "bombs_per_game": 13.34375,
+      "kill_share": 0.5714285714285714,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 7.703125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 2043.1200000000001,
+     "model_ms_per_tick": 105.64620328307151,
+     "bot_ms_per_tick": 0.6242860241731008,
+     "model_json_sha256": "57e864778b84b9ee864bafa4238a56cee7194a5b2f18c37de12d84a0838288b2"
+    }
+   }
+  },
+  {
+   "name": "exp04_scenario_s2_final",
+   "group": "EXP-20261001-04",
+   "label": "EXP04 scenario s2 final",
+   "source": "<train_scene_opt>/runs/scene_ab/scenario_s20261002_1gpu/ckpt/final.pt",
+   "checkpoint_sha256": "e7031ee6da1c43d0aee5f4a9db9733fb14eab671d2606fd931d4709429612a0d",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "killed_by_bot": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "loss": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "bombs_per_game": 6.484375,
+      "kill_share": 0.8181818181818182,
+      "danger_to_death": {
+       "count": 3,
+       "rate": 0.046875
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 61.06091904640198
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "bombs_per_game": 8.671875,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 5.328125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2015.834,
+     "model_ms_per_tick": 101.97302017966906,
+     "bot_ms_per_tick": 2.8790323702494303,
+     "model_json_sha256": "0393fbae814539faa49ab664d81f6bcef0902df5cc8b31dbd63bd7b77fbfa26e"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "own_bomb": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "bombs_per_game": 8.9375,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 10.15625
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 2076.775,
+     "model_ms_per_tick": 106.95325974424681,
+     "bot_ms_per_tick": 1.0596180291970572,
+     "model_json_sha256": "0393fbae814539faa49ab664d81f6bcef0902df5cc8b31dbd63bd7b77fbfa26e"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "killed_by_bot": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "own_bomb": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "loss": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "bombs_per_game": 11.84375,
+      "kill_share": 1.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 8.25
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 2009.341,
+     "model_ms_per_tick": 103.81742644707361,
+     "bot_ms_per_tick": 0.6895351751645407,
+     "model_json_sha256": "0393fbae814539faa49ab664d81f6bcef0902df5cc8b31dbd63bd7b77fbfa26e"
+    }
+   }
+  },
+  {
+   "name": "hist_it4000",
+   "group": "history",
+   "label": "历史 phase2_it4000",
+   "source": "<qqt-RL>/runs/overnight_tf_v2/phase2_it4000.pt",
+   "checkpoint_sha256": "6e190b009f180f2e449fd19941c930c0d1a86d680071eeb02262aadb6808ebd0",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 28,
+       "rate": 0.4375
+      },
+      "killed_by_bot": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "own_bomb": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 27,
+       "rate": 0.421875
+      },
+      "loss": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "bombs_per_game": 16.765625,
+      "kill_share": 1.0,
+      "danger_to_death": {
+       "count": 3,
+       "rate": 0.046875
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 59.02253031730652
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "killed_by_bot": {
+       "count": 6,
+       "rate": 0.09375
+      },
+      "own_bomb": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "loss": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "bombs_per_game": 12.53125,
+      "kill_share": 0.14285714285714285,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 7.09375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2019.6380000000001,
+     "model_ms_per_tick": 102.09210719227791,
+     "bot_ms_per_tick": 2.93983473777771,
+     "model_json_sha256": "1fc0a61096283a656a871c3009fcae776eb288e7b7970bc80057bb5af75043b2"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 12,
+       "rate": 0.1875
+      },
+      "bombs_per_game": 12.90625,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 8.046875
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 1985.74,
+     "model_ms_per_tick": 102.45187330245972,
+     "bot_ms_per_tick": 0.8044129196802775,
+     "model_json_sha256": "1fc0a61096283a656a871c3009fcae776eb288e7b7970bc80057bb5af75043b2"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "killed_by_bot": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "own_bomb": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "loss": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "bombs_per_game": 14.53125,
+      "kill_share": 0.25,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 6.765625
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 2033.237,
+     "model_ms_per_tick": 105.04390192945799,
+     "bot_ms_per_tick": 0.7124330631891886,
+     "model_json_sha256": "1fc0a61096283a656a871c3009fcae776eb288e7b7970bc80057bb5af75043b2"
+    }
+   }
+  },
+  {
+   "name": "rv2_thr04_it100",
+   "group": "EXP-20260930-01",
+   "label": "RewardV2 sweep thr0.4 it100",
+   "source": "<qqt-reward-v2>/runs/reward_v2_20260930/sweep/v2_threat04/final_it100.pt",
+   "checkpoint_sha256": "d7ca4deb913b71c7ef15f727fc1e4f68b2f6f1d2c652b2f24ad1e090c1c43e91",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 25,
+       "rate": 0.390625
+      },
+      "killed_by_bot": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "own_bomb": {
+       "count": 6,
+       "rate": 0.09375
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 22,
+       "rate": 0.34375
+      },
+      "loss": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "bombs_per_game": 27.515625,
+      "kill_share": 0.8928571428571429,
+      "danger_to_death": {
+       "count": 12,
+       "rate": 0.1875
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 55.7341570854187
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "own_bomb": {
+       "count": 12,
+       "rate": 0.1875
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 13,
+       "rate": 0.203125
+      },
+      "bombs_per_game": 15.078125,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 5.359375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2044.6,
+     "model_ms_per_tick": 104.44647223830223,
+     "bot_ms_per_tick": 1.8992565631866456,
+     "model_json_sha256": "91f52b2bed3f9b4bc198d65499ee5aee8892fede6343997de30b8cb1472d19ac"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "own_bomb": {
+       "count": 14,
+       "rate": 0.21875
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 20,
+       "rate": 0.3125
+      },
+      "bombs_per_game": 15.140625,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 7.6875
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 2024.083,
+     "model_ms_per_tick": 104.42231425841649,
+     "bot_ms_per_tick": 0.8281858285268148,
+     "model_json_sha256": "91f52b2bed3f9b4bc198d65499ee5aee8892fede6343997de30b8cb1472d19ac"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "killed_by_bot": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "own_bomb": {
+       "count": 6,
+       "rate": 0.09375
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "loss": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "bombs_per_game": 18.109375,
+      "kill_share": 0.42857142857142855,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 7.109375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 1942.8319999999999,
+     "model_ms_per_tick": 100.33834296425184,
+     "bot_ms_per_tick": 0.7100633776187897,
+     "model_json_sha256": "91f52b2bed3f9b4bc198d65499ee5aee8892fede6343997de30b8cb1472d19ac"
+    }
+   }
+  },
+  {
+   "name": "rv2_long_thr04_lr1e4_it200",
+   "group": "EXP-20260930-01",
+   "label": "RewardV2 long thr0.4 lr1e-4 it200",
+   "source": "<qqt-reward-v2>/runs/reward_v2_20260930/long/thr04_lr1e4/final_it200.pt",
+   "checkpoint_sha256": "27368635322e15c09dfa9181275d1eea41366b68184b49a6a281b89221f94327",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 28,
+       "rate": 0.4375
+      },
+      "killed_by_bot": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "own_bomb": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 24,
+       "rate": 0.375
+      },
+      "loss": {
+       "count": 6,
+       "rate": 0.09375
+      },
+      "bombs_per_game": 29.890625,
+      "kill_share": 0.8484848484848485,
+      "danger_to_death": {
+       "count": 10,
+       "rate": 0.15625
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 55.32112431526184
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "killed_by_bot": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "own_bomb": {
+       "count": 10,
+       "rate": 0.15625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "loss": {
+       "count": 13,
+       "rate": 0.203125
+      },
+      "bombs_per_game": 14.734375,
+      "kill_share": 0.25,
+      "bot_own_bomb": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "bot_bombs_per_game": 5.25
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2001.693,
+     "model_ms_per_tick": 102.17052331328392,
+     "bot_ms_per_tick": 1.9629874702294667,
+     "model_json_sha256": "eff880266f088ef4528fd2314cfb4b25b35a3043572b2df53990aad1cbcd4f81"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "own_bomb": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 15,
+       "rate": 0.234375
+      },
+      "bombs_per_game": 15.8125,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 6.609375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 1983.26,
+     "model_ms_per_tick": 102.31422026832898,
+     "bot_ms_per_tick": 0.8106301522254944,
+     "model_json_sha256": "eff880266f088ef4528fd2314cfb4b25b35a3043572b2df53990aad1cbcd4f81"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "killed_by_bot": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "own_bomb": {
+       "count": 17,
+       "rate": 0.265625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "loss": {
+       "count": 19,
+       "rate": 0.296875
+      },
+      "bombs_per_game": 17.546875,
+      "kill_share": 0.5714285714285714,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 5.875
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 1991.961,
+     "model_ms_per_tick": 102.99069189866384,
+     "bot_ms_per_tick": 0.6272017975648244,
+     "model_json_sha256": "eff880266f088ef4528fd2314cfb4b25b35a3043572b2df53990aad1cbcd4f81"
+    }
+   }
+  },
+  {
+   "name": "dp8_it2500",
+   "group": "EXP-20261001-03",
+   "label": "dp8 it2500",
+   "source": "<integrate_v2_jax_bot>/runs/v2_jaxbot_dp8_20261001_102237_job-t3vswpexou-master-0/ckpt/final_it2500.pt",
+   "checkpoint_sha256": "45677c01e0bdc04dc7a612e86bfbcd3ca7b730dadf6869731290dd34e8b42370",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 17,
+       "rate": 0.265625
+      },
+      "killed_by_bot": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "own_bomb": {
+       "count": 10,
+       "rate": 0.15625
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 15,
+       "rate": 0.234375
+      },
+      "loss": {
+       "count": 14,
+       "rate": 0.21875
+      },
+      "bombs_per_game": 13.484375,
+      "kill_share": 0.7727272727272727,
+      "danger_to_death": {
+       "count": 16,
+       "rate": 0.25
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 61.228835344314575
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "own_bomb": {
+       "count": 16,
+       "rate": 0.25
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 19,
+       "rate": 0.296875
+      },
+      "bombs_per_game": 9.8125,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 5.234375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 2015.439,
+     "model_ms_per_tick": 102.25294986168544,
+     "bot_ms_per_tick": 2.575103782812754,
+     "model_json_sha256": "18c10be4ebcf0f3688e8a4591a067a9f60107bf267f75bfd719458a82c6327d0"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "killed_by_bot": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "own_bomb": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "loss": {
+       "count": 15,
+       "rate": 0.234375
+      },
+      "bombs_per_game": 10.921875,
+      "kill_share": 0.2222222222222222,
+      "bot_own_bomb": {
+       "count": 2,
+       "rate": 0.03125
+      },
+      "bot_bombs_per_game": 8.375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 1944.057,
+     "model_ms_per_tick": 100.21728161891302,
+     "bot_ms_per_tick": 0.9062463215986888,
+     "model_json_sha256": "18c10be4ebcf0f3688e8a4591a067a9f60107bf267f75bfd719458a82c6327d0"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 22,
+       "rate": 0.34375
+      },
+      "killed_by_bot": {
+       "count": 4,
+       "rate": 0.0625
+      },
+      "own_bomb": {
+       "count": 12,
+       "rate": 0.1875
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 18,
+       "rate": 0.28125
+      },
+      "loss": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "bombs_per_game": 12.59375,
+      "kill_share": 0.8461538461538461,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 5.703125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 1865.834,
+     "model_ms_per_tick": 96.4518140522639,
+     "bot_ms_per_tick": 0.5604224097728729,
+     "model_json_sha256": "18c10be4ebcf0f3688e8a4591a067a9f60107bf267f75bfd719458a82c6327d0"
+    }
+   }
+  },
+  {
+   "name": "dp8_it8000",
+   "group": "EXP-20261001-03",
+   "label": "dp8 it8000",
+   "source": "<integrate_v2_jax_bot>/runs/v2_jaxbot_dp8_20261001_102237_job-t3vswpexou-master-0/ckpt/final_it8000.pt",
+   "checkpoint_sha256": "da7932998b4fde011b9c8fe8ab2dbc2f81cad83e82ff106b4b1dca8a14a4a5b1",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "killed_by_bot": {
+       "count": 13,
+       "rate": 0.203125
+      },
+      "own_bomb": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "loss": {
+       "count": 16,
+       "rate": 0.25
+      },
+      "bombs_per_game": 27.09375,
+      "kill_share": 0.35,
+      "danger_to_death": {
+       "count": 20,
+       "rate": 0.3125
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 60.292513608932495
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "own_bomb": {
+       "count": 22,
+       "rate": 0.34375
+      },
+      "mutual": {
+       "count": 3,
+       "rate": 0.046875
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 34,
+       "rate": 0.53125
+      },
+      "bombs_per_game": 11.75,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 4.375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 1087.546,
+     "model_ms_per_tick": 55.489826922019326,
+     "bot_ms_per_tick": 1.0787683633963268,
+     "model_json_sha256": "bd2d08bc919b5ef425b89d7ae39f186f63ca47585afcb192ec2f291d24edb4af"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 10,
+       "rate": 0.15625
+      },
+      "own_bomb": {
+       "count": 17,
+       "rate": 0.265625
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 26,
+       "rate": 0.40625
+      },
+      "bombs_per_game": 13.71875,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 7.28125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 1018.454,
+     "model_ms_per_tick": 52.52492198944092,
+     "bot_ms_per_tick": 0.4321402029196421,
+     "model_json_sha256": "bd2d08bc919b5ef425b89d7ae39f186f63ca47585afcb192ec2f291d24edb4af"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "killed_by_bot": {
+       "count": 6,
+       "rate": 0.09375
+      },
+      "own_bomb": {
+       "count": 16,
+       "rate": 0.25
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "loss": {
+       "count": 21,
+       "rate": 0.328125
+      },
+      "bombs_per_game": 14.4375,
+      "kill_share": 0.5384615384615384,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 6.3125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 991.131,
+     "model_ms_per_tick": 51.24786262989044,
+     "bot_ms_per_tick": 0.30126006801923116,
+     "model_json_sha256": "bd2d08bc919b5ef425b89d7ae39f186f63ca47585afcb192ec2f291d24edb4af"
+    }
+   }
+  },
+  {
+   "name": "dp8_it12000",
+   "group": "EXP-20261001-03",
+   "label": "dp8 it12000",
+   "source": "<integrate_v2_jax_bot>/runs/v2_jaxbot_dp8_20261001_102237_job-t3vswpexou-master-0/ckpt/final_it12000.pt",
+   "checkpoint_sha256": "0435896e9cc36f0fb665fcc8b43e1284553d47157661be1da61f3f9901787db4",
+   "bots": {
+    "bun.tactical_v2": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 12,
+       "rate": 0.1875
+      },
+      "killed_by_bot": {
+       "count": 15,
+       "rate": 0.234375
+      },
+      "own_bomb": {
+       "count": 14,
+       "rate": 0.21875
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 11,
+       "rate": 0.171875
+      },
+      "loss": {
+       "count": 28,
+       "rate": 0.4375
+      },
+      "bombs_per_game": 49.015625,
+      "kill_share": 0.4444444444444444,
+      "danger_to_death": {
+       "count": 33,
+       "rate": 0.515625
+      }
+     },
+     "bot": {
+      "id": "bun.tactical_v2",
+      "version": null,
+      "module_sha256": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710"
+     },
+     "wall_seconds": 59.3151581287384
+    },
+    "bun.hunter@hard": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "killed_by_bot": {
+       "count": 9,
+       "rate": 0.140625
+      },
+      "own_bomb": {
+       "count": 15,
+       "rate": 0.234375
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "loss": {
+       "count": 23,
+       "rate": 0.359375
+      },
+      "bombs_per_game": 11.8125,
+      "kill_share": 0.0,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 6.375
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "hard"
+      },
+      "resolved_config": {
+       "label": "困难",
+       "reactionDelay": 0,
+       "chainAware": true,
+       "robust": 2,
+       "mistakeRate": 0,
+       "bombHesitation": 0,
+       "maxLiveBombs": 10,
+       "attackRadius": 7,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.4,
+       "itemRadius": 6,
+       "itemSeed": 1,
+       "raidMargin": 2,
+       "threatPenalty": 3,
+       "trapSearch": true,
+       "brickCost": 4
+      }
+     },
+     "cpu_seconds": 984.712,
+     "model_ms_per_tick": 49.99526396512985,
+     "bot_ms_per_tick": 1.2152561648686726,
+     "model_json_sha256": "118fc04191d4a39e70315cab75436d36713e8cbde12a869eea68f21eae57180a"
+    },
+    "bun.hunter@normal": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "killed_by_bot": {
+       "count": 13,
+       "rate": 0.203125
+      },
+      "own_bomb": {
+       "count": 16,
+       "rate": 0.25
+      },
+      "mutual": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "win": {
+       "count": 1,
+       "rate": 0.015625
+      },
+      "loss": {
+       "count": 29,
+       "rate": 0.453125
+      },
+      "bombs_per_game": 11.859375,
+      "kill_share": 0.07142857142857142,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 8.625
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "normal"
+      },
+      "resolved_config": {
+       "label": "普通",
+       "reactionDelay": 1,
+       "chainAware": true,
+       "robust": 1,
+       "mistakeRate": 0.02,
+       "bombHesitation": 0.05,
+       "maxLiveBombs": 2,
+       "attackRadius": 5,
+       "lineOnly": false,
+       "footRatio": 1,
+       "pressureRatio": 0.3,
+       "itemRadius": 4,
+       "itemSeed": 2,
+       "raidMargin": 6,
+       "threatPenalty": 2,
+       "trapSearch": false,
+       "brickCost": 5
+      }
+     },
+     "cpu_seconds": 955.965,
+     "model_ms_per_tick": 49.305837277571364,
+     "bot_ms_per_tick": 0.4119507873058319,
+     "model_json_sha256": "118fc04191d4a39e70315cab75436d36713e8cbde12a869eea68f21eae57180a"
+    },
+    "bun.hunter@easy": {
+     "metrics": {
+      "games": 64,
+      "surviving_kill": {
+       "count": 6,
+       "rate": 0.09375
+      },
+      "killed_by_bot": {
+       "count": 7,
+       "rate": 0.109375
+      },
+      "own_bomb": {
+       "count": 16,
+       "rate": 0.25
+      },
+      "mutual": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "win": {
+       "count": 5,
+       "rate": 0.078125
+      },
+      "loss": {
+       "count": 21,
+       "rate": 0.328125
+      },
+      "bombs_per_game": 12.90625,
+      "kill_share": 0.46153846153846156,
+      "bot_own_bomb": {
+       "count": 0,
+       "rate": 0.0
+      },
+      "bot_bombs_per_game": 6.3125
+     },
+     "bot": {
+      "id": "bun.hunter",
+      "version": "1.0.0",
+      "display_name": "猎手 Bot（躲泡/进攻/偷包）",
+      "config": {
+       "difficulty": "easy"
+      },
+      "resolved_config": {
+       "label": "简单",
+       "reactionDelay": 4,
+       "chainAware": false,
+       "robust": 0,
+       "mistakeRate": 0.1,
+       "bombHesitation": 0.4,
+       "maxLiveBombs": 1,
+       "attackRadius": 3,
+       "lineOnly": true,
+       "footRatio": 1.01,
+       "pressureRatio": 0,
+       "itemRadius": 0,
+       "itemSeed": 0,
+       "raidMargin": null,
+       "threatPenalty": 0,
+       "trapSearch": false,
+       "brickCost": 6
+      }
+     },
+     "cpu_seconds": 925.382,
+     "model_ms_per_tick": 47.8493721028169,
+     "bot_ms_per_tick": 0.2874480291207631,
+     "model_json_sha256": "118fc04191d4a39e70315cab75436d36713e8cbde12a869eea68f21eae57180a"
+    }
+   }
+  }
+ ],
+ "js_jax_parity": [
+  {
+   "schema": "four_bot_js_jax_parity_v1",
+   "checkpoint": "<qqt-RL>/runs/overnight_tf_v2/phase2_it4000.pt",
+   "checkpoint_sha256": "6e190b009f180f2e449fd19941c930c0d1a86d680071eeb02262aadb6808ebd0",
+   "model_json_sha256": "1fc0a61096283a656a871c3009fcae776eb288e7b7970bc80057bb5af75043b2",
+   "seed": 20261001,
+   "initial_states": 64,
+   "initial_obs_max_abs_diff": 0.0,
+   "initial_obs_channel_max_abs_diff": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "initial_state_max_abs_diff": 5.960464477539063e-08,
+   "initial_move_mask_equal": 64,
+   "trace_ticks": 120,
+   "trace_move_logit_max_abs_diff_js_f64_vs_jax_bf16": 1.8162333598424922,
+   "trace_ability_logit_max_abs_diff_js_f64_vs_jax_bf16": 0.6259172086274081,
+   "trace_move_argmax_agreement": 0.9916666666666667,
+   "trace_ability_argmax_agreement": 1.0
+  }
+ ]
+}
