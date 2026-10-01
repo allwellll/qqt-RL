@@ -1,0 +1,32 @@
+{
+  "seed": 20260929,
+  "games_per_direction": 2048,
+  "results": [
+    {
+      "label": "baseline_p0_vs_final_p1",
+      "games": 2048,
+      "p0_win": 0.69970703125,
+      "p1_win": 0.0,
+      "draw": 0.30029296875,
+      "ongoing": 0.0,
+      "p0_surviving_kill": 0.31787109375,
+      "p1_surviving_kill": 0.0,
+      "trade": 0.0,
+      "mean_ticks": 201.87060546875,
+      "elapsed": 32.66619253158569
+    },
+    {
+      "label": "final_p0_vs_baseline_p1",
+      "games": 2048,
+      "p0_win": 0.69970703125,
+      "p1_win": 0.0,
+      "draw": 0.30029296875,
+      "ongoing": 0.0,
+      "p0_surviving_kill": 0.31787109375,
+      "p1_surviving_kill": 0.0,
+      "trade": 0.0,
+      "mean_ticks": 201.87158203125,
+      "elapsed": 31.539603233337402
+    }
+  ]
+}

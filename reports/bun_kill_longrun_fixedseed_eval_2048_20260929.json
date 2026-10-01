@@ -1,0 +1,170 @@
+{
+  "schema": "bun_flee_bot_capability_eval_v1",
+  "seed": 20260929,
+  "games": 2048,
+  "max_steps": 600,
+  "protocol": {
+    "opponent": "device-side JIT flee_bot_actions mixture (idle25/roam5/pure_flee50/smart_kite20)",
+    "actor_player": 0,
+    "arch": "mlp4",
+    "hidden": 768,
+    "curriculum": "combat_static=0.2,combat_moving=0.2,combat_kill=0.3,combat=0.3",
+    "hp": 1,
+    "reward_profile": "legacy",
+    "note": "SPS/throughput is NOT a capability metric and is excluded"
+  },
+  "results": [
+    {
+      "games": 2048,
+      "max_steps": 600,
+      "elapsed_seconds": 34.01,
+      "bomb_placement": {
+        "per_game_mean": 3.04833984375,
+        "episode_rate": 1.0,
+        "total": 6243
+      },
+      "surviving_non_trade_kill": {
+        "per_game_mean": 0.61181640625,
+        "episode_rate": 0.611328125,
+        "total": 1253
+      },
+      "self_kill": {
+        "per_game_mean": 0.0,
+        "episode_rate": 0.0,
+        "total": 0
+      },
+      "trade": {
+        "episode_rate": 0.0,
+        "total": 0
+      },
+      "outcome": {
+        "win_rate": 0.99267578125,
+        "loss_rate": 0.0,
+        "draw_rate": 0.00732421875,
+        "ongoing_rate": 0.0
+      },
+      "episode_length": {
+        "mean": 47.400390625,
+        "median": 31.0,
+        "max": 600
+      },
+      "forced_kill": "no env metric under legacy reward profile",
+      "label": "baseline",
+      "actor": "checkpoints/bun_kill_dp_20260929/actor.pt"
+    },
+    {
+      "games": 2048,
+      "max_steps": 600,
+      "elapsed_seconds": 34.71,
+      "bomb_placement": {
+        "per_game_mean": 2.90771484375,
+        "episode_rate": 1.0,
+        "total": 5955
+      },
+      "surviving_non_trade_kill": {
+        "per_game_mean": 0.61474609375,
+        "episode_rate": 0.61474609375,
+        "total": 1259
+      },
+      "self_kill": {
+        "per_game_mean": 0.0,
+        "episode_rate": 0.0,
+        "total": 0
+      },
+      "trade": {
+        "episode_rate": 0.0,
+        "total": 0
+      },
+      "outcome": {
+        "win_rate": 0.99658203125,
+        "loss_rate": 0.00048828125,
+        "draw_rate": 0.0029296875,
+        "ongoing_rate": 0.0
+      },
+      "episode_length": {
+        "mean": 45.40966796875,
+        "median": 31.0,
+        "max": 600
+      },
+      "forced_kill": "no env metric under legacy reward profile",
+      "label": "it800",
+      "actor": "checkpoints/bun_kill_longrun_20260929/actor_it800.pt"
+    },
+    {
+      "games": 2048,
+      "max_steps": 600,
+      "elapsed_seconds": 33.17,
+      "bomb_placement": {
+        "per_game_mean": 2.87890625,
+        "episode_rate": 1.0,
+        "total": 5896
+      },
+      "surviving_non_trade_kill": {
+        "per_game_mean": 0.6162109375,
+        "episode_rate": 0.61572265625,
+        "total": 1262
+      },
+      "self_kill": {
+        "per_game_mean": 0.0,
+        "episode_rate": 0.0,
+        "total": 0
+      },
+      "trade": {
+        "episode_rate": 0.0,
+        "total": 0
+      },
+      "outcome": {
+        "win_rate": 0.99755859375,
+        "loss_rate": 0.0,
+        "draw_rate": 0.00244140625,
+        "ongoing_rate": 0.0
+      },
+      "episode_length": {
+        "mean": 44.8408203125,
+        "median": 31.0,
+        "max": 600
+      },
+      "forced_kill": "no env metric under legacy reward profile",
+      "label": "it1400",
+      "actor": "checkpoints/bun_kill_longrun_20260929/actor_it1400.pt"
+    },
+    {
+      "games": 2048,
+      "max_steps": 600,
+      "elapsed_seconds": 33.72,
+      "bomb_placement": {
+        "per_game_mean": 3.07421875,
+        "episode_rate": 1.0,
+        "total": 6296
+      },
+      "surviving_non_trade_kill": {
+        "per_game_mean": 0.60986328125,
+        "episode_rate": 0.609375,
+        "total": 1249
+      },
+      "self_kill": {
+        "per_game_mean": 0.0009765625,
+        "episode_rate": 0.0009765625,
+        "total": 2
+      },
+      "trade": {
+        "episode_rate": 0.0,
+        "total": 0
+      },
+      "outcome": {
+        "win_rate": 0.9912109375,
+        "loss_rate": 0.0,
+        "draw_rate": 0.0087890625,
+        "ongoing_rate": 0.0
+      },
+      "episode_length": {
+        "mean": 48.0087890625,
+        "median": 31.0,
+        "max": 600
+      },
+      "forced_kill": "no env metric under legacy reward profile",
+      "label": "final",
+      "actor": "checkpoints/bun_kill_longrun_20260929/actor.pt"
+    }
+  ]
+}

@@ -65,7 +65,7 @@
 | safe_high | 3.9% | 11.7% | 0.54 | 9.4% |
 
 - 结论：单纯压低自炸会导致“不放泡也不逃”的被动崩溃，不能作为晋升标准。
-- 来源：`/mnt/jpfs/afs/wangyaqi/code_room/qqt-RL/reports/danger_curriculum_optimization_20260929.md`（canonical工作区历史未提交报告；后续应迁入版本库）。
+- 来源：canonical工作区中的`reports/danger_curriculum_optimization_20260929.md`（canonical工作区历史未提交报告；后续应迁入版本库）。
 
 ### EXP-20260930-01：Reward V2 + threat
 
@@ -137,9 +137,11 @@
 | dp8 it10000 | 21.9% | 22.3% | 40.6% | 2.7% | 92.9% | 88.7% | 27.8 |
 | dp8 it12000 | 26.2% | 16.4% | 37.9% | 2.3% | 93.4% | 82.5% | 40.7 |
 
-- 当前解释：所有新增点的Tactical surviving kill仍低于历史基线，且自炸/危险死亡明显更高；12k较6k–10k有局部恢复，但场均放泡升至40.7且战术结算下降，不能视为综合改善。
-- 决策：当前无可晋升checkpoint；256局仅为探索性结果，由独立评估任务筛点后做更大固定样本确认。
-- 结果：`.../eval_live_20261001_new/tactical_256/summary.json`。
+- 当前解释：256局探索结果显示所有新增点的Tactical surviving kill仍低于历史基线，且自炸/危险死亡明显更高。该次启动误将`--device gpu`当作设备值，JAX无可用CUDA后退到CPU；因此只用于组内筛点，不能与历史GPU结果混算。
+- 1024局GPU确认：固定seed 20261001、相同出生，仅评估历史it4000、探索候选it12000和明显回归点it8000。历史it4000 surviving kill 41.8%、自炸7.3%、danger→death 9.4%；it8000分别15.4%、13.1%、33.2%；it12000分别17.9%、20.6%、50.5%。相对基线的配对差均显著：it8000 kill −26.4pp [−30.1,−22.7]；it12000 kill −23.9pp [−27.8,−20.0]。
+- 决策：当前无可晋升checkpoint；1024局确认已足以判定“训练Bot专项进步、独立泛化与安全退化”，无需继续放大该比较样本。
+- 探索结果：`.../eval_live_20261001_new/tactical_256/summary.json`。
+- 确认结果：评估worktree下`runs/eval_dp8_confirm_20261001/tactical_confirm_1024_gpu/summary.json`；完整checkpoint路径、SHA256和审计摘要在同目录上级`audit_report.json`。
 
 ### EXP-20261001-04：危险残局与随机场景族
 
