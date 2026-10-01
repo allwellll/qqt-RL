@@ -24,7 +24,7 @@ IS_BUN = RULE_NAME == "bun"
 if IS_BUN:
     from .bun_env import (H, W, MAX_HP, MAX_STEPS, N_BOMB, N_MOVES,
                           N_OBS_CH, _danger_map, configure_start_state_curriculum,
-                          configure_training,
+                          configure_spawn_buckets, configure_training,
                           global_vec, init_batch,
                           legal_mask, make_obs, prepare as prepare_environment,
                           reward_from_events as _bun_reward_from_events, step)
@@ -1314,6 +1314,7 @@ def save_run_metadata(path: str, args) -> None:
         "bun_start_state_bank": getattr(args, "bun_start_state_bank", None),
         "bun_start_state_weights": getattr(
             args, "bun_start_state_weights", ""),
+        "bun_spawn_buckets": getattr(args, "bun_spawn_buckets", ""),
         "ppo_iterations": getattr(args, "iters", None),
         "warmup_updates_committed": False,
         "safety_mode": getattr(args, "safety_mode", "off"),
@@ -1720,6 +1721,12 @@ def main():
                     help="兼容旧脚本；等价于 --bun-opponent-recent")
     ap.add_argument("--bun-start-state-bank", default=None)
     ap.add_argument("--bun-start-state-weights", default="")
+    ap.add_argument(
+        "--bun-spawn-buckets", default="",
+        help="danger_arena 出生位置分桶权重（空 = 原分布）："
+             "native/near/mid/far/below/upper_left/upper_right，"
+             "如 native=0.3,near=0.1,mid=0.15,far=0.1,below=0.15,"
+             "upper_left=0.1,upper_right=0.1")
     ap.add_argument("--bun-reward-profile",
                     choices=["legacy", "auto_sparse", "combat_evolution",
                              "danger_arena"],
@@ -1830,6 +1837,9 @@ def main():
             enemy_threat_reward=args.bun_enemy_threat_reward)
         configure_start_state_curriculum(
             args.bun_start_state_bank, args.bun_start_state_weights)
+        spawn_audit = configure_spawn_buckets(args.bun_spawn_buckets)
+        if spawn_audit is not None:
+            print(f"spawn buckets={spawn_audit}", flush=True)
         if args.distill_data:
             raise ValueError("抢包子观测/动作维度独立，不能加载普通模式蒸馏数据")
         print(f"rule=bun map=806 levels={active_levels} obs={N_OBS_CH} ability={N_BOMB} "

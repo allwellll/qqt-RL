@@ -79,6 +79,17 @@ _START_STATE_BANK = None
 _START_STATE_BUCKETS = None
 _START_STATE_WEIGHTS = None
 START_STATE_BUCKET_NAMES = ("return", "steal", "post_kill", "contact", "full_start")
+# danger_arena 出生位置分桶。native = 原 _DANGER_ARENA_SPAWN_PAIRS 分布（不变）；
+# 距离桶按初始可通行格 BFS 步数；方位桶是 P1 相对 P0 的方向（dr = 行差，向下为正）。
+SPAWN_BUCKET_NAMES = ("native", "near", "mid", "far",
+                      "below", "upper_left", "upper_right")
+DEFAULT_SPAWN_BUCKETS = ("native=0.3,near=0.1,mid=0.15,far=0.1,"
+                         "below=0.15,upper_left=0.1,upper_right=0.1")
+_SPAWN_PAIRS = None
+_SPAWN_MEMBERS = None
+_SPAWN_WEIGHTS = None
+_SPAWN_AUDIT = None
+_SPAWN_SAFE_CACHE: dict = {}
 
 ROUTE_TARGETS = jnp.asarray([[9, 3], [9, 11]], jnp.int32)
 ROUTE_SPAWNS = jnp.asarray([[9, 2], [9, 12]], jnp.int32)
@@ -259,6 +270,140 @@ def configure_training(curriculum: str | None = None,
     _BASE_BOMB_REWARD = float(base_bomb_reward)
     _FORCED_KILL_REWARD = float(forced_kill_reward)
     _ENEMY_THREAT_REWARD = float(enemy_threat_reward)
+
+
+def _parse_spawn_buckets(spec: str) -> np.ndarray:
+    values = {name: 0.0 for name in SPAWN_BUCKET_NAMES}
+    for item in spec.split(","):
+        item = item.strip()
+        if not item:
+            continue
+        name, raw = item.split("=", 1)
+        if name not in values:
+            raise ValueError(f"unknown spawn bucket: {name} "
+                             f"(known: {', '.join(SPAWN_BUCKET_NAMES)})")
+        values[name] = float(raw)
+    weights = np.asarray([values[n] for n in SPAWN_BUCKET_NAMES], np.float64)
+    if np.any(weights < 0) or weights.sum() <= 0:
+        raise ValueError("spawn bucket weights must be non-negative and sum > 0")
+    return weights / weights.sum()
+
+
+def _spawn_candidates(level: dict):
+    """Directed (P0 cell, P1 cell) pairs on the native map and their buckets."""
+    wall = np.asarray(level["wall"], np.bool_).reshape(H, W)
+    brick = np.asarray(level["brick"], np.bool_).reshape(H, W)
+    opened = ~wall & ~brick
+    in_base = np.zeros((H, W), np.bool_)
+    for row, column in level.get("bun_bases", [[1, 4], [1, 8]]):
+        in_base[row:row + 3, column:column + 3] = True
+    steps = ((-1, 0), (1, 0), (0, -1), (0, 1))
+
+    def degree(cell):
+        return sum(0 <= cell[0] + a < H and 0 <= cell[1] + b < W
+                   and opened[cell[0] + a, cell[1] + b] for a, b in steps)
+
+    cells = [tuple(map(int, c)) for c in np.argwhere(opened & ~in_base)
+             if degree(tuple(c)) >= 2]
+    pairs, member = [], []
+    for start in cells:
+        distance = {start: 0}
+        queue = [start]
+        for current in queue:
+            for a, b in steps:
+                nxt = (current[0] + a, current[1] + b)
+                if (0 <= nxt[0] < H and 0 <= nxt[1] < W and opened[nxt]
+                        and nxt not in distance):
+                    distance[nxt] = distance[current] + 1
+                    queue.append(nxt)
+        for target in cells:
+            d = distance.get(target)
+            if target == start or d is None or d < 2:
+                continue
+            dr, dc = target[0] - start[0], target[1] - start[1]
+            flags = (2 <= d <= 4, 5 <= d <= 8, d >= 9,
+                     d >= 3 and dr >= 2 and abs(dc) <= dr,
+                     d >= 3 and dr <= -1 and dc <= -1,
+                     d >= 3 and dr <= -1 and dc >= 1)
+            if any(flags):
+                pairs.append((start, target))
+                member.append(flags)
+    return np.asarray(pairs, np.int32), np.asarray(member, np.bool_)
+
+
+def _spawn_pairs_safe(pairs: np.ndarray) -> np.ndarray:
+    """Batched simulator check: nobody is doomed, each side has a survivable
+    bomb, and neither side's instant bomb leaves the enemy without a safe move."""
+    from . import bun_safety
+    template = jax.tree.map(lambda x: x[0], init_batch(jax.random.PRNGKey(0), 1))
+    template = template._replace(
+        lesson=jnp.asarray(LESSON_DANGER_ARENA, jnp.int8),
+        core=template.core._replace(
+            wall=jnp.asarray(np.asarray(_BUN_LEVEL["wall"], np.bool_).reshape(H, W)),
+            brick=jnp.asarray(np.asarray(_BUN_LEVEL["brick"], np.bool_).reshape(H, W))))
+    bomb_now = jnp.asarray([[4, 1], [4, 1]], jnp.int32)
+
+    def check(pair):
+        pos = pair.astype(jnp.float32) + 0.5
+        state = template._replace(core=template.core._replace(pos=pos),
+                                  bun_spawn_pos=pos)
+        full = bun_safety.analyze_actions(state)
+        alive_ok = ~full.doomed.any()
+        can_bomb = full.survivable[:, :, 1].any(axis=-1).all()
+        tactical = bun_safety.analyze_tactical_bomb_placements(state, bomb_now)
+        no_instant_kill = (tactical.enemy_safe_moves_after > 0).all()
+        return alive_ok & can_bomb & no_instant_kill
+
+    return np.asarray(jax.jit(jax.vmap(check))(jnp.asarray(pairs)))
+
+
+def configure_spawn_buckets(spec: str | None = None) -> dict | None:
+    """Enable danger_arena spawn diversification (device-side, used by every
+    reset and auto-reset). Empty spec restores the native distribution exactly.
+    Must run before the first JIT of init_batch/step."""
+    global _SPAWN_PAIRS, _SPAWN_MEMBERS, _SPAWN_WEIGHTS, _SPAWN_AUDIT
+    if not spec:
+        _SPAWN_PAIRS = _SPAWN_MEMBERS = _SPAWN_WEIGHTS = _SPAWN_AUDIT = None
+        return None
+    weights = _parse_spawn_buckets(spec)
+    pairs, member = _spawn_candidates(_BUN_LEVEL)
+    cache_key = (_LEVELS_PATH, _BUN_INDEX, pairs.tobytes())
+    if cache_key not in _SPAWN_SAFE_CACHE:
+        _SPAWN_SAFE_CACHE[cache_key] = _spawn_pairs_safe(pairs)
+    safe = _SPAWN_SAFE_CACHE[cache_key]
+    pairs, member = pairs[safe], member[safe]
+    counts = member.sum(axis=0)
+    for index, name in enumerate(SPAWN_BUCKET_NAMES[1:]):
+        if weights[index + 1] > 0 and counts[index] == 0:
+            raise ValueError(f"spawn bucket {name} has no valid pairs")
+    _SPAWN_PAIRS = jnp.asarray(pairs, jnp.int32)
+    _SPAWN_MEMBERS = jnp.asarray(member.T)
+    _SPAWN_WEIGHTS = jnp.asarray(weights, jnp.float32)
+    _SPAWN_AUDIT = {
+        "weights": dict(zip(SPAWN_BUCKET_NAMES, map(float, weights))),
+        "valid_pairs": dict(zip(SPAWN_BUCKET_NAMES, [
+            int(_DANGER_ARENA_SPAWN_PAIRS.shape[0])] + list(map(int, counts)))),
+        "rejected_by_safety": int((~safe).sum()),
+    }
+    return _SPAWN_AUDIT
+
+
+def _sample_spawn_bucket(key, native_spawn):
+    """Returns ((2,2) float spawn, bucket id). Bucket 0 keeps native_spawn."""
+    k_bucket, k_pair = jax.random.split(jax.random.fold_in(key, 0x5BA7))
+    bucket = jax.random.categorical(k_bucket, jnp.log(_SPAWN_WEIGHTS))
+    eligible = _SPAWN_MEMBERS[jnp.maximum(bucket - 1, 0)]
+    index = jax.random.categorical(k_pair, jnp.where(eligible, 0.0, -jnp.inf))
+    spawn = _SPAWN_PAIRS[index].astype(jnp.float32) + 0.5
+    return jnp.where(bucket == 0, native_spawn, spawn), bucket
+
+
+def spawn_bucket_ids(key, n: int) -> jnp.ndarray:
+    """Bucket chosen by init_batch(key, n) per env (audit; same key path)."""
+    def one(env_key):
+        k_danger = jax.random.split(env_key, 11)[9]
+        return _sample_spawn_bucket(k_danger, jnp.zeros((2, 2)))[1]
+    return jax.vmap(one)(jax.random.split(key, n))
 
 
 def configure_start_state_curriculum(path: str | None = None,
@@ -502,6 +647,8 @@ def _fresh(key) -> BunState:
     danger_pair = jnp.where(
         jax.random.bernoulli(k_danger_swap), danger_pair[::-1], danger_pair)
     danger_spawn = danger_pair.astype(jnp.float32) + 0.5
+    if _SPAWN_PAIRS is not None:
+        danger_spawn = _sample_spawn_bucket(k_danger, danger_spawn)[0]
     combat_hit_lesson = ((lesson == LESSON_COMBAT_STATIC)
                          | (lesson == LESSON_COMBAT_MOVING))
     combat_target_lesson = combat_hit_lesson | (lesson == LESSON_COMBAT_KILL)
