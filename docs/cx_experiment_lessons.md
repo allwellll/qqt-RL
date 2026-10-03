@@ -1,6 +1,6 @@
 # CX-01 至 CX-30 实验经验
 
-本文是 CX 训练实验的精炼决策索引，长期保留已复现的负结果、诊断和失败原因，避免重新实现没有通用价值的实验分支。权威的实验登记、协议和原始产物路径仍以[训练实验总账](training_experiment_ledger.md)为准；与 trap16 有关的训练曲线、行为审计和长训门控设计见[CX-29 详细报告](../reports/cx29_trap_routes_20261003.md)。早期 Reward V2 的基线证据见[Reward V2 报告](reward_v2_experiment_report.md)。
+本文是 CX 训练实验的精炼决策索引，长期保留已复现的负结果、诊断和失败原因，避免重新实现没有通用价值的实验分支。权威实验登记见[训练实验总账](training_experiment_ledger.md)，早期机制与复现细节见[CX-01 至 CX-28 报告](../reports/cx01_28_diagnostics_20261003.md)；trap16 训练曲线、行为审计和长训门控见[CX-29 详细报告](../reports/cx29_trap_routes_20261003.md)。早期 Reward V2 的基线证据见[Reward V2 报告](reward_v2_experiment_report.md)。原始 run 产物未纳入 Git，以各报告所列相对路径定位。
 
 ## 读法与证据等级
 
