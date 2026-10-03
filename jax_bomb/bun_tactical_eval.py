@@ -24,6 +24,7 @@ import numpy as np
 
 from . import bun_env as env
 from . import jax_train
+from .attack_trace import SCHEMA as TRACE_SCHEMA, EpisodeTracer
 from .bun_frozen_opponents import clear_destructible_bricks, tactical_bot_provenance
 from .bun_rule_bot import state_from_bun_state
 from .jax_net import transformer_forward
@@ -121,7 +122,7 @@ class TacticalOpponentEvaluator:
         return bot_action, labels[:, 0].astype(bool), labels[:, 1], labels[:, 2].astype(bool)
 
     def run(self, checkpoint: str, games: int, seed: int, max_steps: int = 300,
-            per_episode: bool = False) -> dict:
+            per_episode: bool = False, trace: bool = False) -> dict:
         params = load_params(checkpoint)
         key = jax.random.PRNGKey(np.uint32(seed & 0xFFFFFFFF))
         states = clear_destructible_bricks(env.init_batch(key, games))
@@ -149,6 +150,8 @@ class TacticalOpponentEvaluator:
         winners = np.full((games,), -2, np.int8)
         done_tick = np.full((games,), max_steps, np.int32)
         policy_seconds = host_seconds = step_seconds = 0.0
+        tracers = [EpisodeTracer() for _ in range(games)] if trace else None
+        placed_actual = np.zeros((games,), np.int32)
 
         policy = _make_policy(params, games)
         jax.block_until_ready(policy(states))
@@ -212,6 +215,10 @@ class TacticalOpponentEvaluator:
             counters["avoidable_danger_death"] += active * p0("avoidable_danger_death")
             counters["steal"] += active * p0("steal")
             counters["capture"] += active * p0("capture")
+            placed_actual += active * p0("bomb_placed")
+            if tracers is not None:
+                _trace_tick(tracers, tick, active, host_states, jax.device_get(states.core.fuse),
+                            host_info)
             entropy_sum += active * np.asarray(entropy)
             decisions += active
             host_done = np.asarray(done)
@@ -251,8 +258,28 @@ class TacticalOpponentEvaluator:
                 "avoidable_danger_death": (counters["avoidable_danger_death"] > 0).tolist(),
                 "danger_to_death": (counters["danger_death"] > 0).tolist(),
                 "bombs": counters["bombs"].tolist(),
+                "bombs_placed": placed_actual.tolist(),
             }
+        if tracers is not None:
+            result["attack_trace"] = {"schema": TRACE_SCHEMA,
+                                      "episodes": [t.to_json() for t in tracers]}
         return result
+
+
+def _trace_tick(tracers, tick, active, pre, fuse_after, info) -> None:
+    """Feed one tick of host-side pre-state + step info into each active game's tracer."""
+    get = lambda name: np.asarray(info[name])
+    death, own, mutual = get("death"), get("own_bomb_defeat"), get("mutual_death")
+    by_opp = get("opponent_physical_defeat") | get("opponent_causal_defeat")
+    kill = get("causal_kill")[:, 0] | get("credited_kill")[:, 0]
+    surviving = get("surviving_causal_kill")[:, 0] | get("surviving_physical_kill")[:, 0]
+    placed = get("bomb_placed")[:, 0]
+    core = pre.core
+    for g in np.flatnonzero(active):
+        tracers[g].step(
+            tick, core.pos[g], core.alive[g], core.wall[g], core.fuse[g], core.brick[g],
+            core.blast_cap[g, 0], bool(placed[g]), fuse_after[g], death[g], own[g], by_opp[g],
+            bool(mutual[g]), bool(kill[g]), bool(surviving[g]))
 
 
 def _summary(games, seed, counters, funnel, winners, first_contact, entropy_sum,

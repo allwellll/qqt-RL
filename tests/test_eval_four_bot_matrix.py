@@ -66,6 +66,14 @@ def test_tactical_cell_requires_exact_protocol(tmp_path):
     assert not matrix.tactical_cell_ok(tmp_path / "missing.json", "a" * 64, 7, 4, 300, spawns)
 
 
+def test_trace_protocol_does_not_reuse_non_trace_cache(tmp_path):
+    path = tmp_path / "t.json"
+    spawns = [[[1, 1], [2, 2]]] * 4
+    path.write_text(json.dumps(_tactical(spawns=spawns)))
+    assert not matrix.tactical_cell_ok(path, "a" * 64, 7, 4, 300, spawns, trace=True)
+    assert not matrix.shard_ok(_shard(tmp_path), **META, trace=True)
+
+
 def _shard(tmp_path, **override):
     data = {"schema": matrix.SHARD_SCHEMA, "seed": 7, "max_steps": 300,
             "bot": {"config": {"difficulty": "hard"}}, "game_range": [0, 2],

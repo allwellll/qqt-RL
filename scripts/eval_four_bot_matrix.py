@@ -167,14 +167,15 @@ def make_spawns(args) -> None:
 # ----------------------------------------------------------------- tactical cells
 
 def tactical_cell_ok(path: Path, checkpoint_sha: str, seed: int, games: int, max_steps: int,
-                     spawn_cells: list) -> bool:
+                     spawn_cells: list, trace: bool = False) -> bool:
     if not path.exists():
         return False
     data = read_json(path)
     return (data.get("schema") == TACTICAL_SCHEMA and data.get("checkpoint_sha256") == checkpoint_sha
             and data.get("seed") == seed and data.get("max_steps") == max_steps
             and data["summary"].get("games") == games
-            and data["per_episode"]["spawn_cells"] == spawn_cells)
+            and data["per_episode"]["spawn_cells"] == spawn_cells
+            and (not trace or len(data.get("attack_trace", {}).get("episodes", [])) == games))
 
 
 def run_tactical(args) -> None:
@@ -194,14 +195,16 @@ def run_tactical(args) -> None:
             path = Path(row["path"])
             sha = sha256_file(path)
             cell = out / "cells" / row["name"] / "tactical_v2.json"
-            if tactical_cell_ok(cell, sha, args.seed, args.games, args.max_steps, spawns["spawn_cells"]):
+            if tactical_cell_ok(cell, sha, args.seed, args.games, args.max_steps, spawns["spawn_cells"],
+                                trace=args.attack_trace):
                 print(f"[tactical] {row['name']}: complete, skip")
                 continue
             wait_stable(path)
             if evaluator is None:
                 evaluator = TacticalOpponentEvaluator(host_workers=args.host_workers)
             started = time.time()
-            data = evaluator.run(str(path), args.games, args.seed, args.max_steps, per_episode=True)
+            data = evaluator.run(str(path), args.games, args.seed, args.max_steps, per_episode=True,
+                                 trace=args.attack_trace)
             if data["checkpoint_sha256"] != sha or sha256_file(path) != sha:
                 raise SystemExit(f"{row['name']}: checkpoint changed during evaluation")
             if data["per_episode"]["spawn_cells"] != spawns["spawn_cells"]:
@@ -228,10 +231,12 @@ def export_model(row: dict, out: Path, sha: str) -> tuple[Path, str]:
 
 
 def shard_ok(path: Path, *, seed, max_steps, difficulty, start, end, model_sha, checkpoint_sha,
-             sources, spawn_sha) -> bool:
+             sources, spawn_sha, trace=False) -> bool:
     if not path.exists():
         return False
     data = read_json(path)
+    if trace and not all("attack_trace" in e for e in data.get("episodes", [])):
+        return False
     return (data.get("schema") == SHARD_SCHEMA and data["seed"] == seed and data["max_steps"] == max_steps
             and data["bot"]["config"] == {"difficulty": difficulty}
             and data["game_range"] == [start, end] and len(data["episodes"]) == end - start
@@ -265,7 +270,7 @@ def run_hunters(args) -> None:
                 shard = cell_dir / f"games_{start:03d}_{end:03d}.json"
                 meta = dict(seed=args.seed, max_steps=args.max_steps, difficulty=difficulty, start=start,
                             end=end, model_sha=model_sha, checkpoint_sha=sha, sources=sources,
-                            spawn_sha=spawns["spawn_sha256"])
+                            spawn_sha=spawns["spawn_sha256"], trace=args.attack_trace)
                 if shard_ok(shard, **meta):
                     continue
                 cell_dir.mkdir(parents=True, exist_ok=True)
@@ -273,7 +278,8 @@ def run_hunters(args) -> None:
                                      "--model", str(model_path), "--difficulty", difficulty,
                                      "--spawns", str(spawns_path), "--start", str(start), "--end", str(end),
                                      "--seed", str(args.seed), "--max-steps", str(args.max_steps),
-                                     "--checkpoint-sha", sha, "--out", str(shard)], meta))
+                                     "--checkpoint-sha", sha, "--out", str(shard)]
+                            + (["--attack-trace", "1"] if args.attack_trace else []), meta))
     print(f"[hunter] {len(jobs)} shards to run with {args.workers} workers")
     started = time.time()
 
@@ -520,6 +526,8 @@ def main() -> None:
     parser.add_argument("--only", default="")
     parser.add_argument("--checkpoint", default="", help="parity: manifest name")
     parser.add_argument("--ticks", type=int, default=120)
+    parser.add_argument("--attack-trace", action="store_true",
+                        help="tactical/hunters: also emit attack_trace_v1 raw events (default off)")
     parser.add_argument("--out", default="", help="spawns: output path")
     args = parser.parse_args()
     if args.command == "spawns":

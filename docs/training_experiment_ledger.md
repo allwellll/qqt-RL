@@ -50,6 +50,7 @@ JAX Bot ladder 可作为训练专项能力的旁路诊断，但不能替代上�
 | EXP-20261001-02 | 2026-10-01 | 出生位置多样化 | 已实现并进入长训 | 与Reward V2、Bot池组合进入8卡run；尚无单独消融 | 组合结果不可归因到该动作，后续需单项A/B |
 | EXP-20261001-03 | 2026-10-01 | 8卡、2048环境、长训规模扩大 | 训练中/评估中 | 约20万SPS；截至15:09为12932/60000，最新完整ckpt it12500 | 继续训练；任何ckpt不得仅凭JAX Bot结果晋升 |
 | EXP-20261001-04 | 2026-10-01 | 新增危险残局/随机场景族 | 实现完成，验证中 | 6类场景已接入；专项测试、4卡smoke和短A/B仍在进行 | 未评估，不得宣称改善泛化 |
+| EXP-CX-20261003-29 | 2026-10-03 | trap16 路线目标场与四 Bot attack trace | 完成 | 两次 512 局确认的 Delta C CI 均大于零；it101 快筛 0/4 通过，hard/normal 未改善 | 不按原配置长训；先做对手混合的配对门控试验 |
 
 ## 4. 详细记录
 
@@ -161,6 +162,18 @@ JAX Bot ladder 可作为训练专项能力的旁路诊断，但不能替代上�
 - 统一四Bot 64局快速矩阵进一步确认：scenario两seed自炸普遍较低，但对网页猎手困难/普通几乎无存活击杀；结果见`reports/four_bot_matrix_64_20261001/`。64局只作筛点，不替代既有1024局证据。
 - 决策：不晋升当前scenario checkpoint，不启动当前配置长训。下一轮降低scenario比例，并加入native/JAX Bot进攻能力保持约束。
 - 晋升门槛：场景合法性与可解性通过；旧native路径不回归；4卡吞吐可接受；Tactical v2/held-out场景安全与击杀改善，同时JAX Bot专项能力不显著下降。
+
+### EXP-CX-20261003-29：trap16 路线目标场
+
+- 状态：完成短程训练、独立复现和四 Bot 确认；未启动长程训练。
+- 变更类型：训练对手策略 / 评估协议。
+- 假设：在半数 JAX `hunter_hard` P1 槽位中，为路线目标加入距敌三格内、至多 16 个可达安全候选，可提升安全进攻。
+- 训练：control/trap16 各 4 seed，101 updates；起点 it4000，projected critic、kill reward 24、reward shaping 0.6、EMA 0.95、512 env x 64、top 25%、32 PPO epoch、lr 3e-4。全部正式任务 `rc=0` 且 checkpoint 有限。
+- 快筛：固定 seed 20261001、每 Bot 64 局、真实 JS hunter、300 tick。trap16 it50 为 2/4 通过，it101 为 0/4；两条已通过轨迹从 C=0.547 到 0.422、C=0.516 到 0.250。
+- 确认：每 Bot 512 局、eval seed 20264011、bootstrap seed 20264012、10,000 paired bootstrap。原候选 Delta C +0.142578，95% CI [0.060498, 0.226562]；独立重训 +0.101562，95% CI [0.009766, 0.193359]。
+- 行为：tactical surviving-kill 为 201/230/229（基线/原候选/重训），自炸为 28/8/1；hard 为 4/0/0，normal 均为 0，收益不能解释为高难攻击转化。
+- 决策：不批准原配置长训。后续先做四 seed、两臂、201-update 的对手混合配对试验，保存 50/100/150/200/201，按真实四 Bot 快筛和 hard/normal 不退化门控决定是否扩至 401 updates。
+- 证据：`runs/cx20261003_29_trap_routes/`、`runs/cx20261003_29_screen/screen.json`、`runs/cx20261003_29_confirm_eval/`。运行产物不纳入版本控制；完整设计见 `reports/cx29_trap_routes_20261003.md`。
 
 ## 5. 新实验追加模板
 

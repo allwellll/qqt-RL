@@ -80,7 +80,79 @@ function killedByOpponent(info, victim) {
     && ((phys[killer] && physCount === 1) || (causal[killer] && causalCount === 1));
 }
 
-function runEpisode({ level, model, hunter, spawn, game, seed, maxSteps, rngSeed, trace }) {
+// Raw attack_trace_v1 events; classification lives in jax_bomb/attack_trace.py (shared with Tactical).
+const TRACE_SCHEMA = 'attack_trace_v1';
+const CONTACT_DISTANCE = 3.0;
+const PRESSURE_WINDOW = 10;
+const RAY_DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+
+function rayCover(sim, fuseBefore, cell, blast) {
+  const H = QQT.H, W = QQT.W;
+  const out = new Set([cell[0] * W + cell[1]]);
+  for (const [dr, dc] of RAY_DIRS) {
+    let r = cell[0], c = cell[1];
+    for (let k = 0; k < blast; k++) {
+      r += dr; c += dc;
+      if (r < 0 || r >= H || c < 0 || c >= W) break;
+      const i = r * W + c;
+      if (sim.wall[i]) break;
+      out.add(i);
+      if (fuseBefore[i] > 0 || sim.brick[i]) break;
+    }
+  }
+  return out;
+}
+
+class AttackTracer {
+  constructor(sim) {
+    this.W = QQT.W;
+    this.contact_tick = -1; this.ticks = 0;
+    this.placements = []; this.resolutions = []; this.deaths = []; this.kills = [];
+    this.pending = new Map();
+  }
+
+  step(sim, tick, pre, info) {
+    const W = this.W;
+    const cells = [0, 1].map((p) => [Math.floor(pre.pos[p * 2]), Math.floor(pre.pos[p * 2 + 1])]);
+    const dist = Math.abs(pre.pos[0] - pre.pos[2]) + Math.abs(pre.pos[1] - pre.pos[3]);
+    if (this.contact_tick < 0 && pre.alive[0] && pre.alive[1] && dist <= CONTACT_DISTANCE) this.contact_tick = tick;
+    if (info.placed[0]) {
+      const cover = rayCover(sim, pre.fuse, cells[0], pre.blast);
+      this.placements.push({ tick, cell: cells[0], enemy_cell: cells[1], dist: Math.round(dist * 1000) / 1000,
+        blast: pre.blast, threat: !!pre.alive[1] && cover.has(cells[1][0] * W + cells[1][1]), pressure: false });
+      this.pending.set(cells[0][0] * W + cells[0][1], this.placements.length - 1);
+    }
+    if (pre.alive[1]) {
+      const enemyKey = cells[1][0] * W + cells[1][1];
+      for (const [key, index] of this.pending) {
+        const record = this.placements[index];
+        if (record.pressure || !(pre.fuse[key] > 0 && pre.fuse[key] <= PRESSURE_WINDOW)) continue;
+        if (rayCover(sim, pre.fuse, record.cell, record.blast).has(enemyKey)) record.pressure = true;
+      }
+    }
+    for (const key of [...this.pending.keys()].sort((a, b) => a - b)) {
+      if (sim.fuse[key] <= 0) {
+        this.resolutions.push({ tick, cell: this.placements[this.pending.get(key)].cell });
+        this.pending.delete(key);
+      }
+    }
+    for (const p of [0, 1]) {
+      if (!info.died[p]) continue;
+      const cause = info.mutualDeath ? 'mutual' : info.ownBombDefeat[p] ? 'own_bomb'
+        : killedByOpponent(info, p) ? 'by_opponent' : 'other';
+      this.deaths.push({ tick, player: p, cause });
+    }
+    if (info.causalKill[0] || info.creditedKill[0]) this.kills.push({ tick, surviving: !!sim.alive[0] });
+    this.ticks = tick + 1;
+  }
+
+  toJSON() {
+    return { contact_tick: this.contact_tick, ticks: this.ticks, placements: this.placements,
+      resolutions: this.resolutions, deaths: this.deaths, kills: this.kills };
+  }
+}
+
+function runEpisode({ level, model, hunter, spawn, game, seed, maxSteps, rngSeed, trace, attackTrace }) {
   const simSeed = episodeSeed(seed, game);
   const sim = setupSim(level, spawn, simSeed, maxSteps);
   const botSeed = episodeSeed(seed ^ 0x68756e74, game);
@@ -95,7 +167,11 @@ function runEpisode({ level, model, hunter, spawn, game, seed, maxSteps, rngSeed
   const startSpawn = [[Math.floor(sim.pos[0]), Math.floor(sim.pos[1])],
     [Math.floor(sim.pos[2]), Math.floor(sim.pos[3])]];
   let modelMs = 0, botMs = 0;
+  const tracer = attackTrace ? new AttackTracer(sim) : null;
   while (!sim.done && sim.t < maxSteps) {
+    const tick = sim.t;
+    const pre = tracer ? { pos: Array.from(sim.pos), alive: Array.from(sim.alive),
+      fuse: Int16Array.from(sim.fuse), blast: Number(sim.blastCap[0]) } : null;
     if (trace && trace.rows.length < trace.limit) {
       const obs = sim.encodeObsJAX(0, model.obsShape[0]);
       const state = sim.encodeStateJAX(0);
@@ -125,9 +201,12 @@ function runEpisode({ level, model, hunter, spawn, game, seed, maxSteps, rngSeed
     counts.killed_by_bot += killedByOpponent(info, 0) ? 1 : 0;
     counts.surviving_causal_kill += info.causalKill[0] && sim.alive[0] ? 1 : 0;
     counts.surviving_physical_kill += info.creditedKill[0] && sim.alive[0] ? 1 : 0;
+    if (tracer) tracer.step(sim, tick, pre, info);
   }
-  return { game, sim_seed: simSeed, bot_seed: botSeed, spawn_cells: startSpawn,
+  const record = { game, sim_seed: simSeed, bot_seed: botSeed, spawn_cells: startSpawn,
     ticks: sim.t, counts, model_ms: modelMs, bot_ms: botMs };
+  if (tracer) record.attack_trace = tracer.toJSON();
+  return record;
 }
 
 function loadModel(file) {
@@ -152,7 +231,8 @@ function runShard(options) {
   const episodes = [];
   for (let game = start; game < end; game++) {
     const spawn = manifest.spawn_cells[game];
-    const record = runEpisode({ level, model, hunter, spawn, game, seed, maxSteps });
+    const record = runEpisode({ level, model, hunter, spawn, game, seed, maxSteps,
+      attackTrace: !!options.attackTrace });
     if (JSON.stringify(record.spawn_cells) !== JSON.stringify(spawn)) throw new Error(`spawn mismatch game ${game}`);
     episodes.push(record);
   }
@@ -208,7 +288,7 @@ function parseArgs(argv) {
     modelPath: args.model, difficulty: args.difficulty, spawnsPath: args.spawns,
     start: Number(args.start), end: Number(args.end), seed: Number(args.seed),
     maxSteps: Number(args['max-steps'] || 300), checkpointSha: args['checkpoint-sha'] || null,
-    out: args.out,
+    attackTrace: args['attack-trace'] === '1', out: args.out,
   };
 }
 
@@ -224,4 +304,4 @@ if (require.main === module) {
 }
 
 module.exports = { runShard, runEpisode, createHunter, setupSim, parseArgs, loadLevel, loadModel,
-  episodeSeed, parityDump, SCHEMA, DIFFICULTIES };
+  episodeSeed, parityDump, SCHEMA, DIFFICULTIES, AttackTracer, rayCover, TRACE_SCHEMA };
