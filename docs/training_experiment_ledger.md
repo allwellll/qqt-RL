@@ -51,6 +51,7 @@ JAX Bot ladder 可作为训练专项能力的旁路诊断，但不能替代上�
 | EXP-20261001-03 | 2026-10-01 | 8卡、2048环境、长训规模扩大 | 训练中/评估中 | 约20万SPS；截至15:09为12932/60000，最新完整ckpt it12500 | 继续训练；任何ckpt不得仅凭JAX Bot结果晋升 |
 | EXP-20261001-04 | 2026-10-01 | 新增危险残局/随机场景族 | 实现完成，验证中 | 6类场景已接入；专项测试、4卡smoke和短A/B仍在进行 | 未评估，不得宣称改善泛化 |
 | EXP-CX-20261003-29 | 2026-10-03 | trap16 路线目标场与四 Bot attack trace | 完成 | 两次 512 局确认的 Delta C CI 均大于零；it101 快筛 0/4 通过，hard/normal 未改善 | 不按原配置长训；先做对手混合的配对门控试验 |
+| EXP-CX-20261003-30 | 2026-10-03 | trap16 对手混合：50% vs 75% JAX hunter_hard | 完成 pilot | mixed-hard 8/16 保存点通过、3/4 seed 有至少两个通过点；hard S 仍为 0，normal S 仅少量出现，末端 Tactical 退化 | 不启动 401；若继续只做新 seed 的 512 局确认 |
 
 ## 4. 详细记录
 
@@ -174,6 +175,15 @@ JAX Bot ladder 可作为训练专项能力的旁路诊断，但不能替代上�
 - 行为：tactical surviving-kill 为 201/230/229（基线/原候选/重训），自炸为 28/8/1；hard 为 4/0/0，normal 均为 0，收益不能解释为高难攻击转化。
 - 决策：不批准原配置长训。后续先做四 seed、两臂、201-update 的对手混合配对试验，保存 50/100/150/200/201，按真实四 Bot 快筛和 hard/normal 不退化门控决定是否扩至 401 updates。
 - 证据：`runs/cx20261003_29_trap_routes/`、`runs/cx20261003_29_screen/screen.json`、`runs/cx20261003_29_confirm_eval/`。运行产物不纳入版本控制；完整设计见 `reports/cx29_trap_routes_20261003.md`。
+
+### EXP-CX-20261003-30：对手混合主动击杀 pilot
+
+- 状态：完成四 seed、两臂、201-update 训练和 64 局四 Bot 快筛；未启动 401-update 或 512 局确认。
+- 假设与唯一变量：固定 CX-29 trap16 及全部训练配置，只把 P1 JAX `hunter_hard` 比例从 50% 提高到 75%；reference 保持 50% 作为配对参照。
+- 训练：两臂各 4 个固定 seed，初始化为 historical it4000，保存 it50/100/150/200/201；8 个任务均 `rc=0` 且 checkpoint 有限。
+- 快筛：固定 seed 20261001、每 Bot 64 局、真实网页 hard/normal/easy、Tactical v2、同出生、300 tick 和 attack trace。reference 通过 1/16，mixed-hard 通过 8/16；mixed-hard 的 seed 20265002/3/4 各有至少两个通过点。
+- 行为限制：mixed-hard 在 it50/100/150/201 的 hard+normal S 总计为 0/1/4/3（512 局合计），hard S 各保存点均为 0；it201 Tactical S/B/P 下降到 82/14.520/0.746。结果支持改变对手混合再评估，但不支持把它写成 hard 攻击改善。
+- 决策：不启动 401-update 长训，不合入一次性训练入口；若继续，按预注册聚合规则固定一个 mixed-hard checkpoint，用新的训练 seed 做每 Bot 512 局确认和 10,000 次 paired bootstrap。详细结果见 `reports/cx30_active_kill_20261003.md`。
 
 ## 5. 新实验追加模板
 
