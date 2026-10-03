@@ -80,6 +80,9 @@ JAX Bot ladder 可作为训练专项能力的旁路诊断，但不能替代上�
 | EXP-CX-20261003-28 | 2026-10-03 | 安全放泡按敌方逃路缩减加 margin reward .4 | 完成 | 64 局两臂各 2/8、全部 hard S=0；原点/重训 Delta C +.150/-.230 | 不晋升；原点属于 control，不能归因于新奖励 |
 | EXP-CX-20261003-29 | 2026-10-03 | trap16 路线目标场与四 Bot attack trace | 完成 | 两次 512 局确认的 Delta C CI 均大于零；it101 快筛 0/4 通过，hard/normal 未改善 | 不按原配置长训；CX-30 门控也未提供延长证据 |
 | EXP-CX-20261003-30 | 2026-10-03 | trap16 对手混合：50% vs 75% JAX hunter_hard | 完成 pilot | mixed-hard 8/16 保存点通过、3/4 seed 有至少两个通过点；hard S 仍为 0，normal S 仅少量出现，末端 Tactical 退化 | 不启动 401；不因快筛通过直接追加训练或 512 局确认 |
+| EXP-CX-20261003-31 | 2026-10-03 | JAX/网页主动击杀机会与 45-tick 配对审计 | 完成诊断 | JAX hard 96 次安全放泡反事实均无 surviving kill；网页近距/逃路缩减事件也为 hard/normal 0→0 | 不训练；先寻找网页时间展开 forced 且自身可逃的单变量机制 |
+| EXP-CX-20261003-32 | 2026-10-03 | 网页 forced 几何见证与 JAX reset window pilot | 完成，阴性 | 人工格位可见 52/52 机制见证；两条 21-update 模型真实 hard/normal 均 0/64，JAX 标签与网页时序不一致 | 不追加训练或 512 局；先对齐标签和正常出生可达性 |
+| EXP-CX-20261003-33 | 2026-10-03 | JAX 对手梯度 ladder 对照 | 完成，阴性 | 两 seed ladder 的真实 hard/normal 均 0/64，Tactical 低于 control；代理 kill/death 信号未转化 | 不扩大对手梯度；保留为负结果诊断 |
 
 CX-01 至 CX-28 的实验假设、唯一变量、证据等级和失败模式可按 ID 在[经验索引](cx_experiment_lessons.md)检索；关键机制诊断、复现与启动踩坑见[CX-01 至 CX-28 报告](../reports/cx01_28_diagnostics_20261003.md)。各轮原始 run 产物仍在隔离工作区，未纳入 Git；64 局结果均不能替代 512 局确认。
 
@@ -214,6 +217,27 @@ CX-01 至 CX-28 的实验假设、唯一变量、证据等级和失败模式可�
 - 快筛：固定 seed 20261001、每 Bot 64 局、真实网页 hard/normal/easy、Tactical v2、同出生、300 tick 和 attack trace。reference 通过 1/16，mixed-hard 通过 8/16；mixed-hard 的 seed 20265002/3/4 各有至少两个通过点。
 - 行为限制：mixed-hard 在 it50/100/150/201 的 hard+normal S 总计为 0/1/4/3（512 局合计），hard S 各保存点均为 0；it201 Tactical S/B/P 下降到 82/14.520/0.746。结果支持改变对手混合再评估，但不支持把它写成 hard 攻击改善。
 - 决策：不启动 401-update 长训，不合入一次性训练入口，也不因 64 局快筛通过自动启动新的训练 seed 或 512 局确认。后续必须先完成真实网页机制机会审计并在新的单变量设计中得到跨 seed hard/normal 信号。详细结果见 `reports/cx30_active_kill_20261003.md`。
+
+### EXP-CX-20261003-31：主动击杀机会审计
+
+- 状态：完成 JAX/JIT 与真实网页 45-tick 配对诊断；未训练新模型。
+- 唯一变量：只改变审计首步动作，比较 actor 原动作与安全放泡反事实；不改变训练或评估模型。
+- 结果：JAX hard 三 seed 共 96 次实际放泡，surviving kill 对照/干预均为 `0/0`；网页 hard/normal 近距和 Hunter 逃路缩减事件也均为 `0→0`，部分干预增加死亡。计数是相关 tick，不是独立局率。
+- 决策：不把静态 pressure/宽泛 threat 作为训练奖励，不启动长训。完整协议与限制见 `reports/cx31_attack_opportunity_20261003.md`。
+
+### EXP-CX-20261003-32：网页 forced 几何见证与 reset window pilot
+
+- 状态：机制见证和 21-update 短训完成；未做 512 局确认或长训。
+- 假设与唯一变量：将网页清砖 map 806 的人工 forced 格位混入 reset；control/window 的名义差异为 reset 比例，但两臂共同改变了奖励，且 seed 未配对，因此不作严格因果归因。
+- 结果：人工起点规则移动单泡为 `52/52` surviving kill；历史模型为 `44/52` 且 trade/死亡增加。正常出生四 Bot 64 局中，两条 window 模型 hard/normal 均 `0/64`，Tactical 为 `26/64`。
+- 决策：人工见证不代表正常出生收益；先修正 JAX 静态标签与网页时间展开差异。详见 `reports/cx32_geometry_windows_20261003.md`。
+
+### EXP-CX-20261003-33：JAX 对手梯度 ladder 对照
+
+- 状态：完成 2 seed × 2 arm、21-update 训练与真实四 Bot 64 局快筛；未晋升。
+- 假设与唯一变量：只将 JAX 对手池从 `dodge+legacy_flee` 改为包含 `bomber_easy/hunter/hunter_hard` 的 ladder；control 与 ladder 各两个 seed。
+- 结果：control seed Tactical S 为 `28/30`、ladder 为 `23/22`；两臂真实 hard/normal 均 `0/64`，easy 仅有噪声差异。训练侧 hunter kill/death 信号不等于网页转化。
+- 决策：不扩大对手梯度；保留精炼结论和长训门控见 `reports/cx33_opponent_ladder_20261003.md`。原始矩阵不入 Git。
 
 ## 5. 新实验追加模板
 
