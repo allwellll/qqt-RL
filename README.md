@@ -4,6 +4,8 @@
 
 当前代码基线来自 `qqt-gpu-sim` 的 safe-aggression r6 冻结 runtime，并合入 cycle 9 后的 seed namespace/runner 修复。旧仓库中正在运行的 360-cycle 四卡任务继续使用旧路径；新实验与后续调试才使用本仓库。
 
+训练实验的权威索引见[实验总账](docs/training_experiment_ledger.md)；CX-01 至 CX-29 可检索的负结果、诊断和复现限制见[CX 实验经验](docs/cx_experiment_lessons.md)。
+
 ## 快速开始
 
 ```bash
