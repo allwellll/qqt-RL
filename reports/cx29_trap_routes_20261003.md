@@ -4,7 +4,7 @@
 
 ## 结论
 
-trap16 的短程候选已通过独立复现和四 Bot 确认，但不支持直接按原配置延长训练。建议先修改对手混合，再以配对的 201-update 门控试验判断是否值得扩至 401 updates；本次未启动长程训练。
+trap16 的短程候选已通过独立复现和四 Bot 确认，但不支持直接按原配置延长训练。本文原先预注册的对手混合 201-update 门控试验已在 CX-30 完成：mixed-hard 提高了 64 局快筛通过点数，却仍没有 hard surviving-kill，且 it201 的 Tactical `S/B/P` 回落。因此不批准原配置、mixed-hard 或任意“同配置继续训练”的 401-update 长训。
 
 原配置中 P1 为 50% JAX `hunter_hard` 与 50% 当前随机策略。trap16 只在 hunter 的目标场增加距离对手三格内、至多 16 个可达安全位置；其余训练配置固定。训练从 it4000 初始化，使用 projected critic、kill reward 24、reward shaping 0.6、EMA 0.95、512 env x 64 steps、top 25%、32 PPO epoch、学习率 3e-4，共 101 updates。
 
@@ -46,9 +46,9 @@ trap16 在 it50 为 2/4 通过，在 it101 为 0/4。两条已通过轨迹在继
 
 hard surviving-kill 为基线 4、原候选 0、重训 0；normal 均为 0。easy 为 15、15、34。hard/normal 的样本杀伤率低，64 局筛选中零计数有较大噪声，但两次 512 局确认都未改善，且 hard 的差异 CI 为负，不能把该结果解释为解决了高难攻击。
 
-## 后续长程设计
+## 已执行的延长门控与结论
 
-先做一个 8 GPU 的四 seed、两臂配对 201-update pilot，所有 run 均从同一 it4000 初始化重新训练，不从 it50 checkpoint 续训。每个 seed 固定配对；save at 50、100、150、200 以及 final 201。训练预算为 8 x 201 updates，采用原批量与优化器配置。
+为区分“延长同配置”与“改变训练压力”，CX-30 已执行 8 GPU、四 seed、两臂配对的 201-update pilot。所有 run 都从同一 it4000 初始化重新训练，不从 it50 checkpoint 续训；每个 seed 固定配对，保存 it50/100/150/200/201，训练预算为 `8 x 201` updates，批量和优化器不变。
 
 两臂应保持 trap16，且只改变对手混合：
 
@@ -57,8 +57,10 @@ hard surviving-kill 为基线 4、原候选 0、重训 0；normal 均为 0。eas
 | reference | 原 50% `hunter_hard` + 50% 当前策略 | 测量单纯延长的效应 |
 | mixed-hard | 75% `hunter_hard` + 25% 当前策略 | 在不改奖励、网络或 trap16 的前提下增加接近 hard 的训练压力 |
 
-在启动 pilot 前，先做每臂 3-update smoke 与 2048-state 机制探针，确认候选合法、安全预测和 action-diff 没有回归。每个保存点使用固定 seed、真实 JS hunter 的 64 局四 Bot 快筛，必须启用 `--attack-trace`。选择规则预先固定为：在四 seed 上先比较 checkpoint 的平均 C，再以 tactical S 和 hard+normal S 打破并列；不得按单一最佳 seed 选点。
+启动前每臂均完成 3-update smoke 与 2048-state 机制探针，确认候选合法、安全预测和 action-diff 无回归。每个保存点均以固定 seed、真实 JS hunter 的 64 局四 Bot 快筛并启用 `--attack-trace`；选择规则预先固定为四 seed 平均 C，随后以 Tactical S 和 hard+normal S 打破并列，禁止挑单一最佳 seed。
 
-仅当 mixed-hard 在至少 2/4 seed 的至少两个保存点通过快筛，且 hard+normal S 相对 reference 未下降，并且平均 C 不低于 it50 reference 中位数，才将两臂各扩至 401 updates。任一条件触发即停止该臂：两个或更多 seed 相对其 it50 checkpoint 的 C 下降至少 6/64；100 与 150 后 hard+normal S 未增加且 tactical S 或 pressure 指标下降；任一 Bot 的 S、D、B、P 触发现有 `score_eval_screen.py` 的 no-collapse 门槛。
+CX-30 的完整结果见[CX-30 报告](cx30_active_kill_20261003.md)：reference 仅 `1/16` 保存点通过，mixed-hard 为 `8/16`，但所有 mixed-hard 保存点的 hard S 仍为 0，normal S 仅在 it150/it201 分别为 4/3，且 it201 Tactical S/B/P 下滑。它没有提供把任一臂扩至 401 updates 的证据。
 
-扩展后仍在 50、100、150、200、300、400、401 保存并快筛。只有预注册规则选出的单一 checkpoint 才进入新的独立 seed、每 Bot 512 局真实四 Bot 确认与 10,000 次 paired bootstrap；确认须同时满足 Delta C CI 下界大于零、各 cell Delta S CI 下界不低于 -0.05、炸弹量不低于基线 75%。
+若以后出现与真实网页猎手机制对齐的新单变量设计，先做 2048-state rollout 机会审计和 3-update smoke；随后才可做新的四 seed、两臂、101-update 快筛，保存 it50/100/101，以真实四 Bot 各 64 局、attack trace 观察 hard/normal 的实际转化。只有至少两个训练 seed 的多个保存点同时出现 hard 或 normal 的 surviving-kill 信号、无 Tactical S/B/P 退化，才可预注册 `8 x 201` 配对 gate（保存 it50/100/150/200/201）。任何两条轨迹相对 it50 的 C 下降至少 `6/64`、it100 与 it150 后 hard+normal S 未增加且 Tactical S 或 pressure 下降、或任一 Bot 触发 `score_eval_screen.py` 的 S/D/B/P no-collapse 门槛，立即停止该臂；目前没有满足该前提的候选。
+
+即使未来通过 201-update gate，也只能把预注册聚合规则选出的单一 checkpoint 用新的训练 seed 重训，并做每 Bot 512 局真实四 Bot 确认（独立 eval seed、同出生、attack trace、10,000 次 paired bootstrap）。确认仍须同时满足 Delta C 置信区间下界大于零、每格 Delta S 下界不低于 `-0.05`、炸弹量至少为基线的 75%，并单列 hard/normal；不以 easy 或少死替代高难攻击。未达到这些条件前，不批准 401-update 长训。

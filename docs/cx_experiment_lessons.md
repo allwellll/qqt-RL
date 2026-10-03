@@ -37,8 +37,8 @@
 | CX-21 | 混合对手中 current 与 frozen reference。 | 有筛选候选。 | 原点/重训 Delta C `+.156/+.182`，两者 Tactical 都失败。 | 对手强度改变不能只按综合 C 选择。 |
 | CX-24 | 学习型 P1 随机采样或合法动作 greedy 解码。 | 快筛没有稳定 hard 攻击收益。 | 独立 Tactical 下界 `-.09375`。 | 训练对手解码方式不是网页策略的代理；不以更多即时威胁泡宣称有效。 |
 | CX-27 | 后半 P1 固定为更强的 CX-25 reference。 | current 2/8、strong-ref 1/8 通过；全部 hard S 为 0。 | 原点 `+.1445`，独立 C CI 跨零且 Tactical 下界 `-.1328`。 | 强 reference 仍未带来 hard 转化；不能用原点的防御收益掩盖复训失败。 |
-| CX-29 | 训练猎手目标场加入至多 16 个非射线 trap 位置。 | it50 2/4 通过，it101 0/4；两条通过轨迹 C `0.547 -> 0.422`、`0.516 -> 0.250`。 | 原点 Delta C `+.142578`，独立 `+.101562`，均为正；hard S `4 -> 0/0`、normal 均为 0。 | 可复现的是 Tactical 安全收益，不是高难攻击。禁止按原配置长训；先做对手混合的配对门控试验。 |
-| CX-30 | 在固定 trap16 配置下把 P1 JAX `hunter_hard` 从 50% 提至 75%。 | reference 1/16、mixed-hard 8/16 保存点通过；mixed-hard 3/4 seed 各有至少两个通过点。 | 尚无 512 局确认；hard S 各保存点均为 0，normal S 仅 0/1/4/3，it201 Tactical 退化。 | 对手混合值得进入独立确认，但不等于 hard 攻击改善；不启动 401，必须先做新 seed 512 局确认。 |
+| CX-29 | 训练猎手目标场加入至多 16 个非射线 trap 位置。 | it50 2/4 通过，it101 0/4；两条通过轨迹 C `0.547 -> 0.422`、`0.516 -> 0.250`。 | 原点 Delta C `+.142578`，独立 `+.101562`，均为正；hard S `4 -> 0/0`、normal 均为 0。 | 可复现的是 Tactical 安全收益，不是高难攻击。禁止按原配置长训；CX-30 的对手混合 gate 也未提供延长证据。 |
+| CX-30 | 在固定 trap16 配置下把 P1 JAX `hunter_hard` 从 50% 提至 75%。 | reference 1/16、mixed-hard 8/16 保存点通过；mixed-hard 3/4 seed 各有至少两个通过点。 | 未做 512 局确认；hard S 各保存点均为 0，normal S 仅 0/1/4/3，it201 Tactical 退化。 | 对手混合没有产生真实 high-hard 攻击转化；不启动 401，也不因快筛通过自动启动新 seed 确认。 |
 
 ## 采样、优化器与参数化稳定性
 
@@ -57,9 +57,9 @@
 
 CX-25 的 HL-Gauss 价值标签边界投影在两次 512 局确认中满足原综合和逐格数值门槛：原点 Delta C `+.205078`，独立 `+.156250`。但真实 hard surviving-kill 从基线 `4/512` 变为 `0/512` 和 `0/512`，收益主要来自减少被杀与自炸。它说明价值投影可保留综合安全收益，不能作为“hard 攻击已改善”的证据。
 
-CX-29 是唯一已纳入 main 的新增训练方向：原点与独立重训的 Delta C 置信区间均大于零，Tactical surviving-kill 为基线/原点/重训 `201/230/229`，自炸 `28/8/1`。但 hard `4/0/0`、normal `0/0/0`，而且 it101 的跨 seed 快筛已显示退化。因此下一步是固定设计的 4 seed、两臂、201-update 对手混合 pilot，而不是按同一配置直接长训；完整保存点、停止条件和确认规则见详细报告。
+CX-29 是唯一已纳入 main 的新增训练方向：原点与独立重训的 Delta C 置信区间均大于零，Tactical surviving-kill 为基线/原点/重训 `201/230/229`，自炸 `28/8/1`。但 hard `4/0/0`、normal `0/0/0`，而且 it101 的跨 seed 快筛已显示退化。后续 CX-30 的四 seed、两臂、201-update 对手混合 gate 仍未得到 hard S，且 it201 Tactical S/B/P 下滑。因此 trap16 当前不具备长训资格；完整保存点、停止条件和新的机制门槛见详细报告。
 
-CX-30 的 pilot 支持 mixed-hard 对手混合进入下一轮筛选，但不能证明高难攻击改善：64 局保存点通过率为 reference `1/16`、mixed-hard `8/16`，mixed-hard 的 hard S 各点均为 0，normal S 仅少量出现，且 it201 的 Tactical S/B/P 下降。结论是停止 401-update 扩展；如继续，只固定聚合候选并以新训练 seed 做 512 局真实四 Bot 确认。完整数据与门槛见[CX-30 报告](../reports/cx30_active_kill_20261003.md)。
+CX-30 的 pilot 说明提高 JAX hard 对手比例本身不足以改善真实高难攻击：64 局保存点通过率为 reference `1/16`、mixed-hard `8/16`，mixed-hard 的 hard S 各点均为 0，normal S 仅少量出现，且 it201 的 Tactical S/B/P 下降。结论是停止 401-update 扩展，也不因快筛通过直接花费新的训练 seed 做 512 局确认；先证明新的单变量设计能在真实 hard/normal 形成跨 seed 信号。完整数据与门槛见[CX-30 报告](../reports/cx30_active_kill_20261003.md)。
 
 ## 固化的工作规则
 
