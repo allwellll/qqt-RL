@@ -82,7 +82,7 @@ for (const [ms, allowed] of [[500, false], [501, true], [599, true], [600, false
   assert(!sim._activateNativePass(0), '100ms stale contact must not activate passage');
 }
 {
-  const sim = scene({ bananaSlideSpeedPx: 360 });
+  const sim = scene({ bananaSlideSpeedPx: 480 });
   sim.spdG[0] = 2.4;
   const cell = sim.centerCell(0)[0] * Q.W + sim.centerCell(0)[1];
   sim.fieldItem[cell] = Q.ITEM_BANANA; sim.fieldArmed[cell] = 1; sim.fieldOwner[cell] = 1;
@@ -90,14 +90,14 @@ for (const [ms, allowed] of [[500, false], [501, true], [599, true], [600, false
   assert.equal(sim.movementStatus[0], Q.MOVE_STATUS_SLIDE, 'actual banana contact activates sliding');
   const x = sim.pos[1];
   for (let i = 0; i < 10; i++) sim.frameStep(0, Q.MOVE_LEFT, 0.02);
-  assert(Math.abs((sim.pos[1] - x) * 40 - 72) < 1, '360px/s slide ignores steering');
+  assert(Math.abs((sim.pos[1] - x) * 40 - 96) <= 1, '480px/s slide ignores steering within native pixel rounding');
   sim.wall[4 * Q.W + 7] = 1;
   for (let i = 0; i < 100 && sim.movementStatus[0] === Q.MOVE_STATUS_SLIDE; i++) sim.frameStep(0, Q.MOVE_LEFT, 0.02);
   assert.equal(sim.movementStatus[0], Q.MOVE_STATUS_NONE, 'fast slide stops at obstacles');
   assert(sim.pos[1] < 7, 'slide cannot tunnel through a wall');
   const restored = scene();
   restored.restoreReplay(sim.snapshotReplay());
-  assert.equal(restored.bananaSlideSpeedPx, 360, 'replay preserves custom banana speed');
+  assert.equal(restored.bananaSlideSpeedPx, 480, 'replay preserves custom banana speed');
   const original = scene().snapshotReplay();
   assert(!Object.hasOwn(original, 'bananaSlideSpeedPx'), 'default speed preserves legacy replay schema');
   restored.restoreReplay(original);

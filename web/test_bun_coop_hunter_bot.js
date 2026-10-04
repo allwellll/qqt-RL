@@ -25,7 +25,7 @@ const decide = (sim, pid) => bot().analyze(Hunter.hunterStateFromSim(sim), pid);
 {
   const sim = scene();
   assert.equal(decide(sim, 1).role, 'ATTACKER');
-  assert.equal(decide(sim, 2).mode, 'SUPPORT');
+  assert.equal(decide(sim, 2).mode, 'GUARD');
   sim.alive[1] = false;
   assert.equal(decide(sim, 2).role, 'SOLO', 'support takes over when attacker is dead');
 }
@@ -212,5 +212,68 @@ for (const difficulty of ['easy', 'normal', 'hard']) {
   sim.pos[0] = 11.5; sim.pos[1] = 1.5;
   attacker.analyzeSim(sim, 1);
   assert.equal(attacker.chainPlan, null, 'cancel the reserve connection after the enemy leaves its target ray');
+}
+{
+  const sim = scene([0, 1, 1], [[10.5, 1.5], [6.5, 8.5], [6.5, 9.5]]);
+  sim.bunStored = [[0, 0], [0, 0]]; sim.spdG.fill(1);
+  const attacker = bot(), defender = bot();
+  let guardTicks = 0;
+  for (let tick = 0; tick < 30; tick++) {
+    const first = attacker.act(sim, 1), second = defender.act(sim, 2);
+    if (defender.lastDecision.mode === 'GUARD') guardTicks++;
+    sim.step([[4, 0, 0, 0], [...first, 0], [...second, 0]]);
+  }
+  const separation = Math.abs(sim.pos[2] - sim.pos[4]) + Math.abs(sim.pos[3] - sim.pos[5]);
+  assert(guardTicks >= 20 && separation >= 4, 'actual attack and defense routes split initially adjacent teammates');
+  assert(sim.pos[4] < 6 && sim.alive[2] && !sim.trapped[2], 'defender stays near the base approach');
+}
+{
+  const sim = scene([0, 1, 1], [[8.8, 7.5], [5.5, 5.5], [10.5, 12.5]]);
+  sim.bunStored = [[0, 0], [0, 0]];
+  sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
+  sim.wall[4 * W + 5] = 1; sim.wall[5 * W + 4] = 1;
+  const attacker = bot();
+  attacker.observeEnemyTrends(Hunter.hunterStateFromSim(sim), 1);
+  sim.step([[QQT.MOVE_UP, 0, 0, 0], [4, 0, 0, 0], [4, 0, 0, 0]]);
+  let connected = false, exploded = false, waited = 0;
+  for (let tick = 0; tick < 34; tick++) {
+    const decision = attacker.analyzeSim(sim, 1);
+    if (tick === 0) {
+      assert.equal(decision.mode, 'HUNT');
+      assert.equal(decision.reason, 'bomb_reserve', 'observed motion enables a corner reserve before the enemy enters its ray');
+      const state = Hunter.hunterStateFromSim(sim), g = attacker.geometry(state);
+      const ray = attacker.blastCells(state, g, attacker.chainPlan.cell, 3);
+      assert(!ray.has(state.players[0].cell) &&
+        ray.has(attacker.predictedEnemyCell(state, g, 0)), 'the reserve aims at projected movement, not the current cell');
+    }
+    if (decision.mode === 'CHAIN' && decision.action[0] === 4 && !decision.action[1]) waited++;
+    if (decision.reason === 'bomb_chain') {
+      assert(sim.fuse[5 * W + 5] <= 12, 'late connector waits until the reserve is near detonation');
+      connected = true;
+    }
+    const info = sim.step([[tick < 3 ? QQT.MOVE_UP : 4, 0, 0, 0], [...decision.action, 0, 0], [4, 0, 0, 0]]);
+    assert(sim.alive[1] && !sim.trapped[1], 'late corner attack keeps its own escape route');
+    if (info.triggered[5 * W + 5] && info.triggered[7 * W + 5]) {
+      assert(sim.trapped[0] > 0, 'motion-predicted late connection actually traps the arriving enemy');
+      exploded = true;
+    }
+  }
+  assert(connected && exploded && waited >= 5, 'reserve, wait, connect and explosion all occur in real simulation');
+}
+{
+  const sim = scene([0, 1, 1], [[7.5, 7.5], [5.5, 5.5], [10.5, 12.5]]);
+  sim.spdG.fill(1);
+  const hunter = bot();
+  hunter.observeEnemyTrends(Hunter.hunterStateFromSim(sim), 1);
+  sim.step([[QQT.MOVE_RIGHT, 0, 0, 0], [4, 0, 0, 0], [4, 0, 0, 0]]);
+  hunter.observeEnemyTrends(Hunter.hunterStateFromSim(sim), 1);
+  sim.wall[7 * W + 8] = 1;
+  const state = Hunter.hunterStateFromSim(sim), g = hunter.geometry(state);
+  assert.equal(hunter.predictedEnemyCell(state, g, 0), state.players[0].cell, 'movement projection stops at the wall');
+  sim.t++; sim.pos[0] = 1.5; sim.pos[1] = 12.5;
+  hunter.observeEnemyTrends(Hunter.hunterStateFromSim(sim), 1);
+  assert(!hunter.enemyTrends.get(0).confidence, 'respawn-size jumps do not become a confident movement trend');
+  hunter.reset();
+  assert.equal(hunter.enemyTrends.size, 0, 'new match clears learned movement trends');
 }
 console.log('Cooperative hunter: roles, takeover, rescue, delivery, escort, interception and friendly safety passed');

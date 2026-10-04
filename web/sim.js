@@ -220,7 +220,7 @@
       this.nativeItems = !!(opts && opts.nativeItems);
       this.nativeTrap = !!(opts && opts.nativeTrap);
       this.bananaSlideSpeedPx = opts && Number.isFinite(opts.bananaSlideSpeedPx)
-        ? Math.max(NATIVE_FAST_PX_PER_SEC, Math.min(400, opts.bananaSlideSpeedPx)) : NATIVE_FAST_PX_PER_SEC;
+        ? Math.max(NATIVE_FAST_PX_PER_SEC, Math.min(600, opts.bananaSlideSpeedPx)) : NATIVE_FAST_PX_PER_SEC;
       this.itemSlots = per(() => []);
       this.trapped = per(0);
       this.trapTicks = 6 * CFG.tickHz;
@@ -473,7 +473,7 @@
       this.nativeItems = !!frame.nativeItems;
       this.nativeTrap = !!frame.nativeTrap;
       this.bananaSlideSpeedPx = Number.isFinite(frame.bananaSlideSpeedPx)
-        ? Math.max(NATIVE_FAST_PX_PER_SEC, Math.min(400, frame.bananaSlideSpeedPx)) : NATIVE_FAST_PX_PER_SEC;
+        ? Math.max(NATIVE_FAST_PX_PER_SEC, Math.min(600, frame.bananaSlideSpeedPx)) : NATIVE_FAST_PX_PER_SEC;
       this.itemSlots = (frame.itemSlots || [[], []]).map((slots) => slots.map((x) => ({ item: x.item, count: x.count })));
       this.trapped = (frame.trapped || [0, 0]).slice();
       this.movementStatus = (frame.movementStatus || [MOVE_STATUS_NONE, MOVE_STATUS_NONE]).slice();
@@ -739,7 +739,7 @@
 
     playerMoveScale(player) {
       // 网页原版规则：状态速度按原版绝对档位（慢慢胶 72px/s、超级鞋 268px/s），不随速度道具叠乘；
-      // 香蕉滑行与超级鞋同速，携包与慢慢胶同慢。训练默认路径保持下方旧倍率。
+      // 香蕉使用独立滑行速度，携包与慢慢胶同慢。训练默认路径保持下方旧倍率。
       if (this.nativeItems) {
         const status = this.movementStatus[player];
         let px = 0;
