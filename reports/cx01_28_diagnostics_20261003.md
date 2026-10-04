@@ -36,5 +36,6 @@ CX-09 至 CX-24 中多次出现原点 512 局综合分通过、独立训练 seed
 - CX-14 的同 seed 回放与历史参数 75/75 leaf 不同；现有审计未隔离底层数值、编译或硬件因素，不能据此指定单一根因，也不能把同 seed 当成逐位复现保证。
 - CX-24、CX-25 的首次定向测试失败来自测试替身 ability 维数或 float32 严格比较，修正 fixture 后完整回归通过；失败尝试和测试输出仍应保留。CX-26 的 PPO 包装曾漏传 safety/reference 参数，正式训练前用 smoke 与接口测试补齐。
 - CX-28 独立重训首次误从筛选权重初始化、第二次准备时历史路径错误；两次均标为无效，最终有效 run 从历史 it4000 SHA 初始化。来源 SHA、实际更新数、EMA/raw 索引、训练 seed、评估 seed、同出生和真实 JS 来源都应逐项审计。
+- 另有一轮新增 checkpoint 的 256 局 Tactical 探索把 `--device gpu` 当作设备值；JAX 未使用 CUDA而静默回退到 CPU。该轮仅保留为错误环境下的组内筛点记录，不得与历史 GPU 结果混算，也不构成模型晋升证据；后续 1024 局确认改用 GPU 并核验设备。
 
 完整原始记录曾保存在隔离实验工作区的 `docs/training_experiment_ledger.md` 及 `reports/cx_autonomous_optimization_20261002.md`、`reports/cx_autonomous_optimization_20261003.md`；本报告和 main 总账保存经最终结果核对的长期结论，不依赖临时进程状态或个人绝对路径。
