@@ -4,6 +4,8 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { execFileSync } = require('child_process');
+const Module = require('module');
 const QQT = require('../web/sim.js');
 const Hunter = require('../web/bun_hunter_bot.js');
 const Coop = require('../web/bun_coop_hunter_bot.js');
@@ -40,18 +42,46 @@ function trackItemEvents(sim, stats) {
   };
 }
 
-function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strategy = 'coop') {
+function referenceBot(ref) {
+  if (!/^[0-9a-f]{7,40}$/.test(ref)) throw new Error('reference must be a commit hash');
+  const source = execFileSync('git', ['show', `${ref}:web/bun_coop_hunter_bot.js`], { cwd: ROOT, encoding: 'utf8' });
+  const filename = path.join(ROOT, 'web', 'reference_coop_hunter_bot.js');
+  const snapshot = new Module(filename, module);
+  snapshot.filename = filename;
+  snapshot.paths = Module._nodeModulePaths(path.dirname(filename));
+  snapshot._compile(source, filename);
+  return { api: snapshot.exports, sha256: crypto.createHash('sha256').update(source).digest('hex'), ref };
+}
+
+function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strategy = 'coop', reference = null) {
   const teams = size === 1 ? [0, 1] : size === 3 ? [1 - candidateTeam, candidateTeam, candidateTeam] : [0, 1, 0, 1];
   const sim = new QQT.Sim(seed);
   sim.reset(levels.find((l) => l.qqt_id === 806), { nativeItems: true, nativeTrap: true, teams });
   sim.maxSteps = maxSteps;
   if (clearBricks) { sim.brick.fill(0); sim.brickLinger.fill(0); }
-  const bots = teams.map((team, pid) => new (team === candidateTeam && strategy === 'coop' ? Coop.BunCoopHunterBot : Hunter.BunHunterBot)(
+  const candidateBot = strategy === 'coop' ? Coop.BunCoopHunterBot
+    : strategy === 'previous' ? reference.api.BunCoopHunterBot : Hunter.BunHunterBot;
+  const bots = teams.map((team, pid) => new (team === candidateTeam ? candidateBot : Hunter.BunHunterBot)(
     { difficulty: 'hard', seed: (seed + pid * 7919) >>> 0 }));
   const stats = [0, 1].map(() => ({ bombs: 0, threateningBombs: 0, deaths: 0,
     trapped: 0, selfTraps: 0, friendlyTraps: 0, rescues: 0, carrierTicks: 0, escortTicks: 0,
     bananas: 0, glue: 0, carrierSlides: 0, enemySlows: 0, friendlySlows: 0, overlapTicks: 0, modes: {} }));
+  for (const s of stats) Object.assign(s, { attackIntentBombs: 0, earlyChainBombs: 0, crates: 0,
+    capacityUpgrades: 0, damageUpgrades: 0, speedUpgrades: 0, multiReserves: 0, reserveSeconds: 0, connectors: 0, screens: 0 });
   trackItemEvents(sim, stats);
+  const collect = sim._collectCrate;
+  sim._collectCrate = function(player, cell) {
+    const before = [this.bombsCap[player], this.blastCap[player], this.spdG[player]];
+    const picked = collect.call(this, player, cell);
+    if (picked) {
+      const s = stats[this.team[player]];
+      s.crates++;
+      if (this.bombsCap[player] > before[0]) s.capacityUpgrades++;
+      if (this.blastCap[player] > before[1]) s.damageUpgrades++;
+      if (this.spdG[player] > before[2]) s.speedUpgrades++;
+    }
+    return picked;
+  };
   const spawns = teams.map((_, p) => Array.from(sim.pos.slice(p * 2, p * 2 + 2)));
   const ordered = teams.map((_, p) => p).sort((a, b) => teams[a] - teams[b] || a - b);
   while (!sim.done) {
@@ -84,10 +114,22 @@ function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strat
       }
       return b.enemiesOf(state, p).some((q) => state.players[q].alive && cells.has(state.players[q].cell));
     });
+    const fuseBefore = sim.fuse.slice(), ownersBefore = sim.owner.slice();
     const info = sim.step(actions);
+    for (let c = 0; c < sim.fuse.length; c++) if (info.triggered[c] && fuseBefore[c] > 1 && ownersBefore[c] >= 0) {
+      stats[teams[ownersBefore[c]]].earlyChainBombs++;
+    }
     for (let p = 0; p < teams.length; p++) {
       const s = stats[teams[p]];
-      if (info.placed[p]) { s.bombs++; if (threat[p]) s.threateningBombs++; }
+      if (info.placed[p]) {
+        s.bombs++; if (threat[p]) s.threateningBombs++;
+        const reason = bots[p].lastDecision.reason;
+        if (reason !== 'bomb_dig') s.attackIntentBombs++;
+        if (reason === 'bomb_reserve_multi') s.multiReserves++;
+        if (reason === 'bomb_reserve_second') s.reserveSeconds++;
+        if (reason === 'bomb_chain') s.connectors++;
+        if (reason === 'bomb_screen' || reason === 'bomb_block') s.screens++;
+      }
       if (info.died[p]) s.deaths++;
       if (!wasTrapped[p] && sim.trapped[p]) {
         s.trapped++;
@@ -137,10 +179,11 @@ function pairedInterval(rows) {
     lower95: samples[250], upper95: samples[9749] };
 }
 
-function run({ pairs = 8, seed = 2026100400, maxSteps = 1200, sizes = [1, 2, 3] } = {}) {
+function run({ pairs = 8, seed = 2026100400, maxSteps = 1200, sizes = [1, 2, 3], referenceRef = null } = {}) {
   const rows = [];
   const started = performance.now();
   const hashes = {};
+  const reference = referenceRef ? referenceBot(referenceRef) : null;
   for (const name of ['web/sim.js', 'web/bun_hunter_bot.js', 'web/bun_coop_hunter_bot.js',
     'web/assets/maps/levels.json', 'scripts/eval_bot_cooperation.js']) {
     hashes[name] = crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, name))).digest('hex');
@@ -149,19 +192,25 @@ function run({ pairs = 8, seed = 2026100400, maxSteps = 1200, sizes = [1, 2, 3] 
     for (let i = 0; i < pairs; i++) {
       for (const candidateTeam of [0, 1]) {
         rows.push(episode(seed + i * 7919, size, candidateTeam, maxSteps));
+        if (reference) rows.push(episode(seed + i * 7919, size, candidateTeam, maxSteps, false, 'previous', reference));
         if (size === 3) rows.push(episode(seed + i * 7919, size, candidateTeam, maxSteps, false, 'legacy'));
       }
-      process.stderr.write(`size=${size} pair=${i + 1}/${pairs} ${JSON.stringify(summarize(rows.filter((r) => r.size === size)))}\n`);
+        process.stderr.write(`size=${size} pair=${i + 1}/${pairs} ${JSON.stringify(summarize(rows.filter((r) => r.size === size && r.strategy === 'coop')))}\n`);
     }
   }
-  return { schema: 'bot_cooperation_eval/v4', protocol: { pairs, seed, maxSteps, sizes, map: 806,
+  return { schema: 'bot_cooperation_eval/v5', protocol: { pairs, seed, maxSteps, sizes, map: 806,
     nativeItems: true, nativeTrap: true, difficulty: 'hard', candidate: 'bun.coop_hunter', baseline: 'bun.hunter' },
+    reference: reference ? { ref: reference.ref, sha256: reference.sha256, baseline: 'bun.hunter' } : null,
     hashes, elapsedSeconds: (performance.now() - started) / 1000,
-    solo: summarize(rows.filter((r) => r.size === 1)), team: summarize(rows.filter((r) => r.size === 2)),
+    solo: summarize(rows.filter((r) => r.size === 1 && r.strategy === 'coop')),
+    team: summarize(rows.filter((r) => r.size === 2 && r.strategy === 'coop')),
+    previousSolo: summarize(rows.filter((r) => r.size === 1 && r.strategy === 'previous')),
+    previousTeam: summarize(rows.filter((r) => r.size === 2 && r.strategy === 'previous')),
+    previousDuoVsSolo: summarize(rows.filter((r) => r.size === 3 && r.strategy === 'previous')),
     duoVsSolo: summarize(rows.filter((r) => r.size === 3 && r.strategy === 'coop')),
     legacyDuoVsSolo: summarize(rows.filter((r) => r.size === 3 && r.strategy === 'legacy')),
-    soloInterval: pairedInterval(rows.filter((r) => r.size === 1)),
-    teamInterval: pairedInterval(rows.filter((r) => r.size === 2)), episodes: rows };
+    soloInterval: pairedInterval(rows.filter((r) => r.size === 1 && r.strategy === 'coop')),
+    teamInterval: pairedInterval(rows.filter((r) => r.size === 2 && r.strategy === 'coop')), episodes: rows };
 }
 
 if (require.main === module) {
@@ -170,6 +219,7 @@ if (require.main === module) {
   for (let i = 2; i < process.argv.length; i += 2) {
     const flag = process.argv[i], value = process.argv[i + 1];
     if (flag === '--out') output = value;
+    else if (flag === '--reference-ref') options.referenceRef = value;
     else if (flag === '--sizes') {
       options.sizes = value.split(',').map(Number);
       if (!options.sizes.length || options.sizes.some((n) => ![1, 2, 3].includes(n))) throw new Error('invalid --sizes');
@@ -182,7 +232,8 @@ if (require.main === module) {
   }
   const result = run(options);
   if (output) { fs.mkdirSync(path.dirname(output), { recursive: true }); fs.writeFileSync(output, JSON.stringify(result, null, 2) + '\n'); }
-  console.log(JSON.stringify({ solo: result.solo, team: result.team, duoVsSolo: result.duoVsSolo,
+  console.log(JSON.stringify({ solo: result.solo, team: result.team, previousSolo: result.previousSolo,
+    previousTeam: result.previousTeam, previousDuoVsSolo: result.previousDuoVsSolo, duoVsSolo: result.duoVsSolo,
     legacyDuoVsSolo: result.legacyDuoVsSolo, elapsedSeconds: result.elapsedSeconds }));
 }
-module.exports = { episode, summarize, pairedInterval, run, trackItemEvents };
+module.exports = { episode, summarize, pairedInterval, run, trackItemEvents, referenceBot };

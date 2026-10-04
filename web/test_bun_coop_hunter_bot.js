@@ -174,7 +174,7 @@ const decide = (sim, pid) => bot().analyze(Hunter.hunterStateFromSim(sim), pid);
   const sim = scene([0, 1, 1], [[7.5, 7.5], [5.5, 5.5], [10.5, 12.5]]);
   sim.bunStored = [[0, 0], [0, 0]];
   sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
-  const attacker = bot();
+  const attacker = new Coop.BunCoopHunterBot({ difficulty: 'hard', seed: 7, overrides: { multiReserve: false } });
   let anchor, connector, connectedTick, chainExploded = false;
   for (let tick = 0; tick < 34; tick++) {
     const decision = attacker.analyzeSim(sim, 1);
@@ -206,7 +206,8 @@ for (const difficulty of ['easy', 'normal', 'hard']) {
   const sim = scene([0, 1, 1], [[7.5, 7.5], [5.5, 5.5], [10.5, 12.5]]);
   sim.bunStored = [[0, 0], [0, 0]];
   sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
-  const attacker = bot(), decision = attacker.analyzeSim(sim, 1);
+  const attacker = new Coop.BunCoopHunterBot({ difficulty: 'hard', seed: 7, overrides: { multiReserve: false } });
+  const decision = attacker.analyzeSim(sim, 1);
   assert.equal(decision.reason, 'bomb_reserve');
   sim.step([[4, 0, 0, 0], [...decision.action, 0, 0], [4, 0, 0, 0]]);
   sim.pos[0] = 11.5; sim.pos[1] = 1.5;
@@ -217,22 +218,24 @@ for (const difficulty of ['easy', 'normal', 'hard']) {
   const sim = scene([0, 1, 1], [[10.5, 1.5], [6.5, 8.5], [6.5, 9.5]]);
   sim.bunStored = [[0, 0], [0, 0]]; sim.spdG.fill(1);
   const attacker = bot(), defender = bot();
-  let guardTicks = 0;
+  let guardTicks = 0, reserveTicks = 0;
   for (let tick = 0; tick < 30; tick++) {
     const first = attacker.act(sim, 1), second = defender.act(sim, 2);
     if (defender.lastDecision.mode === 'GUARD') guardTicks++;
+    if (defender.lastDecision.mode === 'RESERVE') reserveTicks++;
     sim.step([[4, 0, 0, 0], [...first, 0], [...second, 0]]);
   }
   const separation = Math.abs(sim.pos[2] - sim.pos[4]) + Math.abs(sim.pos[3] - sim.pos[5]);
-  assert(guardTicks >= 20 && separation >= 4, 'actual attack and defense routes split initially adjacent teammates');
+  assert(guardTicks + reserveTicks >= 20 && separation >= 3, 'actual attack and defense routes split initially adjacent teammates');
   assert(sim.pos[4] < 6 && sim.alive[2] && !sim.trapped[2], 'defender stays near the base approach');
+  assert(sim.pos[2] < 5 && sim.pos[3] < 8, 'attacker actually approaches the opposing base perimeter while support holds home');
 }
 {
   const sim = scene([0, 1, 1], [[8.8, 7.5], [5.5, 5.5], [10.5, 12.5]]);
   sim.bunStored = [[0, 0], [0, 0]];
   sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
   sim.wall[4 * W + 5] = 1; sim.wall[5 * W + 4] = 1;
-  const attacker = bot();
+  const attacker = new Coop.BunCoopHunterBot({ difficulty: 'hard', seed: 7, overrides: { multiReserve: false } });
   attacker.observeEnemyTrends(Hunter.hunterStateFromSim(sim), 1);
   sim.step([[QQT.MOVE_UP, 0, 0, 0], [4, 0, 0, 0], [4, 0, 0, 0]]);
   let connected = false, exploded = false, waited = 0;
@@ -403,4 +406,82 @@ for (const difficulty of ['easy', 'normal', 'hard']) {
   assert.equal(stats[1].friendlySlows, 1, 'friendly glue hits are recorded separately');
   assert.equal(stats[1].enemySlows, 1, 'friendly hits do not inflate enemy hits');
 }
-console.log('Cooperative hunter: roles, resource farming, inventory escort, separation and friendly safety passed');
+{
+  const sim = scene([0, 1, 1], [[7.5, 7.5], [5.5, 5.5], [10.5, 12.5]]);
+  sim.bunStored = [[0, 0], [0, 0]];
+  sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
+  const attacker = bot();
+  let first, second, connector, secondTick, connectorTick, unlinked = false, chain = false;
+  for (let tick = 0; tick < 34; tick++) {
+    const decision = attacker.analyzeSim(sim, 1);
+    const cell = sim.centerCell(1)[0] * W + sim.centerCell(1)[1];
+    if (decision.reason === 'bomb_reserve_multi') { first = cell; assert(attacker.reservePlan); }
+    if (decision.reason === 'bomb_reserve_second') {
+      second = cell; secondTick = tick;
+      const state = Hunter.hunterStateFromSim(sim), g = attacker.geometry(state);
+      assert(!attacker.blastCells(state, g, first, 3).has(second) &&
+        !attacker.blastCells(state, g, second, 3).has(first), 'two reserve bubbles do not connect directly');
+      assert(sim.fuse[first] > 12, 'second reserve precedes the late connector window');
+      unlinked = true;
+    }
+    if (decision.reason === 'bomb_chain') {
+      connector = cell; connectorTick = tick;
+      assert(sim.fuse[first] <= 12, 'new connector waits for the earliest reserve, not the second fuse');
+    }
+    const info = sim.step([[4, 0, 0, 0], [decision.action[0], decision.action[1] === 1 ? 1 : 0, 0, 0], [4, 0, 0, 0]]);
+    assert(sim.alive[1] && !sim.trapped[1] && sim.alive[2] && !sim.trapped[2], 'every stage preserves self and ally safety');
+    if (first != null && second != null && connector != null && info.triggered[first] &&
+        info.triggered[second] && info.triggered[connector]) {
+      chain = true;
+      assert(tick < secondTick + 30 && tick < connectorTick + 30, 'both newer bubbles detonate early');
+      assert(sim.trapped[0] > 0, 'unlinked reserves and the late connector actually trap the enemy');
+    }
+  }
+  assert(unlinked && chain && connectorTick >= secondTick + 2, 'three placements and real delayed chain all execute');
+}
+{
+  const sim = scene([0, 1, 1], [[11.5, 1.5], [5.5, 9.5], [9.5, 11.5]]);
+  sim.bunStored = [[0, 0], [0, 0]]; sim.spdG.fill(1);
+  sim.crate[5 * W + 10] = 1; sim.crateType[5 * W + 10] = 1; sim.blastCap[1] = 1;
+  const attacker = bot();
+  assert.equal(attacker.analyzeSim(sim, 1).mode, 'COLLECT', 'attacker takes a nearby visible damage upgrade');
+  for (let tick = 0; tick < 15 && sim.crate[5 * W + 10]; tick++) sim.step([[4, 0, 0, 0], attacker.act(sim, 1), [4, 0, 0, 0]]);
+  assert(sim.blastCap[1] > 1 && !sim.crate[5 * W + 10], 'visible upgrade actually increases offensive blast range');
+}
+{
+  const sim = scene([0, 1, 1], [[7.5, 7.5], [5.5, 5.5], [10.5, 12.5]]);
+  sim.bunStored = [[0, 0], [0, 0]]; sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
+  const attacker = bot();
+  assert.equal(attacker.analyzeSim(sim, 1).reason, 'bomb_reserve_multi');
+  sim.step([[4, 0, 0, 0], attacker.act(sim, 1), [4, 0, 0, 0]]);
+  sim.pos[0] = 11.5; sim.pos[1] = 1.5;
+  attacker.analyzeSim(sim, 1);
+  assert.equal(attacker.reservePlan, null, 'separated reserve plan cancels when the enemy leaves its useful rays');
+  assert(attacker.reserveRetryTick > sim.t, 'failed reserve receives a cooldown');
+  attacker.reset();
+  assert.equal(attacker.reservePlan, null); assert.equal(attacker.reserveRetryTick, 0);
+}
+{
+  const sim = scene([0, 1, 1], [[7.5, 7.5], [5.5, 5.5], [10.5, 12.5]]);
+  sim.bunStored = [[0, 0], [0, 0]]; sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(2);
+  assert.notEqual(bot().analyzeSim(sim, 1).reason, 'bomb_reserve_multi', 'three-bubble plan needs three free slots');
+  sim.movementStatus[1] = QQT.MOVE_STATUS_SLIDE; sim.slideDir[1] = QQT.MOVE_RIGHT;
+  assert.equal(bot().analyzeSim(sim, 1).action[1], 0, 'forced sliding cannot start an attack with an assumed turn escape');
+}
+{
+  const sim = scene([0, 1, 1], [[10.5, 8.5], [4.5, 8.5], [6.5, 8.5]]);
+  sim.bunCarried[1] = 0; sim.spdG.fill(1); sim.blastCap.fill(1);
+  for (let row = 5; row < 13; row++) for (const col of [7, 9]) sim.wall[row * W + col] = 1;
+  sim.wall[6 * W + 9] = 0; sim.wall[6 * W + 10] = 0;
+  const carrier = bot(), escort = bot();
+  let blocking = false;
+  for (let tick = 0; tick < 10; tick++) {
+    const a = carrier.act(sim, 1), b = escort.act(sim, 2);
+    const info = sim.step([[QQT.MOVE_UP, 0, 0, 0], a, b]);
+    blocking ||= !!info.placed[2];
+    assert(!sim.trapped[1] && !sim.trapped[2] && sim.alive[1] && sim.alive[2], 'escort screen preserves carrier and defender');
+  }
+  assert(blocking && sim.pos[0] >= 7 && sim.bunScore[1] >= 1,
+    'escort really blocks the only pursuer route while the carrier returns home');
+}
+console.log('Cooperative hunter: safe unlinked reserves, late triple chain, resource growth and escort passed');

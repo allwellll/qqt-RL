@@ -26,6 +26,8 @@
       this.decisionState = null;
       this.resourceTarget = -1;
       this.itemPlan = null;
+      this.reservePlan = null;
+      this.reserveRetryTick = 0;
     }
 
     analyzeSim(sim, pid) {
@@ -50,6 +52,19 @@
         const step = this.stepLen(p, false);
         return sim.movementStatus[q] === 2 ? sim._tryMove(p.y, p.x, direction, blocked, step)
           : sim._steer(p.y, p.x, direction, blocked, step, q);
+      };
+      const obstacleCache = new WeakMap();
+      state.projectPosition = (q, y, x, move, pred, tick) => {
+        if (move === 4 || !state.players[q].alive || state.players[q].trapped) return [y, x];
+        let frames = obstacleCache.get(pred);
+        if (!frames) { frames = []; obstacleCache.set(pred, frames); }
+        if (!frames[tick]) frames[tick] = Uint8Array.from(state.wall,
+          (wall, c) => wall || state.brick[c] || pred.bombGone[c] > tick ? 1 : 0);
+        const obstacles = frames[tick];
+        const player = state.players[q], step = this.stepLen(player, false);
+        const direction = sim.playerMoveDirection(q, move);
+        return sim.movementStatus[q] === 2 ? sim._tryMove(y, x, direction, obstacles, step)
+          : sim._steer(y, x, direction, obstacles, step, q);
       };
       const decision = this.analyze(state, pid);
       pending.moves[pid] = decision.action[0];
@@ -94,9 +109,23 @@
 
     chooseGoal(state, g, pid, pred, perceive) {
       let goal = this.selectGoal(state, g, pid, pred, perceive);
+      if (this.reservePlan && ['HUNT', 'SUPPORT', 'RAID', 'DEFEND', 'GUARD'].includes(goal.mode)) {
+        const reserve = this.reservePlan;
+        const targetRay = this.blastCells(state, g, reserve.targetCell, state.players[pid].blast);
+        if (state.tick >= reserve.expires || !g.open[reserve.targetCell] || g.bombAt[reserve.targetCell] >= 0 ||
+            !state.bombs.some((b) => b.owner === pid && b.cell === reserve.anchor) ||
+            !this.enemiesOf(state, pid).some((q) => state.players[q].alive && !state.players[q].trapped &&
+              this.enemyPathCells(state, g, q).some((c) => targetRay.has(c)))) {
+          this.reservePlan = null;
+          this.reserveRetryTick = state.tick + 30;
+        } else {
+          goal = { mode: 'RESERVE', seeds: [{ cell: reserve.targetCell, cost: 0 }], threat: false, noDig: true };
+        }
+      }
       const plan = this.chainPlan;
       if (plan) {
         const ray = this.blastCells(state, g, plan.cell, state.players[pid].blast);
+        for (const cell of plan.linkedCells || []) for (const c of this.blastCells(state, g, cell, state.players[pid].blast)) ray.add(c);
         const anchor = state.bombs.find((b) => b.cell === plan.anchor && b.owner === pid);
         if (state.tick >= plan.expires || !g.open[plan.cell] || g.bombAt[plan.cell] >= 0 ||
             !anchor ||
@@ -104,7 +133,7 @@
               !state.players[q].trapped && this.enemyPathCells(state, g, q, anchor.fuse)
                 .some((cell) => ray.has(cell)))) this.chainPlan = null;
       }
-      if (this.chainPlan && ['HUNT', 'SUPPORT', 'RAID'].includes(goal.mode)) {
+      if (this.chainPlan && ['HUNT', 'SUPPORT', 'RAID', 'RESERVE'].includes(goal.mode)) {
         goal = { mode: 'CHAIN', seeds: [{ cell: plan.cell, cost: 0 }], threat: false, noDig: true };
       }
       this.lastGoalMode = goal.mode;
@@ -151,7 +180,7 @@
           if (!g.open[cell] || g.bombAt[cell] >= 0) continue;
           const point = { row: Math.floor(cell / g.W), col: cell % g.W };
           const d = distance(point, ally);
-          if (d < 2 || d > 3 || delivery.includes(cell)) continue;
+          if (d < 2 || d > (foe && foe.alive ? 5 : 3) || delivery.includes(cell)) continue;
           seeds.push({ cell, cost: foe && foe.alive && !foe.trapped ? distance(point, foe) * 0.4 : d * 0.2 });
         }
         return { mode: 'ESCORT', seeds: seeds.length ? seeds : [{ cell: ally.cell, cost: 0 }], threat: false, noDig: true };
@@ -160,6 +189,12 @@
       if (thief != null) return { mode: 'INTERCEPT', seeds: this.attackSeeds(state, g, pid, pred, perceive), threat: false };
       if (role !== 'SUPPORT') {
         const goal = super.chooseGoal(state, g, pid, pred, perceive);
+        if (goal.mode === 'HUNT' && role === 'ATTACKER') {
+          const resource = this.resourceGoal(state, g, pid, pred);
+          if (resource && resource.mode === 'COLLECT' && distance(me, {
+            row: Math.floor(resource.seeds[0].cell / g.W), col: resource.seeds[0].cell % g.W }) <= 3) return resource;
+          if (role === 'ATTACKER') goal.seeds = this.offensiveSeeds(state, g, pid, pred, perceive).concat(goal.seeds || []);
+        }
         if (role === 'ATTACKER' && goal.mode === 'POP') {
           const partner = allies.find((q) => state.players[q].alive && !state.players[q].trapped && state.players[q].carrying < 0);
           const partnerPop = partner == null ? null : this.trapGoal(state, g, partner, pred, [goal.target], 'POP');
@@ -207,6 +242,20 @@
         const spacing = allies.reduce((cost, ally) => cost + Math.max(0, 3 - distance(point, ally)) * 2.5, 0);
         return { cell: s.cell, cost: s.cost + Math.max(0, distance(point, foe) - 2) * 0.7 + spacing };
       });
+    }
+
+    offensiveSeeds(state, g, pid, pred, perceive) {
+      const me = state.players[pid], team = me.team == null ? pid : me.team;
+      const seeds = this.attackSeeds(state, g, pid, pred, perceive).slice();
+      const enemyHome = this.baseCells(state, g, 1 - team), foe = this.foeOf(state, pid);
+      const route = foe && foe.alive ? this.routeCells(state, g, foe, this.baseCells(state, g, team), pred, 12) : [];
+      const add = (cell, cost) => {
+        if (cell < 0 || !g.open[cell] || g.bombAt[cell] >= 0) return;
+        if (!seeds.some((s) => s.cell === cell)) seeds.push({ cell, cost });
+      };
+      route.slice(1, 8).forEach((cell, i) => add(cell, 1.5 + i * 0.25));
+      for (const base of enemyHome) for (let a = 0; a < 4; a++) add(g.nb[base * 4 + a], 2.2);
+      return seeds;
     }
 
     threatMap(state, g) {
@@ -410,20 +459,30 @@
     considerBomb(state, g, pid, pred, perceive, field) {
       if (this.lastGoalMode === 'RESCUE') return null;
       if (this.itemPlan) return null;
+      if (state.movementStatus && state.movementStatus[pid] === 2) return null;
       if (this.lastGoalMode === 'CHAIN' && this.chainPlan && state.players[pid].cell === this.chainPlan.cell) {
         const anchor = state.bombs.find((b) => b.cell === this.chainPlan.anchor && b.owner === pid);
-        if (this.alliesOf(state, pid).length && anchor && anchor.fuse > 12) return null;
+        const window = 12;
+        if (this.alliesOf(state, pid).length && anchor && anchor.fuse > window) return null;
       }
-      const candidate = (this.lastGoalMode === 'CHAIN' ? this.tacticalBomb(state, g, pid, field) : null)
+      const candidate = this.lastGoalMode === 'RESERVE' ? this.tacticalBomb(state, g, pid, field)
+        : (this.lastGoalMode === 'CHAIN' ? this.tacticalBomb(state, g, pid, field) : null)
         || super.considerBomb(state, g, pid, pred, perceive, field)
         || this.tacticalBomb(state, g, pid, field);
       if (!candidate) return null;
       const me = state.players[pid];
+      const cooperative = this.alliesOf(state, pid).length > 0;
       const mine = { cell: me.cell, e: Base.NEW_BOMB_TICK, blast: me.blast };
       // Physical safety uses all visible bombs even when a difficulty has delayed perception.
       const before = this.predict(state, g, [], () => true);
       const after = this.predict(state, g, [mine], () => true);
-      if (!(this.escape(g, after, me, false).surv & (1 << candidate.move))) return null;
+      const selfEscape = this.escape(g, after, me, false);
+      if (!(selfEscape.surv & (1 << candidate.move))) return null;
+      const selfSpace = selfEscape.endCount;
+      const oldSelfSpace = this.escape(g, before, me, false).endCount;
+      if (cooperative && (selfSpace < Math.min(12, oldSelfSpace) || selfSpace < oldSelfSpace * 0.15)) return null;
+      const retreat = !cooperative || this.physicalEscape(state, g, pid, after, candidate.move);
+      if (!retreat) return null;
       for (const q of this.alliesOf(state, pid)) {
         const ally = state.players[q];
         if (!ally.alive) continue;
@@ -434,8 +493,13 @@
         } else {
           const safe = this.escape(g, after, ally, false).surv;
           if (!safe) return null;
+          const allySpace = this.escape(g, after, ally, false).endCount;
+          const oldAllySpace = this.escape(g, before, ally, false).endCount;
+          if (allySpace < Math.min(12, oldAllySpace) || allySpace < oldAllySpace * 0.3) return null;
+          if (state.movementStatus && state.movementStatus[q] === 2 && this.blastCells(state, g, me.cell, me.blast).has(ally.cell)) return null;
           const committedMove = state.committedMoves && state.committedMoves[q];
           if (committedMove != null && !(safe & (1 << committedMove))) return null;
+          if (!this.physicalEscape(state, g, q, after, committedMove)) return null;
           if (ally.carrying >= 0) {
             // Do not force the slower carrier off its delivery route with a new blast line.
             const danger = this.dangerCells(after, g.N), oldDanger = this.dangerCells(before, g.N);
@@ -446,13 +510,60 @@
               const n = g.nb[ally.cell * 4 + a];
               if (n >= 0 && homeField[n] < homeField[ally.cell] && danger[n] && !oldDanger[n]) return null;
             }
+            const route = this.routeCells(state, g, ally, home.map((s) => s.cell), before);
+            for (let i = 1; i < route.length; i++) {
+              if (route[i] === me.cell) return null;
+              const arrival = i * this.moveTicks(ally, false);
+              for (let t = Math.max(1, arrival - 2); t <= Math.min(after.T, arrival + 2); t++) {
+                const offset = t * g.N + route[i];
+                if (after.lethal[offset] && !before.lethal[offset]) return null;
+              }
+            }
           }
         }
       }
-      if (candidate.nextCell != null) this.chainPlan = { cell: candidate.nextCell, anchor: me.cell,
-        expires: state.tick + Base.NEW_BOMB_TICK - (this.alliesOf(state, pid).length ? 4 : 8) };
+      if (candidate.reserveTarget != null) {
+        this.reservePlan = { anchor: me.cell, targetCell: candidate.reserveTarget,
+          connector: candidate.reserveConnector, expires: state.tick + Base.NEW_BOMB_TICK - 8 };
+        this.chainPlan = null;
+      } else if (candidate.nextCell != null) this.chainPlan = { cell: candidate.nextCell,
+        anchor: candidate.chainAnchor == null ? me.cell : candidate.chainAnchor,
+        linkedCells: candidate.reason === 'bomb_reserve_second' ? [me.cell] : [],
+        expires: state.tick + (candidate.chainFuse == null ? Base.NEW_BOMB_TICK - (this.alliesOf(state, pid).length ? 4 : 8)
+          : candidate.chainFuse - 2) };
       else if (this.lastGoalMode === 'CHAIN') this.chainPlan = null;
+      if (candidate.reason === 'bomb_reserve_second') this.reservePlan = null;
       return candidate;
+    }
+
+    physicalEscape(state, g, pid, pred, firstMove) {
+      if (!state.projectPosition) return true;
+      const player = state.players[pid];
+      const futureDanger = new Uint8Array((pred.T + 2) * g.N);
+      for (let t = pred.T; t >= 1; t--) for (let c = 0; c < g.N; c++) {
+        futureDanger[t * g.N + c] = pred.lethal[t * g.N + c] + futureDanger[(t + 1) * g.N + c];
+      }
+      let points = [{ y: player.y, x: player.x }];
+      for (let tick = 1; tick <= pred.T; tick++) {
+        const next = new Map();
+        for (const point of points) {
+          for (let move = 0; move < 5; move++) {
+            if (tick === 1 && firstMove != null && move !== firstMove) continue;
+            const [y, x] = state.projectPosition(pid, point.y, point.x, move, pred, tick);
+            const cell = Math.floor(y) * g.W + Math.floor(x);
+            if (cell < 0 || cell >= g.N || (tick > player.invuln && pred.lethal[tick * g.N + cell])) continue;
+            const key = `${Math.round(y * 5)},${Math.round(x * 5)}`;
+            if (!next.has(key)) next.set(key, { y, x });
+          }
+        }
+        if (!next.size) return false;
+        // Keep continuous alternatives near several exits instead of a single greedy retreat.
+        points = [...next.values()].sort((a, b) => {
+          const ca = Math.floor(a.y) * g.W + Math.floor(a.x), cb = Math.floor(b.y) * g.W + Math.floor(b.x);
+          return futureDanger[tick * g.N + ca] - futureDanger[tick * g.N + cb];
+        }).slice(0, 48);
+      }
+      return true;
     }
 
     blastCells(state, g, cell, blast) {
@@ -477,7 +588,8 @@
         if (targets.has(c)) return dist[c];
         for (let a = 0; a < 4; a++) {
           const n = g.nb[c * 4 + a];
-          if (n < 0 || n === blocked || !g.open[n] || g.bombAt[n] >= 0 || dist[n] >= 0) continue;
+          if (n < 0 || n === blocked || (blocked instanceof Set && blocked.has(n)) ||
+              !g.open[n] || g.bombAt[n] >= 0 || dist[n] >= 0) continue;
           dist[n] = dist[c] + 1; queue.push(n);
         }
       }
@@ -525,6 +637,8 @@
             me.cell === this.chainPlan.cell && (acts & 16) && esc.count[4] > 0) return 4;
         return super.pickMove(g, me, acts, esc, field, false, null);
       }
+      if (this.lastGoalMode === 'RESERVE' && this.reservePlan && me.cell === this.reservePlan.targetCell &&
+          !threatened && (acts & 16) && esc.count[4] > 0) return 4;
       let spacedField = field;
       if (!threatened && this.decisionState && ['HUNT', 'SUPPORT', 'GUARD', 'DEFEND'].includes(this.lastGoalMode)) {
         spacedField = field.slice();
@@ -543,25 +657,45 @@
       const me = state.players[pid];
       if (this.difficulty === 'easy' || me.carrying >= 0 || me.bombsLeft <= 0 ||
           me.liveBombs >= this.cfg.maxLiveBombs || g.bombAt[me.cell] >= 0 || !g.open[me.cell] ||
-          !['HUNT', 'SUPPORT', 'GUARD', 'DEFEND', 'INTERCEPT', 'ESCORT', 'CHAIN'].includes(this.lastGoalMode)) return null;
+          !['HUNT', 'SUPPORT', 'GUARD', 'DEFEND', 'INTERCEPT', 'ESCORT', 'CHAIN', 'RESERVE'].includes(this.lastGoalMode)) return null;
       const foes = this.enemiesOf(state, pid).map((q) => ({ ...state.players[q], pid: q })).filter((e) =>
-        e.alive && !e.trapped && e.invuln < Base.NEW_BOMB_TICK && distance(me, e) <= this.cfg.attackRadius);
+        e.alive && !e.trapped && e.invuln < Base.NEW_BOMB_TICK);
+      const nearFoes = foes.filter((e) => distance(me, e) <= this.cfg.attackRadius);
       if (!foes.length) return null;
       const mine = { cell: me.cell, e: Base.NEW_BOMB_TICK, blast: me.blast };
       const before = this.predict(state, g, [], () => true);
       const after = this.predict(state, g, [mine], () => true);
       const blast = this.blastCells(state, g, me.cell, me.blast);
       const oldDanger = this.dangerCells(before, g.N), danger = this.dangerCells(after, g.N);
-      let reason = null, nextCell = null;
+      let reason = null, nextCell = null, chainAnchor, chainFuse, reserveTarget, reserveConnector;
+      if (this.lastGoalMode === 'RESERVE' && this.reservePlan) {
+        const anchor = state.bombs.find((b) => b.owner === pid && b.cell === this.reservePlan.anchor);
+        if (!anchor || me.cell !== this.reservePlan.targetCell || anchor.fuse <= 6 || me.bombsLeft < 2) return null;
+        const connector = this.reservePlan.connector;
+        const connectorBlast = connector == null ? new Set() : this.blastCells(state, g, connector, me.blast);
+        const hitCells = new Set([...connectorBlast, ...blast]);
+        if (connector == null || !connectorBlast.has(anchor.cell) || !connectorBlast.has(me.cell) ||
+            !foes.some((e) => this.enemyPathCells(state, g, e.pid).some((c) => hitCells.has(c)))) return null;
+        reason = 'bomb_reserve_second';
+        nextCell = connector;
+        chainAnchor = anchor.cell;
+        chainFuse = anchor.fuse;
+      }
+      const chainBlast = new Set(blast);
+      if (this.chainPlan) for (const cell of this.chainPlan.linkedCells || []) {
+        for (const c of this.blastCells(state, g, cell, me.blast)) chainBlast.add(c);
+      }
       if (this.chainPlan && me.cell === this.chainPlan.cell && blast.has(this.chainPlan.anchor) &&
-          foes.some((e) => blast.has(e.cell) || blast.has(this.predictedEnemyCell(state, g, e.pid,
+          foes.some((e) => chainBlast.has(e.cell) || chainBlast.has(this.predictedEnemyCell(state, g, e.pid,
             after.bombGone[me.cell])))) reason = 'bomb_chain';
       const home = new Set(this.baseCells(state, g, me.team));
-      for (const foe of foes) {
+      const carrier = this.alliesOf(state, pid).find((q) => state.players[q].alive && state.players[q].carrying >= 0);
+      const protectedCells = carrier == null ? home : new Set([state.players[carrier].cell]);
+      for (const foe of nearFoes) {
         if (reason) break;
-        const approach = this.routeDistance(g, foe.cell, home);
+        const approach = this.routeDistance(g, foe.cell, protectedCells);
         if (approach <= 7 && distance(me, foe) <= 5 && me.cell !== foe.cell &&
-            this.routeDistance(g, foe.cell, home, me.cell) >= approach + 3) {
+            this.routeDistance(g, foe.cell, protectedCells, me.cell) >= approach + 3) {
           reason = 'bomb_block'; break;
         }
         const futureCell = this.predictedEnemyCell(state, g, foe.pid, after.bombGone[me.cell]);
@@ -571,8 +705,27 @@
             state.players[b.owner].team === me.team && blast.has(b.cell));
           reason = linked ? 'bomb_chain' : 'bomb_pressure'; break;
         }
+        const route = this.routeCells(state, g, foe, [...protectedCells], before, 10);
+        const covered = route.filter((c) => blast.has(c));
+        if (this.alliesOf(state, pid).length && approach <= 10 && distance(me, foe) <= 6 && covered.length >= 2 &&
+            this.routeDistance(g, foe.cell, protectedCells, blast) >= approach + 3 &&
+            covered.some((c) => !oldDanger[c])) { reason = 'bomb_screen'; break; }
       }
-      // Reserve a first bubble only when a reachable second placement connects to it and aims at a foe.
+      // First place an unlinked reserve bubble. A later connector is only accepted if it
+      // reaches both reserves and an observed enemy route before either fuse expires.
+      if (!reason && state.tick >= this.reserveRetryTick && this.cfg.multiReserve !== false &&
+          this.alliesOf(state, pid).length &&
+          me.bombsLeft >= 3 && me.liveBombs === 0 && nearFoes.some((e) => distance(me, e) <= 5) &&
+          ['HUNT', 'SUPPORT', 'DEFEND'].includes(this.lastGoalMode)) {
+        const separate = this.findSeparateReserve(state, g, pid, me, foes, after, blast);
+        if (separate) {
+          reason = 'bomb_reserve_multi';
+          nextCell = separate.targetCell;
+          reserveTarget = separate.targetCell;
+          reserveConnector = separate.connector;
+        }
+      }
+      // Existing connected reserve fallback remains available where no separated geometry exists.
       if (!reason && me.bombsLeft >= 2 && me.liveBombs === 0 && me.liveBombs + 1 < this.cfg.maxLiveBombs &&
           ['HUNT', 'SUPPORT'].includes(this.lastGoalMode)) {
         let best = INF;
@@ -582,7 +735,7 @@
           const ticks = Math.ceil(travel / this.stepLen(me, false));
           if (ticks < 1 || ticks + 10 >= after.bombGone[me.cell]) continue;
           const secondRay = this.blastCells(state, g, cell, me.blast);
-          if (!foes.some((e) => {
+          if (!nearFoes.some((e) => {
             const target = this.predictedEnemyCell(state, g, e.pid);
             return (secondRay.has(e.cell) && !blast.has(e.cell)) || (secondRay.has(target) && !blast.has(target));
           })) continue;
@@ -607,8 +760,52 @@
       if (!safe) return null;
       const targetField = nextCell == null ? field : this.goalField(state, g,
         [{ cell: nextCell, cost: 0 }], me, after, null, true);
-      return { move: this.pickMove(g, me, safe, escape, targetField, true, danger), reason, nextCell };
+      return { move: this.pickMove(g, me, safe, escape, targetField, true, danger), reason, nextCell,
+        chainAnchor, chainFuse, reserveTarget, reserveConnector };
     }
+
+    findSeparateReserve(state, g, pid, me, foes, after, firstBlast) {
+      const targets = new Set();
+      for (const foe of foes) for (const cell of this.enemyPathCells(state, g, foe.pid)) targets.add(cell);
+      const current = me.cell;
+      let best = null;
+      const candidates = [];
+      for (let target = 0; target < g.N; target++) {
+        if (!g.open[target] || g.bombAt[target] >= 0 || firstBlast.has(target)) continue;
+        const travel = this.routeDistance(g, current, new Set([target]));
+        const ticks = Math.ceil(travel / this.stepLen(me, false));
+        if (travel >= INF || ticks < 1 || ticks + 12 >= after.bombGone[current]) continue;
+        const secondBlast = this.blastCells(state, g, target, me.blast);
+        if (![...targets].some((cell) => secondBlast.has(cell))) continue;
+        let connector = -1, connectorCost = INF;
+        for (const c of firstBlast) {
+          if (!g.open[c] || g.bombAt[c] >= 0 || c === current || c === target) continue;
+          const ray = this.blastCells(state, g, c, me.blast);
+          if (!ray.has(current) || !ray.has(target) || ![...targets].some((cell) => ray.has(cell) || secondBlast.has(cell))) continue;
+          const toConnector = this.routeDistance(g, target, new Set([c]));
+          if (toConnector < connectorCost) { connectorCost = toConnector; connector = c; }
+        }
+        if (connector < 0 || connectorCost > 2 || ticks + connectorCost + 8 >= after.bombGone[current]) continue;
+        const score = travel + connectorCost * 0.5 - this.solidNeighbors(state, g, target) * 0.4;
+        candidates.push({ targetCell: target, connector, score });
+      }
+      candidates.sort((a, b) => a.score - b.score || a.targetCell - b.targetCell);
+      for (const candidate of candidates.slice(0, 6)) {
+        const { targetCell, connector } = candidate;
+        const future = { ...me, cell: connector, row: Math.floor(connector / g.W), col: connector % g.W,
+          y: Math.floor(connector / g.W) + 0.5, x: connector % g.W + 0.5 };
+        const chain = this.predict(state, g, [
+          { cell: current, e: 12, blast: me.blast },
+          { cell: targetCell, e: Base.NEW_BOMB_TICK, blast: me.blast },
+          { cell: connector, e: Base.NEW_BOMB_TICK, blast: me.blast },
+        ], () => true);
+        if (!this.escape(g, chain, future, false).surv || this.alliesOf(state, pid).some((q) =>
+          state.players[q].alive && !this.escape(g, chain, state.players[q], false).surv)) continue;
+        best = candidate; break;
+      }
+      return best;
+    }
+
 
   }
 
