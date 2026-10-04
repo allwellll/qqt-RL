@@ -204,6 +204,7 @@
       this.crate = new Uint8Array(N);
       this.superCrate = new Uint8Array(N);   // 1=超级宝箱(拾取+4档)
       this.crateType = new Int8Array(N);    // -1=随机，0/1/2=泡/威/速，3/4/5=香蕉/慢慢胶/超级鞋
+      this.crateCount = new Uint32Array(N); // 0=普通拾取数量；死亡掉落保存实际数量
       this.recycle = new Uint8Array(N);
       this.fieldItem = new Uint8Array(N);   // 1=香蕉皮，2=慢慢胶
       this.fieldOwner = new Int8Array(N);
@@ -234,6 +235,8 @@
       this.airdropTotal = 0;
       this.airdropDropped = 0;
       this._airdropQueue = [];
+      this.airdropFalls = [];
+      this._pendingDeathDrops = [];
       this.fuse = new Int16Array(N);
       this.owner = new Int8Array(N);
       this.owner.fill(-1);
@@ -385,7 +388,14 @@
         slideDir: this.slideDir.slice(),
         lastMoveDir: this.lastMoveDir.slice(),
         tacticalItemFraction: this.tacticalItemFraction,
-        graveyard: this.graveyard.map((x) => ({ type: x.type, isSuper: !!x.isSuper })),
+        graveyard: this.graveyard.map((x) => this.nativeItems ? { ...x } : { type: x.type, isSuper: !!x.isSuper }),
+        ...(this.nativeItems ? {
+          crateCount: arr(this.crateCount),
+          airdropTotal: this.airdropTotal, airdropDropped: this.airdropDropped,
+          airdropQueue: this._airdropQueue.map((x) => ({ ...x })),
+          airdropFalls: this.airdropFalls.map((x) => ({ ...x })),
+          pendingDeathDrops: this._pendingDeathDrops.map((x) => ({ ...x })),
+        } : {}),
         fuse: arr(this.fuse),
         owner: arr(this.owner),
         bombBlast: arr(this.bombBlast),
@@ -466,6 +476,7 @@
       this.pendingCrateType = frame.pendingCrateType != null ? new Int8Array(frame.pendingCrateType) : new Int8Array(N).fill(-1);
       this.pendingSuperCrate = frame.pendingSuperCrate != null ? new Uint8Array(frame.pendingSuperCrate) : new Uint8Array(N);
       if (frame.crateType != null) this.crateType = new Int8Array(frame.crateType);
+      this.crateCount = new Uint32Array(frame.crateCount || N);
       if (frame.fieldItem != null) this.fieldItem = new Uint8Array(frame.fieldItem);
       if (frame.fieldOwner != null) this.fieldOwner = new Int8Array(frame.fieldOwner);
       if (frame.fieldArmed != null) this.fieldArmed = new Uint8Array(frame.fieldArmed);
@@ -481,7 +492,12 @@
       this.slideDir = (frame.slideDir || [MOVE_DOWN, MOVE_DOWN]).slice();
       this.lastMoveDir = (frame.lastMoveDir || [MOVE_DOWN, MOVE_DOWN]).slice();
       this.tacticalItemFraction = Number(frame.tacticalItemFraction || 0);
-      this.graveyard = (frame.graveyard || []).map((x) => ({ type: x.type, isSuper: !!x.isSuper }));
+      this.graveyard = (frame.graveyard || []).map((x) => ({ ...x }));
+      this.airdropTotal = frame.airdropTotal || 0;
+      this.airdropDropped = frame.airdropDropped || 0;
+      this._airdropQueue = (frame.airdropQueue || []).map((x) => ({ ...x }));
+      this.airdropFalls = (frame.airdropFalls || []).map((x) => ({ ...x }));
+      this._pendingDeathDrops = (frame.pendingDeathDrops || []).map((x) => ({ ...x }));
       this.pushBoxes = (frame.pushBoxes || []).map((b) => ({
         o: b.o, cells: b.cells.slice(), eid: b.eid, dead: !!b.dead,
       }));
@@ -766,9 +782,9 @@
     }
 
     // 原版道具栏：同种道具叠在同一格，否则占第一个空格；7 格满则拒收（道具留在地上）。
-    _addItemToSlots(player, item) {
+    _addItemToSlots(player, item, quantity = 0) {
       const slots = this.itemSlots[player];
-      const gain = item === ITEM_SLOW_GLUE ? 3 : 1;
+      const gain = quantity || (item === ITEM_SLOW_GLUE ? 3 : 1);
       const slot = slots.find((x) => x.item === item);
       if (slot) slot.count += gain;
       else if (slots.length < ITEM_SLOT_COUNT) slots.push({ item, count: gain });
@@ -787,7 +803,7 @@
       if (type === CRATE_BANANA || type === CRATE_SLOW_GLUE) {
         const item = type === CRATE_BANANA ? ITEM_BANANA : ITEM_SLOW_GLUE;
         if (this.nativeItems) {
-          if (!this._addItemToSlots(player, item)) return false;
+          if (!this._addItemToSlots(player, item, this.crateCount[cell])) return false;
         } else {
           if (this.heldItem[player] !== ITEM_NONE) return false;
           this.heldItem[player] = item;
@@ -795,12 +811,15 @@
       } else if (type === CRATE_FAST_SHOE) {
         this._setMovementStatus(player, MOVE_STATUS_FAST);
       } else {
-        this._grow(player, this.superCrate[cell] === 1, type >= 0 ? type : null);
+        for (let n = 0; n < (this.crateCount[cell] || 1); n++) {
+          this._grow(player, this.superCrate[cell] === 1, type >= 0 ? type : null);
+        }
       }
       this.crate[cell] = 0;
       this.recycle[cell] = 0;
       this.superCrate[cell] = 0;
       this.crateType[cell] = -1;
+      this.crateCount[cell] = 0;
       return true;
     }
 
@@ -829,15 +848,107 @@
     }
 
     _killPlayer(player) {
+      if (!this.alive[player]) return;
       this.hp[player] = 0;
       this.alive[player] = false;
       this.trapped[player] = 0;
       this.lastDied[player] = true;
       this._clearMovementStatus(player);
+      if (this.nativeItems) this._dropDeathInventory(player);
       if (this.isBun) {
         this._bunDrop(player);
         this.bunRespawn[player] = this.bunRespawnTicks;
       }
+    }
+
+    _dropDeathInventory(player) {
+      const [r, c] = this.centerCell(player);
+      const add = (type, count) => {
+        if (count > 0) this._pendingDeathDrops.push({ type, count, isSuper: false, row: r, col: c });
+      };
+      add(0, Math.max(0, this.bombsCap[player] - this.loBombs[player]));
+      add(1, Math.max(0, this.blastCap[player] - this.loBlast[player]));
+      add(2, Math.max(0, Math.round((this.spdG[player] - this.loSpeed[player]) / (this.speedStep || CFG.growthSpeedStep))));
+      this.bombsCap[player] = this.loBombs[player];
+      this.blastCap[player] = this.loBlast[player];
+      this.spdG[player] = this.loSpeed[player];
+      for (const slot of this.itemSlots[player]) {
+        add(slot.item === ITEM_BANANA ? CRATE_BANANA : CRATE_SLOW_GLUE, slot.count);
+      }
+      this.itemSlots[player] = [];
+      this._syncHeldItem(player);
+    }
+
+    _dropCellAvailable(cell) {
+      if (this.wall[cell] || this.brick[cell] || this.pushable[cell] || this.cover[cell] ||
+          this.crate[cell] || this.fieldItem[cell] || this.fuse[cell] > 0 || this.blastLinger[cell] > 0 ||
+          this.airdropFalls.some((drop) => drop.cell === cell)) return false;
+      return !this.alive.some((alive, p) => alive && this.centerCell(p)[0] * W + this.centerCell(p)[1] === cell);
+    }
+
+    _releaseDeathDrops() {
+      const pending = [];
+      for (const drop of this._pendingDeathDrops) {
+        const cells = [];
+        for (let cell = 0; cell < N; cell++) if (this._dropCellAvailable(cell)) cells.push(cell);
+        // Scatter near the death position; retain drops until a safe cell becomes available.
+        const distance = (cell) => Math.abs(Math.floor(cell / W) - drop.row) + Math.abs(cell % W - drop.col);
+        cells.sort((a, b) => distance(a) - distance(b) || a - b);
+        if (!cells.length) { pending.push(drop); continue; }
+        this.spawnGraveyardDrop(cells[0], drop.type, drop.isSuper);
+        this.crateCount[cells[0]] = drop.count;
+      }
+      this._pendingDeathDrops = pending;
+    }
+
+    birdFlight(fraction = 0) {
+      const tick = this.t % 300 + Math.max(0, Math.min(1, fraction));
+      const payload = this.nativeItems ? this.airdropTotal
+        : this.airdropTotal || this._airdropQueue.length || this.graveyard.length;
+      if (tick < 270 || tick >= 300 || !payload) return null;
+      const x = this.nativeItems ? W + 1.5 - (W + 3) * (tick - 270) / 30
+        : 15 - (18.5 / 30) * (tick - 276);
+      return { x, row: 3, column: Math.max(0, Math.min(W - 1, Math.floor(x))) };
+    }
+
+    _nativeAirdropStep() {
+      const falling = [];
+      for (const drop of this.airdropFalls) {
+        if (this.t - drop.tick < 3) { falling.push(drop); continue; }
+        if (!this.wall[drop.cell] && !this.brick[drop.cell] && !this.pushable[drop.cell] &&
+            !this.crate[drop.cell] && !this.fieldItem[drop.cell] && this.fuse[drop.cell] <= 0) {
+          this.spawnGraveyardDrop(drop.cell, drop.type, drop.isSuper);
+          this.crateCount[drop.cell] = drop.count || 0;
+        } else this.graveyard.push({ type: drop.type, isSuper: drop.isSuper, count: drop.count || 0 });
+      }
+      this.airdropFalls = falling;
+      const cycleTick = this.t % 300;
+      if (cycleTick === 270) {
+        this._airdropQueue = this.graveyard.splice(0);
+        this.airdropTotal = this._airdropQueue.length;
+        this.airdropDropped = 0;
+      }
+      const bird = this.birdFlight();
+      if (bird && cycleTick >= 273 && cycleTick <= 296) {
+        const target = Math.round((cycleTick - 272) * this.airdropTotal / 24);
+        while (this.airdropDropped < target && this._airdropQueue.length) {
+          const cells = [];
+          for (let row = 0; row < H; row++) {
+            const cell = row * W + bird.column;
+            if (this._dropCellAvailable(cell)) cells.push(cell);
+          }
+          if (!cells.length) break;
+          const cell = cells[Math.floor(this.rng() * cells.length)];
+          const drop = this._airdropQueue.shift();
+          this.airdropFalls.push({ ...drop, cell, tick: this.t, x: bird.x, row: bird.row });
+          this.airdropDropped++;
+        }
+      }
+      if (cycleTick === 299) {
+        this.graveyard.push(...this._airdropQueue);
+        this._airdropQueue = [];
+      }
+      if (cycleTick === 0) { this.airdropTotal = 0; this.airdropDropped = 0; }
     }
 
     // 原版糖泡（actor_state.go resolveActorContacts）：其他角色中心进入 ±41 原生像素（不含边界）时，
@@ -967,6 +1078,7 @@
         this.superCrate[i] = 0;
         this.recycle[i] = 0;
         this.crateType[i] = -1;
+        this.crateCount[i] = 0;
       }
     }
 
@@ -1167,11 +1279,13 @@
         if (covered[i] && this.crate[i]) {
           const type = this.crateType[i] >= 0 ? this.crateType[i] : Math.floor(this.rng() * 3);
           const isSuper = this.superCrate[i] === 1;
-          if (type <= 2) this.graveyard.push({ type, isSuper });
+          if (this.nativeItems) this.graveyard.push({ type, isSuper, count: this.crateCount[i] });
+          else if (type <= 2) this.graveyard.push({ type, isSuper });
           this.crate[i] = 0;
           this.superCrate[i] = 0;
           this.recycle[i] = 0;
           this.crateType[i] = -1;
+          this.crateCount[i] = 0;
         }
         if (covered[i] && this.fieldItem[i]) {
           this.fieldItem[i] = ITEM_NONE;
@@ -1207,6 +1321,7 @@
           this.hp[p] = Math.max(0, this.hp[p] - 1);
           if (this.isBun) this.hp[p] = 0;
           if (this.hp[p] === 0) {
+            if (this.nativeItems) { this._killPlayer(p); continue; }
             this.alive[p] = false;
             this.lastDied[p] = true;
             this._clearMovementStatus(p);
@@ -1267,6 +1382,7 @@
         for (let p = 0; p < this.nPlayers; p++) {
           const dmg = hpBefore[p] - this.hp[p];
           if (dmg <= 0 || !alive0[p]) continue;
+          if (this.nativeItems && !this.alive[p]) continue;
           // 掉血惩罚：总是每个属性 -1 档（简化并降低惩罚）
           const spdStep = this.speedStep || CFG.growthSpeedStep;
           const nb = Math.max(this.bombsCap[p] - 1, this.loBombs[p]);
@@ -1284,6 +1400,7 @@
       this._movementStatusStep();
       this._bunUpdate();
       this._bunRespawnStep();
+      if (this.nativeItems) this._releaseDeathDrops();
       for (let p = 0; p < this.nPlayers; p++) {
         if (!this.alive[p] || this.trapped[p] > 0) continue;
         const [r, c] = this.centerCell(p);
@@ -1293,7 +1410,8 @@
       }
 
       // 7. 飞鸟 30s（300 tick）大循环：非 UI 手动接管模式下沿途各列精准落地墓地道具
-      if (!this._manualBird) {
+      if (!this._manualBird && this.nativeItems) this._nativeAirdropStep();
+      if (!this._manualBird && !this.nativeItems) {
         const cycleTick = this.t % 300;
         if (cycleTick === 270 && this.graveyard && this.graveyard.length > 0) {
           this.airdropTotal = this.graveyard.length;
@@ -1445,6 +1563,7 @@
       this.superCrate[cell] = isSuper ? 1 : 0;
       this.crateType[cell] = type;
       this.recycle[cell] = 0;
+      this.crateCount[cell] = 0;
       return true;
     }
 

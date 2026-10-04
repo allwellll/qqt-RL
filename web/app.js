@@ -419,6 +419,9 @@
     if (event.code === 'KeyR') reset();
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));
+  window.addEventListener('blur', () => {
+    held.clear(); bombCell = -1; itemCell = -1;
+  });
   restart.addEventListener('click', reset);
   soundToggle.addEventListener('change', () => sound.setEnabled(soundToggle.checked));
   characterSelect.addEventListener('change', () => {

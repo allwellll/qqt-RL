@@ -13,11 +13,12 @@
   const ITEM_SLOT_KEYS = ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7'];
 
   function moveForHeld(held) {
-    if (held.has('ArrowUp')) return 0;
-    if (held.has('ArrowDown')) return 1;
-    if (held.has('ArrowLeft')) return 2;
-    if (held.has('ArrowRight')) return 3;
-    return 4;
+    let move = 4;
+    for (const key of held) {
+      const direction = MOVEMENT_KEYS.indexOf(key);
+      if (direction >= 0) move = direction;
+    }
+    return move;
   }
 
   return { MOVEMENT_KEYS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld };

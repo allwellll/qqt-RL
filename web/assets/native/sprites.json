@@ -56,6 +56,13 @@
       "h": 76,
       "frames": 2,
       "source": "object/misc/misc111_die.img"
+    },
+    "bird": {
+      "file": "assets/native/bird.png",
+      "w": 163,
+      "h": 106,
+      "frames": 6,
+      "source": "object/misc/misc101_stand.img"
     }
   },
   "sound": {

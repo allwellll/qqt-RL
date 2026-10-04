@@ -66,7 +66,7 @@ def main():
                     portrait = portrait.crop(portrait.getbbox())
                     portrait.save(out / f'{key}_portrait.png', optimize=True)
             manifest['actors'][key] = actor
-        for key, name in [('trap', 'misc111_trigger'), ('pop', 'misc111_die')]:
+        for key, name in [('trap', 'misc111_trigger'), ('pop', 'misc111_die'), ('bird', 'misc101_stand')]:
             (w, h, cx, cy, frames), _ = decode(f'object\\misc\\{name}.img')
             strip = Image.new('RGBA', (w * len(frames), h))
             for i, (x, y, image) in enumerate(frames):

@@ -492,6 +492,13 @@
         if (sim.crate && sim.crate[i]) {
           const sprite = assets.items[crateSpriteKey(sim.crateType ? sim.crateType[i] : -1, sim.superCrate && sim.superCrate[i] === 1)];
           if (sprite) place(sprite, row * Z_ROW_STRIDE + 16);
+          if (sim.crateCount && sim.crateCount[i] > 1) items.push([row * Z_ROW_STRIDE + 17, () => {
+            ctx.save(); ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'right';
+            ctx.lineWidth = 3; ctx.strokeStyle = '#202020'; ctx.fillStyle = '#fff';
+            const x = (column + 1) * CELL - 4, y = (row + 1) * CELL - 8;
+            ctx.strokeText(String(sim.crateCount[i]), x, y); ctx.fillText(String(sim.crateCount[i]), x, y);
+            ctx.restore();
+          }]);
         } else if (debris && sim.pendingCrateType && sim.pendingCrateType[i] >= 0) {
           const sprite = assets.items[crateSpriteKey(sim.pendingCrateType[i], sim.pendingSuperCrate && sim.pendingSuperCrate[i] === 1)];
           if (sprite) place(sprite, row * Z_ROW_STRIDE + 16);
@@ -651,6 +658,17 @@
       }
       items.sort((a, b) => a[0] - b[0]);
       for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
+      const birdFraction = motion && !sim.done ? Math.max(0, Math.min(1, (now - motion.lastTickT) / motion.tickMs)) : 0;
+      const bird = sim.birdFlight ? sim.birdFlight(birdFraction) : null;
+      if (assets.items) for (const drop of sim.airdropFalls || []) {
+        const progress = Math.min(1, (sim.t - drop.tick + birdFraction) / 3);
+        const sprite = assets.items[crateSpriteKey(drop.type, drop.isSuper)];
+        if (sprite) drawHeldItem(sprite, ((1 - progress) * drop.x + progress * (drop.cell % 15 + .5)) * CELL,
+          ((1 - progress) * (drop.row || 3) + progress * (Math.floor(drop.cell / 15) + .5)) * CELL, now);
+      }
+      if (bird && assets.effects && assets.effects.bird) {
+        drawNativeEffect(assets.effects.bird, bird.x * CELL, bird.row * CELL, now);
+      }
       if (arrow && assets.point) drawArrow(arrow, now);
       // 玩家(pid0)被炸掉→复活期间压暗画面：alpha 随复活倒计时消退，复活瞬间恢复。
       if (sim.isBun && !sim.alive[0] && sim.bunRespawn[0] > 0) {
