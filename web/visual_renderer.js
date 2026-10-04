@@ -312,7 +312,8 @@
     function updateFaces(sim, intents) {
       const previous = lastPositions;
       for (let pid = 0; pid < playerCount(sim); pid++) {
-        const intent = intents ? intents[pid] : MOVE_IDLE;
+        const intent = sim.movementStatus && sim.movementStatus[pid] === 2
+          ? sim.slideDir[pid] : (intents ? intents[pid] : MOVE_IDLE);
         if (intent >= 0 && intent < MOVE_IDLE) { faces[pid] = intent; continue; }
         const dy = previous ? sim.pos[pid * 2] - previous[pid * 2] : 0;
         const dx = previous ? sim.pos[pid * 2 + 1] - previous[pid * 2 + 1] : 0;

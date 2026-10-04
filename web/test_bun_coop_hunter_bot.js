@@ -154,11 +154,63 @@ const decide = (sim, pid) => bot().analyze(Hunter.hunterStateFromSim(sim), pid);
   second.act(sim, 2);
   assert.equal(observed.length, 0, 'commitments expire at the next tick');
 }
+{
+  const sim = scene([0, 1, 1], [[5.5, 8.5], [10.5, 12.5], [3.5, 8.5]]);
+  sim.bunStored = [[0, 0], [0, 0]];
+  sim.spdG.fill(1); sim.blastCap.fill(1);
+  for (let row = 1; row < 7; row++) for (const col of [7, 9]) sim.wall[row * W + col] = 1;
+  sim.wall[3 * W + 9] = 0;
+  const defender = bot(), first = defender.analyzeSim(sim, 2);
+  assert.equal(first.mode, 'DEFEND');
+  assert.equal(first.reason, 'bomb_block', 'defender blocks the only base approach before a direct shot');
+  const info = sim.step([[QQT.MOVE_UP, 0, 0, 0], [4, 0, 0, 0], [...first.action, 0, 0]]);
+  assert(info.placed[2] && sim.fuse[3 * W + 8] > 0, 'blocking bubble enters actual physics');
+  for (let t = 0; t < 12; t++) {
+    sim.step([[QQT.MOVE_UP, 0, 0, 0], [4, 0, 0, 0], [...defender.act(sim, 2), 0]]);
+    assert(sim.pos[0] >= 4 && sim.alive[2] && !sim.trapped[2], 'bubble stops the enemy while defender escapes');
+  }
+}
+{
+  const sim = scene([0, 1, 1], [[7.5, 7.5], [5.5, 5.5], [10.5, 12.5]]);
+  sim.bunStored = [[0, 0], [0, 0]];
+  sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
+  const attacker = bot();
+  let anchor, connector, connectedTick, chainExploded = false;
+  for (let tick = 0; tick < 34; tick++) {
+    const decision = attacker.analyzeSim(sim, 1);
+    const cell = sim.centerCell(1)[0] * W + sim.centerCell(1)[1];
+    if (tick === 0) {
+      assert.equal(decision.reason, 'bomb_reserve', 'first bubble prepares a corner connection');
+      assert.equal(decision.action[1], 1);
+      anchor = cell;
+    }
+    if (decision.reason === 'bomb_chain') { connector = cell; connectedTick = tick; }
+    const info = sim.step([[4, 0, 0, 0], [...decision.action, 0, 0], [4, 0, 0, 0]]);
+    assert(sim.alive[1] && !sim.trapped[1], 'attacker survives its real chain attack');
+    if (info.triggered[anchor] && connector != null && info.triggered[connector]) {
+      chainExploded = true;
+      assert(tick < connectedTick + 30, 'connector detonates early through the reserve bubble');
+      assert(sim.trapped[0] > 0, 'connected ray actually traps the enemy outside the first ray');
+    }
+  }
+  assert(connector != null && chainExploded, 'reserve plan leads to a second placement and real chain explosion');
+}
 for (const difficulty of ['easy', 'normal', 'hard']) {
   const sim = scene([0, 1, 1], [[11.5, 1.5], [5.5, 9.5], [5.5, 5.5]]);
   sim.trapped[1] = 60;
   const rescue = new Coop.BunCoopHunterBot({ difficulty, seed: 3, overrides: { mistakeRate: 0 } });
   for (let t = 0; t < 40 && sim.trapped[1]; t++) sim.step([[4, 0, 0, 0], [4, 0, 0, 0], [...rescue.act(sim, 2), 0]]);
   assert(sim.alive[1] && !sim.trapped[1], `${difficulty} completes actual rescue`);
+}
+{
+  const sim = scene([0, 1, 1], [[7.5, 7.5], [5.5, 5.5], [10.5, 12.5]]);
+  sim.bunStored = [[0, 0], [0, 0]];
+  sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
+  const attacker = bot(), decision = attacker.analyzeSim(sim, 1);
+  assert.equal(decision.reason, 'bomb_reserve');
+  sim.step([[4, 0, 0, 0], [...decision.action, 0, 0], [4, 0, 0, 0]]);
+  sim.pos[0] = 11.5; sim.pos[1] = 1.5;
+  attacker.analyzeSim(sim, 1);
+  assert.equal(attacker.chainPlan, null, 'cancel the reserve connection after the enemy leaves its target ray');
 }
 console.log('Cooperative hunter: roles, takeover, rescue, delivery, escort, interception and friendly safety passed');

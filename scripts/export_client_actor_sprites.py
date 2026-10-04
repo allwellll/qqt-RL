@@ -45,9 +45,9 @@ def main():
                     layers[part] = (frames, len(frames) // dirs)
                 count = max(n for _, n in layers.values())
                 strip = Image.new('RGBA', (85 * count, 340))
-                # Native order left/up/right/down becomes renderer down/left/right/up.
+                # Native frames face right/up/left/down; renderer rows are down/left/right/up.
                 for direction, suffix in enumerate(('down', 'left', 'right', 'up')):
-                    source_direction = (3, 0, 2, 1)[direction]
+                    source_direction = (3, 2, 0, 1)[direction]
                     order = sorted(layers, key=lambda p: int(zorder[action].get(f'{p}_z_{suffix}', 0)))
                     for frame in range(count):
                         canvas = Image.new('RGBA', (100, 100))

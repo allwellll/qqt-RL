@@ -190,7 +190,7 @@
     // 原版道具栏/糖泡只在真人对局开启；模型评测与录像保持训练规则。
     const native = localHumanControls();
     sim.reset(level, { nativeItems: native, nativeTrap: native, teams: teamLayout(),
-      bananaSlideSpeedPx: native ? 300 : undefined });
+      bananaSlideSpeedPx: native ? 360 : undefined });
     resetBot();
     bombCell = -1;
     itemCell = -1;

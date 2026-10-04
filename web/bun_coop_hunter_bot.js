@@ -13,13 +13,14 @@
   class BunCoopHunterBot extends Base.BunHunterBot {
     constructor(options = {}) {
       super(options);
-      this.cfg.maxLiveBombs = Math.min(this.cfg.maxLiveBombs, 3);
+      this.cfg.maxLiveBombs = Math.min(this.cfg.maxLiveBombs, 4);
     }
 
     reset(seed) {
       super.reset(seed);
       this.assignment = null;
       this.lastGoalMode = null;
+      this.chainPlan = null;
     }
 
     analyzeSim(sim, pid) {
@@ -73,7 +74,18 @@
     }
 
     chooseGoal(state, g, pid, pred, perceive) {
-      const goal = this.selectGoal(state, g, pid, pred, perceive);
+      let goal = this.selectGoal(state, g, pid, pred, perceive);
+      const plan = this.chainPlan;
+      if (plan) {
+        const ray = this.blastCells(state, g, plan.cell, state.players[pid].blast);
+        if (state.tick >= plan.expires || !g.open[plan.cell] || g.bombAt[plan.cell] >= 0 ||
+            !state.bombs.some((b) => b.cell === plan.anchor && b.owner === pid) ||
+            !this.enemiesOf(state, pid).some((q) => state.players[q].alive &&
+              !state.players[q].trapped && ray.has(state.players[q].cell))) this.chainPlan = null;
+      }
+      if (this.chainPlan && ['HUNT', 'SUPPORT', 'RAID'].includes(goal.mode)) {
+        goal = { mode: 'CHAIN', seeds: [{ cell: plan.cell, cost: 0 }], threat: false, noDig: true };
+      }
       this.lastGoalMode = goal.mode;
       return goal;
     }
@@ -174,7 +186,9 @@
 
     considerBomb(state, g, pid, pred, perceive, field) {
       if (this.lastGoalMode === 'RESCUE') return null;
-      const candidate = super.considerBomb(state, g, pid, pred, perceive, field);
+      const candidate = (this.lastGoalMode === 'CHAIN' ? this.tacticalBomb(state, g, pid, field) : null)
+        || super.considerBomb(state, g, pid, pred, perceive, field)
+        || this.tacticalBomb(state, g, pid, field);
       if (!candidate) return null;
       const me = state.players[pid];
       const mine = { cell: me.cell, e: Base.NEW_BOMB_TICK, blast: me.blast };
@@ -207,7 +221,106 @@
           }
         }
       }
+      if (candidate.nextCell != null) this.chainPlan = { cell: candidate.nextCell, anchor: me.cell,
+        expires: state.tick + Base.NEW_BOMB_TICK - 8 };
+      else if (this.lastGoalMode === 'CHAIN') this.chainPlan = null;
       return candidate;
+    }
+
+    blastCells(state, g, cell, blast) {
+      const cells = new Set([cell]);
+      for (let a = 0; a < 4; a++) {
+        let c = cell;
+        for (let n = 0; n < blast; n++) {
+          c = g.nb[c * 4 + a];
+          if (c < 0 || state.wall[c]) break;
+          cells.add(c);
+          if (state.brick[c] || g.bombAt[c] >= 0) break;
+        }
+      }
+      return cells;
+    }
+
+    routeDistance(g, start, targets, blocked = -1) {
+      const dist = new Int16Array(g.N).fill(-1), queue = [start];
+      dist[start] = 0;
+      for (let i = 0; i < queue.length; i++) {
+        const c = queue[i];
+        if (targets.has(c)) return dist[c];
+        for (let a = 0; a < 4; a++) {
+          const n = g.nb[c * 4 + a];
+          if (n < 0 || n === blocked || !g.open[n] || g.bombAt[n] >= 0 || dist[n] >= 0) continue;
+          dist[n] = dist[c] + 1; queue.push(n);
+        }
+      }
+      return INF;
+    }
+
+    pickMove(g, me, acts, esc, field, threatened, danger) {
+      if (this.lastGoalMode === 'CHAIN') return super.pickMove(g, me, acts, esc, field, false, null);
+      return super.pickMove(g, me, acts, esc, field, threatened, danger);
+    }
+
+    tacticalBomb(state, g, pid, field) {
+      const me = state.players[pid];
+      if (this.difficulty === 'easy' || me.carrying >= 0 || me.bombsLeft <= 0 ||
+          me.liveBombs >= this.cfg.maxLiveBombs || g.bombAt[me.cell] >= 0 || !g.open[me.cell] ||
+          !['HUNT', 'SUPPORT', 'DEFEND', 'INTERCEPT', 'ESCORT', 'CHAIN'].includes(this.lastGoalMode)) return null;
+      const foes = this.enemiesOf(state, pid).map((q) => state.players[q]).filter((e) =>
+        e.alive && !e.trapped && e.invuln < Base.NEW_BOMB_TICK && distance(me, e) <= this.cfg.attackRadius);
+      if (!foes.length) return null;
+      const mine = { cell: me.cell, e: Base.NEW_BOMB_TICK, blast: me.blast };
+      const before = this.predict(state, g, [], () => true);
+      const after = this.predict(state, g, [mine], () => true);
+      const blast = this.blastCells(state, g, me.cell, me.blast);
+      const oldDanger = this.dangerCells(before, g.N), danger = this.dangerCells(after, g.N);
+      let reason = null, nextCell = null;
+      if (this.chainPlan && me.cell === this.chainPlan.cell && blast.has(this.chainPlan.anchor) &&
+          foes.some((e) => blast.has(e.cell))) reason = 'bomb_chain';
+      const home = new Set(this.baseCells(state, g, me.team));
+      for (const foe of foes) {
+        if (reason) break;
+        const approach = this.routeDistance(g, foe.cell, home);
+        if (approach <= 7 && distance(me, foe) <= 5 && me.cell !== foe.cell &&
+            this.routeDistance(g, foe.cell, home, me.cell) >= approach + 3) {
+          reason = 'bomb_block'; break;
+        }
+        if (danger[foe.cell] && !oldDanger[foe.cell]) {
+          const linked = state.bombs.some((b) => state.players[b.owner] &&
+            state.players[b.owner].team === me.team && blast.has(b.cell));
+          reason = linked ? 'bomb_chain' : 'bomb_pressure'; break;
+        }
+      }
+      // Reserve a first bubble only when a reachable second placement connects to it and aims at a foe.
+      if (!reason && me.bombsLeft >= 2 && me.liveBombs === 0 && me.liveBombs + 1 < this.cfg.maxLiveBombs &&
+          ['HUNT', 'SUPPORT'].includes(this.lastGoalMode)) {
+        let best = INF;
+        for (const cell of blast) {
+          if (cell === me.cell || !g.open[cell] || g.bombAt[cell] >= 0) continue;
+          const travel = this.routeDistance(g, me.cell, new Set([cell]));
+          const ticks = Math.ceil(travel / this.stepLen(me, false));
+          if (ticks < 1 || ticks + 10 >= after.bombGone[me.cell]) continue;
+          const secondRay = this.blastCells(state, g, cell, me.blast);
+          if (!foes.some((e) => secondRay.has(e.cell) && !blast.has(e.cell))) continue;
+          const future = { ...me, cell, row: Math.floor(cell / g.W), col: cell % g.W,
+            y: Math.floor(cell / g.W) + 0.5, x: cell % g.W + 0.5 };
+          const shifted = { ...state, bombs: state.bombs.map((b) => ({ ...b, fuse: Math.max(1, b.fuse - ticks) })) };
+          const connected = this.predict(shifted, g, [
+            { ...mine, e: after.bombGone[me.cell] - ticks },
+            { cell, e: Base.NEW_BOMB_TICK, blast: me.blast },
+          ], () => true);
+          if (!this.escape(g, connected, future, false).surv) continue;
+          if (travel < best) { best = travel; nextCell = cell; reason = 'bomb_reserve'; }
+        }
+      }
+      if (!reason) return null;
+      const escape = this.escape(g, after, me, false);
+      let safe = escape.surv;
+      if (this.cfg.robust) safe &= this.hypoSurvivors(state, g, pid, () => true, [mine]);
+      if (!safe) return null;
+      const targetField = nextCell == null ? field : this.goalField(state, g,
+        [{ cell: nextCell, cost: 0 }], me, after, null, true);
+      return { move: this.pickMove(g, me, safe, escape, targetField, true, danger), reason, nextCell };
     }
 
   }

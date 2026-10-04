@@ -197,6 +197,25 @@ function playerGx(draws, pid) {
   return (hit.x + hit.w / 2) / CELL;
 }
 
+{
+  const { canvas, draws } = mockCanvas(), assets = mockAssets();
+  const rows = ['down', 'left', 'right', 'up'].map((tag) => [tagImg(`native-${tag}`, 127, 127)]);
+  assets.characters = { maomao: { stand: rows, walk: rows } };
+  const renderer = visual.createRenderer(canvas, level, assets);
+  const sim = fakeSim({ pos: [5.5, 5.5, 9.5, 9.5] });
+  for (const [move, face] of [[QQT.MOVE_LEFT, 'left'], [QQT.MOVE_RIGHT, 'right']]) {
+    draws.length = 0;
+    renderer.render(sim, 1000, { characters: ['maomao'], intents: [move, MOVE_IDLE],
+      prevPos: sim.pos.slice(), curPos: sim.pos.slice(), lastTickT: 1000, tickMs: 100, humanPid: 0 });
+    assert(draws.some((d) => d.tag === `native-${face}`), 'native frame direction follows horizontal input');
+  }
+  sim.movementStatus = [QQT.MOVE_STATUS_SLIDE, 0]; sim.slideDir = [QQT.MOVE_RIGHT, MOVE_IDLE];
+  draws.length = 0;
+  renderer.render(sim, 1100, { characters: ['maomao'], intents: [QQT.MOVE_LEFT, MOVE_IDLE],
+    prevPos: sim.pos.slice(), curPos: sim.pos.slice(), lastTickT: 1000, tickMs: 100, humanPid: 0 });
+  assert(draws.some((d) => d.tag === 'native-right'), 'banana slide faces its forced direction even with opposite input');
+}
+
 // 4a) 本地人类(humanPid=0)raw 不插值；对手(pid1)按 alpha 插值。
 {
   const { canvas, draws } = mockCanvas();
