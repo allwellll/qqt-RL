@@ -181,12 +181,12 @@
     if (level !== selectedLevel()) await useMap(selectedLevel());
     sim = new QQT.Sim(Date.now() >>> 0);
     const wantModel = isModelChoice(opponentSelect.value);
-    if (wantModel && loadedModelId !== opponentSelect.value.slice(MODEL_PREFIX.length)) opponentSelect.value = 'bun.hunter@hard';
+    if (wantModel && loadedModelId !== opponentSelect.value.slice(MODEL_PREFIX.length)) opponentSelect.value = 'bun.coop_hunter@hard';
     if (matchMode.value === 'model-vs-rule' && !loadedModel) {
       matchMode.value = 'human-vs-opponent';
       modelStatus.textContent = '请先在「策略」中选择一个训练模型';
     }
-    if (teamMode.value !== '1v1' && !teamCapable(opponentSelect.value)) opponentSelect.value = 'bun.hunter@hard';
+    if (teamMode.value !== '1v1' && !teamCapable(opponentSelect.value)) opponentSelect.value = 'bun.coop_hunter@hard';
     // 原版道具栏/糖泡只在真人对局开启；模型评测与录像保持训练规则。
     const native = localHumanControls();
     sim.reset(level, { nativeItems: native, nativeTrap: native, teams: teamLayout(),
