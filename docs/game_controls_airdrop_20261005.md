@@ -34,4 +34,9 @@
 
 ## 发布
 
-待完成提交、main 快进合并、GitHub push 和 Pages 部署核验后补充记录。
+- 功能提交：`d8f65408bba89d7c568f162ae0afa22b3cc08f4d`。从当前开发分支快进合入主仓库 `main` 后推送；GitHub API 已确认 main 指向该提交。
+- Pages workflow：[37220757571](https://github.com/allwellll/qqt-RL/actions/runs/37220757571)，对应上述 SHA；`test-and-build`、`deploy` 及 `Deploy Pages` 步骤均 `success`。
+- 站点：<https://allwellll.github.io/qqt-RL/>。线上 `index.html`、`app.js`、`controls.js`、`sim.js`、`visual_renderer.js`、`assets/native/sprites.json`、`assets/native/bird.png` 共 7 个文件全部逐字节匹配本地功能提交。
+- 线上资源校验保存为 `runs/game_controls_airdrop_20261005/pages-assets.json`。大鸟 PNG SHA-256：`673ff506a414c944465ccc633500709acfda03c5ce00618ec67da67112db7389`。
+- 最终本地浏览器证据 JSON SHA-256：`2abb0e55fe87c08704a666c9771c730d75b93bf5ca5aefd62e3f90a2679acce1`。
+- 本报告的发布证据为后续文档提交，仅更新报告；最终文档提交的 main push 也须核验 Pages workflow 成功，网页代码与上述已验版本相同。
