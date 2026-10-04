@@ -175,7 +175,7 @@
       const pred = this.predict(state, g, [], perceive);
       const esc = this.escape(g, pred, me, false);
       const goal = this.chooseGoal(state, g, pid, pred, perceive);
-      const field = this.goalField(state, g, goal.seeds, me, pred, goal.threat ? foe : null, goal.noDig !== false && me.carrying >= 0);
+      const field = this.fieldForGoal(state, g, goal, me, pred, foe);
       if (!esc.surv) {
         let best = MOVE_IDLE, bestT = -1;
         for (let a = 0; a < 5; a++) if (esc.maxT[a] > bestT) { bestT = esc.maxT[a]; best = a; }
@@ -203,6 +203,11 @@
     finish(move, ability, reason, mode) {
       this.lastDecision = { action: [move, ability], reason, mode, difficulty: this.difficulty };
       return this.lastDecision;
+    }
+
+    fieldForGoal(state, g, goal, me, pred, foe) {
+      return this.goalField(state, g, goal.seeds, me, pred, goal.threat ? foe : null,
+        goal.noDig !== false && me.carrying >= 0);
     }
 
     geometry(state) {

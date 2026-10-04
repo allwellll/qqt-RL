@@ -192,12 +192,15 @@
 
   // 素材并行下载：原先逐张串行 await，首屏要等几十次往返。onProgress(done, total) 驱动加载动画。
   async function loadAssets(level, onProgress = null) {
-    const [elements, itemMeta] = await Promise.all([
+    const [elements, itemMeta, nativeMeta] = await Promise.all([
       fetch('assets/maps/elements.json').then((r) => r.json()),
       fetch('assets/item/items.json').then((r) => r.json()),
+      fetch('assets/native/sprites.json').then((r) => r.json()),
     ]);
     const elementIds = levelElementIds(level).filter((id) => elements[String(id)] || elements[id]);
     const flameFiles = ['C_1', 'C_2'];
+    const nativeSprites = Object.values(nativeMeta.actors).flatMap((actor) => Object.values(actor.actions))
+      .concat(Object.values(nativeMeta.effects));
     for (const dir of DIR_KEYS) for (let f = 1; f <= 6; f++) flameFiles.push(`${dir}_${f}`);
     const sources = [
       level.bg || 'assets/bg/抢包子.png', 'assets/角色4×4精灵图.png', 'assets/角色c4×4.png',
@@ -205,6 +208,7 @@
       ...flameFiles.map((name) => `assets/flame/flame_${name}.png`),
       ...Object.values(itemMeta).map((meta) => meta.file),
       ...elementIds.map((id) => (elements[String(id)] || elements[id]).file),
+      ...nativeSprites.map((meta) => meta.file),
     ];
     let done = 0;
     const total = sources.length;
@@ -220,6 +224,18 @@
     const flameImages = take(flameFiles.length);
     const itemImages = take(Object.keys(itemMeta).length);
     const elementSheets = take(elementIds.length);
+    const nativeImages = take(nativeSprites.length);
+    const nativeFrames = new Map(nativeSprites.map((meta, index) => [meta.file,
+      sliceSheet(nativeImages[index], meta.directions || 1, meta.frames, Math.round(meta.w * SCALE))]));
+    const characters = {};
+    for (const [key, actor] of Object.entries(nativeMeta.actors)) {
+      characters[key] = Object.fromEntries(Object.entries(actor.actions).map(([action, meta]) =>
+        [action, nativeFrames.get(meta.file)]));
+    }
+    const effects = {};
+    for (const [key, meta] of Object.entries(nativeMeta.effects)) {
+      effects[key] = { frames: nativeFrames.get(meta.file)[0], aspect: meta.h / meta.w };
+    }
     const humanSize = Math.round((humanSheet.width / 4) * SCALE);
     const botSize = Math.round((botSheet.width / 4) * SCALE * 0.85);
     const bombSplits = [0, 38, 73, 112, 156];
@@ -261,6 +277,7 @@
       elements, background: scaledBackground, baseBand: makeTopBand(scaledBackground),
       players: [sliceSheet(humanSheet, 4, 4, humanSize), sliceSheet(botSheet, 4, 4, botSize)],
       bombs, flames, shadow: scaleImage(shadow), elementImages, items,
+      characters, effects,
       point: scaleImage(point, Math.round(point.width * SCALE * 0.5), Math.round(point.height * SCALE * 0.5)),
     };
   }
@@ -271,6 +288,10 @@
     const explosions = [];
     const faces = [1, 1, 1, 1];
     const movingUntil = [0, 0, 0, 0];
+    const pops = [];
+    let previousTraps = [];
+    let previousTrapPositions = [];
+    let trapGeneration = null;
     let lastPositions = null;
 
     function tileZ(row, column) { return row * Z_ROW_STRIDE + (15 - 1 - column); }
@@ -283,6 +304,8 @@
       explosions.length = 0;
       faces.fill(1);
       movingUntil.fill(0);
+      pops.length = 0;
+      previousTraps = []; previousTrapPositions = []; trapGeneration = null;
       lastPositions = null;
     }
     // 有移动意图时朝向跟随意图（顶墙也要面朝墙）；无意图时才按位移推断（如香蕉皮滑行）。
@@ -331,11 +354,21 @@
         Math.round(image.width * k), Math.round(image.height * k));
       ctx.restore();
     }
-    // 原版糖泡：半透明泡泡罩住角色，高光 + 剩余秒数；越临近爆破抖动越明显。
+    function drawNativeEffect(sprite, cx, bottom, now, age = null) {
+      const index = age == null ? Math.floor(now / 100) % sprite.frames.length
+        : Math.min(sprite.frames.length - 1, Math.floor(age / 120));
+      const image = sprite.frames[index];
+      ctx.drawImage(image, Math.round(cx - image.width / 2), Math.round(bottom - image.width * sprite.aspect),
+        image.width, Math.round(image.width * sprite.aspect));
+    }
+    // Native syrup frames replace the fallback bubble when client assets are loaded.
     function drawTrapBubble(cx, cy, ticks, now) {
       const r = CELL * 0.62;
       const urgency = 1 - Math.min(1, ticks / 60);
       const wobble = 1 + Math.sin(now / (120 - urgency * 70)) * (0.03 + urgency * 0.04);
+      if (assets.effects && assets.effects.trap) {
+        drawNativeEffect(assets.effects.trap, cx, cy + r, now);
+      } else {
       ctx.save(); ctx.translate(cx, cy); ctx.scale(wobble, 2 - wobble);
       const fill = ctx.createRadialGradient(-r * 0.3, -r * 0.35, r * 0.1, 0, 0, r);
       fill.addColorStop(0, 'rgba(255,255,255,0.55)');
@@ -346,6 +379,7 @@
       ctx.fillStyle = 'rgba(255,255,255,0.8)';
       ctx.beginPath(); ctx.ellipse(-r * 0.4, -r * 0.45, r * 0.18, r * 0.1, -0.6, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
+      }
       ctx.save();
       ctx.font = 'bold 18px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
       ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,0.75)'; ctx.fillStyle = urgency > 0.65 ? '#ff7a7a' : '#ffffff';
@@ -516,6 +550,17 @@
       return true;
     }
     function render(sim, now = performance.now(), motion = null) {
+      if (trapGeneration !== sim._gen) {
+        pops.length = 0; previousTraps = []; previousTrapPositions = []; trapGeneration = sim._gen;
+      }
+      for (let pid = 0; pid < playerCount(sim); pid++) {
+        if (previousTraps[pid] > 0 && !sim.alive[pid] && assets.effects && assets.effects.pop) {
+          pops.push({ x: previousTrapPositions[pid * 2 + 1] * CELL,
+            y: previousTrapPositions[pid * 2] * CELL + FOOT_BELOW_CENTER_PX * SCALE, t0: now });
+        }
+      }
+      previousTraps = sim.trapped ? sim.trapped.slice() : [];
+      previousTrapPositions = Array.from(sim.pos);
       const intents = motion && motion.intents ? motion.intents : null;
       const previousPositions = updateFaces(sim, intents);
       // 逻辑节拍 10Hz，渲染 60Hz：对手(10Hz)在两个 sim tick 之间线性插值位置 → 顺滑。
@@ -563,12 +608,17 @@
         if (moved) movingUntil[pid] = now + 150;
         const trapTicks = sim.trapped ? sim.trapped[pid] : 0;
         const team = teamOf(sim, pid);
-        const frames = assets.players[team][row], image = frames[!trapTicks && now < movingUntil[pid] ? Math.floor(now / 125) % 4 : 0];
+        const character = motion && motion.characters && assets.characters && assets.characters[motion.characters[pid]];
+        const walking = !trapTicks && now < movingUntil[pid];
+        const frames = character ? character[walking ? 'walk' : 'stand'][row] : assets.players[team][row];
+        const image = frames[walking ? Math.floor(now / 100) % frames.length : 0];
         const x = Math.round(gx * CELL - image.width / 2), y = Math.min(Math.round(playerVisualY(gy, image.height)), 780 - image.height);
         // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
         if (pid === arrowPid) arrow = { x: gx * CELL, y: y + image.height * SPRITE_HEAD_FRAC };
-        if (coveredCells.has(Math.floor(gy) * 15 + Math.floor(gx))) continue;
-        const z = Math.floor(gy) * Z_ROW_STRIDE + 18;
+        const playerCell = Math.floor(gy) * 15 + Math.floor(gx);
+        const onWall = sim.wall[playerCell] || sim.brick[playerCell];
+        if (coveredCells.has(playerCell) && !onWall) continue;
+        const z = Math.floor(gy) * Z_ROW_STRIDE + (onWall ? 23 : 18);
         items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
         // 多人时同队共用精灵：脚下队伍色光圈 + 头顶名牌区分。
         if (playerCount(sim) > 2) {
@@ -589,7 +639,14 @@
         if (heldKey && assets.items && assets.items[heldKey] && !trapTicks) {
           items.push([z + 2, () => drawHeldItem(assets.items[heldKey], x + image.width * 0.8, y + image.height * 0.25, now)]);
         }
-        if (trapTicks > 0) items.push([z + 3, () => drawTrapBubble(gx * CELL, y + image.height * 0.58, trapTicks, now)]);
+        if (trapTicks > 0) items.push([z + 3, () => drawTrapBubble(gx * CELL,
+          gy * CELL + FOOT_BELOW_CENTER_PX * SCALE - CELL * 0.62, trapTicks, now)]);
+      }
+      for (let i = pops.length - 1; i >= 0; i--) {
+        const pop = pops[i], age = now - pop.t0;
+        if (age >= assets.effects.pop.frames.length * 120) { pops.splice(i, 1); continue; }
+        items.push([Math.floor(pop.y / CELL) * Z_ROW_STRIDE + 23,
+          () => drawNativeEffect(assets.effects.pop, pop.x, pop.y, now, age)]);
       }
       items.sort((a, b) => a[0] - b[0]);
       for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);

@@ -113,7 +113,8 @@
     act(observation, playerId, rng) {
       const sim = observation.metadata && observation.metadata.sim;
       if (!sim) throw new Error('bun.hunter requires observation.metadata.sim');
-      const decision = this.bot.analyze(this.stateFromSim(sim), playerId);
+      const decision = this.bot.analyzeSim ? this.bot.analyzeSim(sim, playerId)
+        : this.bot.analyze(this.stateFromSim(sim), playerId);
       return validateAction({ move: decision.action[0], ability: decision.action[1] },
         observation.legal_moves, observation.legal_abilities);
     }
@@ -159,6 +160,17 @@
         difficulty: { type: 'string', enum: ['easy', 'normal', 'hard'] } } },
       defaults: { difficulty: 'normal' },
     }, dependencies.hunter ? (config) => new HunterAdapter(dependencies.hunter, config) : null);
+    registry.register({
+      id: 'bun.coop_hunter', version: '1.0.0', display_name: '协作猎手',
+      runtime: ['browser'], capabilities: { deterministic: true, batched: 'none',
+        jittable: false, async: false, transition_observer: false, frozen: false },
+      config_schema: { type: 'object', additionalProperties: false, properties: {
+        difficulty: { type: 'string', enum: ['easy', 'normal', 'hard'] } } },
+      defaults: { difficulty: 'hard' },
+    }, dependencies.coopHunter ? (config) => new HunterAdapter({
+      BunHunterBot: dependencies.coopHunter.BunCoopHunterBot,
+      hunterStateFromSim: dependencies.coopHunter.hunterStateFromSim,
+    }, config) : null);
     registry.register({
       id: 'bun.browser_model', version: '1.0.0', display_name: '浏览器模型 Bot',
       runtime: ['browser'], capabilities: { deterministic: true, batched: 'none',

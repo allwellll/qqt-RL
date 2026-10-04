@@ -61,6 +61,9 @@ assert.equal(visual.respawnSeconds(1), 1);
 for (const name of ['放炮', '爆炸', '吃道具音效']) {
   assert(fs.existsSync(path.join(web, `assets/snd/${name}.wav`)), `missing sound: ${name}`);
 }
+assert(fs.existsSync(path.join(web, 'assets/native/syrup_pop.wav')), 'missing native syrup pop sound');
+assert(fs.existsSync(path.join(web, 'assets/native/sprites.json')), 'missing native actor manifest');
+assert(fs.existsSync(path.join(web, 'assets/native/maomao_stand.png')), 'missing Maomao actor');
 assert(htmlSource.includes('sound.js') && htmlSource.includes('sound-toggle'), 'page must load sound effects with a toggle');
 assert(appSource.includes('QQTSound.detectEvents'), 'app must play sounds from step events');
 const items = JSON.parse(fs.readFileSync(path.join(web, 'assets/item/items.json')));

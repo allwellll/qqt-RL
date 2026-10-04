@@ -8,6 +8,8 @@
   const mapSelect = document.getElementById('map-select');
   const matchMode = document.getElementById('match-mode');
   const teamMode = document.getElementById('team-mode');
+  const characterSelect = document.getElementById('character');
+  const characterPortrait = document.getElementById('character-portrait');
   const modelOptions = document.getElementById('model-options');
   const modelDetails = document.getElementById('model-details');
   const modelProgressWrap = document.getElementById('model-progress-wrap');
@@ -105,7 +107,8 @@
   // 本地人类操控 pid0（非回放、非观战 model-vs-rule）时 humanPid=0 → 渲染 raw；否则 -1（两方皆插值）。
   function localHumanControls() { return !replayDocument && matchMode.value !== 'model-vs-rule'; }
   function motionState() {
-    return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1, intents };
+    return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1, intents,
+      characters: localHumanControls() ? [characterSelect.value] : [] };
   }
 
   // rAF 逐帧推进本地人类 pid0：sim.frameStep 内走原版像素移动（含 6px 拐角修正、泡泡 3px 入口带），
@@ -133,6 +136,7 @@
     return QQTBots.createDefaultRegistry({
       BunRuleTacticalBot,
       hunter: QQTBunHunterBot,
+      coopHunter: QQTBunCoopHunterBot,
       modelFactory: loadedModel ? () => ({
         reset(context) {},
         async act(observation, playerId, rng) {
@@ -147,7 +151,7 @@
   const MODEL_PREFIX = 'model:';
   const isModelChoice = (value) => value.startsWith(MODEL_PREFIX);
   // 组队只支持猎手；规则 Bot 与训练模型按 1v1 训练。
-  const teamCapable = (value) => value.startsWith('bun.hunter');
+  const teamCapable = (value) => value.startsWith('bun.hunter') || value.startsWith('bun.coop_hunter');
 
   function resetBot() {
     if (activeBot && activeBot.close) activeBot.close();
@@ -185,7 +189,8 @@
     if (teamMode.value !== '1v1' && !teamCapable(opponentSelect.value)) opponentSelect.value = 'bun.hunter@hard';
     // 原版道具栏/糖泡只在真人对局开启；模型评测与录像保持训练规则。
     const native = localHumanControls();
-    sim.reset(level, { nativeItems: native, nativeTrap: native, teams: teamLayout() });
+    sim.reset(level, { nativeItems: native, nativeTrap: native, teams: teamLayout(),
+      bananaSlideSpeedPx: native ? 300 : undefined });
     resetBot();
     bombCell = -1;
     itemCell = -1;
@@ -415,6 +420,10 @@
   window.addEventListener('keyup', (event) => held.delete(event.code));
   restart.addEventListener('click', reset);
   soundToggle.addEventListener('change', () => sound.setEnabled(soundToggle.checked));
+  characterSelect.addEventListener('change', () => {
+    characterPortrait.src = `assets/native/${characterSelect.value}_portrait.png`;
+    characterPortrait.alt = characterSelect.selectedOptions[0].textContent;
+  });
   replaySelect.addEventListener('change', async () => {
     const row = replayCatalog.find((item) => item.id === replaySelect.value);
     if (!row) return;

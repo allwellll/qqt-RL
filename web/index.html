@@ -19,6 +19,12 @@
       </div>
       <aside>
         <button id="restart" type="button">重新开局</button>
+        <label>人物
+          <span class="character-picker">
+            <img id="character-portrait" src="assets/native/pipi_portrait.png" alt="皮皮" width="48" height="64">
+            <select id="character"><option value="pipi">皮皮</option><option value="maomao">毛毛</option></select>
+          </span>
+        </label>
         <h2>操作</h2>
         <p><kbd>方向键</kbd> 移动</p>
         <p><kbd>Space / W</kbd> 放泡</p>
@@ -26,7 +32,7 @@
         <p><kbd>E / Shift</kbd> 使用道具栏第 1 格</p>
         <p>被炸会被糖泡包住：6 秒后爆破，敌人碰到立即爆破，队友碰到立即救出</p>
         <p><kbd>R</kbd> 重新开局</p>
-        <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效（放泡 / 爆炸 / 拾取）</label>
+        <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效</label>
         <h2>对手</h2>
         <label>地图
           <select id="map-select">
@@ -49,6 +55,10 @@
         </label>
         <label>策略
           <select id="opponent">
+            <optgroup label="协作猎手">
+              <option value="bun.coop_hunter@normal">协作猎手 · 普通</option>
+              <option value="bun.coop_hunter@hard">协作猎手 · 困难</option>
+            </optgroup>
             <optgroup label="猎手 Bot：躲泡 + 进攻 + 偷包子">
               <option value="bun.hunter@easy">猎手 · 简单</option>
               <option value="bun.hunter@normal">猎手 · 普通</option>
@@ -100,6 +110,7 @@
   <script src="tactical_arena.js"></script>
   <script src="bun_rule_bot.js"></script>
   <script src="bun_hunter_bot.js"></script>
+  <script src="bun_coop_hunter_bot.js"></script>
   <script src="bot_contract.js"></script>
   <script src="visual_renderer.js"></script>
   <script src="sound.js"></script>

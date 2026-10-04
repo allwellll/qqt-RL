@@ -48,7 +48,7 @@ def read_archive(root):
     return entries
 
 
-def decode_dimg(data):
+def decode_dimg(data, all_directions=False):
     if data[:8] != b"QQF\x1aDIMG":
         raise ValueError("not a QQF/DIMG resource")
     _, _, frame_count, directions = struct.unpack_from("<4I", data, 8)
@@ -87,7 +87,7 @@ def decode_dimg(data):
         image = Image.new("RGBA", (fw, fh))
         image.putdata(pixels)
         frames.append((x, y, image))
-    return width, height, cx, cy, frames[: frame_count // directions]
+    return width, height, cx, cy, frames if all_directions else frames[: frame_count // directions]
 
 
 def main():

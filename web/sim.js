@@ -219,6 +219,8 @@
       // nativeItems=道具栏(7格叠加，慢慢胶一次+3)；nativeTrap=被炸先进糖泡，敌方碰到或超时才阵亡。
       this.nativeItems = !!(opts && opts.nativeItems);
       this.nativeTrap = !!(opts && opts.nativeTrap);
+      this.bananaSlideSpeedPx = opts && Number.isFinite(opts.bananaSlideSpeedPx)
+        ? Math.max(NATIVE_FAST_PX_PER_SEC, Math.min(400, opts.bananaSlideSpeedPx)) : NATIVE_FAST_PX_PER_SEC;
       this.itemSlots = per(() => []);
       this.trapped = per(0);
       this.trapTicks = 6 * CFG.tickHz;
@@ -375,6 +377,7 @@
         team: this.team.slice(),
         nativeItems: this.nativeItems,
         nativeTrap: this.nativeTrap,
+        ...(this.bananaSlideSpeedPx !== NATIVE_FAST_PX_PER_SEC ? { bananaSlideSpeedPx: this.bananaSlideSpeedPx } : {}),
         itemSlots: this.itemSlots.map((slots) => slots.map((x) => ({ item: x.item, count: x.count }))),
         trapped: this.trapped.slice(),
         movementStatus: this.movementStatus.slice(),
@@ -469,6 +472,8 @@
       this.heldItem = (frame.heldItem || [ITEM_NONE, ITEM_NONE]).slice();
       this.nativeItems = !!frame.nativeItems;
       this.nativeTrap = !!frame.nativeTrap;
+      this.bananaSlideSpeedPx = Number.isFinite(frame.bananaSlideSpeedPx)
+        ? Math.max(NATIVE_FAST_PX_PER_SEC, Math.min(400, frame.bananaSlideSpeedPx)) : NATIVE_FAST_PX_PER_SEC;
       this.itemSlots = (frame.itemSlots || [[], []]).map((slots) => slots.map((x) => ({ item: x.item, count: x.count })));
       this.trapped = (frame.trapped || [0, 0]).slice();
       this.movementStatus = (frame.movementStatus || [MOVE_STATUS_NONE, MOVE_STATUS_NONE]).slice();
@@ -738,7 +743,8 @@
       if (this.nativeItems) {
         const status = this.movementStatus[player];
         let px = 0;
-        if (status === MOVE_STATUS_SLIDE || status === MOVE_STATUS_FAST) px = NATIVE_FAST_PX_PER_SEC;
+        if (status === MOVE_STATUS_SLIDE) px = this.bananaSlideSpeedPx;
+        else if (status === MOVE_STATUS_FAST) px = NATIVE_FAST_PX_PER_SEC;
         else if (status === MOVE_STATUS_SLOW || (this.isBun && this.bunCarried[player] >= 0)) px = NATIVE_SLOW_PX_PER_SEC;
         if (px) return px / (CFG.speed * this.spdG[player] * NATIVE_CELL_PX);
         return 1;
@@ -1174,8 +1180,7 @@
         }
       }
 
-      // 5. 伤害判定：当前爆炸 + 之前 0.3s 余威覆盖区域均可扣血。
-      //    半身位微操：单水柱中心线判定（半身避伤），并排连锁相邻格自动扩张连通合并（连泡必伤）。
+      // 5. 原版糖泡按当前爆炸的中心格判伤；训练模式保留身体碰撞与 0.3s 余威。
       const physicalDamageSource = this.alive.map(() => this.alive.map(() => false));
       const causalDamageSource = this.alive.map(() => this.alive.map(() => false));
       for (const source of sources) {
@@ -1580,6 +1585,8 @@
     _isHitByExplosion(p, covered, horzCovered = this.horzCovered,
                       vertCovered = this.vertCovered, includeLinger = true) {
       const y = this.pos[p * 2], x = this.pos[p * 2 + 1];
+      // Native actor_state.go registers explosion contact by the actor's centre cell.
+      if (this.nativeTrap) return !!covered[Math.floor(y) * W + Math.floor(x)];
       const R = CFG.radius;
       const py0 = y - R, py1 = y + R;
       const px0 = x - R, px1 = x + R;

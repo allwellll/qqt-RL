@@ -1,0 +1,66 @@
+{
+  "source": "kuuhaku1314/qqtang v1.3.2 QQTang-Local.zip",
+  "actors": {
+    "pipi": {
+      "roleId": 1,
+      "label": "皮皮",
+      "actions": {
+        "stand": {
+          "file": "assets/native/pipi_stand.png",
+          "w": 85,
+          "h": 85,
+          "frames": 6,
+          "directions": 4
+        },
+        "walk": {
+          "file": "assets/native/pipi_walk.png",
+          "w": 85,
+          "h": 85,
+          "frames": 6,
+          "directions": 4
+        }
+      }
+    },
+    "maomao": {
+      "roleId": 9,
+      "label": "毛毛",
+      "actions": {
+        "stand": {
+          "file": "assets/native/maomao_stand.png",
+          "w": 85,
+          "h": 85,
+          "frames": 1,
+          "directions": 4
+        },
+        "walk": {
+          "file": "assets/native/maomao_walk.png",
+          "w": 85,
+          "h": 85,
+          "frames": 6,
+          "directions": 4
+        }
+      }
+    }
+  },
+  "effects": {
+    "trap": {
+      "file": "assets/native/trap.png",
+      "w": 62,
+      "h": 66,
+      "frames": 13,
+      "source": "object/misc/misc111_trigger.img"
+    },
+    "pop": {
+      "file": "assets/native/pop.png",
+      "w": 73,
+      "h": 76,
+      "frames": 2,
+      "source": "object/misc/misc111_die.img"
+    }
+  },
+  "sound": {
+    "file": "assets/native/syrup_pop.wav",
+    "source": "sound/X12_01.wav",
+    "sha256": "170d1bad71a50c5ba333bb345a31b4e5f0b727be01c60cd202c0a20cf0c2020a"
+  }
+}

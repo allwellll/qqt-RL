@@ -9,13 +9,15 @@
     place: 'assets/snd/放炮.wav',
     boom: 'assets/snd/爆炸.wav',
     pickup: 'assets/snd/吃道具音效.wav',
+    pop: 'assets/native/syrup_pop.wav',
   };
-  const VOLUME = { place: 0.6, boom: 0.5, pickup: 0.6 };
+  const VOLUME = { place: 0.6, boom: 0.5, pickup: 0.6, pop: 0.7 };
 
   function snapshot(sim) {
     return {
       crate: Uint8Array.from(sim.crate),
       bunCarried: sim.bunCarried ? sim.bunCarried.slice() : [-1, -1],
+      trapped: sim.trapped ? sim.trapped.slice() : [],
     };
   }
 
@@ -24,6 +26,8 @@
     const events = [];
     if (info && info.placed && info.placed.some(Boolean)) events.push('place');
     if (info && info.covered && info.covered.some((value) => value > 0)) events.push('boom');
+    if (before && before.trapped && before.trapped.some((ticks, pid) => ticks > 0 &&
+      ((info && info.died && info.died[pid]) || !sim.alive[pid]))) events.push('pop');
     const p = listenerPid;
     if (before && p >= 0 && sim.alive[p]) {
       const [row, column] = sim.centerCell(p);
