@@ -4,7 +4,7 @@
 
 当前代码基线来自 `qqt-gpu-sim` 的 safe-aggression r6 冻结 runtime，并合入 cycle 9 后的 seed namespace/runner 修复。旧仓库中正在运行的 360-cycle 四卡任务继续使用旧路径；新实验与后续调试才使用本仓库。
 
-训练实验的权威索引见[实验总账](docs/training_experiment_ledger.md)；CX-01 至 CX-30 可检索的负结果、诊断和复现限制见[CX 实验经验](docs/cx_experiment_lessons.md)。本轮 CX-01 至 CX-29 的精炼复现经验与 trap16 长训门控见[CX-01 至 CX-29 经验索引](docs/cx01_29_reproduction_lessons_20261003.md)。CX-35 至 CX-45 的主动击杀阶段结论见[主动击杀研究结论](docs/active_kill_experiment_conclusions_20261004.md)，详细实验代码和逐局证据保留在 `agent/cx-active-kill-v2-20261003` 分支。
+训练实验的权威索引见[实验总账](docs/training_experiment_ledger.md)；CX-01 至 CX-30 可检索的负结果、诊断和复现限制见[CX 实验经验](docs/cx_experiment_lessons.md)。本轮 CX-01 至 CX-29 的精炼复现经验与 trap16 长训门控见[CX-01 至 CX-29 经验索引](docs/cx01_29_reproduction_lessons_20261003.md)，详细实验实现、逐轮报告和审计工具保留在 `agent/cx-eval-bot-8gpu-opt` 分支。CX-35 至 CX-45 的主动击杀阶段结论见[主动击杀研究结论](docs/active_kill_experiment_conclusions_20261004.md)，详细实验代码和逐局证据保留在 `agent/cx-active-kill-v2-20261003` 分支。
 
 ## 快速开始
 
