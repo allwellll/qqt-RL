@@ -24,21 +24,36 @@
       this.enemyTrends = new Map();
       this.trendTick = -1;
       this.decisionState = null;
+      this.resourceTarget = -1;
+      this.itemPlan = null;
     }
 
     analyzeSim(sim, pid) {
       const state = Base.hunterStateFromSim(sim);
+      state.itemSlots = sim.nativeItems ? sim.itemSlots : state.heldItem.map((item) => item ? [{ item, count: 1 }] : []);
+      state.fieldOwner = sim.fieldOwner;
+      state.movementStatus = sim.movementStatus;
       let pending = commitments.get(sim);
       if (!pending || pending.tick !== sim.t || pending.generation !== sim._gen) {
-        pending = { tick: sim.t, generation: sim._gen, bombs: [], moves: {} };
+        pending = { tick: sim.t, generation: sim._gen, bombs: [], moves: {}, tasks: {} };
         commitments.set(sim, pending);
       }
       const team = state.players[pid].team;
       // Later teammates see bombs committed earlier in this tick before choosing their escape.
       state.bombs = state.bombs.concat(pending.bombs.filter((b) => state.players[b.owner].team === team));
       state.committedMoves = pending.moves;
+      state.committedTasks = pending.tasks;
+      const blocked = Uint8Array.from(sim.wall, (wall, c) => wall || sim.brick[c] || sim.fuse[c] > 0 ? 1 : 0);
+      for (const b of state.bombs) blocked[b.cell] = 1;
+      state.nextPosition = (q, move) => {
+        const p = state.players[q], direction = sim.playerMoveDirection(q, move);
+        const step = this.stepLen(p, false);
+        return sim.movementStatus[q] === 2 ? sim._tryMove(p.y, p.x, direction, blocked, step)
+          : sim._steer(p.y, p.x, direction, blocked, step, q);
+      };
       const decision = this.analyze(state, pid);
       pending.moves[pid] = decision.action[0];
+      pending.tasks[pid] = { mode: decision.mode, cell: this.assignment && this.assignment.cell };
       if (decision.action[1] === 1) {
         const me = state.players[pid];
         if (!pending.bombs.some((b) => b.owner === pid)) pending.bombs.push({
@@ -50,7 +65,8 @@
 
     act(sim, pid = 1) {
       const decision = this.analyzeSim(sim, pid);
-      return [decision.action[0], decision.action[1], 0];
+      return [decision.action[0], decision.action[1] === 1 ? 1 : 0, decision.action[1] === 2 ? 1 : 0,
+        0, -1, -1, decision.itemSlot || 0];
     }
 
     teamRole(state, pid) {
@@ -96,6 +112,12 @@
     }
 
     fieldForGoal(state, g, goal, me, pred, foe) {
+      if (me.carrying >= 0 && state.fieldOwner) {
+        const fieldItem = state.fieldItem.slice();
+        for (let c = 0; c < g.N; c++) if (fieldItem[c] === 1 &&
+            state.players[state.fieldOwner[c]] && state.players[state.fieldOwner[c]].team === me.team) fieldItem[c] = 0;
+        state = Object.assign({}, state, { fieldItem });
+      }
       return this.goalField(state, g, goal.seeds, me, pred, goal.threat ? foe : null,
         goal.noDig == null ? me.carrying >= 0 : goal.noDig);
     }
@@ -105,6 +127,7 @@
       const allies = this.alliesOf(state, pid);
       const role = this.teamRole(state, pid);
       this.assignment = { role, target: null };
+      this.itemPlan = null;
       const rescue = this.trapGoal(state, g, pid, pred, allies, 'RESCUE');
       if (rescue && (me.carrying < 0 || rescue.steps <= 4)) {
         this.assignment.target = rescue.target;
@@ -116,13 +139,19 @@
       if (carrier != null) {
         this.assignment.target = carrier;
         const ally = state.players[carrier], foe = this.foeOf(state, pid);
+        this.itemPlan = this.escortItemPlan(state, g, pid, carrier, pred);
+        if (this.itemPlan) {
+          this.assignment.cell = this.itemPlan.cell;
+          return { mode: 'ESCORT', seeds: [{ cell: this.itemPlan.cell, cost: 0 }], threat: false, noDig: true };
+        }
         // Stay between the carrier and the nearest pursuer without chasing beyond the escort radius.
         const seeds = [];
+        const delivery = this.routeCells(state, g, ally, this.baseCells(state, g, team), pred);
         for (let cell = 0; cell < g.N; cell++) {
           if (!g.open[cell] || g.bombAt[cell] >= 0) continue;
           const point = { row: Math.floor(cell / g.W), col: cell % g.W };
           const d = distance(point, ally);
-          if (d < 1 || d > 2) continue;
+          if (d < 2 || d > 3 || delivery.includes(cell)) continue;
           seeds.push({ cell, cost: foe && foe.alive && !foe.trapped ? distance(point, foe) * 0.4 : d * 0.2 });
         }
         return { mode: 'ESCORT', seeds: seeds.length ? seeds : [{ cell: ally.cell, cost: 0 }], threat: false, noDig: true };
@@ -159,6 +188,8 @@
       }
       const opportunity = super.chooseGoal(state, g, pid, pred, perceive);
       if (['OPEN_ROUTE', 'STEAL'].includes(opportunity.mode)) return opportunity;
+      const resource = this.resourceGoal(state, g, pid, pred);
+      if (resource) return resource;
       const guards = this.defenseSeeds(state, g, pid);
       if (guards.length && foe && foe.alive && !foe.trapped) {
         return { mode: 'GUARD', seeds: guards, threat: false };
@@ -197,7 +228,116 @@
       this.assignment = null;
       this.observeEnemyTrends(state, pid);
       const decision = super.analyze(state, pid);
+      const plan = this.itemPlan, me = state.players[pid];
+      if (plan && me.alive && !me.trapped && me.cell === plan.cell && decision.action[1] === 0) {
+        const g = this.geometry(state), pred = this.predict(state, g, [], () => true);
+        const next = state.nextPosition && state.nextPosition(pid, decision.action[0]);
+        // An item arms only after its owner leaves: clear the tile before the carrier arrives.
+        if (next && Math.floor(next[0]) * g.W + Math.floor(next[1]) !== me.cell &&
+            !this.threatened(pred, me, g.N)) {
+          decision.action[1] = 2;
+          decision.itemSlot = plan.slot;
+          decision.reason = plan.item === 1 ? 'escort_banana' : 'approach_glue';
+        }
+      }
       return Object.assign(decision, this.assignment || { role: 'SOLO', target: null });
+    }
+
+    resourceGoal(state, g, pid, pred) {
+      const me = state.players[pid], home = this.baseCells(state, g, me.team);
+      const allies = this.alliesOf(state, pid).filter((q) => state.players[q].alive && !state.players[q].trapped);
+      const claimed = (cell) => allies.some((q) => state.committedTasks && state.committedTasks[q] &&
+        state.committedTasks[q].cell === cell);
+      const candidates = [];
+      const openTravel = this.goalField(state, g, [{ cell: me.cell, cost: 0 }], me, pred, null, true);
+      const digTravel = this.goalField(state, g, [{ cell: me.cell, cost: 0 }], me, pred, null, false);
+      for (let cell = 0; cell < g.N; cell++) {
+        if ((!state.crate[cell] && !state.brick[cell]) || state.wall[cell] || claimed(cell)) continue;
+        const point = { row: Math.floor(cell / g.W), col: cell % g.W };
+        const d = distance(me, point);
+        if (d > 7 || Math.min(...home.map((c) => distance(point, { row: Math.floor(c / g.W), col: c % g.W }))) > 9) continue;
+        const type = state.crateType[cell];
+        if (state.crate[cell] && ((type === 0 && me.bombsCap >= 5) || (type === 1 && me.blast >= 7) ||
+            (type === 2 && me.speed >= 2) || ((type === 3 || type === 4) && state.itemSlots &&
+              state.itemSlots[pid].reduce((n, slot) => n + slot.count, 0) >= 6))) continue;
+        const travel = (state.crate[cell] ? openTravel : digTravel)[cell];
+        if (travel >= INF / 2) continue;
+        const partner = allies.some((q) => distance(state.players[q], point) + 2 < d);
+        candidates.push({ cell, score: travel + (state.crate[cell] ? -3 : 2) + (partner ? 4 : 0)
+          - (cell === this.resourceTarget ? 2 : 0) });
+      }
+      candidates.sort((a, b) => a.score - b.score || a.cell - b.cell);
+      if (!candidates.length) { this.resourceTarget = -1; return null; }
+      const cell = candidates[0].cell;
+      this.resourceTarget = cell;
+      this.assignment.cell = cell;
+      return { mode: state.crate[cell] ? 'COLLECT' : 'FARM', seeds: [{ cell, cost: 0 }], threat: false,
+        noDig: !!state.crate[cell] };
+    }
+
+    routeCells(state, g, player, targets, pred, limit = 20) {
+      const field = this.goalField(state, g, targets.map((cell) => ({ cell, cost: 0 })), player, pred, null, true);
+      const path = [player.cell];
+      for (let i = 0; i < limit && field[path[path.length - 1]] > 0; i++) {
+        const cell = path[path.length - 1];
+        let next = -1, best = field[cell];
+        for (let a = 0; a < 4; a++) {
+          const n = g.nb[cell * 4 + a];
+          if (n >= 0 && g.open[n] && g.bombAt[n] < 0 && field[n] < best) { next = n; best = field[n]; }
+        }
+        if (next < 0) break;
+        path.push(next);
+      }
+      return path;
+    }
+
+    safeSlide(state, g, path, index, home, danger) {
+      const delta = path[index] - path[index - 1];
+      const dir = delta === -g.W ? 0 : delta === g.W ? 1 : delta === -1 ? 2 : 3;
+      let cell = path[index], reached = false, length = 0;
+      while (cell >= 0 && g.open[cell] && g.bombAt[cell] < 0) {
+        if (danger[cell] || state.fieldItem[cell] === 2) return false;
+        if (home.includes(cell)) reached = true;
+        if (!reached && path[index + length] !== cell) return false;
+        length++;
+        cell = g.nb[cell * 4 + dir];
+      }
+      return reached && length >= 2;
+    }
+
+    escortItemPlan(state, g, pid, carrier, pred) {
+      const slots = state.itemSlots && state.itemSlots[pid];
+      if (!slots || !slots.length || state.movementStatus[pid] === 2) return null;
+      const me = state.players[pid], ally = state.players[carrier];
+      const home = this.baseCells(state, g, ally.team), danger = this.dangerCells(pred, g.N);
+      const path = this.routeCells(state, g, ally, home, pred);
+      const free = (cell) => g.open[cell] && g.bombAt[cell] < 0 && !state.fieldItem[cell] && !danger[cell];
+      const slot = slots.findIndex((s) => s.item === 1 && s.count > 0);
+      if (slot >= 0 && state.movementStatus[carrier] !== 2) {
+        for (let i = 2; i < path.length; i++) {
+          const cell = path[i];
+          if (!free(cell) || !this.safeSlide(state, g, path, i, home, danger)) continue;
+          const travel = this.goalField(state, g, [{ cell, cost: 0 }], me, pred, null, true)[me.cell];
+          if (travel * this.moveTicks(me, false) + 2 >= i * this.moveTicks(ally, false)) continue;
+          return { cell, slot, item: 1 };
+        }
+      }
+      const glue = slots.findIndex((s) => s.item === 2 && s.count > 0);
+      if (glue < 0) return null;
+      for (const q of this.enemiesOf(state, pid)) {
+        const foe = state.players[q];
+        if (!foe.alive || foe.trapped || distance(foe, ally) > 9) continue;
+        const approach = this.routeCells(state, g, foe, [ally.cell], pred, 8);
+        for (let i = 2; i < approach.length; i++) {
+          const cell = approach[i];
+          if (!free(cell) || path.some((c) => Math.abs(Math.floor(c / g.W) - Math.floor(cell / g.W)) +
+              Math.abs(c % g.W - cell % g.W) < 2)) continue;
+          const travel = this.goalField(state, g, [{ cell, cost: 0 }], me, pred, null, true)[me.cell];
+          if (travel > 5 || travel * this.moveTicks(me, false) + 2 >= i * this.moveTicks(foe, false)) continue;
+          return { cell, slot: glue, item: 2 };
+        }
+      }
+      return null;
     }
 
     observeEnemyTrends(state, pid) {
@@ -269,6 +409,7 @@
 
     considerBomb(state, g, pid, pred, perceive, field) {
       if (this.lastGoalMode === 'RESCUE') return null;
+      if (this.itemPlan) return null;
       if (this.lastGoalMode === 'CHAIN' && this.chainPlan && state.players[pid].cell === this.chainPlan.cell) {
         const anchor = state.bombs.find((b) => b.cell === this.chainPlan.anchor && b.owner === pid);
         if (this.alliesOf(state, pid).length && anchor && anchor.fuse > 12) return null;
@@ -344,6 +485,41 @@
     }
 
     pickMove(g, me, acts, esc, field, threatened, danger) {
+      const state = this.decisionState;
+      if (state && state.nextPosition && this.lastGoalMode !== 'RESCUE') {
+        let separated = 0;
+        let itemSafe = 0;
+        for (let a = 0; a < 5; a++) {
+          if (!(acts & (1 << a))) continue;
+          const next = state.nextPosition(this.currentPid, a);
+          const cell = Math.floor(next[0]) * g.W + Math.floor(next[1]);
+          if (cell === me.cell || !state.fieldItem[cell] ||
+              (state.fieldItem[cell] === 1 && me.carrying >= 0)) itemSafe |= 1 << a;
+          const conflict = this.alliesOf(state, this.currentPid).some((q) => {
+            const ally = state.players[q];
+            if (!ally.alive || ally.trapped) return false;
+            const move = state.committedMoves[q], end = move == null ? [ally.y, ally.x] : state.nextPosition(q, move);
+            if (me.carrying >= 0 && ally.carrying < 0 && move == null) return false;
+            const dy = me.y - ally.y, dx = me.x - ally.x;
+            const vy = next[0] - me.y - (end[0] - ally.y), vx = next[1] - me.x - (end[1] - ally.x);
+            const t = Math.max(0, Math.min(1, -(dy * vy + dx * vx) / (vy * vy + vx * vx || 1)));
+            const closest = Math.hypot(dy + t * vy, dx + t * vx);
+            // Existing overlap must be allowed to separate; never eliminate every safe escape.
+            return closest < (ally.carrying >= 0 ? 1.4 : 0.75) &&
+              Math.hypot(next[0] - end[0], next[1] - end[1]) <= Math.hypot(dy, dx) + 0.01;
+          });
+          if (!conflict) separated |= 1 << a;
+        }
+        if (itemSafe) acts = itemSafe;
+        if (separated & acts) acts &= separated;
+      }
+      if (this.itemPlan && me.cell === this.itemPlan.cell) {
+        const exits = acts & 15;
+        if (exits) acts = exits;
+      }
+      if (this.lastGoalMode === 'GUARD' && !threatened && (acts & 16) &&
+          !(danger && danger[me.cell]) && field[me.cell] <= Math.min(...Array.from(
+            g.nb.slice(me.cell * 4, me.cell * 4 + 4)).filter((c) => c >= 0).map((c) => field[c]))) return 4;
       if (this.lastGoalMode === 'CHAIN') {
         if (this.assignment && this.assignment.role !== 'SOLO' && this.chainPlan &&
             me.cell === this.chainPlan.cell && (acts & 16) && esc.count[4] > 0) return 4;

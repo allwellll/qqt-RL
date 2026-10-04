@@ -10,6 +10,36 @@ const Coop = require('../web/bun_coop_hunter_bot.js');
 const levels = require('../web/assets/maps/levels.json');
 const ROOT = path.resolve(__dirname, '..');
 
+function trackItemEvents(sim, stats) {
+  const place = sim._placeHeldItem;
+  sim._placeHeldItem = function(player, cell, slotIndex) {
+    const slot = this.itemSlots[player][slotIndex || 0];
+    const item = slot ? slot.item : this.heldItem[player];
+    const placed = place.call(this, player, cell, slotIndex);
+    if (placed) stats[this.team[player]][item === QQT.ITEM_BANANA ? 'bananas' : 'glue']++;
+    return placed;
+  };
+  const update = sim._updateFieldItems;
+  sim._updateFieldItems = function(actions) {
+    const items = [];
+    for (let cell = 0; cell < this.fieldItem.length; cell++) {
+      if (!this.fieldItem[cell]) continue;
+      const player = this.team.findIndex((_, p) => this.alive[p] && !this.trapped[p] &&
+        this.centerCell(p)[0] * (this.W || QQT.W) + this.centerCell(p)[1] === cell);
+      if (player >= 0) items.push({ cell, player, item: this.fieldItem[cell], owner: this.fieldOwner[cell] });
+    }
+    update.call(this, actions);
+    for (const event of items) {
+      if (this.fieldItem[event.cell]) continue;
+      const team = this.team[event.player], ownerTeam = this.team[event.owner];
+      if (event.item === QQT.ITEM_BANANA && this.bunCarried[event.player] >= 0) stats[team].carrierSlides++;
+      if (event.item === QQT.ITEM_SLOW_GLUE && ownerTeam != null) {
+        stats[ownerTeam][ownerTeam === team ? 'friendlySlows' : 'enemySlows']++;
+      }
+    }
+  };
+}
+
 function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strategy = 'coop') {
   const teams = size === 1 ? [0, 1] : size === 3 ? [1 - candidateTeam, candidateTeam, candidateTeam] : [0, 1, 0, 1];
   const sim = new QQT.Sim(seed);
@@ -19,7 +49,9 @@ function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strat
   const bots = teams.map((team, pid) => new (team === candidateTeam && strategy === 'coop' ? Coop.BunCoopHunterBot : Hunter.BunHunterBot)(
     { difficulty: 'hard', seed: (seed + pid * 7919) >>> 0 }));
   const stats = [0, 1].map(() => ({ bombs: 0, threateningBombs: 0, deaths: 0,
-    trapped: 0, selfTraps: 0, friendlyTraps: 0, rescues: 0, carrierTicks: 0, escortTicks: 0, modes: {} }));
+    trapped: 0, selfTraps: 0, friendlyTraps: 0, rescues: 0, carrierTicks: 0, escortTicks: 0,
+    bananas: 0, glue: 0, carrierSlides: 0, enemySlows: 0, friendlySlows: 0, overlapTicks: 0, modes: {} }));
+  trackItemEvents(sim, stats);
   const spawns = teams.map((_, p) => Array.from(sim.pos.slice(p * 2, p * 2 + 2)));
   const ordered = teams.map((_, p) => p).sort((a, b) => teams[a] - teams[b] || a - b);
   while (!sim.done) {
@@ -27,12 +59,14 @@ function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strat
     const actions = teams.map(() => [4, 0, 0, 0]);
     for (const p of ordered) {
       const raw = bots[p].act(sim, p);
-      actions[p] = [raw[0], raw[1], 0, 0];
+      actions[p] = raw;
       const mode = bots[p].lastDecision.mode;
       const s = stats[teams[p]];
       s.modes[mode] = (s.modes[mode] || 0) + 1;
       if (mode === 'ESCORT') s.escortTicks++;
       if (sim.bunCarried[p] >= 0 && sim.alive[p]) s.carrierTicks++;
+      if (teams.some((team, q) => q > p && team === teams[p] && sim.alive[p] && sim.alive[q] &&
+          Math.hypot(sim.pos[p * 2] - sim.pos[q * 2], sim.pos[p * 2 + 1] - sim.pos[q * 2 + 1]) < 0.75)) s.overlapTicks++;
     }
     const state = Hunter.hunterStateFromSim(sim);
     const threat = teams.map((_, p) => {
@@ -120,7 +154,7 @@ function run({ pairs = 8, seed = 2026100400, maxSteps = 1200, sizes = [1, 2, 3] 
       process.stderr.write(`size=${size} pair=${i + 1}/${pairs} ${JSON.stringify(summarize(rows.filter((r) => r.size === size)))}\n`);
     }
   }
-  return { schema: 'bot_cooperation_eval/v3', protocol: { pairs, seed, maxSteps, sizes, map: 806,
+  return { schema: 'bot_cooperation_eval/v4', protocol: { pairs, seed, maxSteps, sizes, map: 806,
     nativeItems: true, nativeTrap: true, difficulty: 'hard', candidate: 'bun.coop_hunter', baseline: 'bun.hunter' },
     hashes, elapsedSeconds: (performance.now() - started) / 1000,
     solo: summarize(rows.filter((r) => r.size === 1)), team: summarize(rows.filter((r) => r.size === 2)),
@@ -151,4 +185,4 @@ if (require.main === module) {
   console.log(JSON.stringify({ solo: result.solo, team: result.team, duoVsSolo: result.duoVsSolo,
     legacyDuoVsSolo: result.legacyDuoVsSolo, elapsedSeconds: result.elapsedSeconds }));
 }
-module.exports = { episode, summarize, pairedInterval, run };
+module.exports = { episode, summarize, pairedInterval, run, trackItemEvents };

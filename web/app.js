@@ -382,7 +382,8 @@
         const info = sim.step([
           [Number(first[0]), Number(first[1]), Number(first[2]) || 0, Number(first[3]) || 0,
             first[4] == null ? -1 : first[4], first[5] == null ? -1 : first[5], first[6] == null ? 0 : first[6]],
-          ...botActions.slice(1).map((a) => [a.move, a.ability === 1 ? 1 : 0, a.ability === 2 ? 1 : 0]),
+          ...botActions.slice(1).map((a) => [a.move, a.ability === 1 ? 1 : 0, a.ability === 2 ? 1 : 0,
+            0, -1, -1, a.itemSlot == null ? 0 : a.itemSlot]),
         ]);
         curPos.set(sim.pos); lastTickT = performance.now();
         if (localHumanControls()) {

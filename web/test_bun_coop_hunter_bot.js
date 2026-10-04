@@ -276,4 +276,131 @@ for (const difficulty of ['easy', 'normal', 'hard']) {
   hunter.reset();
   assert.equal(hunter.enemyTrends.size, 0, 'new match clears learned movement trends');
 }
-console.log('Cooperative hunter: roles, takeover, rescue, delivery, escort, interception and friendly safety passed');
+{
+  const sim = scene([0, 1, 1], [[11.5, 1.5], [10.5, 4.5], [6.5, 10.5]]);
+  sim.bunStored = [[0, 0], [0, 0]];
+  sim.bombsCap[2] = 1;
+  sim.brick[6 * W + 11] = 1;
+  sim.crateRate = 1;
+  sim._rollCrateType = () => ({ type: 0, isSuper: false });
+  const support = bot(), capacity = sim.bombsCap[2];
+  let farmed = false, collected = false, placed = false;
+  for (let t = 0; t < 150 && sim.bombsCap[2] === capacity; t++) {
+    const action = support.act(sim, 2);
+    farmed ||= support.lastDecision.mode === 'FARM';
+    collected ||= support.lastDecision.mode === 'COLLECT';
+    const info = sim.step([[4, 0, 0, 0], [4, 0, 0, 0], action]);
+    placed ||= !!info.placed[2];
+    assert(sim.alive[2] && !sim.trapped[2], 'resource farming preserves the defender escape');
+  }
+  assert(farmed && collected && placed && !sim.brick[6 * W + 11] && sim.bombsCap[2] > capacity,
+    'idle defender actually bombs a brick and collects its revealed upgrade');
+  sim.pos[0] = 3.5; sim.pos[1] = 9.5;
+  assert.equal(support.analyzeSim(sim, 2).mode, 'DEFEND', 'base threat immediately preempts farming');
+}
+{
+  const sim = scene([0, 1, 1], [[11.5, 1.5], [7.5, 8.5], [5.2, 8.5]]);
+  sim.bunCarried[1] = 0;
+  sim.spdG.fill(1);
+  sim.itemSlots[2] = [{ item: 2, count: 1 }, { item: 1, count: 1 }];
+  sim._syncHeldItem(2);
+  const carrier = bot(), support = bot();
+  const registry = Bots.createDefaultRegistry({ coopHunter: Coop });
+  const adapter = registry.create('bun.coop_hunter', {});
+  adapter.reset({ seed: 7 });
+  const obs = { metadata: { sim }, legal_moves: [0, 1, 2, 3, 4], legal_abilities: [0, 1, 2] };
+  const first = adapter.act(obs, 2);
+  assert.equal(first.ability, 2, 'registry forwards cooperative item use');
+  assert.equal(first.itemSlot, 1, 'registry selects the banana in the second inventory slot');
+  Bots.validateAction(first);
+  assert.throws(() => Bots.validateAction({ move: 4, ability: 2, itemSlot: 7 }), /item slot/);
+  let placed = false, slid = false, slideDistance = 0;
+  for (let t = 0; t < 80 && sim.bunCarried[1] >= 0; t++) {
+    const a = carrier.act(sim, 1), b = support.act(sim, 2);
+    if (b[2]) { placed = true; assert.equal(b[6], 1); }
+    const y = sim.pos[2], sliding = sim.movementStatus[1] === 2;
+    sim.step([[4, 0, 0, 0], a, b]);
+    slid ||= sim.movementStatus[1] === 2;
+    if (sliding) slideDistance = Math.max(slideDistance, Math.abs(sim.pos[2] - y));
+    assert(sim.alive[1] && !sim.trapped[1], 'banana escort does not injure the carrier');
+  }
+  assert(placed && slid && slideDistance > 0.2 && sim.bunScore[1] === 1,
+    'support leaves its planted banana, carrier triggers acceleration and actually delivers');
+  assert.equal(sim.itemSlots[2][0].item, 2, 'banana use preserves the glue in the first slot');
+}
+{
+  const sim = scene([0, 1, 1], [[11.5, 1.5], [6.5, 8.5], [6.5, 8.5]]);
+  sim.bunStored = [[0, 0], [0, 0]]; sim.spdG.fill(1);
+  const a = bot(), b = bot();
+  for (let t = 0; t < 20; t++) sim.step([[4, 0, 0, 0], a.act(sim, 1), b.act(sim, 2)]);
+  assert(Math.hypot(sim.pos[2] - sim.pos[4], sim.pos[3] - sim.pos[5]) > 2,
+    'two teammates starting at exactly the same coordinates split their movement');
+}
+{
+  const sim = scene([0, 1, 1], [[11.5, 8.5], [6.5, 8.5], [8.8, 8.5]]);
+  sim.bunCarried[1] = 0; sim.spdG.fill(1);
+  sim.itemSlots[2] = [{ item: 2, count: 1 }]; sim._syncHeldItem(2);
+  const carrier = bot(), support = bot();
+  let placed = false, slowed = false;
+  for (let t = 0; t < 12; t++) {
+    const a = carrier.act(sim, 1), b = support.act(sim, 2);
+    if (b[2]) { placed = true; assert.equal(support.lastDecision.reason, 'approach_glue'); }
+    sim.step([[QQT.MOVE_UP, 0, 0, 0], a, b]);
+    slowed ||= sim.movementStatus[0] === QQT.MOVE_STATUS_SLOW;
+    assert.equal(sim.movementStatus[1], 0, 'glue never slows the friendly delivery route');
+    assert.equal(sim.movementStatus[2], 0, 'support does not step back onto its own glue');
+  }
+  assert(placed && slowed, 'support plants glue ahead of the pursuer and the enemy actually triggers it');
+}
+{
+  const sim = scene([0, 1, 1], [[11.5, 1.5], [7.5, 8.5], [5.2, 8.5]]);
+  sim.bunCarried[1] = 0; sim.spdG.fill(1);
+  sim.itemSlots[2] = [{ item: 1, count: 1 }]; sim._syncHeldItem(2);
+  sim.wall[4 * W + 8] = 1;
+  const support = bot();
+  support.analyzeSim(sim, 2);
+  assert(!support.itemPlan || support.itemPlan.cell !== 5 * W + 8,
+    'a straight slide that stops before reaching home is rejected');
+  sim.wall[4 * W + 8] = 0; sim.fuse[5 * W + 10] = 6; sim.owner[5 * W + 10] = 0; sim.bombBlast[5 * W + 10] = 3;
+  support.analyzeSim(sim, 2);
+  assert(!support.itemPlan || support.itemPlan.cell !== 5 * W + 8,
+    'a banana lane crossing a predicted explosion is rejected');
+}
+{
+  const sim = scene([0, 1, 1], [[11.5, 1.5], [6.5, 7.9], [6.5, 8.9]]);
+  sim.spdG.fill(1);
+  const a = bot(), b = bot();
+  for (const [hunter, target] of [[a, 6 * W + 10], [b, 6 * W + 6]]) {
+    hunter.chooseGoal = () => ({ mode: 'HUNT', seeds: [{ cell: target, cost: 0 }], threat: false });
+    hunter.considerBomb = () => null;
+  }
+  sim.step([[4, 0, 0, 0], a.act(sim, 1), b.act(sim, 2)]);
+  assert(Math.hypot(sim.pos[2] - sim.pos[4], sim.pos[3] - sim.pos[5]) >= 0.75,
+    'same-tick movement commitments stop teammates walking into each other');
+}
+{
+  const { trackItemEvents } = require('../scripts/eval_bot_cooperation.js');
+  const sim = scene([0, 1, 1], [[5.5, 5.5], [6.5, 8.5], [7.5, 8.5]]);
+  const stats = [0, 1].map(() => ({ bananas: 0, glue: 0, carrierSlides: 0, enemySlows: 0, friendlySlows: 0 }));
+  trackItemEvents(sim, stats);
+  sim.itemSlots[2] = [{ item: QQT.ITEM_SLOW_GLUE, count: 2 }]; sim._syncHeldItem(2);
+  sim.wall[7 * W + 8] = 1;
+  assert(!sim._placeHeldItem(2), 'blocked item placement fails');
+  assert.equal(stats[1].glue, 0, 'failed placement does not inflate usage');
+  sim.wall[7 * W + 8] = 0;
+  assert(sim._placeHeldItem(2));
+  assert.equal(stats[1].glue, 1, 'confirmed placement is counted');
+  sim.pos[4] = 8.5;
+  sim.pos[0] = 7.5; sim.pos[1] = 8.5;
+  sim._updateFieldItems([[4], [4], [4]]);
+  assert.equal(stats[1].enemySlows, 1, 'enemy hit is attributed to the actual glue owner');
+  assert.equal(stats[0].enemySlows, 0);
+  sim.pos[4] = 7.5;
+  assert(sim._placeHeldItem(2));
+  sim.pos[4] = 8.5; sim.pos[0] = 10.5;
+  sim.pos[2] = 7.5;
+  sim._updateFieldItems([[4], [4], [4]]);
+  assert.equal(stats[1].friendlySlows, 1, 'friendly glue hits are recorded separately');
+  assert.equal(stats[1].enemySlows, 1, 'friendly hits do not inflate enemy hits');
+}
+console.log('Cooperative hunter: roles, resource farming, inventory escort, separation and friendly safety passed');

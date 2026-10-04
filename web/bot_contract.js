@@ -17,6 +17,9 @@
     if (!legalMoves.includes(action.move) || !legalAbilities.includes(action.ability)) {
       throw new Error(`illegal Bun action: ${action.move},${action.ability}`);
     }
+    if (action.itemSlot != null && (!Number.isInteger(action.itemSlot) || action.itemSlot < 0 || action.itemSlot > 6)) {
+      throw new Error('invalid Bun item slot');
+    }
     return action;
   }
 
@@ -115,7 +118,9 @@
       if (!sim) throw new Error('bun.hunter requires observation.metadata.sim');
       const decision = this.bot.analyzeSim ? this.bot.analyzeSim(sim, playerId)
         : this.bot.analyze(this.stateFromSim(sim), playerId);
-      return validateAction({ move: decision.action[0], ability: decision.action[1] },
+      const action = { move: decision.action[0], ability: decision.action[1] };
+      if (decision.itemSlot != null) action.itemSlot = decision.itemSlot;
+      return validateAction(action,
         observation.legal_moves, observation.legal_abilities);
     }
     close() {}
