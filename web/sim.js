@@ -388,6 +388,10 @@
         team: this.team.slice(),
         nativeItems: this.nativeItems,
         nativeTrap: this.nativeTrap,
+        ...(this.nativeMove && this.alive.some((alive, p) => alive && this.nativeMove[p] && this.nativeMove[p].wallExit) ? {
+          nativeWallExits: this.alive.map((_, p) => this.nativeMove[p] && this.nativeMove[p].wallExit
+            ? { ...this.nativeMove[p].wallExit, remainder: this.nativeMove[p].remainder } : null),
+        } : {}),
         ...(this.bananaSlideSpeedPx !== NATIVE_FAST_PX_PER_SEC ? { bananaSlideSpeedPx: this.bananaSlideSpeedPx } : {}),
         itemSlots: this.itemSlots.map((slots) => slots.map((x) => ({ item: x.item, count: x.count }))),
         trapped: this.trapped.slice(),
@@ -451,6 +455,12 @@
       };
       this.team = (frame.team || [0, 1]).slice();
       this.nPlayers = frame.nPlayers || this.team.length;
+      if (this.nativeMove || frame.nativeWallExits) for (let p = 0; p < this.nPlayers; p++) {
+        const st = this._nativeState(p), exit = frame.nativeWallExits && frame.nativeWallExits[p];
+        st.wallExit = exit ? { from: exit.from, to: exit.to, move: exit.move, cross: exit.cross } : null;
+        st.remainder = exit && Number.isFinite(exit.remainder) && exit.remainder >= 0 && exit.remainder < 1
+          ? exit.remainder : 0;
+      }
       copy('pos', Float64Array);
       this.alive = frame.alive.slice();
       this.hp = frame.hp.slice();
@@ -860,6 +870,7 @@
       if (!this.alive[player]) return;
       this.hp[player] = 0;
       this.alive[player] = false;
+      if (this.nativeMove && this.nativeMove[player]) this.nativeMove[player].wallExit = null;
       this.trapped[player] = 0;
       this.spawnProtection[player] = 0;
       if (this.nativeTrap) this.invuln[player] = 0;
@@ -2153,6 +2164,7 @@
           clock: 0, remainder: 0,
           touchValid: false, touchCell: -1, touchStart: 0, touchLast: 0,
           passActive: false, passStart: 0, passDuration: 0,
+          wallExit: null,
         };
       }
       return this.nativeMove[pid];
@@ -2189,6 +2201,36 @@
 
     _nativeCollisions(st, x, y, mv) {
       return nativeLeadingEdgePoints(x, y, mv).map(([px, py]) => this._nativePointCollision(st, px, py, mv, x, y));
+    }
+
+    // Leaving a wall uses centre-cell traversal, not the leading corners that
+    // still overlap the wall. The exception ends at the neighbouring cell's
+    // centre and never grants entry to any other obstacle.
+    _nativeWallExit(st, x, y, mv, distance) {
+      const row = Math.floor(y / NATIVE_CELL_PX), col = Math.floor(x / NATIVE_CELL_PX);
+      if (row < 0 || row >= H || col < 0 || col >= W) { st.wallExit = null; return null; }
+      const cell = row * W + col, [dy, dx] = DIRS[mv], cross = dy ? x : y;
+      let exit = st.wallExit;
+      if (exit && (exit.move !== mv || exit.cross !== cross ||
+          !this.wall[exit.from] || exit.to !== exit.from + dy * W + dx ||
+          (cell !== exit.from && cell !== exit.to))) exit = st.wallExit = null;
+      if (!exit && this.wall[cell]) {
+        const tr = row + dy, tc = col + dx;
+        if (tr < 0 || tr >= H || tc < 0 || tc >= W) return [x, y];
+        exit = { from: cell, to: tr * W + tc, move: mv, cross };
+      }
+      if (!exit) return null;
+      const target = exit.to;
+      if (this._crateBlocked(target) || this.fuse[target] > 0) {
+        st.wallExit = null;
+        return [x, y];
+      }
+      const center = ((dy ? Math.floor(target / W) : target % W) + .5) * NATIVE_CELL_PX;
+      const remaining = (center - (dy ? y : x)) * (dy || dx);
+      if (remaining <= 0) { st.wallExit = null; return null; }
+      const step = Math.min(distance, remaining);
+      st.wallExit = step < remaining ? exit : null;
+      return [x + dx * step, y + dy * step];
     }
 
     _nativeTouch(st, cell) {
@@ -2269,6 +2311,8 @@
 
     // 一次原版位移解算：整步 → 前方可走格中心截停 → 垂直拐角修正。返回新像素坐标。
     _nativeResolve(st, x, y, mv, distance, allowCorner) {
+      const wallExit = this._nativeWallExit(st, x, y, mv, distance);
+      if (wallExit) return wallExit;
       const [dy, dx] = DIRS[mv];
       const blocked = this._nativeSegmentCollision(st, x, y, mv, distance);
       if (!blocked) return [x + dx * distance, y + dy * distance];
@@ -2326,7 +2370,8 @@
         const distance = Math.min(Math.floor(total), NATIVE_MAX_STEP_PX);
         st.remainder = total - Math.floor(total);
         if (distance <= 0) continue;
-        const allowCorner = forcedSlide ? false : !this._nativePushContact(pid, x, y, mv, chunk / 1000);
+        const onWall = this.wall[Math.floor(y / NATIVE_CELL_PX) * W + Math.floor(x / NATIVE_CELL_PX)];
+        const allowCorner = !forcedSlide && (onWall || st.wallExit || !this._nativePushContact(pid, x, y, mv, chunk / 1000));
         const [nx, ny] = this._nativeResolve(st, x, y, mv, distance, allowCorner);
         if (nx !== x || ny !== y) { x = nx; y = ny; moved = true; }
       }

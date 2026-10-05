@@ -40,7 +40,7 @@ try {
   });
   const evidence = { sha, remoteMain: remote, run: { id: run.id, url: run.html_url,
     status: run.status, conclusion: run.conclusion }, jobs, resources };
-  const output = path.resolve('runs/bot_reserve_spawn_20261005/pages.json');
+  const output = path.resolve(process.argv[3] || 'runs/bot_reserve_spawn_20261005/pages.json');
   fs.mkdirSync(path.dirname(output), { recursive: true });
   fs.writeFileSync(output, JSON.stringify(evidence, null, 2) + '\n');
   console.log(JSON.stringify(evidence, null, 2));
