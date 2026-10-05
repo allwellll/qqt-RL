@@ -98,3 +98,12 @@ node scripts/verify_reserve_spawn_pages.js <full-deployed-commit-sha>
 
 - 浏览器检查需要 Playwright 与 Chromium，当前机器通过 `PLAYWRIGHT_MODULE`、`CHROMIUM_PATH` 指向已有安装；依赖库/字体分别使用 `LD_LIBRARY_PATH`、`FONTCONFIG_FILE`。本地服务 `http://127.0.0.1:8080/`，发布页面可通过 `WEB_URL` 指定。
 - 原版探针需要 `pefile`、`unicorn`；素材导出需要原版资源及 Pillow。Pages检查从Git credential helper读取凭证，不在源码或输出中记录token。
+
+## 发布验证
+
+- 实现提交 `dd1f0f1aa1b97ece7bb8fdb9e793df008cbb3c8d`，从本worktree快进合入main并通过Git push发布；远端main SHA与本地一致。没有使用强推或改写其他worktree。
+- 对应Pages workflow：[37261116359](https://github.com/allwellll/qqt-RL/actions/runs/37261116359)，`test-and-build`和`deploy`均成功，含CI网页全套测试。
+- `verify_reserve_spawn_pages.js`核对12个线上资源与本地逐字节相同：入口、app、sim、协作bot、渲染器、原版素材manifest、保护光环、大鸟、糖泡、爆破音效、levels与bun06地图；地图SHA256与迁移文档一致。
+- 发布地址：<https://allwellll.github.io/qqt-RL/>。以此作为`WEB_URL`再次运行真实浏览器检查，桌面1440x1000、手机390x844均通过三泡串联、安全撤离、光环/复活/到期/回放、无溢出及无资源/JS错误；完整地图仍在1151tick结算、94泡、23提前连爆、0自困/友困。
+- 最新`runs/bot_reserve_spawn_20261005/browser/checks.json`及截图为线上验证产物，覆盖了先前本地同名产物；前文保留的本地检查哈希是覆盖前的记录。Pages API/资源证据保存为同目录`pages.json`。
+- 本节记录首个实现提交的验证；报告记录更新本身会再提交并触发Pages，最终提交与workflow证据以最后的`pages.json`及会话结果为准。
