@@ -33,4 +33,15 @@
 2. 运行 `node scripts/verify_leaderboard_remote.js` 和桌面/手机浏览器脚本；脚本只输出测试 UUID，不输出 capability secret。
 3. 管理端执行脚本证据中的精确 cleanup SQL 后，再次读取排行榜确认临时身份消失。本任务没有管理连接，因此测试记录是否清理必须以人工执行结果为准。
 
+本轮测试均使用昵称 `Hermes远端验收`。管理连接不可用，以下记录**尚未清理**；执行前请核对 UUID，删除玩家会按外键 cascade 删除其战绩、进度和升级事件：
+
+```sql
+delete from qqt_private.players where player_id in (
+  '1cbd8dd8-1980-4b3f-9892-83164f27d5a1'::uuid,
+  '4465444b-09ea-4043-ac85-d159f45ec4fb'::uuid,
+  '3c162283-4dc5-4c30-b23c-83079e8d9e27'::uuid,
+  'ad141562-447e-4562-9175-bf5b53256d75'::uuid
+);
+```
+
 客户端排行榜仍是可信度有限的测试榜：拥有本地凭证的客户端可以伪造自己的赛果，随机身份可绕过每身份限流。正式公平榜需要服务器签名赛果、Auth和网关级限流。IP未写入数据库；Supabase平台访问日志的保留由平台配置决定。
