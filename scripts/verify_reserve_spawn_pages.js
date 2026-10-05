@@ -30,6 +30,7 @@ try {
   if (!jobs.some((j) => j.name === 'deploy' && j.conclusion === 'success') ||
       jobs.some((j) => j.conclusion !== 'success')) throw new Error('Pages jobs did not all succeed');
   const files = ['index.html', 'app.js', 'sim.js', 'bun_coop_hunter_bot.js', 'visual_renderer.js',
+    'style.css', 'leaderboard.js', 'leaderboard_config.js',
     'assets/native/sprites.json', 'assets/native/protection.png', 'assets/native/bird.png',
     'assets/native/trap.png', 'assets/native/syrup_pop.wav', 'assets/maps/levels.json', 'assets/maps/bun06_8.map'];
   const resources = files.map((file) => {
@@ -38,6 +39,13 @@ try {
     if (!data.equals(fs.readFileSync(path.resolve('web', file)))) throw new Error(`published resource differs: ${file}`);
     return { file, bytes: data.length, sha256: crypto.createHash('sha256').update(data).digest('hex') };
   });
+  const buildInfo = execFileSync('curl', ['--fail', '--silent', '--show-error', '--retry', '3', '--max-time', '45',
+    `https://allwellll.github.io/qqt-RL/build-info.json?verify=${sha}`], { stdio: ['ignore', 'pipe', 'pipe'] });
+  if (!buildInfo.equals(Buffer.from(JSON.stringify({ version: 'leaderboard-v1', commit: sha }) + '\n'))) {
+    throw new Error('published build-info.json differs from expected exact-head build');
+  }
+  resources.push({ file: 'build-info.json', bytes: buildInfo.length,
+    sha256: crypto.createHash('sha256').update(buildInfo).digest('hex') });
   const evidence = { sha, remoteMain: remote, run: { id: run.id, url: run.html_url,
     status: run.status, conclusion: run.conclusion }, jobs, resources };
   const output = path.resolve(process.argv[3] || 'runs/bot_reserve_spawn_20261005/pages.json');

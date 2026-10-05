@@ -176,3 +176,7 @@ python scripts/benchmark_v2_pipeline.py \
 - seed namespace 同时保证原始整数与 JAX `uint32` 表示在 candidate/cycle/split 间不碰撞。
 
 详见 `docs/migration_report.md`。
+
+## 用户排行榜
+
+GitHub Pages接入Supabase客户端测试排行榜；初始化、RPC/RLS、升级口径和隐私限制见 [部署文档](supabase/README.md)。前端仅含公开publishable key，远端建表状态见当天排行榜验证报告。

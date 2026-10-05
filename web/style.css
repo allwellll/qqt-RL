@@ -34,6 +34,15 @@ pre { min-height: 150px; padding: 12px; overflow: auto; border-radius: 7px; back
 #replay-seek { width: 100%; accent-color: #ffbf4b; }
 .fold { margin-top: 16px; }
 .fold summary { cursor: pointer; color: #77e7de; font-size: 15px; font-weight: 700; }
+.leaderboard { padding-bottom: 12px; border-bottom: 1px solid #42616a; }
+.leaderboard form { display: grid; gap: 6px; margin-top: 12px; }
+.leaderboard button { width: 100%; padding: 8px; font-size: 13px; }
+.leaderboard input { margin: 0 0 4px; min-width: 0; }
+.leaderboard p { margin: 8px 0; }
+#leaderboard-list { padding: 0; margin: 0; list-style: none; }
+.leaderboard-entry { display: grid; gap: 4px; border-top: 1px solid #42616a; padding: 10px 0; font-size: 13px; }
+.leaderboard-entry span { color: #c5d5d9; }
+.leaderboard-entry, .leaderboard p { overflow-wrap: anywhere; }
 @media (max-width: 820px) {
   body { overflow: auto; height: auto; }
   main, .arena, .stage, aside { height: auto; }

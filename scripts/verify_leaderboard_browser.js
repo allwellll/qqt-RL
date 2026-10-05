@@ -1,0 +1,113 @@
+'use strict';
+const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const base = process.env.WEB_URL || 'http://127.0.0.1:8080/';
+const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/browser');
+(async () => {
+  fs.mkdirSync(out, { recursive: true });
+  const browser = await chromium.launch({ headless: true, executablePath: process.env.CHROMIUM_PATH, args: ['--no-sandbox'] });
+  const evidence = [];
+  try {
+  for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+    const page = await browser.newPage({ viewport, isMobile: viewport.width < 600, hasTouch: viewport.width < 600 });
+    const errors = [], rpc = [], received = new Map(); let unavailable = false;
+    page.on('pageerror', e => errors.push(e.message));
+    await page.route('**/rest/v1/rpc/qqt_leaderboard', route => { rpc.push('read'); return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([{ rank: 1, nickname: '<unsafe>', victory_message: '<script>bad</script>', level: 4, progress: 2, level_reached_ms: 12000, last_level_up_ms: 3000, wins: 8, games: 10, win_rate: .8 }]) }); });
+    await page.route('**/rest/v1/rpc/qqt_submit_result', route => {
+      const p = route.request().postDataJSON().p_payload;
+      rpc.push({ write: p.client_match_id, result: p.result, mode: p.mode });
+      if (unavailable) return route.fulfill({ status: 503, contentType: 'application/json', body: '{}' });
+      const old = received.get(p.client_match_id);
+      if (old) assert.deepEqual(p, old);
+      received.set(p.client_match_id, p);
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ level: 1, points: 3, wins: 1, games: received.size }) });
+    });
+    await page.addInitScript(() => {
+      window.clockOffset = 0; const realNow = Date.now;
+      Date.now = () => realNow() + window.clockOffset;
+      window.setInterval = cb => { window.appTick = cb; return 1; };
+      window.realRAF = window.requestAnimationFrame;
+      window.requestAnimationFrame = cb => { window.appFrame = cb; return 1; };
+    });
+    await page.goto(base); await page.waitForSelector('#leaderboard-list li');
+    assert.strictEqual(await page.locator('#leaderboard-list li').count(), 1);
+    assert.strictEqual(await page.locator('#leaderboard-list li strong').textContent(), '1. <unsafe> · Lv.4 (2/10)');
+    assert.strictEqual(await page.locator('#leaderboard-list li script').count(), 0);
+    await page.locator('#player-nickname').fill('网页玩家'); await page.locator('#player-message').fill('胜利宣言');
+    await page.locator('#leaderboard-profile').evaluate(form => form.requestSubmit());
+    assert((await page.locator('#leaderboard-status').textContent()).includes('昵称和宣言'));
+    const id = await page.evaluate(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).player_id);
+    await page.waitForFunction(() => window.appFrame, null, { polling: 50 });
+    async function settle(result) {
+      await page.evaluate(async result => {
+        const step = QQT.Sim.prototype.frameStep;
+        QQT.Sim.prototype.frameStep = function(...args) { window.appSim = this; return step.apply(this, args); };
+        appFrame(performance.now());
+        appSim.t = 119; appSim.maxSteps = 120;
+        // Trigger the real timeout settlement branch on the full 806 map.
+        appSim.bunStored = result === 'win' ? [[2, 1], [0, 1]] : result === 'loss' ? [[1, 0], [1, 2]] : [[1, 0], [0, 1]];
+        window.clockOffset += 12000;
+        await appTick(); appFrame(performance.now()); appFrame(performance.now() + 20);
+      }, result);
+    }
+    await settle('win'); await page.waitForFunction(() => document.getElementById('leaderboard-progress').textContent.includes('1/1'), null, { polling: 50 });
+    assert.equal(received.size, 1); const payload = [...received.values()][0];
+    assert.equal(payload.nickname, '网页玩家'); assert.equal(payload.victory_message, '胜利宣言');
+    assert.equal(payload.game_duration_ms, 12000); assert.equal(payload.result, 'win');
+    assert.equal(Object.keys(payload).length, 16);
+    const idempotentWrites = rpc.filter(x => x.write).length; assert.equal(idempotentWrites, 1);
+    await page.reload(); await page.waitForSelector('#leaderboard-list li');
+    assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).player_id), id);
+    assert.equal(await page.locator('#player-nickname').inputValue(), '网页玩家');
+    unavailable = true; await page.waitForFunction(() => window.appFrame, null, { polling: 50 });
+    await settle('loss'); await page.waitForFunction(() => document.getElementById('leaderboard-status').textContent.includes('待提交'), null, { polling: 50 });
+    assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).queue.length), 1);
+    await page.locator('#restart').click();
+    await page.evaluate(() => appFrame(performance.now()));
+    assert.equal(await page.evaluate(() => appSim.done), false, 'RPC failure does not block restart');
+    unavailable = false; await page.locator('#leaderboard-retry').click();
+    await page.waitForFunction(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).queue.length === 0, null, { polling: 50 });
+    assert.equal(received.size, 2);
+    await page.locator('#player-nickname').fill('<img onerror=alert(1)>');
+    await page.locator('#leaderboard-profile').evaluate(form => form.requestSubmit());
+    assert((await page.locator('#leaderboard-status').textContent()).includes('尖括号'));
+    // Profile typing must not move, bomb, or restart the current game.
+    const seed = await page.evaluate(() => appSim.seed);
+    await page.locator('#player-nickname').fill(''); await page.locator('#player-nickname').type('R W 123');
+    assert.equal(await page.evaluate(() => appSim.seed), seed);
+    await page.evaluate(() => { window.requestAnimationFrame = realRAF; });
+    await page.screenshot({ path: `${out}/${viewport.width}.png`, fullPage: true });
+    assert.deepStrictEqual(errors, []); assert((await page.locator('body').evaluate(() => document.documentElement.scrollWidth <= innerWidth)));
+    assert(rpc.includes('read')); await page.close();
+    evidence.push({ viewport, mock: true, simulatedTimeoutOnMap806: true, received: received.size,
+      writes: rpc.filter(x => x.write).length, identityStable: true, escaped: true, errors });
+    console.log(`${viewport.width}: mock RPC, real app settlement hook, refresh identity, offline retry, escaping and layout passed`);
+  }
+  // No route mocks: confirm the actual uninitialized backend degrades safely.
+  for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+    const page = await browser.newPage({viewport,isMobile:viewport.width<600,hasTouch:viewport.width<600});
+    const errors = [], network = [];
+    page.on('pageerror',error=>errors.push(error.message));
+    page.on('response',response=>{if(response.status()>=400)network.push({url:response.url(),status:response.status()});});
+    await page.goto(base);
+    await page.waitForSelector('.loading.done');
+    await page.waitForFunction(()=>document.getElementById('leaderboard-status').textContent.includes('数据库尚未初始化'),null,{timeout:15000});
+    const state = JSON.parse(await page.locator('#status').textContent());
+    await page.locator('#restart').click();
+    await page.waitForFunction(()=>JSON.parse(document.getElementById('status').textContent).tick<10);
+    assert.deepEqual(errors,[]);
+    assert(network.every(x=>x.url.includes('/rest/v1/rpc/qqt_leaderboard')&&x.status===404));
+    const canvas = await page.locator('#game').evaluate(c=>{
+      const pixels=c.getContext('2d').getImageData(0,0,c.width,c.height).data,colors=new Set();
+      for(let i=0;i<pixels.length;i+=400)colors.add(`${pixels[i]},${pixels[i+1]},${pixels[i+2]}`);
+      return colors.size;
+    });
+    assert(canvas>100); await page.screenshot({path:`${out}/${viewport.width}-live-uninitialized.png`,fullPage:true});
+    evidence.push({viewport,mock:false,remoteDatabaseE2E:false,degraded:true,gameTick:state.tick,canvasColors:canvas,errors,expectedNetworkErrors:network});
+    await page.close(); console.log(`${viewport.width}: live uninitialized Supabase shows explicit status; game remains running`);
+  }
+  fs.writeFileSync(`${out}/checks.json`, JSON.stringify({ url: base, remoteDatabaseE2E: false, evidence }, null, 2) + '\n');
+  } finally { await browser.close(); }
+})().catch(error => { console.error(error); process.exitCode = 1; });

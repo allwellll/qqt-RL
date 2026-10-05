@@ -25,6 +25,13 @@
   const loading = document.getElementById('loading');
   const loadingText = document.getElementById('loading-text');
   const loadingProgress = document.getElementById('loading-progress');
+  const leaderboard = QQTLeaderboard.mount(document, { config: QQTLeaderboardConfig,
+    storage: { getItem: key => localStorage.getItem(key), setItem: (key, value) => localStorage.setItem(key, value) },
+    crypto, fetch: (...args) => fetch(...args) });
+  let leaderboardMatch = null, clientVersion = 'dev';
+  fetch('build-info.json', { cache: 'no-store' }).then(r => r.json()).then(info => {
+    if (/^[a-f0-9]{40}$/.test(info.commit)) clientVersion = info.commit;
+  }).catch(() => {});
   function showLoading(text) {
     loading.classList.remove('done');
     loadingText.textContent = text;
@@ -191,6 +198,10 @@
     const native = localHumanControls();
     sim.reset(level, { nativeItems: native, nativeTrap: native, teams: teamLayout(),
       bananaSlideSpeedPx: native ? 480 : undefined });
+    const [opponent, difficulty] = opponentSelect.value.split('@');
+    leaderboardMatch = native ? leaderboard.begin({ seed: sim.seed, opponent,
+      difficulty: difficulty || (isModelChoice(opponent) ? 'model' : 'fixed'),
+      mode: teamMode.value, map_id: mapSelect.value }) : null;
     resetBot();
     bombCell = -1;
     itemCell = -1;
@@ -201,6 +212,7 @@
 
   function resetReplay() {
     if (!replayDocument) return;
+    leaderboardMatch = null;
     sim = new QQT.Sim(replayDocument.meta.seed);
     sim.reset(level);
     replayIndex = 0;
@@ -336,6 +348,12 @@
   }
 
   function render(now = performance.now()) {
+    if (sim.done && localHumanControls() && leaderboardMatch) {
+      const match = { ...leaderboardMatch, client_version: clientVersion };
+      leaderboardMatch = null;
+      void leaderboard.finish(match, { result: sim.winner == null ? 'draw' : sim.winner === sim.team[0] ? 'win' : 'loss',
+        gameDurationMs: sim.t * TICK_MS });
+    }
     renderer.render(sim, now, motionState());
     hideLoading();
     status.textContent = JSON.stringify({
@@ -408,6 +426,7 @@
   const unlockAudio = () => sound.unlock();
   window.addEventListener('pointerdown', unlockAudio);
   window.addEventListener('keydown', (event) => {
+    if (event.target.closest && event.target.closest('input, textarea, [contenteditable="true"]')) return;
     unlockAudio();
     if ([...QQTControls.MOVEMENT_KEYS, ...QQTControls.ITEM_KEYS, ...QQTControls.ITEM_SLOT_KEYS,
       ...QQTControls.BOMB_KEYS].includes(event.code)) event.preventDefault();
@@ -420,6 +439,9 @@
     if (event.code === 'KeyR') reset();
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));
+  document.addEventListener('focusin', (event) => {
+    if (event.target.matches('input, textarea')) { held.clear(); bombCell = -1; itemCell = -1; }
+  });
   window.addEventListener('blur', () => {
     held.clear(); bombCell = -1; itemCell = -1;
   });
