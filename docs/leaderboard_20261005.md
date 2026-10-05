@@ -23,6 +23,8 @@
 - live 未初始化 Supabase：桌面和手机均显示明确“数据库尚未初始化”状态，游戏仍可重开和绘制，无JS错误；没有把404误报成排行榜成功。
 - 浏览器证据：`runs/leaderboard_20261005/browser/checks.json`，SHA256 `88e1790e90b34ceaf2f9ffa732c439b6a3ab161dee27ccf5c3a00b6720558a78`。
 - npm 日志：`runs/leaderboard_20261005/npm-test-final.log`，SHA256 `3ff5a06f3c875727be8affc289a988a03a25fd9433322b4128bb5002273b3874`。
+- Pages 部署运行 [37267080842](https://github.com/allwellll/qqt-RL/actions/runs/37267080842) 对提交 `2fb4f5f35099778fdd08a8f9a75ed8d0826585a1` 的 `test-and-build`、`deploy` 均成功；`runs/leaderboard_20261005/pages-implementation.json` 核对了线上 16 个资源（含 `build-info.json` exact-head）逐字节一致。
+- 线上浏览器证据 `runs/leaderboard_20261005/browser-online/checks.json`：桌面和手机 mock RPC、身份刷新、离线重试、恶意文字和布局通过；同一页面不加 mock 时对当前未初始化 Supabase显示明确降级状态，游戏仍运行。该文件包含线上 `remoteDatabaseE2E:false`，SHA256 在最终报告提交后更新。
 
 ## 部署后操作
 
