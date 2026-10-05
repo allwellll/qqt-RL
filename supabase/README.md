@@ -4,7 +4,7 @@
 
 在项目 `ozfdtqtlwrqywwfdxfac` 的 Supabase Dashboard → SQL Editor 执行完整文件
 [`migrations/20261005140000_leaderboard.sql`](migrations/20261005140000_leaderboard.sql)。
-这是首次建表 migration，只执行一次；失败会回滚事务。远端执行状态以当天验证报告为准，仓库内有 SQL 不代表远端已建表。
+这是首次建表 migration，只执行一次；失败会回滚事务。用户已执行该 migration；当前远端复核证据见 [`runs/leaderboard_20261005/remote-live-e2e-independent.json`](../runs/leaderboard_20261005/remote-live-e2e-independent.json)。
 
 若使用 CLI，先从 Dashboard → Connect 复制该项目真实 session/transaction pooler host，
 用户名通常为 `postgres.<project-ref>`，session 端口5432、transaction端口6543，必须验证项目实际配置。
@@ -67,8 +67,8 @@ select * from qqt_private.players; -- 应拒绝访问
 reset role;
 ```
 
-远端专项：`node scripts/verify_leaderboard_remote.js`，只做只读检查和应拒绝的输入探测，输出不含凭证。
-建表后还需使用隔离随机测试身份提交有效payload、重发幂等、验证错误凭证、确认Top与RLS，再由管理端清理。
+远端专项：`node scripts/verify_leaderboard_remote.js`，使用一次性随机身份提交有效 payload、重发幂等、验证错误凭证、确认 Top 与 RLS，输出不含凭证。该脚本不能删除测试数据。
+浏览器专项：`WEB_URL=https://allwellll.github.io/qqt-RL/ node scripts/verify_leaderboard_browser.js`，需要安装 Playwright Chromium；脚本会在桌面视口提交一次临时记录，并在手机视口回读榜单。
 清理固定测试UUID（从本地测试结果获取）会cascade删除对应战绩、进度和升级事件，不要按IP或昵称误删真实玩家：
 
 ```sql

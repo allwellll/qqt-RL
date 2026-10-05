@@ -85,29 +85,97 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
       writes: rpc.filter(x => x.write).length, identityStable: true, escaped: true, errors });
     console.log(`${viewport.width}: mock RPC, real app settlement hook, refresh identity, offline retry, escaping and layout passed`);
   }
-  // No route mocks: confirm the actual uninitialized backend degrades safely.
-  for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
-    const page = await browser.newPage({viewport,isMobile:viewport.width<600,hasTouch:viewport.width<600});
-    const errors = [], network = [];
-    page.on('pageerror',error=>errors.push(error.message));
-    page.on('response',response=>{if(response.status()>=400)network.push({url:response.url(),status:response.status()});});
-    await page.goto(base);
-    await page.waitForSelector('.loading.done');
-    await page.waitForFunction(()=>document.getElementById('leaderboard-status').textContent.includes('数据库尚未初始化'),null,{timeout:15000});
-    const state = JSON.parse(await page.locator('#status').textContent());
-    await page.locator('#restart').click();
-    await page.waitForFunction(()=>JSON.parse(document.getElementById('status').textContent).tick<10);
-    assert.deepEqual(errors,[]);
-    assert(network.every(x=>x.url.includes('/rest/v1/rpc/qqt_leaderboard')&&x.status===404));
-    const canvas = await page.locator('#game').evaluate(c=>{
-      const pixels=c.getContext('2d').getImageData(0,0,c.width,c.height).data,colors=new Set();
-      for(let i=0;i<pixels.length;i+=400)colors.add(`${pixels[i]},${pixels[i+1]},${pixels[i+2]}`);
+  // Formal Pages verification without route mocks. The two pages share one
+  // isolated browser context, so only desktop submits one temporary match.
+  const liveContext = await browser.newContext();
+  const liveEvidence = [];
+  let cleanupPlayerId = null;
+  try {
+    const desktop = await liveContext.newPage({ viewport: { width: 1440, height: 1000 }, isMobile: false });
+    const desktopErrors = [], desktopNetwork = [], desktopRpc = [];
+    desktop.on('pageerror', error => desktopErrors.push(error.message));
+    desktop.on('response', response => {
+      if (response.url().includes('/rest/v1/rpc/')) desktopRpc.push({ url: response.url(), status: response.status() });
+      if (response.status() >= 400) desktopNetwork.push({ url: response.url(), status: response.status() });
+    });
+    await desktop.addInitScript(() => {
+      window.clockOffset = 0; const realNow = Date.now;
+      Date.now = () => realNow() + window.clockOffset;
+      window.setInterval = cb => { window.appTick = cb; return 1; };
+      window.realRAF = window.requestAnimationFrame;
+      window.requestAnimationFrame = cb => { window.appFrame = cb; return 1; };
+    });
+    console.log('live desktop: goto');
+    await desktop.goto(base, { waitUntil: 'domcontentloaded' });
+    console.log('live desktop: loaded');
+    await desktop.waitForSelector('#leaderboard-list li', { timeout: 20000 });
+    console.log('live desktop: leaderboard loaded');
+    await desktop.locator('#player-nickname').fill('Hermes远端验收');
+    await desktop.locator('#player-message').fill('临时测试，验收后清理');
+    await desktop.locator('#leaderboard-profile').evaluate(form => form.requestSubmit());
+    console.log('live desktop: profile saved');
+    await desktop.waitForFunction(() => window.appFrame && window.appTick, null, { polling: 50 });
+    console.log('live desktop: hooks ready');
+    await desktop.evaluate(() => appFrame(performance.now()));
+    await desktop.evaluate(async () => {
+      const step = QQT.Sim.prototype.frameStep;
+      QQT.Sim.prototype.frameStep = function(...args) { window.appSim = this; return step.apply(this, args); };
+      appFrame(performance.now());
+      appSim.t = 119; appSim.maxSteps = 120;
+      appSim.bunStored = [[2, 1], [0, 1]];
+      window.clockOffset += 12000;
+      await appTick(); appFrame(performance.now()); appFrame(performance.now() + 20);
+    });
+    console.log('live desktop: settlement triggered');
+    await desktop.waitForFunction(() => document.getElementById('leaderboard-progress').textContent.includes('1/1'), null, { polling: 100, timeout: 20000 });
+    console.log('live desktop: settlement submitted');
+    cleanupPlayerId = await desktop.evaluate(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).player_id);
+    const canvas = await desktop.locator('#game').evaluate(c => {
+      const pixels = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, colors = new Set();
+      for (let i = 0; i < pixels.length; i += 400) colors.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
       return colors.size;
     });
-    assert(canvas>100); await page.screenshot({path:`${out}/${viewport.width}-live-uninitialized.png`,fullPage:true});
-    evidence.push({viewport,mock:false,remoteDatabaseE2E:false,degraded:true,gameTick:state.tick,canvasColors:canvas,errors,expectedNetworkErrors:network});
-    await page.close(); console.log(`${viewport.width}: live uninitialized Supabase shows explicit status; game remains running`);
-  }
-  fs.writeFileSync(`${out}/checks.json`, JSON.stringify({ url: base, remoteDatabaseE2E: false, evidence }, null, 2) + '\n');
+    assert(desktopRpc.some(row => row.url.endsWith('/qqt_leaderboard') && row.status === 200));
+    assert(desktopRpc.some(row => row.url.endsWith('/qqt_submit_result') && row.status === 200));
+    assert.deepStrictEqual(desktopErrors, []); assert(canvas > 100);
+    assert((await desktop.locator('#leaderboard-list').textContent()).includes('Hermes远端验收'));
+    assert(await desktop.locator('body').evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await desktop.screenshot({ path: `${out}/1440-live-real.png`, fullPage: true });
+    liveEvidence.push({ viewport: { width: 1440, height: 1000 }, mock: false, submitted: true,
+      playerId: cleanupPlayerId, canvasColors: canvas, rpc: desktopRpc, networkErrors: desktopNetwork, errors: desktopErrors });
+    await desktop.close();
+
+    const mobile = await liveContext.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    const mobileErrors = [], mobileNetwork = [], mobileRpc = [];
+    mobile.on('pageerror', error => mobileErrors.push(error.message));
+    mobile.on('response', response => {
+      if (response.url().includes('/rest/v1/rpc/')) mobileRpc.push({ url: response.url(), status: response.status() });
+      if (response.status() >= 400) mobileNetwork.push({ url: response.url(), status: response.status() });
+    });
+    console.log('live mobile: goto');
+    await mobile.goto(base); await mobile.waitForSelector('.loading.done');
+    console.log('live mobile: loaded');
+    await mobile.waitForSelector('#leaderboard-list li', { timeout: 20000 });
+    await mobile.waitForFunction(() => document.getElementById('leaderboard-list').textContent.includes('Hermes远端验收'), null, { timeout: 20000 });
+    assert.equal(await mobile.locator('#player-nickname').inputValue(), 'Hermes远端验收');
+    const mobileCanvas = await mobile.locator('#game').evaluate(c => {
+      const pixels = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, colors = new Set();
+      for (let i = 0; i < pixels.length; i += 400) colors.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
+      return colors.size;
+    });
+    assert.deepStrictEqual(mobileErrors, []); assert(mobileCanvas > 100);
+    assert(await mobile.locator('body').evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    assert(mobileRpc.some(row => row.url.endsWith('/qqt_leaderboard') && row.status === 200));
+    await mobile.screenshot({ path: `${out}/390-live-real.png`, fullPage: true });
+    liveEvidence.push({ viewport: { width: 390, height: 844 }, mock: false, submitted: false,
+      playerId: cleanupPlayerId, canvasColors: mobileCanvas, rpc: mobileRpc, networkErrors: mobileNetwork, errors: mobileErrors });
+    await mobile.close();
+  } finally { await liveContext.close(); }
+  const cleanupSql = cleanupPlayerId
+    ? `delete from qqt_private.players where player_id = '${cleanupPlayerId}'::uuid;`
+    : null;
+  fs.writeFileSync(`${out}/checks.json`, JSON.stringify({ url: base, remoteDatabaseE2E: true,
+    cleanupPerformed: false, cleanupSql, evidence: evidence.concat(liveEvidence) }, null, 2) + '\n');
+  fs.writeFileSync(`${out}/cleanup.sql`, `${cleanupSql || '-- desktop live test did not create a player'}\n`);
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

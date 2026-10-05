@@ -157,6 +157,11 @@
       image.onload = () => resolve(image);
       image.onerror = () => reject(new Error(`素材加载失败: ${src}`));
       image.src = src;
+      // Cached images can be complete before an onload listener is delivered.
+      if (image.complete) {
+        if (image.naturalWidth > 0) resolve(image);
+        else reject(new Error(`素材加载失败: ${src}`));
+      }
     });
   }
 
