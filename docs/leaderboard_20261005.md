@@ -24,7 +24,8 @@
 - 浏览器证据：`runs/leaderboard_20261005/browser/checks.json`，SHA256 `88e1790e90b34ceaf2f9ffa732c439b6a3ab161dee27ccf5c3a00b6720558a78`。
 - npm 日志：`runs/leaderboard_20261005/npm-test-final.log`，SHA256 `3ff5a06f3c875727be8affc289a988a03a25fd9433322b4128bb5002273b3874`。
 - Pages 部署运行 [37267080842](https://github.com/allwellll/qqt-RL/actions/runs/37267080842) 对提交 `2fb4f5f35099778fdd08a8f9a75ed8d0826585a1` 的 `test-and-build`、`deploy` 均成功；`runs/leaderboard_20261005/pages-implementation.json` 核对了线上 16 个资源（含 `build-info.json` exact-head）逐字节一致。
-- 线上浏览器证据 `runs/leaderboard_20261005/browser-online/checks.json`：桌面和手机 mock RPC、身份刷新、离线重试、恶意文字和布局通过；同一页面不加 mock 时对当前未初始化 Supabase显示明确降级状态，游戏仍运行。该文件包含线上 `remoteDatabaseE2E:false`，SHA256 在最终报告提交后更新。
+- 线上浏览器证据 `runs/leaderboard_20261005/browser-online/checks.json`：桌面和手机 mock RPC、身份刷新、离线重试、恶意文字和布局通过；同一页面不加 mock 时对当前未初始化 Supabase显示明确降级状态，游戏仍运行。该文件包含线上 `remoteDatabaseE2E:false`，SHA256 `63f246137b97062a49f22df7fd4190e33dd26e1d4945b4db18b0b61a4c9c9ca0`。
+- 最终文档提交的 Pages 精确 SHA 和资源证据另存到 `runs/leaderboard_20261005/pages.json`；文档提交不改变前述已验证游戏资源。
 
 ## 部署后操作
 
