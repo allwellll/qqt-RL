@@ -63,6 +63,19 @@
       "h": 106,
       "frames": 6,
       "source": "object/misc/misc101_stand.img"
+    },
+    "protection": {
+      "file": "assets/native/protection.png",
+      "w": 100,
+      "h": 113,
+      "ox": -48,
+      "oy": -90,
+      "frames": 15,
+      "frameMs": 100,
+      "cycleMs": 1500,
+      "protectionMs": 3000,
+      "source": "object/magic/magic0139.img",
+      "effect": "effect/flash2.eff"
     }
   },
   "sound": {

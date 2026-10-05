@@ -10,6 +10,7 @@ function scene(options = {}) {
   sim.reset('open', { nativeItems: true, nativeTrap: true, ...options });
   for (const key of ['wall', 'brick', 'crate', 'fuse']) sim[key].fill(0);
   sim.pos.set([4.5, 3.5, 10.5, 10.5]);
+  sim.invuln.fill(0); sim.spawnProtection.fill(0);
   return sim;
 }
 

@@ -262,6 +262,9 @@
       this.alive = per(true);
       this.hp = per(CFG.maxHp);
       this.invuln = per(0);
+      // 原生客户端出生/复活保护：3000ms @ 10Hz。与普通受伤后的短暂无敌分开，
+      // 这样回放和渲染只会显示原版出生光环。
+      this.spawnProtection = per(0);
       this.sinceBomb = per(0);
       this.bombsCap = per(0);
       this.blastCap = per(0);
@@ -345,6 +348,10 @@
         this.pos[2] = y0; this.pos[3] = x0;
       }
       this.sinceBomb[0] = 0; this.sinceBomb[1] = 0;
+      if (this.nativeTrap) {
+        this.invuln.fill(3 * CFG.tickHz);
+        this.spawnProtection.fill(3 * CFG.tickHz);
+      }
     }
 
     // Serializable logical state used by replay export. Typed arrays are copied to
@@ -357,6 +364,7 @@
         alive: this.alive.slice(),
         hp: this.hp.slice(),
         invuln: this.invuln.slice(),
+        ...(this.nativeTrap ? { spawnProtection: this.spawnProtection.slice() } : {}),
         sinceBomb: this.sinceBomb.slice(),
         bombsCap: this.bombsCap.slice(),
         blastCap: this.blastCap.slice(),
@@ -447,6 +455,7 @@
       this.alive = frame.alive.slice();
       this.hp = frame.hp.slice();
       this.invuln = frame.invuln.slice();
+      this.spawnProtection = (frame.spawnProtection || Array.from({ length: this.nPlayers }, () => 0)).slice();
       this.sinceBomb = frame.sinceBomb.slice();
       this.bombsCap = frame.bombsCap.slice();
       this.blastCap = frame.blastCap.slice();
@@ -852,6 +861,8 @@
       this.hp[player] = 0;
       this.alive[player] = false;
       this.trapped[player] = 0;
+      this.spawnProtection[player] = 0;
+      if (this.nativeTrap) this.invuln[player] = 0;
       this.lastDied[player] = true;
       this._clearMovementStatus(player);
       if (this.nativeItems) this._dropDeathInventory(player);
@@ -993,6 +1004,7 @@
         if (!this.fieldArmed[cell]) continue;
         for (let p = 0; p < this.nPlayers; p++) {
           if (!this.alive[p] || this.trapped[p] > 0) continue;
+          if (this.nativeTrap && this.spawnProtection[p] > 0 && this.invuln[p] > 0) continue;
           const [row, column] = this.centerCell(p);
           if (row * W + column !== cell) continue;
           if (this.fieldItem[cell] === ITEM_BANANA) {
@@ -1022,7 +1034,8 @@
         this.pos[p * 2] = sp[0]; this.pos[p * 2 + 1] = sp[1];
         this.hp[p] = this.initialHp || 1;
         this.alive[p] = true;
-        this.invuln[p] = 10;
+        this.invuln[p] = this.nativeTrap ? 3 * CFG.tickHz : 10;
+        this.spawnProtection[p] = this.nativeTrap ? 3 * CFG.tickHz : 0;
         this.trapped[p] = 0;
         this._clearMovementStatus(p);
       }
@@ -1335,8 +1348,9 @@
       if (this.nativeTrap) this._trapStep(newlyTrapped);
       // 无敌期递减（≥0）；实际掉血者重新进入无敌期
       for (let p = 0; p < nP; p++) this.invuln[p] = Math.max(0, this.invuln[p] - 1);
+      for (let p = 0; p < nP; p++) this.spawnProtection[p] = Math.min(this.invuln[p], Math.max(0, this.spawnProtection[p] - 1));
       for (let p = 0; p < this.nPlayers; p++) {
-        if (hpBefore[p] > this.hp[p]) this.invuln[p] = CFG.invulnTicks;
+        if (hpBefore[p] > this.hp[p] && (!this.nativeTrap || this.alive[p])) this.invuln[p] = CFG.invulnTicks;
       }
 
       // 当前爆炸已经在本 tick 结算过；把覆盖范围续留到后续 tick。

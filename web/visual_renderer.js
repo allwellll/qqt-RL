@@ -234,7 +234,8 @@
     }
     const effects = {};
     for (const [key, meta] of Object.entries(nativeMeta.effects)) {
-      effects[key] = { frames: nativeFrames.get(meta.file)[0], aspect: meta.h / meta.w };
+      effects[key] = { frames: nativeFrames.get(meta.file)[0], aspect: meta.h / meta.w,
+        ox: meta.ox || 0, oy: meta.oy || 0, frameMs: meta.frameMs || 100 };
     }
     const humanSize = Math.round((humanSheet.width / 4) * SCALE);
     const botSize = Math.round((botSheet.width / 4) * SCALE * 0.85);
@@ -615,6 +616,7 @@
         const moved = pushing || (previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5));
         if (moved) movingUntil[pid] = now + 150;
         const trapTicks = sim.trapped ? sim.trapped[pid] : 0;
+        const spawnProtection = sim.spawnProtection ? sim.spawnProtection[pid] : 0;
         const team = teamOf(sim, pid);
         const character = motion && motion.characters && assets.characters && assets.characters[motion.characters[pid]];
         const walking = !trapTicks && now < movingUntil[pid];
@@ -638,6 +640,15 @@
           }
         }
         items.push([z, image, x, y]);
+        if (spawnProtection > 0 && assets.effects && assets.effects.protection) {
+          const halo = assets.effects.protection;
+          const frame = halo.frames[Math.floor(now / halo.frameMs) % halo.frames.length];
+          // magic0139 的原点来自 DIMG，换算为角色中心锚点，保持官方环形光效偏移。
+          items.push([z + 3, () => ctx.drawImage(frame,
+            Math.round(gx * CELL + halo.ox * SCALE),
+            Math.round(gy * CELL + halo.oy * SCALE), frame.width,
+            Math.round(frame.width * halo.aspect))]);
+        }
         // 包子底边落在头顶附近（帧顶约 30% 为透明留白），贴着头顶而不是悬在上方。
         if (sim.bunCarried[pid] >= 0) {
           const bunBottom = y + image.height * (SPRITE_HEAD_FRAC + CARRY_BUN_SINK_FRAC);

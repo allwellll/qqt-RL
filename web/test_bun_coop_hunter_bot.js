@@ -484,4 +484,45 @@ for (const difficulty of ['easy', 'normal', 'hard']) {
   assert(blocking && sim.pos[0] >= 7 && sim.bunScore[1] >= 1,
     'escort really blocks the only pursuer route while the carrier returns home');
 }
-console.log('Cooperative hunter: safe unlinked reserves, late triple chain, resource growth and escort passed');
+{
+  const sim = scene([0, 1, 1], [[7.5, 7.5], [4.5, 4.5], [10.5, 12.5]]);
+  sim.bunStored = [[0, 0], [0, 0]];
+  sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
+  const anchor = 5 * W + 3;
+  sim.fuse[anchor] = 26; sim.owner[anchor] = 1; sim.bombBlast[anchor] = 3;
+  const attacker = bot(), decision = attacker.analyzeSim(sim, 1), second = 4 * W + 4;
+  assert.equal(decision.reason, 'bomb_reserve_replenish', 'already active bubble can be supplemented');
+  const state = Hunter.hunterStateFromSim(sim), g = attacker.geometry(state);
+  assert(!attacker.blastCells(state, g, anchor, 3).has(second) &&
+    !attacker.blastCells(state, g, second, 3).has(anchor), 'replenishment remains unlinked');
+  const info = sim.step([[4, 0, 0, 0], [...decision.action, 0, 0], [4, 0, 0, 0]]);
+  assert(info.placed[1] && sim.fuse[second] > 0, 'replenishment actually places the bubble');
+  sim.bunCarried[1] = 0;
+  assert.equal(attacker.analyzeSim(sim, 1).mode, 'DELIVER');
+  assert.equal(attacker.chainPlan, null, 'new delivery cancels ambush');
+  assert(attacker.reserveCancellations > 0);
+  sim.bunCarried[1] = -1;
+  attacker.chainPlan = { cell: 5 * W + 4, anchor, linkedCells: [second], expires: sim.t + 25 };
+  sim.movementStatus[1] = QQT.MOVE_STATUS_SLIDE; sim.slideDir[1] = QQT.MOVE_RIGHT;
+  assert.equal(attacker.analyzeSim(sim, 1).action[1], 0);
+  assert.equal(attacker.chainPlan, null, 'forced sliding cancels the staged connector');
+}
+{
+  const sim = scene([0, 1, 1], [[7.5, 7.5], [5.5, 5.5], [5.5, 7.5]]);
+  sim.bunStored = [[0, 0], [0, 0]]; sim.spdG.fill(1); sim.blastCap.fill(3); sim.bombsCap.fill(5);
+  const attacker = bot();
+  const decision = attacker.analyzeSim(sim, 1);
+  assert.equal(decision.action[1], 0, 'undeclared stationary teammate in new blast line vetoes placement');
+  const info = sim.step([[4, 0, 0, 0], [...decision.action, 0, 0], [4, 0, 0, 0]]);
+  assert(!info.placed[1] && sim.alive[2] && !sim.trapped[2], 'no actual friendly bubble is placed');
+}
+{
+  const sim = scene([0, 1, 1], [[10.5, 1.5], [5.9, 5.5], [10.5, 12.5]]);
+  sim.fuse[5 * W + 3] = 1; sim.owner[5 * W + 3] = 1; sim.bombBlast[5 * W + 3] = 4;
+  const attacker = bot(), decision = attacker.analyzeSim(sim, 1);
+  assert.equal(decision.reason, 'physical_escape', 'continuous centre-cell escape overrides conservative grid doom');
+  assert.equal(decision.action[0], QQT.MOVE_DOWN);
+  sim.step([[4, 0, 0, 0], [...decision.action, 0, 0], [4, 0, 0, 0]]);
+  assert(sim.alive[1] && !sim.trapped[1], 'actual movement leaves the imminent own blast');
+}
+console.log('Cooperative hunter: safe unlinked reserves, replenishment, cancellation, late triple chain, resource growth and escort passed');

@@ -349,6 +349,7 @@
         ? sim.itemSlots.map((slots) => slots.map((slot) => `${['无', '香蕉皮', '慢慢胶'][slot.item] || '?'}×${slot.count}`))
         : sim.heldItem.map((item) => ['无', '香蕉皮', '慢慢胶'][item] || '无'),
       trapped: sim.nativeTrap ? sim.trapped : undefined,
+      spawn_protection: sim.nativeTrap ? sim.spawnProtection : undefined,
       team: sim.nPlayers > 2 ? sim.team : undefined,
       bot: [activeBot, ...extraBots.slice(2)].map((bot) => (bot && bot.bot && bot.bot.lastDecision
         ? `${bot.bot.lastDecision.mode} / ${bot.bot.lastDecision.reason}` : undefined)).filter(Boolean).join(' | ') || undefined,

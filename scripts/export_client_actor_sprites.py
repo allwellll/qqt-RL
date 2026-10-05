@@ -75,6 +75,16 @@ def main():
             strip.save(out / f'{key}.png', optimize=True)
             manifest['effects'][key] = {'file': f'assets/native/{key}.png', 'w': w, 'h': h,
                                         'frames': len(frames), 'source': f'object/misc/{name}.img'}
+        (w, h, cx, cy, frames), _ = decode('object\\magic\\magic0139.img')
+        strip = Image.new('RGBA', (w * len(frames), h))
+        for i, (x, y, image) in enumerate(frames):
+            if image is not None:
+                strip.alpha_composite(image, (i * w + x - cx, y - cy))
+        strip.save(out / 'protection.png', optimize=True)
+        manifest['effects']['protection'] = {'file': 'assets/native/protection.png',
+            'w': w, 'h': h, 'ox': cx, 'oy': cy, 'frames': len(frames), 'frameMs': 100,
+            'cycleMs': 1500, 'protectionMs': 3000, 'source': 'object/magic/magic0139.img',
+            'effect': 'effect/flash2.eff'}
         sound = root / 'sound/X12_01.wav'
         (out / 'syrup_pop.wav').write_bytes(sound.read_bytes())
         manifest['sound'] = {'file': 'assets/native/syrup_pop.wav', 'source': 'sound/X12_01.wav',

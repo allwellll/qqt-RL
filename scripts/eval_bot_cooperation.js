@@ -67,7 +67,11 @@ function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strat
     trapped: 0, selfTraps: 0, friendlyTraps: 0, rescues: 0, carrierTicks: 0, escortTicks: 0,
     bananas: 0, glue: 0, carrierSlides: 0, enemySlows: 0, friendlySlows: 0, overlapTicks: 0, modes: {} }));
   for (const s of stats) Object.assign(s, { attackIntentBombs: 0, earlyChainBombs: 0, crates: 0,
-    capacityUpgrades: 0, damageUpgrades: 0, speedUpgrades: 0, multiReserves: 0, reserveSeconds: 0, connectors: 0, screens: 0 });
+    capacityUpgrades: 0, damageUpgrades: 0, speedUpgrades: 0, multiReserves: 0, reserveSeconds: 0,
+    replenishments: 0, reserveBubbleTicks: 0, unlinkedPairTicks: 0, reserveCancellations: 0,
+    expiredReserveNoTarget: 0, reserveChainDetonations: 0, connectors: 0, screens: 0 });
+  const reserves = new Map();
+  const trapEvents = [];
   trackItemEvents(sim, stats);
   const collect = sim._collectCrate;
   sim._collectCrate = function(player, cell) {
@@ -99,6 +103,20 @@ function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strat
           Math.hypot(sim.pos[p * 2] - sim.pos[q * 2], sim.pos[p * 2 + 1] - sim.pos[q * 2 + 1]) < 0.75)) s.overlapTicks++;
     }
     const state = Hunter.hunterStateFromSim(sim);
+    for (const [cell, entry] of reserves) {
+      if (sim.fuse[cell] <= 0 || sim.owner[cell] !== entry.pid) { reserves.delete(cell); continue; }
+      stats[teams[entry.pid]].reserveBubbleTicks++;
+    }
+    for (const p of ordered) {
+      const s = stats[teams[p]], count = bots[p].reserveCancellations || 0;
+      s.reserveCancellations += count - (bots[p]._evalCancellations || 0);
+      bots[p]._evalCancellations = count;
+      const live = state.bombs.filter((b) => b.owner === p && reserves.has(b.cell));
+      const geometry = bots[p].geometry(state);
+      if (live.some((b, i) => live.slice(i + 1).some((other) =>
+          !bots[p].blastCells(state, geometry, b.cell, b.blast).has(other.cell) &&
+          !bots[p].blastCells(state, geometry, other.cell, other.blast).has(b.cell)))) s.unlinkedPairTicks++;
+    }
     const threat = teams.map((_, p) => {
       if (!actions[p][1]) return false;
       const b = bots[p], g = b.geometry(state), me = state.players[p];
@@ -119,6 +137,14 @@ function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strat
     for (let c = 0; c < sim.fuse.length; c++) if (info.triggered[c] && fuseBefore[c] > 1 && ownersBefore[c] >= 0) {
       stats[teams[ownersBefore[c]]].earlyChainBombs++;
     }
+    for (const [cell, entry] of reserves) if (info.triggered[cell]) {
+      const s = stats[teams[entry.pid]];
+      if (fuseBefore[cell] > 1) s.reserveChainDetonations++;
+      const ray = bots[entry.pid].blastCells(state, bots[entry.pid].geometry(state), cell, entry.blast);
+      if (fuseBefore[cell] <= 1 && !state.players.some((e) => e.team !== teams[entry.pid] &&
+          e.alive && !e.trapped && ray.has(e.cell))) s.expiredReserveNoTarget++;
+      reserves.delete(cell);
+    }
     for (let p = 0; p < teams.length; p++) {
       const s = stats[teams[p]];
       if (info.placed[p]) {
@@ -127,6 +153,10 @@ function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strat
         if (reason !== 'bomb_dig') s.attackIntentBombs++;
         if (reason === 'bomb_reserve_multi') s.multiReserves++;
         if (reason === 'bomb_reserve_second') s.reserveSeconds++;
+        if (reason === 'bomb_reserve_replenish') s.replenishments++;
+        if (['bomb_reserve_multi', 'bomb_reserve_second', 'bomb_reserve_replenish'].includes(reason)) {
+          const me = state.players[p]; reserves.set(me.cell, { pid: p, blast: me.blast });
+        }
         if (reason === 'bomb_chain') s.connectors++;
         if (reason === 'bomb_screen' || reason === 'bomb_block') s.screens++;
       }
@@ -135,13 +165,18 @@ function episode(seed, size, candidateTeam, maxSteps, clearBricks = false, strat
         s.trapped++;
         if (info.physicalDamageSource[p][p]) s.selfTraps++;
         if (teams.some((team, q) => q !== p && team === teams[p] && info.physicalDamageSource[p][q])) s.friendlyTraps++;
+        if (teams[p] === candidateTeam) trapEvents.push({ tick: sim.t, player: p,
+          own: !!info.physicalDamageSource[p][p], friendly: teams.some((team, q) =>
+            q !== p && team === teams[p] && info.physicalDamageSource[p][q]),
+          decision: bots[p].lastDecision, posBefore: [state.players[p].y, state.players[p].x],
+          posAfter: Array.from(sim.pos.slice(p * 2, p * 2 + 2)), bombsBefore: state.bombs });
       }
       if (wasTrapped[p] && !sim.trapped[p] && sim.alive[p]) s.rescues++;
     }
   }
   return { seed, size, strategy, clearBricks, candidateTeam, spawns, winner: sim.winner, ticks: sim.t,
     candidate: stats[candidateTeam], baseline: stats[1 - candidateTeam], score: sim.bunScore.slice(),
-    outcome: sim.winner === candidateTeam ? 'win' : sim.winner === 1 - candidateTeam ? 'loss' : 'draw' };
+    outcome: sim.winner === candidateTeam ? 'win' : sim.winner === 1 - candidateTeam ? 'loss' : 'draw', trapEvents };
 }
 
 function summarize(rows) {
@@ -198,7 +233,7 @@ function run({ pairs = 8, seed = 2026100400, maxSteps = 1200, sizes = [1, 2, 3],
         process.stderr.write(`size=${size} pair=${i + 1}/${pairs} ${JSON.stringify(summarize(rows.filter((r) => r.size === size && r.strategy === 'coop')))}\n`);
     }
   }
-  return { schema: 'bot_cooperation_eval/v5', protocol: { pairs, seed, maxSteps, sizes, map: 806,
+  return { schema: 'bot_cooperation_eval/v6', protocol: { pairs, seed, maxSteps, sizes, map: 806,
     nativeItems: true, nativeTrap: true, difficulty: 'hard', candidate: 'bun.coop_hunter', baseline: 'bun.hunter' },
     reference: reference ? { ref: reference.ref, sha256: reference.sha256, baseline: 'bun.hunter' } : null,
     hashes, elapsedSeconds: (performance.now() - started) / 1000,
