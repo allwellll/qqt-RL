@@ -141,6 +141,86 @@ for (const [move,dy,dx] of directions) {
   saved.nativeWallExits[0].to=0;
   assert.notEqual(fractionalReplay._nativeState(0).wallExit.to,0,'restored exit owns its state');
 }
+// Forced banana slides clear a single wall corner by the minimum perpendicular
+// alignment, then keep their original direction. Exercise both sides and all
+// four directions with the opposite input held to prove steering is ignored.
+function slideCorner(direction, side) {
+  const vectors = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+  const [dy, dx] = vectors[direction];
+  const perp = direction < 2 ? 1 : 0;
+  const sideOffset = side < 0 ? 5 : 35;
+  const sim = scene(5, 5, direction < 2 ? 20 : sideOffset, direction < 2 ? sideOffset : 20);
+  sim.wall[5 * Q.W + 5] = 0;
+  const aheadRow = 5 + dy, aheadCol = 5 + dx;
+  const sideRow = aheadRow + (direction < 2 ? 0 : side);
+  const sideCol = aheadCol + (direction < 2 ? side : 0);
+  sim.wall[sideRow * Q.W + sideCol] = 1;
+  sim._setMovementStatus(0, Q.MOVE_STATUS_SLIDE, 0);
+  sim.slideDir[0] = direction;
+  const input = [Q.MOVE_DOWN, Q.MOVE_UP, Q.MOVE_RIGHT, Q.MOVE_LEFT][direction];
+  const before = Array.from(sim.pos.slice(0, 2));
+  for (let i = 0; i < 5; i++) sim.frameStep(0, input, .02);
+  const perpendicular = sim.pos[perp] * 40;
+  assert(Math.abs(perpendicular - 220) <= 1,
+    `single-side corner direction=${direction} side=${side} aligns to cell center`);
+  for (let i = 0; i < 15; i++) sim.frameStep(0, input, .02);
+  const axis = direction < 2 ? 0 : 1;
+  assert((sim.pos[axis] - before[axis]) * (dy || dx) > .5,
+    `single-side corner direction=${direction} keeps sliding along slideDir`);
+  assert.equal(sim.movementStatus[0], Q.MOVE_STATUS_SLIDE,
+    `single-side corner direction=${direction} remains forced slide`);
+  return sim;
+}
+for (const direction of [Q.MOVE_UP, Q.MOVE_DOWN, Q.MOVE_LEFT, Q.MOVE_RIGHT]) {
+  for (const side of [-1, 1]) slideCorner(direction, side);
+}
+
+// Two blocked leading corners form a closed wall face: no perpendicular escape
+// or tunnelling is allowed, and the forced status is cleared after the stop.
+for (const direction of [Q.MOVE_UP, Q.MOVE_DOWN, Q.MOVE_LEFT, Q.MOVE_RIGHT]) {
+  const [dy, dx] = [[-1, 0], [1, 0], [0, -1], [0, 1]][direction];
+  const sim = scene(5, 5, 20, 20);
+  sim.wall[5 * Q.W + 5] = 0;
+  const aheadRow = 5 + dy, aheadCol = 5 + dx;
+  const side = direction < 2 ? [[aheadRow, aheadCol - 1], [aheadRow, aheadCol + 1]]
+    : [[aheadRow - 1, aheadCol], [aheadRow + 1, aheadCol]];
+  side.push([aheadRow, aheadCol]);
+  for (const [r, c] of side) sim.wall[r * Q.W + c] = 1;
+  sim._setMovementStatus(0, Q.MOVE_STATUS_SLIDE, 0); sim.slideDir[0] = direction;
+  const before = Array.from(sim.pos.slice(0, 2));
+  const input = [Q.MOVE_DOWN, Q.MOVE_UP, Q.MOVE_RIGHT, Q.MOVE_LEFT][direction];
+  sim.frameStep(0, input, .02);
+  assert.deepStrictEqual(Array.from(sim.pos.slice(0, 2)), before, `closed corner direction=${direction} stays put`);
+  assert.equal(sim.movementStatus[0], Q.MOVE_STATUS_NONE, `closed corner direction=${direction} clears slide`);
+}
+
+// A wall or bomb introduced after alignment stops the slide at the obstacle;
+// it cannot tunnel through a dynamic target or change to the perpendicular axis.
+for (const kind of ['wall', 'bomb']) {
+  const sim = slideCorner(Q.MOVE_RIGHT, -1);
+  const target = 5 * Q.W + 9;
+  if (kind === 'wall') sim.wall[target] = 1;
+  else sim.fuse[target] = 30;
+  const alignedY = sim.pos[0];
+  for (let i = 0; i < 30; i++) sim.frameStep(0, Q.MOVE_LEFT, .02);
+  assert.equal(sim.pos[0], alignedY, `dynamic ${kind} keeps the aligned perpendicular coordinate`);
+  assert(sim.pos[1] < 9, `dynamic ${kind} stops before the target cell`);
+}
+
+// A replay taken mid-slide resumes at the same aligned pixel and continues in
+// the same direction, including the wall-corner permission state.
+{
+  const original = slideCorner(Q.MOVE_RIGHT, 1);
+  const frame = JSON.parse(JSON.stringify(original.snapshotReplay(null)));
+  const restored = new Q.Sim(99); restored.restoreReplay(frame);
+  assert.deepStrictEqual(Array.from(restored.pos), Array.from(original.pos), 'slide corner replay restores aligned pixel');
+  assert.equal(restored.movementStatus[0], original.movementStatus[0], 'slide corner replay restores status');
+  assert.equal(restored.slideDir[0], original.slideDir[0], 'slide corner replay restores direction');
+  for (let i = 0; i < 20; i++) {
+    original.frameStep(0, Q.MOVE_LEFT, .02); restored.frameStep(0, Q.MOVE_LEFT, .02);
+  }
+  assert(restored.pos[1] > frame.pos[1] && original.pos[1] > frame.pos[1], 'slide corner replay continues forward');
+}
 {
   const sim=scene();sim._setMovementStatus(0,Q.MOVE_STATUS_SLIDE,0);sim.slideDir[0]=Q.MOVE_RIGHT;
   assert(reach(sim,Q.MOVE_LEFT,[5,6]),'forced banana motion uses its own direction when exiting');

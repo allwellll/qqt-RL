@@ -69,28 +69,36 @@ function infoShape(info) {
   };
 }
 
-// 横向边界：中心在边界左右 4px（0.1 格）都属于明显半身位；任一单侧覆盖均安全。
-for (const x of [5.9, 6.0, 6.1]) {
+// 横向边界：9%/10% 仍属于半身豁免；11% 已离开豁免带，单侧覆盖命中。
+for (const [x, grace, centerSide] of [[5.91, true, null], [5.90, true, null], [5.89, false, 0], [6.0, true, null], [6.09, true, null], [6.11, false, 1]]) {
   for (const side of [[[5, 5]], [[5, 6]]]) {
     const sim = scene(5.5, x);
     hitTick(sim, [{ owner: 1, cells: side }]);
-    survived(sim, `horizontal half-tile x=${x} must survive one-sided coverage ${JSON.stringify(side)}`);
+    const sideIndex = side[0][1] === 5 ? 0 : 1;
+    if (grace || sideIndex !== centerSide) survived(sim, `horizontal ${x} tile boundary coverage ${JSON.stringify(side)} must survive`);
+    else trapped(sim, `horizontal ${x} tile center-cell coverage must hit outside the 0.10-tile exemption`);
   }
-  const sim = scene(5.5, x);
-  hitTick(sim, [{ owner: 1, cells: [[5, 5]] }, { owner: 1, cells: [[5, 6]] }]);
-  trapped(sim, `horizontal half-tile x=${x} must be hit when both sides are covered in one tick`);
+  if (grace) {
+    const sim = scene(5.5, x);
+    hitTick(sim, [{ owner: 1, cells: [[5, 5]] }, { owner: 1, cells: [[5, 6]] }]);
+    trapped(sim, `horizontal half-tile x=${x} must be hit when both sides are covered in one tick`);
+  }
 }
 
 // 纵向边界与横向完全对称。
-for (const y of [5.9, 6.0, 6.1]) {
+for (const [y, grace, centerSide] of [[5.91, true, null], [5.90, true, null], [5.89, false, 0], [6.0, true, null], [6.09, true, null], [6.11, false, 1]]) {
   for (const side of [[[5, 5]], [[6, 5]]]) {
     const sim = scene(y, 5.5);
     hitTick(sim, [{ owner: 1, cells: side }]);
-    survived(sim, `vertical half-tile y=${y} must survive one-sided coverage ${JSON.stringify(side)}`);
+    const sideIndex = side[0][0] === 5 ? 0 : 1;
+    if (grace || sideIndex !== centerSide) survived(sim, `vertical ${y} tile boundary coverage ${JSON.stringify(side)} must survive`);
+    else trapped(sim, `vertical ${y} tile center-cell coverage must hit outside the 0.10-tile exemption`);
   }
-  const sim = scene(y, 5.5);
-  hitTick(sim, [{ owner: 1, cells: [[5, 5]] }, { owner: 1, cells: [[6, 5]] }]);
-  trapped(sim, `vertical half-tile y=${y} must be hit when both sides are covered in one tick`);
+  if (grace) {
+    const sim = scene(y, 5.5);
+    hitTick(sim, [{ owner: 1, cells: [[5, 5]] }, { owner: 1, cells: [[6, 5]] }]);
+    trapped(sim, `vertical half-tile y=${y} must be hit when both sides are covered in one tick`);
+  }
 }
 
 // 同 tick 聚合不依赖爆炸源遍历顺序，且两侧来源都保留物理归因。
@@ -120,17 +128,19 @@ for (const reverse of [false, true]) {
   trapped(sim, 'centered player must be hit by the centered cell');
 }
 
-// 角落规则：同时明显跨行、跨列时占四格；本 tick 四格必须全部覆盖才命中，少一格仍安全。
-const cornerCells = [[5, 5], [5, 6], [6, 5], [6, 6]];
-for (let omitted = 0; omitted < cornerCells.length; omitted++) {
-  const sim = scene(6.0, 6.0);
-  hitTick(sim, [{ owner: 1, cells: cornerCells.filter((_, i) => i !== omitted) }]);
-  survived(sim, `four-cell corner must survive when corner cell ${omitted} is not covered`);
-}
-{
-  const sim = scene(6.0, 6.0);
+// 角落规则：同时明显跨行、跨列时占四格；四种象限都必须覆盖四格才命中，少一格仍安全。
+for (const [y, x] of [[6.0, 6.0], [6.0, 5.0], [5.0, 6.0], [5.0, 5.0]]) {
+  const rows = y === 6.0 ? [5, 6] : [4, 5];
+  const cols = x === 6.0 ? [5, 6] : [4, 5];
+  const cornerCells = rows.flatMap((r) => cols.map((c) => [r, c]));
+  for (let omitted = 0; omitted < cornerCells.length; omitted++) {
+    const sim = scene(y, x);
+    hitTick(sim, [{ owner: 1, cells: cornerCells.filter((_, i) => i !== omitted) }]);
+    survived(sim, `four-cell corner ${y},${x} must survive when corner cell ${omitted} is not covered`);
+  }
+  const sim = scene(y, x);
   hitTick(sim, [{ owner: 1, cells: cornerCells }]);
-  trapped(sim, 'four-cell corner must be hit when all four cells are covered in one tick');
+  trapped(sim, `four-cell corner ${y},${x} must be hit when all four cells are covered in one tick`);
 }
 
 // 出生保护优先于完整的双侧覆盖。
@@ -207,6 +217,7 @@ for (let omitted = 0; omitted < cornerCells.length; omitted++) {
 
 // 快照恢复后不引入跨 tick 隐状态；同一帧、同一覆盖得到相同结果。
 {
+  const cornerCells = [[5, 5], [5, 6], [6, 5], [6, 6]];
   const original = scene(6.0, 6.0);
   const frame = JSON.parse(JSON.stringify(original.snapshotReplay(null)));
   const restored = new Q.Sim(99).restoreReplay(frame);
@@ -217,6 +228,18 @@ for (let omitted = 0; omitted < cornerCells.length; omitted++) {
     { trapped: restored.trapped, died: b.died, physical: b.physicalDamageSource },
     'snapshot/replay restoration must preserve deterministic half-tile damage',
   );
+}
+
+// Boundary tolerance survives snapshot/replay and does not widen after restore.
+for (const [x, grace] of [[5.9, true], [5.89, false]]) {
+  const original = scene(5.5, x);
+  const frame = JSON.parse(JSON.stringify(original.snapshotReplay(null)));
+  const restored = new Q.Sim(99).restoreReplay(frame);
+  for (const sim of [original, restored]) {
+    hitTick(sim, [{ owner: 1, cells: [[5, 5]] }]);
+    if (grace) survived(sim, `replay preserves the ${x} tile half-tile exemption`);
+    else trapped(sim, `replay preserves the ${x} tile hard hit`);
+  }
 }
 
 console.log('half-tile explosion aggregation, symmetry, corner, protection and replay checks passed');

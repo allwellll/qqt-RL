@@ -109,7 +109,10 @@
                 data.nickname = defaultNickname(data.player_id, result.ip_display);
               }
               if (settlement && settlement.client_match_id === match.client_match_id) {
-                settlement = { ...settlement, submitted: true, ranking: validRanking(result.match_rank, match) ? result.match_rank : null };
+                // The queued payload carries the terminal result; the original
+                // match metadata passed to begin() intentionally does not.
+                settlement = { ...settlement, submitted: true,
+                  ranking: validRanking(result.match_rank, match) ? result.match_rank : null };
               }
               data.progress = progress;
               data.queue.shift(); save(); emit('结算已提交');

@@ -1734,19 +1734,19 @@
       return { covered, triggered, sources };
     }
 
-    // 玩家身体当前明确占据的格。中心在格内时只有一格；身体跨过一条边界时
-    // 为两格；同时跨行列边界（角落）时为四格。EPS 避免“刚好贴边”被浮点
-    // 误判为跨格；真正跨入相邻格才算明显半身位。
+    // Native half-tile immunity is deliberately narrow: only a center within
+    // 10% of a grid line may straddle that line for explosion purposes. This
+    // keeps the classic 9/10% grace while making 11% a normal hit.
     _explosionContactCells(p) {
-      const y = this.pos[p * 2], x = this.pos[p * 2 + 1], R = CFG.radius;
-      const rMin = Math.max(0, Math.floor(y - R + EPS));
-      const rMax = Math.min(H - 1, Math.floor(y + R - EPS));
-      const cMin = Math.max(0, Math.floor(x - R + EPS));
-      const cMax = Math.min(W - 1, Math.floor(x + R - EPS));
+      const y = this.pos[p * 2], x = this.pos[p * 2 + 1], tolerance = 0.10 + EPS;
+      const row = Math.floor(y), col = Math.floor(x), fy = y - row, fx = x - col;
+      const rows = [row], cols = [col];
+      if (fy <= tolerance && row > 0) rows.unshift(row - 1);
+      else if (fy >= 1 - tolerance && row < H - 1) rows.push(row + 1);
+      if (fx <= tolerance && col > 0) cols.unshift(col - 1);
+      else if (fx >= 1 - tolerance && col < W - 1) cols.push(col + 1);
       const cells = [];
-      for (let r = rMin; r <= rMax; r++) {
-        for (let c = cMin; c <= cMax; c++) cells.push(r * W + c);
-      }
+      for (const r of rows) for (const c of cols) cells.push(r * W + c);
       return cells;
     }
 
@@ -2401,7 +2401,10 @@
         st.remainder = total - Math.floor(total);
         if (distance <= 0) continue;
         const onWall = this.wall[Math.floor(y / NATIVE_CELL_PX) * W + Math.floor(x / NATIVE_CELL_PX)];
-        const allowCorner = !forcedSlide && (onWall || st.wallExit || !this._nativePushContact(pid, x, y, mv, chunk / 1000));
+        // Sliding keeps its original direction after the minimum corner
+        // alignment; the correction itself is perpendicular only for the
+        // single frame needed to clear a wall corner.
+        const allowCorner = onWall || st.wallExit || !this._nativePushContact(pid, x, y, mv, chunk / 1000);
         const [nx, ny] = this._nativeResolve(st, x, y, mv, distance, allowCorner);
         if (nx !== x || ny !== y) { x = nx; y = ny; moved = true; }
       }
