@@ -27,6 +27,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261006/
         await page.waitForFunction(() => window.appFrame, null, { polling: 50 });
         await page.evaluate(() => appFrame(performance.now()));
         await page.waitForSelector('.loading.done');
+        await page.waitForFunction(() => getComputedStyle(document.getElementById('loading')).opacity === '0', null, { polling: 50 });
       }
       await load();
       await page.waitForFunction(() => document.getElementById('leaderboard-status').textContent.includes('排行榜已更新'), null, { polling: 50 });

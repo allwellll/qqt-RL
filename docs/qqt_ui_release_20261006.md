@@ -55,3 +55,4 @@ delete from qqt_private.players where player_id in (
 - 新增 `scripts/verify_menu_browser.js`。本地 Chromium 1440×1000 / 390×844 真实加载页面和远端榜单（无网络mock），默认本地标识、保存刷新后自定义昵称、五列可见、紧凑按钮、无页面/表格横向溢出、无JS错误通过。结算截图为确定性 UI 状态验证，未制造服务端排名或提交赛果；另一个明确mock场景验证长文本/XSS五列布局。证据 `runs/leaderboard_20261006/menu-local/checks.json` 和对应截图。
 - 正式 Pages 同视口重复验收证据 `runs/leaderboard_20261006/menu-pages/checks.json`；exact-head workflow与关键资源证据 `runs/leaderboard_20261006/pages-menu-final.json`（以发布后生成的实际结果为准）。
 - 本轮浏览器只读远端数据库，不新建远端测试记录、不添加或执行任何删除/清理动作。已有测试身份由用户另行处理。Supabase增量SQL与Edge仍未部署，服务端本局排名/IP不宣称上线。
+- 截图脚本追加等待加载遮罩 `opacity=0`，避免把淡出中的加载层误当最终页面。全套测试再次通过，正式Pages与本地截图重取；没有改动游戏运行或网络提交逻辑。
