@@ -144,7 +144,9 @@
       markers.push({ pid, row: spawn[0], col: spawn[1], team: teamOf(sim, pid),
         seconds: respawnSeconds(sim.bunRespawn[pid]),
         label: viewerPid < 0 ? `${teamOf(sim, pid) === 0 ? '蓝' : '红'}${pid + 1}`
-          : `${playerLabel(sim, pid, viewerPid, teamOf(sim, viewerPid))}${pid + 1}` });
+          : teamOf(sim, pid) === teamOf(sim, viewerPid)
+            ? `${playerLabel(sim, pid, viewerPid, teamOf(sim, viewerPid))}${pid + 1}`
+            : playerLabel(sim, pid, viewerPid, teamOf(sim, viewerPid)) });
     }
     return markers;
   }
@@ -787,9 +789,9 @@
         ctx.strokeStyle = marker.team === 0 ? '#8ee9ff' : '#ffa6bf'; ctx.lineWidth = 3;
         ctx.beginPath(); ctx.ellipse(x, y + CELL * .2, CELL * .36, CELL * .16, 0, 0, Math.PI * 2); ctx.stroke();
         const text = `${marker.label} · ${marker.seconds}秒复活`;
-        const labelX = Math.max(72, Math.min(canvas.width - 72, x));
+        const labelX = Math.max(96, Math.min(canvas.width - 96, x));
         const labelY = Math.max(16, y - CELL * .35);
-        ctx.font = 'bold 16px sans-serif'; ctx.lineWidth = 4;
+        ctx.font = 'bold 24px sans-serif'; ctx.lineWidth = 5;
         ctx.strokeStyle = 'rgba(0,0,0,.85)'; ctx.fillStyle = marker.pid === humanPid ? '#ffe477' : '#ffffff';
         ctx.strokeText(text, labelX, labelY); ctx.fillText(text, labelX, labelY);
         ctx.restore();

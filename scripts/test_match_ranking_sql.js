@@ -30,6 +30,9 @@ const { PGlite } = require('@electric-sql/pglite');
     assert.equal(tie.match_rank.rank, 2); assert.equal(tie.match_rank.total, 4); assert.equal(tie.match_rank.percentile, 33.33);
     const isolated = await submit(payload('win', 3000, { mode: '1v1' }));
     assert.equal(isolated.match_rank.total, 1); assert.equal(isolated.match_rank.percentile, 0);
+    for (const patch of [{ map_id: 'arena' }, { difficulty: 'easy' }, { opponent: 'bun.hunter' }]) {
+      assert.equal((await submit(payload('win', 3000, patch))).match_rank.total, 1, 'map/difficulty/opponent isolate cohorts');
+    }
     for (const result of ['loss', 'draw']) {
       await submit(payload(result, 4000));
       const survived = await submit(payload(result, 8000));

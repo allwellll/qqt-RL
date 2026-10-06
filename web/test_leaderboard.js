@@ -110,5 +110,27 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
   LB.renderSettlement(settlementDoc, { status: '', settlement: { result: 'win', duration_ms: 5000, ranking: { rank: 2, total: 4, percentile: 33.33 } } });
   assert.match(elements.get('settlement-rank').textContent, /2 名 \/ 4 位玩家.*33.33%/);
   client.clearSettlement(); assert.equal(client.state().settlement, null);
+  const fakeMatch = { ...metadata, result: 'win', game_duration_ms: 5000 };
+  const ranking = { ...metadata, result: 'win', duration_ms: 5000, rank: 2, total: 4, percentile: 33.33, comparison: 'player-best-v1' };
+  assert(LB.validRanking(ranking, fakeMatch));
+  assert(!LB.validRanking({ ...ranking, mode: '1v1' }, fakeMatch));
+  assert(!LB.validRanking({ ...ranking, rank: '<img>' }, fakeMatch));
+  const ambiguousAccepted = new Set(); let edgeBreak = true;
+  const ambiguous = LB.createClient({ config: { url: 'https://db', publishableKey: 'public', submitResultUrl: 'https://db/functions/v1/submit-result' },
+    storage: memory(), crypto: webcrypto, now: () => now, fetch: async (url, options) => {
+      if (url.endsWith('qqt_leaderboard')) return { ok: true, json: async () => [] };
+      const payload = JSON.parse(options.body).p_payload;
+      ambiguousAccepted.add(payload.client_match_id);
+      if (url.includes('/functions/') && edgeBreak) throw new TypeError('connection lost after commit');
+      return { ok: true, json: async () => ({ level: 1, points: 3, wins: 1, games: ambiguousAccepted.size,
+        match_rank: { ...ranking, ...metadata } }) };
+    } });
+  const lostConnection = ambiguous.begin(metadata); now += 5000;
+  await ambiguous.finish(lostConnection, { result: 'win', gameDurationMs: 5000 });
+  assert.equal(ambiguousAccepted.size, 1); assert.equal(ambiguous.state().pending, 0);
+  assert.equal(ambiguous.state().settlement.ranking.rank, 2);
+  edgeBreak = false;
+  await ambiguous.finish(lostConnection, { result: 'win', gameDurationMs: 5000 });
+  assert.equal(ambiguousAccepted.size, 1, 'duplicate finish cannot submit again');
   console.log('排行榜身份、校验、幂等、离线重试、payload与纯文本渲染回归通过');
 })().catch(error => { console.error(error); process.exitCode = 1; });

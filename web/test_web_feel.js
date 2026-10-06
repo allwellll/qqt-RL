@@ -313,7 +313,7 @@ function dimRects(rects, canvas) {
   const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [0, 0], isBun: true, bunRespawn: [15, 42] });
   r.render(s, 1050, { prevPos: s.pos, curPos: s.pos, lastTickT: 1000, tickMs: 100, humanPid: 0 });
   assert(texts.some((t) => t.text === '你1 · 2秒复活' && t.x === 2.5 * CELL), 'local player countdown is at its spawn');
-  const bot = texts.find((t) => t.text === '敌12 · 5秒复活');
+  const bot = texts.find((t) => t.text === '敌1 · 5秒复活');
   assert(bot && Math.abs(bot.x - 12.5 * CELL) < 1e-6, '对手倒计时(42 tick→5 秒)应画在其复活点');
 }
 {

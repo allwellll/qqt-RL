@@ -55,6 +55,10 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
       }, result);
     }
     await settle('win'); await page.waitForFunction(() => document.getElementById('leaderboard-progress').textContent.includes('1/1'), null, { polling: 50 });
+    await page.evaluate(() => appFrame(performance.now() + 30));
+    assert.equal(await page.locator('#settlement-title').textContent(), '胜利');
+    assert.equal(await page.locator('#settlement-rank').textContent(), '排名待数据库升级');
+    await page.screenshot({ path: `${out}/${viewport.width}-win.png`, fullPage: true });
     assert.equal(received.size, 1); const payload = [...received.values()][0];
     assert.equal(payload.nickname, '网页玩家'); assert.equal(payload.victory_message, '胜利宣言');
     assert.equal(payload.game_duration_ms, 12000); assert.equal(payload.result, 'win');
@@ -65,13 +69,23 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     assert.equal(await page.locator('#player-nickname').inputValue(), '网页玩家');
     unavailable = true; await page.waitForFunction(() => window.appFrame, null, { polling: 50 });
     await settle('loss'); await page.waitForFunction(() => document.getElementById('leaderboard-status').textContent.includes('待提交'), null, { polling: 50 });
+    await page.evaluate(() => appFrame(performance.now() + 30));
+    assert.equal(await page.locator('#settlement-title').textContent(), '失败');
+    assert.equal(await page.locator('#settlement-rank').textContent(), '排名等待结算提交');
     assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).queue.length), 1);
-    await page.locator('#restart').click();
+    await page.locator('#play-again').evaluate(button => { button.click(); button.click(); });
     await page.evaluate(() => appFrame(performance.now()));
     assert.equal(await page.evaluate(() => appSim.done), false, 'RPC failure does not block restart');
     unavailable = false; await page.locator('#leaderboard-retry').click();
     await page.waitForFunction(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).queue.length === 0, null, { polling: 50 });
     assert.equal(received.size, 2);
+    await settle('draw'); await page.waitForFunction(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).queue.length === 0, null, { polling: 50 });
+    await page.evaluate(() => appFrame(performance.now() + 30));
+    assert.equal(await page.locator('#settlement-title').textContent(), '平局');
+    const drawWrites = rpc.filter(x => x.write).length;
+    await page.locator('#play-again').evaluate(button => { button.click(); button.click(); });
+    await page.evaluate(() => appFrame(performance.now() + 60));
+    assert.equal(rpc.filter(x => x.write).length, drawWrites, 'double restart cannot resubmit prior settlement');
     await page.locator('#player-nickname').fill('<img onerror=alert(1)>');
     await page.locator('#leaderboard-profile').evaluate(form => form.requestSubmit());
     assert((await page.locator('#leaderboard-status').textContent()).includes('尖括号'));
@@ -130,6 +144,9 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     });
     console.log('live desktop: settlement triggered');
     await desktop.waitForFunction(() => document.getElementById('leaderboard-progress').textContent.includes('1/1'), null, { polling: 100, timeout: 20000 });
+    await desktop.evaluate(() => appFrame(performance.now() + 30));
+    assert.equal(await desktop.locator('#settlement-title').textContent(), '胜利');
+    assert.equal(await desktop.locator('#settlement-rank').textContent(), '排名待数据库升级', 'old remote schema must never produce a fabricated rank');
     console.log('live desktop: settlement submitted');
     cleanupPlayerId = await desktop.evaluate(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).player_id);
     const canvas = await desktop.locator('#game').evaluate(c => {

@@ -22,10 +22,10 @@ PostgREST 与 Edge Function 收到的转发请求头目前没有已验证的“�
 
 ```bash
 supabase link --project-ref ozfdtqtlwrqywwfdxfac
+# 首次 migration 已通过 SQL Editor 执行时，先标记历史，避免 CLI 重跑建表：
+supabase migration repair 20261005140000 --status applied
 supabase db push
-supabase secrets set SUPABASE_URL=https://ozfdtqtlwrqywwfdxfac.supabase.co \\
-  SUPABASE_SERVICE_ROLE_KEY='<Dashboard 中临时生成的 service-role key>' \\
-  CORS_ALLOWED_ORIGINS='https://allwellll.github.io,http://localhost:8000'
+supabase secrets set CORS_ALLOWED_ORIGINS='https://allwellll.github.io'
 supabase functions deploy submit-result --no-verify-jwt
 ```
 
@@ -36,9 +36,20 @@ supabase functions deploy submit-result --no-verify-jwt
 在完成上述 IP/最佳胜利 migration 后，再执行一次
 [`migrations/20261006090000_match_ranking.sql`](migrations/20261006090000_match_ranking.sql)。它把既有结算校验函数保留在 `qqt_private`，公开同名 RPC 先调用原校验/幂等逻辑，再返回 `match_rank`。比较 cohort 固定为相同 `result`、`mode`、`map_id`、`difficulty` 与 `opponent`；每名其他匿名玩家取最佳记录，当前对局取当前耗时。胜局按耗时升序，失败/平局按耗时降序；相同耗时竞争排名并列（`rank = 严格更优样本数 + 1`），`percentile = 严格更差其他玩家数 / 其他玩家总数 × 100`，单样本为0。旧 RPC 响应没有 `match_rank` 时，网页只显示“排名待数据库升级”，不从 Top20 推算。
 
-该 RPC 仍处理未签名客户端赛果，排名只能作为测试榜指标；同一 `client_match_id` 重试返回相同结果，不新增样本。迁移会短暂锁定提交函数，应在低流量窗口执行。增量文件可重复执行。
+该 RPC 仍处理未签名客户端赛果，排名只能作为测试榜指标；同一 `client_match_id` 重试不新增样本，排名按请求时数据库样本重算。迁移会短暂锁定提交函数，应在低流量窗口执行。增量文件可重复执行。seed 与提交 SHA 留作审计，但不划分 cohort，因此不同 seed/版本的客户端结果仍可能不可完全公平比较。
 
 ## 浏览器与排名口径
+
+Edge 的 `SUPABASE_URL` 和 `SUPABASE_SERVICE_ROLE_KEY` 使用平台内置环境变量；不要将它们写到 Pages 或命令历史。Dashboard 部署必须同时上传 `index.ts` 和 `handler.mjs`。CORS 只是浏览器来源约束，不能阻止伪造 Origin 的脚本请求；当前没有可靠 IP 限流，新匿名身份可绕过每身份限制。公开使用前还需平台全局配额/限流与服务器签名赛果。
+
+当前 IP 收集关闭。未来可信入口启用前，需批准并配置 30 天元数据保留策略，例如管理端每日运行：
+
+```sql
+update qqt_private.players set ip_display=null, ip_hash=null, ip_recorded_at=null
+where ip_recorded_at < clock_timestamp() - interval '30 days';
+```
+
+这不是已部署的定时任务；平台访问日志由 Supabase 项目配置另行管理。
 
 [`../web/leaderboard_config.js`](../web/leaderboard_config.js) 只包含公开项目URL和publishable key。
 不使用数据库密码、service-role key或IP身份。不依赖匿名Auth开关。
@@ -48,7 +59,7 @@ supabase functions deploy submit-result --no-verify-jwt
 已有游戏没有角色经验等级；新增的是**排行榜等级**，不改变游戏战斗属性。
 真人完成对局胜利+3点，平局或失败+1点，10点升级：`level = 1 + floor(points/10)`。
 仅完成对局计时累加；重开/中止、回放、模型观战不计分。两个地图及三种队伍模式共用测试榜，模式/对手/难度留作审计。
-排名固定为等级降序、达到本级累计游戏用时升序、胜场降序、胜率降序、内部UUID升序，Top20。
+主榜排名固定为等级降序、达到本级累计游戏用时升序、最佳胜利用时升序（无胜局最后）、胜场降序、胜率降序、内部UUID升序，Top20。等级统计单独保留，不塞入五列主表；本局 cohort 排名与主榜排名口径不同。
 一级达到时间为0；“本次升级”是从上一次升级到本次升级所累加的游戏时间。
 客户端总用时也单独留存，但**数据库自行累加每局游戏时间**作为榜单时长，不信任客户端进度或升级时间。
 `level_events` 保存跨级时间与对应对局；一次最多+3点，不跨多个等级。

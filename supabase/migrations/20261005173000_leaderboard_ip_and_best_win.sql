@@ -1,11 +1,12 @@
 begin;
 
 -- Incremental migration for databases that already ran 20261005140000_leaderboard.sql.
--- The Edge Function stores only a redacted display value and a keyed digest; the raw
--- request IP never enters Postgres and is never returned by the leaderboard RPC.
+-- Reserved metadata stays empty until IP provenance is proven. Future writers may
+-- store only redacted display values and keyed digests, never raw request IP.
 alter table qqt_private.players
   add column if not exists ip_display text,
-  add column if not exists ip_hash bytea;
+  add column if not exists ip_hash bytea,
+  add column if not exists ip_recorded_at timestamptz;
 alter table qqt_private.players
   drop constraint if exists players_ip_display_check;
 alter table qqt_private.players
@@ -38,7 +39,7 @@ begin
     raise exception 'invalid network metadata' using errcode = '22023';
   end if;
   update qqt_private.players
-    set ip_display = p_ip_display, ip_hash = decode(p_ip_hash_hex, 'hex')
+    set ip_display = p_ip_display, ip_hash = decode(p_ip_hash_hex, 'hex'), ip_recorded_at = clock_timestamp()
     where player_id = p_player_id;
   if not found then raise exception 'player not found' using errcode = '22023'; end if;
   return jsonb_build_object('recorded', true);
