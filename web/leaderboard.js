@@ -16,17 +16,31 @@
   function secret(crypto) {
     return Array.from(crypto.getRandomValues(new Uint8Array(32)), b => b.toString(16).padStart(2, '0')).join('');
   }
+  // A short UUID fragment is explicitly labelled local; it is never an IP address.
+  function defaultNickname(playerId, trustedIpDisplay = null) {
+    const ip = trustedMaskedIp(trustedIpDisplay);
+    const id = playerId.replace(/-/g, '');
+    return `QQT玩家·${ip || `本地${id.slice(0, 3)}…${id.slice(-3)}`}`;
+  }
+  function trustedMaskedIp(value) {
+    if (typeof value !== 'string') return null;
+    if (/^\d{1,3}\.\*\.\*\.\d{1,3}$/.test(value) &&
+        [value.split('.')[0], value.split('.')[3]].every(part => Number(part) <= 255)) return value;
+    return /^[0-9a-f]{1,4}:\*:\*:[0-9a-f]{1,4}$/i.test(value) ? value : null;
+  }
   function createClient({ config, storage, crypto, fetch, onChange = () => {}, now = Date.now }) {
     let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null;
     try { data = JSON.parse(storage.getItem(KEY)); } catch (_) { persistent = false; }
     if (!data || !/^[0-9a-f-]{36}$/.test(data.player_id || '') || !/^[0-9a-f]{64}$/.test(data.secret || '')) {
-      data = { player_id: uuid(crypto), secret: secret(crypto), nickname: 'QQT玩家', victory_message: '', total_ms: 0, queue: [] };
+      const playerId = uuid(crypto);
+      data = { player_id: playerId, secret: secret(crypto), nickname: defaultNickname(playerId),
+        nickname_auto: true, victory_message: '', total_ms: 0, queue: [] };
     }
     data.queue = Array.isArray(data.queue) ? data.queue.slice(-20) : [];
     data.total_ms = Number.isSafeInteger(data.total_ms) ? data.total_ms : 0;
     progress = data.progress || null;
     try { Object.assign(data, profile(data.nickname, data.victory_message)); }
-    catch (_) { Object.assign(data, { nickname: 'QQT玩家', victory_message: '' }); }
+    catch (_) { Object.assign(data, { nickname: defaultNickname(data.player_id), nickname_auto: true, victory_message: '' }); }
     const completed = new Set(data.queue.map(x => x.client_match_id));
     function state() { return { nickname: data.nickname, victory_message: data.victory_message,
       player_id: data.player_id, persistent, status, rows, progress, settlement, pending: data.queue.length }; }
@@ -67,7 +81,7 @@
         const responseRows = await rpc('qqt_leaderboard', {});
         if (!Array.isArray(responseRows)) throw new Error('排行榜响应格式错误');
         rows = responseRows;
-        emit(data.queue.length ? `有 ${data.queue.length} 局待提交` : '排行榜已更新 · 客户端赛果');
+        emit(data.queue.length ? `有 ${data.queue.length} 局待提交` : '排行榜已更新');
         return true;
       } catch (error) { emit(`${error.message}；可重试`); return false; }
     }
@@ -86,6 +100,13 @@
               throw new Error('结算响应格式错误');
             }
             progress = result;
+            // Only the authenticated settlement response may confirm metadata for this
+            // player. Never infer an IP from browser inputs or someone else's Top row.
+            // Today's Edge returns network_metadata_recorded=false, so this stays local.
+            if (data.nickname_auto === true && result.network_metadata_recorded === true &&
+                trustedMaskedIp(result.ip_display)) {
+              data.nickname = defaultNickname(data.player_id, result.ip_display);
+            }
             if (settlement && settlement.client_match_id === match.client_match_id) {
               settlement = { ...settlement, submitted: true, ranking: validRanking(result.match_rank, match) ? result.match_rank : null };
             }
@@ -117,7 +138,7 @@
       save(); emit('正在提交结算…'); return drain();
     }
     return { state, begin, finish, refresh, retry: drain, clearSettlement() { settlement = null; },
-      setProfile(nick, message) { Object.assign(data, profile(nick, message)); save(); emit('昵称和宣言已保存；下次结算同步'); } };
+      setProfile(nick, message) { Object.assign(data, profile(nick, message), { nickname_auto: false }); save(); emit('昵称和宣言已保存'); } };
   }
   function time(ms) { return ms ? `${(Number(ms) / 1000).toFixed(1)}秒` : '—'; }
   function validRanking(rank, match) {
@@ -163,14 +184,18 @@
   }
   function mount(document, options) {
     const el = id => document.getElementById(id);
+    let renderedNickname;
     const client = createClient({ ...options, onChange(state) {
-      el('leaderboard-status').textContent = state.status;
-      el('leaderboard-identity').textContent = state.persistent ? '匿名身份保存在此浏览器' : '本地存储不可用：刷新后匿名身份会变化';
+      el('leaderboard-status').textContent = state.persistent ? state.status : `本地存储不可用 · ${state.status}`;
+      const input = el('player-nickname');
+      if (state.nickname !== renderedNickname && input.value === renderedNickname && document.activeElement !== input) {
+        input.value = state.nickname;
+      }
+      renderedNickname = state.nickname;
       renderRows(document, el('leaderboard-list'), state.rows);
       el('leaderboard-empty').hidden = state.rows.length > 0;
-      if (state.progress) el('leaderboard-progress').textContent = `你的等级 Lv.${state.progress.level} · ${state.progress.points % 10}/10 · ${state.progress.wins}/${state.progress.games} 胜`;
     } });
-    el('player-nickname').value = client.state().nickname;
+    el('player-nickname').value = renderedNickname = client.state().nickname;
     el('player-message').value = client.state().victory_message;
     el('leaderboard-profile').addEventListener('submit', event => {
       event.preventDefault();
@@ -181,5 +206,5 @@
     client.refresh();
     return client;
   }
-  return { createClient, profile, renderRows, renderSettlement, validRanking, mount, time, maskIp };
+  return { createClient, profile, renderRows, renderSettlement, validRanking, mount, time, maskIp, defaultNickname };
 });

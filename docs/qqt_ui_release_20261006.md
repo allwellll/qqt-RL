@@ -43,3 +43,15 @@ delete from qqt_private.players where player_id in (
 历史四个验收身份的清理SQL在 `docs/leaderboard_20261005.md`，同样没有管理执行证据。未使用或输出数据库密码。本轮预览PID608327/608328已停止，浏览器finally关闭，最终状态再次核查。
 
 最终重跑证据位于 `runs/leaderboard_20261006/browser-final-local`、`ui-final-local`，正式Pages最终head验收位于 `browser-final-pages`、`ui-final-pages`。真实验收脚本每次创建的身份精确清理SQL位于对应目录 `cleanup.sql`，最后一轮线上身份请一并执行该文件清理；本任务没有管理删除权限。
+
+## 右侧菜单精简追加验收（20261006）
+
+- 继续原 workspace/worktree，从 `958a00e` 修改；未新建、reset 或进入 goal。
+- 右栏首块为排行榜，主表仍仅排名、昵称、最佳胜利用时、宣言、脱敏 IP。桌面和手机均显示五列，资料设置折叠；删除等级/身份/加分/算法/Edge/权限等长说明和结算 cohort 长文，保留状态、错误、数据库升级提示。实际排序与数据库 RPC 不变，后台边界仍见本文件前文和 Supabase 部署文档。
+- 新身份昵称为 `QQT玩家·本地abc…def`：UUID 首尾各三个十六进制字符，显式“本地”，不呈现为 IP。旧有效昵称（包括旧默认“QQT玩家”）全部保留，因为无法区分旧默认和主动同名。显式保存后 `nickname_auto=false`，不被后续元数据覆盖。
+- 只有有效结算响应明确给出 `network_metadata_recorded=true` 且 `ip_display` 是合法已脱敏 IPv4/IPv6 才可替换自动昵称；不采用原始 IP、浏览器自报 IP、其他排行榜行或无证明的值。当前 Edge 始终返回 false，因此线上仍使用本地短标识；没有修改 SQL/Edge 或可信 IP 边界。
+- 按钮改为暗色低饱和、较小内边距；手机点击高度至少44px，保留焦点指示。资料表单、错误和重开仍正常。
+- 新增自动化覆盖稳定本地昵称、旧昵称保留、禁用/畸形/原始 IP 拒绝、明确可信脱敏元数据、显式昵称优先、顶部五列和长文移除。全套 `npm test` 通过，日志 `/tmp/qqt-menu-npm-20261006.log`；独立只读审查无阻断，`git diff --check` 通过。
+- 新增 `scripts/verify_menu_browser.js`。本地 Chromium 1440×1000 / 390×844 真实加载页面和远端榜单（无网络mock），默认本地标识、保存刷新后自定义昵称、五列可见、紧凑按钮、无页面/表格横向溢出、无JS错误通过。结算截图为确定性 UI 状态验证，未制造服务端排名或提交赛果；另一个明确mock场景验证长文本/XSS五列布局。证据 `runs/leaderboard_20261006/menu-local/checks.json` 和对应截图。
+- 正式 Pages 同视口重复验收证据 `runs/leaderboard_20261006/menu-pages/checks.json`；exact-head workflow与关键资源证据 `runs/leaderboard_20261006/pages-menu-final.json`（以发布后生成的实际结果为准）。
+- 本轮浏览器只读远端数据库，不新建远端测试记录、不添加或执行任何删除/清理动作。已有测试身份由用户另行处理。Supabase增量SQL与Edge仍未部署，服务端本局排名/IP不宣称上线。

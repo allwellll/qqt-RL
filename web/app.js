@@ -322,7 +322,7 @@
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       publishedModels = QQTModelCatalog.validateManifest(await response.json());
       modelOptions.replaceChildren(...publishedModels.map((row) => new Option(row.display_name, MODEL_PREFIX + row.id)));
-      modelDetails.textContent = `「策略」中提供 ${publishedModels.length} 个训练模型；选择后才下载权重。`;
+      modelDetails.textContent = `可选模型 ${publishedModels.length} 个`;
     } catch (error) {
       modelOptions.replaceChildren();
       modelDetails.textContent = `模型列表读取失败：${error.message}`;
@@ -340,7 +340,7 @@
       for (const row of replayCatalog) {
         replaySelect.add(new Option(`${row.model_id} · seed ${row.seed} · ${row.summary.ticks} ticks`, row.id));
       }
-      replayStatus.textContent = `当前提供 ${replayCatalog.length} 局固定seed离线推理录像；每局仅约数KB动作流。`;
+      replayStatus.textContent = `可选录像 ${replayCatalog.length} 局`;
     } catch (error) {
       replaySelect.replaceChildren(new Option('录像列表读取失败', ''));
       replayStatus.textContent = `录像列表读取失败：${error.message}`;

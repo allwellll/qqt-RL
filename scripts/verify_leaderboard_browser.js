@@ -37,6 +37,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     assert.strictEqual(await page.locator('#leaderboard-list tr').count(), 1);
     assert.strictEqual(await page.locator('#leaderboard-list tr td').nth(1).textContent(), '<unsafe>');
     assert.strictEqual(await page.locator('#leaderboard-list tr script').count(), 0);
+    await page.locator('.profile-settings summary').click();
     await page.locator('#player-nickname').fill('网页玩家'); await page.locator('#player-message').fill('胜利宣言');
     await page.locator('#leaderboard-profile').evaluate(form => form.requestSubmit());
     assert((await page.locator('#leaderboard-status').textContent()).includes('昵称和宣言'));
@@ -54,7 +55,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
         await appTick(); appFrame(performance.now()); appFrame(performance.now() + 20);
       }, result);
     }
-    await settle('win'); await page.waitForFunction(() => document.getElementById('leaderboard-progress').textContent.includes('1/1'), null, { polling: 50 });
+    await settle('win'); await page.waitForFunction(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).progress?.games === 1, null, { polling: 50 });
     await page.evaluate(() => appFrame(performance.now() + 30));
     assert.equal(await page.locator('#settlement-title').textContent(), '胜利');
     assert.equal(await page.locator('#settlement-rank').textContent(), '排名待数据库升级');
@@ -67,6 +68,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     await page.reload(); await page.waitForSelector('#leaderboard-list tr');
     assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).player_id), id);
     assert.equal(await page.locator('#player-nickname').inputValue(), '网页玩家');
+    await page.locator('.profile-settings summary').click();
     unavailable = true; await page.waitForFunction(() => window.appFrame, null, { polling: 50 });
     await settle('loss'); await page.waitForFunction(() => document.getElementById('leaderboard-status').textContent.includes('待提交'), null, { polling: 50 });
     await page.evaluate(() => appFrame(performance.now() + 30));
@@ -86,6 +88,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     await page.locator('#play-again').evaluate(button => { button.click(); button.click(); });
     await page.evaluate(() => appFrame(performance.now() + 60));
     assert.equal(rpc.filter(x => x.write).length, drawWrites, 'double restart cannot resubmit prior settlement');
+    await page.locator('.profile-settings').evaluate(el => { el.open = true; });
     await page.locator('#player-nickname').fill('<img onerror=alert(1)>');
     await page.locator('#leaderboard-profile').evaluate(form => form.requestSubmit());
     assert((await page.locator('#leaderboard-status').textContent()).includes('尖括号'));
@@ -126,6 +129,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     console.log('live desktop: loaded');
     await desktop.waitForSelector('#leaderboard-list tr', { timeout: 20000 });
     console.log('live desktop: leaderboard loaded');
+    await desktop.locator('.profile-settings summary').click();
     await desktop.locator('#player-nickname').fill('Hermes远端验收');
     await desktop.locator('#player-message').fill('临时测试，验收后清理');
     await desktop.locator('#leaderboard-profile').evaluate(form => form.requestSubmit());
@@ -143,7 +147,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
       await appTick(); appFrame(performance.now()); appFrame(performance.now() + 20);
     });
     console.log('live desktop: settlement triggered');
-    await desktop.waitForFunction(() => document.getElementById('leaderboard-progress').textContent.includes('1/1'), null, { polling: 100, timeout: 20000 });
+    await desktop.waitForFunction(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).progress?.games === 1, null, { polling: 100, timeout: 20000 });
     await desktop.evaluate(() => appFrame(performance.now() + 30));
     assert.equal(await desktop.locator('#settlement-title').textContent(), '胜利');
     assert.equal(await desktop.locator('#settlement-rank').textContent(), '排名待数据库升级', 'old remote schema must never produce a fabricated rank');

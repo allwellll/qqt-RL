@@ -23,6 +23,14 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
     } });
   const client = make(), id = client.state().player_id;
   assert.match(id, /^[0-9a-f-]{36}$/); assert.equal(make().state().player_id, id);
+  assert.equal(client.state().nickname, LB.defaultNickname(id));
+  assert.match(client.state().nickname, /^QQT玩家·本地[0-9a-f]{3}…[0-9a-f]{3}$/);
+  assert.equal(make().state().nickname, client.state().nickname, 'local default survives reload');
+  const legacyStore = memory();
+  for (const nickname of ['已有昵称', 'QQT玩家']) {
+    legacyStore.setItem('qqt.leaderboard.v1', JSON.stringify({ ...JSON.parse(storage.getItem('qqt.leaderboard.v1')), nickname, nickname_auto: undefined }));
+    assert.equal(make(legacyStore).state().nickname, nickname, 'legacy valid names are never reinterpreted as auto defaults');
+  }
   assert.notEqual(make(memory()).state().player_id, id);
   for (const nick of ['', 'a'.repeat(25), '<img onerror=x>', 'a\x00b']) assert.throws(() => LB.profile(nick, ''), /昵称/);
   assert.throws(() => LB.profile('ok', 'x'.repeat(81)), /80/);
@@ -132,5 +140,36 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
   edgeBreak = false;
   await ambiguous.finish(lostConnection, { result: 'win', gameDurationMs: 5000 });
   assert.equal(ambiguousAccepted.size, 1, 'duplicate finish cannot submit again');
+  // IP provenance is a server contract, never a browser/raw/top-row inference.
+  let ipResponse = { ip_display: '123.*.*.45', network_metadata_recorded: false };
+  const autoStore = memory();
+  const automatic = LB.createClient({ config: { url: 'https://db', publishableKey: 'public' },
+    storage: autoStore, crypto: webcrypto, now: () => now, fetch: async url => ({ ok: true, json: async () =>
+      url.endsWith('qqt_leaderboard') ? [{ nickname: 'Other', player_ip: '8.*.*.8' }] :
+        { level: 1, points: 3, wins: 1, games: 1, ...ipResponse } }) });
+  const localName = automatic.state().nickname;
+  async function submitAuto() {
+    const m = automatic.begin(metadata); now += 5000;
+    await automatic.finish(m, { result: 'win', gameDurationMs: 5000 });
+  }
+  await submitAuto(); assert.equal(automatic.state().nickname, localName, 'disabled IP and other player rows cannot rename');
+  for (const ip of ['123.45.67.89', '999.*.*.45', '<script>', 'not-an-ip']) {
+    ipResponse = { network_metadata_recorded: true, ip_display: ip };
+    await submitAuto(); assert.equal(automatic.state().nickname, localName, 'only already masked valid server IP is accepted');
+  }
+  ipResponse = { network_metadata_recorded: true, ip_display: '123.*.*.45' };
+  await submitAuto(); assert.equal(automatic.state().nickname, 'QQT玩家·123.*.*.45');
+  assert.equal(make(autoStore).state().nickname, automatic.state().nickname);
+  ipResponse = { network_metadata_recorded: true, ip_display: '2001:*:*:42' };
+  await submitAuto(); assert.equal(automatic.state().nickname, 'QQT玩家·2001:*:*:42');
+  automatic.setProfile('我的名字', '我的宣言');
+  ipResponse.ip_display = '8.*.*.8'; await submitAuto();
+  assert.equal(automatic.state().nickname, '我的名字', 'explicit profile always wins over trusted metadata');
+  const html = require('fs').readFileSync(require('path').join(__dirname, 'index.html'), 'utf8');
+  assert.match(html, /<aside>\s*<section class="leaderboard"/);
+  const aside = html.split('<aside>')[1].split('</aside>')[0];
+  assert(!/leaderboard-identity|leaderboard-progress|匿名身份保存在此浏览器|胜 \+3|未权威|Edge|排名按等级/.test(aside));
+  assert(!html.includes('同结果、队伍模式'));
+  assert.equal((aside.match(/scope="col"/g) || []).length, 5);
   console.log('排行榜身份、校验、幂等、离线重试、payload与纯文本渲染回归通过');
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -20,37 +20,37 @@
           <h2 id="settlement-title"></h2>
           <p id="settlement-time"></p>
           <p id="settlement-rank"></p>
-          <p class="note">同结果、队伍模式、地图、对手与难度；每位其他玩家取最佳记录。胜局越快越好，负/平局存活越久越好；同耗时并列。超过比例只统计严格落后的其他玩家。</p>
           <p id="settlement-status" class="note"></p>
           <button id="play-again" type="button">再来一局</button>
         </section>
       </div>
       <aside>
-        <button id="restart" type="button">重新开局</button>
-        <details class="fold leaderboard" open>
-          <summary>用户排行榜 · Top 20</summary>
-          <form id="leaderboard-profile">
-            <label for="player-nickname">昵称</label>
-            <input id="player-nickname" maxlength="24" required autocomplete="nickname">
-            <label for="player-message">胜利宣言</label>
-            <input id="player-message" maxlength="80" autocomplete="off">
-            <button type="submit">保存昵称与宣言</button>
-          </form>
-          <p id="leaderboard-identity" class="note"></p>
-          <p id="leaderboard-progress">Lv.1 · 0/10</p>
-          <p class="note">胜 +3，平/负 +1，每 10 点升级。排名按等级↓、达到本级累计对局用时↑、最佳胜利耗时↑、胜场↓、胜率↓；最佳胜利耗时只取真实获胜对局的最短游戏内用时，无胜局显示“—”。</p>
-          <p class="note">仅真人完成对局计分。当前未证明 Edge 转发 IP 头不可伪造，因此不记录 IP，榜单显示“—”；函数未部署时结算仍可回退直连。客户端赛果未经权威验证。</p>
-          <button id="leaderboard-retry" type="button">刷新 / 重试结算</button>
-          <p id="leaderboard-status" class="note" role="status" aria-live="polite">正在连接排行榜…</p>
-          <p id="leaderboard-empty" class="note">暂无排行榜数据</p>
+        <section class="leaderboard" aria-labelledby="leaderboard-heading">
+          <h2 id="leaderboard-heading">用户排行榜 · Top 20</h2>
           <div class="leaderboard-table-wrap">
             <table class="leaderboard-table" aria-label="用户排行榜">
-              <thead><tr><th scope="col">排名</th><th scope="col">玩家昵称</th><th scope="col">最佳胜利用时</th><th scope="col">玩家宣言</th><th scope="col">脱敏 IP</th></tr></thead>
+              <caption>最佳获胜用时 · 无胜局显示 —</caption>
+              <thead><tr><th scope="col" class="rank">排名</th><th scope="col" class="player">昵称</th><th scope="col" class="best-win">最佳胜利用时</th><th scope="col" class="message">宣言</th><th scope="col" class="ip">脱敏 IP</th></tr></thead>
               <tbody id="leaderboard-list"></tbody>
             </table>
           </div>
-          <p class="note">公开昵称、宣言与汇总战绩；匿名 ID 和凭证保存在此浏览器，清除后不可恢复。IP 仅为必要的脱敏显示值，旧记录或未部署入口的记录显示“—”，不上传回放；结算离线保留最多 20 局、7 天内可重试。</p>
-        </details>
+          <p id="leaderboard-empty" class="note">暂无排行榜数据</p>
+          <div class="leaderboard-actions">
+            <p id="leaderboard-status" class="note" role="status" aria-live="polite">正在连接排行榜…</p>
+            <button id="leaderboard-retry" type="button">刷新 / 重试</button>
+          </div>
+          <details class="profile-settings fold">
+            <summary>昵称与宣言</summary>
+            <form id="leaderboard-profile">
+              <label for="player-nickname">昵称</label>
+              <input id="player-nickname" maxlength="24" required autocomplete="nickname">
+              <label for="player-message">胜利宣言</label>
+              <input id="player-message" maxlength="80" autocomplete="off">
+              <button type="submit">保存</button>
+            </form>
+          </details>
+        </section>
+        <button id="restart" type="button">重新开局</button>
         <label>人物
           <span class="character-picker">
             <img id="character-portrait" src="assets/native/maomao_portrait.png" alt="毛毛" width="48" height="64">
@@ -62,7 +62,7 @@
         <p><kbd>Space / W</kbd> 放泡</p>
         <p><kbd>1 - 7</kbd> 使用道具栏对应格（左下角）</p>
         <p><kbd>E / Shift</kbd> 使用道具栏第 1 格</p>
-        <p>被炸会被糖泡包住：6 秒后爆破，敌人碰到立即爆破，队友碰到立即救出</p>
+        <p>糖泡：队友碰触救援</p>
         <p><kbd>R</kbd> 重新开局</p>
         <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效</label>
         <h2>对手</h2>
@@ -103,12 +103,12 @@
             <optgroup id="model-options" label="训练模型（仅 1v1，选择后下载）"></optgroup>
           </select>
         </label>
-        <p id="model-details" class="note">选择模型后按需下载；模型权重不进入Git历史。</p>
+        <p id="model-details" class="note"></p>
         <div id="model-progress-wrap" class="progress-wrap" hidden>
           <progress id="model-progress" max="100" value="0"></progress>
           <span id="model-progress-text">准备下载…</span>
         </div>
-        <p id="model-status" class="note" aria-live="polite">尚未加载模型；可在「策略」中选择训练模型。</p>
+        <p id="model-status" class="note" aria-live="polite"></p>
         <details class="fold">
         <summary>离线实战录像</summary>
         <label>固定seed对局
@@ -123,14 +123,12 @@
           </select>
         </div>
         <input id="replay-seek" type="range" min="0" max="0" value="0" step="1" aria-label="录像进度">
-        <p id="replay-status" class="note" aria-live="polite">录像只保存固定seed、模型哈希和每tick双方动作，不重复保存地图或完整状态。</p>
+        <p id="replay-status" class="note" aria-live="polite"></p>
         </details>
         <details class="fold">
         <summary>状态</summary>
         <pre id="status">正在加载 Bun06…</pre>
         </details>
-        <p class="note">猎手 Bot 三档差异：简单=反应慢半拍、只直线放泡、偶有失误；普通=识别连锁、提防你的反制泡、会捡道具；困难=零延迟、主动围堵封路、趁你走远就偷包。你被炸后它会去你的包子屋搬包子回家。</p>
-        <p class="note">蓝方为真人，红方可选冻结规则 Bot 或本地导出的训练模型。默认复现训练使用的空砖近距竞技场：保留不可炸墙和包子笼，清空可炸砖。</p>
       </aside>
     </section>
   </main>
