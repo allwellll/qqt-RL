@@ -10,6 +10,15 @@
   const teamMode = document.getElementById('team-mode');
   const characterSelect = document.getElementById('character');
   const characterPortrait = document.getElementById('character-portrait');
+  try {
+    const savedCharacter = localStorage.getItem('qqt.character');
+    if (['pipi', 'maomao'].includes(savedCharacter)) characterSelect.value = savedCharacter;
+  } catch (_) {}
+  function updateCharacterPortrait() {
+    characterPortrait.src = `assets/native/${characterSelect.value}_portrait.png`;
+    characterPortrait.alt = characterSelect.selectedOptions[0].textContent;
+  }
+  updateCharacterPortrait();
   const modelOptions = document.getElementById('model-options');
   const modelDetails = document.getElementById('model-details');
   const modelProgressWrap = document.getElementById('model-progress-wrap');
@@ -182,6 +191,8 @@
   }
 
   async function reset() {
+    leaderboard.clearSettlement();
+    QQTLeaderboard.renderSettlement(document, leaderboard.state());
     replayDocument = null;
     replayPlaying = false;
     replayToggle.textContent = '播放';
@@ -213,6 +224,7 @@
   function resetReplay() {
     if (!replayDocument) return;
     leaderboardMatch = null;
+    leaderboard.clearSettlement();
     sim = new QQT.Sim(replayDocument.meta.seed);
     sim.reset(level);
     replayIndex = 0;
@@ -355,6 +367,7 @@
         gameDurationMs: sim.t * TICK_MS });
     }
     renderer.render(sim, now, motionState());
+    QQTLeaderboard.renderSettlement(document, leaderboard.state());
     hideLoading();
     status.textContent = JSON.stringify({
       mode: QQTModelCatalog.matchLabel(matchMode.value),
@@ -446,10 +459,11 @@
     held.clear(); bombCell = -1; itemCell = -1;
   });
   restart.addEventListener('click', reset);
+  document.getElementById('play-again').addEventListener('click', () => { if (sim.done) reset(); });
   soundToggle.addEventListener('change', () => sound.setEnabled(soundToggle.checked));
   characterSelect.addEventListener('change', () => {
-    characterPortrait.src = `assets/native/${characterSelect.value}_portrait.png`;
-    characterPortrait.alt = characterSelect.selectedOptions[0].textContent;
+    updateCharacterPortrait();
+    try { localStorage.setItem('qqt.character', characterSelect.value); } catch (_) {}
   });
   replaySelect.addEventListener('change', async () => {
     const row = replayCatalog.find((item) => item.id === replaySelect.value);

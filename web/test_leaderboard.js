@@ -5,13 +5,21 @@ const LB = require('./leaderboard.js');
 const metadata = { opponent: 'bun.coop_hunter', difficulty: 'hard', seed: 7, mode: '2v2', map_id: 'training806', client_version: 'dev' };
 function memory() { const map = new Map(); return { getItem: k => map.get(k) || null, setItem: (k,v) => map.set(k,v) }; }
 (async () => {
-  let now = Date.now(), unavailable = false;
+  let now = Date.now(), unavailable = false, submitStatus = 200, edgeCommittedThenFailed = false;
+  const acceptedMatches = new Set();
   const calls = [], storage = memory();
   const make = (store = storage) => LB.createClient({ config: { url: 'https://db', publishableKey: 'public' },
     storage: store, crypto: webcrypto, now: () => now, fetch: async (url, options) => {
       calls.push({ url, options, payload: JSON.parse(options.body) });
-      return unavailable ? { ok: false, status: 503, json: async () => ({}) } : { ok: true,
-        json: async () => url.endsWith('qqt_leaderboard') ? [] : { level: 1, points: 3, wins: 1, games: 1 } };
+      if (unavailable) return { ok: false, status: 503, json: async () => ({}) };
+      if (url.includes('/functions/v1/') && edgeCommittedThenFailed) {
+        acceptedMatches.add(JSON.parse(options.body).p_payload.client_match_id);
+        return { ok: false, status: 503, json: async () => ({}) };
+      }
+      if (url.includes('/functions/v1/') && submitStatus !== 200) return { ok: false, status: submitStatus, json: async () => ({}) };
+      if (url.endsWith('qqt_submit_result')) acceptedMatches.add(JSON.parse(options.body).p_payload.client_match_id);
+      return { ok: true, json: async () => url.endsWith('qqt_leaderboard') ? [] :
+        { level: 1, points: acceptedMatches.size * 3, wins: acceptedMatches.size, games: acceptedMatches.size } };
     } });
   const client = make(), id = client.state().player_id;
   assert.match(id, /^[0-9a-f-]{36}$/); assert.equal(make().state().player_id, id);
@@ -40,17 +48,67 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
   unavailable = false; await Promise.all([restored.retry(), restored.retry()]);
   writes = calls.filter(c => c.url.endsWith('qqt_submit_result'));
   assert.deepEqual(writes.at(-1).payload, failedPayload); assert.equal(restored.state().pending, 0);
+  const gatewayStorage = memory();
+  const gateway = LB.createClient({ config: { url: 'https://db', publishableKey: 'public', submitResultUrl: 'https://db/functions/v1/submit-result' },
+    storage: gatewayStorage, crypto: webcrypto, now: () => now, fetch: async (url, options) => {
+      calls.push({ url, options, payload: JSON.parse(options.body) });
+      if (url.includes('/functions/v1/')) {
+        const matchId = JSON.parse(options.body).p_payload.client_match_id;
+        if (edgeCommittedThenFailed) { acceptedMatches.add(matchId); return { ok: false, status: 503, json: async () => ({}) }; }
+        if (submitStatus !== 200) return { ok: false, status: submitStatus, json: async () => ({}) };
+      }
+      if (url.endsWith('qqt_submit_result')) acceptedMatches.add(JSON.parse(options.body).p_payload.client_match_id);
+      return { ok: true, json: async () => url.endsWith('qqt_leaderboard') ? [] :
+        { level: 1, points: acceptedMatches.size * 3, wins: acceptedMatches.size, games: acceptedMatches.size } };
+    } });
+  gateway.setProfile('网关玩家', '');
+  submitStatus = 422;
+  const rejected = gateway.begin(metadata); now += 5000;
+  await gateway.finish(rejected, { result: 'win', gameDurationMs: 5000 });
+  assert.equal(calls.filter(c => c.payload.p_payload && c.payload.p_payload.client_match_id === rejected.client_match_id).length, 1,
+    '422 business rejection must not fall back to direct RPC');
+  assert.equal(gateway.state().pending, 1);
+  submitStatus = 200; edgeCommittedThenFailed = true;
+  await gateway.retry();
+  edgeCommittedThenFailed = false;
+  assert.equal(gateway.state().pending, 0, '503 fallback clears an already committed match');
+  assert.equal(acceptedMatches.has(rejected.client_match_id), true);
+  assert.equal(gateway.state().progress.games, acceptedMatches.size,
+    'same client_match_id is idempotent when Edge commits before fallback');
   const bad = restored.begin(metadata); now += 5000;
   const before = calls.length; await restored.finish(bad, { result: 'win', gameDurationMs: 999 });
   assert.equal(calls.length, before);
   const broken = make({ getItem() { throw new Error('denied'); }, setItem() { throw new Error('denied'); } });
   assert.equal(broken.state().persistent, false);
   const target = { items: [], replaceChildren() { this.items = []; }, append(x) { this.items.push(x); } };
-  const doc = { createElement() { return { textContent: '', append(...items) { this.items = items; } }; } };
+  const doc = { createElement() { return { textContent: '', items: [], append(...items) { this.items.push(...items); } }; } };
   const row = { rank: 1, nickname: '<script>boom</script>', victory_message: '<img src=x onerror=alert(1)>', level: 2, progress: 1,
-    level_reached_ms: 10000, last_level_up_ms: 5000, wins: 3, games: 4, win_rate: .75 };
+    level_reached_ms: 10000, last_level_up_ms: 5000, best_win_duration_ms: 4200, player_ip: '123.*.*.45', wins: 3, games: 4, win_rate: .75 };
   LB.renderRows(doc, target, [row]);
-  assert.equal(target.items[0].items[0].textContent, '1. <script>boom</script> · Lv.2 (1/10)');
-  assert.equal(target.items[0].items[2].textContent, row.victory_message); assert.match(target.items[0].items[1].textContent, /75.0%/);
+  assert.equal(target.items[0].items[0].textContent, '1');
+  assert.equal(target.items[0].items.length, 5);
+  assert.equal(target.items[0].items[4].textContent, row.player_ip);
+  assert.equal(target.items[0].items[1].textContent, row.nickname);
+  assert.equal(target.items[0].items[2].textContent, '4.2秒');
+  assert.equal(target.items[0].items[3].textContent, row.victory_message);
+  assert.equal(LB.maskIp('123.45.67.89'), '123.*.*.89');
+  assert.equal(LB.maskIp('2001:db8:0:0:0:0:0:42'), '2001:*:*:42');
+  assert.equal(LB.maskIp('not-an-ip'), '—');
+  const noWin = { ...row, best_win_duration_ms: null };
+  LB.renderRows(doc, target, [noWin]);
+  assert.equal(target.items[0].items[2].textContent, '—');
+  assert.equal(gateway.state().settlement.submitted, true);
+  assert.equal(gateway.state().settlement.ranking, null, 'old deployed response never invents ranking');
+  const elements = new Map(['settlement','settlement-title','settlement-time','settlement-rank','settlement-status'].map(id => [id, { textContent: '', hidden: true }]));
+  const settlementDoc = { getElementById: id => elements.get(id) };
+  for (const [outcome, title] of [['win','胜利'],['loss','失败'],['draw','平局']]) {
+    LB.renderSettlement(settlementDoc, { status: '<script>offline</script>', settlement: { result: outcome, duration_ms: 5000, submitted: true, ranking: null } });
+    assert.equal(elements.get('settlement-title').textContent, title);
+    assert.equal(elements.get('settlement-rank').textContent, '排名待数据库升级');
+    assert.equal(elements.get('settlement-status').textContent, '<script>offline</script>');
+  }
+  LB.renderSettlement(settlementDoc, { status: '', settlement: { result: 'win', duration_ms: 5000, ranking: { rank: 2, total: 4, percentile: 33.33 } } });
+  assert.match(elements.get('settlement-rank').textContent, /2 名 \/ 4 位玩家.*33.33%/);
+  client.clearSettlement(); assert.equal(client.state().settlement, null);
   console.log('排行榜身份、校验、幂等、离线重试、payload与纯文本渲染回归通过');
 })().catch(error => { console.error(error); process.exitCode = 1; });

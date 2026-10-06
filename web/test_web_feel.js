@@ -163,12 +163,14 @@ function mockCanvas() {
   const rects = [];
   const texts = [];
   let fillStyle = '';
+  const states = [];
   const ctx = {
+    filter: 'none',
     set fillStyle(v) { fillStyle = v; }, get fillStyle() { return fillStyle; },
     imageSmoothingEnabled: true,
     shadowColor: '', shadowBlur: 0, shadowOffsetY: 0,
     strokeStyle: '', lineWidth: 0, font: '', textAlign: '', textBaseline: '',
-    save() {}, restore() {}, translate() {}, scale() {}, beginPath() {}, ellipse() {}, strokeRect() {},
+    save() { states.push(this.filter); }, restore() { this.filter = states.pop(); }, translate() {}, scale() {}, beginPath() {}, ellipse() {}, strokeRect() {},
     createRadialGradient() { return { addColorStop() {} }; },
     fill() {}, arc() {}, stroke() {}, strokeText() {},
     fillText(text, x, y) { texts.push({ text: String(text), x, y }); },
@@ -266,6 +268,7 @@ function playerGx(draws, pid) {
   const r = visual.createRenderer(canvas, level, mockAssets());
   const s = fakeSim({ pos: [5.0, 4.0, 5.0, 9.0] });
   r.render(s, 1050, null);
+  assert.equal(canvas.getContext().filter, 'none', 'real render boundary restores filter after dead frame');
   assert(Math.abs(playerGx(draws, 0) - 4.0) < 0.02, '无 motion 时 pid0 用原始位置');
   assert(Math.abs(playerGx(draws, 1) - 9.0) < 0.02, '无 motion 时 pid1 用原始位置');
 }
@@ -303,15 +306,14 @@ function dimRects(rects, canvas) {
   assert(dimRects(rects, canvas).length === 0, '复活倒计时归零瞬间必须恢复亮度');
 }
 
-// 4g) 复活倒计时：本地玩家阵亡显示中央秒数；对手阵亡在复活点显示秒数。
+// 4g) Every dead player gets a compact identity/countdown at the authoritative spawn.
 {
   const { canvas, texts } = mockCanvas();
   const r = visual.createRenderer(canvas, level, mockAssets());
   const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [0, 0], isBun: true, bunRespawn: [15, 42] });
   r.render(s, 1050, { prevPos: s.pos, curPos: s.pos, lastTickT: 1000, tickMs: 100, humanPid: 0 });
-  assert(texts.some((t) => t.text === '2'), '本地玩家剩 15 tick 应显示 2 秒');
-  assert(texts.some((t) => t.text === '秒后复活'), '本地玩家阵亡应显示复活提示');
-  const bot = texts.find((t) => t.text === '5');
+  assert(texts.some((t) => t.text === '你1 · 2秒复活' && t.x === 2.5 * CELL), 'local player countdown is at its spawn');
+  const bot = texts.find((t) => t.text === '敌12 · 5秒复活');
   assert(bot && Math.abs(bot.x - 12.5 * CELL) < 1e-6, '对手倒计时(42 tick→5 秒)应画在其复活点');
 }
 {

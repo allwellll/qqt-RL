@@ -14,8 +14,8 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     const page = await browser.newPage({ viewport, isMobile: viewport.width < 600, hasTouch: viewport.width < 600 });
     const errors = [], rpc = [], received = new Map(); let unavailable = false;
     page.on('pageerror', e => errors.push(e.message));
-    await page.route('**/rest/v1/rpc/qqt_leaderboard', route => { rpc.push('read'); return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([{ rank: 1, nickname: '<unsafe>', victory_message: '<script>bad</script>', level: 4, progress: 2, level_reached_ms: 12000, last_level_up_ms: 3000, wins: 8, games: 10, win_rate: .8 }]) }); });
-    await page.route('**/rest/v1/rpc/qqt_submit_result', route => {
+    await page.route('**/rest/v1/rpc/qqt_leaderboard', route => { rpc.push('read'); return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([{ rank: 1, player_ip: '123.*.*.45', nickname: '<unsafe>', victory_message: '<script>bad</script>', best_win_duration_ms: 4200, level: 4, progress: 2, level_reached_ms: 12000, last_level_up_ms: 3000, wins: 8, games: 10, win_rate: .8 }]) }); });
+    const submitRoute = async route => {
       const p = route.request().postDataJSON().p_payload;
       rpc.push({ write: p.client_match_id, result: p.result, mode: p.mode });
       if (unavailable) return route.fulfill({ status: 503, contentType: 'application/json', body: '{}' });
@@ -23,7 +23,9 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
       if (old) assert.deepEqual(p, old);
       received.set(p.client_match_id, p);
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ level: 1, points: 3, wins: 1, games: received.size }) });
-    });
+    };
+    await page.route('**/rest/v1/rpc/qqt_submit_result', submitRoute);
+    await page.route('**/functions/v1/submit-result', submitRoute);
     await page.addInitScript(() => {
       window.clockOffset = 0; const realNow = Date.now;
       Date.now = () => realNow() + window.clockOffset;
@@ -31,10 +33,10 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
       window.realRAF = window.requestAnimationFrame;
       window.requestAnimationFrame = cb => { window.appFrame = cb; return 1; };
     });
-    await page.goto(base); await page.waitForSelector('#leaderboard-list li');
-    assert.strictEqual(await page.locator('#leaderboard-list li').count(), 1);
-    assert.strictEqual(await page.locator('#leaderboard-list li strong').textContent(), '1. <unsafe> · Lv.4 (2/10)');
-    assert.strictEqual(await page.locator('#leaderboard-list li script').count(), 0);
+    await page.goto(base); await page.waitForSelector('#leaderboard-list tr');
+    assert.strictEqual(await page.locator('#leaderboard-list tr').count(), 1);
+    assert.strictEqual(await page.locator('#leaderboard-list tr td').nth(1).textContent(), '<unsafe>');
+    assert.strictEqual(await page.locator('#leaderboard-list tr script').count(), 0);
     await page.locator('#player-nickname').fill('网页玩家'); await page.locator('#player-message').fill('胜利宣言');
     await page.locator('#leaderboard-profile').evaluate(form => form.requestSubmit());
     assert((await page.locator('#leaderboard-status').textContent()).includes('昵称和宣言'));
@@ -58,7 +60,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     assert.equal(payload.game_duration_ms, 12000); assert.equal(payload.result, 'win');
     assert.equal(Object.keys(payload).length, 16);
     const idempotentWrites = rpc.filter(x => x.write).length; assert.equal(idempotentWrites, 1);
-    await page.reload(); await page.waitForSelector('#leaderboard-list li');
+    await page.reload(); await page.waitForSelector('#leaderboard-list tr');
     assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('qqt.leaderboard.v1')).player_id), id);
     assert.equal(await page.locator('#player-nickname').inputValue(), '网页玩家');
     unavailable = true; await page.waitForFunction(() => window.appFrame, null, { polling: 50 });
@@ -108,7 +110,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     console.log('live desktop: goto');
     await desktop.goto(base, { waitUntil: 'domcontentloaded' });
     console.log('live desktop: loaded');
-    await desktop.waitForSelector('#leaderboard-list li', { timeout: 20000 });
+    await desktop.waitForSelector('#leaderboard-list tr', { timeout: 20000 });
     console.log('live desktop: leaderboard loaded');
     await desktop.locator('#player-nickname').fill('Hermes远端验收');
     await desktop.locator('#player-message').fill('临时测试，验收后清理');
@@ -155,7 +157,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/leaderboard_20261005/
     console.log('live mobile: goto');
     await mobile.goto(base); await mobile.waitForSelector('.loading.done');
     console.log('live mobile: loaded');
-    await mobile.waitForSelector('#leaderboard-list li', { timeout: 20000 });
+    await mobile.waitForSelector('#leaderboard-list tr', { timeout: 20000 });
     await mobile.waitForFunction(() => document.getElementById('leaderboard-list').textContent.includes('Hermes远端验收'), null, { timeout: 20000 });
     assert.equal(await mobile.locator('#player-nickname').inputValue(), 'Hermes远端验收');
     const mobileCanvas = await mobile.locator('#game').evaluate(c => {

@@ -41,6 +41,7 @@
   const NATIVE_CONTACT_OFFSET_PX = 22;
   const NATIVE_PASS_CHARGE_MIN_MS = 500, NATIVE_PASS_CHARGE_MAX_MS = 600, NATIVE_PASS_FRESH_MS = 100;
   const NATIVE_HIT_NONE = 0, NATIVE_HIT_STATIC = 1, NATIVE_HIT_BOMB = 2;
+  const AIRDROP_LANDING_TICKS = 3;
 
   function nativeMod(value) {
     const r = value % NATIVE_CELL_PX;
@@ -936,7 +937,7 @@
     _nativeAirdropStep() {
       const falling = [];
       for (const drop of this.airdropFalls) {
-        if (this.t - drop.tick < 3) { falling.push(drop); continue; }
+        if (this.t - drop.tick < AIRDROP_LANDING_TICKS) { falling.push(drop); continue; }
         if (!this.wall[drop.cell] && !this.brick[drop.cell] && !this.pushable[drop.cell] &&
             !this.crate[drop.cell] && !this.fieldItem[drop.cell] && this.fuse[drop.cell] <= 0) {
           this.spawnGraveyardDrop(drop.cell, drop.type, drop.isSuper);
@@ -4266,6 +4267,7 @@
     MOVE_STATUS_NONE, MOVE_STATUS_SLOW, MOVE_STATUS_SLIDE, MOVE_STATUS_FAST,
     DIRS, EPS, CFG,
     NATIVE_CELL_PX, NATIVE_HALF_PX, NATIVE_CORNER_TOLERANCE_PX, NATIVE_ENTRY_STRIP_PX,
+    AIRDROP_LANDING_TICKS,
     Sim, MLPModel, CNNModel, TransformerModel, MLP4Model, ORTTransformerModel,
     HunterAI, TimeAStarAI, NukemanAI,
     StationaryDefenseAI, FleeBotAI, RoamBotAI,

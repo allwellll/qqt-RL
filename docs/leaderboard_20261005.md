@@ -2,12 +2,14 @@
 
 ## 实现
 
-- 前端新增匿名浏览器身份：随机 `player_id` + 32字节 capability secret，写入 `localStorage`；不使用IP、不上传回放、不依赖匿名Auth。
+- 前端新增匿名浏览器身份：随机 `player_id` + 32字节 capability secret，写入 `localStorage`；不把 IP 作为身份、不上传回放、不依赖匿名Auth。增量 migration/Edge 网关部署后，榜单预留脱敏 IP 字段，但在平台未证明转发头可信前保持禁用。
 - 新增昵称和胜利宣言设置，昵称1–24字、宣言最多80字，拒绝控制字符和尖括号；榜单使用 `textContent` 渲染。
 - 真人对局结束自动提交一次结算；观战、回放、模型对局不计分。失败时结算留在本地最多20局，7天内可重试，不影响重开和游戏运行。
 - 排行榜等级是局外进度：胜利+3，平局/失败+1，每10点升一级。排名为等级降序、达到本级累计游戏时间升序、胜场降序、胜率降序、稳定UUID升序，Top20。
-- migration 位于 `supabase/migrations/20261005140000_leaderboard.sql`：`qqt_private` schema、players/match_results/player_progress/level_events、RLS、无基表匿名权限、两个 SECURITY DEFINER RPC、字段限制、幂等 `client_match_id`、凭证校验、并发锁和每身份限流。
+- 首次 migration 位于 `supabase/migrations/20261005140000_leaderboard.sql`；已执行项目的增量文件为 `supabase/migrations/20261005173000_leaderboard_ip_and_best_win.sql`，增加最佳胜利耗时排序、可空脱敏 IP 字段与 Edge-only 写入 RPC。
 - Pages 构建生成当前提交的 `build-info.json`，公开配置只含 URL 与 publishable key。
+- 本局结算画面显示胜/负/平、本局耗时和服务端 `match_rank`；主榜精简为排名、昵称、最佳胜利用时、宣言、脱敏 IP。没有 `match_rank` 的旧 RPC 只显示“排名待数据库升级”。
+- 已部署旧 schema 的本局排名增量为 `supabase/migrations/20261006090000_match_ranking.sql`；它按同结果、模式、地图、对手、难度分 cohort，每位其他玩家取最佳记录，并使用严格优于/劣于样本计算并列排名和百分位。
 
 ## 数据库状态
 
@@ -44,4 +46,4 @@ delete from qqt_private.players where player_id in (
 );
 ```
 
-客户端排行榜仍是可信度有限的测试榜：拥有本地凭证的客户端可以伪造自己的赛果，随机身份可绕过每身份限流。正式公平榜需要服务器签名赛果、Auth和网关级限流。IP未写入数据库；Supabase平台访问日志的保留由平台配置决定。
+客户端排行榜仍是可信度有限的测试榜：拥有本地凭证的客户端可以伪造自己的赛果，随机身份可绕过每身份限流。正式公平榜需要服务器签名赛果、Auth和网关级限流。当前未证明 Edge 转发 IP 头不可由调用者伪造，因此不记录 IP，榜单 IP 显示为“—”；Supabase 平台访问日志的保留由平台配置决定。

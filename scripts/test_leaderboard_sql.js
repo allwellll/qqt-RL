@@ -6,7 +6,7 @@ const { PGlite } = require('@electric-sql/pglite');
 (async () => {
   const db = new PGlite();
   try {
-    await db.exec('create role anon; create role authenticated;');
+    await db.exec('create role anon; create role authenticated; create role service_role;');
     await db.exec(fs.readFileSync('supabase/migrations/20261005140000_leaderboard.sql','utf8'));
     const pid = randomUUID(), other = randomUUID();
     const payload = (overrides = {}) => ({ player_id: pid, player_secret: 'a'.repeat(64), client_match_id: randomUUID(),
@@ -17,6 +17,8 @@ const { PGlite } = require('@electric-sql/pglite');
     const asAnon = async callback => { await db.exec('set role anon'); try { return await callback(); } finally { await db.exec('reset role'); } };
     const first = payload(), result = await asAnon(() => submit(first));
     assert.equal(result.points, 3); assert.equal(result.games, 1);
+    // Apply the incremental migration to a populated deployed-old-schema database.
+    await db.exec(fs.readFileSync('supabase/migrations/20261005173000_leaderboard_ip_and_best_win.sql','utf8'));
     assert.deepEqual(await asAnon(() => submit(first)), result, 'duplicate is idempotent before rate check');
     await assert.rejects(asAnon(() => submit({ ...first, result: 'draw' })), /match id already used/);
     await assert.rejects(asAnon(() => submit(payload({ player_secret: 'b'.repeat(64) }))), /credential mismatch/);
@@ -47,7 +49,24 @@ const { PGlite } = require('@electric-sql/pglite');
     await asAnon(() => submit(payload({ player_id: other, nickname: '另一玩家' })));
     const sorted = (await asAnon(() => db.query('select * from public.qqt_leaderboard()'))).rows;
     assert.equal(sorted[0].nickname, '测试玩家'); assert.equal(sorted[1].nickname, '另一玩家');
-    assert(!Object.keys(sorted[0]).some(x => /player_id|hash|ip/.test(x)));
+    await db.query("update qqt_private.match_results set game_duration_ms=4000 where player_id=$1", [other]);
+    await db.query('update qqt_private.player_progress set points=12,level=2,total_game_ms=20000,level_reached_ms=20000 where player_id=$1', [other]);
+    assert.equal((await asAnon(() => db.query('select * from public.qqt_leaderboard()'))).rows[0].nickname, '另一玩家', 'best real win precedes wins tie-breaker');
+    await db.query("update qqt_private.match_results set result='loss' where player_id=$1", [other]);
+    const noWin = (await asAnon(() => db.query('select * from public.qqt_leaderboard()'))).rows.find(r => r.nickname === '另一玩家');
+    assert.equal(noWin.best_win_duration_ms, null, 'loss durations never become best wins');
+    await db.query("update qqt_private.match_results set result='win',game_duration_ms=5000 where player_id=$1", [other]);
+    assert(!Object.keys(sorted[0]).some(x => /player_id|hash|raw_ip/.test(x)));
+    await db.exec('set role service_role');
+    await db.query('select public.qqt_record_player_ip($1,$2,$3)', [pid, '123.*.*.45', 'a'.repeat(64)]);
+    await db.exec('reset role');
+    const withIp = (await asAnon(() => db.query('select * from public.qqt_leaderboard()'))).rows.find(r => r.nickname === '测试玩家');
+    assert.equal(withIp.player_ip, '123.*.*.45');
+    assert.equal(withIp.best_win_duration_ms, 5000);
+    await db.exec('set role service_role');
+    await assert.rejects(() => db.query('select public.qqt_record_player_ip($1,$2,$3)', [pid, '999.*.*.1', 'c'.repeat(64)]), /invalid network metadata/);
+    await db.exec('reset role');
+    await assert.rejects(asAnon(() => db.query('select public.qqt_record_player_ip($1,$2,$3)', [pid, '8.8.8.8', 'b'.repeat(64)])), /permission denied/);
     // Equal level: shorter level-reached time wins, then wins, then win rate.
     await db.query('update qqt_private.player_progress set points=12,level=2,total_game_ms=20000,level_reached_ms=15000 where player_id=$1',[other]);
     assert.equal((await asAnon(() => db.query('select * from public.qqt_leaderboard()'))).rows[0].nickname,'另一玩家');

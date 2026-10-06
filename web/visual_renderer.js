@@ -18,6 +18,8 @@
   const BUN_ELEMENT_IDS = [8001, 8002, 8003, 8004, 8005, 8006, 8009, 8010, 8011, 8012, 8013, 8028];
   // DIMG 无逐帧时长；与上游 GM 预览一致取 100ms/帧。
   const ITEM_FRAME_MS = 100;
+  // Visual-only: the simulation lands at 3 ticks while this trail finishes at 5 ticks.
+  const AIRDROP_ANIMATION_TICKS = 5;
   const CRATE_SPRITES = ['bomb', 'power', 'speed', 'banana_pickup', 'glue_pickup', 'fast_shoe'];
   const SUPER_CRATE_SPRITES = ['bomb_super', 'power_super', 'speed_super'];
   const FIELD_SPRITES = [null, 'banana_field', 'glue_field'];
@@ -116,6 +118,35 @@
   }
   function respawnSeconds(ticks, tickHz = 10) {
     return Math.max(0, Math.ceil(ticks / tickHz));
+  }
+
+  function deathOverlayAlpha(sim, viewerPid) {
+    if (!sim || viewerPid == null || viewerPid < 0 || !sim.alive || sim.alive[viewerPid]) return 0;
+    if (sim.isBun && sim.bunRespawn && !(sim.bunRespawn[viewerPid] > 0)) return 0;
+    const remaining = sim.isBun && sim.bunRespawn ? sim.bunRespawn[viewerPid] : 1;
+    const total = sim.bunRespawnTicks || 1;
+    return Math.max(0.18, Math.min(0.72, sim.isBun ? 0.34 + 0.38 * remaining / total : 0.58));
+  }
+
+  function withContextState(ctx, draw) {
+    ctx.save();
+    try { return draw(); } finally { ctx.restore(); }
+  }
+
+  function respawnMarkers(sim, viewerPid = -1) {
+    if (!sim || !sim.isBun || sim.done) return [];
+    const markers = [];
+    for (let pid = 0; pid < playerCount(sim); pid++) {
+      const spawn = sim.bunSpawnPos && sim.bunSpawnPos[pid];
+      if (sim.alive[pid] || !(sim.bunRespawn[pid] > 0) || !spawn ||
+          !Number.isFinite(spawn[0]) || !Number.isFinite(spawn[1])) continue;
+      if (spawn[0] < 0 || spawn[0] >= 13 || spawn[1] < 0 || spawn[1] >= 15) continue;
+      markers.push({ pid, row: spawn[0], col: spawn[1], team: teamOf(sim, pid),
+        seconds: respawnSeconds(sim.bunRespawn[pid]),
+        label: viewerPid < 0 ? `${teamOf(sim, pid) === 0 ? '蓝' : '红'}${pid + 1}`
+          : `${playerLabel(sim, pid, viewerPid, teamOf(sim, viewerPid))}${pid + 1}` });
+    }
+    return markers;
   }
 
   function bunTokens(sim) {
@@ -295,6 +326,7 @@
     const faces = [1, 1, 1, 1];
     const movingUntil = [0, 0, 0, 0];
     const pops = [];
+    const airdropVisuals = [];
     let previousTraps = [];
     let previousTrapPositions = [];
     let trapGeneration = null;
@@ -311,6 +343,7 @@
       faces.fill(1);
       movingUntil.fill(0);
       pops.length = 0;
+      airdropVisuals.length = 0;
       previousTraps = []; previousTrapPositions = []; trapGeneration = null;
       lastPositions = null;
     }
@@ -495,7 +528,7 @@
           items.push([z, itemFrame(sprite, now), Math.round(column * CELL + ox * SCALE), Math.round(row * CELL + oy * SCALE)]);
         };
         if (fieldKey && assets.items[fieldKey]) place(assets.items[fieldKey], row * Z_ROW_STRIDE + 14);
-        if (sim.crate && sim.crate[i]) {
+        if (sim.crate && sim.crate[i] && !airdropVisuals.some((entry) => entry.drop.cell === i)) {
           const sprite = assets.items[crateSpriteKey(sim.crateType ? sim.crateType[i] : -1, sim.superCrate && sim.superCrate[i] === 1)];
           if (sprite) place(sprite, row * Z_ROW_STRIDE + 16);
           if (sim.crateCount && sim.crateCount[i] > 1) items.push([row * Z_ROW_STRIDE + 17, () => {
@@ -563,9 +596,9 @@
       }
       return true;
     }
-    function render(sim, now = performance.now(), motion = null) {
+    function renderUnsafe(sim, now = performance.now(), motion = null) {
       if (trapGeneration !== sim._gen) {
-        pops.length = 0; previousTraps = []; previousTrapPositions = []; trapGeneration = sim._gen;
+        pops.length = 0; airdropVisuals.length = 0; previousTraps = []; previousTrapPositions = []; trapGeneration = sim._gen;
       }
       for (let pid = 0; pid < playerCount(sim); pid++) {
         if (previousTraps[pid] > 0 && !sim.alive[pid] && assets.effects && assets.effects.pop) {
@@ -581,12 +614,26 @@
       // 本地人类(motion.humanPid)不插值：由 rAF 逐帧 frameStep 连续移动，sim.pos 本身即每帧真实位置。
       // 复活/传送(位移>1格)时不插值直接吸附。
       const alpha = motion ? Math.min(1, Math.max(0, (now - motion.lastTickT) / motion.tickMs)) : 1;
+      const viewerPid = motion ? motion.humanPid : 0;
+      const deathAlpha = deathOverlayAlpha(sim, viewerPid);
+      ctx.filter = deathAlpha > 0 ? `grayscale(${Math.min(1, deathAlpha + 0.45).toFixed(2)}) brightness(${(1 - deathAlpha * 0.45).toFixed(2)})` : 'none';
       ctx.fillStyle = '#0c0e13'; ctx.fillRect(0, 0, canvas.width, canvas.height);
       const band = assets.baseBand;
       ctx.drawImage(band, 0, Math.max(0, (band.height - BOARD_OFFSET) / 2), band.width, BOARD_OFFSET,
         0, 0, canvas.width, BOARD_OFFSET);
       ctx.save(); ctx.translate(0, BOARD_OFFSET);
       ctx.drawImage(assets.background, 0, 0);
+      const tickMs = motion && motion.tickMs ? motion.tickMs : 100;
+      for (const drop of sim.airdropFalls || []) if (!airdropVisuals.some((entry) => entry.key === `${drop.tick}:${drop.cell}`)) {
+        airdropVisuals.push({ key: `${drop.tick}:${drop.cell}`, drop: { ...drop }, startedAt: now - Math.max(0, sim.t - drop.tick) * tickMs });
+      }
+      for (let i = airdropVisuals.length - 1; i >= 0; i--) {
+        const entry = airdropVisuals[i];
+        if (now - entry.startedAt >= AIRDROP_ANIMATION_TICKS * tickMs ||
+            (sim.t >= entry.drop.tick + 3 && (!sim.crate[entry.drop.cell] || sim.crateType[entry.drop.cell] !== entry.drop.type))) {
+          airdropVisuals.splice(i, 1);
+        }
+      }
       const items = [];
       const coveredCells = structureItems(sim, items);
       groundItems(sim, now, items, coveredCells);
@@ -676,8 +723,8 @@
       for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
       const birdFraction = motion && !sim.done ? Math.max(0, Math.min(1, (now - motion.lastTickT) / motion.tickMs)) : 0;
       const bird = sim.birdFlight ? sim.birdFlight(birdFraction) : null;
-      if (assets.items) for (const drop of sim.airdropFalls || []) {
-        const progress = Math.min(1, (sim.t - drop.tick + birdFraction) / 3);
+      if (assets.items) for (const { drop, startedAt } of airdropVisuals) {
+        const progress = Math.min(1, Math.max(0, (now - startedAt) / (AIRDROP_ANIMATION_TICKS * tickMs)));
         const sprite = assets.items[crateSpriteKey(drop.type, drop.isSuper)];
         if (sprite) drawHeldItem(sprite, ((1 - progress) * drop.x + progress * (drop.cell % 15 + .5)) * CELL,
           ((1 - progress) * (drop.row || 3) + progress * (Math.floor(drop.cell / 15) + .5)) * CELL, now);
@@ -686,17 +733,24 @@
         drawNativeEffect(assets.effects.bird, bird.x * CELL, bird.row * CELL, now);
       }
       if (arrow && assets.point) drawArrow(arrow, now);
-      // 玩家(pid0)被炸掉→复活期间压暗画面：alpha 随复活倒计时消退，复活瞬间恢复。
-      if (sim.isBun && !sim.alive[0] && sim.bunRespawn[0] > 0) {
-        const frac = Math.max(0, Math.min(1, sim.bunRespawn[0] / (sim.bunRespawnTicks || 1)));
-        ctx.fillStyle = `rgba(0,0,0,${(0.62 * frac).toFixed(3)})`;
+      // 死亡只压暗游戏画布，右侧 DOM 控件仍可读可点；观战/回放 viewerPid=-1 不遮挡。
+      if (deathAlpha > 0) {
+        ctx.fillStyle = `rgba(58,58,58,${(deathAlpha * 0.65).toFixed(3)})`;
+        ctx.fillRect(0, 0, canvas.width, BOARD_H);
+        ctx.fillStyle = `rgba(0,0,0,${(deathAlpha * 0.55).toFixed(3)})`;
         ctx.fillRect(0, 0, canvas.width, BOARD_H);
       }
+      ctx.filter = 'none';
       if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0);
       ctx.restore();
+      // Death filter applies only to the playfield; HUD/result rendering remains legible.
+      ctx.filter = 'none';
       const barPid = motion ? motion.humanPid : 0;
       if (barPid >= 0 && sim.spdG) drawStatusBar(sim, barPid, now);
       drawResult(matchResult(sim, motion ? motion.humanPid : 0));
+    }
+    function render(sim, now = performance.now(), motion = null) {
+      return withContextState(ctx, () => renderUnsafe(sim, now, motion));
     }
     const RESULT_COLORS = { win: '#ffd54a', lose: '#ff7a7a', draw: '#d8e6ea' };
     function drawResult(result) {
@@ -723,37 +777,26 @@
       const ay = Math.max(-BOARD_OFFSET, Math.round(anchor.y - 3 - image.height * POINT_TIP_FRAC + bob));
       ctx.drawImage(image, ax, ay);
     }
-    // 本地玩家阵亡：画面中央大字倒计时；其余阵亡者：在复活点显示小号秒数。
+    // Compact spawn markers keep paths visible, including in spectator/replay views.
     function drawRespawnCountdowns(sim, humanPid) {
-      for (let pid = 0; pid < playerCount(sim); pid++) {
-        if (sim.alive[pid] || !(sim.bunRespawn[pid] > 0)) continue;
-        const seconds = respawnSeconds(sim.bunRespawn[pid]);
+      for (const marker of respawnMarkers(sim, humanPid)) {
+        const x = marker.col * CELL, y = marker.row * CELL;
         ctx.save();
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.lineJoin = 'round';
-        if (pid === humanPid) {
-          const cx = canvas.width / 2, cy = BOARD_H / 2;
-          ctx.font = 'bold 34px sans-serif';
-          ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(0,0,0,0.75)'; ctx.fillStyle = '#ffffff';
-          ctx.strokeText('你被炸中了', cx, cy - 48); ctx.fillText('你被炸中了', cx, cy - 48);
-          ctx.font = 'bold 72px sans-serif'; ctx.lineWidth = 8; ctx.fillStyle = '#ffd54a';
-          ctx.strokeText(String(seconds), cx, cy + 20); ctx.fillText(String(seconds), cx, cy + 20);
-          ctx.font = 'bold 22px sans-serif'; ctx.lineWidth = 5; ctx.fillStyle = '#ffffff';
-          ctx.strokeText('秒后复活', cx, cy + 78); ctx.fillText('秒后复活', cx, cy + 78);
-        } else {
-          const spawn = (sim.bunSpawnPos && sim.bunSpawnPos[pid]) || null;
-          if (!spawn) { ctx.restore(); continue; }
-          const x = spawn[1] * CELL, y = spawn[0] * CELL - CELL * 0.35;
-          ctx.fillStyle = 'rgba(0,0,0,0.6)';
-          ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI * 2); ctx.fill();
-          ctx.font = 'bold 22px sans-serif'; ctx.fillStyle = '#ff8a8a';
-          ctx.fillText(String(seconds), x, y + 1);
-        }
+        ctx.strokeStyle = marker.team === 0 ? '#8ee9ff' : '#ffa6bf'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.ellipse(x, y + CELL * .2, CELL * .36, CELL * .16, 0, 0, Math.PI * 2); ctx.stroke();
+        const text = `${marker.label} · ${marker.seconds}秒复活`;
+        const labelX = Math.max(72, Math.min(canvas.width - 72, x));
+        const labelY = Math.max(16, y - CELL * .35);
+        ctx.font = 'bold 16px sans-serif'; ctx.lineWidth = 4;
+        ctx.strokeStyle = 'rgba(0,0,0,.85)'; ctx.fillStyle = marker.pid === humanPid ? '#ffe477' : '#ffffff';
+        ctx.strokeText(text, labelX, labelY); ctx.fillText(text, labelX, labelY);
         ctx.restore();
       }
     }
     return { render, addExplosion, reset };
   }
 
-  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, heldItemSpriteKey, playerLabel, matchResult, bunTokens, explosionFrame, loadAssets, createRenderer };
+  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, AIRDROP_ANIMATION_TICKS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, respawnMarkers, deathOverlayAlpha, withContextState, heldItemSpriteKey, playerLabel, matchResult, bunTokens, explosionFrame, loadAssets, createRenderer };
 });

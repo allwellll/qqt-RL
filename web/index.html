@@ -16,6 +16,14 @@
           <p id="loading-text">正在加载地图与素材…</p>
           <progress id="loading-progress" max="100" value="0"></progress>
         </div>
+        <section id="settlement" class="settlement" role="region" aria-label="本局结算" aria-live="polite" hidden>
+          <h2 id="settlement-title"></h2>
+          <p id="settlement-time"></p>
+          <p id="settlement-rank"></p>
+          <p class="note">同结果、队伍模式、地图、对手与难度；每位其他玩家取最佳记录。胜局越快越好，负/平局存活越久越好；同耗时并列。超过比例只统计严格落后的其他玩家。</p>
+          <p id="settlement-status" class="note"></p>
+          <button id="play-again" type="button">再来一局</button>
+        </section>
       </div>
       <aside>
         <button id="restart" type="button">重新开局</button>
@@ -30,18 +38,23 @@
           </form>
           <p id="leaderboard-identity" class="note"></p>
           <p id="leaderboard-progress">Lv.1 · 0/10</p>
-          <p class="note">胜 +3，平/负 +1，每 10 点升级。按等级↓、达到本级累计对局用时↑、胜场↓、胜率↓排名；一级用时为 0。</p>
-          <p class="note">仅真人完成对局计分。用时累加游戏内时间；“本次升级”是两次升级间对局用时。客户端赛果未经权威验证。</p>
+          <p class="note">胜 +3，平/负 +1，每 10 点升级。排名按等级↓、达到本级累计对局用时↑、最佳胜利耗时↑、胜场↓、胜率↓；最佳胜利耗时只取真实获胜对局的最短游戏内用时，无胜局显示“—”。</p>
+          <p class="note">仅真人完成对局计分。当前未证明 Edge 转发 IP 头不可伪造，因此不记录 IP，榜单显示“—”；函数未部署时结算仍可回退直连。客户端赛果未经权威验证。</p>
           <button id="leaderboard-retry" type="button">刷新 / 重试结算</button>
           <p id="leaderboard-status" class="note" role="status" aria-live="polite">正在连接排行榜…</p>
           <p id="leaderboard-empty" class="note">暂无排行榜数据</p>
-          <ol id="leaderboard-list" aria-label="用户排行榜"></ol>
-          <p class="note">公开昵称、宣言与战绩；匿名 ID 和凭证保存在此浏览器，清除后不可恢复。不上传 IP 或回放；Supabase 可能保留服务访问日志。结算离线保留最多 20 局、7 天内可重试。</p>
+          <div class="leaderboard-table-wrap">
+            <table class="leaderboard-table" aria-label="用户排行榜">
+              <thead><tr><th scope="col">排名</th><th scope="col">玩家昵称</th><th scope="col">最佳胜利用时</th><th scope="col">玩家宣言</th><th scope="col">脱敏 IP</th></tr></thead>
+              <tbody id="leaderboard-list"></tbody>
+            </table>
+          </div>
+          <p class="note">公开昵称、宣言与汇总战绩；匿名 ID 和凭证保存在此浏览器，清除后不可恢复。IP 仅为必要的脱敏显示值，旧记录或未部署入口的记录显示“—”，不上传回放；结算离线保留最多 20 局、7 天内可重试。</p>
         </details>
         <label>人物
           <span class="character-picker">
-            <img id="character-portrait" src="assets/native/pipi_portrait.png" alt="皮皮" width="48" height="64">
-            <select id="character"><option value="pipi">皮皮</option><option value="maomao">毛毛</option></select>
+            <img id="character-portrait" src="assets/native/maomao_portrait.png" alt="毛毛" width="48" height="64">
+            <select id="character"><option value="pipi">皮皮</option><option value="maomao" selected>毛毛</option></select>
           </span>
         </label>
         <h2>操作</h2>

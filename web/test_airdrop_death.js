@@ -1,8 +1,11 @@
 'use strict';
 const assert = require('assert');
 const Q = require('./sim.js');
+const visual = require('./visual_renderer.js');
 const level = require('./assets/maps/levels.json').find(x => x.qqt_id === 806);
 const idle = [4, 0, 0, 1];
+assert.equal(Q.AIRDROP_LANDING_TICKS, 3, 'airdrop simulation still lands after 3 ticks');
+assert.equal(visual.AIRDROP_ANIMATION_TICKS, 5, 'airdrop rendering may animate for 5 ticks');
 function scene(options = {}) {
   const sim = new Q.Sim(19);
   sim.reset(level, { nativeItems: true, nativeTrap: true, ...options });
@@ -11,6 +14,17 @@ function scene(options = {}) {
   sim.itemSlots[0] = [{ item: Q.ITEM_BANANA, count: 2 }, { item: Q.ITEM_SLOW_GLUE, count: 5 }];
   sim._syncHeldItem(0);
   return sim;
+}
+{
+  const sim = scene(); sim._manualBird = true;
+  const cell = 5 * Q.W + 5;
+  sim.wall[cell] = sim.brick[cell] = sim.pushable[cell] = sim.crate[cell] = sim.fieldItem[cell] = sim.fuse[cell] = 0;
+  sim.airdropFalls = [{ type: 4, isSuper: false, cell, tick: sim.t, x: 5.5, row: 3 }];
+  for (let elapsed = 1; elapsed <= 3; elapsed++) {
+    sim.t++; sim._nativeAirdropStep();
+    assert.equal(!!sim.crate[cell], elapsed === 3, 'pickup state becomes available on original tick 3, not visual tick 5');
+    assert.equal(sim.airdropFalls.length, elapsed < 3 ? 1 : 0);
+  }
 }
 function tick(sim) { return sim.step(sim.alive.map(() => idle)); }
 function quantities(sim) {
@@ -106,7 +120,7 @@ for (const cause of ['timeout', 'enemy', 'direct-blast']) {
       assert.deepEqual(restored.birdFlight(), sim.birdFlight());
       // No RNG is used for landing an already dispatched item.
       restored._manualBird = true;
-      for (let n = 0; n < 3; n++) { restored.t++; restored._nativeAirdropStep(); }
+      for (let n = 0; n < Q.AIRDROP_LANDING_TICKS; n++) { restored.t++; restored._nativeAirdropStep(); }
       assert(restored.crate.some(x => x > 0));
     }
   }
