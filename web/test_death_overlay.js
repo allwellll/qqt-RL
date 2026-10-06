@@ -3,7 +3,7 @@ const assert = require('assert');
 const visual = require('./visual_renderer.js');
 
 const sim = { alive: [false, true], isBun: true, bunRespawn: [60, 0], bunRespawnTicks: 100 };
-assert(visual.deathOverlayAlpha(sim, 0) > 0.4, 'dead human receives a visible gray overlay');
+assert(visual.deathOverlayAlpha(sim, 0) > 0.4, 'dead human receives a visible dim overlay');
 assert.equal(visual.deathOverlayAlpha(sim, 1), 0, 'alive player is not dimmed');
 assert.equal(visual.deathOverlayAlpha(sim, -1), 0, 'spectator/replay view remains unobscured');
 sim.alive[0] = true;
@@ -17,7 +17,7 @@ const context = {
   restore() { this.filter = this.saves.pop(); },
 };
 assert.throws(() => visual.withContextState(context, () => {
-  context.filter = 'grayscale(1)';
+  context.filter = 'none';
   throw new Error('draw failed');
 }), /draw failed/);
 assert.equal(context.filter, 'sepia(1)', 'render boundary restores Canvas filter even when drawing throws');

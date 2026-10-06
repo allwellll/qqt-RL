@@ -21,5 +21,27 @@
     return move;
   }
 
-  return { MOVEMENT_KEYS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld };
+  function isTypingTarget(target) {
+    return !!(target && target.closest && target.closest('input, textarea, [contenteditable]:not([contenteditable="false"])'));
+  }
+
+  function isRestartKey(event, held) {
+    return event.code === 'KeyR' && !event.repeat && !held.has('KeyR') &&
+      !event.ctrlKey && !event.metaKey && !event.altKey && !isTypingTarget(event.target);
+  }
+
+  // Coalesce keyboard/button requests while the existing reset (including map load)
+  // is in progress. Completed-match buttons cannot restart the replacement match.
+  function createRestartGate(reset, isFinished) {
+    let pending = null;
+    return function restart(finishedOnly = false) {
+      if (pending) return pending;
+      if (finishedOnly && !isFinished()) return Promise.resolve(false);
+      pending = Promise.resolve().then(reset).then(() => true).finally(() => { pending = null; });
+      return pending;
+    };
+  }
+
+  return { MOVEMENT_KEYS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld,
+    isTypingTarget, isRestartKey, createRestartGate };
 });

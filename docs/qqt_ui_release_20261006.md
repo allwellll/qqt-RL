@@ -56,3 +56,18 @@ delete from qqt_private.players where player_id in (
 - 正式 Pages 同视口重复验收证据 `runs/leaderboard_20261006/menu-pages/checks.json`；exact-head workflow与关键资源证据 `runs/leaderboard_20261006/pages-menu-final.json`（以发布后生成的实际结果为准）。
 - 本轮浏览器只读远端数据库，不新建远端测试记录、不添加或执行任何删除/清理动作。已有测试身份由用户另行处理。Supabase增量SQL与Edge仍未部署，服务端本局排名/IP不宣称上线。
 - 截图脚本追加等待加载遮罩 `opacity=0`，避免把淡出中的加载层误当最终页面。全套测试再次通过，正式Pages与本地截图重取；没有改动游戏运行或网络提交逻辑。
+
+## 死亡彩色压暗与结算 R 重开追加（20261006）
+
+- 开始时原 worktree 干净，HEAD/main/origin-main 均为 `9d09fae`。未新建 workspace/worktree、reset 或进入 goal。
+- 死亡等待复活仅在地图区域覆盖透明黑色，删除 grayscale/brightness 滤镜及灰色层，保留原 RGB 比例；HUD、复活标记与右栏不压暗。alive 恢复当帧取消压暗，无过渡延迟；观战/回放不额外压暗。
+- Canvas 外层 save/finally restore 保留，并为地图内部 translate/save 增加 try/finally；新增真实 renderer 抛错/恢复后调用者 filter 不泄漏回归。
+- 结算按钮显示“再来一局 · 按 R”。R 与按钮调用相同 guarded reset；忽略输入/textarea/contenteditable、repeat/已按住 R 与 Ctrl/Meta/Alt，合并异步重开期间的重复请求，过期结算按钮不能重开替换后的新局。
+- 真实浏览器快速三局暴露上一局刷新排行榜尚未结束时，新局结算会留队的问题。修复 drain 刷新后继续处理新入队赛果；新增延迟 read 下两局各提交一次回归，幂等 ID/payload/数据库逻辑不变。
+- 单元覆盖存活/死亡/复活、渲染颜色与 filter、异常 save/restore、键盘R/焦点/repeat/修饰键、异步重开合并/报错恢复、快速两局队列；全套 npm test 与 diff --check 通过。日志 `/tmp/qqt-color-restart-npm-20261006.log`。
+- `scripts/verify_color_restart_browser.js` 在桌面1440×1000/手机390×844真实加载完整806地图、资产、QQT.Sim和Canvas渲染。结果提交明确mock，实际不会写数据库；通过真实超时分支确定性推进胜/负/平，不是自然完整真人对局统计，也不是数据库排名E2E。
+- 本地证据 `runs/leaderboard_20261006/color-restart-local/checks.json`：每视口3625个彩色地形采样，平均RGB缩放比例差约0.00586、亮度约0.544；HUD像素变化0、复活后与原帧像素变化0、调用者sepia filter恢复、观战压暗值0。死亡、复活、胜/负/平R结算截图已保存；各结果焦点不重开、R重复+按钮连点只有一次重开，上一局不重复提交，无JS错误/横向溢出。
+- 审查补修：重开/回放重置递增 sessionRevision，每个异步 Bot/model 决策 await 后检查局面版本与 Sim 身份，过期动作直接取消；地图加载时暂停 tick。浏览器真实延迟猎手 adapter 决策跨越 R 重开，确认新局 tick=0、无旧泡且不提交旧赛果。HUD 像素检查从 BOARD_OFFSET+H*CELL（810px）开始，覆盖完整底部 HUD，两视口变化均为0。
+- 独立只读 Agent `color_restart_review_final` 审查完成，无发布阻断；独立重跑 controls、death_overlay、web_feel、leaderboard 定向测试及 diff --check 通过，复核双视口证据。此前 CLI 审查因重连未完成，已停止，不将其算作通过。
+- 正式Pages证据发布后生成于 `runs/leaderboard_20261006/color-restart-pages/checks.json`；exact-head和线上关键文件（包括新增核验 controls.js）证据 `runs/leaderboard_20261006/pages-color-restart-final.json`。
+- 可信IP记录仍禁用；增量SQL/Edge未部署，不宣称服务端本局排名/IP上线。本轮没有新增数据库写入或清理动作，既有记录由用户另行处理。

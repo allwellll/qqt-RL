@@ -618,134 +618,134 @@
       const alpha = motion ? Math.min(1, Math.max(0, (now - motion.lastTickT) / motion.tickMs)) : 1;
       const viewerPid = motion ? motion.humanPid : 0;
       const deathAlpha = deathOverlayAlpha(sim, viewerPid);
-      ctx.filter = deathAlpha > 0 ? `grayscale(${Math.min(1, deathAlpha + 0.45).toFixed(2)}) brightness(${(1 - deathAlpha * 0.45).toFixed(2)})` : 'none';
+      ctx.filter = 'none';
       ctx.fillStyle = '#0c0e13'; ctx.fillRect(0, 0, canvas.width, canvas.height);
       const band = assets.baseBand;
       ctx.drawImage(band, 0, Math.max(0, (band.height - BOARD_OFFSET) / 2), band.width, BOARD_OFFSET,
         0, 0, canvas.width, BOARD_OFFSET);
-      ctx.save(); ctx.translate(0, BOARD_OFFSET);
-      ctx.drawImage(assets.background, 0, 0);
-      const tickMs = motion && motion.tickMs ? motion.tickMs : 100;
-      for (const drop of sim.airdropFalls || []) if (!airdropVisuals.some((entry) => entry.key === `${drop.tick}:${drop.cell}`)) {
-        airdropVisuals.push({ key: `${drop.tick}:${drop.cell}`, drop: { ...drop }, startedAt: now - Math.max(0, sim.t - drop.tick) * tickMs });
-      }
-      for (let i = airdropVisuals.length - 1; i >= 0; i--) {
-        const entry = airdropVisuals[i];
-        if (now - entry.startedAt >= AIRDROP_ANIMATION_TICKS * tickMs ||
-            (sim.t >= entry.drop.tick + 3 && (!sim.crate[entry.drop.cell] || sim.crateType[entry.drop.cell] !== entry.drop.type))) {
-          airdropVisuals.splice(i, 1);
+      ctx.save();
+      try {
+        ctx.translate(0, BOARD_OFFSET);
+        ctx.drawImage(assets.background, 0, 0);
+        const tickMs = motion && motion.tickMs ? motion.tickMs : 100;
+        for (const drop of sim.airdropFalls || []) if (!airdropVisuals.some((entry) => entry.key === `${drop.tick}:${drop.cell}`)) {
+          airdropVisuals.push({ key: `${drop.tick}:${drop.cell}`, drop: { ...drop }, startedAt: now - Math.max(0, sim.t - drop.tick) * tickMs });
         }
-      }
-      const items = [];
-      const coveredCells = structureItems(sim, items);
-      groundItems(sim, now, items, coveredCells);
-      for (const token of bunTokens(sim)) items.push([
-        token.row * Z_ROW_STRIDE + 15,
-        () => drawBun((token.column + .5 + token.xOffset) * CELL, (token.row + 1) * CELL,
-          token.team, token.count, token.size, now),
-      ]);
-      for (let i = explosions.length - 1; i >= 0; i--) if (!drawExplosion(explosions[i], now, items)) explosions.splice(i, 1);
-      for (let i = 0; i < 195; i++) if (sim.fuse[i] > 0) {
-        if (coveredCells.has(i)) continue;
-        const row = Math.floor(i / 15), column = i % 15;
-        const age = bombAgeSeconds(sim.fuse[i]);
-        const image = assets.bombs[bombFrame(age, assets.bombs.length)];
-        items.push([row * Z_ROW_STRIDE + 17, image, column * CELL + (CELL - image.width) / 2, (row + 1) * CELL - image.height]);
-      }
-      // 本地玩家头顶的原版 point.png 箭头；观战/回放时不画。
-      const arrowPid = motion ? motion.humanPid : 0;
-      let arrow = null;
-      const humanTeam = teamOf(sim, motion ? motion.humanPid : 0);
-      for (let pid = 0; pid < playerCount(sim); pid++) if (sim.alive[pid]) {
-        let gy = sim.pos[pid * 2], gx = sim.pos[pid * 2 + 1];
-        if (motion && pid !== motion.humanPid) {
-          const py = motion.prevPos[pid * 2], px = motion.prevPos[pid * 2 + 1];
-          const cy = motion.curPos[pid * 2], cx = motion.curPos[pid * 2 + 1];
-          // 位移过大（复活/传送）不插值，避免角色横扫全图
-          if (Math.abs(cy - py) + Math.abs(cx - px) <= 1.0) { gy = py + (cy - py) * alpha; gx = px + (cx - px) * alpha; }
-          else { gy = cy; gx = cx; }
-        }
-        const row = MOVE_TO_SPRITE_ROW[faces[pid]];
-        const pushing = intents && intents[pid] >= 0 && intents[pid] < MOVE_IDLE;
-        const moved = pushing || (previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5));
-        if (moved) movingUntil[pid] = now + 150;
-        const trapTicks = sim.trapped ? sim.trapped[pid] : 0;
-        const spawnProtection = sim.spawnProtection ? sim.spawnProtection[pid] : 0;
-        const team = teamOf(sim, pid);
-        const character = motion && motion.characters && assets.characters && assets.characters[motion.characters[pid]];
-        const walking = !trapTicks && now < movingUntil[pid];
-        const frames = character ? character[walking ? 'walk' : 'stand'][row] : assets.players[team][row];
-        const image = frames[walking ? Math.floor(now / 100) % frames.length : 0];
-        const x = Math.round(gx * CELL - image.width / 2), y = Math.min(Math.round(playerVisualY(gy, image.height)), 780 - image.height);
-        // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
-        if (pid === arrowPid) arrow = { x: gx * CELL, y: y + image.height * SPRITE_HEAD_FRAC };
-        const playerCell = Math.floor(gy) * 15 + Math.floor(gx);
-        const onWall = sim.wall[playerCell] || sim.brick[playerCell];
-        if (coveredCells.has(playerCell) && !onWall) continue;
-        const z = Math.floor(gy) * Z_ROW_STRIDE + (onWall ? 23 : 18);
-        items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
-        // 多人时同队共用精灵：脚下队伍色光圈 + 头顶名牌区分。
-        if (playerCount(sim) > 2) {
-          items.push([z - 1, () => drawTeamRing(gx * CELL, y + image.height - 6, team)]);
-          // 真人只靠箭头标识，不另画名牌。
-          if (pid !== (motion ? motion.humanPid : 0)) {
-            const label = playerLabel(sim, pid, motion ? motion.humanPid : 0, humanTeam);
-            items.push([z + 4, () => drawNameTag(gx * CELL, y + image.height * SPRITE_HEAD_FRAC - 6, label, team)]);
+        for (let i = airdropVisuals.length - 1; i >= 0; i--) {
+          const entry = airdropVisuals[i];
+          if (now - entry.startedAt >= AIRDROP_ANIMATION_TICKS * tickMs ||
+              (sim.t >= entry.drop.tick + 3 && (!sim.crate[entry.drop.cell] || sim.crateType[entry.drop.cell] !== entry.drop.type))) {
+            airdropVisuals.splice(i, 1);
           }
         }
-        items.push([z, image, x, y]);
-        if (spawnProtection > 0 && assets.effects && assets.effects.protection) {
-          const halo = assets.effects.protection;
-          const frame = halo.frames[Math.floor(now / halo.frameMs) % halo.frames.length];
-          // magic0139 的原点来自 DIMG，换算为角色中心锚点，保持官方环形光效偏移。
-          items.push([z + 3, () => ctx.drawImage(frame,
-            Math.round(gx * CELL + halo.ox * SCALE),
-            Math.round(gy * CELL + halo.oy * SCALE), frame.width,
-            Math.round(frame.width * halo.aspect))]);
+        const items = [];
+        const coveredCells = structureItems(sim, items);
+        groundItems(sim, now, items, coveredCells);
+        for (const token of bunTokens(sim)) items.push([
+          token.row * Z_ROW_STRIDE + 15,
+          () => drawBun((token.column + .5 + token.xOffset) * CELL, (token.row + 1) * CELL,
+            token.team, token.count, token.size, now),
+        ]);
+        for (let i = explosions.length - 1; i >= 0; i--) if (!drawExplosion(explosions[i], now, items)) explosions.splice(i, 1);
+        for (let i = 0; i < 195; i++) if (sim.fuse[i] > 0) {
+          if (coveredCells.has(i)) continue;
+          const row = Math.floor(i / 15), column = i % 15;
+          const age = bombAgeSeconds(sim.fuse[i]);
+          const image = assets.bombs[bombFrame(age, assets.bombs.length)];
+          items.push([row * Z_ROW_STRIDE + 17, image, column * CELL + (CELL - image.width) / 2, (row + 1) * CELL - image.height]);
         }
-        // 包子底边落在头顶附近（帧顶约 30% 为透明留白），贴着头顶而不是悬在上方。
-        if (sim.bunCarried[pid] >= 0) {
-          const bunBottom = y + image.height * (SPRITE_HEAD_FRAC + CARRY_BUN_SINK_FRAC);
-          items.push([z + 1, () => drawBun(x + image.width / 2, bunBottom, sim.bunCarried[pid], 1, 0.8, now)]);
+        // 本地玩家头顶的原版 point.png 箭头；观战/回放时不画。
+        const arrowPid = motion ? motion.humanPid : 0;
+        let arrow = null;
+        const humanTeam = teamOf(sim, motion ? motion.humanPid : 0);
+        for (let pid = 0; pid < playerCount(sim); pid++) if (sim.alive[pid]) {
+          let gy = sim.pos[pid * 2], gx = sim.pos[pid * 2 + 1];
+          if (motion && pid !== motion.humanPid) {
+            const py = motion.prevPos[pid * 2], px = motion.prevPos[pid * 2 + 1];
+            const cy = motion.curPos[pid * 2], cx = motion.curPos[pid * 2 + 1];
+            // 位移过大（复活/传送）不插值，避免角色横扫全图
+            if (Math.abs(cy - py) + Math.abs(cx - px) <= 1.0) { gy = py + (cy - py) * alpha; gx = px + (cx - px) * alpha; }
+            else { gy = cy; gx = cx; }
+          }
+          const row = MOVE_TO_SPRITE_ROW[faces[pid]];
+          const pushing = intents && intents[pid] >= 0 && intents[pid] < MOVE_IDLE;
+          const moved = pushing || (previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5));
+          if (moved) movingUntil[pid] = now + 150;
+          const trapTicks = sim.trapped ? sim.trapped[pid] : 0;
+          const spawnProtection = sim.spawnProtection ? sim.spawnProtection[pid] : 0;
+          const team = teamOf(sim, pid);
+          const character = motion && motion.characters && assets.characters && assets.characters[motion.characters[pid]];
+          const walking = !trapTicks && now < movingUntil[pid];
+          const frames = character ? character[walking ? 'walk' : 'stand'][row] : assets.players[team][row];
+          const image = frames[walking ? Math.floor(now / 100) % frames.length : 0];
+          const x = Math.round(gx * CELL - image.width / 2), y = Math.min(Math.round(playerVisualY(gy, image.height)), 780 - image.height);
+          // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
+          if (pid === arrowPid) arrow = { x: gx * CELL, y: y + image.height * SPRITE_HEAD_FRAC };
+          const playerCell = Math.floor(gy) * 15 + Math.floor(gx);
+          const onWall = sim.wall[playerCell] || sim.brick[playerCell];
+          if (coveredCells.has(playerCell) && !onWall) continue;
+          const z = Math.floor(gy) * Z_ROW_STRIDE + (onWall ? 23 : 18);
+          items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
+          // 多人时同队共用精灵：脚下队伍色光圈 + 头顶名牌区分。
+          if (playerCount(sim) > 2) {
+            items.push([z - 1, () => drawTeamRing(gx * CELL, y + image.height - 6, team)]);
+            // 真人只靠箭头标识，不另画名牌。
+            if (pid !== (motion ? motion.humanPid : 0)) {
+              const label = playerLabel(sim, pid, motion ? motion.humanPid : 0, humanTeam);
+              items.push([z + 4, () => drawNameTag(gx * CELL, y + image.height * SPRITE_HEAD_FRAC - 6, label, team)]);
+            }
+          }
+          items.push([z, image, x, y]);
+          if (spawnProtection > 0 && assets.effects && assets.effects.protection) {
+            const halo = assets.effects.protection;
+            const frame = halo.frames[Math.floor(now / halo.frameMs) % halo.frames.length];
+            // magic0139 的原点来自 DIMG，换算为角色中心锚点，保持官方环形光效偏移。
+            items.push([z + 3, () => ctx.drawImage(frame,
+              Math.round(gx * CELL + halo.ox * SCALE),
+              Math.round(gy * CELL + halo.oy * SCALE), frame.width,
+              Math.round(frame.width * halo.aspect))]);
+          }
+          // 包子底边落在头顶附近（帧顶约 30% 为透明留白），贴着头顶而不是悬在上方。
+          if (sim.bunCarried[pid] >= 0) {
+            const bunBottom = y + image.height * (SPRITE_HEAD_FRAC + CARRY_BUN_SINK_FRAC);
+            items.push([z + 1, () => drawBun(x + image.width / 2, bunBottom, sim.bunCarried[pid], 1, 0.8, now)]);
+          }
+          const heldKey = sim.heldItem ? heldItemSpriteKey(sim.heldItem[pid]) : null;
+          if (heldKey && assets.items && assets.items[heldKey] && !trapTicks) {
+            items.push([z + 2, () => drawHeldItem(assets.items[heldKey], x + image.width * 0.8, y + image.height * 0.25, now)]);
+          }
+          if (trapTicks > 0) items.push([z + 3, () => drawTrapBubble(gx * CELL,
+            gy * CELL + FOOT_BELOW_CENTER_PX * SCALE - CELL * 0.62, trapTicks, now)]);
         }
-        const heldKey = sim.heldItem ? heldItemSpriteKey(sim.heldItem[pid]) : null;
-        if (heldKey && assets.items && assets.items[heldKey] && !trapTicks) {
-          items.push([z + 2, () => drawHeldItem(assets.items[heldKey], x + image.width * 0.8, y + image.height * 0.25, now)]);
+        for (let i = pops.length - 1; i >= 0; i--) {
+          const pop = pops[i], age = now - pop.t0;
+          if (age >= assets.effects.pop.frames.length * 120) { pops.splice(i, 1); continue; }
+          items.push([Math.floor(pop.y / CELL) * Z_ROW_STRIDE + 23,
+            () => drawNativeEffect(assets.effects.pop, pop.x, pop.y, now, age)]);
         }
-        if (trapTicks > 0) items.push([z + 3, () => drawTrapBubble(gx * CELL,
-          gy * CELL + FOOT_BELOW_CENTER_PX * SCALE - CELL * 0.62, trapTicks, now)]);
-      }
-      for (let i = pops.length - 1; i >= 0; i--) {
-        const pop = pops[i], age = now - pop.t0;
-        if (age >= assets.effects.pop.frames.length * 120) { pops.splice(i, 1); continue; }
-        items.push([Math.floor(pop.y / CELL) * Z_ROW_STRIDE + 23,
-          () => drawNativeEffect(assets.effects.pop, pop.x, pop.y, now, age)]);
-      }
-      items.sort((a, b) => a[0] - b[0]);
-      for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
-      const birdFraction = motion && !sim.done ? Math.max(0, Math.min(1, (now - motion.lastTickT) / motion.tickMs)) : 0;
-      const bird = sim.birdFlight ? sim.birdFlight(birdFraction) : null;
-      if (assets.items) for (const { drop, startedAt } of airdropVisuals) {
-        const progress = Math.min(1, Math.max(0, (now - startedAt) / (AIRDROP_ANIMATION_TICKS * tickMs)));
-        const sprite = assets.items[crateSpriteKey(drop.type, drop.isSuper)];
-        if (sprite) drawHeldItem(sprite, ((1 - progress) * drop.x + progress * (drop.cell % 15 + .5)) * CELL,
-          ((1 - progress) * (drop.row || 3) + progress * (Math.floor(drop.cell / 15) + .5)) * CELL, now);
-      }
-      if (bird && assets.effects && assets.effects.bird) {
-        drawNativeEffect(assets.effects.bird, bird.x * CELL, bird.row * CELL, now);
-      }
-      if (arrow && assets.point) drawArrow(arrow, now);
-      // 死亡只压暗游戏画布，右侧 DOM 控件仍可读可点；观战/回放 viewerPid=-1 不遮挡。
-      if (deathAlpha > 0) {
-        ctx.fillStyle = `rgba(58,58,58,${(deathAlpha * 0.65).toFixed(3)})`;
-        ctx.fillRect(0, 0, canvas.width, BOARD_H);
-        ctx.fillStyle = `rgba(0,0,0,${(deathAlpha * 0.55).toFixed(3)})`;
-        ctx.fillRect(0, 0, canvas.width, BOARD_H);
-      }
-      ctx.filter = 'none';
-      if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0);
-      ctx.restore();
-      // Death filter applies only to the playfield; HUD/result rendering remains legible.
+        items.sort((a, b) => a[0] - b[0]);
+        for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
+        const birdFraction = motion && !sim.done ? Math.max(0, Math.min(1, (now - motion.lastTickT) / motion.tickMs)) : 0;
+        const bird = sim.birdFlight ? sim.birdFlight(birdFraction) : null;
+        if (assets.items) for (const { drop, startedAt } of airdropVisuals) {
+          const progress = Math.min(1, Math.max(0, (now - startedAt) / (AIRDROP_ANIMATION_TICKS * tickMs)));
+          const sprite = assets.items[crateSpriteKey(drop.type, drop.isSuper)];
+          if (sprite) drawHeldItem(sprite, ((1 - progress) * drop.x + progress * (drop.cell % 15 + .5)) * CELL,
+            ((1 - progress) * (drop.row || 3) + progress * (Math.floor(drop.cell / 15) + .5)) * CELL, now);
+        }
+        if (bird && assets.effects && assets.effects.bird) {
+          drawNativeEffect(assets.effects.bird, bird.x * CELL, bird.row * CELL, now);
+        }
+        if (arrow && assets.point) drawArrow(arrow, now);
+        // 死亡只压暗游戏画布，右侧 DOM 控件仍可读可点；观战/回放 viewerPid=-1 不遮挡。
+        if (deathAlpha > 0) {
+          ctx.fillStyle = `rgba(0,0,0,${deathAlpha.toFixed(3)})`;
+          ctx.fillRect(0, 0, canvas.width, BOARD_H);
+        }
+        ctx.filter = 'none';
+        if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0);
+      } finally { ctx.restore(); }
+      // Only the playfield was dimmed; HUD/result rendering remains legible.
       ctx.filter = 'none';
       const barPid = motion ? motion.humanPid : 0;
       if (barPid >= 0 && sim.spdG) drawStatusBar(sim, barPid, now);

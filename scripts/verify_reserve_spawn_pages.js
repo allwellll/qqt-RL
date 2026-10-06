@@ -29,7 +29,7 @@ try {
     conclusion: j.conclusion, steps: j.steps.map((s) => ({ name: s.name, conclusion: s.conclusion })) }));
   if (!jobs.some((j) => j.name === 'deploy' && j.conclusion === 'success') ||
       jobs.some((j) => j.conclusion !== 'success')) throw new Error('Pages jobs did not all succeed');
-  const files = ['index.html', 'app.js', 'sim.js', 'bun_coop_hunter_bot.js', 'visual_renderer.js',
+  const files = ['index.html', 'app.js', 'controls.js', 'sim.js', 'bun_coop_hunter_bot.js', 'visual_renderer.js',
     'style.css', 'leaderboard.js', 'leaderboard_config.js',
     'assets/native/sprites.json', 'assets/native/protection.png', 'assets/native/bird.png',
     'assets/native/trap.png', 'assets/native/syrup_pop.wav', 'assets/maps/levels.json', 'assets/maps/bun06_8.map'];

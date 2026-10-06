@@ -174,8 +174,8 @@ function mockCanvas() {
     createRadialGradient() { return { addColorStop() {} }; },
     fill() {}, arc() {}, stroke() {}, strokeText() {},
     fillText(text, x, y) { texts.push({ text: String(text), x, y }); },
-    drawImage(img, a, b) { if (arguments.length === 3 && img && img.tag) draws.push({ tag: img.tag, x: a, y: b, w: img.width, row: img.row }); },
-    fillRect(x, y, w, h) { rects.push({ fillStyle, x, y, w, h }); },
+    drawImage(img, a, b) { if (arguments.length === 3 && img && img.tag) draws.push({ tag: img.tag, x: a, y: b, w: img.width, row: img.row, filter: this.filter }); },
+    fillRect(x, y, w, h) { rects.push({ fillStyle, x, y, w, h, filter: this.filter }); },
   };
   return { canvas: { width: 900, height: 880, getContext: () => ctx }, draws, rects, texts };
 }
@@ -280,14 +280,41 @@ function dimRects(rects, canvas) {
 
 // 4e) pid0 阵亡且复活倒计时中 → 压暗一层。
 {
-  const { canvas, rects } = mockCanvas();
+  const { canvas, rects, draws } = mockCanvas();
   const r = visual.createRenderer(canvas, level, mockAssets());
   const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [0, 1], isBun: true, bunRespawn: [15, 0] });
   r.render(s, 1050, null);
   const dims = dimRects(rects, canvas);
   assert(dims.length === 1, '阵亡复活期间必须压暗一层');
   const alphaVal = parseFloat(String(dims[0].fillStyle).match(/rgba\(0,0,0,([0-9.]+)\)/)[1]);
-  assert(alphaVal > 0 && alphaVal <= 0.62, `压暗透明度应在 (0,0.62]，实得 ${alphaVal}`);
+  assert(alphaVal > 0 && alphaVal <= 0.72, `压暗透明度应在 (0,0.72]，实得 ${alphaVal}`);
+  assert(draws.every(d => d.filter === 'none'), 'dead map and HUD keep their original colors');
+  assert(rects.every(rc => rc.filter === 'none'), 'no grayscale/brightness filter is used');
+  assert.equal(canvas.getContext().filter, 'none', 'dead render restores Canvas filter');
+  assert(rects.every(rc => !String(rc.fillStyle).startsWith('rgba(58,58,58,')), 'no gray layer desaturates the map');
+  rects.length = 0;
+  s.alive[0] = true; s.bunRespawn[0] = 0;
+  r.render(s, 1050, null);
+  assert.equal(dimRects(rects, canvas).length, 0, 'same renderer removes dimming immediately on respawn');
+  assert.equal(canvas.getContext().filter, 'none');
+}
+
+// The nested playfield transform must also balance its save on a drawing error.
+{
+  const { canvas } = mockCanvas(), ctx = canvas.getContext();
+  const renderer = visual.createRenderer(canvas, level, mockAssets());
+  const draw = ctx.drawImage;
+  ctx.filter = 'sepia(1)';
+  ctx.drawImage = function(img, ...args) {
+    if (img.tag === 'bg') throw new Error('background failed');
+    return draw.call(this, img, ...args);
+  };
+  const s = fakeSim({ pos: [5, 3, 5, 8], alive: [0, 1], isBun: true, bunRespawn: [15, 0] });
+  assert.throws(() => renderer.render(s, 1050), /background failed/);
+  assert.equal(ctx.filter, 'sepia(1)', 'nested save and render boundary restore caller state after error');
+  ctx.drawImage = draw;
+  renderer.render(s, 1050);
+  assert.equal(ctx.filter, 'sepia(1)', 'same renderer also restores caller filter after recovery');
 }
 
 // 4f) 存活时不压暗 / 复活倒计时归零瞬间恢复亮度。

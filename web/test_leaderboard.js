@@ -165,6 +165,26 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
   automatic.setProfile('我的名字', '我的宣言');
   ipResponse.ip_display = '8.*.*.8'; await submitAuto();
   assert.equal(automatic.state().nickname, '我的名字', 'explicit profile always wins over trusted metadata');
+  let releaseRead, announceRead, readCount = 0;
+  const waitingRead = new Promise(resolve => { announceRead = resolve; }), quickWrites = [];
+  const quick = LB.createClient({ config: { url: 'https://db', publishableKey: 'public' },
+    storage: memory(), crypto: webcrypto, now: () => now, fetch: async (url, options) => {
+      if (url.endsWith('qqt_leaderboard')) {
+        if (++readCount === 1) { announceRead(); await new Promise(resolve => { releaseRead = resolve; }); }
+        return { ok: true, json: async () => [] };
+      }
+      quickWrites.push(JSON.parse(options.body).p_payload.client_match_id);
+      return { ok: true, json: async () => ({ level: 1, points: 2, wins: 0, games: quickWrites.length }) };
+    } });
+  const q1 = quick.begin(metadata); now += 5000;
+  const d1 = quick.finish(q1, { result: 'loss', gameDurationMs: 5000 });
+  await waitingRead;
+  const q2 = quick.begin(metadata); now += 5000;
+  const d2 = quick.finish(q2, { result: 'draw', gameDurationMs: 5000 });
+  releaseRead(); await Promise.all([d1, d2]);
+  assert.deepEqual(quickWrites, [q1.client_match_id, q2.client_match_id], 'fast restart during prior read drains both matches once');
+  assert.equal(quick.state().pending, 0);
+  assert.equal(quick.state().settlement.submitted, true);
   const html = require('fs').readFileSync(require('path').join(__dirname, 'index.html'), 'utf8');
   assert.match(html, /<aside>\s*<section class="leaderboard"/);
   const aside = html.split('<aside>')[1].split('</aside>')[0];

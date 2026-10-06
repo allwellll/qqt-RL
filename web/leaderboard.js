@@ -92,28 +92,32 @@
           data.queue = data.queue.filter(match => Number.isFinite(Date.parse(match.completed_at)) &&
             now() - Date.parse(match.completed_at) <= 7 * 86400000);
           save();
-          while (data.queue.length) {
-            const match = data.queue[0];
-            const result = await rpc('qqt_submit_result', { p_payload: { ...match, player_secret: data.secret } });
-            if (!result || !['level', 'points', 'wins', 'games'].every(key => Number.isInteger(result[key])) ||
-                result.level < 1 || result.points < 0 || result.wins < 0 || result.games < result.wins) {
-              throw new Error('结算响应格式错误');
+          do {
+            while (data.queue.length) {
+              const match = data.queue[0];
+              const result = await rpc('qqt_submit_result', { p_payload: { ...match, player_secret: data.secret } });
+              if (!result || !['level', 'points', 'wins', 'games'].every(key => Number.isInteger(result[key])) ||
+                  result.level < 1 || result.points < 0 || result.wins < 0 || result.games < result.wins) {
+                throw new Error('结算响应格式错误');
+              }
+              progress = result;
+              // Only the authenticated settlement response may confirm metadata for this
+              // player. Never infer an IP from browser inputs or someone else's Top row.
+              // Today's Edge returns network_metadata_recorded=false, so this stays local.
+              if (data.nickname_auto === true && result.network_metadata_recorded === true &&
+                  trustedMaskedIp(result.ip_display)) {
+                data.nickname = defaultNickname(data.player_id, result.ip_display);
+              }
+              if (settlement && settlement.client_match_id === match.client_match_id) {
+                settlement = { ...settlement, submitted: true, ranking: validRanking(result.match_rank, match) ? result.match_rank : null };
+              }
+              data.progress = progress;
+              data.queue.shift(); save(); emit('结算已提交');
             }
-            progress = result;
-            // Only the authenticated settlement response may confirm metadata for this
-            // player. Never infer an IP from browser inputs or someone else's Top row.
-            // Today's Edge returns network_metadata_recorded=false, so this stays local.
-            if (data.nickname_auto === true && result.network_metadata_recorded === true &&
-                trustedMaskedIp(result.ip_display)) {
-              data.nickname = defaultNickname(data.player_id, result.ip_display);
-            }
-            if (settlement && settlement.client_match_id === match.client_match_id) {
-              settlement = { ...settlement, submitted: true, ranking: validRanking(result.match_rank, match) ? result.match_rank : null };
-            }
-            data.progress = progress;
-            data.queue.shift(); save(); emit('结算已提交');
-          }
-          await refresh();
+            await refresh();
+            // A fast restart may finish another match while the prior leaderboard read
+            // is pending. Drain that newly queued result before releasing this request.
+          } while (data.queue.length);
         } catch (error) { emit(`${error.message}；${data.queue.length} 局待提交，可重试`); }
       })().finally(() => { pendingRequest = null; });
       return pendingRequest;

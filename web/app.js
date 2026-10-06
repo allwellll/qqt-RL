@@ -91,6 +91,7 @@
   // 组队模式下 pid>=2 的猎手（pid1 仍是 activeBot）。
   let extraBots = [];
   let ticking = false;
+  let sessionRevision = 0;
   let replayCatalog = [];
   let replayDocument = null;
   let replayIndex = 0;
@@ -191,6 +192,8 @@
   }
 
   async function reset() {
+    sessionRevision++;
+    leaderboardMatch = null;
     leaderboard.clearSettlement();
     QQTLeaderboard.renderSettlement(document, leaderboard.state());
     replayDocument = null;
@@ -223,6 +226,7 @@
 
   function resetReplay() {
     if (!replayDocument) return;
+    sessionRevision++;
     leaderboardMatch = null;
     leaderboard.clearSettlement();
     sim = new QQT.Sim(replayDocument.meta.seed);
@@ -389,8 +393,10 @@
   }
 
   async function tick() {
-    if (ticking) return;
+    if (ticking || assetsPending) return;
     ticking = true;
+    const tickSim = sim, revision = sessionRevision;
+    const obsolete = () => sim !== tickSim || revision !== sessionRevision;
     try {
       if (replayDocument) {
         if (replayPlaying) {
@@ -400,14 +406,19 @@
       } else if (!sim.done) {
         const first = matchMode.value === 'model-vs-rule'
           ? await Promise.resolve(loadedModel.act(sim, 0, modelRng)) : humanAction();
+        if (obsolete()) return;
         const state = QQTBunRuleBot.stateFromSim(sim);
         const observation = {
           schema: 'qqt.bot.observation/v1', tick: sim.t, state,
           legal_moves: [0, 1, 2, 3, 4], legal_abilities: [0, 1, 2], metadata: { sim },
         };
         const action = await Promise.resolve(activeBot.act(observation, 1, modelRng));
+        if (obsolete()) return;
         const extra = [];
-        for (let pid = 2; pid < sim.nPlayers; pid++) extra[pid] = await Promise.resolve(extraBots[pid].act(observation, pid, modelRng));
+        for (let pid = 2; pid < sim.nPlayers; pid++) {
+          extra[pid] = await Promise.resolve(extraBots[pid].act(observation, pid, modelRng));
+          if (obsolete()) return;
+        }
         const botActions = [null, action, ...extra.slice(2)];
         prevPos.set(sim.pos);
         const before = QQTSound.snapshot(sim);
@@ -437,10 +448,19 @@
   }
 
   const unlockAudio = () => sound.unlock();
+  const restartGame = QQTControls.createRestartGate(reset, () => sim.done);
+  function requestRestart(finishedOnly = false) {
+    return restartGame(finishedOnly).catch(error => { status.textContent = `重新开局失败：${error.message}`; });
+  }
   window.addEventListener('pointerdown', unlockAudio);
   window.addEventListener('keydown', (event) => {
-    if (event.target.closest && event.target.closest('input, textarea, [contenteditable="true"]')) return;
+    if (QQTControls.isTypingTarget(event.target)) return;
     unlockAudio();
+    if (event.code === 'KeyR') {
+      if (QQTControls.isRestartKey(event, held)) { event.preventDefault(); requestRestart(); }
+      held.add(event.code);
+      return;
+    }
     if ([...QQTControls.MOVEMENT_KEYS, ...QQTControls.ITEM_KEYS, ...QQTControls.ITEM_SLOT_KEYS,
       ...QQTControls.BOMB_KEYS].includes(event.code)) event.preventDefault();
     held.add(event.code);
@@ -449,7 +469,6 @@
     if (QQTControls.ITEM_KEYS.includes(event.code) && itemCell < 0) { itemCell = humanCell(); itemSlot = 0; }
     const slotKey = QQTControls.ITEM_SLOT_KEYS.indexOf(event.code);
     if (slotKey >= 0 && itemCell < 0) { itemCell = humanCell(); itemSlot = slotKey; }
-    if (event.code === 'KeyR') reset();
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));
   document.addEventListener('focusin', (event) => {
@@ -458,8 +477,8 @@
   window.addEventListener('blur', () => {
     held.clear(); bombCell = -1; itemCell = -1;
   });
-  restart.addEventListener('click', reset);
-  document.getElementById('play-again').addEventListener('click', () => { if (sim.done) reset(); });
+  restart.addEventListener('click', () => requestRestart());
+  document.getElementById('play-again').addEventListener('click', () => requestRestart(true));
   soundToggle.addEventListener('change', () => sound.setEnabled(soundToggle.checked));
   characterSelect.addEventListener('change', () => {
     updateCharacterPortrait();
