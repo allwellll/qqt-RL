@@ -16,11 +16,13 @@
           <p id="loading-text">正在加载地图与素材…</p>
           <progress id="loading-progress" max="100" value="0"></progress>
         </div>
-        <section id="settlement" class="settlement sr-only" role="region" aria-label="本局结算" aria-live="polite" hidden>
-          <h2 id="settlement-title"></h2>
+        <section id="settlement" class="settlement" role="region" aria-label="本局结算" aria-live="polite" hidden>
+          <button id="settlement-close" class="close-button" type="button" aria-label="关闭结算">×</button>
+          <div class="sr-only"><h2 id="settlement-title"></h2>
           <p id="settlement-time"></p>
           <p id="settlement-rank"></p>
-          <p id="settlement-status" class="note"></p>
+          </div><p id="settlement-status" class="note" role="status"></p>
+          <button id="settlement-submit" type="button">提交战绩</button>
         </section>
         <form id="leaderboard-profile" class="upgrade-profile" hidden>
           <p id="profile-title">排行榜等级提升！</p>
@@ -49,7 +51,6 @@
           </div>
 
         </section>
-        <button id="restart" type="button">重新开局</button>
         <label>人物
           <span class="character-picker">
             <img id="character-portrait" src="assets/native/maomao_portrait.png" alt="毛毛" width="48" height="64">
@@ -63,6 +64,12 @@
         <p><kbd>E / Shift</kbd> 使用道具栏第 1 格</p>
         <p>糖泡：队友碰触救援</p>
         <p><kbd>R</kbd> 重新开局</p>
+        <button id="announcement-open" type="button">公告</button>
+        <button id="advanced-open" type="button" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button>
+        <section id="advanced-settings" hidden>
+        <button id="advanced-close" type="button">关闭高阶设置</button>
+        <button id="restart" type="button">重新开局</button>
+        <button id="pending-submit" type="button">提交待存战绩</button>
         <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效</label>
         <h2>对手</h2>
         <label>地图
@@ -128,9 +135,24 @@
         <summary>状态</summary>
         <pre id="status">正在加载 Bun06…</pre>
         </details>
+        </section>
       </aside>
     </section>
   </main>
+  <dialog id="password-dialog" class="game-dialog" aria-labelledby="password-title">
+    <button type="button" class="close-button" data-dialog-close aria-label="关闭密码框">×</button>
+    <h2 id="password-title">高阶设置</h2>
+    <form id="password-form"><label>请输入设置密码<input id="settings-password" type="password" autocomplete="off" required></label>
+      <p id="password-status" role="status">每次打开都需验证，刷新后锁定。</p><button type="submit">解锁</button></form>
+  </dialog>
+  <dialog id="announcement-dialog" class="game-dialog" aria-labelledby="announcement-title">
+    <button type="button" class="close-button" data-dialog-close aria-label="关闭公告">×</button>
+    <h2 id="announcement-title">公告</h2>
+    <p>作者想研制一个抢包子AI，用于玩家练习对战技巧，看一下和顶尖玩家的水平差距。</p>
+    <p>当前仍是初级版本，还在测试不同方法效果。</p>
+    <p>有兴趣的盆友可以联系 <a href="mailto:1035628914@qq.com">1035628914@qq.com</a> 一起交流～</p>
+  </dialog>
+  <script src="ui_panels.js"></script>
   <script src="sim.js"></script>
   <script src="controls.js"></script>
   <script src="model_catalog.js"></script>

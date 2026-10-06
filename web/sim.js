@@ -1006,32 +1006,58 @@
       }
     }
 
-    _updateFieldItems(actions) {
+    _armFieldItems() {
       for (let cell = 0; cell < N; cell++) {
-        if (!this.fieldItem[cell]) continue;
+        if (!this.fieldItem[cell] || this.fieldArmed[cell]) continue;
         const owner = this.fieldOwner[cell];
-        if (!this.fieldArmed[cell] && (owner < 0 || !this.alive[owner] || this.centerCell(owner)[0] * W + this.centerCell(owner)[1] !== cell)) {
+        if (owner < 0 || !this.alive[owner] || this.centerCell(owner)[0] * W + this.centerCell(owner)[1] !== cell) {
           this.fieldArmed[cell] = 1;
         }
-        if (!this.fieldArmed[cell]) continue;
-        for (let p = 0; p < this.nPlayers; p++) {
-          if (!this.alive[p] || this.trapped[p] > 0) continue;
-          if (this.nativeTrap && this.spawnProtection[p] > 0 && this.invuln[p] > 0) continue;
-          const [row, column] = this.centerCell(p);
-          if (row * W + column !== cell) continue;
-          if (this.fieldItem[cell] === ITEM_BANANA) {
-            const requested = actions[p] && actions[p][0] != null ? actions[p][0] : MOVE_IDLE;
-            const direction = requested !== MOVE_IDLE ? requested : this.lastMoveDir[p];
-            this.slideDir[p] = direction < MOVE_IDLE ? direction : MOVE_DOWN;
-            this._setMovementStatus(p, MOVE_STATUS_SLIDE, 0);
-          } else {
-            this._setMovementStatus(p, MOVE_STATUS_SLOW);
+      }
+    }
+
+    _contactFieldItem(p, requested = MOVE_IDLE, contactCell = null) {
+      if (!this.alive[p] || this.trapped[p] > 0) return;
+      if (this.nativeTrap && this.spawnProtection[p] > 0 && this.invuln[p] > 0) return;
+      const [row, column] = this.centerCell(p), cell = contactCell == null ? row * W + column : contactCell;
+      if (!this.fieldItem[cell]) return;
+      // Departure protects only the placer, never an opponent standing on the item.
+      // Teammates retain the existing contact rule (no team immunity).
+      if (!this.fieldArmed[cell] && this.fieldOwner[cell] === p) return;
+      if (this.fieldItem[cell] === ITEM_BANANA) {
+        const direction = requested !== MOVE_IDLE ? requested : this.lastMoveDir[p];
+        this.slideDir[p] = direction < MOVE_IDLE ? direction : MOVE_DOWN;
+        this._setMovementStatus(p, MOVE_STATUS_SLIDE, 0);
+      } else {
+        this._setMovementStatus(p, MOVE_STATUS_SLOW);
+      }
+      this.fieldItem[cell] = ITEM_NONE;
+      this.fieldOwner[cell] = -1;
+      this.fieldArmed[cell] = 0;
+    }
+
+    _updateFieldItems(actions, previousPositions = null) {
+      const protectedDeparture = previousPositions && Array.from({ length: this.nPlayers }, (_, p) => {
+        const cell = Math.floor(previousPositions[p * 2]) * W + Math.floor(previousPositions[p * 2 + 1]);
+        return this.fieldItem[cell] && !this.fieldArmed[cell] && this.fieldOwner[cell] === p;
+      });
+      this._armFieldItems();
+      // Same-tick overlaps resolve in stable player-id order; consumption is atomic.
+      for (let p = 0; p < this.nPlayers; p++) {
+        if (previousPositions) {
+          const y = previousPositions[p * 2], x = previousPositions[p * 2 + 1];
+          const dy = this.pos[p * 2] - y, dx = this.pos[p * 2 + 1] - x;
+          const startCell = Math.floor(y) * W + Math.floor(x);
+          if (!protectedDeparture[p]) this._contactFieldItem(p, actions[p]?.[0], startCell);
+          // Tick steering returns one collision-resolved axis. Check crossed centers
+          // even at custom banana speed; don't re-trigger a placer on its departure.
+          const steps = Math.ceil(Math.max(Math.abs(dy), Math.abs(dx)) * 4);
+          for (let k = 1; k <= steps; k++) {
+            const cell = Math.floor(y + dy * k / steps) * W + Math.floor(x + dx * k / steps);
+            if (cell !== startCell) this._contactFieldItem(p, actions[p]?.[0], cell);
           }
-          this.fieldItem[cell] = ITEM_NONE;
-          this.fieldOwner[cell] = -1;
-          this.fieldArmed[cell] = 0;
-          break;
         }
+        this._contactFieldItem(p, actions[p]?.[0]);
       }
     }
 
@@ -1159,6 +1185,7 @@
     step(actions) {
       const nP = this.nPlayers;
       const alive0 = this.alive.slice();
+      const fieldMovementStart = this.pos.slice();
       const hpBefore = this.hp.slice();
       this.lastDied = this.alive.map(() => false);
       this.lastCovered = new Uint8Array(N);
@@ -1261,7 +1288,7 @@
         this.pos[p * 2 + 1] = Math.min(Math.max(this.pos[p * 2 + 1], CFG.radius), W - CFG.radius);
         if (forcedSlide && Math.abs(ny - y) + Math.abs(nx - x) <= 2 * EPS) this._clearMovementStatus(p);
       }
-      this._updateFieldItems(actions);
+      this._updateFieldItems(actions, fieldMovementStart);
 
       // 4. 爆炸与连锁（sim/blast.py::resolve_explosions 的标量版）
       const { covered, triggered, sources } = this._resolveExplosions(blocked);
@@ -2391,8 +2418,10 @@
     // 本地人类逐帧移动：真实 dt(≤0.1s) 按 25ms 投影步切分，每步走原版像素解算。
     // 空闲帧也要调用以推进穿泡计时。
     frameStep(pid, mv, dtSec) {
+      this._armFieldItems();
+      this._contactFieldItem(pid, mv);
       const st = this._nativeState(pid);
-      const forcedSlide = this.movementStatus && this.movementStatus[pid] === MOVE_STATUS_SLIDE;
+      let forcedSlide = this.movementStatus && this.movementStatus[pid] === MOVE_STATUS_SLIDE;
       mv = this.playerMoveDirection(pid, mv);
       let remainingMs = Math.max(0, Math.min(dtSec, 0.1)) * 1000;
       if (!this.alive[pid] || mv === MOVE_IDLE || (this.trapped && this.trapped[pid] > 0)) {
@@ -2420,6 +2449,12 @@
         const allowCorner = onWall || st.wallExit || !this._nativePushContact(pid, x, y, mv, chunk / 1000);
         const [nx, ny] = this._nativeResolve(st, x, y, mv, distance, allowCorner, forcedSlide);
         if (nx !== x || ny !== y) { x = nx; y = ny; moved = true; }
+        this.pos[pid * 2] = y / NATIVE_CELL_PX;
+        this.pos[pid * 2 + 1] = x / NATIVE_CELL_PX;
+        this._armFieldItems();
+        this._contactFieldItem(pid, mv);
+        mv = this.playerMoveDirection(pid, mv);
+        forcedSlide = this.movementStatus[pid] === MOVE_STATUS_SLIDE;
       }
       if (moved) {
         this.pos[pid * 2] = y / NATIVE_CELL_PX;

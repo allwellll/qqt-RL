@@ -29,7 +29,7 @@
     return /^[0-9a-f]{1,4}:\*:\*:[0-9a-f]{1,4}$/i.test(value) ? value : null;
   }
   function createClient({ config, storage, crypto, fetch, onChange = () => {}, now = Date.now }) {
-    let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null, profileRequest = null;
+    let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null, profileRequest = null, profileRevision = 0;
     try { data = JSON.parse(storage.getItem(KEY)); } catch (_) { persistent = false; }
     if (!data || !/^[0-9a-f-]{36}$/.test(data.player_id || '') || !/^[0-9a-f]{64}$/.test(data.secret || '')) {
       const playerId = uuid(crypto);
@@ -44,7 +44,7 @@
     const completed = new Set(data.queue.map(x => x.client_match_id));
     function state() { return { nickname: data.nickname, victory_message: data.victory_message,
       player_id: data.player_id, persistent, status, rows, progress, settlement, pending: data.queue.length,
-      savedNickname: data.nickname_auto !== true, profileSubmitting: !!profileRequest }; }
+      savedNickname: data.nickname_auto !== true, profileSubmitting: !!profileRequest, submitting: !!pendingRequest }; }
     function emit(text) { if (text !== undefined) status = text; onChange(state()); }
     function save() {
       try { storage.setItem(KEY, JSON.stringify(data)); } catch (_) { persistent = false; }
@@ -95,8 +95,9 @@
             now() - Date.parse(match.completed_at) <= 7 * 86400000);
           save();
           do {
-            while (data.queue.length) {
-              const match = data.queue[0];
+            while (data.queue.some(match => match.approved !== false)) {
+              const index = data.queue.findIndex(match => match.approved !== false);
+              const { approved, ...match } = data.queue[index];
               const result = await rpc('qqt_submit_result', { p_payload: { ...match, player_secret: data.secret } });
               if (!result || !['level', 'points', 'wins', 'games'].every(key => Number.isInteger(result[key])) ||
                   result.level < 1 || result.points < 0 || result.wins < 0 || result.games < result.wins) {
@@ -114,25 +115,25 @@
                 // match metadata passed to begin() intentionally does not.
                 settlement = { ...settlement, submitted: true,
                   ranking: validRanking(result.match_rank, match) ? result.match_rank : null,
-                  upgraded: result.client_match_id === match.client_match_id && result.match_upgraded === true,
+                  closed: false, upgraded: result.client_match_id === match.client_match_id && result.match_upgraded === true,
                   level: result.level };
               }
               data.progress = progress;
-              data.queue.shift(); save(); emit('结算已提交');
+              data.queue.splice(index, 1); save(); emit('结算已提交');
             }
             await refresh();
             // A fast restart may finish another match while the prior leaderboard read
             // is pending. Drain that newly queued result before releasing this request.
-          } while (data.queue.length);
+          } while (data.queue.some(match => match.approved !== false));
         } catch (error) { emit(`${error.message}；${data.queue.length} 局待提交，可重试`); }
-      })().finally(() => { pendingRequest = null; });
+      })().finally(() => { pendingRequest = null; emit(); });
       return pendingRequest;
     }
     function begin(metadata) { return { ...metadata, client_match_id: uuid(crypto), started: now() }; }
-    function finish(match, { result, gameDurationMs }) {
+    function finish(match, { result, gameDurationMs, autoSubmit = true }) {
       if (!match || completed.has(match.client_match_id)) return Promise.resolve(false);
       completed.add(match.client_match_id);
-      settlement = { client_match_id: match.client_match_id, result, duration_ms: gameDurationMs, submitted: false, ranking: null };
+      settlement = { client_match_id: match.client_match_id, result, duration_ms: gameDurationMs, submitted: false, ranking: null, closed: false, eligible: false };
       const wall = Math.round(now() - match.started);
       if (!['win','loss','draw'].includes(result) || !Number.isInteger(gameDurationMs) ||
           gameDurationMs < 1000 || gameDurationMs > 240000 || wall < Math.max(1000, gameDurationMs * .75) || wall > 3600000) {
@@ -141,11 +142,12 @@
       if (data.queue.length >= 20) { emit('待提交结算已达 20 局，请先重试'); return Promise.resolve(false); }
       data.total_ms += gameDurationMs;
       const { client_match_id, opponent, difficulty, seed, mode, map_id, client_version } = match;
-      data.queue.push({ player_id: data.player_id, client_match_id, nickname: data.nickname,
+      settlement.eligible = true;
+      data.queue.push({ approved: autoSubmit, player_id: data.player_id, client_match_id, nickname: data.nickname,
         victory_message: data.victory_message, result, game_duration_ms: gameDurationMs,
         wall_duration_ms: wall, client_total_ms: data.total_ms, opponent, difficulty,
         seed, mode, map_id, client_version, completed_at: new Date(now()).toISOString() });
-      save(); emit('正在提交结算…'); return drain();
+      save(); emit(autoSubmit ? '正在提交结算…' : '战绩已暂存，点击提交战绩；关闭后点击画布可重新打开'); return autoSubmit ? drain() : Promise.resolve(true);
     }
     function submitProfile(nick, message) {
       if (profileRequest) return profileRequest;
@@ -155,7 +157,7 @@
       let values;
       try { values = profile(nick, message); }
       catch (error) { return Promise.reject(error); }
-      const matchId = settlement.client_match_id;
+      const matchId = settlement.client_match_id, revision = profileRevision;
       profileRequest = (async () => {
         const result = await rpc('qqt_update_profile', { p_player_id: data.player_id, p_player_secret: data.secret,
           p_client_match_id: matchId, p_nickname: values.nickname, p_victory_message: values.victory_message });
@@ -163,12 +165,34 @@
             typeof result.victory_message !== 'string') throw new Error('资料提交响应格式错误');
         const saved = profile(result.nickname, result.victory_message);
         Object.assign(data, saved, { nickname_auto: false }); save();
+        if (settlement && settlement.client_match_id === matchId) settlement.profileSaved = revision === profileRevision;
         emit('昵称和宣言已提交'); await refresh();
         return true;
       })().finally(() => { profileRequest = null; emit(); });
       emit(); return profileRequest;
     }
-    return { state, begin, finish, refresh, retry: drain, submitProfile,
+    function submitSettlement() {
+      if (!settlement || !settlement.eligible || settlement.submitted) return Promise.resolve(false);
+      const match = data.queue.find(x => x.client_match_id === settlement.client_match_id);
+      if (!match) return Promise.resolve(false);
+      match.approved = true; save();
+      const request = drain(); emit('正在提交结算…'); return request;
+    }
+    function profileActive() { return !!profileRequest || !!(settlement && settlement.upgraded && !settlement.profileSkipped && !settlement.profileSaved); }
+    return { state, begin, finish, refresh, retry: drain, submitProfile, submitSettlement, profileActive,
+      markProfileDirty() { profileRevision++; if (settlement) settlement.profileSaved = false; emit(); },
+      closeSettlement() { if (profileActive()) return false; if (settlement) settlement.closed = true; emit(); return true; },
+      reopenSettlement() { if (settlement) settlement.closed = false; emit(); },
+      submitPending() {
+        if (profileActive()) return Promise.resolve(false);
+        if ((!settlement || !data.queue.some(x => x.client_match_id === settlement.client_match_id)) && data.queue.length) {
+          const last = data.queue[data.queue.length - 1];
+          settlement = { client_match_id: last.client_match_id, result: last.result, duration_ms: last.game_duration_ms,
+            submitted: false, eligible: true, closed: false, ranking: null };
+        }
+        for (const match of data.queue) match.approved = true;
+        save(); const request = drain(); emit('正在提交结算…'); return request;
+      },
       skipProfile() { if (settlement) settlement = { ...settlement, profileSkipped: true }; emit(); }, clearSettlement() { settlement = null; },
       setProfile(nick, message) { Object.assign(data, profile(nick, message), { nickname_auto: false }); save(); emit('昵称和宣言已保存'); } };
   }
@@ -187,10 +211,16 @@
       percentile: value.ranking ? `超过 ${value.ranking.percentile.toFixed(2)}% 玩家`
         : value.submitted ? '排名待数据库升级' : '排名等待结算提交' };
   }
-  // Screen-reader mirror only. All visible terminal text is drawn in the original Canvas.
+  // Canvas keeps the terminal title; HTML exposes accessible actions and status.
   function renderSettlement(document, state) {
     const el = id => document.getElementById(id), value = state.settlement;
-    el('settlement').hidden = !value;
+    el('settlement').hidden = !value || value.closed;
+    const submit = el('settlement-submit'), close = el('settlement-close');
+    if (submit) {
+      submit.disabled = !value || !value.eligible || value.submitted || state.submitting;
+      submit.textContent = state.submitting ? '提交中…' : value && value.submitted ? '提交成功' : '提交战绩';
+    }
+    if (close) close.disabled = state.profileSubmitting || !!(value && value.upgraded && !value.profileSkipped && !value.profileSaved);
     if (!value) return;
     const lines = settlementText(value);
     el('settlement-title').textContent = { win: '胜利', loss: '失败', draw: '平局' }[value.result] || '本局结束';
@@ -223,7 +253,7 @@
   }
   function renderUpgradeProfile(document, state) {
     const form = document.getElementById('leaderboard-profile'), value = state.settlement;
-    form.hidden = !(value && value.submitted && value.upgraded && !value.profileSkipped);
+    form.hidden = !(value && value.submitted && value.upgraded && !value.profileSkipped && !value.closed);
     document.getElementById('profile-submit').disabled = state.profileSubmitting;
     if (!form.hidden) document.getElementById('profile-title').textContent = `排行榜升至 ${value.level} 级！`;
   }
@@ -253,8 +283,12 @@
         if (client.state().settlement?.client_match_id === matchId) el('profile-status').textContent = error.message;
       }
     });
+    for (const id of ['player-nickname', 'player-message']) el(id).addEventListener('input', () => client.markProfileDirty());
     el('profile-skip').addEventListener('click', () => client.skipProfile());
-    el('leaderboard-retry').addEventListener('click', () => client.retry());
+    el('leaderboard-retry').addEventListener('click', () => { void client.refresh(); void client.retry(); });
+    el('settlement-submit').addEventListener('click', () => client.submitSettlement());
+    el('settlement-close').addEventListener('click', () => client.closeSettlement());
+    el('pending-submit').addEventListener('click', () => client.submitPending());
     client.refresh();
     return client;
   }

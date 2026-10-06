@@ -750,7 +750,7 @@
       ctx.filter = 'none';
       const barPid = motion ? motion.humanPid : 0;
       if (barPid >= 0 && sim.spdG) drawStatusBar(sim, barPid, now);
-      drawResult(matchResult(sim, motion ? motion.humanPid : 0), motion && motion.settlement);
+      if (!motion || !motion.hideResult) drawResult(matchResult(sim, motion ? motion.humanPid : 0), motion && motion.settlement);
     }
     function render(sim, now = performance.now(), motion = null) {
       return withContextState(ctx, () => renderUnsafe(sim, now, motion));

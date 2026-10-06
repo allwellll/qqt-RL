@@ -1,6 +1,7 @@
 'use strict';
 
 (async function startBunArena() {
+  QQTPanels.mount(document);
   const canvas = document.getElementById('game');
   const status = document.getElementById('status');
   const restart = document.getElementById('restart');
@@ -126,6 +127,7 @@
   function motionState() {
     return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1, intents,
       settlement: QQTLeaderboard.settlementText(leaderboard.state().settlement),
+      hideResult: localHumanControls() && !!leaderboard.state().settlement?.closed,
       characters: localHumanControls() ? [characterSelect.value] : [] };
   }
 
@@ -193,6 +195,7 @@
   }
 
   async function reset() {
+    if (leaderboard.profileActive() || leaderboard.state().submitting) return;
     sessionRevision++;
     leaderboardMatch = null;
     leaderboard.clearSettlement();
@@ -370,16 +373,15 @@
       const match = { ...leaderboardMatch, client_version: clientVersion };
       leaderboardMatch = null;
       void leaderboard.finish(match, { result: sim.winner == null ? 'draw' : sim.winner === sim.team[0] ? 'win' : 'loss',
-        gameDurationMs: sim.t * TICK_MS });
+        autoSubmit: false, gameDurationMs: sim.t * TICK_MS });
     }
     renderer.render(sim, now, motionState());
     QQTLeaderboard.renderSettlement(document, leaderboard.state());
     QQTLeaderboard.renderUpgradeProfile(document, leaderboard.state());
     const profileForm = document.getElementById('leaderboard-profile');
-    if (!profileForm.hidden) {
-      const rect = canvas.getBoundingClientRect(), stage = canvas.parentElement.getBoundingClientRect();
-      profileForm.style.top = `${rect.top - stage.top + rect.height * .66}px`;
-    }
+    const rect = canvas.getBoundingClientRect(), stage = canvas.parentElement.getBoundingClientRect();
+    document.getElementById('settlement').style.top = `${rect.top - stage.top + rect.height * .65}px`;
+    if (!profileForm.hidden) profileForm.style.top = `${rect.top - stage.top + rect.height * .80}px`;
     hideLoading();
     status.textContent = JSON.stringify({
       mode: QQTModelCatalog.matchLabel(matchMode.value),
@@ -458,11 +460,16 @@
   const unlockAudio = () => sound.unlock();
   const restartGame = QQTControls.createRestartGate(reset, () => sim.done);
   function requestRestart(finishedOnly = false) {
+    if (leaderboard.profileActive() || leaderboard.state().submitting) {
+      document.getElementById('profile-status').textContent = '请等待战绩提交完成，并提交资料或选择跳过，再按 R 开新局';
+      return Promise.resolve(false);
+    }
     return restartGame(finishedOnly).catch(error => { status.textContent = `重新开局失败：${error.message}`; });
   }
+  canvas.addEventListener('click', () => { if (sim.done) leaderboard.reopenSettlement(); });
   window.addEventListener('pointerdown', unlockAudio);
   window.addEventListener('keydown', (event) => {
-    if (QQTControls.isTypingTarget(event.target)) return;
+    if (document.querySelector('dialog[open]') || event.target.closest?.('#advanced-settings') || QQTControls.isTypingTarget(event.target)) return;
     unlockAudio();
     if (event.code === 'KeyR') {
       if (QQTControls.isRestartKey(event, held)) { event.preventDefault(); requestRestart(); }
@@ -480,7 +487,7 @@
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));
   document.addEventListener('focusin', (event) => {
-    if (event.target.matches('input, textarea')) { held.clear(); bombCell = -1; itemCell = -1; }
+    if (event.target.matches('input, textarea') || event.target.closest('dialog, #advanced-settings')) { held.clear(); bombCell = -1; itemCell = -1; }
   });
   window.addEventListener('blur', () => {
     held.clear(); bombCell = -1; itemCell = -1;
