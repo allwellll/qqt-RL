@@ -207,6 +207,30 @@ for (const kind of ['wall', 'bomb']) {
   assert(sim.pos[1] < 9, `dynamic ${kind} stops before the target cell`);
 }
 
+// The perpendicular alignment side must also remain traversable. Check both
+// corners in each slide direction with obstacles inserted before alignment.
+for (const direction of [Q.MOVE_UP, Q.MOVE_DOWN, Q.MOVE_LEFT, Q.MOVE_RIGHT]) {
+  for (const side of [-1, 1]) for (const kind of ['wall', 'bomb']) {
+    const [dy, dx] = [[-1, 0], [1, 0], [0, -1], [0, 1]][direction];
+    const offset = side < 0 ? 4 : 36;
+    const sim = scene(5, 5, direction < 2 ? 20 : offset, direction < 2 ? offset : 20);
+    sim.wall[5 * Q.W + 5] = 0;
+    sim.wall[(5 + dy) * Q.W + 5 + dx] = 1;
+    const target = (5 + (direction < 2 ? 0 : side)) * Q.W + 5 + (direction < 2 ? side : 0);
+    sim[kind === 'wall' ? 'wall' : 'fuse'][target] = kind === 'wall' ? 1 : 30;
+    sim._setMovementStatus(0, Q.MOVE_STATUS_SLIDE, 0); sim.slideDir[0] = direction;
+    const before = Array.from(sim.pos.slice(0, 2));
+    const frame = JSON.parse(JSON.stringify(sim.snapshotReplay(null)));
+    const restored = new Q.Sim(99); restored.restoreReplay(frame);
+    for (const s of [sim, restored]) {
+      s.frameStep(0, Q.MOVE_IDLE, .02);
+      assert.deepStrictEqual(Array.from(s.pos.slice(0, 2)), before,
+        `alignment side ${kind} direction=${direction} side=${side} blocks original and replay`);
+      assert.equal(s.movementStatus[0], Q.MOVE_STATUS_NONE);
+    }
+  }
+}
+
 // A replay taken mid-slide resumes at the same aligned pixel and continues in
 // the same direction, including the wall-corner permission state.
 {

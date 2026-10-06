@@ -749,17 +749,18 @@
       ctx.filter = 'none';
       const barPid = motion ? motion.humanPid : 0;
       if (barPid >= 0 && sim.spdG) drawStatusBar(sim, barPid, now);
-      drawResult(matchResult(sim, motion ? motion.humanPid : 0));
+      drawResult(matchResult(sim, motion ? motion.humanPid : 0), motion && motion.settlementOverlay);
     }
     function render(sim, now = performance.now(), motion = null) {
       return withContextState(ctx, () => renderUnsafe(sim, now, motion));
     }
     const RESULT_COLORS = { win: '#ffd54a', lose: '#ff7a7a', draw: '#d8e6ea' };
-    function drawResult(result) {
+    function drawResult(result, settlementOverlay = false) {
       if (!result) return;
       const cx = canvas.width / 2, cy = (BOARD_OFFSET + BOARD_H) / 2;
       ctx.save();
       ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (settlementOverlay) { ctx.restore(); return; }
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
       ctx.font = 'bold 96px sans-serif'; ctx.lineWidth = 10; ctx.strokeStyle = 'rgba(0,0,0,0.85)';
       ctx.fillStyle = RESULT_COLORS[result.kind];

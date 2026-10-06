@@ -1,0 +1,6779 @@
+{
+  "protocol": {
+    "pairs": 32,
+    "seed": 2026100600,
+    "opponent": "tactical",
+    "size": 1,
+    "arm": "both",
+    "ref": "1c913b7",
+    "out": "/tmp/coop_win_tactical_recheck_20261006.json",
+    "cpuOnly": true,
+    "fullMap": 806,
+    "nativeItems": true,
+    "nativeTrap": true,
+    "ticks": 2400,
+    "mirroredSpawnGroups": true,
+    "actorOrder": "pid ascending",
+    "noPythonOrJaxEdits": true
+  },
+  "referenceHash": "e7aef0245df8d1b918e19a0e8c3139266783744e34a53d1fa29ae2022cd58977",
+  "hashes": {
+    "web/sim.js": "e24cab31089db8d895438c20c785bb0ffbe2b988ffe128d869914345388e6497",
+    "web/bun_coop_hunter_bot.js": "aae7333d28058b3c3c7074b80e10628a0b9934143d8c8098e66eea5704841860",
+    "web/bun_hunter_bot.js": "93de28e859147eed79d4231c62858c2bfc6fae9033f98a837983ff51746009a8",
+    "web/bun_rule_bot.js": "dc71b1069e60699ab2cd786c3e5b50cf355a577880902dbc6c7dfe093dc30554",
+    "web/bot_contract.js": "3aadb87859f7dea0c483ee352a5c595f812f10b96a0104a23ef0a0b98a4ec411",
+    "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459"
+  },
+  "rows": [
+    {
+      "seed": 2026100600,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1153,
+      "seconds": 115.3,
+      "cpuWallMs": 2028.418327331543,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 22,
+        "attackBombs": 14,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 805,
+          "CHAIN": 27,
+          "POP": 16,
+          "OPEN_ROUTE": 44,
+          "RAID": 65,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "bomb_dig": 19,
+          "dodge": 127,
+          "route": 476,
+          "hold": 517,
+          "bomb_reserve": 5,
+          "bomb_attack": 9
+        }
+      }
+    },
+    {
+      "seed": 2026100600,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1153,
+      "seconds": 115.3,
+      "cpuWallMs": 1805.9169082641602,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 22,
+        "attackBombs": 14,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 805,
+          "CHAIN": 27,
+          "POP": 16,
+          "OPEN_ROUTE": 44,
+          "RAID": 65,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "bomb_dig": 19,
+          "dodge": 127,
+          "route": 476,
+          "hold": 517,
+          "bomb_reserve": 5,
+          "bomb_attack": 9
+        }
+      }
+    },
+    {
+      "seed": 2026100600,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1075,
+      "seconds": 107.5,
+      "cpuWallMs": 1635.2979125976562,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 30,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 24,
+        "attackBombs": 12,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 753,
+          "CHAIN": 4,
+          "POP": 17,
+          "OPEN_ROUTE": 44,
+          "RAID": 64,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "bomb_dig": 18,
+          "dodge": 86,
+          "route": 471,
+          "hold": 488,
+          "bomb_attack": 9,
+          "bomb_reserve": 3
+        }
+      }
+    },
+    {
+      "seed": 2026100600,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1075,
+      "seconds": 107.5,
+      "cpuWallMs": 1605.3598709106445,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 30,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 24,
+        "attackBombs": 12,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 753,
+          "CHAIN": 4,
+          "POP": 17,
+          "OPEN_ROUTE": 44,
+          "RAID": 64,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "bomb_dig": 18,
+          "dodge": 86,
+          "route": 471,
+          "hold": 488,
+          "bomb_attack": 9,
+          "bomb_reserve": 3
+        }
+      }
+    },
+    {
+      "seed": 2026108519,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1165,
+      "seconds": 116.5,
+      "cpuWallMs": 1639.9839553833008,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 31,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 16,
+        "attackBombs": 16,
+        "connectors": 3,
+        "modes": {
+          "HUNT": 724,
+          "CHAIN": 20,
+          "OPEN_ROUTE": 76,
+          "POP": 76,
+          "RAID": 73,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 532,
+          "bomb_dig": 15,
+          "dodge": 132,
+          "hold": 470,
+          "bomb_attack": 7,
+          "bomb_reserve": 3,
+          "bomb_chain": 3,
+          "bomb_kill": 3
+        }
+      }
+    },
+    {
+      "seed": 2026108519,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1165,
+      "seconds": 116.5,
+      "cpuWallMs": 1635.026466369629,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 31,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 16,
+        "attackBombs": 16,
+        "connectors": 3,
+        "modes": {
+          "HUNT": 724,
+          "CHAIN": 20,
+          "OPEN_ROUTE": 76,
+          "POP": 76,
+          "RAID": 73,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 532,
+          "bomb_dig": 15,
+          "dodge": 132,
+          "hold": 470,
+          "bomb_attack": 7,
+          "bomb_reserve": 3,
+          "bomb_chain": 3,
+          "bomb_kill": 3
+        }
+      }
+    },
+    {
+      "seed": 2026108519,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1007,
+      "seconds": 100.7,
+      "cpuWallMs": 1336.9620208740234,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 22,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 8,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 639,
+          "CHAIN": 14,
+          "POP": 23,
+          "OPEN_ROUTE": 73,
+          "RAID": 64,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "route": 484,
+          "bomb_dig": 14,
+          "dodge": 82,
+          "hold": 419,
+          "bomb_attack": 3,
+          "bomb_reserve": 2,
+          "bomb_kill": 2,
+          "bomb_chain": 1
+        }
+      }
+    },
+    {
+      "seed": 2026108519,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1007,
+      "seconds": 100.7,
+      "cpuWallMs": 1344.7898712158203,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 22,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 8,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 639,
+          "CHAIN": 14,
+          "POP": 23,
+          "OPEN_ROUTE": 73,
+          "RAID": 64,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "route": 484,
+          "bomb_dig": 14,
+          "dodge": 82,
+          "hold": 419,
+          "bomb_attack": 3,
+          "bomb_reserve": 2,
+          "bomb_kill": 2,
+          "bomb_chain": 1
+        }
+      }
+    },
+    {
+      "seed": 2026116438,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3679.1827239990234,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 110,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2254
+        }
+      }
+    },
+    {
+      "seed": 2026116438,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3707.994400024414,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 110,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2254
+        }
+      }
+    },
+    {
+      "seed": 2026116438,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3628.1070709228516,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 108,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2257
+        }
+      }
+    },
+    {
+      "seed": 2026116438,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3636.5020065307617,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 108,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2257
+        }
+      }
+    },
+    {
+      "seed": 2026124357,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5340.817207336426,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 116,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 10,
+        "attackBombs": 104,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2256,
+          "CHAIN": 144
+        },
+        "reasons": {
+          "route": 284,
+          "bomb_dig": 12,
+          "dodge": 244,
+          "hold": 1756,
+          "bomb_reserve": 52,
+          "bomb_kill": 2,
+          "bomb_attack": 50
+        }
+      }
+    },
+    {
+      "seed": 2026124357,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5438.207847595215,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 116,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 10,
+        "attackBombs": 104,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2256,
+          "CHAIN": 144
+        },
+        "reasons": {
+          "route": 284,
+          "bomb_dig": 12,
+          "dodge": 244,
+          "hold": 1756,
+          "bomb_reserve": 52,
+          "bomb_kill": 2,
+          "bomb_attack": 50
+        }
+      }
+    },
+    {
+      "seed": 2026124357,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5340.429550170898,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 116,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 11,
+        "attackBombs": 104,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2256,
+          "CHAIN": 144
+        },
+        "reasons": {
+          "route": 283,
+          "bomb_dig": 12,
+          "dodge": 244,
+          "hold": 1757,
+          "bomb_reserve": 52,
+          "bomb_kill": 2,
+          "bomb_attack": 50
+        }
+      }
+    },
+    {
+      "seed": 2026124357,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5336.909202575684,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 116,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 11,
+        "attackBombs": 104,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2256,
+          "CHAIN": 144
+        },
+        "reasons": {
+          "route": 283,
+          "bomb_dig": 12,
+          "dodge": 244,
+          "hold": 1757,
+          "bomb_reserve": 52,
+          "bomb_kill": 2,
+          "bomb_attack": 50
+        }
+      }
+    },
+    {
+      "seed": 2026132276,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5791.795562744141,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 94,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 78,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1846,
+          "CHAIN": 554
+        },
+        "reasons": {
+          "bomb_dig": 16,
+          "dodge": 706,
+          "route": 318,
+          "hold": 1282,
+          "bomb_reserve": 49,
+          "bomb_attack": 28,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026132276,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5680.5026779174805,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 94,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 78,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1846,
+          "CHAIN": 554
+        },
+        "reasons": {
+          "bomb_dig": 16,
+          "dodge": 706,
+          "route": 318,
+          "hold": 1282,
+          "bomb_reserve": 49,
+          "bomb_attack": 28,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026132276,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5468.88981628418,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 94,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 78,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1846,
+          "CHAIN": 554
+        },
+        "reasons": {
+          "bomb_dig": 16,
+          "dodge": 705,
+          "route": 311,
+          "hold": 1290,
+          "bomb_reserve": 49,
+          "bomb_attack": 28,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026132276,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5472.525299072266,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 94,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 78,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1846,
+          "CHAIN": 554
+        },
+        "reasons": {
+          "bomb_dig": 16,
+          "dodge": 705,
+          "route": 311,
+          "hold": 1290,
+          "bomb_reserve": 49,
+          "bomb_attack": 28,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026140195,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1131,
+      "seconds": 113.1,
+      "cpuWallMs": 1510.4743423461914,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 27,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 11,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 699,
+          "CHAIN": 46,
+          "POP": 45,
+          "OPEN_ROUTE": 67,
+          "RAID": 79,
+          "DELIVER": 195
+        },
+        "reasons": {
+          "route": 505,
+          "bomb_dig": 16,
+          "dodge": 139,
+          "hold": 460,
+          "bomb_attack": 5,
+          "bomb_reserve": 5,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026140195,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1131,
+      "seconds": 113.1,
+      "cpuWallMs": 1526.258415222168,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 27,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 11,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 699,
+          "CHAIN": 46,
+          "POP": 45,
+          "OPEN_ROUTE": 67,
+          "RAID": 79,
+          "DELIVER": 195
+        },
+        "reasons": {
+          "route": 505,
+          "bomb_dig": 16,
+          "dodge": 139,
+          "hold": 460,
+          "bomb_attack": 5,
+          "bomb_reserve": 5,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026140195,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1303,
+      "seconds": 130.3,
+      "cpuWallMs": 1812.9350814819336,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 826,
+          "CHAIN": 71,
+          "POP": 41,
+          "OPEN_ROUTE": 58,
+          "RAID": 114,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 540,
+          "bomb_dig": 17,
+          "dodge": 168,
+          "hold": 562,
+          "bomb_attack": 8,
+          "bomb_reserve": 8
+        }
+      }
+    },
+    {
+      "seed": 2026140195,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1303,
+      "seconds": 130.3,
+      "cpuWallMs": 1810.177963256836,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 826,
+          "CHAIN": 71,
+          "POP": 41,
+          "OPEN_ROUTE": 58,
+          "RAID": 114,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 540,
+          "bomb_dig": 17,
+          "dodge": 168,
+          "hold": 562,
+          "bomb_attack": 8,
+          "bomb_reserve": 8
+        }
+      }
+    },
+    {
+      "seed": 2026148114,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3629.955665588379,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 101,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2264
+        }
+      }
+    },
+    {
+      "seed": 2026148114,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3611.438591003418,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 101,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2264
+        }
+      }
+    },
+    {
+      "seed": 2026148114,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3599.6038970947266,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 13,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 97,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2268
+        }
+      }
+    },
+    {
+      "seed": 2026148114,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3623.208236694336,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 13,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 97,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2268
+        }
+      }
+    },
+    {
+      "seed": 2026156033,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1220,
+      "seconds": 122,
+      "cpuWallMs": 1744.1424407958984,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 18,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 801,
+          "CHAIN": 30,
+          "POP": 30,
+          "OPEN_ROUTE": 65,
+          "RAID": 98,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 488,
+          "bomb_dig": 17,
+          "dodge": 148,
+          "hold": 551,
+          "bomb_attack": 8,
+          "bomb_reserve": 7,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026156033,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1220,
+      "seconds": 122,
+      "cpuWallMs": 1744.203758239746,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 18,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 801,
+          "CHAIN": 30,
+          "POP": 30,
+          "OPEN_ROUTE": 65,
+          "RAID": 98,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 488,
+          "bomb_dig": 17,
+          "dodge": 148,
+          "hold": 551,
+          "bomb_attack": 8,
+          "bomb_reserve": 7,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026156033,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1217,
+      "seconds": 121.7,
+      "cpuWallMs": 1732.6890258789062,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 798,
+          "CHAIN": 30,
+          "POP": 30,
+          "OPEN_ROUTE": 65,
+          "RAID": 98,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 484,
+          "bomb_dig": 17,
+          "dodge": 133,
+          "hold": 567,
+          "bomb_attack": 8,
+          "bomb_reserve": 7,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026156033,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1217,
+      "seconds": 121.7,
+      "cpuWallMs": 1730.2338104248047,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 798,
+          "CHAIN": 30,
+          "POP": 30,
+          "OPEN_ROUTE": 65,
+          "RAID": 98,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 484,
+          "bomb_dig": 17,
+          "dodge": 133,
+          "hold": 567,
+          "bomb_attack": 8,
+          "bomb_reserve": 7,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026163952,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 944,
+      "seconds": 94.4,
+      "cpuWallMs": 1373.494255065918,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 24,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 13,
+        "attackBombs": 6,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 670,
+          "CHAIN": 2,
+          "POP": 18,
+          "RAID": 58,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "bomb_dig": 18,
+          "dodge": 68,
+          "route": 392,
+          "hold": 460,
+          "bomb_attack": 3,
+          "bomb_reserve": 2,
+          "bomb_chain": 1
+        }
+      }
+    },
+    {
+      "seed": 2026163952,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 944,
+      "seconds": 94.4,
+      "cpuWallMs": 1360.1530303955078,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 24,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 13,
+        "attackBombs": 6,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 670,
+          "CHAIN": 2,
+          "POP": 18,
+          "RAID": 58,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "bomb_dig": 18,
+          "dodge": 68,
+          "route": 392,
+          "hold": 460,
+          "bomb_attack": 3,
+          "bomb_reserve": 2,
+          "bomb_chain": 1
+        }
+      }
+    },
+    {
+      "seed": 2026163952,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 949,
+      "seconds": 94.9,
+      "cpuWallMs": 1358.0557250976562,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 24,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 13,
+        "attackBombs": 6,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 675,
+          "CHAIN": 2,
+          "POP": 18,
+          "RAID": 58,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "bomb_dig": 18,
+          "dodge": 68,
+          "route": 397,
+          "hold": 460,
+          "bomb_attack": 3,
+          "bomb_reserve": 2,
+          "bomb_chain": 1
+        }
+      }
+    },
+    {
+      "seed": 2026163952,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 949,
+      "seconds": 94.9,
+      "cpuWallMs": 1360.8757247924805,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 24,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 13,
+        "attackBombs": 6,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 675,
+          "CHAIN": 2,
+          "POP": 18,
+          "RAID": 58,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "bomb_dig": 18,
+          "dodge": 68,
+          "route": 397,
+          "hold": 460,
+          "bomb_attack": 3,
+          "bomb_reserve": 2,
+          "bomb_chain": 1
+        }
+      }
+    },
+    {
+      "seed": 2026171871,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1012,
+      "seconds": 101.2,
+      "cpuWallMs": 1454.6996307373047,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 26,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 12,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 624,
+          "CHAIN": 24,
+          "POP": 40,
+          "OPEN_ROUTE": 38,
+          "RAID": 69,
+          "DELIVER": 217
+        },
+        "reasons": {
+          "route": 406,
+          "bomb_dig": 14,
+          "dodge": 79,
+          "hold": 501,
+          "bomb_attack": 5,
+          "bomb_reserve": 3,
+          "bomb_kill": 2,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026171871,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1012,
+      "seconds": 101.2,
+      "cpuWallMs": 1414.998390197754,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 26,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 12,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 624,
+          "CHAIN": 24,
+          "POP": 40,
+          "OPEN_ROUTE": 38,
+          "RAID": 69,
+          "DELIVER": 217
+        },
+        "reasons": {
+          "route": 406,
+          "bomb_dig": 14,
+          "dodge": 79,
+          "hold": 501,
+          "bomb_attack": 5,
+          "bomb_reserve": 3,
+          "bomb_kill": 2,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026171871,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 916,
+      "seconds": 91.6,
+      "cpuWallMs": 1414.8945770263672,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 23,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 25,
+        "attackBombs": 2,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 686,
+          "CHAIN": 4,
+          "POP": 13,
+          "RAID": 20,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 417,
+          "bomb_dig": 21,
+          "dodge": 66,
+          "hold": 410,
+          "bomb_reserve": 1,
+          "bomb_chain": 1
+        }
+      }
+    },
+    {
+      "seed": 2026171871,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 916,
+      "seconds": 91.6,
+      "cpuWallMs": 1414.9245147705078,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 23,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 25,
+        "attackBombs": 2,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 686,
+          "CHAIN": 4,
+          "POP": 13,
+          "RAID": 20,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 417,
+          "bomb_dig": 21,
+          "dodge": 66,
+          "hold": 410,
+          "bomb_reserve": 1,
+          "bomb_chain": 1
+        }
+      }
+    },
+    {
+      "seed": 2026179790,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3553.692337036133,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 7,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 78,
+          "bomb_dig": 9,
+          "dodge": 24,
+          "hold": 2289
+        }
+      }
+    },
+    {
+      "seed": 2026179790,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3531.3562545776367,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 7,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 78,
+          "bomb_dig": 9,
+          "dodge": 24,
+          "hold": 2289
+        }
+      }
+    },
+    {
+      "seed": 2026179790,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3504.9772567749023,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 7,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 78,
+          "bomb_dig": 9,
+          "dodge": 24,
+          "hold": 2289
+        }
+      }
+    },
+    {
+      "seed": 2026179790,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3498.9408569335938,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 7,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 78,
+          "bomb_dig": 9,
+          "dodge": 24,
+          "hold": 2289
+        }
+      }
+    },
+    {
+      "seed": 2026187709,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5571.929382324219,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 113,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 16,
+        "attackBombs": 101,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2240,
+          "CHAIN": 160
+        },
+        "reasons": {
+          "route": 292,
+          "bomb_dig": 12,
+          "dodge": 267,
+          "hold": 1728,
+          "bomb_reserve": 50,
+          "bomb_kill": 2,
+          "bomb_attack": 49
+        }
+      }
+    },
+    {
+      "seed": 2026187709,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5388.819442749023,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 113,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 16,
+        "attackBombs": 101,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2240,
+          "CHAIN": 160
+        },
+        "reasons": {
+          "route": 292,
+          "bomb_dig": 12,
+          "dodge": 267,
+          "hold": 1728,
+          "bomb_reserve": 50,
+          "bomb_kill": 2,
+          "bomb_attack": 49
+        }
+      }
+    },
+    {
+      "seed": 2026187709,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5350.263946533203,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 113,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 15,
+        "attackBombs": 101,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2240,
+          "CHAIN": 160
+        },
+        "reasons": {
+          "route": 292,
+          "bomb_dig": 12,
+          "dodge": 264,
+          "hold": 1731,
+          "bomb_reserve": 50,
+          "bomb_kill": 2,
+          "bomb_attack": 49
+        }
+      }
+    },
+    {
+      "seed": 2026187709,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5243.906402587891,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 113,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 15,
+        "attackBombs": 101,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2240,
+          "CHAIN": 160
+        },
+        "reasons": {
+          "route": 292,
+          "bomb_dig": 12,
+          "dodge": 264,
+          "hold": 1731,
+          "bomb_reserve": 50,
+          "bomb_kill": 2,
+          "bomb_attack": 49
+        }
+      }
+    },
+    {
+      "seed": 2026195628,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1047,
+      "seconds": 104.7,
+      "cpuWallMs": 1474.5230560302734,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 30,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 10,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 765,
+          "CHAIN": 2,
+          "POP": 17,
+          "RAID": 66,
+          "DELIVER": 197
+        },
+        "reasons": {
+          "bomb_dig": 20,
+          "dodge": 105,
+          "route": 424,
+          "hold": 488,
+          "bomb_attack": 8,
+          "bomb_reserve": 2
+        }
+      }
+    },
+    {
+      "seed": 2026195628,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1047,
+      "seconds": 104.7,
+      "cpuWallMs": 1484.1226425170898,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 30,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 10,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 765,
+          "CHAIN": 2,
+          "POP": 17,
+          "RAID": 66,
+          "DELIVER": 197
+        },
+        "reasons": {
+          "bomb_dig": 20,
+          "dodge": 105,
+          "route": 424,
+          "hold": 488,
+          "bomb_attack": 8,
+          "bomb_reserve": 2
+        }
+      }
+    },
+    {
+      "seed": 2026195628,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1192,
+      "seconds": 119.2,
+      "cpuWallMs": 1830.786964416504,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 32,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 12,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 891,
+          "CHAIN": 25,
+          "POP": 17,
+          "RAID": 65,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "bomb_dig": 20,
+          "dodge": 111,
+          "route": 501,
+          "hold": 548,
+          "bomb_attack": 7,
+          "bomb_reserve": 5
+        }
+      }
+    },
+    {
+      "seed": 2026195628,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1192,
+      "seconds": 119.2,
+      "cpuWallMs": 1805.0823059082031,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 32,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 12,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 891,
+          "CHAIN": 25,
+          "POP": 17,
+          "RAID": 65,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "bomb_dig": 20,
+          "dodge": 111,
+          "route": 501,
+          "hold": 548,
+          "bomb_attack": 7,
+          "bomb_reserve": 5
+        }
+      }
+    },
+    {
+      "seed": 2026203547,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1215,
+      "seconds": 121.5,
+      "cpuWallMs": 1685.0431213378906,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 777,
+          "CHAIN": 48,
+          "POP": 30,
+          "OPEN_ROUTE": 65,
+          "RAID": 98,
+          "DELIVER": 197
+        },
+        "reasons": {
+          "route": 486,
+          "bomb_dig": 17,
+          "dodge": 164,
+          "hold": 532,
+          "bomb_attack": 8,
+          "bomb_reserve": 7,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026203547,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1215,
+      "seconds": 121.5,
+      "cpuWallMs": 1695.9029846191406,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 777,
+          "CHAIN": 48,
+          "POP": 30,
+          "OPEN_ROUTE": 65,
+          "RAID": 98,
+          "DELIVER": 197
+        },
+        "reasons": {
+          "route": 486,
+          "bomb_dig": 17,
+          "dodge": 164,
+          "hold": 532,
+          "bomb_attack": 8,
+          "bomb_reserve": 7,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026203547,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1214,
+      "seconds": 121.4,
+      "cpuWallMs": 1912.3586654663086,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 777,
+          "CHAIN": 48,
+          "POP": 30,
+          "OPEN_ROUTE": 65,
+          "RAID": 98,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 484,
+          "bomb_dig": 17,
+          "dodge": 149,
+          "hold": 548,
+          "bomb_attack": 8,
+          "bomb_reserve": 7,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026203547,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1214,
+      "seconds": 121.4,
+      "cpuWallMs": 1860.5759582519531,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 777,
+          "CHAIN": 48,
+          "POP": 30,
+          "OPEN_ROUTE": 65,
+          "RAID": 98,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 484,
+          "bomb_dig": 17,
+          "dodge": 149,
+          "hold": 548,
+          "bomb_attack": 8,
+          "bomb_reserve": 7,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026211466,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3815.9954223632812,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 11,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 93,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2271
+        }
+      }
+    },
+    {
+      "seed": 2026211466,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3695.459030151367,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 11,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 93,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2271
+        }
+      }
+    },
+    {
+      "seed": 2026211466,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3697.4176330566406,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 93,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2271
+        }
+      }
+    },
+    {
+      "seed": 2026211466,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3579.4803161621094,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 93,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2271
+        }
+      }
+    },
+    {
+      "seed": 2026219385,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 4881.348526000977,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 92,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 79,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1824,
+          "CHAIN": 576
+        },
+        "reasons": {
+          "route": 292,
+          "bomb_dig": 13,
+          "dodge": 718,
+          "hold": 1298,
+          "bomb_attack": 28,
+          "bomb_reserve": 51
+        }
+      }
+    },
+    {
+      "seed": 2026219385,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 4899.860443115234,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 92,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 79,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1824,
+          "CHAIN": 576
+        },
+        "reasons": {
+          "route": 292,
+          "bomb_dig": 13,
+          "dodge": 718,
+          "hold": 1298,
+          "bomb_attack": 28,
+          "bomb_reserve": 51
+        }
+      }
+    },
+    {
+      "seed": 2026219385,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5026.769729614258,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 92,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 79,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1824,
+          "CHAIN": 576
+        },
+        "reasons": {
+          "route": 287,
+          "bomb_dig": 13,
+          "dodge": 710,
+          "hold": 1311,
+          "bomb_attack": 28,
+          "bomb_reserve": 51
+        }
+      }
+    },
+    {
+      "seed": 2026219385,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5080.91446685791,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 92,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 79,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1824,
+          "CHAIN": 576
+        },
+        "reasons": {
+          "route": 287,
+          "bomb_dig": 13,
+          "dodge": 710,
+          "hold": 1311,
+          "bomb_attack": 28,
+          "bomb_reserve": 51
+        }
+      }
+    },
+    {
+      "seed": 2026227304,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5004.949554443359,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 62,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 48,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 1303,
+          "CHAIN": 958,
+          "OPEN_ROUTE": 65,
+          "POP": 33,
+          "RAID": 41
+        },
+        "reasons": {
+          "bomb_dig": 14,
+          "dodge": 1220,
+          "route": 522,
+          "hold": 596,
+          "bomb_reserve": 46,
+          "bomb_chain": 1,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026227304,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 4984.194297790527,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 62,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 48,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 1303,
+          "CHAIN": 958,
+          "OPEN_ROUTE": 65,
+          "POP": 33,
+          "RAID": 41
+        },
+        "reasons": {
+          "bomb_dig": 14,
+          "dodge": 1220,
+          "route": 522,
+          "hold": 596,
+          "bomb_reserve": 46,
+          "bomb_chain": 1,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026227304,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 4778.454605102539,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 61,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 47,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 1304,
+          "CHAIN": 957,
+          "OPEN_ROUTE": 65,
+          "POP": 33,
+          "RAID": 41
+        },
+        "reasons": {
+          "bomb_dig": 14,
+          "dodge": 1219,
+          "route": 524,
+          "hold": 596,
+          "bomb_reserve": 45,
+          "bomb_chain": 1,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026227304,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 4795.463623046875,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 61,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 47,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 1304,
+          "CHAIN": 957,
+          "OPEN_ROUTE": 65,
+          "POP": 33,
+          "RAID": 41
+        },
+        "reasons": {
+          "bomb_dig": 14,
+          "dodge": 1219,
+          "route": 524,
+          "hold": 596,
+          "bomb_reserve": 45,
+          "bomb_chain": 1,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026235223,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1152,
+      "seconds": 115.2,
+      "cpuWallMs": 1524.4819564819336,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 28,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 22,
+        "attackBombs": 12,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 735,
+          "CHAIN": 27,
+          "POP": 49,
+          "OPEN_ROUTE": 58,
+          "RAID": 88,
+          "DELIVER": 195
+        },
+        "reasons": {
+          "route": 500,
+          "bomb_dig": 16,
+          "dodge": 118,
+          "hold": 506,
+          "bomb_attack": 4,
+          "bomb_reserve": 6,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026235223,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1152,
+      "seconds": 115.2,
+      "cpuWallMs": 1526.9144897460938,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 28,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 22,
+        "attackBombs": 12,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 735,
+          "CHAIN": 27,
+          "POP": 49,
+          "OPEN_ROUTE": 58,
+          "RAID": 88,
+          "DELIVER": 195
+        },
+        "reasons": {
+          "route": 500,
+          "bomb_dig": 16,
+          "dodge": 118,
+          "hold": 506,
+          "bomb_attack": 4,
+          "bomb_reserve": 6,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026235223,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1298,
+      "seconds": 129.8,
+      "cpuWallMs": 1782.663917541504,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 821,
+          "CHAIN": 71,
+          "POP": 41,
+          "OPEN_ROUTE": 58,
+          "RAID": 114,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 528,
+          "bomb_dig": 17,
+          "dodge": 168,
+          "hold": 569,
+          "bomb_attack": 8,
+          "bomb_reserve": 8
+        }
+      }
+    },
+    {
+      "seed": 2026235223,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1298,
+      "seconds": 129.8,
+      "cpuWallMs": 1960.0228805541992,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 20,
+        "attackBombs": 16,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 821,
+          "CHAIN": 71,
+          "POP": 41,
+          "OPEN_ROUTE": 58,
+          "RAID": 114,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 528,
+          "bomb_dig": 17,
+          "dodge": 168,
+          "hold": 569,
+          "bomb_attack": 8,
+          "bomb_reserve": 8
+        }
+      }
+    },
+    {
+      "seed": 2026243142,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3660.631416320801,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 6,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 81,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2284
+        }
+      }
+    },
+    {
+      "seed": 2026243142,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3664.106605529785,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 6,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 81,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2284
+        }
+      }
+    },
+    {
+      "seed": 2026243142,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3644.677070617676,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 6,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 81,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2284
+        }
+      }
+    },
+    {
+      "seed": 2026243142,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3624.235641479492,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 6,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 81,
+          "bomb_dig": 9,
+          "dodge": 26,
+          "hold": 2284
+        }
+      }
+    },
+    {
+      "seed": 2026251061,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 996,
+      "seconds": 99.6,
+      "cpuWallMs": 1340.8349685668945,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 26,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 21,
+        "attackBombs": 13,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 628,
+          "CHAIN": 10,
+          "OPEN_ROUTE": 65,
+          "POP": 34,
+          "RAID": 65,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "route": 478,
+          "bomb_dig": 13,
+          "dodge": 92,
+          "hold": 400,
+          "bomb_reserve": 2,
+          "bomb_chain": 1,
+          "bomb_attack": 8,
+          "bomb_kill": 2
+        }
+      }
+    },
+    {
+      "seed": 2026251061,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 996,
+      "seconds": 99.6,
+      "cpuWallMs": 1332.9045181274414,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 26,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 21,
+        "attackBombs": 13,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 628,
+          "CHAIN": 10,
+          "OPEN_ROUTE": 65,
+          "POP": 34,
+          "RAID": 65,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "route": 478,
+          "bomb_dig": 13,
+          "dodge": 92,
+          "hold": 400,
+          "bomb_reserve": 2,
+          "bomb_chain": 1,
+          "bomb_attack": 8,
+          "bomb_kill": 2
+        }
+      }
+    },
+    {
+      "seed": 2026251061,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 975,
+      "seconds": 97.5,
+      "cpuWallMs": 1242.874755859375,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 22,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 9,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 583,
+          "CHAIN": 10,
+          "OPEN_ROUTE": 65,
+          "POP": 34,
+          "RAID": 77,
+          "DELIVER": 206
+        },
+        "reasons": {
+          "route": 472,
+          "bomb_dig": 13,
+          "dodge": 88,
+          "hold": 393,
+          "bomb_reserve": 2,
+          "bomb_chain": 1,
+          "bomb_attack": 5,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026251061,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 975,
+      "seconds": 97.5,
+      "cpuWallMs": 1257.360939025879,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 22,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 9,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 583,
+          "CHAIN": 10,
+          "OPEN_ROUTE": 65,
+          "POP": 34,
+          "RAID": 77,
+          "DELIVER": 206
+        },
+        "reasons": {
+          "route": 472,
+          "bomb_dig": 13,
+          "dodge": 88,
+          "hold": 393,
+          "bomb_reserve": 2,
+          "bomb_chain": 1,
+          "bomb_attack": 5,
+          "bomb_kill": 1
+        }
+      }
+    },
+    {
+      "seed": 2026258980,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 979,
+      "seconds": 97.9,
+      "cpuWallMs": 1399.8177795410156,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 24,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 8,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 719,
+          "CHAIN": 3,
+          "POP": 17,
+          "RAID": 46,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "bomb_dig": 16,
+          "dodge": 72,
+          "route": 448,
+          "hold": 435,
+          "bomb_attack": 3,
+          "bomb_reserve": 3,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026258980,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 979,
+      "seconds": 97.9,
+      "cpuWallMs": 1404.762222290039,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 24,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 8,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 719,
+          "CHAIN": 3,
+          "POP": 17,
+          "RAID": 46,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "bomb_dig": 16,
+          "dodge": 72,
+          "route": 448,
+          "hold": 435,
+          "bomb_attack": 3,
+          "bomb_reserve": 3,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026258980,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 959,
+      "seconds": 95.9,
+      "cpuWallMs": 1365.7462310791016,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 24,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 8,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 699,
+          "CHAIN": 3,
+          "POP": 17,
+          "RAID": 46,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "bomb_dig": 16,
+          "dodge": 72,
+          "route": 430,
+          "hold": 433,
+          "bomb_attack": 3,
+          "bomb_reserve": 3,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026258980,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 959,
+      "seconds": 95.9,
+      "cpuWallMs": 1370.4907913208008,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 24,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 8,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 699,
+          "CHAIN": 3,
+          "POP": 17,
+          "RAID": 46,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "bomb_dig": 16,
+          "dodge": 72,
+          "route": 430,
+          "hold": 433,
+          "bomb_attack": 3,
+          "bomb_reserve": 3,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026266899,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5094.479804992676,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 67,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 18,
+        "attackBombs": 55,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1234,
+          "CHAIN": 1166
+        },
+        "reasons": {
+          "route": 222,
+          "bomb_dig": 12,
+          "dodge": 1253,
+          "hold": 858,
+          "bomb_reserve": 53,
+          "bomb_attack": 2
+        }
+      }
+    },
+    {
+      "seed": 2026266899,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5304.621932983398,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 67,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 18,
+        "attackBombs": 55,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1234,
+          "CHAIN": 1166
+        },
+        "reasons": {
+          "route": 222,
+          "bomb_dig": 12,
+          "dodge": 1253,
+          "hold": 858,
+          "bomb_reserve": 53,
+          "bomb_attack": 2
+        }
+      }
+    },
+    {
+      "seed": 2026266899,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5192.432060241699,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 67,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 55,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1234,
+          "CHAIN": 1166
+        },
+        "reasons": {
+          "route": 222,
+          "bomb_dig": 12,
+          "dodge": 1253,
+          "hold": 858,
+          "bomb_reserve": 53,
+          "bomb_attack": 2
+        }
+      }
+    },
+    {
+      "seed": 2026266899,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 5157.974220275879,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 67,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 55,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 1234,
+          "CHAIN": 1166
+        },
+        "reasons": {
+          "route": 222,
+          "bomb_dig": 12,
+          "dodge": 1253,
+          "hold": 858,
+          "bomb_reserve": 53,
+          "bomb_attack": 2
+        }
+      }
+    },
+    {
+      "seed": 2026274818,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3617.4651489257812,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 5,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 86,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2278
+        }
+      }
+    },
+    {
+      "seed": 2026274818,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3617.8758544921875,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 5,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 86,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2278
+        }
+      }
+    },
+    {
+      "seed": 2026274818,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3594.4949798583984,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 5,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 86,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2278
+        }
+      }
+    },
+    {
+      "seed": 2026274818,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3618.109992980957,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 5,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 86,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2278
+        }
+      }
+    },
+    {
+      "seed": 2026282737,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 963,
+      "seconds": 96.3,
+      "cpuWallMs": 1268.254249572754,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 21,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 8,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 573,
+          "CHAIN": 11,
+          "OPEN_ROUTE": 76,
+          "POP": 32,
+          "RAID": 75,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 467,
+          "bomb_dig": 13,
+          "dodge": 74,
+          "hold": 401,
+          "bomb_reserve": 2,
+          "bomb_chain": 2,
+          "bomb_kill": 2,
+          "bomb_attack": 2
+        }
+      }
+    },
+    {
+      "seed": 2026282737,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 963,
+      "seconds": 96.3,
+      "cpuWallMs": 1329.2139205932617,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 21,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 8,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 573,
+          "CHAIN": 11,
+          "OPEN_ROUTE": 76,
+          "POP": 32,
+          "RAID": 75,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 467,
+          "bomb_dig": 13,
+          "dodge": 74,
+          "hold": 401,
+          "bomb_reserve": 2,
+          "bomb_chain": 2,
+          "bomb_kill": 2,
+          "bomb_attack": 2
+        }
+      }
+    },
+    {
+      "seed": 2026282737,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 962,
+      "seconds": 96.2,
+      "cpuWallMs": 1287.768165588379,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 21,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 8,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 572,
+          "CHAIN": 11,
+          "OPEN_ROUTE": 76,
+          "POP": 32,
+          "RAID": 75,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 466,
+          "bomb_dig": 13,
+          "dodge": 75,
+          "hold": 400,
+          "bomb_reserve": 2,
+          "bomb_chain": 2,
+          "bomb_kill": 2,
+          "bomb_attack": 2
+        }
+      }
+    },
+    {
+      "seed": 2026282737,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 962,
+      "seconds": 96.2,
+      "cpuWallMs": 1297.5050506591797,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 21,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 17,
+        "attackBombs": 8,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 572,
+          "CHAIN": 11,
+          "OPEN_ROUTE": 76,
+          "POP": 32,
+          "RAID": 75,
+          "DELIVER": 196
+        },
+        "reasons": {
+          "route": 466,
+          "bomb_dig": 13,
+          "dodge": 75,
+          "hold": 400,
+          "bomb_reserve": 2,
+          "bomb_chain": 2,
+          "bomb_kill": 2,
+          "bomb_attack": 2
+        }
+      }
+    },
+    {
+      "seed": 2026290656,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1026,
+      "seconds": 102.6,
+      "cpuWallMs": 1523.6231536865234,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 30,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 22,
+        "attackBombs": 10,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 746,
+          "CHAIN": 2,
+          "POP": 16,
+          "RAID": 65,
+          "DELIVER": 197
+        },
+        "reasons": {
+          "bomb_dig": 20,
+          "dodge": 96,
+          "route": 401,
+          "hold": 499,
+          "bomb_attack": 8,
+          "bomb_reserve": 2
+        }
+      }
+    },
+    {
+      "seed": 2026290656,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1026,
+      "seconds": 102.6,
+      "cpuWallMs": 1544.6382293701172,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 30,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 22,
+        "attackBombs": 10,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 746,
+          "CHAIN": 2,
+          "POP": 16,
+          "RAID": 65,
+          "DELIVER": 197
+        },
+        "reasons": {
+          "bomb_dig": 20,
+          "dodge": 96,
+          "route": 401,
+          "hold": 499,
+          "bomb_attack": 8,
+          "bomb_reserve": 2
+        }
+      }
+    },
+    {
+      "seed": 2026290656,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1183,
+      "seconds": 118.3,
+      "cpuWallMs": 1844.8881149291992,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 35,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 27,
+        "attackBombs": 10,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 908,
+          "CHAIN": 2,
+          "POP": 15,
+          "RAID": 64,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "bomb_dig": 25,
+          "dodge": 94,
+          "route": 452,
+          "hold": 602,
+          "bomb_attack": 8,
+          "bomb_reserve": 2
+        }
+      }
+    },
+    {
+      "seed": 2026290656,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1183,
+      "seconds": 118.3,
+      "cpuWallMs": 1876.594596862793,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 35,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 27,
+        "attackBombs": 10,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 908,
+          "CHAIN": 2,
+          "POP": 15,
+          "RAID": 64,
+          "DELIVER": 194
+        },
+        "reasons": {
+          "bomb_dig": 25,
+          "dodge": 94,
+          "route": 452,
+          "hold": 602,
+          "bomb_attack": 8,
+          "bomb_reserve": 2
+        }
+      }
+    },
+    {
+      "seed": 2026298575,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1122,
+      "seconds": 112.2,
+      "cpuWallMs": 1603.559700012207,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 24,
+        "attackBombs": 18,
+        "connectors": 5,
+        "modes": {
+          "HUNT": 726,
+          "CHAIN": 23,
+          "OPEN_ROUTE": 70,
+          "POP": 33,
+          "RAID": 40,
+          "DELIVER": 230
+        },
+        "reasons": {
+          "route": 476,
+          "bomb_dig": 15,
+          "dodge": 114,
+          "hold": 499,
+          "bomb_reserve": 7,
+          "bomb_chain": 5,
+          "bomb_kill": 2,
+          "bomb_attack": 4
+        }
+      }
+    },
+    {
+      "seed": 2026298575,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1122,
+      "seconds": 112.2,
+      "cpuWallMs": 1609.7390975952148,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 24,
+        "attackBombs": 18,
+        "connectors": 5,
+        "modes": {
+          "HUNT": 726,
+          "CHAIN": 23,
+          "OPEN_ROUTE": 70,
+          "POP": 33,
+          "RAID": 40,
+          "DELIVER": 230
+        },
+        "reasons": {
+          "route": 476,
+          "bomb_dig": 15,
+          "dodge": 114,
+          "hold": 499,
+          "bomb_reserve": 7,
+          "bomb_chain": 5,
+          "bomb_kill": 2,
+          "bomb_attack": 4
+        }
+      }
+    },
+    {
+      "seed": 2026298575,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1125,
+      "seconds": 112.5,
+      "cpuWallMs": 1559.2783966064453,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 31,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 23,
+        "attackBombs": 17,
+        "connectors": 4,
+        "modes": {
+          "HUNT": 733,
+          "CHAIN": 13,
+          "OPEN_ROUTE": 70,
+          "POP": 68,
+          "RAID": 48,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 491,
+          "bomb_dig": 14,
+          "dodge": 86,
+          "hold": 517,
+          "bomb_reserve": 5,
+          "bomb_chain": 4,
+          "bomb_kill": 3,
+          "bomb_attack": 5
+        }
+      }
+    },
+    {
+      "seed": 2026298575,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 1125,
+      "seconds": 112.5,
+      "cpuWallMs": 1549.6524047851562,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 31,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 23,
+        "attackBombs": 17,
+        "connectors": 4,
+        "modes": {
+          "HUNT": 733,
+          "CHAIN": 13,
+          "OPEN_ROUTE": 70,
+          "POP": 68,
+          "RAID": 48,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 491,
+          "bomb_dig": 14,
+          "dodge": 86,
+          "hold": 517,
+          "bomb_reserve": 5,
+          "bomb_chain": 4,
+          "bomb_kill": 3,
+          "bomb_attack": 5
+        }
+      }
+    },
+    {
+      "seed": 2026306494,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3614.8890075683594,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 113,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2251
+        }
+      }
+    },
+    {
+      "seed": 2026306494,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3636.1679306030273,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 113,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2251
+        }
+      }
+    },
+    {
+      "seed": 2026306494,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3594.201026916504,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 113,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2251
+        }
+      }
+    },
+    {
+      "seed": 2026306494,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3579.104705810547,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 14,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 113,
+          "bomb_dig": 9,
+          "dodge": 27,
+          "hold": 2251
+        }
+      }
+    },
+    {
+      "seed": 2026314413,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1012,
+      "seconds": 101.2,
+      "cpuWallMs": 1397.7889785766602,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 26,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 12,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 614,
+          "CHAIN": 13,
+          "OPEN_ROUTE": 73,
+          "POP": 27,
+          "RAID": 78,
+          "DELIVER": 207
+        },
+        "reasons": {
+          "route": 458,
+          "bomb_dig": 14,
+          "dodge": 132,
+          "hold": 396,
+          "bomb_reserve": 2,
+          "bomb_chain": 1,
+          "bomb_attack": 8,
+          "bomb_pressure": 1
+        }
+      }
+    },
+    {
+      "seed": 2026314413,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1012,
+      "seconds": 101.2,
+      "cpuWallMs": 1477.0784759521484,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 26,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 12,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 614,
+          "CHAIN": 13,
+          "OPEN_ROUTE": 73,
+          "POP": 27,
+          "RAID": 78,
+          "DELIVER": 207
+        },
+        "reasons": {
+          "route": 458,
+          "bomb_dig": 14,
+          "dodge": 132,
+          "hold": 396,
+          "bomb_reserve": 2,
+          "bomb_chain": 1,
+          "bomb_attack": 8,
+          "bomb_pressure": 1
+        }
+      }
+    },
+    {
+      "seed": 2026314413,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1012,
+      "seconds": 101.2,
+      "cpuWallMs": 1449.0486755371094,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 26,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 12,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 614,
+          "CHAIN": 13,
+          "OPEN_ROUTE": 73,
+          "POP": 27,
+          "RAID": 78,
+          "DELIVER": 207
+        },
+        "reasons": {
+          "route": 458,
+          "bomb_dig": 14,
+          "dodge": 132,
+          "hold": 396,
+          "bomb_reserve": 2,
+          "bomb_chain": 1,
+          "bomb_attack": 8,
+          "bomb_pressure": 1
+        }
+      }
+    },
+    {
+      "seed": 2026314413,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1012,
+      "seconds": 101.2,
+      "cpuWallMs": 1455.4458084106445,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 26,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 12,
+        "connectors": 1,
+        "modes": {
+          "HUNT": 614,
+          "CHAIN": 13,
+          "OPEN_ROUTE": 73,
+          "POP": 27,
+          "RAID": 78,
+          "DELIVER": 207
+        },
+        "reasons": {
+          "route": 458,
+          "bomb_dig": 14,
+          "dodge": 132,
+          "hold": 396,
+          "bomb_reserve": 2,
+          "bomb_chain": 1,
+          "bomb_attack": 8,
+          "bomb_pressure": 1
+        }
+      }
+    },
+    {
+      "seed": 2026322332,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 4740.117202758789,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 92,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 16,
+        "attackBombs": 79,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2374,
+          "CHAIN": 26
+        },
+        "reasons": {
+          "bomb_dig": 13,
+          "dodge": 173,
+          "route": 323,
+          "hold": 1812,
+          "bomb_attack": 28,
+          "bomb_reserve": 51
+        }
+      }
+    },
+    {
+      "seed": 2026322332,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 4783.848342895508,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 92,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 16,
+        "attackBombs": 79,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2374,
+          "CHAIN": 26
+        },
+        "reasons": {
+          "bomb_dig": 13,
+          "dodge": 173,
+          "route": 323,
+          "hold": 1812,
+          "bomb_attack": 28,
+          "bomb_reserve": 51
+        }
+      }
+    },
+    {
+      "seed": 2026322332,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1142,
+      "seconds": 114.2,
+      "cpuWallMs": 1715.7831802368164,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 22,
+        "attackBombs": 14,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 777,
+          "CHAIN": 47,
+          "POP": 17,
+          "OPEN_ROUTE": 45,
+          "RAID": 63,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "bomb_dig": 19,
+          "dodge": 128,
+          "route": 495,
+          "hold": 486,
+          "bomb_attack": 9,
+          "bomb_reserve": 5
+        }
+      }
+    },
+    {
+      "seed": 2026322332,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          2.5
+        ],
+        [
+          4.5,
+          12.5
+        ]
+      ],
+      "ticks": 1142,
+      "seconds": 114.2,
+      "cpuWallMs": 1691.1847076416016,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 33,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 22,
+        "attackBombs": 14,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 777,
+          "CHAIN": 47,
+          "POP": 17,
+          "OPEN_ROUTE": 45,
+          "RAID": 63,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "bomb_dig": 19,
+          "dodge": 128,
+          "route": 495,
+          "hold": 486,
+          "bomb_attack": 9,
+          "bomb_reserve": 5
+        }
+      }
+    },
+    {
+      "seed": 2026330251,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 956,
+      "seconds": 95.6,
+      "cpuWallMs": 1202.6371536254883,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 21,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 7,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 604,
+          "CHAIN": 1,
+          "POP": 32,
+          "OPEN_ROUTE": 48,
+          "RAID": 78,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 460,
+          "bomb_dig": 14,
+          "dodge": 51,
+          "hold": 424,
+          "bomb_attack": 4,
+          "bomb_reserve": 1,
+          "bomb_kill": 2
+        }
+      }
+    },
+    {
+      "seed": 2026330251,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 956,
+      "seconds": 95.6,
+      "cpuWallMs": 1199.6419219970703,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 21,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 7,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 604,
+          "CHAIN": 1,
+          "POP": 32,
+          "OPEN_ROUTE": 48,
+          "RAID": 78,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 460,
+          "bomb_dig": 14,
+          "dodge": 51,
+          "hold": 424,
+          "bomb_attack": 4,
+          "bomb_reserve": 1,
+          "bomb_kill": 2
+        }
+      }
+    },
+    {
+      "seed": 2026330251,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 952,
+      "seconds": 95.2,
+      "cpuWallMs": 1187.602668762207,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 21,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 7,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 600,
+          "CHAIN": 1,
+          "POP": 32,
+          "OPEN_ROUTE": 48,
+          "RAID": 78,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 456,
+          "bomb_dig": 14,
+          "dodge": 48,
+          "hold": 426,
+          "bomb_attack": 4,
+          "bomb_reserve": 1,
+          "bomb_kill": 3
+        }
+      }
+    },
+    {
+      "seed": 2026330251,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          3.5,
+          1.5
+        ],
+        [
+          3.5,
+          13.5
+        ]
+      ],
+      "ticks": 952,
+      "seconds": 95.2,
+      "cpuWallMs": 1187.8268127441406,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 21,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 19,
+        "attackBombs": 7,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 600,
+          "CHAIN": 1,
+          "POP": 32,
+          "OPEN_ROUTE": 48,
+          "RAID": 78,
+          "DELIVER": 193
+        },
+        "reasons": {
+          "route": 456,
+          "bomb_dig": 14,
+          "dodge": 48,
+          "hold": 426,
+          "bomb_attack": 4,
+          "bomb_reserve": 1,
+          "bomb_kill": 3
+        }
+      }
+    },
+    {
+      "seed": 2026338170,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3510.699417114258,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 85,
+          "bomb_dig": 9,
+          "dodge": 21,
+          "hold": 2285
+        }
+      }
+    },
+    {
+      "seed": 2026338170,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3482.607421875,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 85,
+          "bomb_dig": 9,
+          "dodge": 21,
+          "hold": 2285
+        }
+      }
+    },
+    {
+      "seed": 2026338170,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3572.8188400268555,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 88,
+          "bomb_dig": 9,
+          "dodge": 22,
+          "hold": 2281
+        }
+      }
+    },
+    {
+      "seed": 2026338170,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          4.5,
+          0.5
+        ],
+        [
+          4.5,
+          14.5
+        ]
+      ],
+      "ticks": 2400,
+      "seconds": 240,
+      "cpuWallMs": 3606.896873474121,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "outcome": "draw",
+      "stats": {
+        "bombs": 9,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 12,
+        "attackBombs": 0,
+        "connectors": 0,
+        "modes": {
+          "HUNT": 2400
+        },
+        "reasons": {
+          "route": 88,
+          "bomb_dig": 9,
+          "dodge": 22,
+          "hold": 2281
+        }
+      }
+    },
+    {
+      "seed": 2026346089,
+      "seat": 0,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1149,
+      "seconds": 114.9,
+      "cpuWallMs": 1575.6142807006836,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 28,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 16,
+        "attackBombs": 12,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 734,
+          "CHAIN": 26,
+          "POP": 49,
+          "OPEN_ROUTE": 58,
+          "RAID": 87,
+          "DELIVER": 195
+        },
+        "reasons": {
+          "route": 497,
+          "bomb_dig": 16,
+          "dodge": 110,
+          "hold": 514,
+          "bomb_attack": 4,
+          "bomb_reserve": 6,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026346089,
+      "seat": 0,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1149,
+      "seconds": 114.9,
+      "cpuWallMs": 1581.6007995605469,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 28,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 16,
+        "attackBombs": 12,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 734,
+          "CHAIN": 26,
+          "POP": 49,
+          "OPEN_ROUTE": 58,
+          "RAID": 87,
+          "DELIVER": 195
+        },
+        "reasons": {
+          "route": 497,
+          "bomb_dig": 16,
+          "dodge": 110,
+          "hold": 514,
+          "bomb_attack": 4,
+          "bomb_reserve": 6,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026346089,
+      "seat": 1,
+      "size": 1,
+      "arm": "A",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1146,
+      "seconds": 114.6,
+      "cpuWallMs": 1585.0500564575195,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 28,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 18,
+        "attackBombs": 12,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 731,
+          "CHAIN": 26,
+          "POP": 49,
+          "OPEN_ROUTE": 58,
+          "RAID": 87,
+          "DELIVER": 195
+        },
+        "reasons": {
+          "route": 492,
+          "bomb_dig": 16,
+          "dodge": 96,
+          "hold": 530,
+          "bomb_attack": 4,
+          "bomb_reserve": 6,
+          "bomb_chain": 2
+        }
+      }
+    },
+    {
+      "seed": 2026346089,
+      "seat": 1,
+      "size": 1,
+      "arm": "B",
+      "opponent": "tactical",
+      "spawns": [
+        [
+          1.5,
+          2.5
+        ],
+        [
+          1.5,
+          12.5
+        ]
+      ],
+      "ticks": 1146,
+      "seconds": 114.6,
+      "cpuWallMs": 1598.1143341064453,
+      "winner": 1,
+      "score": [
+        0,
+        1
+      ],
+      "outcome": "win",
+      "stats": {
+        "bombs": 28,
+        "selfTraps": 0,
+        "friendlyTraps": 0,
+        "trapped": 0,
+        "deaths": 0,
+        "rescues": 0,
+        "captures": 0,
+        "crates": 18,
+        "attackBombs": 12,
+        "connectors": 2,
+        "modes": {
+          "HUNT": 731,
+          "CHAIN": 26,
+          "POP": 49,
+          "OPEN_ROUTE": 58,
+          "RAID": 87,
+          "DELIVER": 195
+        },
+        "reasons": {
+          "route": 492,
+          "bomb_dig": 16,
+          "dodge": 96,
+          "hold": 530,
+          "bomb_attack": 4,
+          "bomb_reserve": 6,
+          "bomb_chain": 2
+        }
+      }
+    }
+  ],
+  "complete": true,
+  "elapsedSeconds": 358.532,
+  "A": {
+    "games": 64,
+    "wins": 35,
+    "draws": 29,
+    "losses": 0,
+    "meanSeconds": 167.92031250000005,
+    "cpuWallSeconds": 179.30356134796145,
+    "stats": {
+      "bombs": 2301,
+      "selfTraps": 0,
+      "friendlyTraps": 0,
+      "trapped": 0,
+      "deaths": 0,
+      "rescues": 0,
+      "captures": 0,
+      "crates": 1027,
+      "attackBombs": 1410,
+      "connectors": 38
+    },
+    "seats": {
+      "0": {
+        "games": 32,
+        "wins": 17,
+        "draws": 15,
+        "losses": 0
+      },
+      "1": {
+        "games": 32,
+        "wins": 18,
+        "draws": 14,
+        "losses": 0
+      }
+    },
+    "seatBiasNet": -0.03125
+  },
+  "B": {
+    "games": 64,
+    "wins": 35,
+    "draws": 29,
+    "losses": 0,
+    "meanSeconds": 167.92031250000005,
+    "cpuWallSeconds": 179.1305275344848,
+    "stats": {
+      "bombs": 2301,
+      "selfTraps": 0,
+      "friendlyTraps": 0,
+      "trapped": 0,
+      "deaths": 0,
+      "rescues": 0,
+      "captures": 0,
+      "crates": 1027,
+      "attackBombs": 1410,
+      "connectors": 38
+    },
+    "seats": {
+      "0": {
+        "games": 32,
+        "wins": 17,
+        "draws": 15,
+        "losses": 0
+      },
+      "1": {
+        "games": 32,
+        "wins": 18,
+        "draws": 14,
+        "losses": 0
+      }
+    },
+    "seatBiasNet": -0.03125
+  },
+  "matched": {
+    "better": 0,
+    "worse": 0,
+    "same": 64,
+    "seedPairs": 32,
+    "deltaNet": 0,
+    "lower95": 0,
+    "upper95": 0,
+    "method": "matched-seed-cluster-bootstrap",
+    "quickScreenOnly": true
+  }
+}

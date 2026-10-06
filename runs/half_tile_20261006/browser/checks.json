@@ -1,0 +1,371 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "evidence": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "result": {
+        "cases": [
+          {
+            "axis": "x",
+            "value": 5.91,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 5.91,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 5.9,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 5.9,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 5.89,
+            "side": 0,
+            "expected": true,
+            "actual": true
+          },
+          {
+            "axis": "x",
+            "value": 5.89,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6.09,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6.09,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6.11,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6.11,
+            "side": 1,
+            "expected": true,
+            "actual": true
+          },
+          {
+            "axis": "y",
+            "value": 5.91,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 5.91,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 5.9,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 5.9,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 5.89,
+            "side": 0,
+            "expected": true,
+            "actual": true
+          },
+          {
+            "axis": "y",
+            "value": 5.89,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6.09,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6.09,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6.11,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6.11,
+            "side": 1,
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "sameTick": true,
+        "cornerMissingCellSafe": true,
+        "replayStable": true
+      },
+      "errors": [],
+      "overflow": true
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "result": {
+        "cases": [
+          {
+            "axis": "x",
+            "value": 5.91,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 5.91,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 5.9,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 5.9,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 5.89,
+            "side": 0,
+            "expected": true,
+            "actual": true
+          },
+          {
+            "axis": "x",
+            "value": 5.89,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6.09,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6.09,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6.11,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "x",
+            "value": 6.11,
+            "side": 1,
+            "expected": true,
+            "actual": true
+          },
+          {
+            "axis": "y",
+            "value": 5.91,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 5.91,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 5.9,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 5.9,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 5.89,
+            "side": 0,
+            "expected": true,
+            "actual": true
+          },
+          {
+            "axis": "y",
+            "value": 5.89,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6.09,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6.09,
+            "side": 1,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6.11,
+            "side": 0,
+            "expected": false,
+            "actual": false
+          },
+          {
+            "axis": "y",
+            "value": 6.11,
+            "side": 1,
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "sameTick": true,
+        "cornerMissingCellSafe": true,
+        "replayStable": true
+      },
+      "errors": [],
+      "overflow": true
+    }
+  ]
+}

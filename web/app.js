@@ -125,6 +125,7 @@
   function localHumanControls() { return !replayDocument && matchMode.value !== 'model-vs-rule'; }
   function motionState() {
     return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1, intents,
+      settlementOverlay: !document.getElementById('settlement').hidden,
       characters: localHumanControls() ? [characterSelect.value] : [] };
   }
 

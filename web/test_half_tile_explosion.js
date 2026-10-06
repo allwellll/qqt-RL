@@ -101,6 +101,15 @@ for (const [y, grace, centerSide] of [[5.91, true, null], [5.90, true, null], [5
   }
 }
 
+// Just beyond the threshold is not covered by the numeric tolerance.
+for (const axis of [0, 1]) for (const sign of [-1, 1]) for (const extra of [0.000001, 0.00005]) {
+  const point = [5.5, 5.5]; point[axis] = 6 + sign * (0.10 + extra);
+  const sim = scene(...point);
+  const center = [Math.floor(point[0]), Math.floor(point[1])];
+  hitTick(sim, [{ owner: 1, cells: [center] }]);
+  trapped(sim, `just outside 10% axis=${axis} sign=${sign} extra=${extra} receives a normal hit`);
+}
+
 // 同 tick 聚合不依赖爆炸源遍历顺序，且两侧来源都保留物理归因。
 for (const reverse of [false, true]) {
   const sim = scene(5.5, 6.0);

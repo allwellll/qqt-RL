@@ -1,0 +1,119 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "evidence": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "geometry": {
+        "stage": {
+          "x": 0,
+          "y": 0,
+          "width": 1000,
+          "height": 1000
+        },
+        "overlay": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "canvas": {
+          "width": 1000,
+          "height": 977.765625
+        },
+        "canvasColors": 1871,
+        "position": "absolute",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "border": "0px none rgb(255, 248, 209)",
+        "boxShadow": "none"
+      },
+      "outcomes": [
+        {
+          "result": "win",
+          "title": "胜利",
+          "rank": "2/5/60.00%",
+          "inputFocusBlocksR": true,
+          "oneRestart": true,
+          "xssTextContent": true
+        },
+        {
+          "result": "loss",
+          "title": "失败",
+          "rank": "2/5/60.00%",
+          "inputFocusBlocksR": true,
+          "oneRestart": true,
+          "xssTextContent": true
+        },
+        {
+          "result": "draw",
+          "title": "平局",
+          "rank": "2/5/60.00%",
+          "inputFocusBlocksR": true,
+          "oneRestart": true,
+          "xssTextContent": true
+        }
+      ],
+      "submissions": 3,
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "geometry": {
+        "stage": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 381.328125
+        },
+        "overlay": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "canvas": {
+          "width": 390,
+          "height": 381.328125
+        },
+        "canvasColors": 1944,
+        "position": "absolute",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "border": "0px none rgb(255, 248, 209)",
+        "boxShadow": "none"
+      },
+      "outcomes": [
+        {
+          "result": "win",
+          "title": "胜利",
+          "rank": "2/5/60.00%",
+          "inputFocusBlocksR": true,
+          "oneRestart": true,
+          "xssTextContent": true
+        },
+        {
+          "result": "loss",
+          "title": "失败",
+          "rank": "2/5/60.00%",
+          "inputFocusBlocksR": true,
+          "oneRestart": true,
+          "xssTextContent": true
+        },
+        {
+          "result": "draw",
+          "title": "平局",
+          "rank": "2/5/60.00%",
+          "inputFocusBlocksR": true,
+          "oneRestart": true,
+          "xssTextContent": true
+        }
+      ],
+      "submissions": 3,
+      "errors": []
+    }
+  ]
+}

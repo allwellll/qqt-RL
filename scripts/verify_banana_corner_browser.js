@@ -75,6 +75,21 @@ async function main() {
           ensure(s.pos[1] < 9 && s.pos[0] === alignedY, `dynamic ${kind}`);
         }
         const original = scene(3, 1); original.wall[5 * QQT.W + 5] = 0;
+        for (const direction of [0, 1, 2, 3]) for (const side of [-1, 1]) for (const kind of ['wall', 'bomb']) {
+          const s = scene(direction, side); s.wall.fill(0);
+          const perp = direction < 2 ? 1 : 0;
+          s.pos[perp] = 5 + (side < 0 ? 4 : 36) / 40;
+          const [dy, dx] = V[direction]; s.wall[(5 + dy) * QQT.W + 5 + dx] = 1;
+          const target = (5 + (direction < 2 ? 0 : side)) * QQT.W + 5 + (direction < 2 ? side : 0);
+          s[kind === 'wall' ? 'wall' : 'fuse'][target] = kind === 'wall' ? 1 : 30;
+          const before = Array.from(s.pos);
+          const restored = new QQT.Sim(99); restored.restoreReplay(JSON.parse(JSON.stringify(s.snapshotReplay(null))));
+          for (const sim of [s, restored]) {
+            sim.frameStep(0, opposite[direction], .02);
+            ensure(JSON.stringify(Array.from(sim.pos)) === JSON.stringify(before), `alignment-side ${kind} direction=${direction} side=${side}`);
+          }
+        }
+        scene(3, 1).wall[5 * QQT.W + 5] = 0;
         for (let i = 0; i < 8; i++) original.frameStep(0, opposite[3], .02);
         const frame = JSON.parse(JSON.stringify(original.snapshotReplay(null)));
         const restored = new QQT.Sim(99); restored.restoreReplay(frame);

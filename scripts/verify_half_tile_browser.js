@@ -67,8 +67,11 @@ async function main() {
             cases.push({ axis, value, side: i, expected, actual });
           }
         }
-        const sameTick = scene(5.5, 6.0);
-        ensure(hit(sameTick, [[5, 5], [5, 6]]), 'same tick should hit');
+        for (const axis of [0, 1]) for (const sign of [-1, 1]) {
+          const point = [5.5, 5.5]; point[axis] = 6 + sign * .10005;
+          ensure(hit(scene(...point), [[Math.floor(point[0]), Math.floor(point[1])]]), 'just over 10% must hit');
+        }
+        ensure(hit(scene(5.5, 6.0), [[5, 5], [5, 6]]), 'same tick should hit');
         for (const [y, x] of [[6, 6], [6, 5], [5, 6], [5, 5]]) {
           const rows = y === 6 ? [5, 6] : [4, 5], cols = x === 6 ? [5, 6] : [4, 5];
           const cornerCells = rows.flatMap(r => cols.map(c => [r, c]));

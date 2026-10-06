@@ -1738,7 +1738,7 @@
     // 10% of a grid line may straddle that line for explosion purposes. This
     // keeps the classic 9/10% grace while making 11% a normal hit.
     _explosionContactCells(p) {
-      const y = this.pos[p * 2], x = this.pos[p * 2 + 1], tolerance = 0.10 + EPS;
+      const y = this.pos[p * 2], x = this.pos[p * 2 + 1], tolerance = 0.10 + 1e-12;
       const row = Math.floor(y), col = Math.floor(x), fy = y - row, fx = x - col;
       const rows = [row], cols = [col];
       if (fy <= tolerance && row > 0) rows.unshift(row - 1);
@@ -2314,7 +2314,7 @@
       return null;
     }
 
-    _nativeCornerCorrection(st, x, y, blocked, mv, distance) {
+    _nativeCornerCorrection(st, x, y, blocked, mv, distance, forcedSlide = false) {
       const hits = this._nativeCollisions(st, blocked[0], blocked[1], mv);
       const negativeBlocked = hits[0].kind !== NATIVE_HIT_NONE;
       const positiveBlocked = hits[1].kind !== NATIVE_HIT_NONE;
@@ -2326,7 +2326,8 @@
       const remainder = nativeMod(coordinate);
       const sideOpen = (dir) => {
         const [dy, dx] = DIRS[dir];
-        return !this._nativeStaticBlocked(Math.trunc(y / NATIVE_CELL_PX) + dy, Math.trunc(x / NATIVE_CELL_PX) + dx);
+        const row = Math.trunc(y / NATIVE_CELL_PX) + dy, col = Math.trunc(x / NATIVE_CELL_PX) + dx;
+        return !this._nativeStaticBlocked(row, col) && (!forcedSlide || this.fuse[row * W + col] <= 0);
       };
       let correction = -1;
       if (negativeBlocked && remainder < NATIVE_CELL_PX / 2) correction = positiveDir;
@@ -2336,11 +2337,22 @@
       else return null;
       const [dy, dx] = DIRS[correction];
       const step = nativeDistanceToCenter(x, y, correction, distance);
+      if (forcedSlide) {
+        // Alignment must sweep the perpendicular path, including newly placed
+        // bubbles; it is not permission to enter an obstructed side cell.
+        const startCell = Math.floor(y / NATIVE_CELL_PX) * W + Math.floor(x / NATIVE_CELL_PX);
+        for (let partial = 1; partial <= step; partial++) {
+          const cx = x + dx * partial, cy = y + dy * partial;
+          const cell = Math.floor(cy / NATIVE_CELL_PX) * W + Math.floor(cx / NATIVE_CELL_PX);
+          if ((cell !== startCell && (this._crateBlocked(cell) || this.fuse[cell] > 0)) ||
+              this._nativeCollisions(st, cx, cy, correction).some(hit => hit.kind !== NATIVE_HIT_NONE)) return null;
+        }
+      }
       return [x + dx * step, y + dy * step];
     }
 
     // 一次原版位移解算：整步 → 前方可走格中心截停 → 垂直拐角修正。返回新像素坐标。
-    _nativeResolve(st, x, y, mv, distance, allowCorner) {
+    _nativeResolve(st, x, y, mv, distance, allowCorner, forcedSlide = false) {
       const wallExit = this._nativeWallExit(st, x, y, mv, distance);
       if (wallExit) return wallExit;
       const [dy, dx] = DIRS[mv];
@@ -2350,7 +2362,7 @@
       if (partial < distance && !this._nativeSegmentCollision(st, x, y, mv, partial)) {
         return [x + dx * partial, y + dy * partial];
       }
-      if (allowCorner) return this._nativeCornerCorrection(st, x, y, blocked, mv, distance) || [x, y];
+      if (allowCorner) return this._nativeCornerCorrection(st, x, y, blocked, mv, distance, forcedSlide) || [x, y];
       return [x, y];
     }
 
@@ -2405,7 +2417,7 @@
         // alignment; the correction itself is perpendicular only for the
         // single frame needed to clear a wall corner.
         const allowCorner = onWall || st.wallExit || !this._nativePushContact(pid, x, y, mv, chunk / 1000);
-        const [nx, ny] = this._nativeResolve(st, x, y, mv, distance, allowCorner);
+        const [nx, ny] = this._nativeResolve(st, x, y, mv, distance, allowCorner, forcedSlide);
         if (nx !== x || ny !== y) { x = nx; y = ny; moved = true; }
       }
       if (moved) {

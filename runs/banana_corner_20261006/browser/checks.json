@@ -1,0 +1,137 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "evidence": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "result": {
+        "cases": [
+          {
+            "direction": 0,
+            "side": -1,
+            "alignedPx": 220,
+            "axis": 3.225
+          },
+          {
+            "direction": 0,
+            "side": 1,
+            "alignedPx": 220,
+            "axis": 3.225
+          },
+          {
+            "direction": 1,
+            "side": -1,
+            "alignedPx": 220,
+            "axis": 7.775
+          },
+          {
+            "direction": 1,
+            "side": 1,
+            "alignedPx": 220,
+            "axis": 7.775
+          },
+          {
+            "direction": 2,
+            "side": -1,
+            "alignedPx": 220,
+            "axis": 3.225
+          },
+          {
+            "direction": 2,
+            "side": 1,
+            "alignedPx": 220,
+            "axis": 3.225
+          },
+          {
+            "direction": 3,
+            "side": -1,
+            "alignedPx": 220,
+            "axis": 7.775
+          },
+          {
+            "direction": 3,
+            "side": 1,
+            "alignedPx": 220,
+            "axis": 7.775
+          }
+        ],
+        "closedDirections": 4,
+        "dynamic": [
+          "wall",
+          "bomb"
+        ],
+        "replay": true
+      },
+      "errors": [],
+      "overflow": true
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "result": {
+        "cases": [
+          {
+            "direction": 0,
+            "side": -1,
+            "alignedPx": 220,
+            "axis": 3.225
+          },
+          {
+            "direction": 0,
+            "side": 1,
+            "alignedPx": 220,
+            "axis": 3.225
+          },
+          {
+            "direction": 1,
+            "side": -1,
+            "alignedPx": 220,
+            "axis": 7.775
+          },
+          {
+            "direction": 1,
+            "side": 1,
+            "alignedPx": 220,
+            "axis": 7.775
+          },
+          {
+            "direction": 2,
+            "side": -1,
+            "alignedPx": 220,
+            "axis": 3.225
+          },
+          {
+            "direction": 2,
+            "side": 1,
+            "alignedPx": 220,
+            "axis": 3.225
+          },
+          {
+            "direction": 3,
+            "side": -1,
+            "alignedPx": 220,
+            "axis": 7.775
+          },
+          {
+            "direction": 3,
+            "side": 1,
+            "alignedPx": 220,
+            "axis": 7.775
+          }
+        ],
+        "closedDirections": 4,
+        "dynamic": [
+          "wall",
+          "bomb"
+        ],
+        "replay": true
+      },
+      "errors": [],
+      "overflow": true
+    }
+  ]
+}

@@ -57,6 +57,11 @@ async function main() {
       await page.waitForFunction(() => getComputedStyle(document.getElementById('loading')).opacity === '0', null, { polling: 50 });
       // Ignore the initial map setup; count only restarts after the real page is ready.
       await page.evaluate(() => { window.resetCount = 0; });
+      await page.evaluate(() => {
+        const ctx = document.getElementById('game').getContext('2d'), fillText = ctx.fillText;
+        window.canvasText = [];
+        ctx.fillText = function (text, ...args) { window.canvasText.push(String(text)); return fillText.call(this, text, ...args); };
+      });
 
       const geometry = await page.evaluate(() => {
         const stage = document.querySelector('.stage').getBoundingClientRect();
@@ -107,6 +112,15 @@ async function main() {
           'settlement overlay must cover the terminal canvas');
         assert(overlayGeometry.overlay.x <= overlayGeometry.canvas.x && overlayGeometry.overlay.y <= overlayGeometry.canvas.y);
         assert.equal(await page.locator('#settlement-title').textContent(), title);
+        const textLayout = await page.evaluate(() => {
+          window.canvasText = []; window.appFrame(performance.now());
+          const rows = Array.from(document.querySelectorAll('#settlement > *')).filter(el => el.getBoundingClientRect().height > 0);
+          return { canvasText: window.canvasText, rows: rows.map(el => {
+            const r = el.getBoundingClientRect(); return { top: r.top, bottom: r.bottom };
+          }) };
+        });
+        assert(!textLayout.canvasText.some(text => ['胜利', '失败', '平局', '按 R 重新开局'].includes(text)), 'DOM settlement must own terminal text');
+        for (let i = 1; i < textLayout.rows.length; i++) assert(textLayout.rows[i].top >= textLayout.rows[i - 1].bottom, 'terminal text rows must not overlap');
         assert.equal(await page.locator('#settlement-time').textContent(), '本局耗时 12.0秒');
         assert.match(await page.locator('#settlement-rank').textContent(), /第 2 名 \/ 5 位玩家 · 超过 60\.00% 玩家/);
         assert.match(await page.locator('#play-again').textContent(), /再来一局.*R/);
