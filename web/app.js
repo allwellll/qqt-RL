@@ -125,7 +125,7 @@
   function localHumanControls() { return !replayDocument && matchMode.value !== 'model-vs-rule'; }
   function motionState() {
     return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1, intents,
-      settlementOverlay: !document.getElementById('settlement').hidden,
+      settlement: QQTLeaderboard.settlementText(leaderboard.state().settlement),
       characters: localHumanControls() ? [characterSelect.value] : [] };
   }
 
@@ -197,6 +197,7 @@
     leaderboardMatch = null;
     leaderboard.clearSettlement();
     QQTLeaderboard.renderSettlement(document, leaderboard.state());
+    QQTLeaderboard.renderUpgradeProfile(document, leaderboard.state());
     replayDocument = null;
     replayPlaying = false;
     replayToggle.textContent = '播放';
@@ -373,6 +374,12 @@
     }
     renderer.render(sim, now, motionState());
     QQTLeaderboard.renderSettlement(document, leaderboard.state());
+    QQTLeaderboard.renderUpgradeProfile(document, leaderboard.state());
+    const profileForm = document.getElementById('leaderboard-profile');
+    if (!profileForm.hidden) {
+      const rect = canvas.getBoundingClientRect(), stage = canvas.parentElement.getBoundingClientRect();
+      profileForm.style.top = `${rect.top - stage.top + rect.height * .66}px`;
+    }
     hideLoading();
     status.textContent = JSON.stringify({
       mode: QQTModelCatalog.matchLabel(matchMode.value),
@@ -479,7 +486,6 @@
     held.clear(); bombCell = -1; itemCell = -1;
   });
   restart.addEventListener('click', () => requestRestart());
-  document.getElementById('play-again').addEventListener('click', () => requestRestart(true));
   soundToggle.addEventListener('change', () => sound.setEnabled(soundToggle.checked));
   characterSelect.addEventListener('change', () => {
     updateCharacterPortrait();

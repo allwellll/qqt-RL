@@ -93,14 +93,15 @@
   function matchResult(sim, viewerPid = 0) {
     if (!sim || !sim.done) return null;
     const timeout = sim.maxSteps != null && sim.t >= sim.maxSteps;
-    const reason = !sim.isBun ? '' : timeout ? '时间到' : '运包成功';
+    const viewerTeam = sim.team ? sim.team[viewerPid] : viewerPid;
+    const reason = !sim.isBun ? '' : timeout ? '时间到'
+      : viewerPid >= 0 && sim.winner != null && sim.winner !== viewerTeam ? '运包失败' : '运包成功';
     // 超时按基地存包总数判胜负，运包成功按夺包数；比分与判定口径一致。
     const tally = !sim.isBun ? null : timeout && sim.bunStored
       ? sim.bunStored.map((row) => row.reduce((sum, count) => sum + count, 0)) : sim.bunScore;
     const score = tally ? `${tally[0]} : ${tally[1]}` : '';
     if (sim.winner == null) return { kind: 'draw', title: '平局', reason, score };
     if (viewerPid < 0) return { kind: 'win', title: sim.winner === 0 ? '蓝方胜利' : '红方胜利', reason, score };
-    const viewerTeam = sim.team ? sim.team[viewerPid] : viewerPid;
     return sim.winner === viewerTeam
       ? { kind: 'win', title: '胜利', reason, score }
       : { kind: 'lose', title: '失败', reason, score };
@@ -749,27 +750,32 @@
       ctx.filter = 'none';
       const barPid = motion ? motion.humanPid : 0;
       if (barPid >= 0 && sim.spdG) drawStatusBar(sim, barPid, now);
-      drawResult(matchResult(sim, motion ? motion.humanPid : 0), motion && motion.settlementOverlay);
+      drawResult(matchResult(sim, motion ? motion.humanPid : 0), motion && motion.settlement);
     }
     function render(sim, now = performance.now(), motion = null) {
       return withContextState(ctx, () => renderUnsafe(sim, now, motion));
     }
     const RESULT_COLORS = { win: '#ffd54a', lose: '#ff7a7a', draw: '#d8e6ea' };
-    function drawResult(result, settlementOverlay = false) {
+    function drawResult(result, settlement = null) {
       if (!result) return;
       const cx = canvas.width / 2, cy = (BOARD_OFFSET + BOARD_H) / 2;
       ctx.save();
       ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-      if (settlementOverlay) { ctx.restore(); return; }
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
-      ctx.font = 'bold 96px sans-serif'; ctx.lineWidth = 10; ctx.strokeStyle = 'rgba(0,0,0,0.85)';
-      ctx.fillStyle = RESULT_COLORS[result.kind];
-      ctx.strokeText(result.title, cx, cy - 30); ctx.fillText(result.title, cx, cy - 30);
+      ctx.strokeStyle = 'rgba(0,0,0,0.85)';
+      function text(value, y, size, color) {
+        ctx.font = `bold ${size}px sans-serif`; ctx.lineWidth = size >= 80 ? 10 : 6;
+        ctx.fillStyle = color; ctx.strokeText(value, cx, y); ctx.fillText(value, cx, y);
+      }
+      text(result.title, cy - 115, 96, RESULT_COLORS[result.kind]);
       const sub = [result.reason, result.score && `包子 ${result.score}`].filter(Boolean).join('  ·  ');
-      ctx.font = 'bold 28px sans-serif'; ctx.lineWidth = 6; ctx.fillStyle = '#ffffff';
-      if (sub) { ctx.strokeText(sub, cx, cy + 50); ctx.fillText(sub, cx, cy + 50); }
-      ctx.font = 'bold 20px sans-serif'; ctx.lineWidth = 5; ctx.fillStyle = '#cfe9ee';
-      ctx.strokeText('按 R 重新开局', cx, cy + 100); ctx.fillText('按 R 重新开局', cx, cy + 100);
+      if (sub) text(sub, cy - 35, 32, '#ffffff');
+      if (settlement) {
+        text(settlement.time, cy + 12, 32, '#ffffff');
+        if (settlement.rank) text(settlement.rank, cy + 57, 32, '#cfe9ee');
+        text(settlement.percentile, cy + (settlement.rank ? 97 : 57), 32, '#cfe9ee');
+      }
+      text('按 R 再来一局', cy + 145, 28, '#cfe9ee');
       ctx.restore();
     }
     // 箭头不参与 Z 排序，永远画在所有地图元件之上；轻微上下浮动便于辨认。

@@ -495,6 +495,7 @@ assert(/nativeItems: native, nativeTrap: native/.test(fs.readFileSync(path.join(
   const base = { isBun: true, done: true, t: 50, maxSteps: 2400, bunScore: [1, 0], bunStored: [[1, 1], [1, 0]] };
   assert.deepEqual(visual.matchResult({ ...base, winner: 0 }, 0), { kind: 'win', title: '胜利', reason: '运包成功', score: '1 : 0' });
   assert.equal(visual.matchResult({ ...base, winner: 1 }, 0).title, '失败');
+  assert.equal(visual.matchResult({ ...base, winner: 1 }, 0).reason, '运包失败');
   const timeout = visual.matchResult({ ...base, t: 2400, winner: null, bunStored: [[1, 0], [0, 1]] }, 0);
   assert.deepEqual([timeout.title, timeout.reason, timeout.score], ['平局', '时间到', '1 : 1']);
   assert.equal(visual.matchResult({ ...base, winner: 1 }, -1).title, '红方胜利', '观战按阵营报胜者');
@@ -504,7 +505,7 @@ assert(/nativeItems: native, nativeTrap: native/.test(fs.readFileSync(path.join(
   const sim = fakeSim({ pos: [5.5, 3.5, 5.5, 8.5], isBun: true });
   Object.assign(sim, { done: true, winner: 0, t: 30, maxSteps: 2400, bunScore: [1, 0] });
   r.render(sim, 1000, null);
-  assert(texts.some((t) => t.text === '胜利') && texts.some((t) => t.text === '按 R 重新开局'), '终局必须在画面显示结果');
+  assert(texts.some((t) => t.text === '胜利') && texts.some((t) => t.text === '按 R 再来一局'), '终局必须在画面显示结果');
 }
 
 // 4l) 炸砖：砖体残骸期仍挡路，但画面立即不画砖；掷出的道具立即可见，残骸结束才可拾取。

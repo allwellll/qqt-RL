@@ -15,3 +15,6 @@ web/models/
 web/test-artifacts/
 *.log
 *.tmp
+
+# Local task resume state.
+.hermes/

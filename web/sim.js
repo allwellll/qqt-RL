@@ -1188,8 +1188,9 @@
           this._activateNativePass(p);
         }
       }
+      const itemReleased = this.alive.map(() => false);
       for (let p = 0; p < this.nPlayers; p++) {
-        if (actions[p][2] === 1) this._placeHeldItem(p, actions[p][5], actions[p][6]);
+        if (actions[p][2] === 1) itemReleased[p] = this._placeHeldItem(p, actions[p][5], actions[p][6]);
       }
       // Keep event masks with the logical frame for deterministic replay.
       this.lastReplayPlaced = placed.slice();
@@ -1524,7 +1525,7 @@
           !causalDamageSource[actor][victim];
       }
       return {
-        placed, covered, triggered, died: this.lastDied.slice(),
+        placed, itemReleased, covered, triggered, died: this.lastDied.slice(),
         physicalDamageSource, causalDamageSource, creditedKill, causalKill,
         ownBombDefeat, mutualDeath,
       };

@@ -71,3 +71,42 @@ delete from qqt_private.players where player_id in (
 - 独立只读 Agent `color_restart_review_final` 审查完成，无发布阻断；独立重跑 controls、death_overlay、web_feel、leaderboard 定向测试及 diff --check 通过，复核双视口证据。此前 CLI 审查因重连未完成，已停止，不将其算作通过。
 - 正式Pages证据发布后生成于 `runs/leaderboard_20261006/color-restart-pages/checks.json`；exact-head和线上关键文件（包括新增核验 controls.js）证据 `runs/leaderboard_20261006/pages-color-restart-final.json`。
 - 可信IP记录仍禁用；增量SQL/Edge未部署，不宣称服务端本局排名/IP上线。本轮没有新增数据库写入或清理动作，既有记录由用户另行处理。
+
+## 主任务合同 A/B/C/D 续做（20261006，最新状态以本节为准）
+
+### 基线与产品实现
+
+- 从 `6c554c7456764657a64f9be9db405ac23f06ac49`、原 `cx_bot_cooperation_20261004` 工作区续做；未 reset、新建 worktree 或撤销其他任务修改。Bot 快筛、10%半身位和香蕉墙角实现没有重新开发。`.hermes/` 本地恢复状态原样保留并加入忽略规则。
+- A：删除终局独立可见 HTML 文本层及“再来一局”按钮/点击入口。原 Canvas 使用统一原终局字体、颜色、描边与行距绘制结果、运包成功/失败或超时原因、正确比分、游戏内耗时、服务端 rank/total/percentile；无服务端排名诚实显示待数据库升级。只留“按 R 再来一局”，R 仍走原安全 restart gate。HTML 仅保留不可见的屏幕阅读器镜像，标题可见仅一次。
+- B 音效：代码中的“释放”是主动使用香蕉皮/慢慢胶，把持有道具放在动作指定格。成功动作的 `itemReleased` 仅增加事件信息，不改变随机数、物理或确定性状态。复用 `assets/snd/吃道具音效.wav` 与原音量/静音路径；同 tick 拾取+释放合并一次，无物品/被阻挡不响。回放从真实 step 重建事件，观战按监听玩家播放，seek 原 silent 路径保留。
+- B 资料：右栏完全移除昵称/宣言控件。只在真人完整对局、服务端证明本局升级（`match_upgraded=true` 且匹配 `client_match_id`）后显示结算资料区。首次无已保存昵称时留空并必填；后续沿用浏览器缓存，刷新不会重现旧升级表单。独立资料 RPC 立即保存，空宣言保留旧值，后续可修改；跳过和 R 不受网络保存阻塞。桌面资料区位于结算 Canvas 内下方，手机接在 Canvas 下方的同一 stage，避免遮挡与越界。长度、控制字符、尖括号及 textContent/XSS 校验继续执行。
+- C：新 migration 增加私表 `raw_ip inet` 和 `profile_saved`。Edge 接受有效转发头 IP（按用户要求接受可伪造），结算成功后经 service-role-only RPC 保存原始值；SQL 生成脱敏展示。公开榜单、结算和资料 RPC 不返回原始 IP，Edge 使用响应字段白名单；无有效来源或 metadata 写入失败不回滚已成功的结算。IP 不参与身份认证。旧三参数 IP writer 停用。
+- 原赛果 validator、凭证验证、payload fingerprint、幂等及 cohort 排名保留。资料 RPC 使用与原赛果相同玩家 advisory lock，已提交资料不会被缓存的旧赛果资料覆盖，不通过重提赛果保存宣言。
+
+### 验证与独立审查
+
+- 完整 `npm test` 通过，日志 `/tmp/qqt-main-npm-20261006.log`。新增 PGlite 测试实际执行下述准确 SQL Editor bundle，并重复新增 migration；覆盖胜/负/平升级边界、非升级禁止提交、凭证/玩家/升级事件归属、重复赛果、宣言空值/覆盖、旧队列保护、IPv4/压缩/映射IPv6 inet与数据库脱敏、私表和 writer ACL。
+- 真实 Chromium 1440×1000、390×844：Canvas 单标题、胜/负/平、运包成功/失败、超时比分、排名有无、无重开按钮、输入聚焦/重复/长按 R gate 和无横向溢出通过。最终本地证据 `runs/qqt_main_20261006/terminal-final-local/checks.json`。
+- 同双视口验证首次昵称+宣言、缓存、刷新、空宣言保留、修改宣言、尖括号拒绝、双提交合并、跳过/R和右栏无控件；实际加载原 WAV、真实 AudioBufferSourceNode.start，成功释放一次、失败释放不响、静音成功释放不创建音源。观战和真实离线录像不触发表单或提交。最终证据 `runs/qqt_main_20261006/upgrade-final-local/checks.json`。
+- 浏览器使用真实网页、Sim、Canvas、地图/角色/音频资源；结果/资料 RPC 明确 mock。终局通过真实超时逻辑确定性推进，运包视觉分支单独设置权威终态；不作为自然完整真人对局或已部署数据库/Edge E2E 证据。本轮没有新建远端玩家。
+- 独立只读审查按恢复合同执行；审查结果和正式发布核验在收尾追加。
+
+### 远端实测状态与准确人工材料
+
+旧章节“所有增量均未部署 / IP 主动禁用”已不适用于本轮代码和远端实测状态。本轮只读 `qqt_leaderboard` HTTP200，包含 `player_ip`、`best_win_duration_ms` 列；`qqt_update_profile` HTTP404/PGRST202、Edge `submit-result` OPTIONS404。本局排名增量是否已执行没有只读证据，不宣称其已部署。证据 `runs/qqt_main_20261006/remote-deployment-status.json`。
+
+本机没有可用 Supabase 管理 CLI、管理 token 或数据库连接，**本轮没有部署 SQL / Edge，没有清理历史测试身份**。Pages 发布不等于这些后端已上线。没有本局升级证明时，线上资料区保持隐藏；无 rank 时 Canvas 显示“排名待数据库升级”。
+
+管理端 SQL Editor 可直接粘贴 [`supabase/manual_upgrade_20261006.sql`](../supabase/manual_upgrade_20261006.sql)：只含排名增量与本轮新增量，跳过首次建表和已生效的 IP/最佳胜利增量。排名增量可安全重复执行，新增 wrapper 随后恢复完整排名/升级/资料逻辑。已有最新 migration 的项目不需要重新执行旧增量。新 migration 为 [`20261006220000_upgrade_profile_and_raw_ip.sql`](../supabase/migrations/20261006220000_upgrade_profile_and_raw_ip.sql)。
+
+SQL 成功后，按 [`supabase/README.md`](../supabase/README.md) 更新 Edge 的 `index.ts` / `handler.mjs`，设置精确 CORS origin，使用平台内置 service-role 变量。人工数据库、Edge、匿名公开返回、真实升级与私表 IP 验证步骤均写在该文档；没有把任何数据库/service-role凭据放入仓库、日志或 Pages。
+
+历史 Hermes 测试身份已从既有报告与生成的 cleanup.sql 汇总为7个准确 player_id，管理端独立执行 [`supabase/cleanup_test_players_20261006.sql`](../supabase/cleanup_test_players_20261006.sql)。只按 UUID cascade 清理，不按昵称或 IP 模糊删除；本轮未执行删除。
+
+### 发布核验材料
+
+自动 Pages 由 push main 触发，无额外审批。`scripts/verify_pages_exact_head.js` 要求远端 main、当前 HEAD、push 事件工作流 success、线上 `build-info.json.commit` 相同，并逐字节比较17个关键资源（包括 HTML/CSS/JS、角色素材、原吃道具 WAV）。结果保存 `runs/qqt_main_20261006/pages-final.json`。正式 Pages 双视口证据分别保存 `terminal-pages` 与 `upgrade-pages`；最终收尾核验在发布后完成。
+
+- 独立只读审查 `qqt_final_readonly_review` 发现多标签缓存陈旧时，空宣言被前端替换成缓存旧值，可能覆盖服务端新宣言。已修复为真实空字符串传给 SQL；资料 RPC 回传服务端最终昵称/宣言以同步缓存。新增多标签等效的陈旧缓存回归，准确人工 SQL bundle 同步更新并实际重跑通过。审查复核结果在最终收尾追加。
+
+- 独立只读复审确认空宣言阻断已解决，当前没有发布阻断；实际执行的 manual SQL 与两份源 migration 完全一致。复跑三个定向测试和 diff --check 通过。完整 npm 与最终本地双视口浏览器通过；正式发布核验接续执行。

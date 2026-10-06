@@ -16,13 +16,21 @@
           <p id="loading-text">正在加载地图与素材…</p>
           <progress id="loading-progress" max="100" value="0"></progress>
         </div>
-        <section id="settlement" class="settlement" role="region" aria-label="本局结算" aria-live="polite" hidden>
+        <section id="settlement" class="settlement sr-only" role="region" aria-label="本局结算" aria-live="polite" hidden>
           <h2 id="settlement-title"></h2>
           <p id="settlement-time"></p>
           <p id="settlement-rank"></p>
           <p id="settlement-status" class="note"></p>
-          <button id="play-again" type="button">再来一局 · 按 R</button>
         </section>
+        <form id="leaderboard-profile" class="upgrade-profile" hidden>
+          <p id="profile-title">排行榜等级提升！</p>
+          <div class="profile-fields">
+            <label>昵称<input id="player-nickname" maxlength="24" required autocomplete="nickname"></label>
+            <label>胜利宣言<input id="player-message" maxlength="80" autocomplete="off" placeholder="留空保留原宣言"></label>
+          </div>
+          <div class="profile-actions"><button id="profile-submit" type="submit">提交资料</button><button id="profile-skip" type="button">跳过</button></div>
+          <p id="profile-status" role="status" aria-live="polite"></p>
+        </form>
       </div>
       <aside>
         <section class="leaderboard" aria-labelledby="leaderboard-heading">
@@ -39,16 +47,7 @@
             <p id="leaderboard-status" class="note" role="status" aria-live="polite">正在连接排行榜…</p>
             <button id="leaderboard-retry" type="button">刷新 / 重试</button>
           </div>
-          <details class="profile-settings fold">
-            <summary>昵称与宣言</summary>
-            <form id="leaderboard-profile">
-              <label for="player-nickname">昵称</label>
-              <input id="player-nickname" maxlength="24" required autocomplete="nickname">
-              <label for="player-message">胜利宣言</label>
-              <input id="player-message" maxlength="80" autocomplete="off">
-              <button type="submit">保存</button>
-            </form>
-          </details>
+
         </section>
         <button id="restart" type="button">重新开局</button>
         <label>人物

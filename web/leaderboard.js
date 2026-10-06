@@ -29,7 +29,7 @@
     return /^[0-9a-f]{1,4}:\*:\*:[0-9a-f]{1,4}$/i.test(value) ? value : null;
   }
   function createClient({ config, storage, crypto, fetch, onChange = () => {}, now = Date.now }) {
-    let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null;
+    let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null, profileRequest = null;
     try { data = JSON.parse(storage.getItem(KEY)); } catch (_) { persistent = false; }
     if (!data || !/^[0-9a-f-]{36}$/.test(data.player_id || '') || !/^[0-9a-f]{64}$/.test(data.secret || '')) {
       const playerId = uuid(crypto);
@@ -43,7 +43,8 @@
     catch (_) { Object.assign(data, { nickname: defaultNickname(data.player_id), nickname_auto: true, victory_message: '' }); }
     const completed = new Set(data.queue.map(x => x.client_match_id));
     function state() { return { nickname: data.nickname, victory_message: data.victory_message,
-      player_id: data.player_id, persistent, status, rows, progress, settlement, pending: data.queue.length }; }
+      player_id: data.player_id, persistent, status, rows, progress, settlement, pending: data.queue.length,
+      savedNickname: data.nickname_auto !== true, profileSubmitting: !!profileRequest }; }
     function emit(text) { if (text !== undefined) status = text; onChange(state()); }
     function save() {
       try { storage.setItem(KEY, JSON.stringify(data)); } catch (_) { persistent = false; }
@@ -57,7 +58,8 @@
           body: JSON.stringify(body), signal: controller.signal });
         if (!response.ok) {
           const error = await response.json().catch(() => ({}));
-          if (['PGRST202', 'PGRST205'].includes(error.code)) throw new Error('排行榜数据库尚未初始化，本地游戏可继续');
+          if (['PGRST202', 'PGRST205'].includes(error.code)) throw new Error(endpoint.endsWith('qqt_update_profile')
+            ? '资料提交待数据库升级' : '排行榜数据库尚未初始化，本地游戏可继续');
           throw new Error(`排行榜请求失败 (${response.status})`);
         }
         return await response.json();
@@ -103,7 +105,6 @@
               progress = result;
               // Only the authenticated settlement response may confirm metadata for this
               // player. Never infer an IP from browser inputs or someone else's Top row.
-              // Today's Edge returns network_metadata_recorded=false, so this stays local.
               if (data.nickname_auto === true && result.network_metadata_recorded === true &&
                   trustedMaskedIp(result.ip_display)) {
                 data.nickname = defaultNickname(data.player_id, result.ip_display);
@@ -112,7 +113,9 @@
                 // The queued payload carries the terminal result; the original
                 // match metadata passed to begin() intentionally does not.
                 settlement = { ...settlement, submitted: true,
-                  ranking: validRanking(result.match_rank, match) ? result.match_rank : null };
+                  ranking: validRanking(result.match_rank, match) ? result.match_rank : null,
+                  upgraded: result.client_match_id === match.client_match_id && result.match_upgraded === true,
+                  level: result.level };
               }
               data.progress = progress;
               data.queue.shift(); save(); emit('结算已提交');
@@ -144,7 +147,29 @@
         seed, mode, map_id, client_version, completed_at: new Date(now()).toISOString() });
       save(); emit('正在提交结算…'); return drain();
     }
-    return { state, begin, finish, refresh, retry: drain, clearSettlement() { settlement = null; },
+    function submitProfile(nick, message) {
+      if (profileRequest) return profileRequest;
+      if (!settlement || !settlement.submitted || !settlement.upgraded || settlement.profileSkipped) {
+        return Promise.reject(new Error('仅本局排行榜升级后可提交资料'));
+      }
+      let values;
+      try { values = profile(nick, message); }
+      catch (error) { return Promise.reject(error); }
+      const matchId = settlement.client_match_id;
+      profileRequest = (async () => {
+        const result = await rpc('qqt_update_profile', { p_player_id: data.player_id, p_player_secret: data.secret,
+          p_client_match_id: matchId, p_nickname: values.nickname, p_victory_message: values.victory_message });
+        if (!result || result.saved !== true || typeof result.nickname !== 'string' ||
+            typeof result.victory_message !== 'string') throw new Error('资料提交响应格式错误');
+        const saved = profile(result.nickname, result.victory_message);
+        Object.assign(data, saved, { nickname_auto: false }); save();
+        emit('昵称和宣言已提交'); await refresh();
+        return true;
+      })().finally(() => { profileRequest = null; emit(); });
+      emit(); return profileRequest;
+    }
+    return { state, begin, finish, refresh, retry: drain, submitProfile,
+      skipProfile() { if (settlement) settlement = { ...settlement, profileSkipped: true }; emit(); }, clearSettlement() { settlement = null; },
       setProfile(nick, message) { Object.assign(data, profile(nick, message), { nickname_auto: false }); save(); emit('昵称和宣言已保存'); } };
   }
   function time(ms) { return ms ? `${(Number(ms) / 1000).toFixed(1)}秒` : '—'; }
@@ -155,15 +180,22 @@
       ['result', 'mode', 'map_id', 'difficulty', 'opponent'].every(key => rank[key] === match[key]) &&
       rank.duration_ms === match.game_duration_ms;
   }
+  function settlementText(value) {
+    if (!value) return null;
+    return { time: `本局耗时 ${time(value.duration_ms)}`,
+      rank: value.ranking ? `第 ${value.ranking.rank} 名 / ${value.ranking.total} 位玩家` : '',
+      percentile: value.ranking ? `超过 ${value.ranking.percentile.toFixed(2)}% 玩家`
+        : value.submitted ? '排名待数据库升级' : '排名等待结算提交' };
+  }
+  // Screen-reader mirror only. All visible terminal text is drawn in the original Canvas.
   function renderSettlement(document, state) {
     const el = id => document.getElementById(id), value = state.settlement;
     el('settlement').hidden = !value;
     if (!value) return;
+    const lines = settlementText(value);
     el('settlement-title').textContent = { win: '胜利', loss: '失败', draw: '平局' }[value.result] || '本局结束';
-    el('settlement-time').textContent = `本局耗时 ${time(value.duration_ms)}`;
-    el('settlement-rank').textContent = value.ranking
-      ? `第 ${value.ranking.rank} 名 / ${value.ranking.total} 位玩家 · 超过 ${value.ranking.percentile.toFixed(2)}% 玩家`
-      : value.submitted ? '排名待数据库升级' : '排名等待结算提交';
+    el('settlement-time').textContent = lines.time;
+    el('settlement-rank').textContent = [lines.rank, lines.percentile].filter(Boolean).join(' · ');
     el('settlement-status').textContent = state.status;
   }
   function maskIp(value) {
@@ -189,29 +221,42 @@
       target.append(item);
     }
   }
+  function renderUpgradeProfile(document, state) {
+    const form = document.getElementById('leaderboard-profile'), value = state.settlement;
+    form.hidden = !(value && value.submitted && value.upgraded && !value.profileSkipped);
+    document.getElementById('profile-submit').disabled = state.profileSubmitting;
+    if (!form.hidden) document.getElementById('profile-title').textContent = `排行榜升至 ${value.level} 级！`;
+  }
   function mount(document, options) {
     const el = id => document.getElementById(id);
-    let renderedNickname;
+    let renderedMatch;
     const client = createClient({ ...options, onChange(state) {
       el('leaderboard-status').textContent = state.persistent ? state.status : `本地存储不可用 · ${state.status}`;
-      const input = el('player-nickname');
-      if (state.nickname !== renderedNickname && input.value === renderedNickname && document.activeElement !== input) {
-        input.value = state.nickname;
+      const value = state.settlement;
+      if (value && value.upgraded && renderedMatch !== value.client_match_id) {
+        renderedMatch = value.client_match_id;
+        el('player-nickname').value = state.savedNickname ? state.nickname : '';
+        el('player-message').value = state.victory_message;
+        el('profile-status').textContent = '';
       }
-      renderedNickname = state.nickname;
+      renderUpgradeProfile(document, state);
       renderRows(document, el('leaderboard-list'), state.rows);
       el('leaderboard-empty').hidden = state.rows.length > 0;
     } });
-    el('player-nickname').value = renderedNickname = client.state().nickname;
-    el('player-message').value = client.state().victory_message;
-    el('leaderboard-profile').addEventListener('submit', event => {
+    el('leaderboard-profile').addEventListener('submit', async event => {
       event.preventDefault();
-      try { client.setProfile(el('player-nickname').value, el('player-message').value); }
-      catch (error) { el('leaderboard-status').textContent = error.message; }
+      const matchId = client.state().settlement?.client_match_id;
+      try {
+        await client.submitProfile(el('player-nickname').value, el('player-message').value);
+        if (client.state().settlement?.client_match_id === matchId) el('profile-status').textContent = '资料已提交，可继续修改宣言';
+      } catch (error) {
+        if (client.state().settlement?.client_match_id === matchId) el('profile-status').textContent = error.message;
+      }
     });
+    el('profile-skip').addEventListener('click', () => client.skipProfile());
     el('leaderboard-retry').addEventListener('click', () => client.retry());
     client.refresh();
     return client;
   }
-  return { createClient, profile, renderRows, renderSettlement, validRanking, mount, time, maskIp, defaultNickname };
+  return { createClient, profile, renderRows, renderSettlement, settlementText, renderUpgradeProfile, validRanking, mount, time, maskIp, defaultNickname };
 });

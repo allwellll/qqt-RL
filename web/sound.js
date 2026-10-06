@@ -37,6 +37,9 @@
       const tookBun = before.bunCarried[p] < 0 && sim.bunCarried && sim.bunCarried[p] >= 0;
       if (tookCrate || tookBun) events.push('pickup');
     }
+    // Successful active releases reuse the pickup buffer, including recorded actions.
+    // A pickup and a release in the same tick still play this buffer only once.
+    if (info && info.itemReleased && info.itemReleased[listenerPid] && !events.includes('pickup')) events.push('pickup');
     return events;
   }
 
