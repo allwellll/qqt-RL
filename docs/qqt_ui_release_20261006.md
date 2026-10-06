@@ -110,3 +110,14 @@ SQL 成功后，按 [`supabase/README.md`](../supabase/README.md) 更新 Edge �
 - 独立只读审查 `qqt_final_readonly_review` 发现多标签缓存陈旧时，空宣言被前端替换成缓存旧值，可能覆盖服务端新宣言。已修复为真实空字符串传给 SQL；资料 RPC 回传服务端最终昵称/宣言以同步缓存。新增多标签等效的陈旧缓存回归，准确人工 SQL bundle 同步更新并实际重跑通过。审查复核结果在最终收尾追加。
 
 - 独立只读复审确认空宣言阻断已解决，当前没有发布阻断；实际执行的 manual SQL 与两份源 migration 完全一致。复跑三个定向测试和 diff --check 通过。完整 npm 与最终本地双视口浏览器通过；正式发布核验接续执行。
+
+### 正式 Pages 发布与收尾
+
+- 功能提交 `8ac4d417ead8f35902f29542d71f94479640717e` 已发布。Git 智能推送受代理 CONNECT503 / TLS 中断影响；通过 GitHub Git API 上传必要 blob/tree/commit，逐层核对 SHA 与本地完全一致，非强制更新 main。push 事件自动触发 [Pages workflow 37480663383](https://github.com/allwellll/qqt-RL/actions/runs/37480663383)，最终 success。
+- `build-info.json.commit` 与该 head 一致，17个关键资源逐字节相同，SHA256证据 `runs/qqt_main_20261006/pages-feature.json`。本地 main/origin/main 已同步该 head，canonical main 工作树干净。
+- 正式网页 1440×1000 / 390×844 Canvas 终局专项通过：`runs/qqt_main_20261006/terminal-pages/checks.json`。升级资料和实际 WebAudio 专项正式页面证据保存到 `upgrade-pages/checks.json`，与本地相同明确 mock 数据库 RPC，不将其宣称为已部署后端 E2E。
+- 新增 `scripts/verify_qqt_pages_readonly_browser.js` 在两种视口无网络 mock 读取实际远端榜单，确认五列/仅脱敏IP/右栏无资料控件/无重开按钮/无横向溢出/无JS异常/线上提交SHA正确；冻结游戏 tick 避免结算，验证无结果或资料写入。证据 `runs/qqt_main_20261006/pages-readonly/checks.json`。
+- 本任务启动的本地预览服务 PID258922 已正常关闭（exec exit143）；没有终止其他任务进程。SQL、Edge和历史玩家清理仍未执行，准确人工材料见上节。
+- 包含本节与只读验收脚本的最后收尾提交继续触发自动 Pages，最终 head/workflow/build-info/资源一致性及全部分支状态保存在 `runs/qqt_main_20261006/pages-final.json` 和 `runs/qqt_main_20261006/release_status_20261006.md`；这两份发布后证据不写入源码，避免为了记录自身SHA不断新增提交。
+
+- 正式 Pages 升级/资料/音效专项已完整通过双视口，`upgrade-pages/checks.json` 确认缓存刷新、空宣言保留、重复提交 gate、跳过/R、观战/真实回放排除、实际 WebAudio source 与静音、无JS异常。加上终局和无 mock 只读验收，三份正式站证据均为完成状态；产品代码不再变化，仅追加收尾报告与只读验收脚本。
