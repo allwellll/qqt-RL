@@ -104,8 +104,9 @@ for (const [ms, allowed] of [[500, false], [501, true], [599, true], [600, false
   restored.restoreReplay(original);
   assert.equal(restored.bananaSlideSpeedPx, 268, 'legacy replay restores original banana speed');
 }
-// A real blast traps the centre cell; visual overlap and expired flames do not.
-for (const [x, hit] of [[4.999, false], [5, true]]) {
+// A one-sided real blast does not trap a native actor visibly straddling the boundary;
+// visual overlap and expired flames do not accumulate into a later hit either.
+for (const x of [4.999, 5]) {
   const sim = scene();
   sim.pos[1] = x; sim.invuln[0] = 0;
   const cell = 4 * Q.W + 5;
@@ -113,12 +114,10 @@ for (const [x, hit] of [[4.999, false], [5, true]]) {
   sim.wall[cell - 1] = 1;
   const info = sim.step([[Q.MOVE_IDLE, 0], [Q.MOVE_IDLE, 0]]);
   assert(info.covered[cell] && !info.covered[cell - 1], 'fixture blast stops at the adjacent wall');
-  assert.equal(sim.trapped[0] > 0, hit, `native centre-cell boundary at x=${x}`);
-  if (!hit) {
-    sim.pos[1] = 5;
-    sim.step([[Q.MOVE_IDLE, 0], [Q.MOVE_IDLE, 0]]);
-    assert(!sim.trapped[0], 'entering expired flame visuals does not trap the native actor');
-  }
+  assert.equal(sim.trapped[0] > 0, false, `native half-tile survives one-sided coverage at x=${x}`);
+  sim.pos[1] = 5;
+  sim.step([[Q.MOVE_IDLE, 0], [Q.MOVE_IDLE, 0]]);
+  assert(!sim.trapped[0], 'entering expired flame visuals does not trap the native actor');
 }
 {
   const sim = scene(); sim.trapped[0] = 1;

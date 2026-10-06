@@ -1324,8 +1324,16 @@
       const causalDamageSource = this.alive.map(() => this.alive.map(() => false));
       for (const source of sources) {
         for (let p = 0; p < this.nPlayers; p++) {
-          if (!alive0[p] || !this._isHitByExplosion(
-            p, source.covered, source.horzCovered, source.vertCovered, false)) continue;
+          if (!alive0[p]) continue;
+          // 半身位需要同 tick 的总覆盖共同构成命中；单颗来源只要覆盖了
+          // 这次完整命中的任一身体格，就参与物理/因果归因。这样归因也不依赖
+          // sources 的遍历顺序，同时不会把前一 tick 的余焰累计进来。
+          const sourceHit = this.nativeTrap
+            ? this._isHitByExplosion(p, covered, null, null, false) &&
+              this._explosionContactCells(p).some((i) => source.covered[i])
+            : this._isHitByExplosion(
+              p, source.covered, source.horzCovered, source.vertCovered, false);
+          if (!sourceHit) continue;
           if (source.owner >= 0) physicalDamageSource[p][source.owner] = true;
           for (let actor = 0; actor < nP; actor++) {
             if (source.causeMask & (1 << actor)) causalDamageSource[p][actor] = true;
@@ -1726,12 +1734,33 @@
       return { covered, triggered, sources };
     }
 
+    // 玩家身体当前明确占据的格。中心在格内时只有一格；身体跨过一条边界时
+    // 为两格；同时跨行列边界（角落）时为四格。EPS 避免“刚好贴边”被浮点
+    // 误判为跨格；真正跨入相邻格才算明显半身位。
+    _explosionContactCells(p) {
+      const y = this.pos[p * 2], x = this.pos[p * 2 + 1], R = CFG.radius;
+      const rMin = Math.max(0, Math.floor(y - R + EPS));
+      const rMax = Math.min(H - 1, Math.floor(y + R - EPS));
+      const cMin = Math.max(0, Math.floor(x - R + EPS));
+      const cMax = Math.min(W - 1, Math.floor(x + R - EPS));
+      const cells = [];
+      for (let r = rMin; r <= rMax; r++) {
+        for (let c = cMin; c <= cMax; c++) cells.push(r * W + c);
+      }
+      return cells;
+    }
+
     // 判定玩家 p 是否被爆炸火焰击中（支持 QQ 堂经典半身位避伤、并排连泡破半身与十字交叉角绝对安全）
     _isHitByExplosion(p, covered, horzCovered = this.horzCovered,
                       vertCovered = this.vertCovered, includeLinger = true) {
       const y = this.pos[p * 2], x = this.pos[p * 2 + 1];
-      // Native actor_state.go registers explosion contact by the actor's centre cell.
-      if (this.nativeTrap) return !!covered[Math.floor(y) * W + Math.floor(x)];
+      // 原版网页糖泡：完整居中时所在格覆盖即命中；明显跨边界时，本 tick
+      // 必须覆盖身体占据的所有 2/4 格。只读当前 covered，余焰和错开 tick
+      // 都不能拼成一次命中。
+      if (this.nativeTrap) {
+        const cells = this._explosionContactCells(p);
+        return cells.length > 0 && cells.every((i) => !!covered[i]);
+      }
       const R = CFG.radius;
       const py0 = y - R, py1 = y + R;
       const px0 = x - R, px1 = x + R;
