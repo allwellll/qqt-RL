@@ -16,11 +16,14 @@
   function secret(crypto) {
     return Array.from(crypto.getRandomValues(new Uint8Array(32)), b => b.toString(16).padStart(2, '0')).join('');
   }
-  // A short UUID fragment is explicitly labelled local; it is never an IP address.
-  function defaultNickname(playerId, trustedIpDisplay = null) {
-    const ip = trustedMaskedIp(trustedIpDisplay);
-    const id = playerId.replace(/-/g, '');
-    return `QQT玩家·${ip || `本地${id.slice(0, 3)}…${id.slice(-3)}`}`;
+  function defaultNickname(crypto) {
+    const alphabet = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', limit = Math.floor(256 / alphabet.length) * alphabet.length;
+    let suffix = '';
+    while (suffix.length < 3) {
+      const value = crypto.getRandomValues(new Uint8Array(1))[0];
+      if (value < limit) suffix += alphabet[value % alphabet.length];
+    }
+    return `QQT玩家${suffix}`;
   }
   function trustedMaskedIp(value) {
     if (typeof value !== 'string') return null;
@@ -34,7 +37,8 @@
     try { data = JSON.parse(storage.getItem(KEY)); } catch (_) { persistent = false; }
     if (!data || !/^[0-9a-f-]{36}$/.test(data.player_id || '') || !/^[0-9a-f]{64}$/.test(data.secret || '')) {
       const playerId = uuid(crypto);
-      data = { player_id: playerId, secret: secret(crypto), nickname: defaultNickname(playerId),
+      const nickname = defaultNickname(crypto);
+      data = { player_id: playerId, secret: secret(crypto), nickname, nicknameDraft: nickname,
         nickname_auto: true, victory_message: '', total_ms: 0, queue: [] };
     }
     data.queue = Array.isArray(data.queue) ? data.queue.slice(-20) : [];
@@ -43,7 +47,8 @@
     delete data.nextProfile;
     progress = data.progress || null;
     try { Object.assign(data, profile(data.nickname, data.victory_message)); }
-    catch (_) { Object.assign(data, { nickname: defaultNickname(data.player_id), nickname_auto: true, victory_message: '' }); }
+    catch (_) { Object.assign(data, { nickname: defaultNickname(crypto), nickname_auto: true, victory_message: '' }); }
+    if (typeof data.nicknameDraft !== 'string') data.nicknameDraft = data.nickname_auto === true ? defaultNickname(crypto) : data.nickname;
     data.cards = Array.isArray(data.cards) ? data.cards.slice(-20) : [];
     // Round 2 stored unfinished results only in queue. Recover them into editable
     // cards without authorizing or changing an already accepted retry payload.
@@ -134,7 +139,10 @@
     async function refresh() {
       const revision = ++refreshRevision;
       try {
-        const responseRows = await rpc('qqt_leaderboard', {});
+        const records = config.leaderboardRpc === 'qqt_my_win_leaderboard';
+        const response = await rpc(records ? 'qqt_my_win_leaderboard' : 'qqt_leaderboard', records
+          ? { p_player_id: data.player_id, p_player_secret: data.secret } : {});
+        const responseRows = records ? winRows(response) : response;
         if (!Array.isArray(responseRows)) throw new Error('排行榜响应格式错误');
         if (revision !== refreshRevision) return false;
         rows = responseRows;
@@ -167,12 +175,6 @@
                 throw new Error('结算响应格式错误');
               }
               progress = result;
-              // Only the authenticated settlement response may confirm metadata for this
-              // player. Never infer an IP from browser inputs or someone else's Top row.
-              if (data.nickname_auto === true && result.network_metadata_recorded === true &&
-                  trustedMaskedIp(result.ip_display)) {
-                data.nickname = defaultNickname(data.player_id, result.ip_display);
-              }
               const currentCard = settlement?.client_match_id === match.client_match_id;
               const card = currentCard ? settlement : data.cards.find(value => value.client_match_id === match.client_match_id);
               if (card) {
@@ -201,7 +203,7 @@
       if (!match || completed.has(match.client_match_id)) return Promise.resolve(false);
       completed.add(match.client_match_id);
       settlement = { client_match_id: match.client_match_id, result, duration_ms: gameDurationMs, submitted: false, ranking: null, closed: false, eligible: false,
-        draft: { nickname: data.confirmed_profile?.registered ? data.nickname : '', victory_message: data.nextDeclaration || '' }, cardStatus: '' };
+        draft: { nickname: data.confirmed_profile?.registered ? data.nickname : data.nicknameDraft, victory_message: data.nextDeclaration || '' }, cardStatus: '' };
       const wall = Math.round(now() - match.started);
       if (!['win','loss','draw'].includes(result) || !Number.isInteger(gameDurationMs) ||
           gameDurationMs < 1000 || gameDurationMs > 240000 || wall < Math.max(1000, gameDurationMs * .75) || wall > 3600000) {
@@ -225,7 +227,7 @@
       }
       if (settlement.profileReceiptVersion === 2) return Promise.resolve(true);
       let values;
-      try { values = profile(data.confirmed_profile?.registered ? data.nickname : nick || data.nickname, message); }
+      try { values = profile(data.confirmed_profile?.registered ? data.nickname : nick, message); }
       catch (error) { return Promise.reject(error); }
       const matchId = settlement.client_match_id;
       // One immutable profile intent per match, persisted before any network write.
@@ -261,6 +263,7 @@
     function setDraft(nickname, message) {
       if (!settlement || settlement.result === 'loss') return;
       settlement.draft = { nickname: data.confirmed_profile?.registered ? data.nickname : String(nickname), victory_message: String(message) };
+      if (!data.confirmed_profile?.registered) data.nicknameDraft = String(nickname);
       if (settlement.profileReceiptVersion === 2) {
         data.nextDeclaration = String(message); settlement.pendingEdits = true;
         settlement.cardStatus = successText(settlement);
@@ -326,7 +329,27 @@
         save(); const request = drain(); emit('提交中…'); return request;
       },
       skipProfile() { if (settlement) settlement = { ...settlement, profileSkipped: true }; emit(); }, clearSettlement() { remember(); settlement = null; emit(); },
-      setProfile(nick, message) { Object.assign(data, profile(nick, message), { nickname_auto: false }); save(); emit('昵称和感言已保存'); } };
+      setProfile(nick, message) { Object.assign(data, profile(nick, message), { nickname_auto: false, nicknameDraft: String(nick) }); save(); emit('昵称和感言已保存'); } };
+  }
+  function winRows(response) {
+    if (response?.leaderboard_contract_version !== 1 || !Array.isArray(response.rows) || response.rows.length > 21)
+      throw new Error('胜局排行榜服务待升级');
+    const ids = new Set(); let previous = 0, latest = 0;
+    const keys = ['rank','record_id','nickname','game_duration_ms','victory_message','player_ip','is_mine','is_latest'];
+    for (const row of response.rows) {
+      if (!row || Object.keys(row).length !== keys.length || Object.keys(row).some(k => !keys.includes(k)) ||
+          !Number.isSafeInteger(row.rank) || row.rank <= previous ||
+          !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(row.record_id) || ids.has(row.record_id) ||
+          typeof row.nickname !== 'string' || length(row.nickname) > 24 ||
+          !Number.isSafeInteger(row.game_duration_ms) || row.game_duration_ms < 1000 || row.game_duration_ms > 240000 ||
+          (row.victory_message !== null && (typeof row.victory_message !== 'string' || length(row.victory_message) > 80)) ||
+          (row.player_ip !== null && !trustedMaskedIp(row.player_ip)) ||
+          typeof row.is_mine !== 'boolean' || typeof row.is_latest !== 'boolean' ||
+          (row.is_latest && (!row.is_mine || ++latest > 1)) ||
+          (row.rank <= 20 ? row.rank !== previous + 1 : previous !== 20 || !row.is_latest)) throw new Error('胜局排行榜响应格式错误');
+      ids.add(row.record_id); previous = row.rank;
+    }
+    return response.rows;
   }
   function time(ms) { return ms ? `${(Number(ms) / 1000).toFixed(1)}秒` : '—'; }
   function validRanking(rank, match) {
@@ -397,14 +420,28 @@
   }
   function renderRows(document, target, rows) {
     target.replaceChildren();
+    let ellipsis = false;
     for (const row of rows) {
+      if (row.rank > 20 && row.is_latest === true && row.is_mine === true && !ellipsis) {
+        const separator = document.createElement('tr'), cell = document.createElement('td');
+        separator.className = 'leaderboard-ellipsis'; cell.textContent = '…';
+        cell.setAttribute('colspan', '5'); cell.setAttribute('aria-label', '省略其余胜利记录');
+        separator.append(cell); target.append(separator); ellipsis = true;
+      }
       const item = document.createElement('tr'); item.className = 'leaderboard-entry';
+      if (row.is_mine === true) item.className += ' is-mine';
+      if (row.is_mine === true && row.is_latest === true) item.className += ' is-latest';
       const cells = [
-        [row.rank, 'rank'], [row.nickname, 'player'], [time(row.best_win_duration_ms), 'best-win'],
+        [row.rank, 'rank'], [row.nickname, 'player'], [time(row.game_duration_ms ?? row.best_win_duration_ms), 'best-win'],
         [row.victory_message || '—', 'message'], [maskIp(row.player_ip || row.ip_display), 'ip'],
       ];
       for (const [value, className] of cells) {
-        const cell = document.createElement('td'); cell.className = className; cell.textContent = String(value ?? '—'); item.append(cell);
+        const cell = document.createElement('td'); cell.className = className; cell.textContent = String(value ?? '—');
+        if (className === 'player' && row.is_mine === true) {
+          const badge = document.createElement('span'); badge.className = 'leaderboard-marker';
+          badge.textContent = row.is_latest === true ? '最新' : '我的'; cell.append(badge);
+        }
+        item.append(cell);
       }
       target.append(item);
     }
@@ -454,5 +491,5 @@
     return client;
   }
 
-  return { createClient, profile, renderRows, renderSettlement, settlementText, renderUpgradeProfile, validRanking, mount, time, maskIp, defaultNickname };
+  return { createClient, profile, renderRows, renderSettlement, settlementText, renderUpgradeProfile, validRanking, mount, time, maskIp, defaultNickname, winRows };
 });

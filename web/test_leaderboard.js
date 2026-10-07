@@ -23,8 +23,7 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
     } });
   const client = make(), id = client.state().player_id;
   assert.match(id, /^[0-9a-f-]{36}$/); assert.equal(make().state().player_id, id);
-  assert.equal(client.state().nickname, LB.defaultNickname(id));
-  assert.match(client.state().nickname, /^QQT玩家·本地[0-9a-f]{3}…[0-9a-f]{3}$/);
+  assert.match(client.state().nickname, /^QQT玩家[A-HJKMNP-Z2-9]{3}$/);
   assert.equal(make().state().nickname, client.state().nickname, 'local default survives reload');
   const legacyStore = memory();
   for (const nickname of ['已有昵称', 'QQT玩家']) {
@@ -158,10 +157,10 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
     await submitAuto(); assert.equal(automatic.state().nickname, localName, 'only already masked valid server IP is accepted');
   }
   ipResponse = { network_metadata_recorded: true, ip_display: '123.*.*.45' };
-  await submitAuto(); assert.equal(automatic.state().nickname, 'QQT玩家·123.*.*.45');
+  await submitAuto(); assert.equal(automatic.state().nickname, localName, 'IP metadata cannot replace the editable default');
   assert.equal(make(autoStore).state().nickname, automatic.state().nickname);
   ipResponse = { network_metadata_recorded: true, ip_display: '2001:*:*:42' };
-  await submitAuto(); assert.equal(automatic.state().nickname, 'QQT玩家·2001:*:*:42');
+  await submitAuto(); assert.equal(automatic.state().nickname, localName, 'IPv6 metadata cannot replace the editable default');
   automatic.setProfile('我的名字', '我的宣言');
   ipResponse.ip_display = '8.*.*.8'; await submitAuto();
   assert.equal(automatic.state().nickname, '我的名字', 'explicit profile always wins over trusted metadata');

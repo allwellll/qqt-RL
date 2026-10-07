@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QQ堂逐胜局排行榜 SQL 升级 · 20261008</title>
+<style>html{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f7f9fb;color:#18252f;font:15px/1.65 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:24px}h1{font-size:26px;line-height:1.3}h2{font-size:19px;margin:28px 0 10px}p,li{overflow-wrap:anywhere}code,pre{font-family:ui-monospace,monospace;font-size:12px}pre{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;background:#eef3f6;border:1px solid #c8d5df;border-radius:6px;padding:16px}button{border:1px solid #8da5b4;background:#fff;color:#173f56;padding:7px 12px;border-radius:4px;cursor:pointer}strong{color:#194f69}.stop{border-left:4px solid #b84f58;padding-left:14px}ol{padding-left:22px}footer{border-top:1px solid #c8d5df;margin-top:28px;padding-top:12px;color:#52616c}@media(max-width:600px){main{padding:16px}h1{font-size:23px}pre{padding:12px}}</style></head><body><main>
+<h1>QQ堂逐胜局排行榜 SQL 升级</h1><p>20261008 · 人工增量升级 · 当前正式站点仍使用已验收的 a3d7de9 版本。<strong>本次不执行正式 SQL、不 push、不发布前端或 Edge。</strong></p>
+<h2>范围与数据边界</h2><p>前置条件为已部署的 20261006 排名/IP 增量和 20261007 Round 4 资料收据增量；禁止重跑初始 schema。新增私有 <code>win_records</code> 表和索引、两层保留旧验证器的赛果/资料包装、新逐局 IP writer、公开胜局 Top20 RPC 和 capability 本人榜单 RPC。旧资料读 RPC、旧公开榜单、旧 raw IP writer、结算玩家最佳排名合同均保留。</p>
+<p>历史真实胜局各自出现一行，但历史逐局感言和 IP 明确为空，不复制当前玩家资料。历史昵称使用迁移时玩家昵称，无法重建更早改名史。新胜局首次确认后保存当局感言；第一份绑定 match 的资料收据可完成该局快照，重复请求不改写，空感言保留该局已有值。原始 IP 仅在私表，第一份 service-role match IP 快照不可被重试覆盖。转发头可伪造，IP 不用于认证，不承诺它是权威客户端地址。</p>
+<p>榜单按本局胜利用时升序，再按服务端接收时间、随机公开 record_id 稳定排序，显示真实全局序号。record_id 是记录句柄，不是玩家 UUID 或 match UUID。公开读取不收 secret；本人窄 RPC 验证已有 UUID/secret 后仅返回布尔归属与最新标记。Top20 后最多追加一条榜外最新胜局。最新由已持久化胜局的累计游戏时长、接收时间和私有 match UUID 排序，不由昵称或浏览器猜测。</p>
+<p>随机三字符后缀只是首次昵称输入的可编辑初值，使用无歧义大写字母和数字的安全随机源，允许碰撞。删除后缀、改名或清空后都不会自动补回；空昵称仍需用户自行填写后才能提交。首次实际输入保存后沿用既有不可改名合同。</p>
+<h2>执行顺序</h2><ol><li>先保存项目备份和当前函数定义，确认本地验证提交；执行下面只读前置检查，必要项不能为 NULL，既有私表应启用 RLS。</li><li>人工执行完整升级 SQL 一次；它包含事务，可重入。不单独执行其中的 ALTER/INSERT。</li><li>执行升级后只读检查：两个合同版本均为 1，fabricated_legacy_records 为 0，匿名私表读取/IP写入为 false，service IP写入和capability读取为 true，RLS为 true。</li><li>回复当前 CX“SQL 已执行”。随后只读探测真实 PostgREST 新 RPC 合同；此探测不创建玩家或赛果。</li><li>确认发布授权后，部署本地新版 submit-result Edge，使来源 IP 绑定实际 match；再 push 前端、核验同 head Pages 和双视口。Edge 缺少新 RPC 时只回退到原私有玩家 IP writer，不伪造逐局 IP；新 Edge 尚未部署时新榜单 IP 可为空。</li></ol>
+<p>文件：<code>supabase/migrations/20261008090000_win_records.sql</code> 与 <code>supabase/manual_win_records_20261008.sql</code> 逐字一致。SQL SHA256：<code>f006421a4042b3eeba09c6a242a755c12cbd49ef9dd9507d8d5b2ce30fa766ba</code></p>
+<h2>执行前：只读核验</h2><button type="button" data-copy="preflight">复制 SQL</button><pre id="preflight">select to_regclass(&#x27;qqt_private.profile_receipts&#x27;) as required_receipts,
+  to_regprocedure(&#x27;public.qqt_get_profile(uuid,text)&#x27;) as required_profile,
+  to_regprocedure(&#x27;public.qqt_update_profile(uuid,text,uuid,text,text)&#x27;) as required_writer,
+  to_regprocedure(&#x27;qqt_private.qqt_submit_result_ranked(jsonb)&#x27;) as required_ranked_core;
+select count(*) as historical_wins from qqt_private.match_results where result=&#x27;win&#x27;;
+select relname,relrowsecurity from pg_class join pg_namespace n on n.oid=relnamespace
+  where n.nspname=&#x27;qqt_private&#x27; and relkind=&#x27;r&#x27; order by relname;
+</pre>
+<h2>完整升级 SQL</h2><button type="button" data-copy="upgrade">复制 SQL</button><pre id="upgrade">begin;
+
+do $$
+begin
+  if to_regclass(&#x27;qqt_private.profile_receipts&#x27;) is null or
+     to_regprocedure(&#x27;public.qqt_get_profile(uuid,text)&#x27;) is null then
+    raise exception &#x27;requires deployed Round 4 profile migration&#x27;;
+  end if;
+end;
+$$;
+
+create table if not exists qqt_private.win_records (
+  client_match_id uuid primary key references qqt_private.match_results on delete cascade,
+  record_id uuid not null unique default gen_random_uuid(),
+  nickname text not null check (char_length(nickname) between 1 and 24 and nickname !~ &#x27;[[:cntrl:]&lt;&gt;]&#x27;),
+  victory_message text check (char_length(victory_message) &lt;= 80 and victory_message !~ &#x27;[[:cntrl:]&lt;&gt;]&#x27;),
+  raw_ip inet,
+  ip_display text,
+  ip_recorded_at timestamptz,
+  snapshot_version smallint not null check (snapshot_version in (0,1))
+);
+alter table qqt_private.win_records enable row level security;
+revoke all on qqt_private.win_records from public, anon, authenticated, service_role;
+comment on column qqt_private.win_records.raw_ip is
+  &#x27;First service-role IP received for this match. Forwarded headers may be spoofed; not an identity credential. Never public.&#x27;;
+
+-- Old wins have no recoverable match-bound declaration or IP. Do not copy current profile/IP.
+insert into qqt_private.win_records(client_match_id,nickname,snapshot_version)
+  select m.client_match_id,p.nickname,0 from qqt_private.match_results m
+  join qqt_private.players p using(player_id) where m.result=&#x27;win&#x27;
+  on conflict(client_match_id) do nothing;
+create index if not exists match_results_win_order
+  on qqt_private.match_results(game_duration_ms,received_at,client_match_id) where result=&#x27;win&#x27;;
+
+-- Preserve the entire deployed Round 4 validators, fingerprint and receipt semantics.
+do $$
+begin
+  if to_regprocedure(&#x27;qqt_private.qqt_submit_result_profile_v2(jsonb)&#x27;) is null then
+    alter function public.qqt_submit_result(jsonb) set schema qqt_private;
+    alter function qqt_private.qqt_submit_result(jsonb) rename to qqt_submit_result_profile_v2;
+  end if;
+  if to_regprocedure(&#x27;qqt_private.qqt_update_profile_v2(uuid,text,uuid,text,text)&#x27;) is null then
+    alter function public.qqt_update_profile(uuid,text,uuid,text,text) set schema qqt_private;
+    alter function qqt_private.qqt_update_profile(uuid,text,uuid,text,text) rename to qqt_update_profile_v2;
+  end if;
+end;
+$$;
+revoke all on function qqt_private.qqt_submit_result_profile_v2(jsonb),
+  qqt_private.qqt_update_profile_v2(uuid,text,uuid,text,text) from public, anon, authenticated, service_role;
+
+create or replace function public.qqt_submit_result(p_payload jsonb) returns jsonb
+language plpgsql security definer set search_path=&#x27;&#x27; as $$
+declare response jsonb; mid uuid; pid uuid;
+begin
+  response:=qqt_private.qqt_submit_result_profile_v2(p_payload);
+  mid:=(p_payload-&gt;&gt;&#x27;client_match_id&#x27;)::uuid; pid:=(p_payload-&gt;&gt;&#x27;player_id&#x27;)::uuid;
+  insert into qqt_private.win_records(client_match_id,nickname,victory_message,snapshot_version)
+    select m.client_match_id,p.nickname,
+      case when btrim(p_payload-&gt;&gt;&#x27;victory_message&#x27;)=&#x27;&#x27; then p.victory_message
+        else btrim(p_payload-&gt;&gt;&#x27;victory_message&#x27;) end,1
+    from qqt_private.match_results m join qqt_private.players p using(player_id)
+    where m.client_match_id=mid and m.player_id=pid and m.result=&#x27;win&#x27;
+    on conflict(client_match_id) do nothing;
+  return response;
+end;
+$$;
+revoke all on function public.qqt_submit_result(jsonb) from public;
+grant execute on function public.qqt_submit_result(jsonb) to anon, authenticated, service_role;
+
+create or replace function public.qqt_update_profile(
+  p_player_id uuid,p_player_secret text,p_client_match_id uuid,p_nickname text,p_victory_message text
+) returns jsonb language plpgsql security definer set search_path=&#x27;&#x27; as $$
+declare response jsonb; accepted boolean;
+begin
+  perform pg_advisory_xact_lock(hashtextextended(p_player_id::text,0));
+  accepted:=exists(select 1 from qqt_private.profile_receipts where client_match_id=p_client_match_id);
+  response:=qqt_private.qqt_update_profile_v2(p_player_id,p_player_secret,p_client_match_id,p_nickname,p_victory_message);
+  -- The first validated receipt freezes this match even when its global profile is superseded.
+  if not accepted then
+    update qqt_private.win_records w set victory_message=
+      case when btrim(p_victory_message)=&#x27;&#x27; then w.victory_message else btrim(p_victory_message) end
+    where w.client_match_id=p_client_match_id and w.snapshot_version=1;
+  end if;
+  return response;
+end;
+$$;
+revoke all on function public.qqt_update_profile(uuid,text,uuid,text,text) from public, service_role;
+grant execute on function public.qqt_update_profile(uuid,text,uuid,text,text) to anon, authenticated;
+
+create or replace function public.qqt_record_match_ip(p_player_id uuid,p_client_match_id uuid,p_raw_ip text)
+returns jsonb language plpgsql security definer set search_path=&#x27;&#x27; as $$
+declare metadata jsonb; record qqt_private.win_records;
+begin
+  if p_player_id is null or p_client_match_id is null then
+    raise exception &#x27;invalid network metadata&#x27; using errcode=&#x27;22023&#x27;;
+  end if;
+  perform pg_advisory_xact_lock(hashtextextended(p_player_id::text,0));
+  if not exists(select 1 from qqt_private.match_results
+    where client_match_id=p_client_match_id and player_id=p_player_id) then
+    raise exception &#x27;network metadata requires own completed match&#x27; using errcode=&#x27;22023&#x27;;
+  end if;
+  -- Reuse the deployed strict inet parser/masking and retain private player metadata.
+  metadata:=public.qqt_record_player_ip(p_player_id,p_raw_ip);
+  update qqt_private.win_records set raw_ip=p_raw_ip::inet,
+    ip_display=metadata-&gt;&gt;&#x27;ip_display&#x27;,ip_recorded_at=clock_timestamp()
+    where client_match_id=p_client_match_id and snapshot_version=1 and raw_ip is null;
+  select * into record from qqt_private.win_records where client_match_id=p_client_match_id;
+  if not found or record.snapshot_version=0 then return jsonb_build_object(&#x27;recorded&#x27;,false); end if;
+  return jsonb_build_object(&#x27;recorded&#x27;,true,&#x27;ip_display&#x27;,record.ip_display);
+end;
+$$;
+revoke all on function public.qqt_record_match_ip(uuid,uuid,text) from public, anon, authenticated;
+grant execute on function public.qqt_record_match_ip(uuid,uuid,text) to service_role;
+
+create or replace function qqt_private.win_leaderboard_data(p_player_id uuid) returns jsonb
+language sql stable security definer set search_path=&#x27;&#x27; as $$
+  with ranked as (
+    select row_number() over(order by m.game_duration_ms,m.received_at,w.record_id) as rank,
+      w.record_id,w.nickname,w.victory_message,w.ip_display,m.game_duration_ms,
+      m.player_id,m.client_match_id,m.client_total_ms,m.received_at
+    from qqt_private.win_records w join qqt_private.match_results m using(client_match_id)
+    where m.result=&#x27;win&#x27;
+  ), latest as (
+    select client_match_id from ranked where player_id=p_player_id
+    order by client_total_ms desc,received_at desc,client_match_id desc limit 1
+  ), selected as (
+    select r.*,coalesce(r.player_id=p_player_id,false) is_mine,
+      coalesce(r.client_match_id=(select client_match_id from latest),false) is_latest
+    from ranked r where rank&lt;=20 or r.client_match_id=(select client_match_id from latest)
+  )
+  select jsonb_build_object(&#x27;leaderboard_contract_version&#x27;,1,&#x27;rows&#x27;,
+    coalesce(jsonb_agg(jsonb_build_object(&#x27;rank&#x27;,rank,&#x27;record_id&#x27;,record_id,&#x27;nickname&#x27;,nickname,
+      &#x27;game_duration_ms&#x27;,game_duration_ms,&#x27;victory_message&#x27;,victory_message,&#x27;player_ip&#x27;,ip_display,
+      &#x27;is_mine&#x27;,is_mine,&#x27;is_latest&#x27;,is_latest) order by rank),&#x27;[]&#x27;::jsonb))
+  from selected;
+$$;
+revoke all on function qqt_private.win_leaderboard_data(uuid) from public, anon, authenticated, service_role;
+
+create or replace function public.qqt_win_leaderboard() returns jsonb
+language sql stable security definer set search_path=&#x27;&#x27; as $$
+  select qqt_private.win_leaderboard_data(null);
+$$;
+revoke all on function public.qqt_win_leaderboard() from public, service_role;
+grant execute on function public.qqt_win_leaderboard() to anon, authenticated;
+
+create or replace function public.qqt_my_win_leaderboard(p_player_id uuid,p_player_secret text) returns jsonb
+language plpgsql stable security definer set search_path=&#x27;&#x27; as $$
+declare player qqt_private.players;
+begin
+  if p_player_id is null or p_player_secret is null or p_player_secret !~ &#x27;^[0-9a-f]{64}$&#x27; then
+    raise exception &#x27;invalid identity&#x27; using errcode=&#x27;22023&#x27;;
+  end if;
+  select * into player from qqt_private.players where player_id=p_player_id;
+  if not found then return qqt_private.win_leaderboard_data(null); end if;
+  if player.secret_hash&lt;&gt;pg_catalog.sha256(convert_to(p_player_secret,&#x27;UTF8&#x27;)) then
+    raise exception &#x27;identity credential mismatch&#x27; using errcode=&#x27;42501&#x27;;
+  end if;
+  return qqt_private.win_leaderboard_data(p_player_id);
+end;
+$$;
+revoke all on function public.qqt_my_win_leaderboard(uuid,text) from public, service_role;
+grant execute on function public.qqt_my_win_leaderboard(uuid,text) to anon, authenticated;
+comment on function public.qqt_win_leaderboard() is
+  &#x27;Win records Top20, duration ASC / received_at ASC / random public record_id ASC. No credentials or player identifiers.&#x27;;
+comment on function public.qqt_my_win_leaderboard(uuid,text) is
+  &#x27;Verified capability: Top20 with private request-scoped mine/latest flags plus at most one latest win outside Top20. Latest uses cumulative time / receipt time / private match UUID.&#x27;;
+
+notify pgrst,&#x27;reload schema&#x27;;
+commit;
+</pre>
+<h2>执行后：只读核验</h2><button type="button" data-copy="verify">复制 SQL</button><pre id="verify">select public.qqt_win_leaderboard()-&gt;&gt;&#x27;leaderboard_contract_version&#x27; as contract_version;
+select public.qqt_my_win_leaderboard(gen_random_uuid(),repeat(&#x27;a&#x27;,64))-&gt;&gt;&#x27;leaderboard_contract_version&#x27; as private_contract_version;
+select count(*) as records,count(*) filter(where snapshot_version=0) as legacy_records,
+  count(*) filter(where snapshot_version=0 and (victory_message is not null or raw_ip is not null)) as fabricated_legacy_records
+  from qqt_private.win_records;
+select has_table_privilege(&#x27;anon&#x27;,&#x27;qqt_private.win_records&#x27;,&#x27;SELECT&#x27;) as anon_table_read,
+  has_function_privilege(&#x27;anon&#x27;,&#x27;public.qqt_record_match_ip(uuid,uuid,text)&#x27;,&#x27;EXECUTE&#x27;) as anon_ip_write,
+  has_function_privilege(&#x27;service_role&#x27;,&#x27;public.qqt_record_match_ip(uuid,uuid,text)&#x27;,&#x27;EXECUTE&#x27;) as service_ip_write,
+  has_function_privilege(&#x27;anon&#x27;,&#x27;public.qqt_my_win_leaderboard(uuid,text)&#x27;,&#x27;EXECUTE&#x27;) as capability_read;
+select relrowsecurity from pg_class where oid=&#x27;qqt_private.win_records&#x27;::regclass;
+</pre>
+<h2>停止与回退条件</h2><div class="stop"><p>前置对象缺失、SQL 报错、合同版本不符、历史数据被填造、匿名权限扩大或 raw IP 出现在公开行时立即停止；不要发布前端、不要重跑初始 schema、不要通过正式写入“试一下”。事务提交前报错：执行 <code>ROLLBACK;</code>，查明原因后整体重试。</p><p>提交后如需功能回退，由用户人工执行下面已部署的 Round 4 资料包装恢复 SQL。它恢复旧赛果/资料公共函数，不删除新记录表、快照、私有副本或新读 RPC；旧正式前端/Edge继续可用。回退后不得发布新前端，需重新执行本次增量并验证。此为函数行为回退，不伪称撤销已提交的数据。</p></div>
+<p>功能回退期间新增的胜局在重新升级时按历史记录补齐，感言与 IP 为空；不能用回退期间的玩家当前资料填造逐局快照。已有冻结快照保留不变。</p>
+<h2>提交后的兼容函数回退 SQL</h2><button type="button" data-copy="rollback">复制 SQL</button><pre id="rollback">begin;
+
+-- Incremental Round 4 only; requires the deployed 20261006 ranked/IP upgrade.
+-- Never rerun the initial schema or replace the IP writer.
+create table if not exists qqt_private.profile_receipts (
+  client_match_id uuid primary key references qqt_private.match_results on delete cascade,
+  player_id uuid not null references qqt_private.players on delete cascade,
+  request_hash bytea not null check (octet_length(request_hash) = 32),
+  applied boolean not null,
+  created_at timestamptz not null default clock_timestamp()
+);
+alter table qqt_private.profile_receipts enable row level security;
+revoke all on qqt_private.profile_receipts from public, anon, authenticated, service_role;
+
+create or replace function public.qqt_submit_result(p_payload jsonb) returns jsonb
+language plpgsql security definer set search_path = &#x27;&#x27; as $$
+declare response jsonb; pid uuid; mid uuid; previous qqt_private.players;
+begin
+  pid := (p_payload-&gt;&gt;&#x27;player_id&#x27;)::uuid;
+  mid := (p_payload-&gt;&gt;&#x27;client_match_id&#x27;)::uuid;
+  perform pg_advisory_xact_lock(hashtextextended(pid::text, 0));
+  select * into previous from qqt_private.players where player_id = pid;
+  response := qqt_private.qqt_submit_result_ranked(p_payload);
+  -- Registration is the first authenticated result, not the first level upgrade.
+  -- Preserve any existing name and declaration, including pre-profile_saved players.
+  if previous.player_id is not null then
+    update qqt_private.players set nickname = previous.nickname, victory_message = previous.victory_message
+      where player_id = pid;
+  end if;
+  return response || jsonb_build_object(&#x27;match_upgraded&#x27;, exists (
+    select 1 from qqt_private.level_events where player_id = pid and client_match_id = mid
+  ));
+end;
+$$;
+revoke all on function public.qqt_submit_result(jsonb) from public;
+grant execute on function public.qqt_submit_result(jsonb) to anon, authenticated, service_role;
+
+-- Authenticated read of one&#x27;s own registration; no UUID, secret, or IP in response.
+create or replace function public.qqt_get_profile(p_player_id uuid, p_player_secret text) returns jsonb
+language plpgsql security definer set search_path = &#x27;&#x27; as $$
+declare player qqt_private.players;
+begin
+  if p_player_id is null or p_player_secret is null or p_player_secret !~ &#x27;^[0-9a-f]{64}$&#x27; then
+    raise exception &#x27;invalid identity&#x27; using errcode = &#x27;22023&#x27;;
+  end if;
+  select * into player from qqt_private.players where player_id = p_player_id;
+  if not found then return jsonb_build_object(&#x27;profile_contract_version&#x27;, 2, &#x27;registered&#x27;, false); end if;
+  if player.secret_hash &lt;&gt; pg_catalog.sha256(convert_to(p_player_secret, &#x27;UTF8&#x27;)) then
+    raise exception &#x27;identity credential mismatch&#x27; using errcode = &#x27;42501&#x27;;
+  end if;
+  return jsonb_build_object(&#x27;profile_contract_version&#x27;, 2, &#x27;registered&#x27;, true,
+    &#x27;nickname&#x27;, player.nickname, &#x27;victory_message&#x27;, player.victory_message);
+end;
+$$;
+revoke all on function public.qqt_get_profile(uuid,text) from public, service_role;
+grant execute on function public.qqt_get_profile(uuid,text) to anon, authenticated;
+
+create or replace function public.qqt_update_profile(
+  p_player_id uuid, p_player_secret text, p_client_match_id uuid,
+  p_nickname text, p_victory_message text
+) returns jsonb
+language plpgsql security definer set search_path = &#x27;&#x27; as $$
+declare
+  player qqt_private.players; match qqt_private.match_results;
+  receipt qqt_private.profile_receipts; fingerprint bytea;
+  message text := btrim(p_victory_message); applied boolean; superseded boolean;
+begin
+  if p_player_id is null or p_client_match_id is null or p_player_secret is null or
+    p_player_secret !~ &#x27;^[0-9a-f]{64}$&#x27; or message is null or char_length(message) &gt; 80 or
+    message ~ &#x27;[[:cntrl:]&lt;&gt;]&#x27; or (p_nickname is not null and
+      (char_length(btrim(p_nickname)) not between 1 and 24 or p_nickname ~ &#x27;[[:cntrl:]&lt;&gt;]&#x27;)) then
+    raise exception &#x27;invalid profile&#x27; using errcode = &#x27;22023&#x27;;
+  end if;
+  perform pg_advisory_xact_lock(hashtextextended(p_player_id::text, 0));
+  select * into player from qqt_private.players where player_id = p_player_id;
+  if not found or player.secret_hash &lt;&gt; pg_catalog.sha256(convert_to(p_player_secret, &#x27;UTF8&#x27;)) then
+    raise exception &#x27;identity credential mismatch&#x27; using errcode = &#x27;42501&#x27;;
+  end if;
+  select * into match from qqt_private.match_results
+    where client_match_id = p_client_match_id and player_id = p_player_id;
+  if not found then raise exception &#x27;profile requires own completed match&#x27; using errcode = &#x27;22023&#x27;; end if;
+  -- Null is the new client contract; a matching name keeps the old signature usable.
+  if p_nickname is not null and btrim(p_nickname) &lt;&gt; player.nickname then
+    raise exception &#x27;nickname is immutable&#x27; using errcode = &#x27;22023&#x27;;
+  end if;
+  fingerprint := pg_catalog.sha256(convert_to(jsonb_build_object(
+    &#x27;nickname&#x27;, player.nickname, &#x27;victory_message&#x27;, message)::text, &#x27;UTF8&#x27;));
+  select * into receipt from qqt_private.profile_receipts where client_match_id = p_client_match_id;
+  if found then
+    if receipt.player_id &lt;&gt; p_player_id or receipt.request_hash &lt;&gt; fingerprint then
+      raise exception &#x27;profile request already accepted&#x27; using errcode = &#x27;22023&#x27;;
+    end if;
+  else
+    -- A late old card may retry after a newer match&#x27;s profile succeeded.
+    -- Use the frozen cumulative game time so offline old results arriving late
+    -- cannot roll the newer declaration back. Receipt time/UUID break ties.
+    superseded := exists(select 1 from qqt_private.profile_receipts r
+      join qqt_private.match_results m using(client_match_id)
+      where r.player_id = p_player_id and r.applied and
+        (m.client_total_ms, m.received_at, m.client_match_id) &gt;
+        (match.client_total_ms, match.received_at, match.client_match_id));
+    applied := not superseded;
+    if applied then
+      update qqt_private.players set
+        victory_message = case when message = &#x27;&#x27; then victory_message else message end,
+        profile_saved = true where player_id = p_player_id;
+    end if;
+    insert into qqt_private.profile_receipts(client_match_id,player_id,request_hash,applied)
+      values(p_client_match_id,p_player_id,fingerprint,applied);
+  end if;
+  select * into player from qqt_private.players where player_id = p_player_id;
+  return jsonb_build_object(&#x27;saved&#x27;, true, &#x27;profile_contract_version&#x27;, 2,
+    &#x27;client_match_id&#x27;, p_client_match_id, &#x27;nickname&#x27;, player.nickname,
+    &#x27;victory_message&#x27;, player.victory_message,
+    &#x27;superseded&#x27;, exists(select 1 from qqt_private.profile_receipts r
+      join qqt_private.match_results m using(client_match_id)
+      where r.player_id = p_player_id and r.applied and
+        (m.client_total_ms, m.received_at, m.client_match_id) &gt;
+        (match.client_total_ms, match.received_at, match.client_match_id)));
+end;
+$$;
+revoke all on function public.qqt_update_profile(uuid,text,uuid,text,text) from public, service_role;
+grant execute on function public.qqt_update_profile(uuid,text,uuid,text,text) to anon, authenticated;
+notify pgrst, &#x27;reload schema&#x27;;
+commit;
+</pre>
+<h2>PostgREST 只读合同</h2><p>公开接口 <code>/rest/v1/rpc/qqt_win_leaderboard</code> 的 POST body 为 <code>{}</code>，不包含身份；本人接口 <code>/rest/v1/rpc/qqt_my_win_leaderboard</code> body 含本地既有 <code>p_player_id</code> 和 <code>p_player_secret</code>，只用于该窄 RPC，不能贴到公开日志或分享。可用随机新 UUID 和合法格式的随机 secret 验证未注册分支，它只读且不会创建身份。</p><p>成功响应包含 <code>leaderboard_contract_version: 1</code> 和 <code>rows</code>；每行只有 rank、record_id、nickname、game_duration_ms、victory_message、player_ip、is_mine、is_latest。公开 RPC 的两个标记均为 false，绝不返回 player_id、client_match_id、secret、raw_ip 或 hash。</p>
+<footer>文档为单文件浅色 HTML，无外部依赖。所有测试使用本地 PGlite 与浏览器 mock；正式数据库升级只能由用户人工执行。</footer></main>
+<script>for(const b of document.querySelectorAll('[data-copy]'))b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(document.getElementById(b.dataset.copy).textContent);b.textContent='已复制'}catch{b.textContent='请选中 SQL'}});</script></body></html>

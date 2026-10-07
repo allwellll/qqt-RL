@@ -21,7 +21,8 @@ const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return {
    return {ok:true,json:async()=>({saved:true,profile_contract_version:2,client_match_id:body.p_client_match_id,nickname:server.nickname,victory_message:server.victory_message,superseded:false})};
   }});
  let c=make();await c.syncProfile();let match=c.begin(meta);now+=5000;await c.finish(match,{result:'win',gameDurationMs:5000,autoSubmit:false});
- assert.equal(c.state().savedNickname,false);assert.equal(c.state().settlement.draft.nickname,'');
+ assert.equal(c.state().savedNickname,false);assert.match(c.state().settlement.draft.nickname,/^QQT玩家[A-HJKMNP-Z2-9]{3}$/);
+ c.setDraft('','');
  assert.equal(await c.submitCard(),false);assert.equal(writes.length,0,'first nickname required');
  c.setDraft('首次昵称','首次宣言');assert(c.closeSettlement());c.clearSettlement();assert(c.openPending());
  c=make();await c.syncProfile();assert.deepEqual(c.state().settlement.draft,{nickname:'首次昵称',victory_message:'首次宣言'});

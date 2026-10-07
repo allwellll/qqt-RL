@@ -18,8 +18,12 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
       const page = await context.newPage(), errors = [], consoleErrors = [], unexpectedRemote = [], writes = [], profiles = [];
       const matches = new Map(), receipts = new Map();
       let registered = false, failResult = true, failProfile = false, failRead = false, upgraded = false;
-      let holdProfile = false, releaseProfile, deferNextRead = false, oldRead;
+      let holdProfile = false, releaseProfile, notifyProfileHeld, deferNextRead = false, oldRead;
       let row = { rank: 5, nickname: '旧榜单', victory_message: '旧宣言', best_win_duration_ms: 9000, player_ip: '31.*.*.6' };
+      const recordRows = value => ({ leaderboard_contract_version: 1, rows: [{ rank: 1,
+        record_id: '00000000-0000-4000-8000-000000000001', nickname: value.nickname,
+        victory_message: value.victory_message, game_duration_ms: value.best_win_duration_ms || 9000,
+        player_ip: value.player_ip || null, is_mine: false, is_latest: false }] });
       page.on('pageerror', e => errors.push(e.message));
       page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });
       // A single deny-by-default router prevents ALL remote requests from escaping,
@@ -31,9 +35,9 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
         if (endpoint.endsWith('/qqt_get_profile')) return route.fulfill({ json: registered
           ? { profile_contract_version: 2, registered: true, nickname: row.nickname, victory_message: row.victory_message }
           : { profile_contract_version: 2, registered: false } });
-        if (endpoint.endsWith('/qqt_leaderboard')) {
+        if (endpoint.endsWith('/qqt_my_win_leaderboard')) {
           if (deferNextRead) { deferNextRead = false; oldRead = route; return; }
-          return route.fulfill({ status: failRead ? 503 : 200, json: failRead ? {} : [row] });
+          return route.fulfill({ status: failRead ? 503 : 200, json: failRead ? {} : recordRows(row) });
         }
         if (endpoint.endsWith('/qqt_submit_result') || endpoint.endsWith('/submit-result')) {
           const p = request.postDataJSON().p_payload; writes.push(p);
@@ -50,7 +54,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
           const p = request.postDataJSON(); profiles.push(p);
           assert.equal(p.p_nickname, null); assert(matches.has(p.p_client_match_id));
           if (failProfile) return route.fulfill({ status: 422, json: { error: 'controlled profile failure' } });
-          if (holdProfile) await new Promise(resolve => { releaseProfile = resolve; });
+          if (holdProfile) await new Promise(resolve => { releaseProfile = resolve; notifyProfileHeld?.(); });
           if (receipts.has(p.p_client_match_id)) assert.deepEqual(receipts.get(p.p_client_match_id), p);
           else { receipts.set(p.p_client_match_id, p); row = { ...row, victory_message: p.p_victory_message || row.victory_message }; }
           return route.fulfill({ json: { saved: true, profile_contract_version: 2, client_match_id: p.p_client_match_id,
@@ -153,7 +157,8 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
       assert.equal(await page.locator('#settlement-title').textContent(), '胜利');
       await wait(() => !document.getElementById('player-nickname').disabled);
       assert(await page.locator('#player-nickname').isVisible());
-      assert.equal(await page.locator('#player-nickname').inputValue(), '');
+      assert.match(await page.locator('#player-nickname').inputValue(), /^QQT玩家[A-HJKMNP-Z2-9]{3}$/);
+      await page.locator('#player-nickname').fill('');
       assert.equal(await page.locator('#settlement button[type=submit]').count(), 1);
       await action('#settlement-submit'); assert.equal(writes.length, 0);
       assert.equal(await page.locator('label:has(#player-message)').textContent(), '胜利感言');
@@ -165,6 +170,10 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
       await action('#settlement-submit'); await status('提交失败'); assert.equal(writes.length, 1);
       assert(await page.evaluate(() => appSim.done === false && restartCount === 0), 'restored card result failure does not reset the current Sim');
       deferNextRead = true; await action('#leaderboard-retry'); failResult = false; holdProfile = true;
+      const profileHeld = new Promise((resolve, reject) => {
+        const deadline = setTimeout(() => reject(new Error('profile mock not reached')), 10000);
+        notifyProfileHeld = () => { clearTimeout(deadline); resolve(); };
+      });
       await page.locator('#settlement-submit').scrollIntoViewIfNeeded();
       const box = await page.locator('#settlement-submit').boundingBox(), x = box.x + box.width / 2, y = box.y + box.height / 2;
       if (viewport.width < 600) {
@@ -179,13 +188,13 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
       assert(await page.locator('#settlement-close').isDisabled());
       await page.locator('#player-message').fill('下一局感言');
       await page.evaluate(() => { window.before = appSim; document.activeElement.blur(); window.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyR' })); appFrame(performance.now()); });
-      assert(await page.evaluate(() => appSim === before)); assert(releaseProfile);
+      assert(await page.evaluate(() => appSim === before)); await profileHeld; assert(releaseProfile);
       holdProfile = false; await newGame(() => releaseProfile());
       assert.equal(await page.locator('#player-nickname').isVisible(), false);
       assert(await page.locator('#player-nickname').isDisabled());
       assert.equal(await page.locator('#leaderboard-list .player').textContent(), '初次玩家');
       assert.equal(await page.locator('#leaderboard-list .message').textContent(), '首次胜利感言');
-      assert(oldRead); await oldRead.fulfill({ json: [{ rank: 5, nickname: '过期榜单', victory_message: '过期宣言' }] }); oldRead = null;
+      assert(oldRead); await oldRead.fulfill({ json: recordRows({ nickname: '过期榜单', victory_message: '过期宣言' }) }); oldRead = null;
       await page.waitForTimeout(100); assert.equal(await page.locator('#leaderboard-list .rank').textContent(), '1');
       await shot('first-success');
       await page.reload(); await load();

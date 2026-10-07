@@ -27,6 +27,7 @@ const harness = `(() => { const Hunter=QQTBunHunterBot, Coop=QQTBunCoopHunterBot
         if (url.href.startsWith(base) && ['GET','HEAD'].includes(request.method())) return route.continue();
         if (url.pathname.endsWith('/qqt_get_profile')) return route.fulfill({ json: { profile_contract_version: 2, registered: false } });
         if (url.pathname.endsWith('/qqt_leaderboard')) return route.fulfill({ json: [] });
+        if (url.pathname.endsWith('/qqt_my_win_leaderboard')) return route.fulfill({ json: { leaderboard_contract_version: 1, rows: [] } });
         writes.push({ method: request.method(), pathname: url.pathname });
         return route.fulfill({ status: 422, json: {} });
       });

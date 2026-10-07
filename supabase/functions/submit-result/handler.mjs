@@ -55,7 +55,10 @@ export function createSettlementHandler({ env, createClient }) {
       if (rawIp) {
         // Metadata failure must not reject a match already committed by qqt_submit_result.
         try {
-          const recorded = await client.rpc('qqt_record_player_ip', {
+          let recorded = await client.rpc('qqt_record_match_ip', {
+            p_player_id: payload.player_id, p_client_match_id: payload.client_match_id, p_raw_ip: rawIp,
+          });
+          if (recorded.error?.code === 'PGRST202') recorded = await client.rpc('qqt_record_player_ip', {
             p_player_id: payload.player_id, p_raw_ip: rawIp,
           });
           const masked = recorded.data?.ip_display;

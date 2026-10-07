@@ -10,18 +10,18 @@ const assert = require('assert');
       assert.equal(key, 'server-only'); assert.equal(options.auth.persistSession, false);
       if (fail) throw new Error('sensitive exception');
       return { async rpc(name, payload) { calls.push({ name, payload });
-        if (name === 'qqt_record_player_ip') return ipFailed ? { error: { code: 'PGRST202' } } : { data: { recorded: true, ip_display: '1.*.*.4' } };
+        if (name === 'qqt_record_player_ip' || name === 'qqt_record_match_ip') return ipFailed ? { error: { code: 'PGRST202' } } : { data: { recorded: true, ip_display: '1.*.*.4' } };
         return rejected ? { error: { code: '22023', message: 'sensitive detail' } } : { data: progress }; } };
     },
   });
   function request(origin = 'https://allwellll.github.io', extra = {}) {
-    return new Request('https://edge', { method: 'POST', headers: { origin, ...extra }, body: JSON.stringify({ p_payload: { player_id: 'test-id', nickname: 'ok' } }) });
+    return new Request('https://edge', { method: 'POST', headers: { origin, ...extra }, body: JSON.stringify({ p_payload: { player_id: 'test-id', client_match_id: 'test-match', nickname: 'ok' } }) });
   }
   const good = await handler(request(undefined, { 'cf-connecting-ip': '::::', 'x-real-ip': '1.2.3.4', 'x-forwarded-for': '1::2::3' }));
   assert.equal(good.status, 200);
   assert.deepEqual(await good.json(), { ...progress, metadata_recorded: true, network_metadata_recorded: true, ip_display: '1.*.*.4' });
-  assert.deepEqual(calls, [{ name: 'qqt_submit_result', payload: { p_payload: { player_id: 'test-id', nickname: 'ok' } } },
-    { name: 'qqt_record_player_ip', payload: { p_player_id: 'test-id', p_raw_ip: '1.2.3.4' } }]);
+  assert.deepEqual(calls, [{ name: 'qqt_submit_result', payload: { p_payload: { player_id: 'test-id', client_match_id: 'test-match', nickname: 'ok' } } },
+    { name: 'qqt_record_match_ip', payload: { p_player_id: 'test-id', p_client_match_id: 'test-match', p_raw_ip: '1.2.3.4' } }]);
   assert.equal(good.headers.get('vary'), 'Origin'); assert.equal(good.headers.get('access-control-allow-origin'), 'https://allwellll.github.io');
   const denied = await handler(request('https://evil.test')); assert.equal(denied.status, 403); assert.equal(calls.length, 2);
   assert.equal(denied.headers.get('access-control-allow-origin'), null);

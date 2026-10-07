@@ -44,6 +44,7 @@ process.env.PW_TEST_SCREENSHOT_NO_FONTS_READY = '1';
         const endpoint = new URL(url).pathname;
         if (endpoint.endsWith('/qqt_get_profile')) return route.fulfill({ json: { profile_contract_version: 2, registered: false } });
         if (endpoint.endsWith('/qqt_leaderboard')) return route.fulfill({ json: [] });
+        if (endpoint.endsWith('/qqt_my_win_leaderboard')) return route.fulfill({ json: { leaderboard_contract_version: 1, rows: [] } });
         if (/qqt_submit_result|submit-result|qqt_update_profile/.test(endpoint)) {
           writes.push(endpoint); return route.fulfill({ status: 422, json: {} });
         }
