@@ -52,6 +52,7 @@ TDD 实际证据位于 `runs/qqt_round4_loss_20261007/`：
 - `tdd-red.log` 与 `tdd-loss-baseline-red.log`：新 loss 测试在原 Round 4 实现实际 RED；后者仅在内存加载 Git 基线，未覆盖 worktree 文件。
 - `tdd-copy-red.log`、`tdd-submit-red.log`、`tdd-close-red.log`：实现前分别确认旧文案、成功未重开、X 未重开断言失败。
 - `tdd-loss-caption-red.log`：失败局仍展示无效提交邀请的断言 RED。
+- `tdd-loss-layout-red.log`：真实 Chromium 发现手机紧凑 loss 卡片的 44px X 超出底边，补按钮边界断言确认 RED；手机卡片增加 56px 最小高度后通过。同样断言纳入本地和线上最终双视口验收。
 - `tdd-green.log`、`tdd-restart-green.log`：最小实现后 GREEN。新 `web/test_loss_settlement.js` 和 `web/test_settlement_restart.js` 纳入完整 npm test，覆盖首次/已有昵称、loss 资料守卫、刷新恢复、win/draw、资料失败仅重试资料、待完成与重复动作、成功/X 后新局和旧事件保护。
 - `npm-test.log`：完整 npm test；本地 SQL/PGlite、身份/幂等/RLS/IP 隐私回归继续执行。
 - `browser-local/checks.json` 与截图：真实 Chromium 149，1440×1000 与 390×844，真实 Sim/Canvas/素材。用包子库存触发真实超时胜负，按实际新 Sim 实例数确认每次动作只新建一局。全部远端请求默认拒绝或 mock，无正式写入。覆盖 loss 首次/老玩家/重载、win/draw 提交、X 新局、提交失败与待完成不重开、连点/长按/Enter、资料重试和榜单竞态；截图人工检查无溢出或遮挡。console 仅故意 mock 的 422/503，无非预期错误。

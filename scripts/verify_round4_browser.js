@@ -143,6 +143,8 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
         const card = await page.locator('#settlement').boundingBox(), refresh = await page.locator('#leaderboard-retry').boundingBox();
         assert(card.x >= 0 && card.x + card.width <= viewport.width + 1);
         assert(card.x + card.width <= refresh.x || card.y + card.height <= refresh.y);
+        const close = await page.locator('#settlement-close').boundingBox();
+        assert(close.y >= card.y && close.y + close.height <= card.y + card.height, 'loss X must fit inside the compact card');
         await shot(name);
       };
       await checkLoss('first-loss'); assert.equal(profiles.length, 0); assert.equal(writes.length, 0);

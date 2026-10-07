@@ -127,7 +127,7 @@ button:disabled { cursor: default; opacity: .6; }
 #announcement-open { padding: 7px 18px; transform: rotate(-2deg); }
 #announcement-open:hover { transform: rotate(0); }
 @media (max-width: 820px) {
-  .settlement { top: 65%; padding: 8px 46px 8px 10px; font-size: 14px; border-radius: 12px; }
+  .settlement { top: 65%; min-height: 56px; padding: 8px 46px 8px 10px; font-size: 14px; border-radius: 12px; }
   .settlement .note { font-size: 13px; }
   .settlement .profile-fields { grid-template-columns: 1fr 1.4fr; gap: 6px; }
   .settlement input { padding: 5px; min-height: 36px; margin: 3px 0 5px; }
