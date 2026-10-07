@@ -2,6 +2,24 @@
 
 项目：`ozfdtqtlwrqywwfdxfac`。Pages 与数据库 / Edge 分开部署。
 
+## Round 4 本地交付（20261007，未部署）
+
+本轮增量要求数据库已完成 20261006 升级。用户在 SQL Editor 执行
+[`manual_profile_update_20261007.sql`](manual_profile_update_20261007.sql)，或等价 migration
+[`20261007120000_match_profile_updates.sql`](migrations/20261007120000_match_profile_updates.sql)。
+完整 SQL、前置核对与部署后只读 RPC 检查见离线单文件
+[`浅色人工升级文档`](../docs/qqt_round4_sql_upgrade_20261007.html)。不要重跑初始 schema 或在本增量之后重放旧资料 wrapper。
+
+新 `qqt_get_profile(uuid,text)` 返回资料合同版本 2，用已验证匿名凭证确认首次/已有玩家。
+首个真实完整赛果注册昵称，之后服务端昵称不可变。`qqt_update_profile` 接受本人任何已完成 match，
+更新宣言、空值保留，按 match 冻结资料意图并记录幂等收据。旧局晚到或旧资料重试不会回滚较新局已应用的宣言。
+私表均开启 RLS；原始 IP writer 与公开脱敏接口保留。
+
+前端只有收到版本 2 的服务端资料收据后才完成结算，并版本化刷新榜单与身份状态；资料失败仅重试资料。
+旧/缺失资料 RPC 阻止提交或提示失败，绝不假称新宣言已保存。
+本地验证通过不代表正式升级：部署顺序固定为 **本地验证提交 → 用户执行 SQL → 验证新 RPC → 再 push 与 Pages exact-head 验收**。
+本轮没有执行正式 SQL、push、Edge 或 Pages 发布。下文保留 20261006 历史说明，其升级局改名规则已被本轮新合同替代。
+
 ## 当前部署状态（20261006）
 
 本轮只读核验远端排行榜已有 `player_ip` / `best_win_duration_ms` 字段；新的 `qqt_update_profile` 和 Edge 均404。本局排名增量是否已执行没有只读证据；本轮没有 Supabase 管理 token、CLI 或数据库管理连接，**没有执行远端 migration 或部署 Edge**。Pages 发布不代表 SQL / Edge 已上线。旧库结算继续工作；未返回本局排名时显示“排名待数据库升级”；没有本局升级证明时，不显示资料提交区。

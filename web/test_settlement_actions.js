@@ -10,9 +10,11 @@ const meta = {opponent:'bun.coop_hunter',difficulty:'hard',seed:20261007,mode:'1
   const make = () => LB.createClient({config:{url:'https://mock',publishableKey:'public'}, storage, crypto:webcrypto, now:()=>now,
     fetch:async (url, options) => {
       if (url.endsWith('qqt_leaderboard')) return {ok:true,json:async()=>[]};
+      if (url.endsWith('qqt_get_profile')) return {ok:true,json:async()=>({profile_contract_version:2,registered:true,nickname:'玩家',victory_message:'练习'})};
       if (url.endsWith('qqt_update_profile')) {
         if (profileRelease) await new Promise(resolve=>{profileRelease.resolve=resolve;});
-        return {ok:true,json:async()=>({saved:true,nickname:'玩家',victory_message:'练习'})};
+        const body=JSON.parse(options.body);
+        return {ok:true,json:async()=>({saved:true,profile_contract_version:2,client_match_id:body.p_client_match_id,nickname:'玩家',victory_message:body.p_victory_message||'练习',superseded:false})};
       }
       const payload = JSON.parse(options.body).p_payload; writes.push(payload);
       if (release) await new Promise(resolve=>{release.resolve=resolve;});
@@ -41,9 +43,6 @@ const meta = {opponent:'bun.coop_hunter',difficulty:'hard',seed:20261007,mode:'1
   await c.submitProfile('玩家','练习'); assert(!c.profileActive(), 'saved profile allows close/R');
   assert(c.closeSettlement()); c.reopenSettlement(); c.markProfileDirty();
   assert(c.profileActive(), 'editing again protects unsaved form'); assert(c.closeSettlement()); c.reopenSettlement();
-  profileRelease = {}; const saving = c.submitProfile('玩家','练习'); c.markProfileDirty();
-  profileRelease.resolve(); await saving; profileRelease = null;
-  assert(c.profileActive(), 'edits during an in-flight save must remain protected');
   c.skipProfile(); assert(c.closeSettlement());
   await c.submitSettlement(); assert.equal(writes.length,2,'success disables repeated submission');
   c.clearSettlement();

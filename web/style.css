@@ -118,6 +118,8 @@ button:disabled { cursor: default; opacity: .6; }
 .settlement .note:empty { display: none; }
 .settlement input { background: #fff4d4; border: 2px solid #aa501c; color: #482407; font: 600 16px system-ui, sans-serif; text-shadow: none; box-shadow: inset 0 2px 3px #71371330; }
 .settlement label { text-align: left; }
+.settlement .profile-fields:has(#nickname-field[hidden]) { grid-template-columns: 1fr; }
+.settlement .current-nickname { margin: 0 0 7px; font-size: 13px; }
 .settlement button, #announcement-open { background: linear-gradient(#ffde76, #ffab35); color: #fffaf0; border: 2px solid #87451b; border-radius: 10px; box-shadow: inset 0 2px 0 #fff2b1, 0 3px 0 #683719; font: 900 18px system-ui, sans-serif; text-shadow: -1px -1px #713713, 1px -1px #713713, -1px 1px #713713, 1px 1px #713713, 0 2px #713713; }
 .settlement #settlement-submit { min-width: 110px; }
 .settlement .close-button { font-size: 24px; }

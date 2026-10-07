@@ -24,9 +24,10 @@
           </div><p id="settlement-status" class="note" role="status"></p>
           <form id="settlement-form">
             <div class="profile-fields">
-              <label>昵称<input id="player-nickname" maxlength="24" required autocomplete="nickname" placeholder="起一个响亮的名字"></label>
+              <label id="nickname-field">昵称（首次玩家）<input id="player-nickname" maxlength="24" required autocomplete="nickname" placeholder="起一个响亮的名字"></label>
               <label>胜利宣言<input id="player-message" maxlength="80" autocomplete="off" placeholder="留空保留原宣言"></label>
             </div>
+            <p id="current-nickname" class="current-nickname" hidden></p>
             <button id="settlement-submit" type="submit">提交</button>
           </form>
         </section>

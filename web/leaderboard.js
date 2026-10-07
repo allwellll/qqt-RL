@@ -29,7 +29,8 @@
     return /^[0-9a-f]{1,4}:\*:\*:[0-9a-f]{1,4}$/i.test(value) ? value : null;
   }
   function createClient({ config, storage, crypto, fetch, onChange = () => {}, now = Date.now }) {
-    let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null, profileRequest = null, profileRevision = 0, refreshRevision = 0, combinedRequest = null;
+    let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null, profileRequest = null, refreshRevision = 0, combinedRequest = null, identityRequest = null, identityRevision = 0;
+    let profileKnown = false;
     try { data = JSON.parse(storage.getItem(KEY)); } catch (_) { persistent = false; }
     if (!data || !/^[0-9a-f-]{36}$/.test(data.player_id || '') || !/^[0-9a-f]{64}$/.test(data.secret || '')) {
       const playerId = uuid(crypto);
@@ -38,6 +39,8 @@
     }
     data.queue = Array.isArray(data.queue) ? data.queue.slice(-20) : [];
     data.total_ms = Number.isSafeInteger(data.total_ms) ? data.total_ms : 0;
+    data.nextDeclaration ??= data.nextProfile?.victory_message || '';
+    delete data.nextProfile;
     progress = data.progress || null;
     try { Object.assign(data, profile(data.nickname, data.victory_message)); }
     catch (_) { Object.assign(data, { nickname: defaultNickname(data.player_id), nickname_auto: true, victory_message: '' }); }
@@ -57,7 +60,8 @@
     const completed = new Set([...data.queue, ...data.cards].map(x => x.client_match_id));
     function state() { return { nickname: data.nickname, victory_message: data.victory_message,
       player_id: data.player_id, persistent, status, rows, progress, settlement, pending: data.queue.length,
-      savedNickname: data.nickname_auto !== true, profileSubmitting: !!profileRequest, submitting: !!pendingRequest || !!combinedRequest }; }
+      savedNickname: data.confirmed_profile?.registered === true, profileReady: profileKnown,
+      profileSubmitting: !!profileRequest, submitting: !!pendingRequest || !!combinedRequest }; }
     function remember() {
       if (settlement) {
         data.cards = data.cards.filter(card => card.client_match_id !== settlement.client_match_id);
@@ -98,6 +102,35 @@
       }
       return requestRpc(`${config.url}/rest/v1/rpc/${name}`, body);
     }
+    function adoptProfile(result) {
+      if (result.profile_contract_version !== 2 || typeof result.registered !== 'boolean') throw new Error('资料服务正在更新，请稍后重试');
+      if (result.registered) Object.assign(data, profile(result.nickname, result.victory_message), { nickname_auto: false });
+      data.confirmed_profile = { registered: result.registered, version: 2 };
+      profileKnown = true;
+    }
+    function syncProfile() {
+      if (identityRequest) return identityRequest;
+      const revision = identityRevision;
+      identityRequest = (async () => {
+        try {
+          const result = await rpc('qqt_get_profile', { p_player_id: data.player_id, p_player_secret: data.secret });
+          if (revision !== identityRevision) return profileKnown;
+          adoptProfile(result);
+          emit(); return true;
+        } catch (_) {
+          if (revision !== identityRevision) return profileKnown;
+          profileKnown = false;
+          if (settlement) settlement.cardStatus = '资料服务暂时无法连接，请重试刷新';
+          emit('资料服务暂时无法连接，请重试刷新'); return false;
+        }
+      })().finally(() => { identityRequest = null; });
+      return identityRequest;
+    }
+    function successText(card) {
+      return card.refreshFailed ? '提交成功，排行榜刷新失败，可重试刷新'
+        : card.pendingEdits ? '提交成功！新的宣言已保留到下一局'
+        : card.profileSuperseded ? '提交成功！宣言沿用较新一局的内容' : '提交成功！';
+    }
     async function refresh() {
       const revision = ++refreshRevision;
       try {
@@ -107,7 +140,7 @@
         rows = responseRows;
         if (settlement) {
           settlement.refreshFailed = false;
-          if (settlement.complete && settlement.cardStatus?.includes('排行榜刷新失败')) settlement.cardStatus = settlement.deferredProfile ? '提交成功！新资料将在升级时更新' : '提交成功！';
+          if (settlement.complete && settlement.cardStatus?.includes('排行榜刷新失败')) settlement.cardStatus = successText(settlement);
         }
         emit('排行榜已更新'); return true;
       } catch (error) {
@@ -142,10 +175,6 @@
               }
               const currentCard = settlement?.client_match_id === match.client_match_id;
               const card = currentCard ? settlement : data.cards.find(value => value.client_match_id === match.client_match_id);
-              if (card?.acceptedInput && card.wasSavedNickname === false && data.nickname_auto === true) {
-                Object.assign(data, { nickname: card.acceptedInput.nickname, nickname_auto: false,
-                  victory_message: card.acceptedInput.victory_message || data.victory_message });
-              }
               if (card) {
                 // The queued payload carries the terminal result; the original
                 // match metadata passed to begin() intentionally does not.
@@ -157,7 +186,7 @@
                 else data.cards = data.cards.map(value => value.client_match_id === match.client_match_id ? receipt : value);
               }
               data.progress = progress;
-              data.queue.splice(index, 1); refreshRevision++; save(); emit('提交成功');
+              data.queue.splice(index, 1); refreshRevision++; identityRevision++; save(); emit('提交成功');
               await refresh();
             }
             // A fast restart may finish another match while the prior leaderboard read
@@ -172,7 +201,7 @@
       if (!match || completed.has(match.client_match_id)) return Promise.resolve(false);
       completed.add(match.client_match_id);
       settlement = { client_match_id: match.client_match_id, result, duration_ms: gameDurationMs, submitted: false, ranking: null, closed: false, eligible: false,
-        draft: { nickname: data.nextProfile?.nickname || (data.nickname_auto === true ? '' : data.nickname), victory_message: data.nextProfile?.victory_message || '' }, cardStatus: '' };
+        draft: { nickname: data.confirmed_profile?.registered ? data.nickname : '', victory_message: data.nextDeclaration || '' }, cardStatus: '' };
       const wall = Math.round(now() - match.started);
       if (!['win','loss','draw'].includes(result) || !Number.isInteger(gameDurationMs) ||
           gameDurationMs < 1000 || gameDurationMs > 240000 || wall < Math.max(1000, gameDurationMs * .75) || wall > 3600000) {
@@ -190,22 +219,33 @@
     }
     function submitProfile(nick, message) {
       if (profileRequest) return profileRequest;
-      if (!settlement || !settlement.submitted || !settlement.upgraded || settlement.profileSkipped) {
-        return Promise.reject(new Error('仅本局排行榜升级后可提交资料'));
+      if (!settlement || !settlement.submitted || settlement.profileSkipped) {
+        return Promise.reject(new Error('请先完成本局战绩提交'));
       }
+      if (settlement.profileReceiptVersion === 2) return Promise.resolve(true);
       let values;
-      try { values = profile(nick, message); }
+      try { values = profile(data.confirmed_profile?.registered ? data.nickname : nick || data.nickname, message); }
       catch (error) { return Promise.reject(error); }
-      const matchId = settlement.client_match_id, revision = profileRevision;
+      const matchId = settlement.client_match_id;
+      // One immutable profile intent per match, persisted before any network write.
+      settlement.profileIntent ??= { victory_message: values.victory_message };
+      remember();
       profileRequest = (async () => {
         const result = await rpc('qqt_update_profile', { p_player_id: data.player_id, p_player_secret: data.secret,
-          p_client_match_id: matchId, p_nickname: values.nickname, p_victory_message: values.victory_message });
-        if (!result || result.saved !== true || typeof result.nickname !== 'string' ||
-            typeof result.victory_message !== 'string') throw new Error('资料提交响应格式错误');
-        const saved = profile(result.nickname, result.victory_message);
-        Object.assign(data, saved, { nickname_auto: false }); save();
-        if (settlement && settlement.client_match_id === matchId) settlement.profileSaved = revision === profileRevision;
-        emit('昵称和宣言已提交'); await refresh();
+          p_client_match_id: matchId, p_nickname: null, p_victory_message: settlement.profileIntent.victory_message });
+        if (!result || result.saved !== true || result.profile_contract_version !== 2 || result.client_match_id !== matchId ||
+            typeof result.nickname !== 'string' || typeof result.victory_message !== 'string') throw new Error('资料服务正在更新，请稍后重试');
+        adoptProfile({ ...result, registered: true });
+        identityRevision++;
+        refreshRevision++;
+        if (settlement && settlement.client_match_id === matchId) {
+          settlement.profileSaved = true;
+          settlement.profileReceiptVersion = 2;
+          settlement.profileSuperseded = result.superseded === true;
+          settlement.pendingEdits = String(settlement.draft?.victory_message || '').trim() !== settlement.profileIntent.victory_message;
+          data.nextDeclaration = settlement.pendingEdits ? settlement.draft.victory_message : '';
+        }
+        emit('宣言已提交'); await refresh();
         return true;
       })().finally(() => { profileRequest = null; emit(); });
       emit(); return profileRequest;
@@ -219,60 +259,44 @@
     }
     function setDraft(nickname, message) {
       if (!settlement) return;
-      profileRevision++;
-      settlement.draft = { nickname: String(nickname), victory_message: String(message) };
-      if (settlement.complete) settlement.complete = false;
-      settlement.cardStatus = ''; emit();
+      settlement.draft = { nickname: data.confirmed_profile?.registered ? data.nickname : String(nickname), victory_message: String(message) };
+      if (settlement.profileReceiptVersion === 2) {
+        data.nextDeclaration = String(message); settlement.pendingEdits = true;
+        settlement.cardStatus = successText(settlement);
+      } else settlement.cardStatus = '';
+      emit();
     }
     function submitCard() {
       if (combinedRequest) return combinedRequest;
       const card = settlement;
       if (!card || !card.eligible || card.complete) return Promise.resolve(false);
-      let values;
-      try { values = profile(card.draft.nickname, card.draft.victory_message); }
-      catch (error) { card.cardStatus = error.message; emit(); return Promise.resolve(false); }
-      // Freeze only the accepted input/payload. Later edits remain a separate draft.
-      const revision = profileRevision;
-      if (!card.submitted) {
-        const queued = data.queue.find(x => x.client_match_id === card.client_match_id);
-        if (!queued) return Promise.resolve(false);
-        if (queued.approved === false) {
-          card.wasSavedNickname = data.nickname_auto !== true;
-          // Until the first upgrade profile RPC, SQL may still accept profile fields
-          // from results. Keep subsequent results on the confirmed registration,
-          // including an earlier authorized retry that will drain before this one.
-          const earlier = data.queue.slice(0, data.queue.indexOf(queued)).find(value => value.approved !== false);
-          const registration = card.wasSavedNickname ? data : earlier || values;
-          queued.nickname = registration.nickname;
-          queued.victory_message = registration.victory_message || data.victory_message;
-          card.acceptedInput = { nickname: queued.nickname, victory_message: queued.victory_message };
-        }
-      }
       card.cardStatus = '提交中…';
       combinedRequest = Promise.resolve().then(async () => {
         try {
+          if (!profileKnown && !await syncProfile()) throw new Error('资料服务暂时无法连接，请重试刷新');
+          const values = profile(data.confirmed_profile?.registered ? data.nickname : card.draft.nickname, card.draft.victory_message);
+          card.profileIntent ??= { victory_message: values.victory_message };
+          if (!card.submitted) {
+            const queued = data.queue.find(x => x.client_match_id === card.client_match_id);
+            if (!queued) throw new Error('本局已过期，请开始新一局');
+            if (queued.approved === false) {
+              queued.nickname = values.nickname;
+              queued.victory_message = values.victory_message;
+              card.acceptedInput = { ...values };
+            }
+          }
+          remember();
           if (!card.submitted) await submitSettlement();
           // drain replaces the settlement object with the server receipt.
           const current = settlement;
           if (!current || current.client_match_id !== card.client_match_id || !current.submitted) throw new Error('result failed');
-          if (current.upgraded) { await submitProfile(values.nickname, values.victory_message); data.nextProfile = null; }
-          else {
-            if (!current.wasSavedNickname && data.nickname_auto === true) {
-              const accepted = current.acceptedInput || values;
-              Object.assign(data, { nickname: accepted.nickname, nickname_auto: false });
-              if (accepted.victory_message) data.victory_message = accepted.victory_message;
-            }
-            const changed = values.nickname !== data.nickname ||
-              (values.victory_message && values.victory_message !== data.victory_message);
-            data.nextProfile = changed ? values : null;
-            current.deferredProfile = !!changed;
-          }
-          current.complete = revision === profileRevision;
-          current.cardStatus = current.complete ? current.refreshFailed ? '提交成功，排行榜刷新失败，可重试刷新' : current.deferredProfile ? '提交成功！新资料将在升级时更新' : '提交成功！' : '已提交，新的修改可继续提交';
-          current.profileSaved = true;
+          await submitProfile(values.nickname, values.victory_message);
+          current.complete = true;
+          current.cardStatus = successText(current);
           return true;
         } catch (error) {
-          if (settlement?.client_match_id === card.client_match_id) settlement.cardStatus = '提交失败，请重试';
+          if (settlement?.client_match_id === card.client_match_id) settlement.cardStatus = settlement.submitted
+            ? '战绩已提交，宣言提交失败，请重试' : /昵称|宣言|资料服务|过期/.test(error.message) ? error.message : '提交失败，请重试';
           return false;
         }
       }).finally(() => { combinedRequest = null; emit(); });
@@ -284,9 +308,9 @@
       if (!card) return false;
       settlement = { ...card, closed: false }; emit(); return true;
     }
-    function profileActive() { return !!profileRequest || !!(settlement && settlement.upgraded && !settlement.profileSkipped && !settlement.profileSaved); }
-    return { state, begin, finish, refresh, retry: drain, setDraft, submitCard, openPending, submitProfile, submitSettlement, profileActive,
-      markProfileDirty() { profileRevision++; if (settlement) settlement.profileSaved = false; emit(); },
+    function profileActive() { return !!profileRequest || !!(settlement && settlement.submitted && !settlement.profileSkipped && !settlement.profileSaved); }
+    return { state, begin, finish, refresh, syncProfile, retry: drain, setDraft, submitCard, openPending, submitProfile, submitSettlement, profileActive,
+      markProfileDirty() { if (settlement) settlement.profileSaved = false; emit(); },
       closeSettlement() { if (pendingRequest || profileRequest || combinedRequest) return false; if (settlement) settlement.closed = true; emit(); return true; },
       reopenSettlement() { if (settlement) settlement.closed = false; emit(); },
       submitPending() {
@@ -323,10 +347,20 @@
     el('settlement').hidden = !value || value.closed;
     const submit = el('settlement-submit'), close = el('settlement-close');
     if (submit) {
-      submit.disabled = !value || !value.eligible || value.complete || state.submitting;
+      submit.disabled = !value || !value.eligible || value.complete || state.submitting || state.profileReady === false;
       submit.textContent = '提交';
     }
     if (close) close.disabled = state.submitting || state.profileSubmitting;
+    const nickname = el('player-nickname'), nicknameField = el('nickname-field'), currentName = el('current-nickname');
+    if (nicknameField) nicknameField.hidden = state.savedNickname || state.profileReady === false;
+    if (nickname) {
+      nickname.disabled = state.savedNickname || state.submitting || state.profileReady === false;
+      nickname.required = !state.savedNickname;
+    }
+    if (currentName) {
+      currentName.hidden = !state.savedNickname;
+      currentName.textContent = state.savedNickname ? `昵称：${state.nickname}` : '';
+    }
     if (!value) return;
     const lines = settlementText(value);
     el('settlement-title').textContent = { win: '胜利', loss: '失败', draw: '平局' }[value.result] || '本局结束';
@@ -379,10 +413,11 @@
     el('settlement-form').addEventListener('submit', event => { event.preventDefault(); void client.submitCard(); });
     for (const id of ['player-nickname', 'player-message']) el(id).addEventListener('input', () =>
       client.setDraft(el('player-nickname').value, el('player-message').value));
-    el('leaderboard-retry').addEventListener('click', () => { void client.refresh(); });
+    el('leaderboard-retry').addEventListener('click', () => { void client.refresh(); void client.syncProfile(); });
     el('settlement-close').addEventListener('click', () => client.closeSettlement());
     el('pending-submit').addEventListener('click', () => client.openPending());
     client.refresh();
+    void client.syncProfile();
     return client;
   }
 
