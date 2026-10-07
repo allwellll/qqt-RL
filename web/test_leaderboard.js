@@ -50,7 +50,7 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
   unavailable = true;
   const next = client.begin(metadata); now += 5000;
   await client.finish(next, { result: 'loss', gameDurationMs: 5000 });
-  assert.equal(client.state().pending, 1); assert.match(client.state().status, /可重试/);
+  assert.equal(client.state().pending, 1); assert.match(client.state().status, /重试/);
   const restored = make(); assert.equal(restored.state().pending, 1);
   const failedPayload = calls.filter(c => c.url.endsWith('qqt_submit_result')).at(-1).payload;
   unavailable = false; await Promise.all([restored.retry(), restored.retry()]);
@@ -110,9 +110,9 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
   const elements = new Map(['settlement','settlement-title','settlement-time','settlement-rank','settlement-status'].map(id => [id, { textContent: '', hidden: true }]));
   const settlementDoc = { getElementById: id => elements.get(id) };
   for (const [outcome, title] of [['win','胜利'],['loss','失败'],['draw','平局']]) {
-    LB.renderSettlement(settlementDoc, { status: '<script>offline</script>', settlement: { result: outcome, duration_ms: 5000, submitted: true, ranking: null } });
+    LB.renderSettlement(settlementDoc, { status: '<script>offline</script>', settlement: { result: outcome, duration_ms: 5000, submitted: true, ranking: null, cardStatus: '<script>offline</script>' } });
     assert.equal(elements.get('settlement-title').textContent, title);
-    assert.equal(elements.get('settlement-rank').textContent, '排名待数据库升级');
+    assert.equal(elements.get('settlement-rank').textContent, '暂无排名');
     assert.equal(elements.get('settlement-status').textContent, '<script>offline</script>');
   }
   LB.renderSettlement(settlementDoc, { status: '', settlement: { result: 'win', duration_ms: 5000, ranking: { rank: 2, total: 4, percentile: 33.33 } } });
@@ -186,7 +186,7 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
   assert.equal(quick.state().pending, 0);
   assert.equal(quick.state().settlement.submitted, true);
   const html = require('fs').readFileSync(require('path').join(__dirname, 'index.html'), 'utf8');
-  assert.match(html, /<aside>\s*<section class="leaderboard"/);
+  assert.match(html, /<aside>[\s\S]*?<section class="leaderboard"/);
   const aside = html.split('<aside>')[1].split('</aside>')[0];
   assert(!/leaderboard-identity|leaderboard-progress|匿名身份保存在此浏览器|胜 \+3|未权威|Edge|排名按等级/.test(aside));
   assert(!html.includes('同结果、队伍模式'));

@@ -22,19 +22,17 @@
           <p id="settlement-time"></p>
           <p id="settlement-rank"></p>
           </div><p id="settlement-status" class="note" role="status"></p>
-          <button id="settlement-submit" type="button">提交战绩</button>
+          <form id="settlement-form">
+            <div class="profile-fields">
+              <label>昵称<input id="player-nickname" maxlength="24" required autocomplete="nickname" placeholder="起一个响亮的名字"></label>
+              <label>胜利宣言<input id="player-message" maxlength="80" autocomplete="off" placeholder="留空保留原宣言"></label>
+            </div>
+            <button id="settlement-submit" type="submit">提交</button>
+          </form>
         </section>
-        <form id="leaderboard-profile" class="upgrade-profile" hidden>
-          <p id="profile-title">排行榜等级提升！</p>
-          <div class="profile-fields">
-            <label>昵称<input id="player-nickname" maxlength="24" required autocomplete="nickname"></label>
-            <label>胜利宣言<input id="player-message" maxlength="80" autocomplete="off" placeholder="留空保留原宣言"></label>
-          </div>
-          <div class="profile-actions"><button id="profile-submit" type="submit">提交资料</button><button id="profile-skip" type="button">跳过</button></div>
-          <p id="profile-status" role="status" aria-live="polite"></p>
-        </form>
       </div>
       <aside>
+        <div class="aside-toolbar"><button id="announcement-open" type="button"><span aria-hidden="true">★</span> 公告</button></div>
         <section class="leaderboard" aria-labelledby="leaderboard-heading">
           <h2 id="leaderboard-heading">用户排行榜 · Top 20</h2>
           <div class="leaderboard-table-wrap">
@@ -64,12 +62,11 @@
         <p><kbd>E / Shift</kbd> 使用道具栏第 1 格</p>
         <p>糖泡：队友碰触救援</p>
         <p><kbd>R</kbd> 重新开局</p>
-        <button id="announcement-open" type="button">公告</button>
         <button id="advanced-open" type="button" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button>
         <section id="advanced-settings" hidden>
         <button id="advanced-close" type="button">关闭高阶设置</button>
         <button id="restart" type="button">重新开局</button>
-        <button id="pending-submit" type="button">提交待存战绩</button>
+        <button id="pending-submit" type="button">查看未完成的结算</button>
         <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效</label>
         <h2>对手</h2>
         <label>地图

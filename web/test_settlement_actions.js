@@ -28,7 +28,7 @@ const meta = {opponent:'bun.coop_hunter',difficulty:'hard',seed:20261007,mode:'1
   await c.retry(); assert.equal(writes.length,0,'refresh/retry cannot authorize a draft');
   const restored = make(); await restored.retry(); assert.equal(writes.length,0,'reload cannot authorize a draft');
   await Promise.all([c.submitSettlement(),c.submitSettlement(),c.submitSettlement()]);
-  assert.equal(writes.length,1); assert.match(c.state().status,/可重试/);
+  assert.equal(writes.length,1); assert.match(c.state().status,/重试/);
   assert(c.closeSettlement()); c.reopenSettlement();
   fail = false; upgraded = true; release = {};
   const a = c.submitSettlement(), b = c.submitSettlement();
@@ -37,10 +37,10 @@ const meta = {opponent:'bun.coop_hunter',difficulty:'hard',seed:20261007,mode:'1
   assert.deepEqual(writes[1],writes[0], 'retry preserves ID and full fingerprint payload');
   assert(!Object.hasOwn(writes[0],'approved'),'local approval is never sent to server');
   assert.equal(c.state().pending,0); assert(c.state().settlement.submitted);
-  assert(c.profileActive()); assert.equal(c.closeSettlement(),false,'upgrade form cannot be dismissed accidentally');
+  assert(c.profileActive()); assert(c.closeSettlement(), 'idle form closes without losing persistent input'); c.reopenSettlement();
   await c.submitProfile('玩家','练习'); assert(!c.profileActive(), 'saved profile allows close/R');
   assert(c.closeSettlement()); c.reopenSettlement(); c.markProfileDirty();
-  assert(c.profileActive(), 'editing again protects unsaved form'); assert(!c.closeSettlement());
+  assert(c.profileActive(), 'editing again protects unsaved form'); assert(c.closeSettlement()); c.reopenSettlement();
   profileRelease = {}; const saving = c.submitProfile('玩家','练习'); c.markProfileDirty();
   profileRelease.resolve(); await saving; profileRelease = null;
   assert(c.profileActive(), 'edits during an in-flight save must remain protected');

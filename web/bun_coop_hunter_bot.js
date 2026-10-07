@@ -488,6 +488,32 @@
       return seeds.sort((a, b) => a.cost - b.cost).slice(0, 18);
     }
 
+    glueClearBomb(state, g, pid, pred, field) {
+      const me = state.players[pid];
+      const glue = Array.from(g.nb.slice(me.cell * 4, me.cell * 4 + 4))
+        .filter(c => c >= 0 && state.fieldItem[c] === 2 && field[c] < field[me.cell]);
+      if (!glue.length || me.carrying >= 0 || me.bombsLeft <= 0 ||
+          me.liveBombs >= this.cfg.maxLiveBombs || g.bombAt[me.cell] >= 0) return null;
+      const slow = this.escape(g, pred, { ...me, speed: Math.min(me.speed, 0.6) }, false);
+      const canEat = [0, 1, 2, 3].some(a => glue.includes(g.nb[me.cell * 4 + a]) && (slow.surv & (1 << a)));
+      if (canEat) return null;
+      const after = this.predict(state, g, [{cell:me.cell,e:Base.NEW_BOMB_TICK,blast:me.blast}], () => true);
+      const esc = this.escape(g, after, me, false);
+      const danger = this.dangerCells(after, g.N);
+      let acts = esc.surv & 15;
+      for (let a = 0; a < 4; a++) {
+        const c = g.nb[me.cell * 4 + a];
+        if (c < 0 || state.fieldItem[c] || !this.physicalEscape(state,g,pid,after,a)) acts &= ~(1 << a);
+      }
+      if (!acts) return null;
+      for (const q of this.alliesOf(state,pid)) {
+        const ally = state.players[q];
+        if (ally.alive && (danger[ally.cell] || !this.escape(g,after,ally,false).surv)) return null;
+      }
+      const move = super.pickMove(g,me,acts,esc,field,true,danger);
+      return {move,reason:'bomb_clear_glue'};
+    }
+
     considerBomb(state, g, pid, pred, perceive, field) {
       if (this.lastGoalMode === 'RESCUE') return null;
       if (this.itemPlan) return null;
@@ -497,10 +523,11 @@
         const window = 12;
         if (this.alliesOf(state, pid).length && anchor && anchor.fuse > window) return null;
       }
-      const candidate = this.lastGoalMode === 'RESERVE' ? this.tacticalBomb(state, g, pid, field)
+      const clear = this.glueClearBomb(state,g,pid,this.predict(state,g,[],()=>true),field);
+      const candidate = clear || (this.lastGoalMode === 'RESERVE' ? this.tacticalBomb(state, g, pid, field)
         : (this.lastGoalMode === 'CHAIN' ? this.tacticalBomb(state, g, pid, field) : null)
         || super.considerBomb(state, g, pid, pred, perceive, field)
-        || this.tacticalBomb(state, g, pid, field);
+        || this.tacticalBomb(state, g, pid, field));
       if (!candidate) return null;
       const me = state.players[pid];
       const cooperative = this.alliesOf(state, pid).length > 0;
@@ -666,13 +693,18 @@
       }
       if (state && state.nextPosition && this.lastGoalMode !== 'RESCUE') {
         let separated = 0;
-        let itemSafe = 0;
+        let itemSafe = 0, glueMoves = 0;
+        const physical = this.predict(state, g, [], () => true);
+        const slowEscape = this.escape(g, physical, { ...me, speed: Math.min(me.speed, 0.6) }, false);
         for (let a = 0; a < 5; a++) {
           if (!(acts & (1 << a))) continue;
           const next = state.nextPosition(this.currentPid, a);
           const cell = Math.floor(next[0]) * g.W + Math.floor(next[1]);
-          if (cell === me.cell || !state.fieldItem[cell] ||
-              (state.fieldItem[cell] === 1 && me.carrying >= 0)) itemSafe |= 1 << a;
+          const neighbor = a < 4 ? g.nb[me.cell * 4 + a] : me.cell;
+          const glue = state.fieldItem[cell] === 2 || (neighbor >= 0 && state.fieldItem[neighbor] === 2);
+          if (glue && a < 4 && (slowEscape.surv & (1 << a))) glueMoves |= 1 << a;
+          if (!glue && (cell === me.cell || !state.fieldItem[cell] ||
+              (state.fieldItem[cell] === 1 && me.carrying >= 0))) itemSafe |= 1 << a;
           const conflict = this.alliesOf(state, this.currentPid).some((q) => {
             const ally = state.players[q];
             if (!ally.alive || ally.trapped) return false;
@@ -688,7 +720,13 @@
           });
           if (!conflict) separated |= 1 << a;
         }
-        if (itemSafe) acts = itemSafe;
+        // Prefer a real bypass that advances the task. Idle is not a bypass.
+        const progress = [0, 1, 2, 3].some(a => (itemSafe & (1 << a)) &&
+          g.nb[me.cell * 4 + a] >= 0 && field[g.nb[me.cell * 4 + a]] < field[me.cell]);
+        if (progress || threatened) { if (itemSafe) acts = itemSafe; }
+        else if (glueMoves) acts = (itemSafe | glueMoves) & acts;
+        else if (itemSafe & 15) acts = itemSafe & 15;
+        else if (itemSafe) acts = itemSafe;
         if (separated & acts) acts &= separated;
       }
       if (this.itemPlan && me.cell === this.itemPlan.cell) {

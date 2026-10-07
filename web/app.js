@@ -194,11 +194,11 @@
     }
   }
 
-  async function reset() {
-    if (leaderboard.profileActive() || leaderboard.state().submitting) return;
+  async function reset(preserveCard = false) {
+    if (leaderboard.state().submitting || leaderboard.state().profileSubmitting) return;
     sessionRevision++;
     leaderboardMatch = null;
-    leaderboard.clearSettlement();
+    if (preserveCard !== true) leaderboard.clearSettlement();
     QQTLeaderboard.renderSettlement(document, leaderboard.state());
     QQTLeaderboard.renderUpgradeProfile(document, leaderboard.state());
     replayDocument = null;
@@ -357,6 +357,7 @@
   }
 
   async function loadReplay(row) {
+    if (leaderboard.state().submitting || leaderboard.state().profileSubmitting) return;
     const response = await fetch(`replays/${row.file}`, { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     replayDocument = QQTReplay.validateReplay(await response.json());
@@ -377,11 +378,9 @@
     }
     renderer.render(sim, now, motionState());
     QQTLeaderboard.renderSettlement(document, leaderboard.state());
-    QQTLeaderboard.renderUpgradeProfile(document, leaderboard.state());
-    const profileForm = document.getElementById('leaderboard-profile');
     const rect = canvas.getBoundingClientRect(), stage = canvas.parentElement.getBoundingClientRect();
-    document.getElementById('settlement').style.top = `${rect.top - stage.top + rect.height * .65}px`;
-    if (!profileForm.hidden) profileForm.style.top = `${rect.top - stage.top + rect.height * .80}px`;
+    document.getElementById('settlement').style.top = window.matchMedia('(max-width: 820px)').matches
+      ? '' : `${rect.top - stage.top + rect.height * .65}px`;
     hideLoading();
     status.textContent = JSON.stringify({
       mode: QQTModelCatalog.matchLabel(matchMode.value),
@@ -460,8 +459,8 @@
   const unlockAudio = () => sound.unlock();
   const restartGame = QQTControls.createRestartGate(reset, () => sim.done);
   function requestRestart(finishedOnly = false) {
-    if (leaderboard.profileActive() || leaderboard.state().submitting) {
-      document.getElementById('profile-status').textContent = '请等待战绩提交完成，并提交资料或选择跳过，再按 R 开新局';
+    if (leaderboard.state().submitting || leaderboard.state().profileSubmitting) {
+      document.getElementById('settlement-status').textContent = '正在提交，请稍候～';
       return Promise.resolve(false);
     }
     return restartGame(finishedOnly).catch(error => { status.textContent = `重新开局失败：${error.message}`; });
@@ -537,7 +536,7 @@
   opponentSelect.addEventListener('change', onStrategyChange);
   mapSelect.addEventListener('change', reset);
   await loadCatalog();
-  reset();
+  reset(true);
   await loadReplayCatalog();
   function animationFrame(now) {
     stepHumanFrame(now);
