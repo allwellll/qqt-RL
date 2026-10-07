@@ -1,0 +1,33 @@
+'use strict';
+const assert = require('assert');
+const QQT = require('./sim');
+const Coop = require('./bun_coop_hunter_bot');
+const { trace } = require('../scripts/eval_staggered_attack');
+function fixture(x, invuln = 0) {
+  const sim = new QQT.Sim(2026100701);
+  sim.reset('open', { nativeItems: true, nativeTrap: true, teams: [0, 1] });
+  for (const key of ['wall', 'brick', 'crate', 'fuse', 'blastLinger']) sim[key].fill(0);
+  sim.pos.set([6.5, x, 2.5, 2.5]); sim.invuln.fill(0); sim.invuln[0] = invuln;
+  const cell = 6 * QQT.W + 8;
+  sim.fuse[cell] = 1; sim.owner[cell] = 1; sim.bombBlast[cell] = 1;
+  sim.maxSteps = 90;
+  const bots = [null, new Coop.BunCoopHunterBot({ difficulty: 'hard' })];
+  return trace(sim, bots, 1, s => s.team.map(() => [4, 0, 0, 0]), 65);
+}
+const half = fixture(10.05);
+assert.equal(half.stats.pressureContacts, 0, 'half-contact geometry is not actual damage');
+assert.equal(fixture(9.5, 10).stats.pressureContacts, 0, 'invulnerability is not actual damage');
+const hit = fixture(9.5);
+assert.equal(hit.stats.enemyTraps, 1);
+assert.equal(hit.stats.pressureContacts, 1);
+assert.equal(hit.stats.enemyDeaths, 1, 'delayed trap death retains its original attacker');
+const blocked = new QQT.Sim(2026100701);
+blocked.reset('open', { nativeItems: true, nativeTrap: true, teams: [0,1] });
+blocked.wall.fill(1); blocked.brick.fill(0); blocked.fuse.fill(0);
+for (const x of [8,9]) blocked.wall[6 * QQT.W+x]=0;
+blocked.pos.set([1.5,1.5,6.5,8.5]); blocked.invuln.fill(0);
+const cell=6*QQT.W+9; blocked.fuse[cell]=20; blocked.owner[cell]=1; blocked.bombBlast[cell]=1;
+const own=trace(blocked,[null,new Coop.BunCoopHunterBot({difficulty:'hard'})],1,()=>[[4,0,0,0],[3,0,0,0]],3);
+assert.equal(own.stats.teammateBlockedTicks,0,'own bubble is not teammate obstruction');
+assert(own.stats.ownBubbleBlockedTicks>0);
+console.log('Staggered oracle: half-contact, invulnerability and delayed death passed');

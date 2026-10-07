@@ -29,6 +29,9 @@
       this.reservePlan = null;
       this.reserveRetryTick = 0;
       this.reserveCancellations = 0;
+      this.staggerPlan = null;
+      this.staggerRetreatUntil = 0;
+      this.lastAttackTiming = null;
     }
 
     analyzeSim(sim, pid) {
@@ -151,6 +154,20 @@
       }
       if (this.chainPlan && [...combat, 'RESERVE'].includes(goal.mode)) {
         goal = { mode: 'CHAIN', seeds: [{ cell: plan.cell, cost: 0 }], threat: false, noDig: true };
+      }
+      if (!combat.includes(goal.mode) || me.carrying >= 0 || this.itemPlan ||
+          (state.movementStatus && state.movementStatus[pid] === 2)) this.staggerPlan = null;
+      if (!this.reservePlan && !this.chainPlan && combat.includes(goal.mode)) {
+        const physical = this.predict(state, g, [], () => true);
+        if (this.staggerPlan) {
+          const p = this.staggerPlan, anchor = state.bombs.find(b => b.cell === p.anchor && b.owner === pid);
+          const remaining = this.routeDistance(g, me.cell, new Set([p.cell]));
+          if (remaining < p.remaining) { p.remaining = remaining; p.progressTick = state.tick; }
+          if (!anchor || state.tick >= p.expires || state.tick - p.progressTick > 8 ||
+              !this.staggerProposal(state, g, pid, anchor, p.cell, physical)) this.staggerPlan = null;
+        }
+        if (!this.staggerPlan) this.staggerPlan = this.findStaggeredPlan(state, g, pid, physical);
+        if (this.staggerPlan) goal = { mode: 'STAGGER', seeds: [{ cell: this.staggerPlan.cell, cost: 0 }], threat: false, noDig: true };
       }
       this.lastGoalMode = goal.mode;
       return goal;
@@ -300,6 +317,7 @@
       this.assignment = null;
       this.observeEnemyTrends(state, pid);
       const decision = super.analyze(state, pid);
+      if (decision.action[1] === 1 && decision.reason.startsWith('bomb_stagger')) decision.attackTiming = this.lastAttackTiming;
       if (decision.reason === 'doomed_max_survival' && state.projectPosition && this.alliesOf(state, pid).length) {
         const g = this.geometry(state), pred = this.predict(state, g, [], () => true);
         const physical = [];
@@ -523,14 +541,24 @@
         const window = 12;
         if (this.alliesOf(state, pid).length && anchor && anchor.fuse > window) return null;
       }
-      const clear = this.glueClearBomb(state,g,pid,this.predict(state,g,[],()=>true),field);
-      const candidate = clear || (this.lastGoalMode === 'RESERVE' ? this.tacticalBomb(state, g, pid, field)
+      const clear = this.lastGoalMode === 'STAGGER' ? null : this.glueClearBomb(state,g,pid,this.predict(state,g,[],()=>true),field);
+      let immediate = null;
+      if (this.lastGoalMode === 'STAGGER' && state.players[pid].cell !== this.staggerPlan?.cell) {
+        // A future timing plan must not suppress an already useful attack.
+        this.lastGoalMode = 'HUNT';
+        const opportunity = super.considerBomb(state, g, pid, pred, perceive, field);
+        this.lastGoalMode = 'STAGGER';
+        if (opportunity && ['bomb_attack', 'bomb_kill'].includes(opportunity.reason)) immediate = opportunity;
+      }
+      const candidate = this.lastGoalMode === 'STAGGER' ? immediate || this.staggerBomb(state, g, pid, field)
+        : clear || (this.lastGoalMode === 'RESERVE' ? this.tacticalBomb(state, g, pid, field)
         : (this.lastGoalMode === 'CHAIN' ? this.tacticalBomb(state, g, pid, field) : null)
         || super.considerBomb(state, g, pid, pred, perceive, field)
         || this.tacticalBomb(state, g, pid, field));
       if (!candidate) return null;
       const me = state.players[pid];
       const cooperative = this.alliesOf(state, pid).length > 0;
+      const scheduled = candidate.reason.startsWith('bomb_stagger');
       const mine = { cell: me.cell, e: Base.NEW_BOMB_TICK, blast: me.blast };
       // Physical safety uses all visible bombs even when a difficulty has delayed perception.
       const before = this.predict(state, g, [], () => true);
@@ -542,11 +570,12 @@
       if (cooperative && (selfSpace < Math.min(12, oldSelfSpace) || selfSpace < oldSelfSpace * 0.15)) return null;
       // Leave three ticks of slack for changing opponent fire, contact fields and
       // continuous corner alignment. A last-moment theoretical exit is too brittle.
-      const safetyState = cooperative ? { ...state, bombs: state.bombs.map((b) =>
+      const safetyState = cooperative || scheduled ? { ...state, bombs: state.bombs.map((b) =>
         ({ ...b, fuse: Math.max(1, b.fuse - 3) })) } : state;
-      const safety = cooperative ? this.predict(safetyState, g,
+      const safety = cooperative || scheduled ? this.predict(safetyState, g,
         [{ ...mine, e: mine.e - 3 }], () => true) : after;
-      const retreat = !cooperative || this.physicalEscape(state, g, pid, safety, candidate.move);
+      if (scheduled && !(this.escape(g, safety, me, false).surv & (1 << candidate.move))) return null;
+      const retreat = (!cooperative && !scheduled) || this.physicalEscape(state, g, pid, safety, candidate.move);
       if (!retreat) return null;
       for (const q of this.alliesOf(state, pid)) {
         const ally = state.players[q];
@@ -606,7 +635,102 @@
           : candidate.chainFuse - 2) };
       else if (this.lastGoalMode === 'CHAIN') this.chainPlan = null;
       if (candidate.reason === 'bomb_reserve_second') this.reservePlan = null;
+      if (immediate) this.staggerPlan = null;
+      if (scheduled) {
+        this.lastAttackTiming = { anchor: this.staggerPlan.anchor,
+          anchorExplosionTick: state.tick + before.bombGone[this.staggerPlan.anchor],
+          expectedExplosionTick: state.tick + after.bombGone[me.cell], insuranceTicks: 3 };
+        this.staggerRetreatUntil = state.tick + after.T;
+        this.staggerPlan = null;
+      }
       return candidate;
+    }
+
+    staggerProposal(state, g, pid, anchor, cell, before) {
+      const me = state.players[pid];
+      if (this.difficulty !== 'hard' || me.carrying >= 0 || me.bombsLeft <= 0 ||
+          me.liveBombs >= this.cfg.maxLiveBombs || (state.movementStatus && state.movementStatus[pid] === 2) ||
+          !g.open[cell] || g.bombAt[cell] >= 0 || state.fieldItem[cell] || before.bombGone[anchor.cell] < 4) return null;
+      const ray = this.blastCells(state, g, cell, me.blast);
+      const useful = this.enemiesOf(state, pid).some(q => {
+        const foe = state.players[q];
+        return foe.alive && !foe.trapped && foe.invuln < Base.NEW_BOMB_TICK && distance(me, foe) <= this.cfg.attackRadius &&
+          (ray.has(foe.cell) || this.pressureRouteCells(state, g, pid, q, before).filter(c => ray.has(c)).length >= 2);
+      });
+      if (!useful) return null;
+      if (state.players.some(p => p.team !== me.team && p.alive && !p.trapped && p.cell === cell && p.bombsLeft > 0)) return null;
+      const after = this.predict(state, g, [{ cell, e: Base.NEW_BOMB_TICK, blast: me.blast }], () => true);
+      const first = before.bombGone[anchor.cell], next = after.bombGone[cell];
+      const extension = next >= first + Base.FLAME_TICKS;
+      // A ray connector detonates in the same engine tick. Keep a separate later
+      // bubble intact so the connector cannot collapse every pressure phase.
+      const continuation = next === first && state.bombs.some(b => b.owner === pid && b.cell !== anchor.cell &&
+        before.bombGone[b.cell] >= first + Base.FLAME_TICKS && after.bombGone[b.cell] === before.bombGone[b.cell]);
+      if (!extension && !continuation) return null;
+      if (!extension && !this.enemiesOf(state, pid).some(q => {
+        const foe = state.players[q];
+        return foe.alive && !foe.trapped && [foe.cell, ...this.pressureRouteCells(state, g, pid, q, before)]
+          .some(c => ray.has(c) && !before.lethal[first * g.N + c]);
+      })) return null;
+      for (const q of this.alliesOf(state, pid)) {
+        const ally = state.players[q];
+        if (!ally.alive) continue;
+        if (ray.has(ally.cell) && (ally.trapped || state.committedMoves?.[q] == null || state.committedMoves[q] === 4 || ally.carrying >= 0)) return null;
+        if (!this.escape(g, after, ally, false).surv) return null;
+        if (ally.carrying >= 0 && this.routeCells(state, g, ally, this.baseCells(state, g, ally.team), before).includes(cell)) return null;
+      }
+      return { after, kind: extension ? 'extension' : 'chain' };
+    }
+
+    findStaggeredPlan(state, g, pid, pred) {
+      const me = state.players[pid], candidates = [];
+      if (this.itemPlan || me.carrying >= 0 || !this.escape(g, pred, me, false).surv) return null;
+      for (const anchor of state.bombs.filter(b => b.owner === pid && b.fuse >= 8 && b.fuse <= 22 && pred.bombGone[b.cell] === b.fuse)) {
+        for (let a = 0; a < 4; a++) {
+          let cell = anchor.cell;
+          for (let d = 1; d <= anchor.blast + 2; d++) {
+            cell = g.nb[cell * 4 + a];
+            if (cell < 0 || !g.open[cell] || g.bombAt[cell] >= 0) break;
+            const travel = this.routeDistance(g, me.cell, new Set([cell]));
+            const ticks = travel * this.moveTicks(me, false) + (travel ? 1 : 0);
+            if (travel > 3 || ticks + 3 >= anchor.fuse) continue;
+            const proposal = this.staggerProposal(state, g, pid, anchor, cell, pred);
+            if (proposal) candidates.push({ cell, anchor: anchor.cell, kind: proposal.kind, ticks, remaining: travel,
+              score: travel + (proposal.kind === 'chain' ? 1 : 0), expires: state.tick + anchor.fuse - 3, progressTick: state.tick });
+          }
+        }
+      }
+      candidates.sort((a, b) => a.score - b.score || a.cell - b.cell);
+      for (const plan of candidates.slice(0, 4)) {
+        const early = { ...state, bombs: state.bombs.map(b => ({ ...b, fuse: Math.max(1, b.fuse - 3) })) };
+        const approach = this.predict(early, g, [], () => true);
+        const route = this.physicalEscape(state, g, pid, approach, null,
+          { cell: plan.cell, deadline: approach.bombGone[plan.anchor] - 1 });
+        if (!route) continue;
+        const future = { ...me, cell: plan.cell, row: Math.floor(plan.cell / g.W), col: plan.cell % g.W,
+          y: Math.floor(plan.cell / g.W) + 0.5, x: plan.cell % g.W + 0.5 };
+        const wait = Math.max(plan.ticks, pred.bombGone[plan.anchor] - 12);
+        const futureState = { ...state, players: state.players.map((p, q) => q === pid ? future : p),
+          bombs: state.bombs.map(b => ({ ...b, fuse: Math.max(1, b.fuse - wait - 3) })) };
+        const safety = this.predict(futureState, g, [{ cell: plan.cell, e: Base.NEW_BOMB_TICK - 3, blast: me.blast }], () => true);
+        if (this.escape(g, safety, future, false).surv && this.physicalEscape(futureState, g, pid, safety)) return plan;
+      }
+      return null;
+    }
+
+    staggerBomb(state, g, pid, field) {
+      const p = this.staggerPlan, me = state.players[pid];
+      if (!p || me.cell !== p.cell) return null;
+      const before = this.predict(state, g, [], () => true), anchor = state.bombs.find(b => b.cell === p.anchor && b.owner === pid);
+      if (!anchor || before.bombGone[anchor.cell] > 12) return null;
+      const proposal = this.staggerProposal(state, g, pid, anchor, p.cell, before);
+      if (!proposal) return null;
+      const extra = [{ cell: me.cell, e: Base.NEW_BOMB_TICK, blast: me.blast }], escape = this.escape(g, proposal.after, me, false);
+      let safe = escape.surv;
+      if (this.cfg.robust) safe &= this.hypoSurvivors(state, g, pid, () => true, extra);
+      if (!safe) return null;
+      return { move: this.pickMove(g, me, safe, escape, field, true, this.dangerCells(proposal.after, g.N), true),
+        reason: `bomb_stagger_${proposal.kind}` };
     }
 
     pressureRouteCells(state, g, pid, q, pred) {
@@ -620,35 +744,43 @@
       return [...cells];
     }
 
-    physicalEscape(state, g, pid, pred, firstMove) {
-      if (!state.projectPosition) return true;
+    physicalEscape(state, g, pid, pred, firstMove, goal = null) {
+      if (!state.projectPosition) return goal ? null : true;
       const player = state.players[pid];
+      if (goal && player.cell === goal.cell) return [];
       const futureDanger = new Uint8Array((pred.T + 2) * g.N);
       for (let t = pred.T; t >= 1; t--) for (let c = 0; c < g.N; c++) {
         futureDanger[t * g.N + c] = pred.lethal[t * g.N + c] + futureDanger[(t + 1) * g.N + c];
       }
-      let points = [{ y: player.y, x: player.x }];
-      for (let tick = 1; tick <= pred.T; tick++) {
+      let points = [{ y: player.y, x: player.x, ...(goal ? { path: [] } : {}) }];
+      for (let tick = 1; tick <= (goal ? Math.min(pred.T, goal.deadline) : pred.T); tick++) {
         const next = new Map();
         for (const point of points) {
           for (let move = 0; move < 5; move++) {
             if (tick === 1 && firstMove != null && move !== firstMove) continue;
+            if (tick === 1 && goal && goal.firstMask != null && !(goal.firstMask & (1 << move))) continue;
             const [y, x] = state.projectPosition(pid, point.y, point.x, move, pred, tick);
             const cell = Math.floor(y) * g.W + Math.floor(x);
             if (cell < 0 || cell >= g.N || (tick > player.invuln && pred.lethal[tick * g.N + cell])) continue;
             if (cell !== player.cell && state.fieldItem[cell] && tick > player.invuln) continue;
+            if (goal && state.players.some(p => p.team !== player.team && p.alive && !p.trapped && p.bombsLeft > 0 && p.cell === cell)) continue;
+            const route = goal ? point.path.concat(move) : null;
+            if (goal && cell === goal.cell) return route;
             const key = `${Math.round(y * 5)},${Math.round(x * 5)}`;
-            if (!next.has(key)) next.set(key, { y, x });
+            if (!next.has(key)) next.set(key, { y, x, ...(goal ? { path: route } : {}) });
           }
         }
-        if (!next.size) return false;
+        if (!next.size) return goal ? null : false;
         // Keep continuous alternatives near several exits instead of a single greedy retreat.
         points = [...next.values()].sort((a, b) => {
           const ca = Math.floor(a.y) * g.W + Math.floor(a.x), cb = Math.floor(b.y) * g.W + Math.floor(b.x);
-          return futureDanger[tick * g.N + ca] - futureDanger[tick * g.N + cb];
+          const target = goal ? { row: Math.floor(goal.cell / g.W), col: goal.cell % g.W } : null;
+          const approach = target ? distance({ row: Math.floor(a.y), col: Math.floor(a.x) }, target) -
+            distance({ row: Math.floor(b.y), col: Math.floor(b.x) }, target) : 0;
+          return futureDanger[tick * g.N + ca] - futureDanger[tick * g.N + cb] + approach;
         }).slice(0, 48);
       }
-      return true;
+      return goal ? null : true;
     }
 
     blastCells(state, g, cell, blast) {
@@ -681,8 +813,18 @@
       return INF;
     }
 
-    pickMove(g, me, acts, esc, field, threatened, danger) {
+    pickMove(g, me, acts, esc, field, threatened, danger, placing = false) {
       const state = this.decisionState;
+      let staggerSafety = null;
+      if (state && (this.lastGoalMode === 'STAGGER' || state.tick < this.staggerRetreatUntil)) {
+        const early = { ...state, bombs: state.bombs.map(b => ({ ...b, fuse: Math.max(1, b.fuse - 3) })) };
+        const safety = this.predict(early, g, [], () => true), insured = this.escape(g, safety, me, false).surv;
+        let viable = 0;
+        for (let a = 0; a < 5; a++) if ((acts & insured & (1 << a)) && this.physicalEscape(state, g, this.currentPid, safety, a)) viable |= 1 << a;
+        if (viable) acts &= viable;
+        else if (!placing) this.staggerPlan = null;
+        if (this.lastGoalMode === 'STAGGER' && this.staggerPlan && !placing && viable) staggerSafety = safety;
+      }
       if (state && state.projectPosition && this.alliesOf(state, this.currentPid).length &&
           state.bombs.some((b) => b.fuse <= 20)) {
         const physical = this.predict(state, g, [], () => true);
@@ -727,7 +869,16 @@
         else if (glueMoves) acts = (itemSafe | glueMoves) & acts;
         else if (itemSafe & 15) acts = itemSafe & 15;
         else if (itemSafe) acts = itemSafe;
+        if (staggerSafety && me.cell === this.staggerPlan?.cell && (itemSafe & separated & 16)) acts |= 16;
         if (separated & acts) acts &= separated;
+      }
+      if (staggerSafety && this.staggerPlan) {
+        const plan = this.staggerPlan;
+        if (me.cell === plan.cell && (acts & 16)) return 4;
+        const route = this.physicalEscape(state, g, this.currentPid, staggerSafety, null,
+          { cell: plan.cell, deadline: staggerSafety.bombGone[plan.anchor] - 1, firstMask: acts & 15 });
+        if (route?.length) return route[0];
+        this.staggerPlan = null;
       }
       if (this.itemPlan && me.cell === this.itemPlan.cell) {
         const exits = acts & 15;
