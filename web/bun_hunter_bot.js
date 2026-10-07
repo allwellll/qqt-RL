@@ -247,6 +247,8 @@
       const bombAt = new Int16Array(N).fill(-1);
       bombs.forEach((b, i) => { bombAt[b.cell] = i; });
       const lethal = new Uint8Array((MAX_T + 1) * N);
+      const impact = new Uint8Array((MAX_T + 1) * N);
+      const sources = [];
       let last = 0;
       for (let c = 0; c < N; c++) {
         const linger = Math.min(MAX_T, state.blastLinger[c] || 0);
@@ -258,6 +260,7 @@
         if (state.brick[c] && state.brickLinger[c] > 0) brickGone[c] = state.brickLinger[c] + 1;
       }
       const mark = (cell, t) => {
+        impact[t * N + cell] = 1;
         const end = Math.min(MAX_T, t + FLAME_TICKS - 1);
         for (let tau = t; tau <= end; tau++) lethal[tau * N + cell] = 1;
         if (end > last) last = end;
@@ -271,6 +274,9 @@
         for (const j of order) if (!bombs[j].done && bombs[j].e === t) { bombs[j].done = t; queue.push(j); }
         for (let q = 0; q < queue.length; q++) {
           const b = bombs[queue[q]];
+          const covered = [];
+          sources.push({ cell: b.cell, tick: t, covered });
+          covered.push(b.cell);
           mark(b.cell, t);
           const br = Math.floor(b.cell / W), bc = b.cell % W;
           for (let a = 0; a < 4; a++) {
@@ -279,6 +285,7 @@
               if (r < 0 || r >= H || c < 0 || c >= W) break;
               const cell = r * W + c;
               if (state.wall[cell]) break;
+              covered.push(cell);
               mark(cell, t);
               const j = bombAt[cell];
               // 同 tick 自然引爆的泡引信已归零不挡火；其余仍在场的泡挡火并被连锁。
@@ -299,7 +306,7 @@
       // 未感知的泡看不到火势，但仍是物理障碍。
       for (const b of state.bombs) if (!bombGone[b.cell]) bombGone[b.cell] = b.fuse;
       const T = Math.min(MAX_T, Math.max(2, last + 1));
-      return { lethal, bombGone, brickGone, T };
+      return { lethal, impact, sources, bombGone, brickGone, T };
     }
 
     moveTicks(player, optimistic) {

@@ -32,6 +32,8 @@
       this.staggerPlan = null;
       this.staggerRetreatUntil = 0;
       this.lastAttackTiming = null;
+      this.lastDirectThreat = null;
+      this.directPursuit = null;
     }
 
     analyzeSim(sim, pid) {
@@ -39,6 +41,31 @@
       state.itemSlots = sim.nativeItems ? sim.itemSlots : state.heldItem.map((item) => item ? [{ item, count: 1 }] : []);
       state.fieldOwner = sim.fieldOwner;
       state.movementStatus = sim.movementStatus;
+      // Attack evidence uses the actual native body rule and movement primitive,
+      // not the conservative grid/linger map used to protect our own escape.
+      state.threatHit = (q, y, x, covered) => {
+        const body = Object.create(sim);
+        body.pos = sim.pos.slice(); body.pos[q * 2] = y; body.pos[q * 2 + 1] = x;
+        return body._isHitByExplosion(q, covered, null, null, false);
+      };
+      state.threatPosition = (q, y, x, move, pred, tick) => {
+        // A changing status, item contact or push-box route is inconclusive. Do
+        // not turn an incomplete forecast into a claimed direct hit.
+        if (sim.movementStatus[q] === 2 || sim.pushBoxes.some(b => !b.dead) ||
+            (sim.movementStatus[q] && sim.movementStatusTicks[q] < tick)) return null;
+        const obstacles = Uint8Array.from(state.wall, (wall, c) => wall ||
+          (state.brick[c] && (!pred.brickGone[c] || pred.brickGone[c] >= tick)) || pred.bombGone[c] >= tick ? 1 : 0);
+        const next = move === 4 ? [y, x] : sim._steer(y, x, move, obstacles, this.stepLen(state.players[q], false), q);
+        // Sim checks the starting tile and the swept movement, including a
+        // departure which lands in a different tile during this tick.
+        const steps = Math.max(1, Math.ceil(Math.max(Math.abs(next[0] - y), Math.abs(next[1] - x)) * 4));
+        for (let k = 0; k <= steps; k++) {
+          const cell = Math.floor(y + (next[0] - y) * k / steps) * state.width +
+            Math.floor(x + (next[1] - x) * k / steps);
+          if (state.fieldItem[cell] || state.crate[cell]) return null;
+        }
+        return next;
+      };
       let pending = commitments.get(sim);
       if (!pending || pending.tick !== sim.t || pending.generation !== sim._gen) {
         pending = { tick: sim.t, generation: sim._gen, bombs: [], moves: {}, tasks: {} };
@@ -277,6 +304,25 @@
       const foe = this.foeOf(state, pid);
       const allies = this.alliesOf(state, pid).map((q) => state.players[q]).filter((p) => p.alive && !p.trapped);
       // Prefer close firing positions to distant cells on the same ray.
+      if (this.directPursuit && state.tick < this.directPursuit.until && state.threatPosition && state.threatHit) {
+        const q = this.directPursuit.target, target = state.players[q], trend = this.enemyTrends.get(q);
+        if (target.alive && !target.trapped) {
+          const move = trend?.confidence ? (Math.abs(trend.vy) > Math.abs(trend.vx) ? (trend.vy < 0 ? 0 : 1) : (trend.vx < 0 ? 2 : 3)) : 4;
+          let y = target.y, x = target.x, valid = true;
+          for (let t = 1; t <= Base.NEW_BOMB_TICK; t++) {
+            const next = state.threatPosition(q,y,x,move,pred,t);
+            if (!next) { valid = false; break; } [y,x] = next;
+          }
+          if (valid) for (let cell = 0; cell < g.N; cell++) {
+            if (!g.open[cell] || g.bombAt[cell] >= 0) continue;
+            const point = {row:Math.floor(cell/g.W),col:cell%g.W};
+            if (Math.abs(point.row-Math.floor(y))+Math.abs(point.col-Math.floor(x)) > state.players[pid].blast) continue;
+            const ray = new Uint8Array(g.N);
+            for(const c of this.blastCells(state,g,cell,state.players[pid].blast)) ray[c]=1;
+            if(state.threatHit(q,y,x,ray)) seeds.push({cell,cost:-4});
+          }
+        }
+      }
       return seeds.map((s) => {
         const point = { row: Math.floor(s.cell / g.W), col: s.cell % g.W };
         const spacing = allies.reduce((cost, ally) => cost + Math.max(0, 3 - distance(point, ally)) * 2.5, 0);
@@ -317,6 +363,7 @@
       this.assignment = null;
       this.observeEnemyTrends(state, pid);
       const decision = super.analyze(state, pid);
+      if (decision.action[1] === 1 && this.lastDirectThreat) decision.directThreat = this.lastDirectThreat;
       if (decision.action[1] === 1 && decision.reason.startsWith('bomb_stagger')) decision.attackTiming = this.lastAttackTiming;
       if (decision.reason === 'doomed_max_survival' && state.projectPosition && this.alliesOf(state, pid).length) {
         const g = this.geometry(state), pred = this.predict(state, g, [], () => true);
@@ -440,7 +487,6 @@
     }
 
     observeEnemyTrends(state, pid) {
-      if (!this.alliesOf(state, pid).length) return;
       if (this.trendTick === state.tick) return;
       this.trendTick = state.tick;
       for (const q of this.enemiesOf(state, pid)) {
@@ -533,6 +579,7 @@
     }
 
     considerBomb(state, g, pid, pred, perceive, field) {
+      this.lastDirectThreat = null;
       if (this.lastGoalMode === 'RESCUE') return null;
       if (this.itemPlan) return null;
       if (state.movementStatus && state.movementStatus[pid] === 2) return null;
@@ -550,19 +597,24 @@
         this.lastGoalMode = 'STAGGER';
         if (opportunity && ['bomb_attack', 'bomb_kill'].includes(opportunity.reason)) immediate = opportunity;
       }
-      const candidate = this.lastGoalMode === 'STAGGER' ? immediate || this.staggerBomb(state, g, pid, field)
+      const direct = this.directBomb(state, g, pid, field);
+      const candidate = direct || (this.lastGoalMode === 'STAGGER' ? immediate || this.staggerBomb(state, g, pid, field)
         : clear || (this.lastGoalMode === 'RESERVE' ? this.tacticalBomb(state, g, pid, field)
         : (this.lastGoalMode === 'CHAIN' ? this.tacticalBomb(state, g, pid, field) : null)
         || super.considerBomb(state, g, pid, pred, perceive, field)
-        || this.tacticalBomb(state, g, pid, field));
+        || this.tacticalBomb(state, g, pid, field)));
       if (!candidate) return null;
       const me = state.players[pid];
       const cooperative = this.alliesOf(state, pid).length > 0;
-      const scheduled = candidate.reason.startsWith('bomb_stagger');
+      const scheduled = candidate.reason.startsWith('bomb_stagger'), directAttack = candidate.reason === 'bomb_direct';
       const mine = { cell: me.cell, e: Base.NEW_BOMB_TICK, blast: me.blast };
       // Physical safety uses all visible bombs even when a difficulty has delayed perception.
       const before = this.predict(state, g, [], () => true);
       const after = this.predict(state, g, [mine], () => true);
+      if (this.directPursuit && state.tick < this.directPursuit.until &&
+          (['bomb_attack','bomb_kill','bomb_chain'].includes(candidate.reason) ||
+            candidate.reason.startsWith('bomb_reserve') || candidate.reason.startsWith('bomb_stagger')) &&
+          !this.directThreat(state,g,pid,me.cell,before,after)) return null;
       const selfEscape = this.escape(g, after, me, false);
       if (!(selfEscape.surv & (1 << candidate.move))) return null;
       const selfSpace = selfEscape.endCount;
@@ -570,12 +622,12 @@
       if (cooperative && (selfSpace < Math.min(12, oldSelfSpace) || selfSpace < oldSelfSpace * 0.15)) return null;
       // Leave three ticks of slack for changing opponent fire, contact fields and
       // continuous corner alignment. A last-moment theoretical exit is too brittle.
-      const safetyState = cooperative || scheduled ? { ...state, bombs: state.bombs.map((b) =>
+      const safetyState = cooperative || scheduled || directAttack ? { ...state, bombs: state.bombs.map((b) =>
         ({ ...b, fuse: Math.max(1, b.fuse - 3) })) } : state;
-      const safety = cooperative || scheduled ? this.predict(safetyState, g,
+      const safety = cooperative || scheduled || directAttack ? this.predict(safetyState, g,
         [{ ...mine, e: mine.e - 3 }], () => true) : after;
-      if (scheduled && !(this.escape(g, safety, me, false).surv & (1 << candidate.move))) return null;
-      const retreat = (!cooperative && !scheduled) || this.physicalEscape(state, g, pid, safety, candidate.move);
+      if ((scheduled || directAttack) && !(this.escape(g, safety, me, false).surv & (1 << candidate.move))) return null;
+      const retreat = (!cooperative && !scheduled && !directAttack) || this.physicalEscape(state, g, pid, safety, candidate.move);
       if (!retreat) return null;
       for (const q of this.alliesOf(state, pid)) {
         const ally = state.players[q];
@@ -636,6 +688,12 @@
       else if (this.lastGoalMode === 'CHAIN') this.chainPlan = null;
       if (candidate.reason === 'bomb_reserve_second') this.reservePlan = null;
       if (immediate) this.staggerPlan = null;
+      this.lastDirectThreat = candidate.proof || this.directThreat(state, g, pid, me.cell, before, after);
+      if (directAttack) {
+        this.reservePlan = null; this.chainPlan = null;
+        this.staggerPlan = null; this.staggerRetreatUntil = state.tick + after.T;
+        this.directPursuit = {target:candidate.proof.target,until:state.tick+Base.NEW_BOMB_TICK*3};
+      }
       if (scheduled) {
         this.lastAttackTiming = { anchor: this.staggerPlan.anchor,
           anchorExplosionTick: state.tick + before.bombGone[this.staggerPlan.anchor],
@@ -644,6 +702,64 @@
         this.staggerPlan = null;
       }
       return candidate;
+    }
+
+    directThreat(state, g, pid, cell, before, after) {
+      if (!state.threatPosition || !state.threatHit || !after.impact) return null;
+      const me = state.players[pid], explosion = after.bombGone[cell];
+      if (!explosion || explosion > Base.NEW_BOMB_TICK) return null;
+      const source = after.sources.find(s => s.cell === cell && s.tick === explosion);
+      if (!source) return null;
+      const ownImpact = new Uint8Array(g.N);
+      for (const c of source.covered) ownImpact[c] = 1;
+      for (const q of this.enemiesOf(state, pid)) {
+        const foe = state.players[q], trend = this.enemyTrends.get(q);
+        if (!foe.alive || foe.trapped || foe.invuln >= explosion || distance(me, foe) > this.cfg.attackRadius) continue;
+        const move = trend?.confidence ? (Math.abs(trend.vy) > Math.abs(trend.vx) ? (trend.vy < 0 ? 0 : 1) : (trend.vx < 0 ? 2 : 3)) : 4;
+        const project = (prediction, requested) => {
+          let y = foe.y, x = foe.x; const path = [];
+          for (let tick = 1; tick <= explosion; tick++) {
+            const next = state.threatPosition(q, y, x, requested, prediction, tick);
+            if (!next) return null;
+            [y, x] = next; path.push({ tick: state.tick + tick, y, x });
+            if (tick > foe.invuln && state.threatHit(q, y, x, prediction.impact.subarray(tick * g.N, (tick + 1) * g.N)))
+              return { hitTick: state.tick + tick, path };
+          }
+          return { hitTick: null, path };
+        };
+        const old = project(before, move), forecast = project(after, move);
+        if (!old || !forecast || old.hitTick != null || forecast.hitTick !== state.tick + explosion) continue;
+        const contact = forecast.path.at(-1);
+        if (!state.threatHit(q, contact.y, contact.x, ownImpact)) continue;
+        const alternatives = Array.from({ length: 5 }, (_, a) => ({ move: a, result: project(after, a) }));
+        const safeMoves = alternatives.filter(a => a.result && a.result.hitTick == null).map(a => a.move);
+        return { target: q, source: trend?.confidence ? 'observed-motion' : 'held-position',
+          prediction: 'conditional-hit', guaranteed: false, intendedMove: move,
+          predictedHitTick: forecast.hitTick, expectedExplosionTick: state.tick + explosion,
+          targetPath: forecast.path, baselinePath: old.path, safeConstantMoves: safeMoves,
+          sourceCell: cell, covered: source.covered.slice() };
+      }
+      return null;
+    }
+
+    directBomb(state, g, pid, field) {
+      const me = state.players[pid];
+      if (this.difficulty !== 'hard' || me.carrying >= 0 || me.bombsLeft <= 0 ||
+          me.liveBombs >= this.cfg.maxLiveBombs || g.bombAt[me.cell] >= 0 ||
+          !['HUNT','SUPPORT','DEFEND','GUARD','INTERCEPT','STAGGER','OPEN_ROUTE'].includes(this.lastGoalMode)) return null;
+      const mine = { cell: me.cell, e: Base.NEW_BOMB_TICK, blast: me.blast };
+      const before = this.predict(state, g, [], () => true), after = this.predict(state, g, [mine], () => true);
+      const proof = this.directThreat(state, g, pid, me.cell, before, after);
+      // Existing same-line attacks keep their strategy. New attacks deliberately
+      // cover an arriving player who is outside this bubble's current ray.
+      const following = proof && this.directPursuit && state.tick < this.directPursuit.until &&
+        this.directPursuit.target === proof.target;
+      if (!proof || (!following && (proof.source !== 'observed-motion' ||
+          this.blastCells(state, g, me.cell, me.blast).has(state.players[proof.target].cell)))) return null;
+      const esc = this.escape(g, after, me, false);
+      let safe = esc.surv & this.hypoSurvivors(state, g, pid, () => true, [mine]);
+      if (!safe) return null;
+      return { move: this.pickMove(g, me, safe, esc, field, true, this.dangerCells(after, g.N)), reason: 'bomb_direct', proof };
     }
 
     staggerProposal(state, g, pid, anchor, cell, before) {
