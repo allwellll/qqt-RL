@@ -61,3 +61,23 @@ TDD 实际证据位于 `runs/qqt_round4_loss_20261007/`：
 发布前用随机未注册身份只读探测正式 `qqt_get_profile`，实际 HTTP 200、`profile_contract_version=2`、`registered=false`，不创建玩家/赛果/资料。证据 `profile-contract-readonly.txt`。用户本次明确授权本地提交后 push main 与 Pages 验收；正式数据库写入仍被禁止。
 
 最终提交 SHA、push、同一 head Pages 工作流/build-info/18 个关键资源逐字节检查、线上双视口只读验收与干净树事实统一记录在 `runs/qqt_round4_loss_20261007/release_status_20261007.md`；发布验收证据分别为 `pages-final.json`、`browser-pages/checks.json`、`pages-readonly/checks.json`。线上功能验收继续全部 mock 远端请求；只读验收放行真实资料/榜单读取且在网络层拦截所有写入口，冻结游戏 tick，禁止污染排行榜。
+
+## 同日追加：加载期间失败提示提前显示回归
+
+基线 `b3857e0bcd459daa45c09469c4ad659b4a96ef5d`。根因：客户端恢复本地未完成 loss 卡片后，排行榜/身份刷新立即触发结算 DOM 渲染，而 app 尚在等待地图与素材；渲染没有素材就绪条件。另一个关联问题是 `settlement=null` 的提前返回只隐藏容器，留下旧失败提示及标题文本。
+
+最小修复使用明确的 `settlementReady` 状态：app 挂载默认 false；加载、普通重开和录像重开置 false；素材完成且实际首帧绘制后才置 true。渲染和结算动作共用有效结算检查（明确的 win/loss/draw、match UUID、非负整数时长、未关闭、已就绪）。所有不可展示状态都实际清空标题、耗时、排名、状态和只读昵称文本，同时隐藏表单、禁用控件；`clearSettlement` 立即 emit，使录像清理也无需等待后续帧。有效旧草稿仍持久保留，首帧后恢复；仅有效 loss 显示精确失败文案。没有修改 CSS、数据库字段、SQL、RPC 或已有数据。
+
+本轮 TDD 与验证产物位于 `runs/qqt_loading_20261007/`：
+
+- `tdd-loading-red.log`、`tdd-clear-red.log`、`tdd-invalid-red.log` 分别确认加载、清理残留和无效状态回归 RED。
+- `tdd-browser-red.log`、`browser-red/1440-loading-trace.json` 和加载截图：真实 Chromium 在地图 JSON、素材 JSON、PNG 分阶段延迟期间复现错误提示。修复前 DOM 时序证明 `ready=false` 却有 loss 文本和可见卡片。
+- `web/test_settlement_lifecycle.js` 纳入完整 npm test，覆盖加载/首帧恢复/再加载、loss 到 null/closed/invalid、win/draw，以及清理立即通知 DOM。其他 loss、restart、card 和 profile 边界定向测试通过。
+- `npm-test.log` 完整 exit 0，包括本地 PGlite SQL 可执行性/重入、身份/match 归属、幂等、XSS、RLS/ACL、原始 IP 私有与公开脱敏回归；未连接正式数据库写入。
+- `browser-local-loading/checks.json`：真实 Chromium 149.0.7827.55，1440x1000、390x844。脚本执行前安装 MutationObserver，地图/素材元数据/图片分别延迟，全部加载快照与变更时序中状态文本为空、卡片隐藏；首帧恢复真实旧 loss、X 后 DOM 清空、新 Sim 的真实 loss 仍显示提示。写请求、非预期远端请求、页面错误均为空。
+- `browser-local/checks.json`：完整 Round 4 双视口资料交互通过，胜利感言、win/draw、成功提交/X 后一次新局、失败/待完成不重开、资料失败只重试资料、冻结意图、连点/Enter、迟到榜单、刷新恢复等合同继续通过。所有远端写请求 mock，非预期远端请求为零。加载与真实 loss 截图人工检查通过。
+- 独立只读审查通过，实际执行五组定向测试和 diff 检查，检查双视口加载时序及截图，没有实现缺陷或安全退化。记录为 `independent_review_20261007.md`。
+
+浏览器测试冻结 RAF 以控制真实 Sim；新脚本的 Playwright 等待使用显式 `polling: 50`，避免默认 RAF 轮询与冻结 RAF 冲突。先前初始化超时记录保留用于追踪，验收结论以完整 `checks.json` 为准。
+
+本轮获用户明确授权提交后更新 main 与 Pages 验收。最终 SHA、同一 head 工作流/build-info/18 个资源 exact-head、线上延迟素材及真实 loss 双视口验证、额外真实只读验证和干净树事实统一记录在 `runs/qqt_loading_20261007/release_status_20261007.md`，发布证据对应 `pages-final.json`、`browser-pages-loading/checks.json`、`browser-pages/checks.json`、`pages-readonly/checks.json`。正式数据库写入始终禁止。

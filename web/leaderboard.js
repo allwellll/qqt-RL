@@ -28,7 +28,7 @@
         [value.split('.')[0], value.split('.')[3]].every(part => Number(part) <= 255)) return value;
     return /^[0-9a-f]{1,4}:\*:\*:[0-9a-f]{1,4}$/i.test(value) ? value : null;
   }
-  function createClient({ config, storage, crypto, fetch, onChange = () => {}, now = Date.now }) {
+  function createClient({ config, storage, crypto, fetch, onChange = () => {}, now = Date.now, settlementReady = true }) {
     let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null, profileRequest = null, refreshRevision = 0, combinedRequest = null, identityRequest = null, identityRevision = 0;
     let profileKnown = false;
     try { data = JSON.parse(storage.getItem(KEY)); } catch (_) { persistent = false; }
@@ -59,7 +59,7 @@
     settlement = data.cards.findLast(card => !card.complete) || null;
     const completed = new Set([...data.queue, ...data.cards].map(x => x.client_match_id));
     function state() { return { nickname: data.nickname, victory_message: data.victory_message,
-      player_id: data.player_id, persistent, status, rows, progress, settlement, pending: data.queue.length,
+      player_id: data.player_id, persistent, status, rows, progress, settlement, settlementReady, pending: data.queue.length,
       savedNickname: data.confirmed_profile?.registered === true, profileReady: profileKnown,
       profileSubmitting: !!profileRequest, submitting: !!pendingRequest || !!combinedRequest }; }
     function remember() {
@@ -311,6 +311,7 @@
     }
     function profileActive() { return !!profileRequest || !!(settlement && settlement.result !== 'loss' && settlement.submitted && !settlement.profileSkipped && !settlement.profileSaved); }
     return { state, begin, finish, refresh, syncProfile, retry: drain, setDraft, submitCard, openPending, submitProfile, submitSettlement, profileActive,
+      setSettlementReady(ready) { if (settlementReady !== !!ready) { settlementReady = !!ready; emit(); } },
       markProfileDirty() { if (settlement) settlement.profileSaved = false; emit(); },
       closeSettlement() { if (pendingRequest || profileRequest || combinedRequest) return false; if (settlement) settlement.closed = true; emit(); return true; },
       reopenSettlement() { if (settlement) settlement.closed = false; emit(); },
@@ -324,7 +325,7 @@
         for (const match of data.queue) match.approved = true;
         save(); const request = drain(); emit('提交中…'); return request;
       },
-      skipProfile() { if (settlement) settlement = { ...settlement, profileSkipped: true }; emit(); }, clearSettlement() { remember(); settlement = null; },
+      skipProfile() { if (settlement) settlement = { ...settlement, profileSkipped: true }; emit(); }, clearSettlement() { remember(); settlement = null; emit(); },
       setProfile(nick, message) { Object.assign(data, profile(nick, message), { nickname_auto: false }); save(); emit('昵称和感言已保存'); } };
   }
   function time(ms) { return ms ? `${(Number(ms) / 1000).toFixed(1)}秒` : '—'; }
@@ -343,31 +344,41 @@
         : value.submitted ? '暂无排名' : value.result === 'loss' ? '' : '提交后查看排名' };
   }
   // Canvas keeps the terminal title; HTML exposes accessible actions and status.
+  function visibleSettlement(state) {
+    const value = state.settlement;
+    return state.settlementReady !== false && !!value && !value.closed &&
+      ['win', 'loss', 'draw'].includes(value.result) &&
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.client_match_id || '') &&
+      Number.isSafeInteger(value.duration_ms) && value.duration_ms >= 0;
+  }
   function renderSettlement(document, state) {
-    const el = id => document.getElementById(id), value = state.settlement;
+    const el = id => document.getElementById(id), value = visibleSettlement(state) ? state.settlement : null;
     const loss = value?.result === 'loss';
-    el('settlement').hidden = !value || value.closed;
+    el('settlement').hidden = !value;
     const form = el('settlement-form');
-    if (form) form.hidden = loss;
+    if (form) form.hidden = !value || loss;
     const submit = el('settlement-submit'), close = el('settlement-close');
     if (submit) {
       submit.disabled = loss || !value || !value.eligible || value.complete || state.submitting || state.profileReady === false;
       submit.textContent = '提交';
     }
-    if (close) close.disabled = state.submitting || state.profileSubmitting;
+    if (close) close.disabled = !value || state.submitting || state.profileSubmitting;
     const nickname = el('player-nickname'), nicknameField = el('nickname-field'), currentName = el('current-nickname');
-    if (nicknameField) nicknameField.hidden = loss || state.savedNickname || state.profileReady === false;
+    if (nicknameField) nicknameField.hidden = !value || loss || state.savedNickname || state.profileReady === false;
     if (nickname) {
-      nickname.disabled = loss || state.savedNickname || state.submitting || state.profileReady === false;
-      nickname.required = !loss && !state.savedNickname;
+      nickname.disabled = !value || loss || state.savedNickname || state.submitting || state.profileReady === false;
+      nickname.required = !!value && !loss && !state.savedNickname;
     }
     const message = el('player-message');
-    if (message) message.disabled = loss;
+    if (message) message.disabled = !value || loss;
     if (currentName) {
-      currentName.hidden = loss || !state.savedNickname;
-      currentName.textContent = state.savedNickname ? `昵称：${state.nickname}` : '';
+      currentName.hidden = !value || loss || !state.savedNickname;
+      currentName.textContent = value && !loss && state.savedNickname ? `昵称：${state.nickname}` : '';
     }
-    if (!value) return;
+    if (!value) {
+      for (const id of ['settlement-title', 'settlement-time', 'settlement-rank', 'settlement-status']) el(id).textContent = '';
+      return;
+    }
     const lines = settlementText(value);
     el('settlement-title').textContent = { win: '胜利', loss: '失败', draw: '平局' }[value.result] || '本局结束';
     el('settlement-time').textContent = lines.time;
@@ -419,8 +430,8 @@
     } });
     function runSettlementAction(action) {
       if (actionRequest) return actionRequest;
-      const card = client.state().settlement;
-      if (!card || card.closed) return Promise.resolve(false);
+      const state = client.state(), card = state.settlement;
+      if (!visibleSettlement(state)) return Promise.resolve(false);
       // Keep submit/X coalesced through the async restart, after write flags clear.
       actionRequest = Promise.resolve().then(action).then(async success => {
         if (!success || client.state().settlement?.client_match_id !== card.client_match_id) return false;
@@ -437,6 +448,7 @@
     el('leaderboard-retry').addEventListener('click', () => { void client.refresh(); void client.syncProfile(); });
     el('settlement-close').addEventListener('click', () => runSettlementAction(() => client.closeSettlement()));
     el('pending-submit').addEventListener('click', () => client.openPending());
+    renderSettlement(document, client.state());
     client.refresh();
     void client.syncProfile();
     return client;

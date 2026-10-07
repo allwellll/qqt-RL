@@ -37,12 +37,13 @@
   const loadingProgress = document.getElementById('loading-progress');
   const leaderboard = QQTLeaderboard.mount(document, { config: QQTLeaderboardConfig,
     storage: { getItem: key => localStorage.getItem(key), setItem: (key, value) => localStorage.setItem(key, value) },
-    crypto, fetch: (...args) => fetch(...args), onRestart: () => requestRestart() });
+    crypto, fetch: (...args) => fetch(...args), settlementReady: false, onRestart: () => requestRestart() });
   let leaderboardMatch = null, clientVersion = 'dev';
   fetch('build-info.json', { cache: 'no-store' }).then(r => r.json()).then(info => {
     if (/^[a-f0-9]{40}$/.test(info.commit)) clientVersion = info.commit;
   }).catch(() => {});
   function showLoading(text) {
+    leaderboard.setSettlementReady(false);
     loading.classList.remove('done');
     loadingText.textContent = text;
     loadingProgress.value = 0;
@@ -53,7 +54,12 @@
   }
   // 首帧真正画出后才撤掉遮罩，避免先露出一块黑画布。
   let assetsPending = true;
-  function hideLoading() { if (!assetsPending) loading.classList.add('done'); }
+  function hideLoading() {
+    if (!assetsPending) {
+      loading.classList.add('done');
+      leaderboard.setSettlementReady(true);
+    }
+  }
   const levelList = await fetch('assets/maps/levels.json').then((response) => response.json());
   const baseLevel = levelList.find((item) => item.qqt_id === 806);
   if (!baseLevel) throw new Error('Bun06 level missing');
@@ -198,6 +204,7 @@
     if (leaderboard.state().submitting || leaderboard.state().profileSubmitting) return;
     sessionRevision++;
     leaderboardMatch = null;
+    leaderboard.setSettlementReady(false);
     if (preserveCard !== true) leaderboard.clearSettlement();
     QQTLeaderboard.renderSettlement(document, leaderboard.state());
     QQTLeaderboard.renderUpgradeProfile(document, leaderboard.state());
@@ -233,6 +240,7 @@
     if (!replayDocument) return;
     sessionRevision++;
     leaderboardMatch = null;
+    leaderboard.setSettlementReady(false);
     leaderboard.clearSettlement();
     sim = new QQT.Sim(replayDocument.meta.seed);
     sim.reset(level);

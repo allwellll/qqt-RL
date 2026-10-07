@@ -50,7 +50,7 @@ const text = '小伙子，再沉淀沉淀吧';
     assert.equal(elements.get('settlement-status').textContent, text);
     // The same DOM is reset for win/draw; their profile controls stay available.
     for (const result of ['win', 'draw']) {
-      const state = { ...c.state(), submitting: false, settlement: { result, eligible: true, duration_ms: 5000 } };
+      const state = { ...c.state(), submitting: false, settlement: { client_match_id: match.client_match_id, result, eligible: true, duration_ms: 5000 } };
       LB.renderSettlement({ getElementById: id => elements.get(id) }, state);
       assert.equal(elements.get('settlement-form').hidden, false);
       assert.equal(elements.get('player-message').disabled, false);

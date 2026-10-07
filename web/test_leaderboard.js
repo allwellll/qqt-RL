@@ -110,12 +110,12 @@ function memory() { const map = new Map(); return { getItem: k => map.get(k) || 
   const elements = new Map(['settlement','settlement-title','settlement-time','settlement-rank','settlement-status'].map(id => [id, { textContent: '', hidden: true }]));
   const settlementDoc = { getElementById: id => elements.get(id) };
   for (const [outcome, title] of [['win','胜利'],['loss','失败'],['draw','平局']]) {
-    LB.renderSettlement(settlementDoc, { status: '<script>offline</script>', settlement: { result: outcome, duration_ms: 5000, submitted: true, ranking: null, cardStatus: '<script>offline</script>' } });
+    LB.renderSettlement(settlementDoc, { status: '<script>offline</script>', settlement: { client_match_id: webcrypto.randomUUID(), result: outcome, duration_ms: 5000, submitted: true, ranking: null, cardStatus: '<script>offline</script>' } });
     assert.equal(elements.get('settlement-title').textContent, title);
     assert.equal(elements.get('settlement-rank').textContent, '暂无排名');
     assert.equal(elements.get('settlement-status').textContent, outcome === 'loss' ? '小伙子，再沉淀沉淀吧' : '<script>offline</script>');
   }
-  LB.renderSettlement(settlementDoc, { status: '', settlement: { result: 'win', duration_ms: 5000, ranking: { rank: 2, total: 4, percentile: 33.33 } } });
+  LB.renderSettlement(settlementDoc, { status: '', settlement: { client_match_id: webcrypto.randomUUID(), result: 'win', duration_ms: 5000, ranking: { rank: 2, total: 4, percentile: 33.33 } } });
   assert.match(elements.get('settlement-rank').textContent, /2 名 \/ 4 位玩家.*33.33%/);
   client.clearSettlement(); assert.equal(client.state().settlement, null);
   const fakeMatch = { ...metadata, result: 'win', game_duration_ms: 5000 };
