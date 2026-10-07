@@ -8,7 +8,7 @@
   function profile(nickname, victoryMessage) {
     const nick = String(nickname).trim(), message = String(victoryMessage).trim();
     if (!length(nick) || length(nick) > 24 || length(message) > 80 || /[\x00-\x1f\x7f<>]/.test(nick + message)) {
-      throw new Error('昵称需 1–24 字，宣言最多 80 字，不能包含控制字符或尖括号');
+      throw new Error('昵称需 1–24 字，感言最多 80 字，不能包含控制字符或尖括号');
     }
     return { nickname: nick, victory_message: message };
   }
@@ -128,8 +128,8 @@
     }
     function successText(card) {
       return card.refreshFailed ? '提交成功，排行榜刷新失败，可重试刷新'
-        : card.pendingEdits ? '提交成功！新的宣言已保留到下一局'
-        : card.profileSuperseded ? '提交成功！宣言沿用较新一局的内容' : '提交成功！';
+        : card.pendingEdits ? '提交成功！新的感言已保留到下一局'
+        : card.profileSuperseded ? '提交成功！感言沿用较新一局的内容' : '提交成功！';
     }
     async function refresh() {
       const revision = ++refreshRevision;
@@ -218,6 +218,7 @@
       save(); emit(autoSubmit ? '提交中…' : ''); return autoSubmit ? drain() : Promise.resolve(true);
     }
     function submitProfile(nick, message) {
+      if (settlement?.result === 'loss') return Promise.reject(new Error('失败局不可提交资料'));
       if (profileRequest) return profileRequest;
       if (!settlement || !settlement.submitted || settlement.profileSkipped) {
         return Promise.reject(new Error('请先完成本局战绩提交'));
@@ -245,7 +246,7 @@
           settlement.pendingEdits = String(settlement.draft?.victory_message || '').trim() !== settlement.profileIntent.victory_message;
           data.nextDeclaration = settlement.pendingEdits ? settlement.draft.victory_message : '';
         }
-        emit('宣言已提交'); await refresh();
+        emit('感言已提交'); await refresh();
         return true;
       })().finally(() => { profileRequest = null; emit(); });
       emit(); return profileRequest;
@@ -258,7 +259,7 @@
       const request = drain(); emit('提交中…'); return request;
     }
     function setDraft(nickname, message) {
-      if (!settlement) return;
+      if (!settlement || settlement.result === 'loss') return;
       settlement.draft = { nickname: data.confirmed_profile?.registered ? data.nickname : String(nickname), victory_message: String(message) };
       if (settlement.profileReceiptVersion === 2) {
         data.nextDeclaration = String(message); settlement.pendingEdits = true;
@@ -269,7 +270,7 @@
     function submitCard() {
       if (combinedRequest) return combinedRequest;
       const card = settlement;
-      if (!card || !card.eligible || card.complete) return Promise.resolve(false);
+      if (!card || card.result === 'loss' || !card.eligible || card.complete) return Promise.resolve(false);
       card.cardStatus = '提交中…';
       combinedRequest = Promise.resolve().then(async () => {
         try {
@@ -296,7 +297,7 @@
           return true;
         } catch (error) {
           if (settlement?.client_match_id === card.client_match_id) settlement.cardStatus = settlement.submitted
-            ? '战绩已提交，宣言提交失败，请重试' : /昵称|宣言|资料服务|过期/.test(error.message) ? error.message : '提交失败，请重试';
+            ? '战绩已提交，感言提交失败，请重试' : /昵称|感言|资料服务|过期/.test(error.message) ? error.message : '提交失败，请重试';
           return false;
         }
       }).finally(() => { combinedRequest = null; emit(); });
@@ -308,7 +309,7 @@
       if (!card) return false;
       settlement = { ...card, closed: false }; emit(); return true;
     }
-    function profileActive() { return !!profileRequest || !!(settlement && settlement.submitted && !settlement.profileSkipped && !settlement.profileSaved); }
+    function profileActive() { return !!profileRequest || !!(settlement && settlement.result !== 'loss' && settlement.submitted && !settlement.profileSkipped && !settlement.profileSaved); }
     return { state, begin, finish, refresh, syncProfile, retry: drain, setDraft, submitCard, openPending, submitProfile, submitSettlement, profileActive,
       markProfileDirty() { if (settlement) settlement.profileSaved = false; emit(); },
       closeSettlement() { if (pendingRequest || profileRequest || combinedRequest) return false; if (settlement) settlement.closed = true; emit(); return true; },
@@ -324,7 +325,7 @@
         save(); const request = drain(); emit('提交中…'); return request;
       },
       skipProfile() { if (settlement) settlement = { ...settlement, profileSkipped: true }; emit(); }, clearSettlement() { remember(); settlement = null; },
-      setProfile(nick, message) { Object.assign(data, profile(nick, message), { nickname_auto: false }); save(); emit('昵称和宣言已保存'); } };
+      setProfile(nick, message) { Object.assign(data, profile(nick, message), { nickname_auto: false }); save(); emit('昵称和感言已保存'); } };
   }
   function time(ms) { return ms ? `${(Number(ms) / 1000).toFixed(1)}秒` : '—'; }
   function validRanking(rank, match) {
@@ -339,26 +340,31 @@
     return { time: `本局耗时 ${time(value.duration_ms)}`,
       rank: value.ranking ? `第 ${value.ranking.rank} 名 / ${value.ranking.total} 位玩家` : '',
       percentile: value.ranking ? `超过 ${value.ranking.percentile.toFixed(2)}% 玩家`
-        : value.submitted ? '暂无排名' : '提交后查看排名' };
+        : value.submitted ? '暂无排名' : value.result === 'loss' ? '' : '提交后查看排名' };
   }
   // Canvas keeps the terminal title; HTML exposes accessible actions and status.
   function renderSettlement(document, state) {
     const el = id => document.getElementById(id), value = state.settlement;
+    const loss = value?.result === 'loss';
     el('settlement').hidden = !value || value.closed;
+    const form = el('settlement-form');
+    if (form) form.hidden = loss;
     const submit = el('settlement-submit'), close = el('settlement-close');
     if (submit) {
-      submit.disabled = !value || !value.eligible || value.complete || state.submitting || state.profileReady === false;
+      submit.disabled = loss || !value || !value.eligible || value.complete || state.submitting || state.profileReady === false;
       submit.textContent = '提交';
     }
     if (close) close.disabled = state.submitting || state.profileSubmitting;
     const nickname = el('player-nickname'), nicknameField = el('nickname-field'), currentName = el('current-nickname');
-    if (nicknameField) nicknameField.hidden = state.savedNickname || state.profileReady === false;
+    if (nicknameField) nicknameField.hidden = loss || state.savedNickname || state.profileReady === false;
     if (nickname) {
-      nickname.disabled = state.savedNickname || state.submitting || state.profileReady === false;
-      nickname.required = !state.savedNickname;
+      nickname.disabled = loss || state.savedNickname || state.submitting || state.profileReady === false;
+      nickname.required = !loss && !state.savedNickname;
     }
+    const message = el('player-message');
+    if (message) message.disabled = loss;
     if (currentName) {
-      currentName.hidden = !state.savedNickname;
+      currentName.hidden = loss || !state.savedNickname;
       currentName.textContent = state.savedNickname ? `昵称：${state.nickname}` : '';
     }
     if (!value) return;
@@ -366,7 +372,8 @@
     el('settlement-title').textContent = { win: '胜利', loss: '失败', draw: '平局' }[value.result] || '本局结束';
     el('settlement-time').textContent = lines.time;
     el('settlement-rank').textContent = [lines.rank, lines.percentile].filter(Boolean).join(' · ');
-    el('settlement-status').textContent = value.cardStatus || (value.eligible ? '' : '本局无法参与排名，继续练习吧～');
+    el('settlement-status').textContent = loss ? '小伙子，再沉淀沉淀吧'
+      : value.cardStatus || (value.eligible ? '' : '本局无法参与排名，继续练习吧～');
   }
   function maskIp(value) {
     const ip = String(value || '').trim();
@@ -397,7 +404,7 @@
   }
   function mount(document, options) {
     const el = id => document.getElementById(id);
-    let renderedMatch;
+    let renderedMatch, actionRequest = null;
     const client = createClient({ ...options, onChange(state) {
       el('leaderboard-status').textContent = state.status;
       const value = state.settlement;
@@ -410,11 +417,25 @@
       renderRows(document, el('leaderboard-list'), state.rows);
       el('leaderboard-empty').hidden = state.rows.length > 0;
     } });
-    el('settlement-form').addEventListener('submit', event => { event.preventDefault(); void client.submitCard(); });
+    function runSettlementAction(action) {
+      if (actionRequest) return actionRequest;
+      const card = client.state().settlement;
+      if (!card || card.closed) return Promise.resolve(false);
+      // Keep submit/X coalesced through the async restart, after write flags clear.
+      actionRequest = Promise.resolve().then(action).then(async success => {
+        if (!success || client.state().settlement?.client_match_id !== card.client_match_id) return false;
+        if (options.onRestart) await options.onRestart();
+        return true;
+      }).finally(() => { actionRequest = null; });
+      return actionRequest;
+    }
+    el('settlement-form').addEventListener('submit', event => {
+      event.preventDefault(); return runSettlementAction(() => client.submitCard());
+    });
     for (const id of ['player-nickname', 'player-message']) el(id).addEventListener('input', () =>
       client.setDraft(el('player-nickname').value, el('player-message').value));
     el('leaderboard-retry').addEventListener('click', () => { void client.refresh(); void client.syncProfile(); });
-    el('settlement-close').addEventListener('click', () => client.closeSettlement());
+    el('settlement-close').addEventListener('click', () => runSettlementAction(() => client.closeSettlement()));
     el('pending-submit').addEventListener('click', () => client.openPending());
     client.refresh();
     void client.syncProfile();

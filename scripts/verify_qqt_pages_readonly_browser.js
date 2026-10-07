@@ -9,7 +9,13 @@ const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
  fs.mkdirSync(out,{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const evidence=[];
  try{
   for(const viewport of [{width:1440,height:1000},{width:390,height:844}]){
-   const context=await browser.newContext({viewport});const page=await context.newPage(),errors=[],writes=[];
+   const context=await browser.newContext({viewport,isMobile:viewport.width<600,hasTouch:viewport.width<600});const page=await context.newPage(),errors=[],writes=[];
+   // Read RPCs use POST; permit only those, and block every other mutation before the network.
+   await context.route('**/*',route=>{
+    const r=route.request(),pathname=new URL(r.url()).pathname;
+    if(['GET','HEAD'].includes(r.method()) || (r.method()==='POST' && /\/rpc\/qqt_(leaderboard|get_profile)$/.test(pathname)))return route.continue();
+    writes.push({method:r.method(),pathname});return route.abort();
+   });
    page.on('pageerror',e=>errors.push(e.message));
    page.on('request',r=>{if(r.method()==='POST' && /qqt_submit_result|submit-result|qqt_update_profile/.test(r.url())) writes.push(new URL(r.url()).pathname);});
    // Freeze gameplay ticks so this read-only live check can never complete/submit a match.
@@ -17,7 +23,7 @@ const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
    await page.goto(base);await page.waitForFunction(()=>document.getElementById('loading').classList.contains('done') && getComputedStyle(document.getElementById('loading')).opacity==='0',null,{polling:50,timeout:60000});
    await page.waitForFunction(()=>document.getElementById('leaderboard-status').textContent.includes('已更新'),null,{polling:50,timeout:30000});
    assert.equal(await page.locator('aside #leaderboard-profile, aside #player-nickname, aside #player-message, #play-again').count(),0);
-   assert.equal(await page.locator('#leaderboard-profile').isVisible(),false);
+   assert.equal(await page.locator('#settlement').isVisible(),false);
    const checked=await page.evaluate(async()=>{
     const info=await(await fetch('build-info.json',{cache:'no-store'})).json();
     const masked=Array.from(document.querySelectorAll('.leaderboard-entry .ip')).every(el=>el.textContent==='—' || /^\d{1,3}\.\*\.\*\.\d{1,3}$/.test(el.textContent) || /^[0-9a-f]{1,4}:\*:\*:[0-9a-f]{1,4}$/i.test(el.textContent));

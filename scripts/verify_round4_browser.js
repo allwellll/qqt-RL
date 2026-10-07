@@ -9,7 +9,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
   fs.mkdirSync(out, { recursive: true });
   const server = createServer();
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-  const base = `http://127.0.0.1:${server.address().port}/`, evidence = [];
+  const base = process.env.WEB_URL || `http://127.0.0.1:${server.address().port}/`, evidence = [];
   let browser;
   try {
     browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
@@ -69,6 +69,13 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
       const load = async () => {
         await page.waitForFunction(() => window.appFrame, null, { polling: 50, timeout: 60000 });
         await page.evaluate(() => {
+          window.restartCount = 0;
+          const instances = new WeakSet();
+          const reset = QQT.Sim.prototype.reset;
+          QQT.Sim.prototype.reset = function (...args) {
+            if (!instances.has(this)) { instances.add(this); window.restartCount++; }
+            window.appSim = this; return reset.apply(this, args);
+          };
           const frame = QQT.Sim.prototype.frameStep;
           QQT.Sim.prototype.frameStep = function (...args) { window.appSim = this; return frame.apply(this, args); };
           appFrame(performance.now());
@@ -77,10 +84,29 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
         await wait(() => !document.getElementById('leaderboard-status').textContent.includes('无法连接'));
       };
       const action = id => viewport.width < 600 ? page.locator(id).tap() : page.locator(id).click();
-      const finish = () => page.evaluate(async () => { appSim.t = 119; appSim.maxSteps = 120; clockOffset += 12000; await appTick(); appFrame(performance.now()); });
-      const nextMatch = async () => {
-        await page.locator('#settlement-close').focus(); await page.keyboard.press('r'); await render();
-        await wait(() => { appFrame(performance.now()); return !appSim.done; }); await finish();
+      const finish = (result = 'draw') => page.evaluate(async result => {
+        appSim.t = 119; appSim.maxSteps = 120;
+        // Bun mode decides the timeout from base inventories, not surviving players.
+        if (result !== 'draw') {
+          const winner = result === 'win' ? appSim.team[0] : 1 - appSim.team[0];
+          appSim.bunStored = [[0, 0], [0, 0]];
+          appSim.bunStored[winner] = [1, 1];
+        }
+        clockOffset += 12000; await appTick(); appFrame(performance.now());
+      }, result);
+      const newGame = async trigger => {
+        const before = await page.evaluate(() => { window.beforeRestart = appSim; return restartCount; });
+        await trigger();
+        await wait(() => { appFrame(performance.now()); return appSim !== beforeRestart && !appSim.done && document.getElementById('settlement').hidden; });
+        assert.equal(await page.evaluate(() => restartCount), before + 1, 'exactly one real Sim reset per settlement action');
+        await page.locator('#settlement-form').evaluate(e => e.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
+        await page.locator('#settlement-close').evaluate(e => e.click());
+        await page.waitForTimeout(100); await render();
+        assert.equal(await page.evaluate(() => restartCount), before + 1, 'stale hidden actions cannot reset replacement match');
+      };
+      const nextMatch = async (result = 'draw') => {
+        if (await page.evaluate(() => appSim.done)) await newGame(() => action('#settlement-close'));
+        await finish(result);
       };
       const status = text => wait(() => { appFrame(performance.now()); return document.getElementById('settlement-status').textContent; }).then(async () => {
         await page.waitForFunction(text => { appFrame(performance.now()); return document.getElementById('settlement-status').textContent.includes(text); }, text, { polling: 50, timeout: 20000 });
@@ -95,19 +121,47 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
         const submit = await page.locator('#settlement-submit').boundingBox();
         assert(submit.y >= card.y && submit.y + submit.height <= card.y + card.height);
       };
-      await page.goto(base); await load(); await finish();
+      await page.goto(base); await load(); await finish('loss');
+      const checkLoss = async name => {
+        await render();
+        assert.equal(await page.locator('#settlement-status').textContent(), '小伙子，再沉淀沉淀吧');
+        assert.equal(await page.locator('#settlement-form').isVisible(), false);
+        for (const id of ['#player-nickname', '#player-message', '#settlement-submit']) {
+          assert.equal(await page.locator(id).isVisible(), false);
+          assert(await page.locator(id).isDisabled());
+        }
+        assert.equal(await page.locator('#current-nickname').isVisible(), false);
+        const counts = [writes.length, profiles.length];
+        await page.locator('#settlement-form').evaluate(e => {
+          e.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        });
+        await page.locator('#settlement-submit').evaluate(e => { e.click(); e.click(); });
+        await page.evaluate(() => document.activeElement.blur());
+        await page.keyboard.press('Enter'); await page.waitForTimeout(100);
+        assert.deepEqual([writes.length, profiles.length], counts, 'loss cannot authorize a write via submit/Enter');
+        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+        const card = await page.locator('#settlement').boundingBox(), refresh = await page.locator('#leaderboard-retry').boundingBox();
+        assert(card.x >= 0 && card.x + card.width <= viewport.width + 1);
+        assert(card.x + card.width <= refresh.x || card.y + card.height <= refresh.y);
+        await shot(name);
+      };
+      await checkLoss('first-loss'); assert.equal(profiles.length, 0); assert.equal(writes.length, 0);
+      await page.reload(); await load(); await checkLoss('first-loss-reloaded');
+      await nextMatch('win');
+      assert.equal(await page.locator('#settlement-title').textContent(), '胜利');
       await wait(() => !document.getElementById('player-nickname').disabled);
       assert(await page.locator('#player-nickname').isVisible());
       assert.equal(await page.locator('#player-nickname').inputValue(), '');
       assert.equal(await page.locator('#settlement button[type=submit]').count(), 1);
       await action('#settlement-submit'); assert.equal(writes.length, 0);
-      await page.locator('#player-nickname').fill('初次玩家'); await page.locator('#player-message').fill('首次胜利宣言');
+      assert.equal(await page.locator('label:has(#player-message)').textContent(), '胜利感言');
+      assert.equal(await page.locator('thead .message').textContent(), '胜利感言');
+      await page.locator('#player-nickname').fill('初次玩家'); await page.locator('#player-message').fill('首次胜利感言');
       await layout(); await shot('first-card');
-      await action('#settlement-close'); await render(); assert.equal(await page.locator('#settlement').isVisible(), false);
-      await action('#game'); await render(); assert.equal(await page.locator('#player-nickname').inputValue(), '初次玩家');
       await page.reload(); await load(); await wait(() => !document.getElementById('settlement-submit').disabled);
-      assert.equal(await page.locator('#player-message').inputValue(), '首次胜利宣言');
+      assert.equal(await page.locator('#player-message').inputValue(), '首次胜利感言');
       await action('#settlement-submit'); await status('提交失败'); assert.equal(writes.length, 1);
+      assert(await page.evaluate(() => appSim.done === false && restartCount === 0), 'restored card result failure does not reset the current Sim');
       deferNextRead = true; await action('#leaderboard-retry'); failResult = false; holdProfile = true;
       await page.locator('#settlement-submit').scrollIntoViewIfNeeded();
       const box = await page.locator('#settlement-submit').boundingBox(), x = box.x + box.width / 2, y = box.y + box.height / 2;
@@ -121,45 +175,54 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
       await wait(() => { appFrame(performance.now()); return document.querySelector('#leaderboard-list .rank')?.textContent === '1'; });
       assert.equal(writes.length, 2); assert.deepEqual(writes[0], writes[1]);
       assert(await page.locator('#settlement-close').isDisabled());
-      await page.locator('#player-message').fill('下一局宣言');
+      await page.locator('#player-message').fill('下一局感言');
       await page.evaluate(() => { window.before = appSim; document.activeElement.blur(); window.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyR' })); appFrame(performance.now()); });
       assert(await page.evaluate(() => appSim === before)); assert(releaseProfile);
-      holdProfile = false; releaseProfile(); await status('下一局');
+      holdProfile = false; await newGame(() => releaseProfile());
       assert.equal(await page.locator('#player-nickname').isVisible(), false);
       assert(await page.locator('#player-nickname').isDisabled());
       assert.equal(await page.locator('#leaderboard-list .player').textContent(), '初次玩家');
-      assert.equal(await page.locator('#leaderboard-list .message').textContent(), '首次胜利宣言');
+      assert.equal(await page.locator('#leaderboard-list .message').textContent(), '首次胜利感言');
       assert(oldRead); await oldRead.fulfill({ json: [{ rank: 5, nickname: '过期榜单', victory_message: '过期宣言' }] }); oldRead = null;
       await page.waitForTimeout(100); assert.equal(await page.locator('#leaderboard-list .rank').textContent(), '1');
       await shot('first-success');
       await page.reload(); await load();
-      await wait(() => document.querySelector('#leaderboard-list .message')?.textContent === '首次胜利宣言');
+      await wait(() => document.querySelector('#leaderboard-list .message')?.textContent === '首次胜利感言');
       await finish(); await wait(() => !document.getElementById('settlement-submit').disabled);
       assert.equal(await page.locator('#player-nickname').isVisible(), false);
       assert.equal(await page.locator('#player-nickname').evaluate(e => e.required), false);
       assert.equal(await page.locator('#current-nickname').textContent(), '昵称：初次玩家');
-      assert.equal(await page.locator('#player-message').inputValue(), '下一局宣言');
+      assert.equal(await page.locator('#player-message').inputValue(), '下一局感言');
       await layout(); await shot('returning-card');
-      failProfile = true; await action('#settlement-submit'); await status('战绩已提交，宣言提交失败');
+      failProfile = true; await action('#settlement-submit'); await status('战绩已提交，感言提交失败');
+      assert(await page.evaluate(() => appSim.done && restartCount === 0), 'profile failure does not restart');
       const count = writes.length, frozen = profiles.at(-1); failProfile = false;
       await page.reload(); await load(); await wait(() => !document.getElementById('settlement-submit').disabled);
       await page.locator('#player-message').fill('后续编辑'); failRead = true;
-      await action('#settlement-submit'); await status('排行榜刷新失败');
+      await newGame(() => action('#settlement-submit'));
+      assert((await page.locator('#leaderboard-status').textContent()).includes('排行榜刷新失败'));
       assert.equal(writes.length, count, 'reload profile retry does not submit result again');
       assert.deepEqual(profiles.at(-1), frozen, 'retry preserves profile intent');
-      failRead = false; await action('#leaderboard-retry'); await status('下一局');
-      assert.equal(await page.locator('#leaderboard-list .message').textContent(), '下一局宣言');
+      failRead = false; await action('#leaderboard-retry');
+      await wait(() => document.querySelector('#leaderboard-list .message')?.textContent === '下一局感言');
       assert(writes.every(p => p.nickname === '初次玩家')); assert(profiles.every(p => p.p_nickname === null));
       // Ordinary and upgraded matches both update declarations; empty retains server value.
       await nextMatch(); await page.locator('#player-message').fill('');
-      await action('#settlement-submit'); await status('提交成功！');
-      assert.equal(await page.locator('#leaderboard-list .message').textContent(), '下一局宣言');
-      upgraded = true; await nextMatch(); await page.locator('#player-message').fill('升级局即时宣言');
-      await action('#settlement-submit'); await status('提交成功！');
-      assert.equal(await page.locator('#leaderboard-list .message').textContent(), '升级局即时宣言');
+      await newGame(() => action('#settlement-submit'));
+      assert.equal(await page.locator('#leaderboard-list .message').textContent(), '下一局感言');
+      upgraded = true; await nextMatch('win'); await page.locator('#player-message').fill('升级局即时感言');
+      await newGame(() => action('#settlement-submit'));
+      assert.equal(await page.locator('#leaderboard-list .message').textContent(), '升级局即时感言');
       await page.reload(); await load();
-      await wait(() => document.querySelector('#leaderboard-list .message')?.textContent === '升级局即时宣言');
+      await wait(() => document.querySelector('#leaderboard-list .message')?.textContent === '升级局即时感言');
       await finish(); await layout(); await shot('final-returning-card');
+      const beforeLoss = [writes.length, profiles.length];
+      await nextMatch('loss'); await checkLoss('returning-loss');
+      await page.reload(); await load(); await checkLoss('returning-loss-reloaded');
+      assert.deepEqual([writes.length, profiles.length], beforeLoss);
+      await newGame(() => action('#settlement-close'));
+      assert.deepEqual([writes.length, profiles.length], beforeLoss, 'loss X restarts without writing result or profile');
+      await shot('loss-x-new-game');
       assert.equal(await page.locator('#player-nickname').isVisible(), false);
       assert(!/仅升级时更新|新资料将在升级时更新/.test(await page.locator('body').textContent()));
       assert.deepEqual(errors, []); assert.deepEqual(unexpectedRemote, []);
@@ -168,6 +231,8 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round4_20261007/b
         firstNicknameRequired: true, returningNicknameHiddenDisabled: true, declarationEveryMatch: true,
         profileOnlyRetryAfterReload: true, immutableProfileRetry: true, oldLeaderboardReadRejected: true,
         serverMockPersistsAcrossReload: true, emptyRetention: true, noOverflowOrRefreshObstruction: true,
+        firstAndReturningLossProfilesBlocked: true, lossRestoredAfterReload: true, winAndDrawProfilesPreserved: true,
+        newWording: true, submitSuccessRestartsOnce: true, failedSubmitNeverRestarts: true, closeRestartsOnceWithoutWrites: true,
         noUnmockedRemoteRequests: true, errors, expectedConsoleErrors: consoleErrors });
       await context.close();
     }

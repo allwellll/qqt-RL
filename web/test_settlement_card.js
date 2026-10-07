@@ -26,7 +26,7 @@ const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return {
  c.setDraft('首次昵称','首次宣言');assert(c.closeSettlement());c.clearSettlement();assert(c.openPending());
  c=make();await c.syncProfile();assert.deepEqual(c.state().settlement.draft,{nickname:'首次昵称',victory_message:'首次宣言'});
  failResult=true;await Promise.all([c.submitCard(),c.submitCard(),c.submitCard()]);assert.equal(writes.length,1);assert.match(c.state().settlement.cardStatus,/提交失败/);
- failResult=false;failProfile=true;await c.submitCard();assert.equal(writes.length,2);assert(c.state().settlement.submitted);assert.match(c.state().settlement.cardStatus,/宣言提交失败/);
+ failResult=false;failProfile=true;await c.submitCard();assert.equal(writes.length,2);assert(c.state().settlement.submitted);assert.match(c.state().settlement.cardStatus,/感言提交失败/);
  c=make();await c.syncProfile();assert(c.state().settlement.submitted,'reload retains result receipt');assert.equal(c.state().savedNickname,true);
  failProfile=false;holdRead=deferred();const stale=holdRead,oldRead=c.refresh();await Promise.resolve();
  await Promise.all([c.submitCard(),c.submitCard()]);assert.equal(writes.length,2,'profile retry never resubmits result');assert.equal(profiles.length,2);
@@ -41,7 +41,7 @@ const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return {
  c.setDraft('仍然篡改','下一局宣言');holdProfile.resolve();holdProfile=null;await request;
  oldIdentity.resolve();await identityRead;assert.equal(c.state().victory_message,'每局新宣言','late identity read cannot roll profile back');
  assert.equal(server.nickname,'首次昵称');assert.equal(server.victory_message,'每局新宣言');assert.match(c.state().settlement.cardStatus,/下一局/);
- c.clearSettlement();match=c.begin(meta);now+=5000;await c.finish(match,{result:'loss',gameDurationMs:5000,autoSubmit:false});
+ c.clearSettlement();match=c.begin(meta);now+=5000;await c.finish(match,{result:'draw',gameDurationMs:5000,autoSubmit:false});
  assert.equal(c.state().settlement.draft.victory_message,'下一局宣言');c.setDraft('x','');failRead=true;await c.submitCard();
  assert.equal(server.victory_message,'每局新宣言','empty declaration retains server value');assert.match(c.state().settlement.cardStatus,/刷新失败/);
  failRead=false;await c.refresh();assert.equal(c.state().rows[0].victory_message,'每局新宣言');assert.equal(c.state().settlement.cardStatus,'提交成功！');

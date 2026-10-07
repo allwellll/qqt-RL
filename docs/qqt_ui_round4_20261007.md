@@ -36,3 +36,27 @@
 单文件浅色离线人工文档：`docs/qqt_round4_sql_upgrade_20261007.html`。包含前置核对、完整可复制升级 SQL、ACL/RLS/资料合同只读检查、新 PostgREST RPC 示例及明确发布顺序。
 
 **本地验证提交 → 用户人工执行 SQL → 验证新 RPC 返回版本 2 → 再 push 与 Pages exact-head 验收。** 本轮仅做到干净本地提交，没有正式执行 SQL，没有 push，没有发布。最终提交 SHA 与干净树结果记入忽略目录 `runs/qqt_round4_20261007/local_status_20261007.md`，避免报告引用自身 SHA 的递归提交。
+
+## 同日追加：失败局提示、胜利感言与自动新局
+
+以下为用户随后覆盖的最新交互与发布要求；上文是首次本地交付的历史记录。继续基线 `0884d901bacde4d4cf760e603173ea714386ea51` 的同一 worktree，保留中断前全部有效 dirty 修改。接管时前次自有测试/浏览器均已结束，未并发重复启动，也未终止其他任务进程。
+
+- 玩家看到的资料名称统一为“胜利感言”，包括表单、占位文本、排行榜列和资料状态/校验文案。没有更改 `victory_message`、`p_victory_message`、存储键或既有玩家资料，也没有 SQL/Edge 修改。
+- `loss` 隐藏整个资料表单和只读昵称，禁用输入与提交；原结算区域只显示“小伙子，再沉淀沉淀吧”（无首尾空格）。核心方法同时拒绝失败局资料请求，刷新恢复与程序触发 submit 也不产生 `qqt_update_profile`。去掉失败局“提交后查看排名”的无效邀请；原游戏胜负、时间及物理逻辑保留。没有新增失败局自动赛果写入。
+- 胜利和平局的资料提交流程保留。完整提交成功后自动开新局；结果失败、资料失败或请求尚未完成时不重开。资料已成功但榜单刷新失败时，依然开新局，榜单可单独重试读取。
+- X 关闭结算卡后自动开新局，对 win/draw/loss 均有效；关闭不授权或提交资料/赛果，原未完成草稿仍持久保存。自动新局与 R 共用 `requestRestart`/restart gate；结算动作在提交与异步新局期间互斥。重复 submit、X、Enter 只产生一次提交和一次新 Sim，清理后的旧隐藏控件不重开新局。
+- 刷新恢复的旧结算卡可能覆盖在运行中的 Sim 上，点击 X 或成功提交仍须开新局，因此结算回调使用普通重启保护，而非只允许已结束 Sim 的限制。
+
+TDD 实际证据位于 `runs/qqt_round4_loss_20261007/`：
+
+- `tdd-red.log` 与 `tdd-loss-baseline-red.log`：新 loss 测试在原 Round 4 实现实际 RED；后者仅在内存加载 Git 基线，未覆盖 worktree 文件。
+- `tdd-copy-red.log`、`tdd-submit-red.log`、`tdd-close-red.log`：实现前分别确认旧文案、成功未重开、X 未重开断言失败。
+- `tdd-loss-caption-red.log`：失败局仍展示无效提交邀请的断言 RED。
+- `tdd-green.log`、`tdd-restart-green.log`：最小实现后 GREEN。新 `web/test_loss_settlement.js` 和 `web/test_settlement_restart.js` 纳入完整 npm test，覆盖首次/已有昵称、loss 资料守卫、刷新恢复、win/draw、资料失败仅重试资料、待完成与重复动作、成功/X 后新局和旧事件保护。
+- `npm-test.log`：完整 npm test；本地 SQL/PGlite、身份/幂等/RLS/IP 隐私回归继续执行。
+- `browser-local/checks.json` 与截图：真实 Chromium 149，1440×1000 与 390×844，真实 Sim/Canvas/素材。用包子库存触发真实超时胜负，按实际新 Sim 实例数确认每次动作只新建一局。全部远端请求默认拒绝或 mock，无正式写入。覆盖 loss 首次/老玩家/重载、win/draw 提交、X 新局、提交失败与待完成不重开、连点/长按/Enter、资料重试和榜单竞态；截图人工检查无溢出或遮挡。console 仅故意 mock 的 422/503，无非预期错误。
+- 独立只读审查 `round4_review` 通过：实际执行两个新定向测试及 `git diff --check`，检查结算回调时序、刷新恢复、重复动作、玩家文案/字段边界、双视口证据及截图，未发现提交阻塞；没有改文件或执行数据库写入。审查记录 `independent_review_20261007.md`。
+
+发布前用随机未注册身份只读探测正式 `qqt_get_profile`，实际 HTTP 200、`profile_contract_version=2`、`registered=false`，不创建玩家/赛果/资料。证据 `profile-contract-readonly.txt`。用户本次明确授权本地提交后 push main 与 Pages 验收；正式数据库写入仍被禁止。
+
+最终提交 SHA、push、同一 head Pages 工作流/build-info/18 个关键资源逐字节检查、线上双视口只读验收与干净树事实统一记录在 `runs/qqt_round4_loss_20261007/release_status_20261007.md`；发布验收证据分别为 `pages-final.json`、`browser-pages/checks.json`、`pages-readonly/checks.json`。线上功能验收继续全部 mock 远端请求；只读验收放行真实资料/榜单读取且在网络层拦截所有写入口，冻结游戏 tick，禁止污染排行榜。

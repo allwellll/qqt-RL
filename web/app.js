@@ -37,7 +37,7 @@
   const loadingProgress = document.getElementById('loading-progress');
   const leaderboard = QQTLeaderboard.mount(document, { config: QQTLeaderboardConfig,
     storage: { getItem: key => localStorage.getItem(key), setItem: (key, value) => localStorage.setItem(key, value) },
-    crypto, fetch: (...args) => fetch(...args) });
+    crypto, fetch: (...args) => fetch(...args), onRestart: () => requestRestart() });
   let leaderboardMatch = null, clientVersion = 'dev';
   fetch('build-info.json', { cache: 'no-store' }).then(r => r.json()).then(info => {
     if (/^[a-f0-9]{40}$/.test(info.commit)) clientVersion = info.commit;
