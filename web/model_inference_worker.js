@@ -11,10 +11,17 @@ async function verifiedDownload(asset) {
   return bytes;
 }
 async function initialize(row) {
-  const bytes=await verifiedDownload(row);
-  const doc=JSON.parse(new TextDecoder().decode(bytes));meta=doc.meta;
+  async function loadReference() {
+    const bytes=await verifiedDownload(row);
+    const doc=JSON.parse(new TextDecoder().decode(bytes));
+    meta=doc.meta;reference=new QQT.TransformerModel(doc);
+  }
+  // Published metadata/reference logits come from the exact SHA-verified JSON
+  // in the reproducible parity benchmark. Healthy WASM needs only ONNX bytes;
+  // avoid downloading and unpacking a second 40MB copy of the same policy.
+  if(row.onnx && row.onnx.meta && row.onnx.reference_zero)meta=row.onnx.meta;
+  else await loadReference();
   if(meta.arch!=='transformer')throw Error('Worker requires native Transformer');
-  reference=new QQT.TransformerModel(doc);
   backend='worker-js';
   if(row.onnx) {
     // Required assets must download and verify before considering a runtime
@@ -28,7 +35,7 @@ async function initialize(row) {
       session=await runtime.InferenceSession.create(onnx,{executionProviders:['wasm'],graphOptimizationLevel:'all'});
       const obs=new Float32Array(meta.obs_shape.reduce((a,b)=>a*b,1));
       const state=new Float32Array(meta.global_dim || 24);
-      const expected=reference.forward(obs,state),actual=await infer(obs,state);
+      const expected=row.onnx.reference_zero || reference.forward(obs,state),actual=await infer(obs,state);
       const error=Math.max(...['move','bomb'].flatMap(k=>Array.from(actual[k],(v,i)=>Math.abs(v-expected[k][i]))),Math.abs(actual.value-expected.value));
       if(!Number.isFinite(error)||error>1e-3)throw Error('WASM/JS numerical parity failed');
       backend='worker-wasm';
@@ -38,6 +45,7 @@ async function initialize(row) {
       // availability errors may use the SAME verified policy in worker JS.
       if(/numerical parity|Nonfinite/.test(error.message))throw error;
       if(session){await session.release();session=null;}
+      if(!reference)await loadReference();
       return {meta,backend,backendReason:String(error.message)};
     }
   }

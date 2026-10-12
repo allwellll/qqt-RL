@@ -18,7 +18,57 @@
         "file": "bun392-selfplay3072.onnx",
         "bytes": 30242279,
         "sha256": "7618ec5f6c23b2e2f0c9f45d086a6ca1429e73808aab3276c8b5cdbf29af5639",
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-selfplay3072-v1/bun392-selfplay3072.onnx"
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-selfplay3072-v1/bun392-selfplay3072.onnx",
+        "meta": {
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "arch": "transformer",
+          "arm": "bun392_selfplay_dynamic",
+          "attention_heads": 4,
+          "checkpoint_sha256": "dc3919a5e7a2f415f951e23f20069d14c3c1df332acf5dfa7b1bb21314ca4f70",
+          "committed_sha256": "a6b4149329b42f203e58d05d607866dd357c1d3d657a9c40474e42aedf658c8b",
+          "depth": 4,
+          "display_name": "Bun392动态自对弈3072",
+          "embed": 392,
+          "generated_at": "2026-10-12T00:00:00Z",
+          "generation": 3072,
+          "move_actions": 5,
+          "n_players": 2,
+          "name": "Bun392动态自对弈3072",
+          "obs_shape": [
+            24,
+            13,
+            15
+          ],
+          "patch": 3,
+          "plan_sha256": "4e89f524c9e428da48417403f0326cc049d6f5e4a36ed2f216f6c322c4b4f5f5",
+          "qqt_map_id": 806,
+          "rule": "bun",
+          "source": "runs/je03_bun_stage2_20261012/bun392_selfplay12_v2/formal/bun392_selfplay_dynamic/gen003072/policy.pt",
+          "state_dim": 24,
+          "strategy": "raw",
+          "value_max": 20,
+          "value_min": -20
+        },
+        "reference_zero": {
+          "move": [
+            2.045218308287805,
+            0.16097231869320724,
+            1.0011017587764965,
+            1.3943039641678345,
+            1.0948877813223457
+          ],
+          "bomb": [
+            1.4530754126029206,
+            -1.1697586920211904,
+            -0.393755089509511
+          ],
+          "value": 2.727728447982351
+        }
       }
     },
     {

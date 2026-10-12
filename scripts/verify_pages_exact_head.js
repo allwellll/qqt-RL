@@ -7,7 +7,7 @@ const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const out=path.resolve(process.env.EVIDENCE_FILE || 'runs/qqt_main_20261006/pages-final.json');
 const base='https://allwellll.github.io/qqt-RL/';
 function curl(args,input){return new Promise((resolve,reject)=>{
- const child=execFile('curl',['--silent','--show-error','--fail','--retry','2','--max-time','45',...args],{encoding:null,maxBuffer:20000000},(error,stdout)=>error?reject(new Error('HTTP resource verification failed')):resolve(stdout));
+ const child=execFile('curl',['--silent','--show-error','--fail','--retry','2','--max-time',args[0]&&args[0].includes('.wasm')?'1200':'45',...args],{encoding:null,maxBuffer:20000000},(error,stdout)=>error?reject(new Error('HTTP resource verification failed')):resolve(stdout));
  if(input)child.stdin.end(input);
 });}
 (async()=>{

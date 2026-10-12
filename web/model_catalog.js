@@ -21,6 +21,19 @@
           || !SHA256.test(row.onnx.sha256 || '') || !Number.isInteger(row.onnx.bytes) || row.onnx.bytes <= 0)) {
         throw new Error('invalid ONNX asset');
       }
+      if (row.onnx && (row.onnx.meta || row.onnx.reference_zero)) {
+        const m=row.onnx.meta, r=row.onnx.reference_zero;
+        if (!m || !r || m.arch!=='transformer'
+            || m.checkpoint_sha256!==row.source_sha256
+            || !Array.isArray(m.obs_shape) || m.obs_shape.length!==3
+            || !m.obs_shape.every(n=>Number.isInteger(n)&&n>0)
+            || !Number.isInteger(m.state_dim) || m.state_dim<=0
+            || !Array.isArray(r.move) || r.move.length!==m.move_actions
+            || !Array.isArray(r.bomb) || r.bomb.length!==m.ability_actions
+            || ![...r.move,...r.bomb,r.value].every(Number.isFinite)) {
+          throw new Error('invalid ONNX metadata/reference');
+        }
+      }
       return Object.freeze({ ...row });
     });
   }
