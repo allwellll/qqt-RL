@@ -75,6 +75,7 @@ _BASE_BOMB_REWARD = 0.0
 _FORCED_KILL_REWARD = 0.0
 _ENEMY_THREAT_REWARD = 0.0
 _DANGER_TRACKING = False
+_RETENTION_REPLAY = 0.0
 _START_STATE_BANK = None
 _START_STATE_BUCKETS = None
 _START_STATE_WEIGHTS = None
@@ -234,12 +235,14 @@ def configure_training(curriculum: str | None = None,
                        tactical_bomb_resolution_reward: float = 0.0,
                        base_bomb_reward: float = 0.0,
                        forced_kill_reward: float = 0.0,
-                       enemy_threat_reward: float = 0.0) -> None:
+                       enemy_threat_reward: float = 0.0,
+                       retention_replay: float = 0.0) -> None:
     """配置 Bun 训练 reset；评估/网页未调用时保持完整地图与原 HP。"""
     global _CURRICULUM_WEIGHTS, _TRAIN_HP, _KILL_WINDOW_REWARD, _REWARD_PROFILE
     global _DANGER_ESCAPE_REWARD, _AVOIDABLE_DANGER_DEATH_PENALTY
     global _TACTICAL_BOMB_PLACEMENT_REWARD, _TACTICAL_BOMB_RESOLUTION_REWARD
     global _BASE_BOMB_REWARD, _FORCED_KILL_REWARD, _ENEMY_THREAT_REWARD
+    global _RETENTION_REPLAY
     global _DANGER_TRACKING
     if curriculum:
         parsed = {name: 0.0 for name in LESSON_NAMES}
@@ -259,7 +262,8 @@ def configure_training(curriculum: str | None = None,
         _TRAIN_HP = int(hit_points)
     _KILL_WINDOW_REWARD = bool(kill_window_reward)
     if reward_profile not in (
-            "legacy", "auto_sparse", "combat_evolution", "danger_arena"):
+            "legacy", "auto_sparse", "combat_evolution", "danger_arena",
+            "retention_v2"):
         raise ValueError(f"未知 Bun reward profile: {reward_profile}")
     _REWARD_PROFILE = reward_profile
     _DANGER_ESCAPE_REWARD = float(danger_escape_reward)
@@ -270,6 +274,9 @@ def configure_training(curriculum: str | None = None,
     _BASE_BOMB_REWARD = float(base_bomb_reward)
     _FORCED_KILL_REWARD = float(forced_kill_reward)
     _ENEMY_THREAT_REWARD = float(enemy_threat_reward)
+    if not 0.0 <= retention_replay <= 1.0:
+        raise ValueError("retention_replay must be in [0, 1]")
+    _RETENTION_REPLAY = float(retention_replay)
 
 
 def _parse_spawn_buckets(spec: str) -> np.ndarray:
@@ -525,9 +532,9 @@ class BunState(NamedTuple):
 
 
 def _fresh(key) -> BunState:
-    (k_core, k0, k1, k_lesson, k_course0, k_course1,
+    (k_core, k0, k1, k_lesson, k_replay, k_replay_lesson, k_course0, k_course1,
      k_contact, k_contact_extra, k_ambush, k_danger,
-     k_danger_swap) = jax.random.split(key, 11)
+     k_danger_swap) = jax.random.split(key, 13)
     core = base._fresh(k_core)
     i0 = jax.random.randint(k0, (), 0, _BUN_SPAWNS.shape[1])
     i1 = jax.random.randint(k1, (), 0, _BUN_SPAWNS.shape[1])
@@ -550,6 +557,14 @@ def _fresh(key) -> BunState:
     )
     lesson = jax.random.choice(
         k_lesson, len(LESSON_NAMES), p=_CURRICULUM_WEIGHTS).astype(jnp.int8)
+    replay_lessons = jnp.asarray(
+        [LESSON_DANGER_ARENA, LESSON_COMBAT, LESSON_COMBAT_MOVING,
+         LESSON_FULL_CONTACT], dtype=jnp.int8)
+    replay_lesson = replay_lessons[jax.random.randint(
+        k_replay_lesson, (), 0, replay_lessons.shape[0])]
+    lesson = jnp.where(
+        jax.random.bernoulli(k_replay, _RETENTION_REPLAY),
+        replay_lesson, lesson)
     rows = jnp.arange(H)[:, None]
     columns = jnp.arange(W)[None, :]
     near_bases = jnp.zeros((H, W), jnp.bool_)
@@ -1596,7 +1611,7 @@ def reward_from_events(dmg, alive_before, alive_after, hp_after, done,
                        win_hp_bonus=0.0,
                        trade_win_bonus=3.5,
                        moves=None, bombs=None, idle_penalty=0.005,
-                       rule_info=None):
+                       rule_info=None, return_components=False):
     """分阶段抢包子奖励；physical owner 与 causal trigger 独立归因。"""
     del hp_after, timeout_alpha, win_bonus, lose_bonus
     del timeout_lead_bonus, timeout_trail_penalty, timeout_draw_bonus
@@ -1788,6 +1803,40 @@ def reward_from_events(dmg, alive_before, alive_after, hp_after, done,
     if _KILL_WINDOW_REWARD:
         full_reward = kill_window_reward
 
+    # Retention-v2 keeps combat/survival as the dominant signal.  Objective
+    # events are one-shot flags from the environment, progress is clipped and
+    # small, and no task term can grow with episode length.  This branch is
+    # intentionally additive to the existing profiles so old runs retain
+    # their sealed semantics.
+    retention_safety = (
+        -2.0 * own_hit.astype(jnp.float32)
+        -12.0 * death
+        -16.0 * self_kill.astype(jnp.float32)
+        -12.0 * info["mutual_death"].astype(jnp.float32)[:, None])
+    retention_escape = (
+        0.50 * info["safe_bomb_escape"].astype(jnp.float32)
+        -1.50 * unsafe_detonation.astype(jnp.float32))
+    retention_kill = (
+        1.0 * enemy_hit.astype(jnp.float32)
+        +16.0 * surviving_kill.astype(jnp.float32)
+        +4.0 * causal_kill.astype(jnp.float32))
+    retention_progress = 0.05 * progress
+    retention_success = (
+        0.75 * info["enter_enemy_half"].astype(jnp.float32)
+        +1.0 * info["enter_enemy_base"].astype(jnp.float32)
+        +2.0 * info["steal"].astype(jnp.float32)
+        +1.0 * info["carry_cross_home"].astype(jnp.float32)
+        +4.0 * info["capture"].astype(jnp.float32)
+        +1.0 * info["recover"].astype(jnp.float32)
+        +1.0 * info["return_bun"].astype(jnp.float32))
+    retention_task_penalty = -2.0 * info["drop"].astype(jnp.float32)
+    retention_terminal = 6.0 * win - 6.0 * loss
+    retention_reward = (retention_safety + retention_escape + retention_kill
+                        + retention_progress + retention_success
+                        + retention_task_penalty + retention_terminal)
+    if _REWARD_PROFILE == "retention_v2":
+        reward = retention_reward
+
     lesson = info["lesson"][:, None]
     reward = jnp.where(lesson == LESSON_ROUTE_BREAK, route_reward,
                        jnp.where(lesson == LESSON_ROUTE_CAPTURE,
@@ -1813,6 +1862,12 @@ def reward_from_events(dmg, alive_before, alive_after, hp_after, done,
     reward = jnp.where(lesson == LESSON_FULL_AMBUSH, full_reward, reward)
     reward = jnp.where(lesson == LESSON_DANGER_ARENA,
                        danger_arena_reward, reward)
+    if return_components:
+        components = jnp.stack((retention_safety, retention_escape,
+                                retention_kill, retention_progress,
+                                retention_success, retention_task_penalty,
+                                retention_terminal, reward), axis=-1)
+        return reward, components
     return reward
 
 

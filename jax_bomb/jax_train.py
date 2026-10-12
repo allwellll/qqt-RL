@@ -143,7 +143,7 @@ def reward_from_events(dmg, alive_before, alive_after, hp_after, done,
                        win_hp_bonus=WIN_HP_BONUS,
                        trade_win_bonus=TRADE_WIN_BONUS,
                        moves=None, bombs=None, idle_penalty=0.015,
-                       rule_info=None):
+                       rule_info=None, return_components=False):
     """Compute JAX PPO rewards from post-step events without reset-state leakage.
 
     奖励只归因于 auto-reset 前的物理事件：击杀、死亡、抢包、运回与安全放泡
@@ -158,7 +158,8 @@ def reward_from_events(dmg, alive_before, alive_after, hp_after, done,
             timeout_lead_bonus, timeout_trail_penalty, timeout_draw_bonus,
             mutual_hit_penalty, double_death_penalty, win_hp_bonus,
             trade_win_bonus, moves=moves, bombs=bombs,
-            idle_penalty=idle_penalty, rule_info=rule_info)
+            idle_penalty=idle_penalty, rule_info=rule_info,
+            return_components=return_components)
     dmg = dmg.astype(jnp.float32)
     dealt = dmg.sum(axis=-1, keepdims=True) - dmg
     rew = ((dealt - dmg) * HIT_REWARD
@@ -443,7 +444,9 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
                     bun_opponent_recent_params=None,
                     jax_bot_pool=None,
                     jax_bot_enabled=None,
-                    return_bot_stats=False):
+                    return_bot_stats=False,
+                    return_components=False,
+                    return_lesson_stats=False):
     """自对弈：同一网络打两边，可选混入部分逃跑对手环境。states (N, ...)。返回 (new_states, batch, nov, kills)。
 
     jax_bot_pool：`JAX_BOT_NAMES` 顺序的权重（可为 traced jnp，便于自适应课程
@@ -522,12 +525,16 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
     else:
         bot_kinds0 = jnp.zeros((n,), jnp.int8)
     bot_stats0 = jnp.zeros((n_kinds, 4), jnp.float32)
+    component_sum0 = jnp.zeros((2, 8), jnp.float32)
+    # Bun has 16 stable lesson ids; keep this optional telemetry independent
+    # of the environment module's Python-only name tuple.
+    lesson_counts0 = jnp.zeros((16,), jnp.float32)
     # Learner seat in bot envs: P0 where the bot is P1 (first half), else P1.
     learner_seat = jnp.where(jnp.arange(n_flee) < n_flee // 2, 0, 1)
 
     def one_step(carry, _):
         (states, key, visited, nov, kills, opponent_kinds,
-         bot_kinds, bot_stats) = carry
+         bot_kinds, bot_stats, component_sum, lesson_counts) = carry
         key, k0, k1, kstep = jrandom.split(key, 4)
         obs = both_perspectives(states)               # (2N, C, H, W)
         masks = (ones_m, ones_b) if no_mask else both_masks(states)
@@ -585,7 +592,7 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
         #     超时全员存活（n_alive==2）按血量领先 +timeout_lead_bonus、
         #     落后 -timeout_trail_penalty，平血 timeout_draw_bonus。
         #     info.alive/hp 是结算后值，不受 auto_reset 重置污染。
-        rew = reward_from_events(
+        reward_out = reward_from_events(
             info["dmg"], states.alive, info["alive"], info["hp"], done,
             info["crate"], newly, info["walls"], crate_coef, explore_coef,
             brick_coef, timeout_alpha, win_bonus, lose_bonus,
@@ -593,7 +600,16 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
             mutual_hit_penalty, double_death_penalty, win_hp_bonus,
             trade_win_bonus,
             moves=env_acts[:, :, 0], bombs=env_acts[:, :, 1],
-            idle_penalty=idle_penalty, rule_info=info)
+            idle_penalty=idle_penalty, rule_info=info,
+            return_components=return_components)
+        if return_components:
+            rew, components = reward_out
+        else:
+            rew = reward_out
+            components = jnp.zeros((n, 2, 8), jnp.float32)
+        component_sum = component_sum + components.sum(axis=0)
+        lesson_counts = lesson_counts.at[states.lesson].add(
+            done.astype(jnp.float32))
         nov = nov + newly.astype(jnp.float32)       # 统计用：探索分/帧可监控
         n_alive = info["alive"].sum(axis=-1)          # (N,)
         death_done = done & (n_alive == 1)
@@ -639,7 +655,7 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
             st2, done2, info2 = jax.vmap(
                 lambda s, a, kk: step(s, a, kk, return_info=True))(new_states, env_acts2, keys2)
             newly2, new_visited = novelty_transition(new_visited, info2["cell"], done2)
-            rew2 = reward_from_events(
+            reward_out2 = reward_from_events(
                 info2["dmg"], new_states.alive, info2["alive"], info2["hp"], done2,
                 info2["crate"], newly2, info2["walls"], crate_coef, explore_coef,
                 brick_coef, timeout_alpha, win_bonus, lose_bonus,
@@ -647,7 +663,17 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
                 mutual_hit_penalty, double_death_penalty, win_hp_bonus,
                 trade_win_bonus,
                 moves=env_acts2[:, :, 0], bombs=env_acts2[:, :, 1],
-                idle_penalty=idle_penalty, rule_info=info2)
+                idle_penalty=idle_penalty, rule_info=info2,
+                return_components=return_components)
+            if return_components:
+                rew2, components2 = reward_out2
+            else:
+                rew2 = reward_out2
+                components2 = jnp.zeros((n, 2, 8), jnp.float32)
+            component_sum = component_sum + jnp.where(
+                done[:, None, None], 0.0, components2).sum(axis=0)
+            lesson_counts = lesson_counts.at[new_states.lesson].add(
+                (done2 & ~done).astype(jnp.float32))
             rew = rew + jnp.where(done[:, None], 0.0, rew2)
             nov = nov + jnp.where(done[:, None], 0.0, newly2.astype(jnp.float32))
             n_alive2 = info2["alive"].sum(axis=-1)
@@ -691,16 +717,24 @@ def collect_rollout(params, arch, states, key, num_steps, no_mask=False,
         stored_masks = (masks[0], masks[1], joint_unsafe)
         data = (obs_s, state_s, acts_exec, lps, vals, rew, d, stored_masks)
         return (new_states, key, new_visited, nov, kills, opponent_kinds,
-                bot_kinds, bot_stats), data
+                bot_kinds, bot_stats, component_sum, lesson_counts), data
     body = (jax.checkpoint(one_step) if checkpoint else one_step)
-    (final_states, _, _, nov, kills, _, _, bot_stats), data = jax.lax.scan(
+    (final_states, _, _, nov, kills, _, _, bot_stats, component_sum,
+     lesson_counts), data = jax.lax.scan(
         body, (states, key, visited0, nov0, kills0, opponent_kinds0,
-               bot_kinds0, bot_stats0), None,
+               bot_kinds0, bot_stats0, component_sum0, lesson_counts0), None,
         length=num_steps)
     obs, state, acts, lps, vals, rew, done, masks = data
     batch = (obs, state, acts, lps, vals, rew, done, masks)
+    extras = []
     if return_bot_stats:
-        return final_states, batch, nov, kills, bot_stats
+        extras.append(bot_stats)
+    if return_components:
+        extras.append(component_sum)
+    if return_lesson_stats:
+        extras.append(lesson_counts)
+    if extras:
+        return (final_states, batch, nov, kills, *extras)
     return final_states, batch, nov, kills
 
 

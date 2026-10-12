@@ -57,6 +57,25 @@ def _wilson(count: int, n: int) -> list[float]:
     return [max(0.0, center - radius), min(1.0, center + radius)]
 
 
+def apply_spawn_manifest(states, spawn_cells):
+    cells = np.asarray(spawn_cells)
+    games = states.core.pos.shape[0]
+    if cells.shape != (games, 2, 2) or not np.issubdtype(cells.dtype, np.number):
+        raise ValueError('spawn manifest must have shape (games, 2, 2)')
+    if not np.isfinite(cells).all() or not np.equal(cells, np.floor(cells)).all():
+        raise ValueError('spawn manifest cells must be finite integers')
+    if np.any(cells < 0) or np.any(cells[..., 0] >= env.H) or np.any(cells[..., 1] >= env.W):
+        raise ValueError('spawn manifest cell outside board')
+    cells = cells.astype(np.int32)
+    if np.any(np.all(cells[:, 0] == cells[:, 1], axis=-1)):
+        raise ValueError('spawn manifest players must occupy distinct cells')
+    blocked = np.asarray(states.core.wall | states.core.brick)
+    if blocked[np.arange(games)[:, None], cells[..., 0], cells[..., 1]].any():
+        raise ValueError('spawn manifest cell is blocked')
+    position = jnp.asarray(cells, states.core.pos.dtype) + .5
+    return states._replace(core=states.core._replace(pos=position), bun_spawn_pos=position)
+
+
 def _make_policy(params, games):
     # Params are closed over (compile-time constants), exactly like the original loop:
     # passing them as jit arguments changes bf16 fusion numerics and flips argmax ties.
@@ -122,10 +141,12 @@ class TacticalOpponentEvaluator:
         return bot_action, labels[:, 0].astype(bool), labels[:, 1], labels[:, 2].astype(bool)
 
     def run(self, checkpoint: str, games: int, seed: int, max_steps: int = 300,
-            per_episode: bool = False, trace: bool = False) -> dict:
+            per_episode: bool = False, trace: bool = False, spawn_cells=None) -> dict:
         params = load_params(checkpoint)
         key = jax.random.PRNGKey(np.uint32(seed & 0xFFFFFFFF))
         states = clear_destructible_bricks(env.init_batch(key, games))
+        if spawn_cells is not None:
+            states = apply_spawn_manifest(states, spawn_cells)
         spawn_cells = np.floor(np.asarray(states.core.pos)).astype(np.int32)
         active = np.ones((games,), np.bool_)
         first_contact = np.full((games,), -1, np.int32)
