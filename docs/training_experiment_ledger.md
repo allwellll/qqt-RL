@@ -342,3 +342,8 @@ Stage2动态12%联赛没有形成稳定三档共同优势。最值得扩大样�
 按用户新隐私边界脱敏已追踪文档中的本机身份路径/IP/PID；不清理未追踪run/checkpoint/编排，不重写Git历史。新增仅本地AGENTS规则并以根级`/AGENTS.md`忽略；扫描覆盖tracked＋本次明确public文件。未启动训练、未改历史checkpoint。
 
 发布恢复：Actions `38265081242` / head `7265ee5` 的test-and-build因首次Release下载HTTP500失败，deploy未执行。下载器改为最多5次、仅HTTP429/500/502/503/504与超时/断连重试，1/2/4/8秒指数退避并尊重Retry-After；超过60秒等待预算明确失败。永久错误/大小/hash错误仍硬失败，不跳过模型。26项确定性相关测试通过，完整静态站继续校验全部6模型；必须用新提交部署并核验同head最终success及公网真实加载，不以rerun旧workflow替代代码修复。Release五个资产均已通过无需凭据的公开下载与完整SHA复核。
+
+
+## Bun392 网页推理性能修复（20261012）
+
+不停止JE04 GPU训练或CPU评估，网页独立在main实施专用Worker+同源ONNX Runtime Web1.23.2单线程SIMD WASM。原392纯JS p95 183.4ms，Worker/WASM27.8ms；16原生状态最大误差2.3222e-5、greedy0差异，32固定seed完整轨迹0差异。完整装配站两模式各10秒100逻辑tick/100完成，推理p95 14.8/36.0ms，rAF约16.7ms，无稳定窗口longtask。模型raw、Bun编码/动作/greedy及10Hz不变，不降低tick、不替换模型。JSON/ONNX下载和SHA/大小硬校验，运行时回退明确与性能成功区分；WebGPU无实际adapter，不声称测得更快。25项Python相关测试及网页回归，部署按精确head终态核验。详见 `docs/bun392_web_inference_performance_20261012.md` 和同日JSON报告。

@@ -32,6 +32,7 @@ jobs:
         run: |
           mkdir -p _site
           cp -a web/. _site/
+          node scripts/assemble_web_runtime.js _site/vendor/ort
           node -e 'require("fs").writeFileSync("_site/build-info.json", JSON.stringify({version:"leaderboard-v1",commit:process.env.GITHUB_SHA}) + "\n")'
           mkdir -p _site/models
           python3 scripts/fetch_web_models.py --manifest web/models.json --output _site/models
@@ -40,9 +41,10 @@ jobs:
           root = pathlib.Path('_site')
           manifest = json.loads((root / 'models.json').read_text())
           for row in manifest['models']:
-              data = (root / 'models' / row['file']).read_bytes()
-              assert len(data) == row['bytes'], (row['id'], len(data), row['bytes'])
-              assert hashlib.sha256(data).hexdigest() == row['sha256'], row['id']
+              for asset in [row] + ([row['onnx']] if row.get('onnx') else []):
+                  data = (root / 'models' / asset['file']).read_bytes()
+                  assert len(data) == asset['bytes'], (row['id'], len(data), asset['bytes'])
+                  assert hashlib.sha256(data).hexdigest() == asset['sha256'], row['id']
           print(f"verified {len(manifest['models'])} same-origin web models")
           PY
           touch _site/.nojekyll

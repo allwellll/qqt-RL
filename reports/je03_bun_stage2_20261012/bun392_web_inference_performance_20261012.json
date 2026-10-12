@@ -1,0 +1,148 @@
+{
+  "protocol": "qqt.bun392.browser-performance/v1",
+  "date": "20261012",
+  "benchmark": {
+    "passed": true,
+    "webgpu_adapter_available": false,
+    "old_js_ms": {
+      "n": 16,
+      "min": 43.599998474121094,
+      "median": 43.79999542236328,
+      "p95": 45.900001525878906,
+      "max": 45.900001525878906,
+      "mean": 43.91874980926514
+    },
+    "bun392_js_ms": {
+      "n": 16,
+      "min": 176.29999542236328,
+      "median": 176.4000015258789,
+      "p95": 183.4000015258789,
+      "max": 183.4000015258789,
+      "mean": 177.0437502861023
+    },
+    "bun392_worker_ms": {
+      "n": 48,
+      "min": 14,
+      "median": 14.300003051757812,
+      "p95": 27.800003051757812,
+      "max": 28,
+      "mean": 16.59166653951009
+    },
+    "worker_backend": "worker-wasm",
+    "backend_reason": null,
+    "initial_parity_max_error": 2.107664154510358e-06,
+    "max_logit_value_error": 2.3221908565240756e-05,
+    "greedy_action_mismatches": 0,
+    "trajectory_ticks": 32,
+    "trajectory_mismatches": 0,
+    "frame_ms": {
+      "n": 54,
+      "min": 12.200001525878179,
+      "median": 16.69999999999891,
+      "p95": 16.799999999999272,
+      "max": 16.799999999999272,
+      "mean": 16.5814815097385
+    },
+    "main_long_tasks_ms": [],
+    "webgpu_available": true,
+    "input_contract": {
+      "obs": [
+        24,
+        13,
+        15
+      ],
+      "global": 24,
+      "ability": 3
+    },
+    "model_sha256": "c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a",
+    "onnx_sha256": "7618ec5f6c23b2e2f0c9f45d086a6ca1429e73808aab3276c8b5cdbf29af5639"
+  },
+  "assembled_static_site": {
+    "passed": true,
+    "network_mock": false,
+    "modes": [
+      {
+        "mode": "human-vs-opponent",
+        "ticks": 100,
+        "wall_ms": 10000.100006103516,
+        "tick_attempts": 100,
+        "tick_completions": 100,
+        "tick_latency_ms": {
+          "n": 100,
+          "p95": 15.099998474121094,
+          "max": 18.5,
+          "mean": 14.656001052856446
+        },
+        "inference_ms": {
+          "n": 100,
+          "p95": 14.799995422363281,
+          "max": 16.899993896484375,
+          "mean": 14.303000259399415
+        },
+        "frame_ms": {
+          "n": 600,
+          "p95": 16.799999999999272,
+          "max": 16.80000000000109,
+          "mean": 16.647833335876463
+        },
+        "long_tasks_ms": [],
+        "backend": "worker-wasm",
+        "native_bun": true,
+        "native_items": true,
+        "native_trap": true,
+        "players": 2
+      },
+      {
+        "mode": "model-vs-rule",
+        "ticks": 100,
+        "wall_ms": 10000.099998474121,
+        "tick_attempts": 100,
+        "tick_completions": 100,
+        "tick_latency_ms": {
+          "n": 100,
+          "p95": 36.79999542236328,
+          "max": 37,
+          "mean": 22.21399971008301
+        },
+        "inference_ms": {
+          "n": 100,
+          "p95": 36,
+          "max": 36.20000457763672,
+          "mean": 21.091000061035157
+        },
+        "frame_ms": {
+          "n": 600,
+          "p95": 16.700000000000728,
+          "max": 16.80000000000109,
+          "mean": 16.656999994913736
+        },
+        "long_tasks_ms": [],
+        "backend": "worker-wasm",
+        "native_bun": true,
+        "native_items": false,
+        "native_trap": false,
+        "players": 2
+      }
+    ],
+    "errors": [],
+    "writes": []
+  },
+  "python_tests": {
+    "passed": 25
+  },
+  "model_change": false,
+  "simulation_tick_ms": 100,
+  "runtime": {
+    "package": "onnxruntime-web",
+    "version": "1.23.2",
+    "backend": "single-thread SIMD WASM",
+    "worker": true,
+    "same_origin": true
+  },
+  "limitations": [
+    "Measured on headless Chromium; device-dependent timing, not a guarantee for all hardware.",
+    "WebGPU API exists but adapter unavailable on tested browser; no WebGPU performance claim.",
+    "Worker-JS compatibility fallback preserves policy but cannot guarantee 10Hz on slow devices.",
+    "Numerical equivalence tested on 16 native states and 32 trajectory ticks; not a proof for every state."
+  ]
+}

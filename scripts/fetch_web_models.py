@@ -68,19 +68,23 @@ def download_models(manifest, output, fetch=None):
     fetch = fetch or fetch_bytes
     seen = set()
     for row in manifest['models']:
-        name = row['file']; url = urllib.parse.urlparse(row['url'])
-        if not re.fullmatch(r'[a-z0-9][a-z0-9._-]*\.json', name) or name in seen:
-            raise ValueError('unsafe or duplicate model filename')
-        seen.add(name)
-        if (url.scheme != 'https' or url.netloc != 'github.com' or url.query or url.fragment
-                or not re.fullmatch(r'/[^/]+/[^/]+/releases/download/[^/]+/'+re.escape(name),url.path)):
-            raise ValueError('model must use an HTTPS GitHub Release asset URL')
-        data = fetch(row['url'])
-        if len(data) != row['bytes'] or hashlib.sha256(data).hexdigest() != row['sha256']:
-            raise ValueError(f"model integrity failed: {row['id']}")
-        target = output/name; pending = target.with_suffix('.tmp')
-        pending.write_bytes(data); pending.replace(target)
-    return len(seen)
+        assets = [(row, 'json')]
+        if row.get('onnx'):
+            assets.append((row['onnx'], 'onnx'))
+        for asset, extension in assets:
+            name = asset['file']; url = urllib.parse.urlparse(asset['url'])
+            if not re.fullmatch(r'[a-z0-9][a-z0-9._-]*\.' + extension, name) or name in seen:
+                raise ValueError('unsafe or duplicate model filename')
+            seen.add(name)
+            if (url.scheme != 'https' or url.netloc != 'github.com' or url.query or url.fragment
+                    or not re.fullmatch(r'/[^/]+/[^/]+/releases/download/[^/]+/'+re.escape(name),url.path)):
+                raise ValueError('model must use an HTTPS GitHub Release asset URL')
+            data = fetch(asset['url'])
+            if len(data) != asset['bytes'] or hashlib.sha256(data).hexdigest() != asset['sha256']:
+                raise ValueError(f"model integrity failed: {row['id']}")
+            target = output/name; pending = target.with_suffix('.tmp')
+            pending.write_bytes(data); pending.replace(target)
+    return len(manifest['models'])
 
 
 if __name__ == '__main__':

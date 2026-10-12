@@ -34,6 +34,16 @@ const id='bun392-selfplay3072';
         }
         return result;
       };
+      if(window.QQTModelWorker) {
+        const load=QQTModelWorker.load;
+        QQTModelWorker.load=async(...args)=>{
+          const model=await load(...args),forward=model.forward;
+          model.forward=async(...inputs)=>{const result=await forward(...inputs);
+            if(![...result.move,...result.bomb,result.value].every(Number.isFinite))throw Error('nonfinite inference');
+            modelCalls.push({embed:model.meta.embed,obs:inputs[0].length,state:inputs[1].length});return result;};
+          return model;
+        };
+      }
       const reset=QQT.Sim.prototype.reset;
       QQT.Sim.prototype.reset=function(...args){window.appSim=this;return reset.apply(this,args);};
     });

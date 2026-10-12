@@ -118,3 +118,14 @@ def test_transport_disconnect_retried_but_unknown_url_error_not_retried():
     with pytest.raises(urllib.error.URLError):
         fetch_bytes(row()['url'],opener=permanent,pause=lambda _:None)
     assert len(calls)==1
+
+
+def test_optional_onnx_asset_is_verified_and_never_skipped(tmp_path):
+    onnx=dict(file='test.onnx',url='https://github.com/example/game/releases/download/v1/test.onnx',bytes=3,
+              sha256=hashlib.sha256(b'onn').hexdigest())
+    manifest={'schema':'qqt.web-models/v1','models':[{**row(), 'onnx':onnx}]}
+    assert download_models(manifest,tmp_path,lambda url:b'onn' if url.endswith('.onnx') else b'{}')==1
+    assert (tmp_path/'test.onnx').read_bytes()==b'onn'
+    with pytest.raises(ValueError,match='integrity'):
+        download_models(manifest,tmp_path,lambda url:b'bad' if url.endswith('.onnx') else b'{}')
+    assert (tmp_path/'test.onnx').read_bytes()==b'onn'

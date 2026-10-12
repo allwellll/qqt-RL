@@ -17,6 +17,10 @@
       if (!SHA256.test(row.sha256 || '')) throw new Error('invalid model sha256');
       if (!Number.isInteger(row.bytes) || row.bytes <= 0) throw new Error('invalid model bytes');
       if (!Number.isInteger(row.cycle) || row.cycle < 0) throw new Error('invalid model cycle');
+      if (row.onnx && (!/^[a-z0-9][a-z0-9._-]*\.onnx$/.test(row.onnx.file || '')
+          || !SHA256.test(row.onnx.sha256 || '') || !Number.isInteger(row.onnx.bytes) || row.onnx.bytes <= 0)) {
+        throw new Error('invalid ONNX asset');
+      }
       return Object.freeze({ ...row });
     });
   }

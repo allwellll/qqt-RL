@@ -40,5 +40,12 @@
     return output.buffer;
   }
 
-  return { progressText, readResponseWithProgress };
+  async function verifyBuffer(buffer, asset, cryptoApi = globalThis.crypto) {
+    if (buffer.byteLength !== asset.bytes) throw new Error('模型大小校验失败');
+    const digest = Array.from(new Uint8Array(await cryptoApi.subtle.digest('SHA-256', buffer)))
+      .map(value => value.toString(16).padStart(2, '0')).join('');
+    if (digest !== asset.sha256) throw new Error('模型 SHA-256 校验失败');
+    return buffer;
+  }
+  return { progressText, readResponseWithProgress, verifyBuffer };
 });

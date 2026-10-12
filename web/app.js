@@ -310,6 +310,13 @@
     modelProgress.removeAttribute('value');
     modelProgressText.textContent = '正在连接模型文件…';
     modelStatus.textContent = `正在加载：${row.display_name}`;
+    let model;
+    if (row.onnx) {
+      model = await QQTModelWorker.load(row, ({loaded,total}) => {
+        if (total > 0) modelProgress.value = loaded * 100 / total;
+        modelProgressText.textContent = QQTModelLoader.progressText(loaded,total);
+      });
+    } else {
     const response = await fetch(QQTModelCatalog.modelUrl(row), { cache: 'no-store' });
     const buffer = await QQTModelLoader.readResponseWithProgress(response, (loaded, total) => {
       if (total > 0) modelProgress.value = loaded * 100 / total;
@@ -324,7 +331,16 @@
     if (digest !== row.sha256) throw new Error('模型 SHA-256 校验失败');
     modelProgressText.textContent = '正在解析并初始化模型…';
     await new Promise((resolve) => setTimeout(resolve, 0));
-    loadedModel = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)));
+    model = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)));
+    }
+    const previousModel = loadedModel;
+    loadedModel = model;
+    if (previousModel && previousModel.close) {
+      // A request may still belong to the old session. Let its obsolete-tick
+      // guard resolve before terminating the worker; never reject a live tick.
+      const retire = () => ticking ? setTimeout(retire, 25) : previousModel.close();
+      setTimeout(retire, 0);
+    }
     modelProgress.value = 100;
     loadedModelId = row.id;
     modelProgressText.textContent = '模型加载完成';

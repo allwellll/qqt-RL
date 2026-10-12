@@ -21,3 +21,6 @@ web/test-artifacts/
 
 # Local agent instructions; never publish.
 /AGENTS.md
+
+# Generated from the integrity-pinned npm runtime package.
+/web/vendor/ort/

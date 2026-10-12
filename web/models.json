@@ -13,7 +13,13 @@
       "score": 0.140625,
       "source_sha256": "dc3919a5e7a2f415f951e23f20069d14c3c1df332acf5dfa7b1bb21314ca4f70",
       "strategy": "raw",
-      "score_protocol": "Hunter safe kills 27/192; exploratory 64/tier; not significance evidence"
+      "score_protocol": "Hunter safe kills 27/192; exploratory 64/tier; not significance evidence",
+      "onnx": {
+        "file": "bun392-selfplay3072.onnx",
+        "bytes": 30242279,
+        "sha256": "7618ec5f6c23b2e2f0c9f45d086a6ca1429e73808aab3276c8b5cdbf29af5639",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-selfplay3072-v1/bun392-selfplay3072.onnx"
+      }
     },
     {
       "id": "bun-tf-it4000",
