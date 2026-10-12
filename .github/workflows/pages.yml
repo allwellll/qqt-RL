@@ -34,8 +34,7 @@ jobs:
           cp -a web/. _site/
           node -e 'require("fs").writeFileSync("_site/build-info.json", JSON.stringify({version:"leaderboard-v1",commit:process.env.GITHUB_SHA}) + "\n")'
           mkdir -p _site/models
-          gh release download web-models-v1 --repo "${{ github.repository }}" \
-            --pattern 'safe-*.json' --pattern 'bun-kill-*.json' --pattern 'bun-tf-*.json' --dir _site/models
+          python3 scripts/fetch_web_models.py --manifest web/models.json --output _site/models
           python3 - <<'PY'
           import hashlib, json, pathlib
           root = pathlib.Path('_site')

@@ -75,6 +75,8 @@ def main() -> None:
     parser.add_argument("checkpoint", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--name", default=None)
+    parser.add_argument("--generated-at", default=None,
+                        help="fixed ISO-8601 timestamp for reproducible release exports")
     parser.add_argument("--arch", default=None,
                         choices=(None, "transformer", "mlp4"),
                         help="override auto-detected architecture")
@@ -96,7 +98,7 @@ def main() -> None:
         "value_min": -20.0, "value_max": 20.0,
         "obs_shape": [args.channels, args.height, args.width], "n_players": 2,
         "source": args.checkpoint.name,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": args.generated_at or datetime.now(timezone.utc).isoformat(),
     }
 
     if arch == "mlp4":

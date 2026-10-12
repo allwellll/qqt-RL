@@ -298,7 +298,7 @@ CX-01 至 CX-28 的实验假设、唯一变量、证据等级和失败模式可�
 
 CPU smoke/recovery 两臂均已通过 finite、非零 Actor/Critic 更新、四副本一致和 fresh-process digest 一致。旧 `bun831_native_tracks_v1` 在 control g1113、recipe g2253 更新边界安全退出，旧 checkpoint/评估/失败证据保留，`SUPERSEDED_20261011_retention_v2.json` 明确这是用户授权的替换而非能力失败伪造。GPU smoke/正式 owner 随后在 8 卡空闲后启动，CPU Hunter/Tactical/Bun-task 评估异步运行，不作为 GPU 启动或扩训阻塞门禁。设计与奖励逐项见 `reports/je03_bun_stage1_20261011/bun392_retention_v2_design.md`。
 
-实际启动证据：GPU owner PID 429980/429981；正式 worker control PID 440471（GPU0-3）、teacher PID 441350（GPU4-7）。smoke/recovery 首次正式更新均 finite、非零且 replica exact；control 首个正式事件 g1 actor/critic L2=9.0233/15.4688，teacher g1=8.2185/15.8791。随后现场读到 control g24、teacher g22，fresh 吞吐约 47.4k/47.9k ticks/s、11.58/11.70 optimizer updates/s，显存约 30-32 GiB/card，8卡均有持续计算。独立 CPU retention owner PID 447316；旧 evaluator KeyError（错误假设 teaching tracks）已保留并由新 owner 修复隔离，不影响训练。
+实际启动证据：GPU owner PID（本地记录）；正式 worker control PID（本地记录）（GPU0-3）、teacher PID（本地记录）（GPU4-7）。smoke/recovery 首次正式更新均 finite、非零且 replica exact；control 首个正式事件 g1 actor/critic L2=9.0233/15.4688，teacher g1=8.2185/15.8791。随后现场读到 control g24、teacher g22，fresh 吞吐约 47.4k/47.9k ticks/s、11.58/11.70 optimizer updates/s，显存约 30-32 GiB/card，8卡均有持续计算。独立 CPU retention owner PID（本地记录）；旧 evaluator KeyError（错误假设 teaching tracks）已保留并由新 owner 修复隔离，不影响训练。
 
 对 `JE03-BUN831-NATIVE-TRACKS-20261011-v1` 做独立只读审计，未停止或修改健康 GPU/CPU 进程。新报告与机器结果：`reports/je03_bun_stage1_20261011/bun392_retention_conflict_analysis_v1.md`、`bun392_retention_conflict_analysis_v1.json`；诊断脚本：`scripts/je03_bun392_retention_conflict_analysis_20261011.py`。覆盖 base g0/32/64/128/192/256/512/768、recipe g0/32/64/128/192/256/512/768/1024/1536 的 Hunter hard/normal/easy safe/death/self/trade/bombs、Tactical、carry/steal/route/full 任务、训练 reward/done/kill telemetry、实际 optimizer accounting、Actor/Critic/输入尾部/heads 漂移。
 
@@ -316,7 +316,7 @@ CPU smoke/recovery 两臂均已通过 finite、非零 Actor/Critic 更新、四�
 
 ## Stage2 CPU 权威评估故障恢复（20261012）
 
-旧 CPU evaluator 在取 manifest 时误用 Bun831 wrapper 的 `SPAWNS` 属性，实际常量位于嵌套 authority，启动抛 AttributeError；handoff 15秒重试未解决。旧 `cpu_owner.log`/protocol/产物保留。新增独立 `authority_stage2_recovery_v2` 及恢复入口，保持训练 SOURCE_SEAL 不变，现场 seal 验证通过。唯一新 CPU owner PID529839（tmux `je03-stage2-cpu-authority-recovery-20261012`）同时持有新旧评估锁，旧重试不能成为 writer；CUDA 空、JAX CPU，CPU96–127与trainer128–135隔离。13项相关CPU测试通过。GPU worker503177/508661继续健康4+4，取证时g2077/g1649、约71.2k/65.3k fresh ticks/s，未中断。
+旧 CPU evaluator 在取 manifest 时误用 Bun831 wrapper 的 `SPAWNS` 属性，实际常量位于嵌套 authority，启动抛 AttributeError；handoff 15秒重试未解决。旧 `cpu_owner.log`/protocol/产物保留。新增独立 `authority_stage2_recovery_v2` 及恢复入口，保持训练 SOURCE_SEAL 不变，现场 seal 验证通过。唯一新 CPU owner PID（本地记录）（tmux `je03-stage2-cpu-authority-recovery-20261012`）同时持有新旧评估锁，旧重试不能成为 writer；CUDA 空、JAX CPU，CPU96–127与trainer128–135隔离。13项相关CPU测试通过。GPU worker（本地记录）继续健康4+4，取证时g2077/g1649、约71.2k/65.3k fresh ticks/s，未中断。
 
 同冻结 Hunter64/档300+64 residual、Tactical64及 Bun task16/类，配对优先g0/512/1024/1536/共同2048，再补早期点及追随3072/4096。任务只增加换命/安全击杀事件观察，idle诊断局限明确；真实Hunter依旧网页路径。新owner逐checkpoint及shard hash校验、原子PAIR、异步不阻GPU；终态以新EVALUATION_COMPLETE/OWNER_FINISHED为准，唯一通知为每PAIR一次jdme-notify claim。根因、完整协议、启动与结果记录在 `reports/je03_bun_stage2_20261012/selfplay_cpu_authority_recovery_20261012.md` 和run下 `RECOVERY_RECEIPT_20261012.json`。
 
@@ -332,3 +332,11 @@ Stage2动态12%联赛没有形成稳定三档共同优势。最值得扩大样�
 
 
 主线白名单整合（20261012）：基于最新origin/main a260615，代码提交2006268；完整248提交/1274差异文件审计见main_integration_audit_20261012.json。main网页/部署和现有更新全部保留，未携带runs/checkpoints/logs/.hermes/历史vendor。70项不同Python测试、7项新增Node及main全套npm测试通过；真实main CPU Hunter8局兼容性smoke通过。最终候选不自动部署，不改网页模型目录；详细整合、依赖、恢复和回滚见docs/bun392_main_integration_20261012.md。
+
+## Bun392 g3072 网页模型发布（20261012）
+
+完成Stage2 dynamic g3072的COMMITTED、raw/EMA/state、plan及全部权威分片hash复核。独立CPU同冻结协议EMA追评137.02秒：Hunter1/5/16（22/192）、Tactical18/64；原始策略0/4/23（27/192）、Tactical24/64。EMA安全性略好（full死亡/自炸0/0对raw2/2），但综合击杀快筛较低，故本轮网页选择raw，不套用raw指标到EMA。所有64局/档仅快筛，不作显著性结论；困难档0、easy贡献为主、route_break/full任务未突破。
+
+新Release `web-bun392-selfplay3072-v1`，网页名称“Bun392动态自对弈3072”。原生Bun392输入/动作保持，无adapter；确定性JSON两次字节一致，与权威模型全部packed权重一致，8组JS/ONNX最大误差5.72e-6。当前main三档Hunter各8局smoke0/0/3且危险结算完整，与冻结曲线分开。12项Python测试、完整npm回归、本地浏览器真实下载校验及16tick/16次有限推理通过。来源、SHA、Release资产、EMA比较、限制与发布后核验标准见 `docs/bun392_model_release_20261012.md` 和同日机器报告。保留旧5个网页模型；Pages从各目录Release URL下载并校验后同源加载。
+
+按用户新隐私边界脱敏已追踪文档中的本机身份路径/IP/PID；不清理未追踪run/checkpoint/编排，不重写Git历史。新增仅本地AGENTS规则并以根级`/AGENTS.md`忽略；扫描覆盖tracked＋本次明确public文件。未启动训练、未改历史checkpoint。

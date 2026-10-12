@@ -2,6 +2,20 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-selfplay3072",
+      "display_name": "Bun392动态自对弈3072",
+      "file": "bun392-selfplay3072-raw-c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a.json",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-selfplay3072-v1/bun392-selfplay3072-raw-c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a.json",
+      "sha256": "c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a",
+      "bytes": 40294795,
+      "candidate": "bun392_selfplay12_v2_dynamic_raw",
+      "cycle": 3072,
+      "score": 0.140625,
+      "source_sha256": "dc3919a5e7a2f415f951e23f20069d14c3c1df332acf5dfa7b1bb21314ca4f70",
+      "strategy": "raw",
+      "score_protocol": "Hunter safe kills 27/192; exploratory 64/tier; not significance evidence"
+    },
+    {
       "id": "bun-tf-it4000",
       "display_name": "Bun Transformer · 自对弈 it4000（vs Tactical v2 击杀 0.418）",
       "file": "bun-tf-it4000-830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084.json",
