@@ -446,5 +446,93 @@
       "Current-main Hunter smoke uses newer Bot code; never merged into frozen training curves"
     ]
   },
-  "release_tag": "web-bun392-selfplay3072-v1"
+  "release_tag": "web-bun392-selfplay3072-v1",
+  "download_recovery": {
+    "failed_run": 38265081242,
+    "failed_head": "7265ee551005e68b8a76e8666554d6e4697d9c48",
+    "cause": "first Release asset request HTTP500; no retry; deploy skipped",
+    "attempts": 5,
+    "retry_http": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "exponential_seconds": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "retry_after": "seconds or HTTP date; max(backoff,Retry-After); if above60s abort without early retry",
+    "max_delay_seconds": 60,
+    "integrity": "complete bytes and SHA256 required; never skip model",
+    "related_python_tests": 26,
+    "public_release_verification": {
+      "passed": true,
+      "release": "https://github.com/allwellll/qqt-RL/releases/tag/web-bun392-selfplay3072-v1",
+      "assets": [
+        {
+          "name": "bun392-selfplay3072-raw-c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a.json",
+          "bytes": 40294795,
+          "sha256": "c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a",
+          "credential_used": false,
+          "http_byte_ranges": true
+        },
+        {
+          "name": "bun392-selfplay3072.onnx",
+          "bytes": 30242279,
+          "sha256": "7618ec5f6c23b2e2f0c9f45d086a6ca1429e73808aab3276c8b5cdbf29af5639",
+          "credential_used": false,
+          "http_byte_ranges": true
+        },
+        {
+          "name": "evaluation.json",
+          "bytes": 13111,
+          "sha256": "f53bc5bbc7ead1dcbc74f52ad672002e8cc273218d94d7c2a196c2f097b1738b",
+          "credential_used": false,
+          "http_byte_ranges": true
+        },
+        {
+          "name": "manifest.json",
+          "bytes": 1459,
+          "sha256": "7fa83b169a20ad90916c732a6202aed71feb3934676e877dc9271376dddc78de",
+          "credential_used": false,
+          "http_byte_ranges": true
+        },
+        {
+          "name": "SHA256SUMS",
+          "bytes": 413,
+          "sha256": "28d106d734bf7adf9a4f2d3ed438355d831dada5154bda8b0d63c925f0b7a59d",
+          "credential_used": false,
+          "http_byte_ranges": true
+        }
+      ],
+      "wall_seconds": 17.51059889793396,
+      "bounded_concurrency": 8
+    },
+    "local_static_site_build": {
+      "passed": true,
+      "models": 6,
+      "model_hashes": {
+        "bun392-selfplay3072": "c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a",
+        "bun-tf-it4000": "830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084",
+        "bun-kill-mlp4": "1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70",
+        "safe-high-c16": "cabd0dad115cd888dec4f715d999f862296ef4ce3dc1e6bfad7c0aea70d37aa1",
+        "safe-medium-c16": "9908caa24d39fab7d34ab0047754c22a78ae2be267142290fbaad41a09bfe3f8",
+        "safe-high-c24": "9ba571c45791aa01dc03ddc8b1a5ae7916be1f5f24e30dec86bdc0c4f8700b5b"
+      },
+      "source": "public Release ranges for new model; previously deployed immutable Pages cache for five existing models",
+      "production_catalog_validation": true,
+      "no_skipped_models": true
+    },
+    "local_static_site_browser": {
+      "passed": true,
+      "ticks": 16,
+      "inference_calls": 16,
+      "native_bun": true,
+      "network_mock": false
+    }
+  }
 }

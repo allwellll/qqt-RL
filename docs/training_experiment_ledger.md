@@ -340,3 +340,5 @@ Stage2动态12%联赛没有形成稳定三档共同优势。最值得扩大样�
 新Release `web-bun392-selfplay3072-v1`，网页名称“Bun392动态自对弈3072”。原生Bun392输入/动作保持，无adapter；确定性JSON两次字节一致，与权威模型全部packed权重一致，8组JS/ONNX最大误差5.72e-6。当前main三档Hunter各8局smoke0/0/3且危险结算完整，与冻结曲线分开。12项Python测试、完整npm回归、本地浏览器真实下载校验及16tick/16次有限推理通过。来源、SHA、Release资产、EMA比较、限制与发布后核验标准见 `docs/bun392_model_release_20261012.md` 和同日机器报告。保留旧5个网页模型；Pages从各目录Release URL下载并校验后同源加载。
 
 按用户新隐私边界脱敏已追踪文档中的本机身份路径/IP/PID；不清理未追踪run/checkpoint/编排，不重写Git历史。新增仅本地AGENTS规则并以根级`/AGENTS.md`忽略；扫描覆盖tracked＋本次明确public文件。未启动训练、未改历史checkpoint。
+
+发布恢复：Actions `38265081242` / head `7265ee5` 的test-and-build因首次Release下载HTTP500失败，deploy未执行。下载器改为最多5次、仅HTTP429/500/502/503/504与超时/断连重试，1/2/4/8秒指数退避并尊重Retry-After；超过60秒等待预算明确失败。永久错误/大小/hash错误仍硬失败，不跳过模型。26项确定性相关测试通过，完整静态站继续校验全部6模型；必须用新提交部署并核验同head最终success及公网真实加载，不以rerun旧workflow替代代码修复。Release五个资产均已通过无需凭据的公开下载与完整SHA复核。
