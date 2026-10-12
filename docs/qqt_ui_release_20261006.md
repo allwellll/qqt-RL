@@ -40,7 +40,7 @@ delete from qqt_private.players where player_id in (
 );
 ```
 
-历史四个验收身份的清理SQL在 `docs/leaderboard_20261005.md`，同样没有管理执行证据。未使用或输出数据库密码。本轮预览PID608327/608328已停止，浏览器finally关闭，最终状态再次核查。
+历史四个验收身份的清理SQL在 `docs/leaderboard_20261005.md`，同样没有管理执行证据。未使用或输出数据库密码。本轮预览PID（本地记录）已停止，浏览器finally关闭，最终状态再次核查。
 
 最终重跑证据位于 `runs/leaderboard_20261006/browser-final-local`、`ui-final-local`，正式Pages最终head验收位于 `browser-final-pages`、`ui-final-pages`。真实验收脚本每次创建的身份精确清理SQL位于对应目录 `cleanup.sql`，最后一轮线上身份请一并执行该文件清理；本任务没有管理删除权限。
 
@@ -117,7 +117,7 @@ SQL 成功后，按 [`supabase/README.md`](../supabase/README.md) 更新 Edge �
 - `build-info.json.commit` 与该 head 一致，17个关键资源逐字节相同，SHA256证据 `runs/qqt_main_20261006/pages-feature.json`。本地 main/origin/main 已同步该 head，canonical main 工作树干净。
 - 正式网页 1440×1000 / 390×844 Canvas 终局专项通过：`runs/qqt_main_20261006/terminal-pages/checks.json`。升级资料和实际 WebAudio 专项正式页面证据保存到 `upgrade-pages/checks.json`，与本地相同明确 mock 数据库 RPC，不将其宣称为已部署后端 E2E。
 - 新增 `scripts/verify_qqt_pages_readonly_browser.js` 在两种视口无网络 mock 读取实际远端榜单，确认五列/仅脱敏IP/右栏无资料控件/无重开按钮/无横向溢出/无JS异常/线上提交SHA正确；冻结游戏 tick 避免结算，验证无结果或资料写入。证据 `runs/qqt_main_20261006/pages-readonly/checks.json`。
-- 本任务启动的本地预览服务 PID258922 已正常关闭（exec exit143）；没有终止其他任务进程。SQL、Edge和历史玩家清理仍未执行，准确人工材料见上节。
+- 本任务启动的本地预览服务 PID（本地记录） 已正常关闭（exec exit143）；没有终止其他任务进程。SQL、Edge和历史玩家清理仍未执行，准确人工材料见上节。
 - 包含本节与只读验收脚本的最后收尾提交继续触发自动 Pages，最终 head/workflow/build-info/资源一致性及全部分支状态保存在 `runs/qqt_main_20261006/pages-final.json` 和 `runs/qqt_main_20261006/release_status_20261006.md`；这两份发布后证据不写入源码，避免为了记录自身SHA不断新增提交。
 
 - 正式 Pages 升级/资料/音效专项已完整通过双视口，`upgrade-pages/checks.json` 确认缓存刷新、空宣言保留、重复提交 gate、跳过/R、观战/真实回放排除、实际 WebAudio source 与静音、无JS异常。加上终局和无 mock 只读验收，三份正式站证据均为完成状态；产品代码不再变化，仅追加收尾报告与只读验收脚本。

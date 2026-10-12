@@ -13,7 +13,7 @@
 
 ## 已确认的明显错误与证据处理
 
-- CX-36 首次正式启动使用了错误设备环境，4 个训练进程（PID 394138–394141）实际在 CPU 上运行。发现后已立即终止；这些启动未产生可用 checkpoint，未进入正式评测，不能计入任何训练结论。后续正式训练固定使用 GPU JAX 环境，显式设置 `JAX_PLATFORMS=cuda`，并在进程内核验 `backend=gpu`、CUDA device、训练进程和显存/利用率。
+- CX-36 首次正式启动使用了错误设备环境，4 个训练进程（PID（本地记录））实际在 CPU 上运行。发现后已立即终止；这些启动未产生可用 checkpoint，未进入正式评测，不能计入任何训练结论。后续正式训练固定使用 GPU JAX 环境，显式设置 `JAX_PLATFORMS=cuda`，并在进程内核验 `backend=gpu`、CUDA device、训练进程和显存/利用率。
 - CX-42 网页 BC 数据转换把原始浮点 observation 直接转为 `uint8`，训练端又除以 255，造成输入重复缩小；该批错误数据及产物仅作为错误记录，不能用于判断监督路线有效性。CX-44 修复尺度并完成 GPU 复验后仍无 hard/normal 改善，才构成有效负结果。
 - 实验分支的辅助头测试契约仍不一致：实现输出 10 维，而 `tests/test_aux_heads.py::test_aux_heads_present_only_when_requested` 期望 15 维；该问题在 main 也存在，不是本轮引入，但说明实验代码不应直接视为已验收生产实现。
 

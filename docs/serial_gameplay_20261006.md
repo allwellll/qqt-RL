@@ -2,7 +2,7 @@
 
 ## 工作区与执行约束
 
-在固定 `cx_bot_cooperation_20261004` worktree 从 `1c913b7` 恢复；没有 reset、新建 workspace/worktree 或 goal。五个已有 dirty 文件先完整保存至 `runs/coop_win_20261006/recovered_candidate/`，含 SHA-256 清单与 tracked patch。原 CPU 进程 PID 594528 已结束（defunct），没有终止该进程。后续阶段按 Bot → 10% 半身爆炸 → 香蕉墙角滑行 → 终局贴图内结算执行。
+在固定 `cx_bot_cooperation_20261004` worktree 从 `1c913b7` 恢复；没有 reset、新建 workspace/worktree 或 goal。五个已有 dirty 文件先完整保存至 `runs/coop_win_20261006/recovered_candidate/`，含 SHA-256 清单与 tracked patch。原 CPU 进程 PID（本地记录） 已结束（defunct），没有终止该进程。后续阶段按 Bot → 10% 半身爆炸 → 香蕉墙角滑行 → 终局贴图内结算执行。
 
 ## Bot 策略审查与实验
 

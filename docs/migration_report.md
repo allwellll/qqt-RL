@@ -71,7 +71,7 @@
 - Web HTTP smoke：主页、模型入口、`/healthz` 与 malformed URL 处理通过。
 - Secret scan：未发现 GitHub token、AWS key、私钥或带凭据 URL；`.git/config` 中 origin 原始值为无凭据 URL，credential helper 仅复制配置项。
 - 大文件检查：工作树无大于 5 MiB 的普通项目文件；未提交模型权重、WASM、日志或 checkpoint。
-- 单 GPU 真实 smoke：**安全跳过**。2026-09-28 最终检查时，四个 GPU UUID 均存在 `qqt-gpu-sim` 旧正式 run 的计算进程（PID 110618、115336、421411、426173、447603、451085），目标仓库 GPU 进程数为 0。为遵守不中断/不争抢旧四卡训练的硬约束，没有在任一卡启动新 GPU 作业。
+- 单 GPU 真实 smoke：**安全跳过**。2026-09-28 最终检查时，四个 GPU UUID 均存在 `qqt-gpu-sim` 旧正式 run 的计算进程（PID（本地记录）），目标仓库 GPU 进程数为 0。为遵守不中断/不争抢旧四卡训练的硬约束，没有在任一卡启动新 GPU 作业。
 
 ## 独立审查
 

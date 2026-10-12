@@ -2,7 +2,7 @@
 
 ## 起点与验收
 
-- worktree：`/mnt/jpfs/afs/wangyaqi/code_room/cx_bot_cooperation_20261004`。
+- worktree：`.`。
 - 分支：`cx_bot_cooperation_20261004`；起点：main `2ce6704`。
 - 新增可选网页对手 `bun.coop_hunter`，原 `bun.hunter` 保留对照。
 - 双 bot：进攻/防守支援分工、营救、搬运护送、阵亡接替、友军放泡安全。

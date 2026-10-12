@@ -32,11 +32,11 @@ CPU独立CUDA空：真实web/sim.js+bun_hunter_bot.js Hunter64/档300+64残余�
 
 连续三个完成点若Hunter safe较起点≤−6或death≥+10或self≥+4，TERM该臂至原子更新边界，owner退出后同4卡立即启动独立recovery namespace：共同冻结起点、冻结对手、LR再减半，全部恶化证据保留。单点不操作、无能力启动或扩训阻塞。自动恢复不选择winner。
 
-启动命令：`CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 taskset -c 128-135 /mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python scripts/je03_bun_selfplay_20261012.py handoff`。旧库只借解释器，不写回；现行worktree独立提交、不改main、不push。
+启动命令：`CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 taskset -c 128-135 <PYTHON> scripts/je03_bun_selfplay_20261012.py handoff`。旧库只借解释器，不写回；现行worktree独立提交、不改main、不push。
 
 ## 已安装证据
 
-tmux `je03-bun392-selfplay12-v2-20261012`；launcher shell PID494073，唯一handoff PID494076；内核flock第二writer实际获取失败。正式plan SHA256 `4e89f524c9e428da48417403f0326cc049d6f5e4a36ed2f216f6c322c4b4f5f5`。状态WAIT_PARENT_ATOMIC_EXIT、assigned空、checks_block_launch=false，候选2048。当前retention worker440471/441350仍占GPU0-3/4-7，没有被抢占，不伪造self-play已启动。
+tmux `je03-bun392-selfplay12-v2-20261012`；launcher shell PID（本地记录），唯一handoff PID（本地记录）；内核flock第二writer实际获取失败。正式plan SHA256 `4e89f524c9e428da48417403f0326cc049d6f5e4a36ed2f216f6c322c4b4f5f5`。状态WAIT_PARENT_ATOMIC_EXIT、assigned空、checks_block_launch=false，候选2048。当前retention worker（本地记录）仍占GPU0-3/4-7，没有被抢占，不伪造self-play已启动。
 
 八项CPU TDD通过（稳定区间/困难档支持/缺失后期点/配对参数/席位/联赛refresh恢复/动作来源选择/占卡拒绝）。独立CPU monitor_v1两臂g1/g2 Actor及Critic非零finite，fresh-process digest均`334b331cf283cc9aa2cf089d0a12c9c4bb58a2edca1cee6bf7848cdcd8c455a0`；测试refresh=1明确不同于正式128，版本1recent/2history相等，已证明滚动恢复。两臂小样本动作未显著分流（digest相同），不冒称该tiny smoke证明实际12%覆盖。另真实network诊断在同物理状态对比初始和实际更新后快照，最大动作概率差.930254、KL(new||old)=1.967522，CUDA空、原生Bun；这是功能诊断，不是正式shape稳定性结论。最终代码快照另在cpu_monitor_v2重跑并行验证，正式调度不读取其passed作为门禁。
 

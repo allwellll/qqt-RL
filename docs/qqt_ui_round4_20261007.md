@@ -1,6 +1,6 @@
 # QQ堂 Round 4：昵称不可变与每局宣言即时写入（20261007）
 
-基线 `fcf3dd558ac85b9930dafd54cf8e2d4c8be3e074`，工作目录 `/mnt/jpfs/afs/wangyaqi/code_room/cx_bot_cooperation_20261004`。当前 CX 实际调用 shell 完成预检，`hostname -I` 输出 `10.186.23.100 `（末尾空格），`pwd` 为上述目录，分支 `cx_bot_cooperation_20261004`。接续开始时的全部 dirty 前端、SQL、测试草稿，未 reset、checkout 覆盖或丢弃修改。预检未调用子代理；用户随后明确授权独立只读审查代理。
+基线 `fcf3dd558ac85b9930dafd54cf8e2d4c8be3e074`，工作目录 `.`。当前 CX 实际调用 shell 完成预检，`hostname -I` 输出 `<PRIVATE_IP>`（末尾空格），`pwd` 为上述目录，分支 `cx_bot_cooperation_20261004`。接续开始时的全部 dirty 前端、SQL、测试草稿，未 reset、checkout 覆盖或丢弃修改。预检未调用子代理；用户随后明确授权独立只读审查代理。
 
 ## 最终合同与实现
 

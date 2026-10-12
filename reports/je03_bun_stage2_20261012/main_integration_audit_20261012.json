@@ -1831,12 +1831,12 @@
     },
     {
       "status": "A",
-      "path": "reports/je03_admission_20261010/deadline_close_v2/durable_markers/old_report_pid82301/RETIREMENT_COMPLETE.json",
+      "path": "reports/je03_admission_20261010/deadline_close_v2/durable_markers/old_report_owner/RETIREMENT_COMPLETE.json",
       "decision": "excluded: unrelated experiment or operational receipt; final verified summaries retained"
     },
     {
       "status": "A",
-      "path": "reports/je03_admission_20261010/deadline_close_v2/durable_markers/old_report_pid82301/WAITING_EVIDENCE.json",
+      "path": "reports/je03_admission_20261010/deadline_close_v2/durable_markers/old_report_owner/WAITING_EVIDENCE.json",
       "decision": "excluded: unrelated experiment or operational receipt; final verified summaries retained"
     },
     {
@@ -1876,12 +1876,12 @@
     },
     {
       "status": "A",
-      "path": "reports/je03_admission_20261010/deadline_close_v2/marker_snapshots/je03_admission_deadline_close_20261010/v2/old_report_pid82301/RETIREMENT_COMPLETE.json",
+      "path": "reports/je03_admission_20261010/deadline_close_v2/marker_snapshots/je03_admission_deadline_close_20261010/v2/old_report_owner/RETIREMENT_COMPLETE.json",
       "decision": "excluded: unrelated experiment or operational receipt; final verified summaries retained"
     },
     {
       "status": "A",
-      "path": "reports/je03_admission_20261010/deadline_close_v2/marker_snapshots/je03_admission_deadline_close_20261010/v2/old_report_pid82301/WAITING_EVIDENCE.json",
+      "path": "reports/je03_admission_20261010/deadline_close_v2/marker_snapshots/je03_admission_deadline_close_20261010/v2/old_report_owner/WAITING_EVIDENCE.json",
       "decision": "excluded: unrelated experiment or operational receipt; final verified summaries retained"
     },
     {

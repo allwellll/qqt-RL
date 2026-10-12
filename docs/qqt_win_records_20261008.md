@@ -51,10 +51,10 @@ HTML包含完整升级、前后只读核验、停止条件及Round4函数兼容�
 ## OSS 交付
 
 本地文档：`docs/20261008-qqt-win-records-sql-upgrade.html`，单文件浅色、自包含。
-使用 `/mnt/jpfs/afs/wangyaqi/.hermes/skills/oss-static-deploy/SKILL.md` 的上传流程；包装器缺pypinyin，按技能允许的英文规范文件名临时副本+oss.sh回退。
+使用 `<EXTERNAL_SKILL>/SKILL.md` 的上传流程；包装器缺pypinyin，按技能允许的英文规范文件名临时副本+oss.sh回退。
 
 外网URL：
-http://jdh-nlp.s3.cn-north-1.jdcloud-oss.com/agent_model/wangyaqi49/20261008-qqt-win-records-sql-upgrade.html
+<EXTERNAL_REPORT_URL>
 
 OSS API HEAD/GET均200，Content-Type `text/html`，26203字节，与本地完全一致。
 HTML SHA256：`da62062ebba4348a227981989dddbaf6dcfed3c034cc7f3ec61c2712f8192a3b`。

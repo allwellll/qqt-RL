@@ -143,9 +143,9 @@
 ## 运行与安全证据
 
 ```text
-CUDA_VISIBLE_DEVICES='' /mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python \
+CUDA_VISIBLE_DEVICES='' <PYTHON> \
   scripts/je03_bun392_retention_conflict_analysis_20261011.py --self-test
-CUDA_VISIBLE_DEVICES='' /mnt/jpfs/afs/wangyaqi/code_room/qqt-gpu-sim/.venv/bin/python \
+CUDA_VISIBLE_DEVICES='' <PYTHON> \
   scripts/je03_bun392_retention_conflict_analysis_20261011.py --run
 ```
 

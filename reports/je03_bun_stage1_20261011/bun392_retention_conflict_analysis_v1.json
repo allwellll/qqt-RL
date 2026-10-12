@@ -2588,7 +2588,7 @@
     "stage2": "blocked_by_stage1_ability_evidence; no dynamic self-play is started by this audit",
     "task_vs_hunter": "task indicators improve while Hunter safety and Tactical do not; this is not a clean generalized improvement"
   },
-  "run": "/mnt/jpfs/afs/wangyaqi/code_room/cx_je03_admission_curriculum_20261009/runs/je03_bun_stage1_20261011/bun831_native_tracks_v1",
+  "run": "runs/je03_bun_stage1_20261011/bun831_native_tracks_v1",
   "schema": "bun392_retention_conflict_analysis_v1",
   "training_events": {
     "bun392_base": {
