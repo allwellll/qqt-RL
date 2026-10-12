@@ -1,0 +1,5506 @@
+{
+  "Stage1": {
+    "experiment_id": "JE03-BUN392-RETENTION-V2-20261011-v1",
+    "run": "bun392_retention_v2",
+    "authority": "authority_bun831_v1",
+    "plan_sha256": "571dc5bc20e9ac771ac3508b6bb6119aad2b28c9986a26cbf092a66c262437d1",
+    "protocol_sha256": "f73fe6881362b56719c8bfe63fecd1abb6f1848ba46dc2009d30faad805fea71",
+    "evaluation_complete_sha256": "a8100729e742eb5625b9f9cca24623bf4b385eb67050b4a1a779ee8a0cecf4c2",
+    "training": {
+      "bun392_retention_control": {
+        "generation": 4096,
+        "fresh_ticks": 2147483648,
+        "compute_seconds": 42358.449880838394,
+        "wall_seconds": 42619.16198897362
+      },
+      "bun392_retention_teacher": {
+        "generation": 4096,
+        "fresh_ticks": 2147483648,
+        "compute_seconds": 44518.75387763977,
+        "wall_seconds": 44779.42028212547
+      }
+    },
+    "curve": {
+      "0": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 8.984375
+            },
+            "normal": {
+              "safe_win": 4,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.375
+            },
+            "easy": {
+              "safe_win": 15,
+              "death_episode": 5,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.03125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 22,
+            "death_episode": 2,
+            "self_episodes": 1,
+            "trade_episodes": 1,
+            "bombs_per_game": 9.609375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 1,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 7,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 79
+            }
+          },
+          "policy_sha256": "1e15b7c517533422e9321e3b792aea791b84a8eca4a1e4146beb380ff88f0ad6",
+          "main_sha256": "69f40a7683903e7466728aadf2791d3bb09ea5c5725b54be0e81c8604286739b",
+          "full_sha256": "724bdf3161a94b6e4acaf61f75657769649bd90b0d0283a98d23b56ecf4d98ef"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 8.984375
+            },
+            "normal": {
+              "safe_win": 4,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.375
+            },
+            "easy": {
+              "safe_win": 15,
+              "death_episode": 5,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.03125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 22,
+            "death_episode": 2,
+            "self_episodes": 1,
+            "trade_episodes": 1,
+            "bombs_per_game": 9.609375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 1,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 7,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 79
+            }
+          },
+          "policy_sha256": "1e15b7c517533422e9321e3b792aea791b84a8eca4a1e4146beb380ff88f0ad6",
+          "main_sha256": "a95fad3c41268d8450abbe84ac567e575ba00832f46fd960aee7fe43307a5284",
+          "full_sha256": "5788115b841f07e499a568d4ed4e4ee0b80b13948c939adb2279ea75e021f6a4"
+        }
+      },
+      "8": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 6.921875
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 4,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 4,
+              "bombs_per_game": 7.6875
+            },
+            "easy": {
+              "safe_win": 5,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 7.640625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 15,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 7.703125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 5,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 11,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 19
+            }
+          },
+          "policy_sha256": "1752dd0451b08a83fe0c37046e0609d221f1e935e416c6d2e3f77f3c8744a227",
+          "main_sha256": "49c84e997c571800bb945401d6b36d2cec4faf3c903fb5abe5a4763c65625a0a",
+          "full_sha256": "c7d130208eccd11d989db0b29ee74de5a9e47e4a3937486e1ddf822891829341"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 1,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.71875
+            },
+            "normal": {
+              "safe_win": 1,
+              "death_episode": 3,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 9.71875
+            },
+            "easy": {
+              "safe_win": 10,
+              "death_episode": 4,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 10.046875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 17,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 8.9375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 1,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 10,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 18
+            }
+          },
+          "policy_sha256": "030f38516b37c0851b2cbd52e2f6e526cb5f2b5efc3ff57893daa872fc440c2b",
+          "main_sha256": "cadd833ffba319f4585899465d89406603e43dbd86a2d93218453c4ec1791ac7",
+          "full_sha256": "784b36a3558f8a3fe4fc5193c1c85838cfdcf8f2470069f103f6d8e8b63e16f8"
+        }
+      },
+      "16": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 5,
+              "final_dead": 4,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 9.921875
+            },
+            "normal": {
+              "safe_win": 2,
+              "death_episode": 4,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 4,
+              "bombs_per_game": 9.296875
+            },
+            "easy": {
+              "safe_win": 5,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 8.234375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 19,
+            "death_episode": 2,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "bombs_per_game": 8.953125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 6,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 15,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 12
+            }
+          },
+          "policy_sha256": "010e29eafe368930eaa132f2e3e6ee4f4005442aa1f747931ebfa3d3752f565e",
+          "main_sha256": "ad72f9b2ee80f4f82361d14d123b74b25ee08b710290b0f937494b2e63b5cf18",
+          "full_sha256": "177bd7f6c45f418ab42569245086a3bdf5f040662861d95e8ba889ee42e54a32"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.921875
+            },
+            "normal": {
+              "safe_win": 3,
+              "death_episode": 4,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 8.875
+            },
+            "easy": {
+              "safe_win": 10,
+              "death_episode": 6,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 1,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.40625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 12,
+            "death_episode": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.40625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 1,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 10,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 19
+            }
+          },
+          "policy_sha256": "14157d4d98ae3bf77af591352fd245ecfc8acdce89b5ed14289d5c0606fd60e0",
+          "main_sha256": "7b121d773dca8b362d401947889a73d72efbfadcdc086ed0f9d978ccb6ae4b46",
+          "full_sha256": "6e5e07154b35076f48487a8b83b02c90ec7937e00e20097efff41f193b762163"
+        }
+      },
+      "32": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 4,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 10.828125
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 9.734375
+            },
+            "easy": {
+              "safe_win": 3,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.515625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 16,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 12.625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 15,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 36
+            }
+          },
+          "policy_sha256": "fa843cd31afbe57b8b8b483440d493568c5d0198b73fb6b2dc444ca5709d8a8b",
+          "main_sha256": "276618881aa2861d5e73003fad45619f4d25486edc843ebc60d750c32e5e8d01",
+          "full_sha256": "749e35201200960bfa05d56afdd2b5da5a358fa362e04aff3dd71890300af62f"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.625
+            },
+            "normal": {
+              "safe_win": 2,
+              "death_episode": 4,
+              "final_dead": 4,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 9.390625
+            },
+            "easy": {
+              "safe_win": 4,
+              "death_episode": 6,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.984375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 24,
+            "death_episode": 4,
+            "self_episodes": 2,
+            "trade_episodes": 2,
+            "bombs_per_game": 9.734375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 3,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 10,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 19
+            }
+          },
+          "policy_sha256": "96c04c46195aaa492cb7d85498cc0bc90d42ec6bddae86f6237576c8d699022f",
+          "main_sha256": "a99935ef0148b5c42c9050c8e3c721487446525c276bc63f4359da5004500d0c",
+          "full_sha256": "5b10472e225abc2b36b6c1c846690bdbe4181ad8679d191994bcf0b04cd79a9f"
+        }
+      },
+      "64": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 3,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 12.78125
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 5,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 12.71875
+            },
+            "easy": {
+              "safe_win": 2,
+              "death_episode": 3,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.84375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 19,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 13.171875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 16,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 15,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 3,
+              "self_episodes": 3,
+              "item_use": 51
+            }
+          },
+          "policy_sha256": "708c0b6beaad8afd245c838e0e591e0a0a0448c596d084e92549e13953d21f7f",
+          "main_sha256": "544e977e1a9462df51825250f5db8bc1e50384605ce5ed6486a44031641c19d0",
+          "full_sha256": "5c103a0a6abb2cc6fd3200e41d2f239d8029a255accd882dbe67b1d3125a0581"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 1,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.078125
+            },
+            "normal": {
+              "safe_win": 2,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.84375
+            },
+            "easy": {
+              "safe_win": 8,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.3125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 11,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 8.328125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 3,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 10,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 4,
+              "self_episodes": 4,
+              "item_use": 87
+            }
+          },
+          "policy_sha256": "e0c6f08ddcc8a0414d39e465712a0d6c153a8a9dc64240c4769a1f75b994c0dc",
+          "main_sha256": "21525c20d3c4b637958b20adb300011c1b5d1388883068b353568bb1802a77b8",
+          "full_sha256": "1677c9e99f13fc22e2f3acbe5292a29815e94ce2f05034794d3ecaea80e5c825"
+        }
+      },
+      "128": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 8,
+              "final_dead": 4,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 6,
+              "bombs_per_game": 10.109375
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 9,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 8,
+              "bombs_per_game": 10.03125
+            },
+            "easy": {
+              "safe_win": 3,
+              "death_episode": 3,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.9375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 16,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 11.59375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 16,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 37
+            }
+          },
+          "policy_sha256": "5ef4d5306c493653575cd5c96c02eb6e0b710f7ca7302083931d1e846d4c3daf",
+          "main_sha256": "309b8f41ae86b0cc3086be4f33ca4609db541c5f16ee9fe766984ed56b070b51",
+          "full_sha256": "6605ad872b2bca80e4e1220c5c906d44a41f156de4cf1ab474cd1cb71c6ed70c"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.75
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.796875
+            },
+            "easy": {
+              "safe_win": 9,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.046875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 16,
+            "death_episode": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.46875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 3,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 10,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 25
+            }
+          },
+          "policy_sha256": "5299c82098c2994e7752622c11932ce4828d3ab0c3e711e9250e61a6fdcc70c1",
+          "main_sha256": "9944d6095fea647501701ad29e3866ac5b0d59b364973ce38cfd4af41b31e822",
+          "full_sha256": "b2dbdce923633d9dba827069f7ad8f8e7143aea07d50119fde6e9ee1b5bb6fff"
+        }
+      },
+      "192": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 13,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 0,
+              "by_bot_episodes": 10,
+              "bombs_per_game": 10.8125
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 10,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 7,
+              "bombs_per_game": 10.515625
+            },
+            "easy": {
+              "safe_win": 1,
+              "death_episode": 10,
+              "final_dead": 7,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 4,
+              "trade_episodes": 1,
+              "by_bot_episodes": 4,
+              "bombs_per_game": 12.046875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 9,
+            "death_episode": 8,
+            "self_episodes": 3,
+            "trade_episodes": 0,
+            "bombs_per_game": 14.703125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 16,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 27
+            }
+          },
+          "policy_sha256": "028dc147a8d1cc16d1dc38a200184986bae513a5fec16ec641fbb4e7f4c55cff",
+          "main_sha256": "57d11a5d7ce79d14d58bd2904a2a2767b407ba03ae40bfb011739eccfedd5cb1",
+          "full_sha256": "1c859fcd8adc0910f924b2c529b8de2e396c5e91de97c580559ac3ce03ab054a"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.75
+            },
+            "normal": {
+              "safe_win": 1,
+              "death_episode": 5,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 4,
+              "bombs_per_game": 10.296875
+            },
+            "easy": {
+              "safe_win": 6,
+              "death_episode": 3,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 9.1875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 20,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.609375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 4,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 9,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 38
+            }
+          },
+          "policy_sha256": "3ce799fd3d20d22ba9c96e7812b0f83d5c3813cc8500fc8b754edfc571cf236b",
+          "main_sha256": "b4db7b72d5eb60f4265bfc12221c6fc6b2115fd0cfded20430dc2022352cef3f",
+          "full_sha256": "e0a9a0fa1e1b210c79d32dd7186766355b4b5eccfdc2473c29db036c94c21550"
+        }
+      },
+      "256": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 7,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 4,
+              "bombs_per_game": 10.671875
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 9,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 0,
+              "by_bot_episodes": 4,
+              "bombs_per_game": 9.8125
+            },
+            "easy": {
+              "safe_win": 3,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.5
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 23,
+            "death_episode": 2,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 12.828125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 16,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 15,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 47
+            }
+          },
+          "policy_sha256": "9af357e4beb637786b19ea636befa5a22a9ad64ee58c4bdab4d23e567d324017",
+          "main_sha256": "ab1dd7132a72b972ed724bbc03c0e62fb2e59f65e5715af996c1c8a5be7b0787",
+          "full_sha256": "919ac2e1baa1d727d651baf6ff240a8c5fe19c4107f08bd41c4819f3a2010011"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.984375
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 4,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 4,
+              "bombs_per_game": 9.890625
+            },
+            "easy": {
+              "safe_win": 7,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.546875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 14,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 9.515625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 4,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 10,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 76
+            }
+          },
+          "policy_sha256": "9e7216f3acfb054082693bd9702484b3c879b36e8bcc65cc45e789346857419d",
+          "main_sha256": "964d3b459b6a08fd0bb071f63c061112e2596f48c53942639e604cc63f0bf099",
+          "full_sha256": "207196b298fb5347885d83fd76fdf0c32aab1302a55ffdd8440df20d17a0f0bf"
+        }
+      },
+      "512": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 12,
+              "final_dead": 7,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 9,
+              "bombs_per_game": 9.234375
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 10,
+              "final_dead": 6,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 4,
+              "trade_episodes": 0,
+              "by_bot_episodes": 6,
+              "bombs_per_game": 8.84375
+            },
+            "easy": {
+              "safe_win": 1,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.5625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 18,
+            "death_episode": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.546875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 15,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 65
+            }
+          },
+          "policy_sha256": "4f5db6c1066d130c49f707d88132fd035a144838923e19cc393fdf5479c468fb",
+          "main_sha256": "6fabd8d1d5b359935b3363858dea41d386ded5a62f1359cf3167af26f360e977",
+          "full_sha256": "c38c133f7fe194de30d33978abac6158b280408a21ded26de97d98d029970b6a"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.453125
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 3,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 9.328125
+            },
+            "easy": {
+              "safe_win": 17,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 19,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.171875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 57
+            }
+          },
+          "policy_sha256": "9ae2d331f66faddfe284868b6383475018d1d4bd05fe1b5faf8b67d2a6018b1e",
+          "main_sha256": "2d6aa79467b9e44bc87ede9b559be447a3320583fb135fd6076062f3a106e974",
+          "full_sha256": "d02c336aa2d8318c5ae0a7dd91200d09579223f99f37f4839cb5148ecafd437e"
+        }
+      },
+      "768": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 8,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 5,
+              "bombs_per_game": 9.078125
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 8,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 0,
+              "by_bot_episodes": 5,
+              "bombs_per_game": 8.640625
+            },
+            "easy": {
+              "safe_win": 1,
+              "death_episode": 5,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 9.390625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 17,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 12.203125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 16,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 56
+            }
+          },
+          "policy_sha256": "cb27cde0d8bab02525fb706b7784ac28ea78a6b2e3db038bf8d93b60ea657bdf",
+          "main_sha256": "62b4e8079ecc118f3001298a5764846f89aab638e0ea08fbd3cc6fcfbac56bc8",
+          "full_sha256": "34c1fe32fa74e52ab1b5c836b1059eebecfaf3f2df2f7af57ed9c6cb4fdb1f1b"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.78125
+            },
+            "normal": {
+              "safe_win": 2,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.375
+            },
+            "easy": {
+              "safe_win": 9,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.46875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 12,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.4375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 10,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 59
+            }
+          },
+          "policy_sha256": "212042f555a1b38907963bca9b199529daa19f17ae9343702dc2d2d99482f165",
+          "main_sha256": "e2ac13df750bef8e6f2f5138df30d6e2e3aa2f230b6ddded6c24cb4d2ef7ca2f",
+          "full_sha256": "a89c514bc402f74ad8138db19aa60e8e4f1c98337046ce2b922263e453aef264"
+        }
+      },
+      "1024": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 14,
+              "final_dead": 6,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 0,
+              "by_bot_episodes": 11,
+              "bombs_per_game": 10.421875
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 9,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 7,
+              "bombs_per_game": 10.71875
+            },
+            "easy": {
+              "safe_win": 2,
+              "death_episode": 12,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 8,
+              "trade_episodes": 0,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 10.828125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 18,
+            "death_episode": 15,
+            "self_episodes": 0,
+            "trade_episodes": 2,
+            "bombs_per_game": 22.9375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 15,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 33
+            }
+          },
+          "policy_sha256": "c1915beedf83aa5fbcf41471d6d2732b4a35c57ab9a2e7929d17f38472095f3a",
+          "main_sha256": "5c9d1b9820b4529ddf164ab851ff240d0ca38f3459985b367ae2c9c2e921ac5c",
+          "full_sha256": "6119b50c3f19dc7526d109cbc3b28251927df53341a6f4afe346ac968535d5cf"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 9.34375
+            },
+            "normal": {
+              "safe_win": 5,
+              "death_episode": 6,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 1,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 10.359375
+            },
+            "easy": {
+              "safe_win": 13,
+              "death_episode": 4,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 3,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.75
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 19,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.4375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 32
+            }
+          },
+          "policy_sha256": "83bd1cd1337c0ae88f1c419578687c9d9a4f44b33f641012470f8d2d86c88562",
+          "main_sha256": "670a6975dda60be62f91b33410f590f212c837f4c13dc2ec52dff2b9d930cfd7",
+          "full_sha256": "5ba7369b2694d67842be8f9c7ac29bf419fa698b284ac821cdbf6907992000c9"
+        }
+      },
+      "1536": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 24,
+              "final_dead": 7,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 4,
+              "trade_episodes": 0,
+              "by_bot_episodes": 19,
+              "bombs_per_game": 9.421875
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 28,
+              "final_dead": 9,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 0,
+              "by_bot_episodes": 23,
+              "bombs_per_game": 9.265625
+            },
+            "easy": {
+              "safe_win": 3,
+              "death_episode": 16,
+              "final_dead": 4,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 13,
+              "bombs_per_game": 8.125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 11,
+            "death_episode": 19,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 38.078125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 16,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 92
+            }
+          },
+          "policy_sha256": "879567b03fcc6f420909a12a66d7f5cdb4af50111ba2a24cf4386dcd5508e4ff",
+          "main_sha256": "a0275ad132f7aec4375ab0204e647ca6f403c450ace6bfa1004cfff2d554578b",
+          "full_sha256": "b61b0d062b71f70d7355ec3c37f9b3c6e10ddbc39f19df12d9bf8c93f4daa7ac"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 2,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.46875
+            },
+            "normal": {
+              "safe_win": 4,
+              "death_episode": 4,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 10.921875
+            },
+            "easy": {
+              "safe_win": 8,
+              "death_episode": 8,
+              "final_dead": 4,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 2,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 10.8125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 14,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.703125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 20
+            }
+          },
+          "policy_sha256": "bdb2e9c7bc2b824574bdf8e28d49b74b6359a4d45e57625d39ced96ec00f32e9",
+          "main_sha256": "99ae7a0602c58ee75b48869e90d37a594714589d4963bb0a650da6030d52c314",
+          "full_sha256": "8a75a50c8561e7b63a818927eb2a4466de6eff015fa753aa6022696cc3013290"
+        }
+      },
+      "2048": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 12,
+              "final_dead": 6,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 4,
+              "trade_episodes": 0,
+              "by_bot_episodes": 9,
+              "bombs_per_game": 10.609375
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 23,
+              "final_dead": 8,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 14,
+              "bombs_per_game": 9.8125
+            },
+            "easy": {
+              "safe_win": 2,
+              "death_episode": 14,
+              "final_dead": 6,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 4,
+              "trade_episodes": 0,
+              "by_bot_episodes": 5,
+              "bombs_per_game": 10.53125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 9,
+            "death_episode": 15,
+            "self_episodes": 2,
+            "trade_episodes": 0,
+            "bombs_per_game": 27.71875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 16,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 27
+            }
+          },
+          "policy_sha256": "074e083dfa8b8952ab3f422ee3c0c66f3c1e06db4afb5be11b5e9739cc2677ff",
+          "main_sha256": "5bf7f0900f03d3aa8ed9345ce568d7fea65d31f23af5d47becae20f0d94cda2d",
+          "full_sha256": "27628b32be9e1c7e296db91b10a2db6b09f80036ac8de1c2edb969900c37e462"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 2,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.078125
+            },
+            "normal": {
+              "safe_win": 4,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.3125
+            },
+            "easy": {
+              "safe_win": 10,
+              "death_episode": 5,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 2,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 11.359375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 21,
+            "death_episode": 3,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 10.75,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 37
+            }
+          },
+          "policy_sha256": "fe61db9e41555cb84fe0b1f48454c9c3d0b63447981369bbaeb08b4b282bad13",
+          "main_sha256": "e2a406d29ce0a46d800b3fc4b1f788569c7b98160fb00c0fd40a857ec1ff5a3c",
+          "full_sha256": "39f98d1ca1c7051811abbf9b536352ef7dc67a00485f5f9a69d3144fdbdccb5a"
+        }
+      },
+      "3072": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 12,
+              "final_dead": 5,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 0,
+              "by_bot_episodes": 9,
+              "bombs_per_game": 9.078125
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 18,
+              "final_dead": 6,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 15,
+              "bombs_per_game": 8.75
+            },
+            "easy": {
+              "safe_win": 1,
+              "death_episode": 11,
+              "final_dead": 5,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 1,
+              "by_bot_episodes": 9,
+              "bombs_per_game": 8.640625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 11,
+            "death_episode": 10,
+            "self_episodes": 1,
+            "trade_episodes": 1,
+            "bombs_per_game": 23.46875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 16,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 22
+            }
+          },
+          "policy_sha256": "776c3fe6bb7939ed7e5da97998d5f72e1a3ca2baddeca2a8a4ed1991a3a2932b",
+          "main_sha256": "fe28985c34e24e1a3e1cd4f028a594148c089fbad4042919dc770c1b959c40f6",
+          "full_sha256": "8c0414c3cf597c3cef57364938977c676f79ae9c07efd3eb94a3fe1ee9dec96a"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 2,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.171875
+            },
+            "normal": {
+              "safe_win": 1,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 10.09375
+            },
+            "easy": {
+              "safe_win": 10,
+              "death_episode": 5,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 1,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.765625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 16,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.421875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 19
+            }
+          },
+          "policy_sha256": "d5640fbefbb603bed0fc3d7e7c40f7f6f26f7cdb01bcdbefc6b048b0adb89ee7",
+          "main_sha256": "9372b37a0288010632b1f195a47bfa9f5e167707007dbc66b86a3928a77fc2bd",
+          "full_sha256": "0bf2de5d7438b3857f05243ececd9bc3c81e5d8b674f86de250d7160c9dd9d31"
+        }
+      },
+      "4096": {
+        "bun392_retention_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 4,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 3,
+              "bombs_per_game": 10.671875
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 13,
+              "final_dead": 7,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 4,
+              "trade_episodes": 0,
+              "by_bot_episodes": 8,
+              "bombs_per_game": 11.3125
+            },
+            "easy": {
+              "safe_win": 1,
+              "death_episode": 7,
+              "final_dead": 4,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 1,
+              "by_bot_episodes": 5,
+              "bombs_per_game": 11.21875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 14,
+            "death_episode": 8,
+            "self_episodes": 2,
+            "trade_episodes": 1,
+            "bombs_per_game": 24.859375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 16,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 28
+            }
+          },
+          "policy_sha256": "7700948f04654c32c6bfe55679a3468cf58dbbf00022795f246aac2aab2d96c3",
+          "main_sha256": "281dda8a851b6729352b5a73823e2b30af13d3ff5fa3ee4b61b25efd9016d377",
+          "full_sha256": "d4d259f787b166c425b57231b83c16a8471c5ae610ab67289b8efd3db50acdbc"
+        },
+        "bun392_retention_teacher": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.015625
+            },
+            "normal": {
+              "safe_win": 4,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.484375
+            },
+            "easy": {
+              "safe_win": 18,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 24,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.046875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 14
+            }
+          },
+          "policy_sha256": "ae1c6b6872244df420559195e091787a1f292e11d807bae801dce050666c365a",
+          "main_sha256": "764880b1563792b1520e0b70de5692ba2e996fa4d8ecf7173db728bf3a8eca48",
+          "full_sha256": "8552d03462bb7438b3a1a8557833f7cc6a9526647f85e920cc29cf49435f540c"
+        }
+      }
+    },
+    "evaluation_protocol": {
+      "namespace": "authority_bun831_v1",
+      "paired": true,
+      "hunter_games_per_tier_per_arm": 64,
+      "tactical_games_per_arm": 64,
+      "hunter_primary": 300,
+      "hunter_residual": 64,
+      "tactical_primary": 300,
+      "spawns_sha256": "e0ff56168b3ea47946361e5db97236bcbbe7374e75667d235b6a516667fe4c53",
+      "seed": 2026101002,
+      "checkpoints": [
+        0,
+        8,
+        16,
+        32,
+        64,
+        128,
+        192,
+        256,
+        512,
+        768,
+        1024,
+        1536,
+        2048,
+        3072,
+        4096
+      ],
+      "native_bun_tasks": [
+        "carry_home",
+        "near_steal",
+        "route_break",
+        "full"
+      ],
+      "native_task_games": 16,
+      "native_task_seed_base": 2026101131,
+      "native_task_ticks": 300,
+      "native_web_safety_seed": 392010731,
+      "cuda_visible_devices": "",
+      "stage2_enabled": false,
+      "sources": {
+        "scripts/je03_bun_evaluator_20261011.py": "2b7958ce56bc56199e7aa3ed8b35f241d88d27c7e347795f9917e3c02a30ce75",
+        "scripts/je03_original_hunter_20261011.js": "293125459c38826d77cc7c88337d1c6517b22f4d6d451844dc308a63ec02fe18",
+        "scripts/je03_native_vit_export_20261011.py": "a66c426c3b2b26df08f3b4eaf49e1a0374ced646cb17b3e00326965a7cbe60b5",
+        "scripts/export_bun_web_model.py": "013d008b2786a22d226b8af7dc28ba8b2da564f2b11dece3551543e172078bd5",
+        "scripts/eval_web_hunter.js": "6d7627dbe071f6f9109ce9c75e8fd79a4bee5d9cf3c8ad15e547a39352c79fad",
+        "scripts/eval_web_hunter_residual.js": "e15e85454ed4137083f5b0206df925a60a59b5164aff5bb99cdd7ac46717dc36",
+        "web/sim.js": "9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3",
+        "web/bun_hunter_bot.js": "faa82b5f12ffdb1792fd5b81c8dcc21ae6a5bf00069cd4a7fc9c290f33630287",
+        "web/bot_contract.js": "d3f6a1a6781b500b3820eadfe8b5c89b567bad40997d75e8141df901958f1dc1",
+        "jax_bomb/bun_tactical_eval.py": "49e9bde5026e0b92898dad1f12f1cd6c1b7181ca05d281504c18f93441c92eb3",
+        "jax_bomb/bun_rule_bot.py": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710",
+        "scripts/je03_bun831_evaluator_20261011.py": "4730f501f31b8b674a88869caca6331bc4594a6a9ad63938d4b743f465ddd713",
+        "scripts/eval_web_native_bun_probe.js": "d028c17f957709cff143701d0c7d0304b3cf0a60dc582bc05ff83f466abf31c5"
+      }
+    }
+  },
+  "Stage2": {
+    "experiment_id": "JE03-BUN392-SELFPLAY12-20261012-v2",
+    "run": "bun392_selfplay12_v2",
+    "authority": "authority_stage2_recovery_v2",
+    "plan_sha256": "4e89f524c9e428da48417403f0326cc049d6f5e4a36ed2f216f6c322c4b4f5f5",
+    "protocol_sha256": "924c8777baa6d607f65e01ea33bd363697267228c142908ef2a8b33998ff39ff",
+    "evaluation_complete_sha256": "73244b7a6c557201e6d9a5713979f6e41ffe05d001b8bc582ae20ed84a5f4eeb",
+    "training": {
+      "bun392_selfplay_control": {
+        "generation": 4096,
+        "fresh_ticks": 2147483648,
+        "compute_seconds": 30554.952548980713,
+        "wall_seconds": 31168.590678215027
+      },
+      "bun392_selfplay_dynamic": {
+        "generation": 4096,
+        "fresh_ticks": 2147483648,
+        "compute_seconds": 33088.1960375309,
+        "wall_seconds": 33751.72209620476
+      }
+    },
+    "curve": {
+      "0": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 2,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.078125
+            },
+            "normal": {
+              "safe_win": 4,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.3125
+            },
+            "easy": {
+              "safe_win": 10,
+              "death_episode": 5,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 2,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 11.359375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 21,
+            "death_episode": 3,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 10.75,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 37,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "fe61db9e41555cb84fe0b1f48454c9c3d0b63447981369bbaeb08b4b282bad13",
+          "main_sha256": "49c94fe82d7c1a4d7204a409965b7154bfbaa5373e07c89737c8b531ad4f2969",
+          "full_sha256": "4cd32acf0a20b9691ae44dc8c141f04cdb34efeb7712ed805d71e0a6205b0597"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 2,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.078125
+            },
+            "normal": {
+              "safe_win": 4,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.3125
+            },
+            "easy": {
+              "safe_win": 10,
+              "death_episode": 5,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 2,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 11.359375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 21,
+            "death_episode": 3,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 10.75,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 37,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "fe61db9e41555cb84fe0b1f48454c9c3d0b63447981369bbaeb08b4b282bad13",
+          "main_sha256": "0320415b4f38bb4ad43ba1f52a19d3128cd13d64ff745630c6a9e2e0824de513",
+          "full_sha256": "85da0fa8a43481d7d69853806839e9b8d3d388c5c07c1af5e3233baca449e116"
+        }
+      },
+      "8": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 5,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 2,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.34375
+            },
+            "normal": {
+              "safe_win": 1,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.25
+            },
+            "easy": {
+              "safe_win": 9,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.359375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 20,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 11.0625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 46,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "fa85e6d7e1fc160d6d14347e74137c4db884b952511f3ae6f9780ad4154ae072",
+          "main_sha256": "54f226391ed8ebe1df22b56e42db55e3947883fcfb355adc22046022586cef1d",
+          "full_sha256": "1ff619786e4674ad5685e92fb5487c096502ce055188b4363d97b9330600c1e5"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.25
+            },
+            "normal": {
+              "safe_win": 1,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.71875
+            },
+            "easy": {
+              "safe_win": 14,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.8125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 15,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 11.390625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 44,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "f3e96f43369228e30a7bcff7c6b66df57622a5e964b5209051df4087f0edab2a",
+          "main_sha256": "abdbc2b5de73787b3e89a2cec9d62631aaa4f537bbc7515b89210c2910a9fd1c",
+          "full_sha256": "081d5b4c13c9b49abc3ee997ab30faed6456df591335c2f09a05b21df414ece2"
+        }
+      },
+      "16": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.203125
+            },
+            "normal": {
+              "safe_win": 5,
+              "death_episode": 2,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 10.09375
+            },
+            "easy": {
+              "safe_win": 6,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 19,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.984375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 35,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "62cc063445a60a7b46143bf46c651e3254ce19ee31d5063fb24bbe983869ffd0",
+          "main_sha256": "549344ec80974fa311f2b3e9ffc1b147de39d19d2f108760848d60d1bc51735f",
+          "full_sha256": "5ddaba5dfb826a12a126fd08843d4673ded022b9f37e540d6b7ec5c03c2bceab"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.484375
+            },
+            "normal": {
+              "safe_win": 2,
+              "death_episode": 3,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 1,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.0625
+            },
+            "easy": {
+              "safe_win": 17,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.8125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 15,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 11.140625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 39,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "e9f3e734002a244813739c7a208532d41d918cb676cfe0f952799e8b04cada52",
+          "main_sha256": "70c48dab8c635e55bd1500f1169077cdce14354507aafac7b26372d20b8c0c61",
+          "full_sha256": "1ff68388b4fcdf3a3265930d7b6979aba0435836ac726dc4ac3f083ad031317a"
+        }
+      },
+      "32": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.390625
+            },
+            "normal": {
+              "safe_win": 1,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.484375
+            },
+            "easy": {
+              "safe_win": 14,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.15625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 20,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 11.015625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 21,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "b085758b196d4bcb04c0d408f3512bcadaaba91a570fe91857aa027b754113ec",
+          "main_sha256": "2cb221f5ca418873738bc616e37aa8a19521e3871b46378ce40628d49e4fad5f",
+          "full_sha256": "1c1c04c0023ca8d67336efba66ed62c55f77073aed778d51c6207530d5b35e82"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 1,
+              "death_episode": 3,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 9.078125
+            },
+            "normal": {
+              "safe_win": 2,
+              "death_episode": 2,
+              "final_dead": 2,
+              "kill_then_death": 1,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.90625
+            },
+            "easy": {
+              "safe_win": 15,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 11.40625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 16,
+            "death_episode": 2,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 10.703125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 23,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "b2c8883d1b32a2448c924110bdd958b9039c7bb4bfbe8eeb0da14284621df23d",
+          "main_sha256": "f25fe815d40ddcfeba6ad98a20fb141bcf649120ad45e24f2f3d415b36c0a69b",
+          "full_sha256": "b9251b5434f423c5e286b85f3a46a5d1fb56e471e9bb1554616c93c76c0d0b71"
+        }
+      },
+      "64": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.234375
+            },
+            "normal": {
+              "safe_win": 3,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.171875
+            },
+            "easy": {
+              "safe_win": 15,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.1875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 15,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.140625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 13,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "840cfb128e0efbe3bfbef469fd7e1bb23b923b285b69536b5094abdaf7126bb8",
+          "main_sha256": "fdd0e1cab94620a5c952387b27af8baf5950a9935cbcb11996cc2eb87fd5a62f",
+          "full_sha256": "a1c7d482bdf7c7b116b022253c5697ef427cb982640540adaf6807e63ac2c244"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.28125
+            },
+            "normal": {
+              "safe_win": 3,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.609375
+            },
+            "easy": {
+              "safe_win": 19,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.59375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 16,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.59375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 25,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "fa75f8a0b3f1cd2e90dc86a65f53b328cec056f2460af783f222c2014cdfa6f1",
+          "main_sha256": "1e44b711c2d3a026de5ecf722c111a668c6c2a9af972e0a65f34723d063f01c4",
+          "full_sha256": "407ce1ece4714871f5bf40daa8dab2490d911f241f9e3b57a39959a0de976d44"
+        }
+      },
+      "128": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.125
+            },
+            "normal": {
+              "safe_win": 3,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.453125
+            },
+            "easy": {
+              "safe_win": 16,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.96875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 20,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 10.640625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 27,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "2aecefb94a0821a0ab0a7f5e6d1a353be843595fd734f1608c056a9e9670bfca",
+          "main_sha256": "2d87a3f0572549d3cb3d3316124771850b8dd4eca79d211a14fc0f63b194dfc6",
+          "full_sha256": "b1d316ba5ebb4269df3244f46ea67f9a19131d23f4f9f611d0f272e1dafa54b9"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 1,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.140625
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.09375
+            },
+            "easy": {
+              "safe_win": 16,
+              "death_episode": 3,
+              "final_dead": 3,
+              "kill_then_death": 1,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 11.59375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 17,
+            "death_episode": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.5,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 72,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "dd1ac5157a63f3d949ff3d467ed64105fec509e5015b383a32d0497752eb5e38",
+          "main_sha256": "af8c918c8462dcc2e1191b6b94c526841ae59f1cf3881b7a7a19c1e8633bc2f8",
+          "full_sha256": "3eea5eae23731b63bf9abc8fefa567ca482618cb7b4abefda0da607f700fcebb"
+        }
+      },
+      "256": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.5625
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.1875
+            },
+            "easy": {
+              "safe_win": 14,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.90625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 20,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.265625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 15,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "27d84b704b17a1b3ff0b60144ce48ce78e8b750be096d4fe26975f397b0fd363",
+          "main_sha256": "51c1a055e86ee8bd22508c99dfb420379d6e9f74daddec569ce49d3d7ef2486a",
+          "full_sha256": "5eee1f238b0f2069fa4df816d86bc71d2a629ff3723661c31e7f019bdef7974b"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 7.96875
+            },
+            "normal": {
+              "safe_win": 2,
+              "death_episode": 2,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 2,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.984375
+            },
+            "easy": {
+              "safe_win": 11,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.703125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 13,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 8.734375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 20,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "d2ca5021aaf214bee933b321492951fa49b0ca11e05cbfffcd8a999598b4f81e",
+          "main_sha256": "57f7fceaca0f4b89803b7e46a1378d8f577491c00d91b6660f420e2fd18a9aa7",
+          "full_sha256": "5a5b2eaf80fe50b78f4250215b299889d80696417b506eb078de1dc9641bbcc8"
+        }
+      },
+      "512": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.859375
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.59375
+            },
+            "easy": {
+              "safe_win": 12,
+              "death_episode": 4,
+              "final_dead": 3,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 1,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.65625
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 27,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.671875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 41,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "42a5eace82c0d234b20c0e86cd009f617415aef5cf34241453b55628b832ee1b",
+          "main_sha256": "e66a208bd499eed5c846249bd6bd19f3d5d526993bdc2ebf0f2784b4477844c5",
+          "full_sha256": "0f079e4e32cd55658203752e476a175f0bb256ff2723ef0238d5c6bc1e793fb3"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.90625
+            },
+            "normal": {
+              "safe_win": 4,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.78125
+            },
+            "easy": {
+              "safe_win": 19,
+              "death_episode": 3,
+              "final_dead": 2,
+              "kill_then_death": 1,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 2,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 11.1875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 11,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.953125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 18,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "8d6cd60ca8de9bb055d4b0fe525114ee238276610caf7820b2f910d01a696a5d",
+          "main_sha256": "0ef6a9f533fd6b9b6f001ad6442e18020e3985bced4fc9af0110dc92deb4d383",
+          "full_sha256": "850e3abac80dc59934611975583750d9987eaafc1247a8eedf2e4475f39b3937"
+        }
+      },
+      "768": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.078125
+            },
+            "normal": {
+              "safe_win": 3,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 1,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.75
+            },
+            "easy": {
+              "safe_win": 13,
+              "death_episode": 3,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 12.21875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 14,
+            "death_episode": 2,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 9.515625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 45,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "4d099c50395d6e89c2b5599a25614980fc8cd79bd44c6ab4b8fce0f2cca2fe74",
+          "main_sha256": "c38995e6c098e456d87c5a02abc2cd13fd87a9d87f2700560389a67d58d624ba",
+          "full_sha256": "563313caacea3ab6dbfeff53928bad8d3ac0739422bd28d47a4adf9adbc4adf7"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 1,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.78125
+            },
+            "normal": {
+              "safe_win": 2,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.953125
+            },
+            "easy": {
+              "safe_win": 16,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 14,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.40625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 20,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "d14cefe74592a529d49be6550266d9c948d702115814a9aa5a0a04c987de344f",
+          "main_sha256": "c78e8d3b77e341137b892c49552a947ce282a268ba5612f62b9164deb3ed642e",
+          "full_sha256": "09dc70dc65494f8f81f25b4a4274490f2739d4b3b31955761e74ee7fca2ac5a0"
+        }
+      },
+      "1024": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 2,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.171875
+            },
+            "normal": {
+              "safe_win": 1,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.734375
+            },
+            "easy": {
+              "safe_win": 16,
+              "death_episode": 3,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 1,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.21875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 19,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.84375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 21,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "859e430e8e2623330ae24a01dfec5f52fdaf2312b32a7abaa44880bd18befbd7",
+          "main_sha256": "22b257ac0ad70b06a1282406c487550d628314a9bb60fa3f4ef6695c1d556534",
+          "full_sha256": "e82fec793de063b04b61bff20b1d6026596498cbb6c828643728e31d3a5c17e2"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.140625
+            },
+            "normal": {
+              "safe_win": 1,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 9.9375
+            },
+            "easy": {
+              "safe_win": 17,
+              "death_episode": 3,
+              "final_dead": 2,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 2,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.34375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 15,
+            "death_episode": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.203125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 42,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "5a7b1686e2259f6b4cbb7ff15d0fe344b043860c7dbc8d8a381c50243e07933a",
+          "main_sha256": "877ab2a72738cd3857c151d6ab50af0302adf5df06f24db39a76a6734c38a22c",
+          "full_sha256": "5768fc34c6debb544b03094399152e68f4ea69f9213bd4ffa7ded8f56cd38929"
+        }
+      },
+      "1536": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.640625
+            },
+            "normal": {
+              "safe_win": 5,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.125
+            },
+            "easy": {
+              "safe_win": 13,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 12.109375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 21,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.203125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 86,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "07a202f5867a43f046d54d564c73852775abf4966269aee73da6a238eddb47d0",
+          "main_sha256": "7c0647920010bcd9d3a0bbeb3fb1ac58f4c6125df8fe192683c0cc67fb51bdba",
+          "full_sha256": "e698eb038c5f109c30db7f169ab787eef3b9626d777f9c924c1fa0dbc66f4094"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 1,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.234375
+            },
+            "normal": {
+              "safe_win": 0,
+              "death_episode": 4,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 10.5625
+            },
+            "easy": {
+              "safe_win": 14,
+              "death_episode": 5,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 1,
+              "by_bot_episodes": 2,
+              "bombs_per_game": 10.875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 16,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 9.46875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 14,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "e25bc28e6903f78cd14c0629688e51204de961a591d5db99e1c26452f057b21f",
+          "main_sha256": "5d47b56d2b8d765bfba33fe332bddf0ab698e47f7e4001b1c9033d302cf4f4aa",
+          "full_sha256": "64315816224127e6a79ba94ae1828de85967567f4be2e50c5fb877fe8da35d11"
+        }
+      },
+      "2048": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.125
+            },
+            "normal": {
+              "safe_win": 3,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.5
+            },
+            "easy": {
+              "safe_win": 13,
+              "death_episode": 2,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 2,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.859375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 26,
+            "death_episode": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.34375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 17,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "09b1287907b75e159eb3bfb0cb4f329b9168b825a911bad086f1763831ced965",
+          "main_sha256": "9e02713d326055b79fbbc6d1b3f37f957f3e922f334285186368664328861898",
+          "full_sha256": "c882824e4a081cbe935ff4e3cd63822568704095fbfc236432af01c399bb8518"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 4,
+              "final_dead": 4,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 4,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.6875
+            },
+            "normal": {
+              "safe_win": 1,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 1,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.390625
+            },
+            "easy": {
+              "safe_win": 16,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 11.328125
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 23,
+            "death_episode": 2,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.6875,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 39,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "e71880c9b5031cecffb1d76e10a80a46c4fb3b41d0062b729d37cda55ff5e7eb",
+          "main_sha256": "de2c42fc71ec75e899835e27703daf8d276ce8194540bc7e8e7fab34c4c7c641",
+          "full_sha256": "729af117f634b56eebc29ef18798d81168b0aa325d3de33c89546894b4577feb"
+        }
+      },
+      "3072": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 8.984375
+            },
+            "normal": {
+              "safe_win": 3,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 1,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.5
+            },
+            "easy": {
+              "safe_win": 12,
+              "death_episode": 4,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 11.484375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 22,
+            "death_episode": 1,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "bombs_per_game": 11.078125,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 1,
+              "self_episodes": 1,
+              "item_use": 32,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "486277eb698357885fc1f1962090023691ee15c21f0d8e6cc561b33615b57f6b",
+          "main_sha256": "f2cbbe4bd4c9264533496710f9c6c1cfdf1f1d1d24f337ec445c45fc96bce17d",
+          "full_sha256": "fdb397dd56a202e1c474ceac5610cac9b8d011faf92b11644c25965e7c2b98b1"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 7.921875
+            },
+            "normal": {
+              "safe_win": 4,
+              "death_episode": 0,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.265625
+            },
+            "easy": {
+              "safe_win": 23,
+              "death_episode": 3,
+              "final_dead": 2,
+              "kill_then_death": 1,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 11.546875
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 24,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.609375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 2,
+              "self_episodes": 2,
+              "item_use": 56,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "dc3919a5e7a2f415f951e23f20069d14c3c1df332acf5dfa7b1bb21314ca4f70",
+          "main_sha256": "8967b7f7b4dbeaf32603f51a19427634e22cab0e76eb35bdceeef89ad0e77e36",
+          "full_sha256": "686e617450470d36d6ba8aa55a23a262f0996093c39d4d7a8cfa2f0be29cb5dd"
+        }
+      },
+      "4096": {
+        "bun392_selfplay_control": {
+          "hunter": {
+            "hard": {
+              "safe_win": 3,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 9.1875
+            },
+            "normal": {
+              "safe_win": 2,
+              "death_episode": 3,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 1,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 10.703125
+            },
+            "easy": {
+              "safe_win": 14,
+              "death_episode": 1,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 11.859375
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 18,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.140625,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 17,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "f37c9df9da13c73f3cba70e3cebbad5dd5f7ab4e073b15528de0bd5ad9664e16",
+          "main_sha256": "e3686adcc520ab184fc5d2af98c7aa1ad6cef8673ddb7e61e5b48bf8398bca9c",
+          "full_sha256": "cdaacff10b46e0bd7466fe0a772fad37c2a47d17716a17bbee33594b1df73812"
+        },
+        "bun392_selfplay_dynamic": {
+          "hunter": {
+            "hard": {
+              "safe_win": 0,
+              "death_episode": 1,
+              "final_dead": 1,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 0,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 8.859375
+            },
+            "normal": {
+              "safe_win": 3,
+              "death_episode": 4,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 3,
+              "trade_episodes": 0,
+              "by_bot_episodes": 0,
+              "bombs_per_game": 10.265625
+            },
+            "easy": {
+              "safe_win": 16,
+              "death_episode": 2,
+              "final_dead": 0,
+              "kill_then_death": 0,
+              "games": 64,
+              "self_episodes": 1,
+              "trade_episodes": 0,
+              "by_bot_episodes": 1,
+              "bombs_per_game": 12.25
+            }
+          },
+          "tactical": {
+            "games": 64,
+            "safe_win": 19,
+            "death_episode": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "bombs_per_game": 10.734375,
+            "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+          },
+          "tasks": {
+            "carry_home": {
+              "games": 16,
+              "capture_episodes": 14,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "near_steal": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 16,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "route_break": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 0,
+              "trade_episodes": 0,
+              "safe_win": 0
+            },
+            "full": {
+              "games": 16,
+              "capture_episodes": 0,
+              "steal_episodes": 0,
+              "return_episodes": 0,
+              "death_episodes": 0,
+              "self_episodes": 0,
+              "item_use": 10,
+              "trade_episodes": 0,
+              "safe_win": 0
+            }
+          },
+          "policy_sha256": "bedda182038f83d9eaec41863424080631b0925c017ed65d3a520f3db3881e07",
+          "main_sha256": "38c5eab1dc75e5254127ddde3cf4a0a11f7256bf347d05cde97a06e83140858f",
+          "full_sha256": "4ede6b25878fadeb7369112ef9ce4d4bf7607d3185e9bed91815003fa1985b11"
+        }
+      }
+    },
+    "evaluation_protocol": {
+      "namespace": "authority_stage2_recovery_v2",
+      "paired": true,
+      "stage2_enabled": true,
+      "hunter_games_per_tier_per_arm": 64,
+      "tactical_games_per_arm": 64,
+      "hunter_primary": 300,
+      "hunter_residual": 64,
+      "tactical_primary": 300,
+      "native_bun_tasks": [
+        "carry_home",
+        "near_steal",
+        "route_break",
+        "full"
+      ],
+      "native_task_games": 16,
+      "native_task_seed_base": 2026101131,
+      "native_task_ticks": 300,
+      "native_web_safety_seed": 392010731,
+      "spawns_sha256": "e0ff56168b3ea47946361e5db97236bcbbe7374e75667d235b6a516667fe4c53",
+      "seed": 2026101002,
+      "checkpoints": [
+        0,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512,
+        768,
+        1024,
+        1536,
+        2048,
+        3072,
+        4096
+      ],
+      "priority": [
+        0,
+        512,
+        1024,
+        1536,
+        2048,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        768,
+        3072,
+        4096
+      ],
+      "cuda_visible_devices": "",
+      "safety": "credited kill, zero actor deaths, actor alive after residual settlement",
+      "task_scope": "native Bun idle-opponent diagnostic, not webpage Hunter",
+      "sources": {
+        "scripts/je03_bun_evaluator_20261011.py": "2b7958ce56bc56199e7aa3ed8b35f241d88d27c7e347795f9917e3c02a30ce75",
+        "scripts/je03_original_hunter_20261011.js": "293125459c38826d77cc7c88337d1c6517b22f4d6d451844dc308a63ec02fe18",
+        "scripts/je03_native_vit_export_20261011.py": "a66c426c3b2b26df08f3b4eaf49e1a0374ced646cb17b3e00326965a7cbe60b5",
+        "scripts/export_bun_web_model.py": "013d008b2786a22d226b8af7dc28ba8b2da564f2b11dece3551543e172078bd5",
+        "scripts/eval_web_hunter.js": "6d7627dbe071f6f9109ce9c75e8fd79a4bee5d9cf3c8ad15e547a39352c79fad",
+        "scripts/eval_web_hunter_residual.js": "e15e85454ed4137083f5b0206df925a60a59b5164aff5bb99cdd7ac46717dc36",
+        "web/sim.js": "9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3",
+        "web/bun_hunter_bot.js": "faa82b5f12ffdb1792fd5b81c8dcc21ae6a5bf00069cd4a7fc9c290f33630287",
+        "web/bot_contract.js": "d3f6a1a6781b500b3820eadfe8b5c89b567bad40997d75e8141df901958f1dc1",
+        "jax_bomb/bun_tactical_eval.py": "49e9bde5026e0b92898dad1f12f1cd6c1b7181ca05d281504c18f93441c92eb3",
+        "jax_bomb/bun_rule_bot.py": "021386cd927fe8c1667750b70a3c1df86d9375c3357a6d2057696fdff7365710",
+        "scripts/je03_bun831_evaluator_20261011.py": "4730f501f31b8b674a88869caca6331bc4594a6a9ad63938d4b743f465ddd713",
+        "scripts/eval_web_native_bun_probe.js": "d028c17f957709cff143701d0c7d0304b3cf0a60dc582bc05ff83f466abf31c5",
+        "scripts/je03_bun_selfplay_authority_recovery_20261012.py": "0f93235430e97929344cba18d93f3a36c3ebcb71f6a5a63305c20145ef8a38eb"
+      }
+    }
+  }
+}

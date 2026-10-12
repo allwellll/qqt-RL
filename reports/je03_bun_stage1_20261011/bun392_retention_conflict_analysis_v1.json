@@ -1,0 +1,2953 @@
+{
+  "cuda_visible_devices": "",
+  "evaluation": {
+    "bun392_base": {
+      "0": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 1,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 2,
+            "games": 16,
+            "item_use": 79,
+            "return_episodes": 0,
+            "self_episodes": 2,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 8
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 0,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 10.03125,
+            "by_bot_episodes": 1,
+            "death_episode": 5,
+            "games": 64,
+            "safe_win": 15,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 8.984375,
+            "by_bot_episodes": 1,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 10.375,
+            "by_bot_episodes": 1,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 4,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 54.28657841682434,
+        "policy_sha256": "1e15b7c517533422e9321e3b792aea791b84a8eca4a1e4146beb380ff88f0ad6",
+        "tactical": {
+          "bombs_per_game": 9.609375,
+          "death_episode": 2,
+          "games": 64,
+          "safe_win": 22,
+          "self_episodes": 1,
+          "trade_episodes": 1
+        },
+        "wall_seconds": 73.26247000694275
+      },
+      "128": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 11,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 1,
+            "games": 16,
+            "item_use": 52,
+            "return_episodes": 0,
+            "self_episodes": 1,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 1
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 128,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 14.171875,
+            "by_bot_episodes": 2,
+            "death_episode": 12,
+            "games": 64,
+            "safe_win": 3,
+            "self_episodes": 8,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 15.015625,
+            "by_bot_episodes": 5,
+            "death_episode": 10,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 6,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 14.1875,
+            "by_bot_episodes": 13,
+            "death_episode": 15,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 55.268176794052124,
+        "policy_sha256": "271e600cfd29f6e21c41c8cb38482ac17d465c6c83ef335db4ba1d8218cca114",
+        "tactical": {
+          "bombs_per_game": 13.296875,
+          "death_episode": 6,
+          "games": 64,
+          "safe_win": 13,
+          "self_episodes": 4,
+          "trade_episodes": 1
+        },
+        "wall_seconds": 73.33063697814941
+      },
+      "192": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 11,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 6,
+            "games": 16,
+            "item_use": 205,
+            "return_episodes": 0,
+            "self_episodes": 6,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 2
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 192,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 12.9375,
+            "by_bot_episodes": 1,
+            "death_episode": 5,
+            "games": 64,
+            "safe_win": 3,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 9.203125,
+            "by_bot_episodes": 1,
+            "death_episode": 4,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 3,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 9.78125,
+            "by_bot_episodes": 3,
+            "death_episode": 8,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 4,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 55.82059168815613,
+        "policy_sha256": "bf157f6be9111c9423aec74ea48e33953d8741bddd24974a92a5f1c54d1f29c1",
+        "tactical": {
+          "bombs_per_game": 11.984375,
+          "death_episode": 4,
+          "games": 64,
+          "safe_win": 15,
+          "self_episodes": 3,
+          "trade_episodes": 1
+        },
+        "wall_seconds": 73.29587602615356
+      },
+      "256": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 11,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 2,
+            "games": 16,
+            "item_use": 69,
+            "return_episodes": 0,
+            "self_episodes": 1,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 9
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 256,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 8.359375,
+            "by_bot_episodes": 10,
+            "death_episode": 14,
+            "games": 64,
+            "safe_win": 2,
+            "self_episodes": 0,
+            "trade_episodes": 1
+          },
+          "hard": {
+            "bombs_per_game": 4.546875,
+            "by_bot_episodes": 1,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 5.890625,
+            "by_bot_episodes": 3,
+            "death_episode": 5,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 55.32498264312744,
+        "policy_sha256": "cc5eca1034e53875d49a52bfe7da9f59ab8fe659fb76a868bf5c55f1914bfb4a",
+        "tactical": {
+          "bombs_per_game": 4.71875,
+          "death_episode": 1,
+          "games": 64,
+          "safe_win": 9,
+          "self_episodes": 1,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 72.74601650238037
+      },
+      "32": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 10,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 3,
+            "games": 16,
+            "item_use": 99,
+            "return_episodes": 0,
+            "self_episodes": 3,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 10
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 32,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 12.140625,
+            "by_bot_episodes": 1,
+            "death_episode": 6,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 5,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 11.984375,
+            "by_bot_episodes": 2,
+            "death_episode": 4,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 11.578125,
+            "by_bot_episodes": 3,
+            "death_episode": 6,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 3,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 55.90312218666077,
+        "policy_sha256": "1abf26d31cdbaa025564f26e615e1033a0a02f490dd398041610daf62f563b29",
+        "tactical": {
+          "bombs_per_game": 11.171875,
+          "death_episode": 2,
+          "games": 64,
+          "safe_win": 16,
+          "self_episodes": 0,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 74.93552160263062
+      },
+      "512": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 16,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 13,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 5
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 512,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 10.65625,
+            "by_bot_episodes": 29,
+            "death_episode": 45,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 18,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 9.375,
+            "by_bot_episodes": 29,
+            "death_episode": 45,
+            "games": 64,
+            "safe_win": 2,
+            "self_episodes": 23,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 9.78125,
+            "by_bot_episodes": 25,
+            "death_episode": 52,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 27,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 54.89799189567566,
+        "policy_sha256": "5e58d0f0ca4987bf5e7f16df76d75650dfb09790338aebee38b3869abbef378d",
+        "tactical": {
+          "bombs_per_game": 22.546875,
+          "death_episode": 38,
+          "games": 64,
+          "safe_win": 6,
+          "self_episodes": 17,
+          "trade_episodes": 1
+        },
+        "wall_seconds": 72.48260021209717
+      },
+      "64": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 11,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 2,
+            "games": 16,
+            "item_use": 61,
+            "return_episodes": 0,
+            "self_episodes": 2,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 5
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 1,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 1,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 64,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 10.84375,
+            "by_bot_episodes": 1,
+            "death_episode": 3,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 10.96875,
+            "by_bot_episodes": 2,
+            "death_episode": 6,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 10.609375,
+            "by_bot_episodes": 8,
+            "death_episode": 12,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 56.0576057434082,
+        "policy_sha256": "59f75f9f7fc096d5a2aabad94f0750fa2dd6275224aad90614f3cb2576b9f007",
+        "tactical": {
+          "bombs_per_game": 12.671875,
+          "death_episode": 7,
+          "games": 64,
+          "safe_win": 14,
+          "self_episodes": 6,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 73.20236778259277
+      },
+      "768": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 16,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 1,
+            "games": 16,
+            "item_use": 23,
+            "return_episodes": 0,
+            "self_episodes": 1,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 5
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 3,
+            "games": 16,
+            "item_use": 24,
+            "return_episodes": 0,
+            "self_episodes": 2,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 768,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 9.40625,
+            "by_bot_episodes": 18,
+            "death_episode": 26,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 7,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 6.578125,
+            "by_bot_episodes": 10,
+            "death_episode": 16,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 5,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 7.703125,
+            "by_bot_episodes": 21,
+            "death_episode": 28,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 5,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 55.26568031311035,
+        "policy_sha256": "09314664b060227c6ac5703b73e56a3898818e43df1e517a5a8a5d77eebfd72e",
+        "tactical": {
+          "bombs_per_game": 21.25,
+          "death_episode": 10,
+          "games": 64,
+          "safe_win": 4,
+          "self_episodes": 1,
+          "trade_episodes": 1
+        },
+        "wall_seconds": 72.69521999359131
+      }
+    },
+    "bun392_recipe": {
+      "0": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 1,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 2,
+            "games": 16,
+            "item_use": 79,
+            "return_episodes": 0,
+            "self_episodes": 2,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 8
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 0,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 10.03125,
+            "by_bot_episodes": 1,
+            "death_episode": 5,
+            "games": 64,
+            "safe_win": 15,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 8.984375,
+            "by_bot_episodes": 1,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 10.375,
+            "by_bot_episodes": 1,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 4,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 55.114163398742676,
+        "policy_sha256": "1e15b7c517533422e9321e3b792aea791b84a8eca4a1e4146beb380ff88f0ad6",
+        "tactical": {
+          "bombs_per_game": 9.609375,
+          "death_episode": 2,
+          "games": 64,
+          "safe_win": 22,
+          "self_episodes": 1,
+          "trade_episodes": 1
+        },
+        "wall_seconds": 72.7170922756195
+      },
+      "1024": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 15,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 30,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 16
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 1024,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 11.671875,
+            "by_bot_episodes": 3,
+            "death_episode": 11,
+            "games": 64,
+            "safe_win": 3,
+            "self_episodes": 5,
+            "trade_episodes": 1
+          },
+          "hard": {
+            "bombs_per_game": 11.59375,
+            "by_bot_episodes": 7,
+            "death_episode": 11,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 11.75,
+            "by_bot_episodes": 4,
+            "death_episode": 8,
+            "games": 64,
+            "safe_win": 2,
+            "self_episodes": 3,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 57.49571442604065,
+        "policy_sha256": "bd20b30c29cd9354fd3e297ccc918afab8a2954dea4d0011f3631c238f23148f",
+        "tactical": {
+          "bombs_per_game": 15.65625,
+          "death_episode": 7,
+          "games": 64,
+          "safe_win": 5,
+          "self_episodes": 1,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 73.05967330932617
+      },
+      "128": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 16,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 23,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 16
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 128,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 11.640625,
+            "by_bot_episodes": 0,
+            "death_episode": 5,
+            "games": 64,
+            "safe_win": 3,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 10.90625,
+            "by_bot_episodes": 0,
+            "death_episode": 0,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 10.734375,
+            "by_bot_episodes": 2,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 57.13809680938721,
+        "policy_sha256": "e86a52ab92d57b52fbbf573800d33fe3711490071a8c1b99f78a595341777272",
+        "tactical": {
+          "bombs_per_game": 12.15625,
+          "death_episode": 1,
+          "games": 64,
+          "safe_win": 16,
+          "self_episodes": 0,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 72.88599801063538
+      },
+      "1536": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 16,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 23,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 16
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 1536,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 10.96875,
+            "by_bot_episodes": 2,
+            "death_episode": 6,
+            "games": 64,
+            "safe_win": 2,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 10.5625,
+            "by_bot_episodes": 2,
+            "death_episode": 3,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 10.171875,
+            "by_bot_episodes": 10,
+            "death_episode": 11,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 58.279797315597534,
+        "policy_sha256": "fb58d6966eeb63d3e84ccebdfee0593c7bce4a54ed011626869936cc64f335b7",
+        "tactical": {
+          "bombs_per_game": 17.78125,
+          "death_episode": 6,
+          "games": 64,
+          "safe_win": 8,
+          "self_episodes": 0,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 73.93081760406494
+      },
+      "192": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 15,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 24,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 16
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 1,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 1,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 192,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 10.640625,
+            "by_bot_episodes": 1,
+            "death_episode": 3,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 9.84375,
+            "by_bot_episodes": 0,
+            "death_episode": 0,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 10.078125,
+            "by_bot_episodes": 4,
+            "death_episode": 8,
+            "games": 64,
+            "safe_win": 3,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 57.67121148109436,
+        "policy_sha256": "c51bed49ca7a402029c7dbb1b237882be20c64169b48e412bdc2320fdfed5b8c",
+        "tactical": {
+          "bombs_per_game": 12.21875,
+          "death_episode": 0,
+          "games": 64,
+          "safe_win": 11,
+          "self_episodes": 0,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 73.37703108787537
+      },
+      "256": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 15,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 28,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 16
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 256,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 11.5,
+            "by_bot_episodes": 1,
+            "death_episode": 4,
+            "games": 64,
+            "safe_win": 4,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 10.5,
+            "by_bot_episodes": 4,
+            "death_episode": 7,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 10.515625,
+            "by_bot_episodes": 2,
+            "death_episode": 4,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 57.59454011917114,
+        "policy_sha256": "b380d02b03de4065f71e882ea4883ef2092e4e8a15a4cf91c55bf7711729764e",
+        "tactical": {
+          "bombs_per_game": 15.296875,
+          "death_episode": 6,
+          "games": 64,
+          "safe_win": 8,
+          "self_episodes": 2,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 72.99556803703308
+      },
+      "32": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 11,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 27,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 16
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 32,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 8.96875,
+            "by_bot_episodes": 1,
+            "death_episode": 1,
+            "games": 64,
+            "safe_win": 7,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 9.21875,
+            "by_bot_episodes": 1,
+            "death_episode": 3,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 8.25,
+            "by_bot_episodes": 1,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 55.18609547615051,
+        "policy_sha256": "c9eea8b7c5db4360a676dc4086d2559725dabec13804cb418124ba9d89e0c6a1",
+        "tactical": {
+          "bombs_per_game": 9.140625,
+          "death_episode": 0,
+          "games": 64,
+          "safe_win": 14,
+          "self_episodes": 0,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 72.41834139823914
+      },
+      "512": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 16,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 1,
+            "games": 16,
+            "item_use": 68,
+            "return_episodes": 0,
+            "self_episodes": 1,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 16
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 512,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 10.890625,
+            "by_bot_episodes": 0,
+            "death_episode": 4,
+            "games": 64,
+            "safe_win": 4,
+            "self_episodes": 4,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 9.609375,
+            "by_bot_episodes": 1,
+            "death_episode": 3,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 2,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 9.953125,
+            "by_bot_episodes": 3,
+            "death_episode": 5,
+            "games": 64,
+            "safe_win": 2,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 57.368337869644165,
+        "policy_sha256": "1d81aabc19fcbb12000a1c78a9cdad4b2b05fd8b42c030c4d799e46d5c45aae1",
+        "tactical": {
+          "bombs_per_game": 13.75,
+          "death_episode": 2,
+          "games": 64,
+          "safe_win": 6,
+          "self_episodes": 0,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 73.2271044254303
+      },
+      "64": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 13,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 2,
+            "games": 16,
+            "item_use": 59,
+            "return_episodes": 0,
+            "self_episodes": 2,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 16
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 64,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 12.34375,
+            "by_bot_episodes": 1,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 15.140625,
+            "by_bot_episodes": 4,
+            "death_episode": 4,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 13.921875,
+            "by_bot_episodes": 2,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 56.16405439376831,
+        "policy_sha256": "051cc553291de9ba3d63821494192bcaf4645b95f63a171ac18b9fc69d460c42",
+        "tactical": {
+          "bombs_per_game": 14.921875,
+          "death_episode": 2,
+          "games": 64,
+          "safe_win": 13,
+          "self_episodes": 0,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 73.00532031059265
+      },
+      "768": {
+        "bun_tasks": {
+          "carry_home": {
+            "capture_episodes": 15,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          },
+          "full": {
+            "capture_episodes": 0,
+            "death_episodes": 2,
+            "games": 16,
+            "item_use": 56,
+            "return_episodes": 0,
+            "self_episodes": 2,
+            "steal_episodes": 0
+          },
+          "near_steal": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 16
+          },
+          "route_break": {
+            "capture_episodes": 0,
+            "death_episodes": 0,
+            "games": 16,
+            "item_use": 0,
+            "return_episodes": 0,
+            "self_episodes": 0,
+            "steal_episodes": 0
+          }
+        },
+        "generation": 768,
+        "hunter": {
+          "easy": {
+            "bombs_per_game": 10.796875,
+            "by_bot_episodes": 0,
+            "death_episode": 2,
+            "games": 64,
+            "safe_win": 3,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          },
+          "hard": {
+            "bombs_per_game": 9.609375,
+            "by_bot_episodes": 1,
+            "death_episode": 4,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 3,
+            "trade_episodes": 0
+          },
+          "normal": {
+            "bombs_per_game": 10.0,
+            "by_bot_episodes": 2,
+            "death_episode": 3,
+            "games": 64,
+            "safe_win": 0,
+            "self_episodes": 1,
+            "trade_episodes": 0
+          }
+        },
+        "hunter_wall_seconds": 57.25250172615051,
+        "policy_sha256": "a8e03acff644a8f983de5ff4c3ccba1f9cdd8ac4350c1c99423e73b67873eb06",
+        "tactical": {
+          "bombs_per_game": 13.71875,
+          "death_episode": 2,
+          "games": 64,
+          "safe_win": 7,
+          "self_episodes": 1,
+          "trade_episodes": 0
+        },
+        "wall_seconds": 72.99813938140869
+      }
+    }
+  },
+  "experiment_id": "JE03-BUN831-NATIVE-TRACKS-20261011-v1",
+  "hypotheses": [
+    {
+      "counterevidence": [
+        "safety/death/self penalties exist",
+        "g0 task ability is weak"
+      ],
+      "id": "A",
+      "minimal_cpu_test": "fixed-seed reward-component attribution and Hunter funnel on g0/g32/g128/g256",
+      "name": "Bun task reward vs Hunter objective mismatch",
+      "rank": 1,
+      "support": [
+        "g32 reward rises while Hunter safe drops",
+        "recipe carry/steal reaches 16/16 while Hunter remains low",
+        "source reward gives large steal/capture/progress terms"
+      ]
+    },
+    {
+      "counterevidence": [
+        "actual lesson/opponent frequencies are not yet logged per rollout"
+      ],
+      "id": "B",
+      "minimal_cpu_test": "deterministic reset-key lesson/opponent frequency audit plus per-opponent capability split",
+      "name": "Curriculum and opponent distribution conflict",
+      "rank": 2,
+      "support": [
+        "fixed old/rule opponents are not web Hunter",
+        "both arms regress despite different task mixtures"
+      ]
+    },
+    {
+      "counterevidence": [
+        "recipe regresses with 32 updates/gen",
+        "g192/base has a temporary recovery"
+      ],
+      "id": "C",
+      "minimal_cpu_test": "replot against actual Adam count and compute fixed-input logits KL",
+      "name": "PPO cumulative updates and catastrophic forgetting",
+      "rank": 3,
+      "support": [
+        "base drift reaches actor .773/critic 1.020 at g512",
+        "base g512 has 142 Hunter deaths"
+      ]
+    },
+    {
+      "counterevidence": [
+        "recipe has smaller drift but still regresses",
+        "drift is not causal proof"
+      ],
+      "id": "E",
+      "minimal_cpu_test": "shared-vs-new token/global/head logits and zero-output new-channel counterfactual",
+      "name": "New Bun input/ability channels disturb old representation",
+      "rank": 4,
+      "support": [
+        "Bun-only input-tail drift exceeds action-head drift"
+      ]
+    },
+    {
+      "counterevidence": [
+        "Actor/Critic trees and gradient paths are independent in the audited update",
+        "both independent-Critic arms regress"
+      ],
+      "id": "F",
+      "minimal_cpu_test": "autodiff cross-gradient zero check and value calibration/GAE sign-flip audit",
+      "name": "Critic/value or shared-gradient amplification",
+      "rank": 5,
+      "support": [
+        "Critic drift exceeds Actor drift",
+        "value targets feed GAE"
+      ]
+    },
+    {
+      "counterevidence": [
+        "base uses all rows and also regresses at g32",
+        "cannot explain common regression"
+      ],
+      "id": "D",
+      "minimal_cpu_test": "compare retained vs discarded lesson/opponent/death/self/steal/capture composition",
+      "name": "Top25 advantage shortcut",
+      "rank": 6,
+      "support": [
+        "recipe selectively retains 25% rows and learns task metrics quickly"
+      ]
+    }
+  ],
+  "missing_entropy_kl": true,
+  "notes": {
+    "authority": "Hunter is web authority; Tactical and Bun tasks are separate diagnostics",
+    "optimizer_accounting": "optimizer_updates is taken from committed event telemetry and plan shape; recipe's historical 128/gen label is not rewritten here",
+    "training_stats": "stats[0:3] are mean reward, done rate, and rollout kill sum; they are not Hunter outcomes"
+  },
+  "parameter_drift": {
+    "bun392_base": {
+      "0": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 0.0,
+            "relative_to_g0": 0.0
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "global_input": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "input_tokens": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "transformer_blocks": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            }
+          },
+          "l2": 0.0,
+          "relative_to_g0": 0.0
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 0.0,
+            "relative_to_g0": 0.0
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "global_input": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "input_tokens": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "transformer_blocks": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            }
+          },
+          "l2": 0.0,
+          "relative_to_g0": 0.0
+        }
+      },
+      "128": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 6.749282858664216,
+            "relative_to_g0": 0.3480817942566853
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.4950625480691147,
+              "relative_to_g0": 0.018409069909542126
+            },
+            "global_input": {
+              "l2": 3.913208240235142,
+              "relative_to_g0": 0.1668051123501662
+            },
+            "input_tokens": {
+              "l2": 7.999703743297666,
+              "relative_to_g0": 0.25302804354264
+            },
+            "transformer_blocks": {
+              "l2": 85.34585208617581,
+              "relative_to_g0": 0.34726574647578057
+            }
+          },
+          "l2": 85.84272540340761,
+          "relative_to_g0": 0.3424006216027561
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 10.371116475475596,
+            "relative_to_g0": 0.5348711717711424
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 5.204526484398572,
+              "relative_to_g0": 0.1935320946232857
+            },
+            "global_input": {
+              "l2": 3.611489628420551,
+              "relative_to_g0": 0.15394400099289154
+            },
+            "input_tokens": {
+              "l2": 14.776623474627447,
+              "relative_to_g0": 0.4673798240445799
+            },
+            "transformer_blocks": {
+              "l2": 119.19862770561176,
+              "relative_to_g0": 0.48501010204083256
+            }
+          },
+          "l2": 120.30153032523006,
+          "relative_to_g0": 0.4798463535442044
+        }
+      },
+      "192": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 8.621414914878823,
+            "relative_to_g0": 0.4446335463255873
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.5140813606142537,
+              "relative_to_g0": 0.01911629094879364
+            },
+            "global_input": {
+              "l2": 5.150763517707045,
+              "relative_to_g0": 0.219557364319726
+            },
+            "input_tokens": {
+              "l2": 9.889590184560529,
+              "relative_to_g0": 0.31280454078494685
+            },
+            "transformer_blocks": {
+              "l2": 107.87778062936412,
+              "relative_to_g0": 0.43894644089533574
+            }
+          },
+          "l2": 108.4967786924611,
+          "relative_to_g0": 0.43276077607760416
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 11.947398529469243,
+            "relative_to_g0": 0.6161650065530666
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 5.985034281440908,
+              "relative_to_g0": 0.22255554359298865
+            },
+            "global_input": {
+              "l2": 4.070878830442714,
+              "relative_to_g0": 0.173526007048147
+            },
+            "input_tokens": {
+              "l2": 16.917441632381827,
+              "relative_to_g0": 0.5350932103672905
+            },
+            "transformer_blocks": {
+              "l2": 148.39792404739762,
+              "relative_to_g0": 0.6038198062366414
+            }
+          },
+          "l2": 149.56248247887146,
+          "relative_to_g0": 0.5965594257237324
+        }
+      },
+      "256": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 10.074306988884484,
+            "relative_to_g0": 0.5195637708504041
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.5326464571898998,
+              "relative_to_g0": 0.01980664040477946
+            },
+            "global_input": {
+              "l2": 5.933716957299278,
+              "relative_to_g0": 0.2529316772717717
+            },
+            "input_tokens": {
+              "l2": 11.638759481168563,
+              "relative_to_g0": 0.36813020022782283
+            },
+            "transformer_blocks": {
+              "l2": 127.60988324576948,
+              "relative_to_g0": 0.5192348576974058
+            }
+          },
+          "l2": 128.33200721863233,
+          "relative_to_g0": 0.5118774926668953
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 13.42119971894437,
+            "relative_to_g0": 0.6921735800790058
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 6.552844906785756,
+              "relative_to_g0": 0.24366977559887015
+            },
+            "global_input": {
+              "l2": 4.500154505924137,
+              "relative_to_g0": 0.19182438855047398
+            },
+            "input_tokens": {
+              "l2": 18.78890851183723,
+              "relative_to_g0": 0.594287102823644
+            },
+            "transformer_blocks": {
+              "l2": 173.78201746056976,
+              "relative_to_g0": 0.7071057414316573
+            }
+          },
+          "l2": 175.00707620991022,
+          "relative_to_g0": 0.6980502004981249
+        }
+      },
+      "32": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 3.1646831651514717,
+            "relative_to_g0": 0.16321268754735033
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.34910161059050365,
+              "relative_to_g0": 0.012981462604998197
+            },
+            "global_input": {
+              "l2": 1.378795265705409,
+              "relative_to_g0": 0.05877277289747506
+            },
+            "input_tokens": {
+              "l2": 4.070260855974197,
+              "relative_to_g0": 0.1287410351862352
+            },
+            "transformer_blocks": {
+              "l2": 38.8451466417181,
+              "relative_to_g0": 0.1580579315310676
+            }
+          },
+          "l2": 39.098939923000714,
+          "relative_to_g0": 0.15595382451723544
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 6.87846024809753,
+            "relative_to_g0": 0.3547438794638003
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 2.9306647694184473,
+              "relative_to_g0": 0.10897777024757765
+            },
+            "global_input": {
+              "l2": 2.2528586893638294,
+              "relative_to_g0": 0.09603075627935428
+            },
+            "input_tokens": {
+              "l2": 9.697705755782625,
+              "relative_to_g0": 0.30673529832823104
+            },
+            "transformer_blocks": {
+              "l2": 62.61099649202252,
+              "relative_to_g0": 0.2547593574019343
+            }
+          },
+          "l2": 63.478599865147594,
+          "relative_to_g0": 0.2531969010787764
+        }
+      },
+      "512": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 14.108125859586057,
+            "relative_to_g0": 0.7276005266988872
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.5994188103811945,
+              "relative_to_g0": 0.02228959316038071
+            },
+            "global_input": {
+              "l2": 7.80835808832948,
+              "relative_to_g0": 0.332840464456311
+            },
+            "input_tokens": {
+              "l2": 16.62167932417496,
+              "relative_to_g0": 0.525738344162159
+            },
+            "transformer_blocks": {
+              "l2": 192.8178162320326,
+              "relative_to_g0": 0.7845609511290194
+            }
+          },
+          "l2": 193.76559116967724,
+          "relative_to_g0": 0.7728722329112974
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 17.1077986410148,
+            "relative_to_g0": 0.8823031085594594
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 8.2924143342979,
+              "relative_to_g0": 0.30835625880887146
+            },
+            "global_input": {
+              "l2": 5.85157975215501,
+              "relative_to_g0": 0.24943048211651592
+            },
+            "input_tokens": {
+              "l2": 24.04276485435803,
+              "relative_to_g0": 0.7604648806589679
+            },
+            "transformer_blocks": {
+              "l2": 254.27872929523386,
+              "relative_to_g0": 1.0346407069960628
+            }
+          },
+          "l2": 255.65927212020074,
+          "relative_to_g0": 1.0197473726642654
+        }
+      },
+      "64": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 4.768594472834306,
+            "relative_to_g0": 0.24593145004374414
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.4352986627041743,
+              "relative_to_g0": 0.016186729423395208
+            },
+            "global_input": {
+              "l2": 2.5588156836560785,
+              "relative_to_g0": 0.10907253368401677
+            },
+            "input_tokens": {
+              "l2": 5.763635009902148,
+              "relative_to_g0": 0.1823019123015966
+            },
+            "transformer_blocks": {
+              "l2": 56.81393693301916,
+              "relative_to_g0": 0.23117156530760774
+            }
+          },
+          "l2": 57.187240562544794,
+          "relative_to_g0": 0.22810257507952325
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 8.18227039948028,
+            "relative_to_g0": 0.42198547925551644
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 3.8297601501726817,
+              "relative_to_g0": 0.14241093901424504
+            },
+            "global_input": {
+              "l2": 2.794294201793332,
+              "relative_to_g0": 0.11911008299459856
+            },
+            "input_tokens": {
+              "l2": 11.767992403903552,
+              "relative_to_g0": 0.3722177958001373
+            },
+            "transformer_blocks": {
+              "l2": 84.23937772040273,
+              "relative_to_g0": 0.34276358688402303
+            }
+          },
+          "l2": 85.20709658056275,
+          "relative_to_g0": 0.33986529082163347
+        }
+      },
+      "768": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 16.60012697873034,
+            "relative_to_g0": 0.8561208804914211
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.5985684022621877,
+              "relative_to_g0": 0.0222579704440684
+            },
+            "global_input": {
+              "l2": 9.125301133299702,
+              "relative_to_g0": 0.3889767135616814
+            },
+            "input_tokens": {
+              "l2": 20.06482122428531,
+              "relative_to_g0": 0.6346438094869883
+            },
+            "transformer_blocks": {
+              "l2": 247.51268899810208,
+              "relative_to_g0": 1.00711020636791
+            }
+          },
+          "l2": 248.582934796741,
+          "relative_to_g0": 0.9915220071852795
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 19.776018281907742,
+            "relative_to_g0": 1.019911607050625
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 9.237469576347204,
+              "relative_to_g0": 0.34349846071269236
+            },
+            "global_input": {
+              "l2": 6.891932944136052,
+              "relative_to_g0": 0.29377676281989706
+            },
+            "input_tokens": {
+              "l2": 27.921990250064212,
+              "relative_to_g0": 0.8831635259880309
+            },
+            "transformer_blocks": {
+              "l2": 310.0611479740987,
+              "relative_to_g0": 1.2616151033988405
+            }
+          },
+          "l2": 311.58744331776506,
+          "relative_to_g0": 1.2428279015402883
+        }
+      }
+    },
+    "bun392_recipe": {
+      "0": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 0.0,
+            "relative_to_g0": 0.0
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "global_input": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "input_tokens": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "transformer_blocks": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            }
+          },
+          "l2": 0.0,
+          "relative_to_g0": 0.0
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 0.0,
+            "relative_to_g0": 0.0
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "global_input": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "input_tokens": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            },
+            "transformer_blocks": {
+              "l2": 0.0,
+              "relative_to_g0": 0.0
+            }
+          },
+          "l2": 0.0,
+          "relative_to_g0": 0.0
+        }
+      },
+      "1024": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 8.435605845412097,
+            "relative_to_g0": 0.4350507868467612
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.5005345781617162,
+              "relative_to_g0": 0.01861254921718661
+            },
+            "global_input": {
+              "l2": 3.4531698607847616,
+              "relative_to_g0": 0.1471954343420779
+            },
+            "input_tokens": {
+              "l2": 9.405672126088405,
+              "relative_to_g0": 0.2974983690191809
+            },
+            "transformer_blocks": {
+              "l2": 85.92164540893374,
+              "relative_to_g0": 0.3496086054801222
+            }
+          },
+          "l2": 86.54221554319392,
+          "relative_to_g0": 0.34519067582741286
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 12.265259193097863,
+            "relative_to_g0": 0.6325580830378428
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 4.811393900389622,
+              "relative_to_g0": 0.17891332523552472
+            },
+            "global_input": {
+              "l2": 4.857185983600334,
+              "relative_to_g0": 0.20704327599274958
+            },
+            "input_tokens": {
+              "l2": 15.057708718510396,
+              "relative_to_g0": 0.4762704594494217
+            },
+            "transformer_blocks": {
+              "l2": 119.02242162883641,
+              "relative_to_g0": 0.48429313298739607
+            }
+          },
+          "l2": 120.19418638794582,
+          "relative_to_g0": 0.4794181911031974
+        }
+      },
+      "128": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 2.2950712845986434,
+            "relative_to_g0": 0.11836406140017669
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.38437094078329015,
+              "relative_to_g0": 0.014292964692389155
+            },
+            "global_input": {
+              "l2": 0.8538948969147042,
+              "relative_to_g0": 0.03639827616394166
+            },
+            "input_tokens": {
+              "l2": 2.976210209722665,
+              "relative_to_g0": 0.09413656689082904
+            },
+            "transformer_blocks": {
+              "l2": 28.139078179460224,
+              "relative_to_g0": 0.11449575755906496
+            }
+          },
+          "l2": 28.32167322781023,
+          "relative_to_g0": 0.11296657314246236
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 5.484434016554099,
+            "relative_to_g0": 0.2828495520103858
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 2.147567150687873,
+              "relative_to_g0": 0.07985801787399574
+            },
+            "global_input": {
+              "l2": 2.3915967878265687,
+              "relative_to_g0": 0.10194463120770081
+            },
+            "input_tokens": {
+              "l2": 6.6559788179122465,
+              "relative_to_g0": 0.2105264585039925
+            },
+            "transformer_blocks": {
+              "l2": 40.86060742796107,
+              "relative_to_g0": 0.16625868736534788
+            }
+          },
+          "l2": 41.53270689026833,
+          "relative_to_g0": 0.16566138352718746
+        }
+      },
+      "1536": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 10.151673333304968,
+            "relative_to_g0": 0.5235537971309582
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.5476366392558832,
+              "relative_to_g0": 0.020364055443920996
+            },
+            "global_input": {
+              "l2": 4.489178234317221,
+              "relative_to_g0": 0.19135651203939222
+            },
+            "input_tokens": {
+              "l2": 11.279809151147221,
+              "relative_to_g0": 0.3567767173178613
+            },
+            "transformer_blocks": {
+              "l2": 107.43724997245451,
+              "relative_to_g0": 0.4371539553359589
+            }
+          },
+          "l2": 108.16532005227572,
+          "relative_to_g0": 0.4314386879926588
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 13.532869756450939,
+            "relative_to_g0": 0.6979327559550172
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 5.818068801332895,
+              "relative_to_g0": 0.21634687519790022
+            },
+            "global_input": {
+              "l2": 5.3635192699699985,
+              "relative_to_g0": 0.2286263289596537
+            },
+            "input_tokens": {
+              "l2": 16.81977961354618,
+              "relative_to_g0": 0.5320041922802006
+            },
+            "transformer_blocks": {
+              "l2": 142.89517309474738,
+              "relative_to_g0": 0.5814295333583192
+            }
+          },
+          "l2": 144.13143264494988,
+          "relative_to_g0": 0.5748966135244301
+        }
+      },
+      "192": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 2.9315655143454222,
+            "relative_to_g0": 0.15119007538770338
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.41698287949934987,
+              "relative_to_g0": 0.015505650770241752
+            },
+            "global_input": {
+              "l2": 1.1453413571450732,
+              "relative_to_g0": 0.04882152495579837
+            },
+            "input_tokens": {
+              "l2": 3.714155992887265,
+              "relative_to_g0": 0.1174775534756284
+            },
+            "transformer_blocks": {
+              "l2": 34.80601562654485,
+              "relative_to_g0": 0.1416230162679178
+            }
+          },
+          "l2": 35.03849057603488,
+          "relative_to_g0": 0.1397579223734713
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 6.581311549375789,
+            "relative_to_g0": 0.33941898430411316
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 2.5111016206339487,
+              "relative_to_g0": 0.09337617128282794
+            },
+            "global_input": {
+              "l2": 2.7123504203890167,
+              "relative_to_g0": 0.11561713275417822
+            },
+            "input_tokens": {
+              "l2": 8.003751033380551,
+              "relative_to_g0": 0.2531560580196986
+            },
+            "transformer_blocks": {
+              "l2": 49.000160111455315,
+              "relative_to_g0": 0.19937790487293686
+            }
+          },
+          "l2": 49.797478051559345,
+          "relative_to_g0": 0.19862705149418147
+        }
+      },
+      "256": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 3.464769311913825,
+            "relative_to_g0": 0.17868907616284954
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.4405413979543455,
+              "relative_to_g0": 0.016381682324021714
+            },
+            "global_input": {
+              "l2": 1.4030939434842342,
+              "relative_to_g0": 0.059808532670027795
+            },
+            "input_tokens": {
+              "l2": 4.346974456122584,
+              "relative_to_g0": 0.1374933969128614
+            },
+            "transformer_blocks": {
+              "l2": 41.2211789980635,
+              "relative_to_g0": 0.16772582551428958
+            }
+          },
+          "l2": 41.49261830747924,
+          "relative_to_g0": 0.16550148231713557
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 7.581028138965852,
+            "relative_to_g0": 0.3909775204537678
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 2.7993474024925558,
+              "relative_to_g0": 0.10409468911468969
+            },
+            "global_input": {
+              "l2": 2.982872725870902,
+              "relative_to_g0": 0.12714846479400352
+            },
+            "input_tokens": {
+              "l2": 9.185999394833585,
+              "relative_to_g0": 0.2905501915375281
+            },
+            "transformer_blocks": {
+              "l2": 56.24212092124556,
+              "relative_to_g0": 0.22884488967755062
+            }
+          },
+          "l2": 57.14609974575061,
+          "relative_to_g0": 0.2279384768268481
+        }
+      },
+      "32": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 1.3493948975148544,
+            "relative_to_g0": 0.06959254885647911
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.20814197040358592,
+              "relative_to_g0": 0.0077398302481457865
+            },
+            "global_input": {
+              "l2": 0.3976615575323539,
+              "relative_to_g0": 0.016950792472403803
+            },
+            "input_tokens": {
+              "l2": 1.719923310519961,
+              "relative_to_g0": 0.05440061835650568
+            },
+            "transformer_blocks": {
+              "l2": 14.272839891376346,
+              "relative_to_g0": 0.0580750941967682
+            }
+          },
+          "l2": 14.388370582314,
+          "relative_to_g0": 0.05739085062925504
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 3.098715872985204,
+            "relative_to_g0": 0.15981054632726313
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 1.4289650033708141,
+              "relative_to_g0": 0.05313655162957288
+            },
+            "global_input": {
+              "l2": 1.3166872538995635,
+              "relative_to_g0": 0.05612534570957335
+            },
+            "input_tokens": {
+              "l2": 3.667700406556666,
+              "relative_to_g0": 0.11600817829649056
+            },
+            "transformer_blocks": {
+              "l2": 21.20159463959301,
+              "relative_to_g0": 0.08626766748501134
+            }
+          },
+          "l2": 21.609699218918113,
+          "relative_to_g0": 0.08619454252453682
+        }
+      },
+      "512": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 5.402290729120008,
+            "relative_to_g0": 0.2786131637192215
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.4744825824101223,
+              "relative_to_g0": 0.017643796858631648
+            },
+            "global_input": {
+              "l2": 2.307944300645919,
+              "relative_to_g0": 0.09837884537011896
+            },
+            "input_tokens": {
+              "l2": 6.362075697779928,
+              "relative_to_g0": 0.20123039781668722
+            },
+            "transformer_blocks": {
+              "l2": 61.1730187295578,
+              "relative_to_g0": 0.2489083358362504
+            }
+          },
+          "l2": 61.57481720502015,
+          "relative_to_g0": 0.2456032888867023
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 9.733265247000535,
+            "relative_to_g0": 0.5019751730812353
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 3.640656241967958,
+              "relative_to_g0": 0.13537904561029804
+            },
+            "global_input": {
+              "l2": 3.979941258388313,
+              "relative_to_g0": 0.1696496858834767
+            },
+            "input_tokens": {
+              "l2": 11.739795230378428,
+              "relative_to_g0": 0.37132592831611055
+            },
+            "transformer_blocks": {
+              "l2": 81.37182210574215,
+              "relative_to_g0": 0.33109572234527035
+            }
+          },
+          "l2": 82.40920007024059,
+          "relative_to_g0": 0.328705329394355
+        }
+      },
+      "64": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 1.7413227694831561,
+            "relative_to_g0": 0.0898055047735365
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.32258240915730607,
+              "relative_to_g0": 0.011995337043626084
+            },
+            "global_input": {
+              "l2": 0.6085813042017787,
+              "relative_to_g0": 0.025941495210458937
+            },
+            "input_tokens": {
+              "l2": 2.232358947977913,
+              "relative_to_g0": 0.0706087919274512
+            },
+            "transformer_blocks": {
+              "l2": 19.783911664033315,
+              "relative_to_g0": 0.08049922385547625
+            }
+          },
+          "l2": 19.92897037317635,
+          "relative_to_g0": 0.07949062441355827
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 4.297252248118228,
+            "relative_to_g0": 0.22162284560031129
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 1.7750523010598056,
+              "relative_to_g0": 0.06600592597996648
+            },
+            "global_input": {
+              "l2": 1.951290008935075,
+              "relative_to_g0": 0.08317603592407183
+            },
+            "input_tokens": {
+              "l2": 5.143650522384345,
+              "relative_to_g0": 0.16269200336780035
+            },
+            "transformer_blocks": {
+              "l2": 31.189200757402045,
+              "relative_to_g0": 0.12690647311208442
+            }
+          },
+          "l2": 31.7273516639729,
+          "relative_to_g0": 0.12655079251622087
+        }
+      },
+      "768": {
+        "actor": {
+          "bun_extra_input": {
+            "l2": 7.089159773591959,
+            "relative_to_g0": 0.36561031822758455
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 0.46100204118473875,
+              "relative_to_g0": 0.017142518329677153
+            },
+            "global_input": {
+              "l2": 2.9619005871303514,
+              "relative_to_g0": 0.12625450266776853
+            },
+            "input_tokens": {
+              "l2": 7.992731398085493,
+              "relative_to_g0": 0.2528075105173491
+            },
+            "transformer_blocks": {
+              "l2": 74.41617196660191,
+              "relative_to_g0": 0.3027937137678182
+            }
+          },
+          "l2": 74.9360037750936,
+          "relative_to_g0": 0.29889701372412386
+        },
+        "critic": {
+          "bun_extra_input": {
+            "l2": 11.180736739426163,
+            "relative_to_g0": 0.5766258411254891
+          },
+          "groups": {
+            "action_heads": {
+              "l2": 4.274993519252486,
+              "relative_to_g0": 0.1589670938868346
+            },
+            "global_input": {
+              "l2": 4.3807186500747175,
+              "relative_to_g0": 0.18673329445822515
+            },
+            "input_tokens": {
+              "l2": 13.675465477879834,
+              "relative_to_g0": 0.43255055255039254
+            },
+            "transformer_blocks": {
+              "l2": 101.02640984518766,
+              "relative_to_g0": 0.41106873703988644
+            }
+          },
+          "l2": 102.15465301666354,
+          "relative_to_g0": 0.4074639583977022
+        }
+      }
+    }
+  },
+  "read_only": true,
+  "requested_points": {
+    "bun392_base": [
+      0,
+      32,
+      64,
+      128,
+      192,
+      256,
+      512,
+      768
+    ],
+    "bun392_recipe": [
+      0,
+      32,
+      64,
+      128,
+      192,
+      256,
+      512,
+      768,
+      1024,
+      1536
+    ]
+  },
+  "root_cause_assessment": {
+    "amplifiers": [
+      "E_new_bun_input_representation",
+      "F_critic_value_targets"
+    ],
+    "earliest_collapse": {
+      "base": {
+        "g0_hunter_safe_total": 19,
+        "generation": 32,
+        "hunter_safe_total": 1,
+        "tactical_safe": 16
+      },
+      "recipe": {
+        "g0_hunter_safe_total": 19,
+        "generation": 32,
+        "hunter_safe_total": 7,
+        "tactical_safe": 14
+      }
+    },
+    "most_likely_combination": [
+      "A_reward_hunter_misalignment",
+      "B_curriculum_opponent_shift",
+      "C_ppo_forgetting"
+    ],
+    "not_sufficient": [
+      "D_top25_shortcut"
+    ],
+    "stage2": "blocked_by_stage1_ability_evidence; no dynamic self-play is started by this audit",
+    "task_vs_hunter": "task indicators improve while Hunter safety and Tactical do not; this is not a clean generalized improvement"
+  },
+  "run": "/mnt/jpfs/afs/wangyaqi/code_room/cx_je03_admission_curriculum_20261009/runs/je03_bun_stage1_20261011/bun831_native_tracks_v1",
+  "schema": "bun392_retention_conflict_analysis_v1",
+  "training_events": {
+    "bun392_base": {
+      "0": null,
+      "128": {
+        "actor_update_l2": 14.133396275798917,
+        "critic_update_l2": 18.57510362306926,
+        "done_rate": 0.0012264251708984375,
+        "fresh_ticks_per_second": 51067.21467127216,
+        "generation": 128,
+        "loss": [
+          1.4758596420288086,
+          1.4765292406082153,
+          1.4760825634002686,
+          1.4765088558197021
+        ],
+        "loss_mean": 1.4762450754642487,
+        "mean_reward": 0.063298131339252,
+        "optimizer_updates": 128,
+        "optimizer_updates_per_second": 12.467581706853554,
+        "parameter_update_l2": 32.708499898868176,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 458.75,
+        "rollout_seconds": 2.1146645545959473,
+        "update_seconds": 7.1791136264801025
+      },
+      "192": {
+        "actor_update_l2": 13.76351046769694,
+        "critic_update_l2": 19.71866879935685,
+        "done_rate": 0.000926971435546875,
+        "fresh_ticks_per_second": 51672.69987546752,
+        "generation": 192,
+        "loss": [
+          1.4662065505981445,
+          1.4686545133590698,
+          1.468092918395996,
+          1.467616319656372
+        ],
+        "loss_mean": 1.4676425755023956,
+        "mean_reward": 0.060842324048280716,
+        "optimizer_updates": 128,
+        "optimizer_updates_per_second": 12.615405243034063,
+        "parameter_update_l2": 33.48217926705379,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 499.5,
+        "rollout_seconds": 2.1144819259643555,
+        "update_seconds": 7.175159215927124
+      },
+      "256": {
+        "actor_update_l2": 15.341625400088162,
+        "critic_update_l2": 18.13027746998985,
+        "done_rate": 0.0009765625,
+        "fresh_ticks_per_second": 51203.27722544227,
+        "generation": 256,
+        "loss": [
+          1.4702874422073364,
+          1.469499945640564,
+          1.4691321849822998,
+          1.470623254776001
+        ],
+        "loss_mean": 1.4698857069015503,
+        "mean_reward": 0.06651506386697292,
+        "optimizer_updates": 128,
+        "optimizer_updates_per_second": 12.500800103867741,
+        "parameter_update_l2": 33.47190287007801,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 462.25,
+        "rollout_seconds": 2.1108224391937256,
+        "update_seconds": 7.178318977355957
+      },
+      "32": {
+        "actor_update_l2": 11.954353441045718,
+        "critic_update_l2": 18.73624045880108,
+        "done_rate": 0.00064849853515625,
+        "fresh_ticks_per_second": 50862.05896485541,
+        "generation": 32,
+        "loss": [
+          1.4930906295776367,
+          1.49052095413208,
+          1.4921395778656006,
+          1.4916036128997803
+        ],
+        "loss_mean": 1.4918386936187744,
+        "mean_reward": 0.044431304559111595,
+        "optimizer_updates": 128,
+        "optimizer_updates_per_second": 12.417494864466653,
+        "parameter_update_l2": 30.6905938998468,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 405.75,
+        "rollout_seconds": 2.1139068603515625,
+        "update_seconds": 7.1842193603515625
+      },
+      "512": {
+        "actor_update_l2": 14.187319711687692,
+        "critic_update_l2": 20.609893576911244,
+        "done_rate": 0.0011005401611328125,
+        "fresh_ticks_per_second": 51442.89851986146,
+        "generation": 512,
+        "loss": [
+          1.4639866352081299,
+          1.4612112045288086,
+          1.463496446609497,
+          1.4644038677215576
+        ],
+        "loss_mean": 1.4632745385169983,
+        "mean_reward": 0.07025937922298908,
+        "optimizer_updates": 128,
+        "optimizer_updates_per_second": 12.559301396450552,
+        "parameter_update_l2": 34.79721328859894,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 474.25,
+        "rollout_seconds": 2.1113905906677246,
+        "update_seconds": 7.184930086135864
+      },
+      "64": {
+        "actor_update_l2": 13.291717855432461,
+        "critic_update_l2": 18.864640407851084,
+        "done_rate": 0.001781463623046875,
+        "fresh_ticks_per_second": 51182.03664860403,
+        "generation": 64,
+        "loss": [
+          1.4876656532287598,
+          1.490189552307129,
+          1.4840377569198608,
+          1.4848363399505615
+        ],
+        "loss_mean": 1.4866823256015778,
+        "mean_reward": 0.05828266218304634,
+        "optimizer_updates": 128,
+        "optimizer_updates_per_second": 12.495614416163093,
+        "parameter_update_l2": 32.15635826328354,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 414.5,
+        "rollout_seconds": 2.110187292098999,
+        "update_seconds": 7.179493188858032
+      },
+      "768": {
+        "actor_update_l2": 14.503015954987442,
+        "critic_update_l2": 24.943654043224146,
+        "done_rate": 0.0011425018310546875,
+        "fresh_ticks_per_second": 51620.47869428941,
+        "generation": 768,
+        "loss": [
+          1.4728307723999023,
+          1.4752875566482544,
+          1.4739311933517456,
+          1.47423255443573
+        ],
+        "loss_mean": 1.474070519208908,
+        "mean_reward": 0.058345602825284004,
+        "optimizer_updates": 128,
+        "optimizer_updates_per_second": 12.602655931223001,
+        "parameter_update_l2": 39.44666999821159,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 449.0,
+        "rollout_seconds": 2.110852003097534,
+        "update_seconds": 7.177806854248047
+      }
+    },
+    "bun392_recipe": {
+      "0": null,
+      "1024": {
+        "actor_update_l2": 4.76270799122502,
+        "critic_update_l2": 6.8231918302836245,
+        "done_rate": 0.002532958984375,
+        "fresh_ticks_per_second": 104367.1051819452,
+        "generation": 1024,
+        "loss": [
+          1.011653184890747,
+          1.015544056892395,
+          0.9552287459373474,
+          1.0380566120147705
+        ],
+        "loss_mean": 1.005120649933815,
+        "mean_reward": 0.14837488532066345,
+        "optimizer_updates": 32,
+        "optimizer_updates_per_second": 6.37006257214021,
+        "parameter_update_l2": 11.585899821508644,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 283.5,
+        "rollout_seconds": 2.3760058879852295,
+        "update_seconds": 1.7939040660858154
+      },
+      "128": {
+        "actor_update_l2": 3.994496213063833,
+        "critic_update_l2": 4.8963880839811695,
+        "done_rate": 0.0020427703857421875,
+        "fresh_ticks_per_second": 103997.57216484997,
+        "generation": 128,
+        "loss": [
+          1.1277220249176025,
+          1.1309444904327393,
+          1.1299350261688232,
+          1.1080563068389893
+        ],
+        "loss_mean": 1.1241644620895386,
+        "mean_reward": 0.12071512266993523,
+        "optimizer_updates": 32,
+        "optimizer_updates_per_second": 6.347508066702269,
+        "parameter_update_l2": 8.890884297045002,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 249.25,
+        "rollout_seconds": 2.3761303424835205,
+        "update_seconds": 1.79313063621521
+      },
+      "1536": {
+        "actor_update_l2": 4.36771303545246,
+        "critic_update_l2": 5.766535261732561,
+        "done_rate": 0.0010929107666015625,
+        "fresh_ticks_per_second": 103576.25164156496,
+        "generation": 1536,
+        "loss": [
+          1.2739827632904053,
+          1.295647144317627,
+          1.2767285108566284,
+          1.2791939973831177
+        ],
+        "loss_mean": 1.2813881039619446,
+        "mean_reward": 0.10037204623222351,
+        "optimizer_updates": 32,
+        "optimizer_updates_per_second": 6.321792702732236,
+        "parameter_update_l2": 10.134248297185021,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 165.75,
+        "rollout_seconds": 2.3738396167755127,
+        "update_seconds": 1.7930359840393066
+      },
+      "192": {
+        "actor_update_l2": 4.3502896193300025,
+        "critic_update_l2": 5.091395245913372,
+        "done_rate": 0.002033233642578125,
+        "fresh_ticks_per_second": 104901.52839538423,
+        "generation": 192,
+        "loss": [
+          1.0778765678405762,
+          1.0805535316467285,
+          1.0971064567565918,
+          1.0894646644592285
+        ],
+        "loss_mean": 1.0862503051757812,
+        "mean_reward": 0.1244762409478426,
+        "optimizer_updates": 32,
+        "optimizer_updates_per_second": 6.402681176476088,
+        "parameter_update_l2": 9.441684865243374,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 267.0,
+        "rollout_seconds": 2.3769898414611816,
+        "update_seconds": 1.7924330234527588
+      },
+      "256": {
+        "actor_update_l2": 4.4156548373998294,
+        "critic_update_l2": 5.5792830145890555,
+        "done_rate": 0.002246856689453125,
+        "fresh_ticks_per_second": 104642.09880574602,
+        "generation": 256,
+        "loss": [
+          1.0422923564910889,
+          1.0465716123580933,
+          1.0374503135681152,
+          1.0607011318206787
+        ],
+        "loss_mean": 1.046753853559494,
+        "mean_reward": 0.13784830272197723,
+        "optimizer_updates": 32,
+        "optimizer_updates_per_second": 6.386846850936647,
+        "parameter_update_l2": 9.994937851988885,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 274.75,
+        "rollout_seconds": 2.3761866092681885,
+        "update_seconds": 1.7933082580566406
+      },
+      "32": {
+        "actor_update_l2": 3.7064753365066956,
+        "critic_update_l2": 4.985356923380956,
+        "done_rate": 0.0010280609130859375,
+        "fresh_ticks_per_second": 104940.08483459537,
+        "generation": 32,
+        "loss": [
+          1.2964584827423096,
+          1.276725172996521,
+          1.2867774963378906,
+          1.3213204145431519
+        ],
+        "loss_mean": 1.2953203916549683,
+        "mean_reward": 0.06021114345639944,
+        "optimizer_updates": 32,
+        "optimizer_updates_per_second": 6.405034474767784,
+        "parameter_update_l2": 8.69183225988765,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 218.5,
+        "rollout_seconds": 2.377254009246826,
+        "update_seconds": 1.7943205833435059
+      },
+      "512": {
+        "actor_update_l2": 4.059866526893148,
+        "critic_update_l2": 6.361556287132161,
+        "done_rate": 0.0020294189453125,
+        "fresh_ticks_per_second": 104633.89826247709,
+        "generation": 512,
+        "loss": [
+          1.1373975276947021,
+          1.1324012279510498,
+          1.1268471479415894,
+          1.1514095067977905
+        ],
+        "loss_mean": 1.137013852596283,
+        "mean_reward": 0.12857068702578545,
+        "optimizer_updates": 32,
+        "optimizer_updates_per_second": 6.3863463294968925,
+        "parameter_update_l2": 10.42142281402531,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 255.5,
+        "rollout_seconds": 2.3775572776794434,
+        "update_seconds": 1.7934494018554688
+      },
+      "64": {
+        "actor_update_l2": 4.052263527682665,
+        "critic_update_l2": 4.545427069616051,
+        "done_rate": 0.0016727447509765625,
+        "fresh_ticks_per_second": 104626.20177561014,
+        "generation": 64,
+        "loss": [
+          1.27585768699646,
+          1.206064224243164,
+          1.1954104900360107,
+          1.2083690166473389
+        ],
+        "loss_mean": 1.2214253544807434,
+        "mean_reward": 0.09737149998545647,
+        "optimizer_updates": 32,
+        "optimizer_updates_per_second": 6.385876573218392,
+        "parameter_update_l2": 8.597690597298715,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 238.0,
+        "rollout_seconds": 2.37782621383667,
+        "update_seconds": 1.7951819896697998
+      },
+      "768": {
+        "actor_update_l2": 5.290988481842645,
+        "critic_update_l2": 6.502191205843807,
+        "done_rate": 0.002468109130859375,
+        "fresh_ticks_per_second": 104662.26954385391,
+        "generation": 768,
+        "loss": [
+          1.0037962198257446,
+          1.0086395740509033,
+          1.0263347625732422,
+          1.0191726684570312
+        ],
+        "loss_mean": 1.0144858062267303,
+        "mean_reward": 0.14671479910612106,
+        "optimizer_updates": 32,
+        "optimizer_updates_per_second": 6.3880779750887395,
+        "parameter_update_l2": 11.793179687686452,
+        "raw_optimizer_updates": 128,
+        "rollout_kills_sum_mean": 266.75,
+        "rollout_seconds": 2.3792264461517334,
+        "update_seconds": 1.7932419776916504
+      }
+    }
+  }
+}

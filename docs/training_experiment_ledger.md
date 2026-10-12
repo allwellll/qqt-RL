@@ -288,3 +288,47 @@ CX-01 至 CX-28 的实验假设、唯一变量、证据等级和失败模式可�
 - 每次停止、失败或重启：记录原因和墙钟，不能只保留成功段。
 - 每次提交训练相关代码：PR/commit说明中引用实验ID。
 - 每次模型晋升：在对应条目中写明被替代checkpoint、依据和可回滚路径。
+
+
+## Bun392 持续训练能力保持冲突根因审计（20261011）
+
+## Bun392 Retention v2 启动（20261011）
+
+基于上述审计和 commit `862303f`，新建独立 namespace `runs/je03_bun_stage1_20261011/bun392_retention_v2`，实验 ID `JE03-BUN392-RETENTION-V2-20261011-v1`。两臂从同一冻结 `bun392_gen0.pkl` 启动：control 为 retention_v2 + 战斗优先课程，teacher 为相同底座加冻结 g0 actor KL=.08 与 45% 战斗 replay。奖励把安全击杀/存活置于主导量级，任务进度有界、一次性且无 crate/brick/explore 奖励；对手冻结为 rule_combat .35 + old .65，动态自对弈关闭。
+
+CPU smoke/recovery 两臂均已通过 finite、非零 Actor/Critic 更新、四副本一致和 fresh-process digest 一致。旧 `bun831_native_tracks_v1` 在 control g1113、recipe g2253 更新边界安全退出，旧 checkpoint/评估/失败证据保留，`SUPERSEDED_20261011_retention_v2.json` 明确这是用户授权的替换而非能力失败伪造。GPU smoke/正式 owner 随后在 8 卡空闲后启动，CPU Hunter/Tactical/Bun-task 评估异步运行，不作为 GPU 启动或扩训阻塞门禁。设计与奖励逐项见 `reports/je03_bun_stage1_20261011/bun392_retention_v2_design.md`。
+
+实际启动证据：GPU owner PID 429980/429981；正式 worker control PID 440471（GPU0-3）、teacher PID 441350（GPU4-7）。smoke/recovery 首次正式更新均 finite、非零且 replica exact；control 首个正式事件 g1 actor/critic L2=9.0233/15.4688，teacher g1=8.2185/15.8791。随后现场读到 control g24、teacher g22，fresh 吞吐约 47.4k/47.9k ticks/s、11.58/11.70 optimizer updates/s，显存约 30-32 GiB/card，8卡均有持续计算。独立 CPU retention owner PID 447316；旧 evaluator KeyError（错误假设 teaching tracks）已保留并由新 owner 修复隔离，不影响训练。
+
+对 `JE03-BUN831-NATIVE-TRACKS-20261011-v1` 做独立只读审计，未停止或修改健康 GPU/CPU 进程。新报告与机器结果：`reports/je03_bun_stage1_20261011/bun392_retention_conflict_analysis_v1.md`、`bun392_retention_conflict_analysis_v1.json`；诊断脚本：`scripts/je03_bun392_retention_conflict_analysis_20261011.py`。覆盖 base g0/32/64/128/192/256/512/768、recipe g0/32/64/128/192/256/512/768/1024/1536 的 Hunter hard/normal/easy safe/death/self/trade/bombs、Tactical、carry/steal/route/full 任务、训练 reward/done/kill telemetry、实际 optimizer accounting、Actor/Critic/输入尾部/heads 漂移。
+
+关键事实：共同 Bun392 g0 Hunter safe `19/192`、Tactical `22/64`；base g32 已降至 Hunter `1/192`、Tactical `16/64`，recipe g32 为 `7/192`、`14/64`。recipe 任务却在 g128 达到 carry/steal `16/16`，base 到 g512 carry `16/16`，而 Hunter 未恢复；base g512 Hunter death/self `142/192`、`68/192`。训练 mean reward 随早期点上升（base .044→.066，recipe .060→.148），不能当作能力提升。实际 Adam 为 base 128/gen、recipe 32/gen，Top25 原始 telemetry 的 128/gen 已由 `accounting_v1` 取 checkpoint 校正，旧 raw 保留。
+
+可证伪假设排序：A Bun 任务奖励与 Hunter 目标错位最强；B 课程/冻结对手分布冲突；C PPO 累计更新遗忘；E 新 Bun 输入/道具通道表征扰动；F Critic/共享梯度可能放大但独立 Critic 两臂仍退化，不能作为唯一解释；D Top25 只解释 recipe 特有捷径，不能解释 base 共同退化。现阶段结论是“任务局部学会、Hunter 战斗/安全目标遗忘或未被优化”，不是训练完全失败；无 entropy/KL 训练遥测，已明确标缺失。后续仅做 CPU 离线 reward 分项、lesson/opponent 频率、固定 batch KL/漂移和 Top25 构成反事实，不设 GPU 阻塞门禁、不热改当前配方、不启动第二阶段。
+
+## Bun392 保守动态自对弈续训接管（20261012）
+
+最终CPU monitor_v2已实际完成两臂真实非零finite更新、每代测试league refresh及fresh-process完整恢复，监测进程自然退出；最终SOURCE_SEAL所有源码hash复核一致。完整JSON证据在`reports/je03_bun_stage2_20261012/selfplay_cpu_validation_20261012.json`，不作GPU阻塞门禁。接管实现提交851d4bd，唯一handoff494076持续WAIT_PARENT_ATOMIC_EXIT，当前候选2048；正式起点与GPU首更新将在实际4卡释放时生成。
+
+耐久调度实装：tmux `je03-bun392-selfplay12-v2-20261012`、launcher494073、唯一handoff494076，flock已现场验证拒绝第二writer。plan SHA `4e89f524c9e428da48417403f0326cc049d6f5e4a36ed2f216f6c322c4b4f5f5`，当前WAIT_PARENT_ATOMIC_EXIT、candidate2048、assigned空、checks_block_launch=false。8项CPU测试通过；两臂真实CPU nonzero+fresh-process restore digest相同且passed，refresh=1监测证明recent→history滚动存取；另真实网络同物理状态概率响应诊断通过（最大变化.930254、KL1.967522，仅功能诊断，不作训练稳定性结论）。最终快照monitor_v2并行复验。新正式self-play尚未占GPU，父retention两worker440471/441350仍健康占满8卡；不伪造PID或起点hash。安装证据在 `reports/je03_bun_stage2_20261012/selfplay_handoff_installed_20261012.json`，首次释放自动生成共同 `INITIALIZATION.json/SOURCE_SEAL.json` 并直接启动formal，技术检查不阻塞。
+
+用户授权阶段2准备，但当前 retention_v2 control/teacher 继续健康训练至4096，未中断；旧CPU owner继续3072/4096。新实验 `JE03-BUN392-SELFPLAY12-20261012-v2` 的CPU准备产物位于 `runs/je03_bun_stage2_20261012/bun392_selfplay12_v2`，handoff owner将在旧worker/owner原子退出、实际4卡释放后自动接管，不等待CPU评估或技术READY。共同保守底座：LR7.5e-5、clip.1、1epoch/64 updates-gen、global clip.5、g0 Actor KL.10、45%战斗重采样；两臂只在12%对手槽位区分冻结Stage1与每128代更新的recent/history神经网络联赛，规则/g0/Stage1其余池相同，learner角色50:50。起点按教师曲线先比较相邻点hard/normal共同安全击杀再比较稳定效用，当前偏好g2048，不默认4096；迟到CPU不阻GPU。实际reward披露：现有retention_v2构造被lesson路由覆盖，新A/B冻结当前语义，不把未生效候选奖励当实验变量。新增每代KL、熵、梯度、Actor漂移、对手/lesson ticks和league版本遥测；连续三点明确恶化才原子替换同卡recovery。六项self-play TDD及control CPU nonzero/fresh restore已通过，dynamic CPU monitor并行中。详见 `reports/je03_bun_stage2_20261012/bun392_selfplay_plan_20261012.md`。
+
+## Stage2 CPU 权威评估故障恢复（20261012）
+
+旧 CPU evaluator 在取 manifest 时误用 Bun831 wrapper 的 `SPAWNS` 属性，实际常量位于嵌套 authority，启动抛 AttributeError；handoff 15秒重试未解决。旧 `cpu_owner.log`/protocol/产物保留。新增独立 `authority_stage2_recovery_v2` 及恢复入口，保持训练 SOURCE_SEAL 不变，现场 seal 验证通过。唯一新 CPU owner PID529839（tmux `je03-stage2-cpu-authority-recovery-20261012`）同时持有新旧评估锁，旧重试不能成为 writer；CUDA 空、JAX CPU，CPU96–127与trainer128–135隔离。13项相关CPU测试通过。GPU worker503177/508661继续健康4+4，取证时g2077/g1649、约71.2k/65.3k fresh ticks/s，未中断。
+
+同冻结 Hunter64/档300+64 residual、Tactical64及 Bun task16/类，配对优先g0/512/1024/1536/共同2048，再补早期点及追随3072/4096。任务只增加换命/安全击杀事件观察，idle诊断局限明确；真实Hunter依旧网页路径。新owner逐checkpoint及shard hash校验、原子PAIR、异步不阻GPU；终态以新EVALUATION_COMPLETE/OWNER_FINISHED为准，唯一通知为每PAIR一次jdme-notify claim。根因、完整协议、启动与结果记录在 `reports/je03_bun_stage2_20261012/selfplay_cpu_authority_recovery_20261012.md` 和run下 `RECOVERY_RECEIPT_20261012.json`。
+
+本轮已取得真正首个完整两臂 `PAIR_g000000.json`（新authority_stage2_recovery_v2），两臂独立重评同Stage1 teacher2048 policy SHA fe61db9e…，Hunter hard/normal/easy各64：safe2/4/10、death1/1/5、self0/0/1、trade0/0/2；Tactical64 safe21/death3/self0/trade1。四类任务每类16：carry capture14、near steal16、route/full capture0；full death/self1，所有task trade0，两臂全指标一致，Hunter pair差全零。control/dynamic墙钟240.611/240.568秒，配对481.179秒；唯一g0通知发送成功，owner自动开始g512。现场GPU原worker继续g2141/g1708、70.9k/65.1k fresh ticks/s；已有10个待评pair约80分钟CPU工作量，未来2048/3072/4096跟随共同提交。数据与协议hash/进程receipt存同名20261012 JSON报告；64局只作快筛，不宣称第二阶段能力已提升。
+
+## Bun392 Stage1/Stage2 全曲线终态验收（20261012）
+
+Stage1/Stage2两臂均实际完成4096代，Stage2每臂2,147,483,648 fresh ticks，control/dynamic有效训练8.487/9.191小时、墙钟8.658/9.375小时。Stage2全部14个pair、所有checkpoint state/policy、评估shard、TRAINING_COMPLETE、EVALUATION_COMPLETE及OWNER_FINISHED hash已重新验证；所有训练/评估相关进程退出。独立只读汇总脚本 `scripts/summarize_bun_stages.py` 输出 `reports/je03_bun_stage2_20261012/bun392_final_acceptance_20261012.md` 和同名JSON，保留完整两阶段曲线和证据hash，无run/checkpoint/log入库。
+
+Stage1教师KL+45%战斗重采样组合明显改善无保持对照的安全退化，但两项共同变化不能拆归因。实际Stage2起点是当时已冻结的teacher g2048，Hunter safe2/4/10、death1/1/5、self0/0/1、trade0/0/2、Tactical21。Stage1 teacher g4096为另一个探索确认候选：safe0/4/18、death/self/trade全0、Tactical24；不回填成历史已知最优。
+
+Stage2动态12%联赛没有形成稳定三档共同优势。最值得扩大样本确认的动态候选为g3072：Hunter safe0/4/23，death1/0/3、self全0、trade0/0/1、Tactical24；但full任务death/self2，不能声称安全非劣已通过。g4096退为safe0/3/16、death1/4/2、self0/3/1、trade全0、Tactical19。固定g4096 safe3/2/14、death1/3/1、self0/0/1、trade0/1/0、Tactical18；动态相对固定总safe持平19/192、death+2/self+3/Tactical+1。保留g3072，不默认终点最好。Stage2所有点carry capture14/16、near steal16/16，route/full capture/steal/return全0，Bun任务仅局部保持，无新完整任务进展。单seed、每档64快筛、多点选择偏差，不得作为最终显著性/晋级/部署结论；旧协议网页Hunter native_items/native_trap关闭的局限与独立native安全probe必须同时披露。
+
+
+主线白名单整合（20261012）：基于最新origin/main a260615，代码提交2006268；完整248提交/1274差异文件审计见main_integration_audit_20261012.json。main网页/部署和现有更新全部保留，未携带runs/checkpoints/logs/.hermes/历史vendor。70项不同Python测试、7项新增Node及main全套npm测试通过；真实main CPU Hunter8局兼容性smoke通过。最终候选不自动部署，不改网页模型目录；详细整合、依赖、恢复和回滚见docs/bun392_main_integration_20261012.md。

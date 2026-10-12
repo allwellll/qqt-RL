@@ -1,0 +1,220 @@
+{
+  "schema": "it831_generation_audit_v1",
+  "legacy_read_only": true,
+  "history_head": "e793499a20db733d619ffb40cb3456ed3a9f669d",
+  "history_head_is_generation_source": false,
+  "artifact_hashes": {
+    "ckpt/params_it00000831.pkl": "51e28b3374e12e1b2074ae7a3c6b90ea08866c22ed43faa6a226f0c05f37ac3a",
+    "ckpt/params_it00000831_ema.pkl": "609bc3a704d3b1637fca53a5e8ffc339b13a5fcd7b2af5e32093499e40c046fb",
+    "ckpt/params_it00000831.meta.json": "e187b23a9079da45fc82ec16b4393cd377b0fdb3567ce9c93b38cfe330b6bf54",
+    "configs/long_12h_league_breakthrough.toml": "cfff7d58c27a44b77bce4020c97bb5b55948b2f2f9c44fdcc506a4e63c717ffa",
+    "configs/long_9h_league_breakthrough.toml": "939e67cbbe3142fc85ea89e1826798f68551d1786dd71f3aca2c50d2e3edcaae",
+    "configs/long_8h_aggressive_clean.toml": "760fc27aedf0d321378d15007bd16832a3e73519c6509c87ddd0ff135c94fb19",
+    "deploy_10node/launch_league_breakthrough.sh": "51e097770820a8d894a3ad8fb3e14b39966e760f3da2beb6b89153db25df6e88",
+    "deploy_10node/launch_aggressive_clean.sh": "80e43d80092e87ad4eb49c960c8aff65902412bc4869cf7bf7af4eadbc141653",
+    "jax_bomb/multicard_train.py": "e94a14f54668e1c6a3d5d40a0ed9d667e7d0000eaf8107192a02c926fb94ee60",
+    "jax_bomb/jax_train.py": "afc72d5d5c22740fd72e84be611592d1e8a1268b8a395b0d056e080dd4e94ac6",
+    "README.md": "16415b8e631d4ea25bcaae1bc47d5f1172fabb2dfd4b7673cff7710c9bd4ce38",
+    "monitor/train_r0_full.log": "cccdd656eb9e5b5ac00a77d3b9828bb3335dbe2f305491315705c3e087fbeaab",
+    "web/models/params_aggr_it00000419_ema.json": "61003fe21e8480d3ecc4dc4134c2e51403dec945f4f91ef356535438952387a7",
+    "web/models/params_aggr_it00000419_ema.onnx": "03a28bd9ce4dde071e0d59b4b37946d5c6e5dcf98911d869588fd3f42ef7cee9",
+    "web/models/params_it00000831_ema.json": "db56b8fb214ac509edaea7ee7e1a9beebd0d9a6bba7b53d9b0c4cda160606cac"
+  },
+  "source_versions": {
+    "3e7a55429fd19a5f6e8dddcab07b7b360231baae": {
+      "jax_bomb/jax_train.py": "0dd70bd93e37a0686e6e0555d6bb64f51246bb283a18e1652b2fa38fae221870",
+      "jax_bomb/multicard_train.py": "8259ddf207e2d3ea69ceccafc5c0329ac36f72eec0607ca0669a5cefb80e4aa6"
+    },
+    "728537c84ddde87a7b91db4b1a8770c0363a7f3a": {
+      "jax_bomb/jax_train.py": "e4e2ce09e8ec9f8b3358da3a181df7d9b11819df1254b9035297176aeb966497",
+      "jax_bomb/multicard_train.py": "59de59b83e79f36259f87dfc5457ad47450fa761476fc94ff67759503222ee4c"
+    }
+  },
+  "evidence": {
+    "verified": [
+      {
+        "topic": "model",
+        "evidence": "actual EMA tensors",
+        "embed": 392,
+        "depth": 4,
+        "patch": 3,
+        "spatial_input": 14,
+        "global_input": 24,
+        "movement": 5,
+        "ability": 2,
+        "params": 7519087,
+        "caveat": "heads4/FF4 follows audited executable network; tensor alone does not identify the launcher"
+      },
+      {
+        "topic": "snapshot",
+        "evidence": "actual raw + EMA pkl and meta",
+        "iteration": 831,
+        "meta": {
+          "iteration": 831,
+          "timestamp": "2026-09-17 00:52:37",
+          "global_steps": 10433617920,
+          "curriculum_stage": 0,
+          "annealed_hyperparams": {
+            "alpha": 1.0,
+            "alpha_fix": 1.0,
+            "alpha_dyn": 1.0,
+            "lose_bonus": 5.0,
+            "crate_coef": 0.25,
+            "explore_coef": 0.0,
+            "brick_coef": 0.20000000298023224,
+            "mutual_hit_penalty": 0.0,
+            "double_death_penalty": 0.0,
+            "win_hp_bonus": 0.2,
+            "trade_win_bonus": 5.0,
+            "lr": null
+          },
+          "training_telemetry": {
+            "loss": 1.5120115280151367,
+            "mean_reward": 0.018014993518590927,
+            "explore_reward": 0.0,
+            "kill_rate": 0.929679274559021,
+            "sps": 436476.03328283184,
+            "sps_avg": 434311.43315863423,
+            "ep_len": 299.4716913773948,
+            "dt": 28.800261735916138
+          }
+        },
+        "caveat": "EMA artifact proven; .995 decay from candidate config/source, not a saved EMA lineage state"
+      },
+      {
+        "topic": "global_steps_semantics",
+        "evidence": "multicard_train.py:118,528-534,821 + exact numeric match",
+        "meta_counter": 10433617920,
+        "formula": "(831-1)*2*(floor_even(24576/22)*22)*256",
+        "adjusted_env": 24552,
+        "physical_ticks_before_iteration": 5216808960,
+        "caveat": "counter counts both player transitions before iteration831, not 10.43B distinct physical ticks"
+      },
+      {
+        "topic": "implementation_gap",
+        "evidence": "728537c jax_train.py:220-283,349-380",
+        "details": "flee ratio .60 implies15%idle/3%roam/30%pure flee/12%smart kite +40% current-policy selfplay; no A* or loading snapshot league",
+        "executable_mixture_present": true,
+        "caveat": "post-training committed code; actual deployed uncommitted source unavailable"
+      },
+      {
+        "topic": "obs_quant_parser",
+        "evidence": "multicard_train.py:308",
+        "details": "parser reads runtime.obs_quant; candidate TOML places it under environment. Do not assume quantization was enabled"
+      },
+      {
+        "topic": "runtime_log",
+        "evidence": "monitor/train_r0_full.log",
+        "details": "only iter1/100/200 of15500; incompatible run length/step increments; NOT an it831 launch record"
+      },
+      {
+        "topic": "parent_public_model",
+        "evidence": "actual aggr419 EMA ONNX + export JSON",
+        "meta": {
+          "name": "params_aggr_it00000419_ema",
+          "display_name": "params_aggr_it00000419_ema (\u26a1\ufe0f\u7834\u62c6\u8fdb\u653b\u7248 T+180m EMA)",
+          "arch": "transformer",
+          "obs_shape": [
+            14,
+            13,
+            15
+          ],
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "n_players": 2,
+          "it": 419,
+          "global_step": 3944742912,
+          "source": "params_aggr_it00000419_ema.pkl",
+          "generated_at": "2026-09-14 03:02 UTC"
+        },
+        "inputs": {
+          "obs": [
+            0,
+            14,
+            13,
+            15
+          ],
+          "state": [
+            0,
+            24
+          ]
+        },
+        "initializer_shapes": {
+          "tok_w": [
+            126,
+            392
+          ],
+          "tok_b": [
+            392
+          ],
+          "pos": [
+            26,
+            392
+          ],
+          "state_w": [
+            24,
+            392
+          ],
+          "state_b": [
+            392
+          ]
+        },
+        "caveat": "real parent inference graph recovered; original pkl/Adam/env/RNG/meta missing; export-label3.944B not actual generation log"
+      }
+    ],
+    "inferred": [
+      {
+        "topic": "most_consistent_launch",
+        "candidate": "configs/long_12h_league_breakthrough.toml",
+        "command": "python3 -u -m jax_bomb.train_real --config configs/long_12h_league_breakthrough.toml",
+        "evidence": "launcher explicitly names config; meta reward5/.25/.2/trade5 matches; adjusted22card step count matches exactly",
+        "candidate_settings": {
+          "world": 11,
+          "local_gpus": 2,
+          "envs": 24576,
+          "steps": 256,
+          "minibatch": 24576,
+          "epochs": 2,
+          "lr": 0.0002,
+          "gamma": 0.995,
+          "lam": 0.95,
+          "clip": 0.2,
+          "value": 0.5,
+          "entropy": 0.008,
+          "top_adv": 0.25,
+          "ema": 0.995,
+          "lsgd_k": 32
+        },
+        "caveat": "no archived actual command/environment/source seal; not proven exact invocation"
+      },
+      {
+        "topic": "maps_domain",
+        "evidence": "candidate TOML + launcher HP_DOMAIN_RAND=1",
+        "details": "empty20/\u529f\u592b30/\u6bd4\u6b6630/\u7231\u7684\u8003\u9a8c20; HP1-5; growth randomization; loader supported fields only, not all descriptive TOML keys"
+      },
+      {
+        "topic": "parent_chain",
+        "evidence": "README table and launcher init_params",
+        "details": "it349 -> aggr419 EMA -> it831 EMA; README claims2.93B+3.94B+10.43B player steps",
+        "caveat": "aggr419 public ONNX recovered; it349/full parent state and matching per-stage meta missing; total17.30B not independently validated"
+      },
+      {
+        "topic": "EMA_selection",
+        "evidence": "save loop + public deployment model name",
+        "details": "periodic raw and EMA snapshots saved together; public deployment uses831EMA",
+        "caveat": "no archived full validation sweep or selection criteria; do not claim831 was objectively best"
+      }
+    ],
+    "missing": [
+      "exact deployed git SHA and dirty-source snapshot",
+      "actual launch log for iteration831",
+      "per-rank topology/env overrides",
+      "it349/aggr419 full state and reliable generation logs",
+      "actual dynamic opponent snapshot history/refresh manifest",
+      "historical clean heldout checkpoint-selection record"
+    ]
+  },
+  "training_source_status": " M jax_bomb/jax_env.py\n M jax_bomb/jax_train.py\n",
+  "stage2_enabled": false
+}
