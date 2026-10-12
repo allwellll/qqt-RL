@@ -51,7 +51,7 @@ const id='bun392-selfplay3072';
     await page.fill('#settings-password', 'demaxiya');
     await page.click('#password-form button[type="submit"]');
     await page.selectOption('#opponent','model:'+id);
-    await page.waitForFunction(()=>document.querySelector('#model-status').textContent.startsWith('已加载：Bun392动态自对弈3072') && !document.querySelector('#opponent').disabled,null,{timeout:180000});
+    await page.waitForFunction(()=>document.querySelector('#model-status').textContent.startsWith('已加载：Bun392动态自对弈3072') && !document.querySelector('#opponent').disabled,null,{timeout:20*60*1000});
     await page.evaluate(async()=>{for(let i=0;i<16;i++)await appTick();});
     const evidence=await page.evaluate(()=>({calls:modelCalls,modelStatus:document.querySelector('#model-status').textContent,
       strategy:document.querySelector('#opponent').value,team:document.querySelector('#team-mode').value,

@@ -27,7 +27,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
     });
     await page.click('#advanced-open');await page.fill('#settings-password','demaxiya');await page.click('#password-form button[type="submit"]');
     await page.selectOption('#opponent','model:bun392-selfplay3072');
-    await page.waitForFunction(()=>document.querySelector('#model-status').textContent.startsWith('已加载：Bun392动态自对弈3072'),null,{timeout:180000});
+    await page.waitForFunction(()=>document.querySelector('#model-status').textContent.startsWith('已加载：Bun392动态自对弈3072'),null,{timeout:20*60*1000});
     const modes=[];
     for(const mode of ['human-vs-opponent','model-vs-rule']){
       await page.selectOption('#match-mode',mode);await page.waitForTimeout(500);

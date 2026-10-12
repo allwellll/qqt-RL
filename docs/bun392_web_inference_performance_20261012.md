@@ -27,3 +27,5 @@ ONNX及JSON沿用 `web-bun392-selfplay3072-v1` Release；目录 `web/models.json
 复现：`npm ci && npm test`；`python3 -m pytest -q tests/test_fetch_web_models.py tests/test_bun_release.py`（25项）；启动网页后 `WEB_URL=<WEB_URL> npm run benchmark:inference` 和 `WEB_URL=<WEB_URL> node scripts/verify_bun_inference_browser.js`，须安装Playwright Chromium。benchmark性能阈值只在真实浏览器执行，不拿静态代码断言替代性能测量。完整静态装配验证6个JSON+1个ONNX，复用已公开下载的cache时仍重新检查全部bytes/SHA，不跳过任何资产。
 
 机器证据：`reports/je03_bun_stage2_20261012/bun392_web_inference_performance_20261012.json`。部署后按精确提交核验Actions和Pages终态，再验证公网build-info、目录、运行时字节、同一Release ONNX完整性与真实两模式10Hz。
+
+公网首次实测暴露下载阶段的短超时：ONNX正在持续下载但当地连接约0.04MiB/s，初始化原3分钟上限会误终止健康下载。初始化上限改为有界20分钟，推理请求独立保留30秒超时；不把慢下载当推理成功，不改变SHA/大小或性能阈值。公网验收仍必须真实下载并开局，不能用mock绕过。

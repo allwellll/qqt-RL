@@ -28,6 +28,8 @@ const crypto=require('node:crypto');
   const app=require('fs').readFileSync(require.resolve('./app.js'),'utf8');
   assert(app.includes('await QQTModelWorker.load(row'));
   assert(app.includes('setInterval(tick, 100)'),'Keep physical 10Hz tick');
+  const workerSource=require('fs').readFileSync(require.resolve('./model_worker.js'),'utf8');
+  assert(workerSource.includes("client.request('init',{row},20*60*1000)"));
   // Exercise the real worker script with controlled runtime/download errors.
   const vm=require('node:vm'),source=require('fs').readFileSync(require.resolve('./model_inference_worker.js'),'utf8');
   async function initialize({downloadError,parityError,runtimeError}={}) {

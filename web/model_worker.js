@@ -30,7 +30,9 @@
   async function load(row,onProgress) {
     const client=new Client(new Worker('model_inference_worker.js'),onProgress);
     try {
-      const initialized=await client.request('init',{row},180000);
+      // Large verified assets can download slowly. Bound initialization to
+      // 20 minutes; inference requests retain their separate 30s timeout.
+      const initialized=await client.request('init',{row},20*60*1000);
       // Reuse the existing asynchronous act/caching/greedy/mask implementation.
       const model=new QQT.ORTTransformerModel({meta:initialized.meta},null);
       model.backend=initialized.backend;model.backendReason=initialized.backendReason;
