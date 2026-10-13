@@ -4,11 +4,8 @@
 importScripts('sim.js', 'model_loader.js');
 let session, meta, reference, runtime, backend;
 async function verifiedDownload(asset) {
-  const response = await fetch(`models/${asset.file}`, {cache:'no-store'});
-  const bytes = await QQTModelLoader.readResponseWithProgress(response,
+  return QQTModelLoader.downloadVerifiedAsset(`models/${asset.file}`,asset,
     (loaded,total)=>postMessage({progress:{loaded,total,asset:asset.file}}));
-  await QQTModelLoader.verifyBuffer(bytes,asset);
-  return bytes;
 }
 async function initialize(row) {
   async function loadReference() {

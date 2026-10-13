@@ -5,6 +5,8 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const base=process.env.WEB_URL || 'https://allwellll.github.io/qqt-RL/';
 const output=process.env.EVIDENCE_FILE || 'runs/bun-release-browser.json';
 const id=process.env.MODEL_ID || 'bun392-selfplay3072';
+const loadTimeout=Number(process.env.MODEL_LOAD_TIMEOUT_MS || 20*60*1000);
+assert.ok(Number.isFinite(loadTimeout) && loadTimeout>=30000 && loadTimeout<=60*60*1000);
 (async()=>{
   const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});
   const errors=[],writes=[],downloads=[];
@@ -52,7 +54,7 @@ const id=process.env.MODEL_ID || 'bun392-selfplay3072';
     await page.fill('#settings-password', 'demaxiya');
     await page.click('#password-form button[type="submit"]');
     await page.selectOption('#opponent','model:'+id);
-    await page.waitForFunction(name=>document.querySelector('#model-status').textContent.startsWith('已加载：'+name) && !document.querySelector('#opponent').disabled,row.display_name,{timeout:20*60*1000});
+    await page.waitForFunction(name=>document.querySelector('#model-status').textContent.startsWith('已加载：'+name) && !document.querySelector('#opponent').disabled,row.display_name,{timeout:loadTimeout});
     await page.evaluate(async()=>{for(let i=0;i<16;i++)await appTick();});
     const evidence=await page.evaluate(()=>({calls:modelCalls,modelStatus:document.querySelector('#model-status').textContent,
       strategy:document.querySelector('#opponent').value,team:document.querySelector('#team-mode').value,
@@ -90,7 +92,7 @@ const id=process.env.MODEL_ID || 'bun392-selfplay3072';
       return rows;
     });
     if(row.onnx)assert.equal(hunterSmoke.length,3);
-    assert.ok(downloads.length>0 && downloads.every(r=>r.status===200));assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);
+    assert.ok(downloads.length>0 && downloads.every(r=>r.status===200 || r.status===206));assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);
     const result={passed:true,url:base,row,downloads,evidence,hunterSmoke,errors,writes,networkMock:false};
     fs.mkdirSync(require('path').dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(result,null,2)+'\n');
     await page.screenshot({path:output+'.png',fullPage:true});console.log(JSON.stringify({passed:true,model:id,ticks:evidence.tick,inferenceCalls:evidence.calls.length}));

@@ -357,3 +357,5 @@ raw SHA `16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719`；COM
 JSON与ONNX独立双导出字节一致、packed权重exact，Python FP32/JS/ONNX八个合法双席位状态最大误差4.77e-6、合法greedy动作一致；JAX训练BF16漂移单列诊断（最高约0.113），不冒称逐值等同FP32权威。27项Python发布/下载测试、完整npm网页回归、本地Chromium WASM worker实际1v1及三档Hunter300tick+危险结算smoke通过。Release `web-bun392-transport1536-v1`与网页首项“Bun392战斗运输1536”保留全部旧模型，资产JSON/ONNX均内容寻址；不上传state/优化器/日志。远端SHA与精确head的最终部署另留验证证据。报告见 `reports/model_releases/bun392_transport1536_release_20261013.md`及同名JSON。
 
 发布只在canonical main进行，JE06独立supervisor持续正常8卡训练，未停止、热改或污染其run；未发布JE06早期点。隐私边界严格为Git追踪/待提交与Release内容，AGENTS本地忽略，旧run/checkpoint保留。
+
+Release五项资产认证API完整回读、Pages JSON/ONNX公开完整回读大小/SHA一致；首个发布head `abea27f` Actions `38411683710`两job最终success且公网目录匹配。首次Chromium真实加载因单连接约17KB/s触发worker20分钟超时，未推理，失败不作成功。追加有界8并发256KiB分段下载与确定性错误/完整性测试，最终仍要求完整SHA，推理/策略/10Hz语义不变；新head与公网浏览器终态继续核验。

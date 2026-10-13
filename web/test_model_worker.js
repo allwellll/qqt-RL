@@ -40,7 +40,7 @@ const crypto=require('node:crypto');
     const context={importScripts(){},performance,Float32Array,TextDecoder,URL,
       self:{location:{href:'https://example.org/model_inference_worker.js'}},
       fetch:async()=>{if(++downloads===(metadataOnly?1:2)&&downloadError)throw Error(downloadError);return {};},
-      QQTModelLoader:{readResponseWithProgress:async()=>new TextEncoder().encode(JSON.stringify({meta:{arch:'transformer',obs_shape:[24,13,15],global_dim:24}})).buffer,verifyBuffer:async()=>{}},
+      QQTModelLoader:{downloadVerifiedAsset:async()=>{await context.fetch();return new TextEncoder().encode(JSON.stringify({meta:{arch:'transformer',obs_shape:[24,13,15],global_dim:24}})).buffer;}},
       QQT:{TransformerModel:class {forward(){return {move:[0],bomb:[0],value:0};}}},
       ort:{env:{wasm:{}},Tensor:class{},InferenceSession:{create:async()=>{
         if(runtimeError)throw Error(runtimeError);

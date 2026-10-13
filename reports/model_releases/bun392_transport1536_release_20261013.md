@@ -31,7 +31,9 @@ JE04两点使用已补齐的JE05真实网页原生任务结果，不能沿用旧
 
 沿用`scripts/export_bun_release.py`与现有模型目录/worker协议，新增可配置资产前缀、内容寻址ONNX和显式原生编码。27项Python发布/下载测试通过，完整npm网页测试通过；本地Chromium worker实际加载、1v1开局及Hunter三档技术smoke由`scripts/verify_bun_release_browser.js`验证。完整静态站必须逐资产校验大小/SHA；Git追踪文件、待提交文件与Release说明/元数据独立隐私扫描，根级AGENTS保持忽略。凭据只在本地内存读取。
 
-新tag/Release：`web-bun392-transport1536-v1`，[Release](https://github.com/allwellll/qqt-RL/releases/tag/web-bun392-transport1536-v1)。JSON+ONNX、manifest和SHA256SUMS发布，不含state、Critic参数、优化器、训练日志、run、通知、锁或编排文件。网页目录首项为“Bun392战斗运输1536”，全部旧模型保留。Release远端回读、精确main head的Actions/Pages及公网页面验收记录以最终验证补记为准，尚未完成的步骤不得记成功。
+新tag/Release：`web-bun392-transport1536-v1`，[Release](https://github.com/allwellll/qqt-RL/releases/tag/web-bun392-transport1536-v1)。JSON+ONNX、manifest、evaluation和SHA256SUMS已发布，不含state、Critic参数、优化器、训练日志、run、通知、锁或编排文件。五项资产经现有认证API逐字节回读，大小/SHA及GitHub digest均一致；Pages JSON/ONNX独立公开回读亦一致。网页目录首项为“Bun392战斗运输1536”，全部旧模型保留。
+
+首个发布head `abea27f57a345a1258586c88c949b3d1c3d614e4` 的Actions `38411683710` test-and-build/deploy均最终success，公开build-info和完整models.json匹配。首次公网浏览器因约17KB/s的单连接ONNX下载触发worker20分钟初始化超时，未进入推理；失败证据保留，不记成功。补充有界8并发256KiB下载，每段核验Content-Range/长度，最终完整SHA/大小；仅瞬态HTTP和断连重试，永久错误及完整性失败硬失败。不支持range时回退完整下载并保留校验，不降低游戏tick或更换策略。验证脚本加载超时可配置且上限1小时；真实网页加载验收待新head完成后补记。
 
 ```sh
 CUDA_VISIBLE_DEVICES='' <PYTHON> scripts/export_bun_release.py --checkpoint <EXTERNAL_CHECKPOINT> --output <LOCAL_EXPORT> --source-ref runs/je05_bun_20261013/combat_transport_pfsp8_v1/formal/bun392_combat_transport_pfsp8/gen001536 --strategy raw --generated-at 2026-10-13T00:00:00Z --name Bun392战斗运输1536 --asset-prefix bun392-transport1536 --onnx
