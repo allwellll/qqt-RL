@@ -1,0 +1,1111 @@
+{
+  "manifest": {
+    "schema": "qqt.bun-release/v1",
+    "source_ref": "runs/je05_bun_20261013/combat_transport_pfsp8_v1/formal/bun392_combat_transport_pfsp8/gen001536",
+    "strategy": "raw",
+    "policy_sha256": "16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719",
+    "raw_policy_sha256": "16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719",
+    "ema_policy_sha256": "96355fe4a9826bc6d9a63107210b5dede02ac1bb59100038531c880bcdeee48d",
+    "committed_sha256": "34cede065d72d2c3674eaec42cf8f3e57292a2fc0bc40fb47a10c2d2c1b67e44",
+    "state_sha256": "867d38c103a58faaec510de7fa14528df8c0a05cb0c9c1982b8ede0bbf6f5bab",
+    "plan_sha256": "abc7a055ec08109e70f34fc091fe2da387ad6bea0759abc212d8799773e6446c",
+    "generation": 1536,
+    "arm": "bun392_combat_transport_pfsp8",
+    "generated_at": "2026-10-13T00:00:00Z",
+    "input_contract": {
+      "obs": [
+        24,
+        13,
+        15
+      ],
+      "global_dim": 24,
+      "embed": 392,
+      "depth": 4,
+      "heads": 4,
+      "patch": 3,
+      "move": 5,
+      "ability": [
+        "none",
+        "bomb",
+        "use_item"
+      ],
+      "bun_state_encoding": "bun24-trap-timer-v2"
+    },
+    "assets": [
+      {
+        "file": "bun392-transport1536-raw-2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0.json",
+        "bytes": 40294842,
+        "sha256": "2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0"
+      },
+      {
+        "file": "bun392-transport1536-raw-d5c8eb84936c18610d50f7044a13ec7d2ad480d5024b96ee75f82e1441b7b60a.onnx",
+        "bytes": 30242279,
+        "sha256": "d5c8eb84936c18610d50f7044a13ec7d2ad480d5024b96ee75f82e1441b7b60a"
+      }
+    ]
+  },
+  "evaluation": {
+    "passed": true,
+    "candidates": [
+      {
+        "label": "je04",
+        "generation": 768,
+        "source_ref": "runs/je04_bun_20261012/retention3_pfsp8_v1/formal/bun392_retention3_pfsp8/gen000768",
+        "committed_sha256": "57255232f514c7469256f37828304577dddb5669c9587ec8d37ddcedac6118fc",
+        "policy_sha256": "182671ad26e0cebdcbd88bb2e9c3af89c863f32d8b4fa660994c7b5497a1a506",
+        "ema_policy_sha256": "9b6e0465228c4c95e448820ff89448c9cf6310543b32e524f781acd86019290c",
+        "state_sha256": "0df77d9e241a8be01d3269798d6bccd47122f7269efa3488bd3f7755f1d75ac6",
+        "full_state_digest": "10caf7e4a88d271f51ea6f6c159df5a45a71b09de6538db68e7b5c7156d5251c",
+        "critic_digest": "9e89e93ff8056f770617c1ceb2c11786706ce2f499b9bb39d0ea429a94cc43d4",
+        "replicas_exact": true,
+        "complete_sha256": "9825aed0a6b3a0e67da59a01539bc152dc100720417305cda9d61b4b34b87b21",
+        "task_complete_sha256": "2997813f7fa9722bfa5c2cca81e498ca6eb8d1edc7f5d91693b3dbac68779727",
+        "hunter": {
+          "hard": {
+            "safe_win": 0,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 8.671875
+          },
+          "normal": {
+            "safe_win": 9,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 9.796875
+          },
+          "easy": {
+            "safe_win": 24,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 1,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 10.453125
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 19,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 8.40625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "tasks": {
+          "carry_home": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2313,
+              "threat": 1,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 4866,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 1,
+              "home_half": 12,
+              "capture": 0,
+              "drop": 1,
+              "repeat_pickup": 0,
+              "reverse": 516,
+              "pressure": 0
+            }
+          },
+          "near_steal": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 13,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2387,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 16,
+              "steal_trap": 7,
+              "steal_dead": 1,
+              "steal_unconditional": 5,
+              "carry_survival": 3035,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 8,
+              "pressure": 0
+            }
+          },
+          "route_break": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2390,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          },
+          "full": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2308,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          }
+        }
+      },
+      {
+        "label": "je04",
+        "generation": 2048,
+        "source_ref": "runs/je04_bun_20261012/retention3_pfsp8_v1/formal/bun392_retention3_pfsp8/gen002048",
+        "committed_sha256": "24439c0dca6dd8e1916d106c37264eda09958f5d4e7138b37fd1abdc5c8bd653",
+        "policy_sha256": "5b95304a42585af0e1986584b17ee39ebd9010211c66e5e573689ca381f3798d",
+        "ema_policy_sha256": "bb1cd8b6b69f1d7bda2580b1ff7903c5126cdee9621a767d3735c09b5431ab16",
+        "state_sha256": "8a8275b3695a65b96b4de0ffec017e214382eb4e572decc02644e60e0848c66a",
+        "full_state_digest": "1637eed857d1d88f2f8dca0087bebf414ea0da5635751f4cc2d3cfe205f11c54",
+        "critic_digest": "1ecae8864b48a46f19642e483820ce22621c507706bd0a4fbad182c6df467eb9",
+        "replicas_exact": true,
+        "complete_sha256": "dd8bf63987f0b085edde80739235a136c209545d5348261d6f604a59ec6163b4",
+        "task_complete_sha256": "f52ea8fd927e78ce3a59f2c0682f60aff306bd9a088464a36b71117a63f4ca20",
+        "hunter": {
+          "hard": {
+            "safe_win": 0,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 8.03125
+          },
+          "normal": {
+            "safe_win": 5,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 2,
+            "bombs_per_game": 9.1875
+          },
+          "easy": {
+            "safe_win": 29,
+            "death_episode": 3,
+            "final_dead": 2,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 1,
+            "trade_episodes": 2,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 11
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 26,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 9.59375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "tasks": {
+          "carry_home": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 4,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2289,
+              "threat": 6,
+              "sugar": 3,
+              "kill": 3,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 4402,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 8,
+              "capture": 0,
+              "drop": 4,
+              "repeat_pickup": 0,
+              "reverse": 523,
+              "pressure": 3
+            }
+          },
+          "near_steal": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 13,
+            "death_episodes": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2428,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 16,
+              "steal_trap": 6,
+              "steal_dead": 1,
+              "steal_unconditional": 6,
+              "carry_survival": 2773,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 1,
+              "repeat_pickup": 0,
+              "reverse": 13,
+              "pressure": 0
+            }
+          },
+          "route_break": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2392,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          },
+          "full": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2292,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          }
+        }
+      },
+      {
+        "label": "je05",
+        "generation": 1536,
+        "source_ref": "runs/je05_bun_20261013/combat_transport_pfsp8_v1/formal/bun392_combat_transport_pfsp8/gen001536",
+        "committed_sha256": "34cede065d72d2c3674eaec42cf8f3e57292a2fc0bc40fb47a10c2d2c1b67e44",
+        "policy_sha256": "16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719",
+        "ema_policy_sha256": "96355fe4a9826bc6d9a63107210b5dede02ac1bb59100038531c880bcdeee48d",
+        "state_sha256": "867d38c103a58faaec510de7fa14528df8c0a05cb0c9c1982b8ede0bbf6f5bab",
+        "full_state_digest": "47ff785cf23723d2131a33ea74e621deaeeef86e3c99ee2f34894f1528f4a3ea",
+        "critic_digest": "0e93b408760fa64a8c649a871d3b226dda61a7004b99e41c1dd29070b9f66946",
+        "replicas_exact": true,
+        "complete_sha256": "264807b0fa1144b92f361729e2a37a8fbc524bdaf40273f9acbc82eb44a548c3",
+        "task_complete_sha256": "7f7e0b4d8564f2eccbc28dc3dee00d2c1dcaec1f4da383605bf9ad57fc99607a",
+        "hunter": {
+          "hard": {
+            "safe_win": 3,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 7.875
+          },
+          "normal": {
+            "safe_win": 1,
+            "death_episode": 2,
+            "final_dead": 2,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 8.625
+          },
+          "easy": {
+            "safe_win": 32,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 1,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 11.359375
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 22,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 8.609375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "tasks": {
+          "carry_home": {
+            "games": 16,
+            "capture_episodes": 15,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 1621,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 2322,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 15,
+              "home_half": 16,
+              "capture": 15,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 49,
+              "pressure": 0
+            }
+          },
+          "near_steal": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 15,
+            "death_episodes": 1,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2420,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 16,
+              "steal_trap": 12,
+              "steal_dead": 2,
+              "steal_unconditional": 1,
+              "carry_survival": 4325,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 1,
+              "repeat_pickup": 0,
+              "reverse": 7,
+              "pressure": 0
+            }
+          },
+          "route_break": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2392,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          },
+          "full": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2288,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          }
+        }
+      },
+      {
+        "label": "je05",
+        "generation": 3072,
+        "source_ref": "runs/je05_bun_20261013/combat_transport_pfsp8_v1/formal/bun392_combat_transport_pfsp8/gen003072",
+        "committed_sha256": "6aaa619b7a5626cf3ddab5c880b1ec8a61e84ebf93c1595916bc151c7af66453",
+        "policy_sha256": "a87aece3a367d037fcdc77d47419388e37a1b6c0c9b5d8af006f08ded1eb2a43",
+        "ema_policy_sha256": "accb93da7f453361a148c22de6e84495df791eb0aa45b205b23303014240f5b5",
+        "state_sha256": "a4fafb74cd577fb3cf12b0ec88decb1661b6cc4b64b0c23f17052e90d9dbcafa",
+        "full_state_digest": "83ce79ecbe00ff34267bd5222cb8da3a5471eda0dc030f170e55e90e5a05e12a",
+        "critic_digest": "b29fc451dd127c3717afe112a60fe07e16c64fb2191486365ab0543afd4ea639",
+        "replicas_exact": true,
+        "complete_sha256": "75d3fe9df03f542c7ffe103f4b93eebfaf648df7af352c8e3d539716c3c6fbb4",
+        "task_complete_sha256": "1d0a90b203487eae7e48b9144b8778e7e24acc4fe4ec5707c2d24f681b48247d",
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 8.546875
+          },
+          "normal": {
+            "safe_win": 6,
+            "death_episode": 3,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 3,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 10.203125
+          },
+          "easy": {
+            "safe_win": 28,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 1,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 10.015625
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 17,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 7.6875,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "tasks": {
+          "carry_home": {
+            "games": 16,
+            "capture_episodes": 16,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 1238,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 1702,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 16,
+              "home_half": 16,
+              "capture": 16,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 16,
+              "pressure": 0
+            }
+          },
+          "near_steal": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 16,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2362,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 16,
+              "steal_trap": 9,
+              "steal_dead": 4,
+              "steal_unconditional": 3,
+              "carry_survival": 4133,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 6,
+              "pressure": 0
+            }
+          },
+          "route_break": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2454,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          },
+          "full": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2263,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          }
+        }
+      },
+      {
+        "label": "je05",
+        "generation": 4096,
+        "source_ref": "runs/je05_bun_20261013/combat_transport_pfsp8_v1/formal/bun392_combat_transport_pfsp8/gen004096",
+        "committed_sha256": "7bc877f37ba343d3b7361a76749e1f7e0822422c342511e00e852e116bf24abe",
+        "policy_sha256": "e3499238352c3054a00fddfc2a7f4d9ab4f7e86f9235d1bb55a7142340c406f3",
+        "ema_policy_sha256": "2c13c74faf6b5af8d92f1414d54875f8ed8cc95614310f476abc1777e688cd92",
+        "state_sha256": "6d731b40ea994606f8c71e6458c277e007d186a7d139a8c055995f033e573635",
+        "full_state_digest": "aa05eb214f9e05dc0859643db05159eebb5c05e7bbc43624ed2374653c0b7f5a",
+        "critic_digest": "469cc04b38b66d5d7845d749faa6ac105fff82f15a025bd8f96045651d0f9322",
+        "replicas_exact": true,
+        "complete_sha256": "c078bbf32c579276a2f6cda8c0a41d912c67a1fa575c81ac9d56fc98a2509e5d",
+        "task_complete_sha256": "11bba38c2908792bb80685fa07e4e1e9c3aac9a2c7b225688208948846343a9a",
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 8.546875
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 9.453125
+          },
+          "easy": {
+            "safe_win": 27,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 1,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 10.671875
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 18,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 7.53125,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "tasks": {
+          "carry_home": {
+            "games": 16,
+            "capture_episodes": 15,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 1451,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 2164,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 15,
+              "home_half": 16,
+              "capture": 15,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 61,
+              "pressure": 0
+            }
+          },
+          "near_steal": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 14,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2381,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 16,
+              "steal_trap": 8,
+              "steal_dead": 5,
+              "steal_unconditional": 1,
+              "carry_survival": 3864,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 5,
+              "pressure": 0
+            }
+          },
+          "route_break": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 1,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2330,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          },
+          "full": {
+            "games": 16,
+            "capture_episodes": 0,
+            "steal_episodes": 0,
+            "death_episodes": 0,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "safe_win": 0,
+            "funnel": {
+              "approach": 2277,
+              "threat": 0,
+              "sugar": 0,
+              "kill": 0,
+              "steal_trap": 0,
+              "steal_dead": 0,
+              "steal_unconditional": 0,
+              "carry_survival": 0,
+              "progress25": 0,
+              "progress50": 0,
+              "progress75": 0,
+              "home_half": 0,
+              "capture": 0,
+              "drop": 0,
+              "repeat_pickup": 0,
+              "reverse": 0,
+              "pressure": 0
+            }
+          }
+        }
+      }
+    ],
+    "selected": "je05_g001536_raw",
+    "ema_evaluated": false,
+    "reason": "Publish actually evaluated raw; EMA is not given raw scores. Native carry/safety and Tactical favor g1536 as a Pareto compromise; no significant dominance claim.",
+    "screening_only": true
+  },
+  "numerical_verification": {
+    "passed": true,
+    "backend": "cpu",
+    "python_precision": "fp32 frozen web authority",
+    "training_precision": "bf16 diagnostic only",
+    "packed_weights_exact": true,
+    "policy_sha256": "16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719",
+    "model_sha256": "2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0",
+    "onnx_sha256": "d5c8eb84936c18610d50f7044a13ec7d2ad480d5024b96ee75f82e1441b7b60a",
+    "samples": [
+      {
+        "sample": 0,
+        "seat": 0,
+        "max_errors": {
+          "js": {
+            "move": 0.0000020908476696668288,
+            "bomb": 0.000002622761195780754,
+            "value": 4.76837158203125e-7
+          },
+          "onnx": {
+            "move": 0.000004291534423828125,
+            "bomb": 9.5367431640625e-7,
+            "value": 0
+          }
+        },
+        "masked_greedy_exact": true,
+        "training_bf16_diagnostic_errors": {
+          "move": 0.04034614562988281,
+          "bomb": 0.047145843505859375,
+          "value": 0.07818078994750977
+        }
+      },
+      {
+        "sample": 0,
+        "seat": 1,
+        "max_errors": {
+          "js": {
+            "move": 0.000002698742821438671,
+            "bomb": 0.0000015430914528380413,
+            "value": 7.152557373046875e-7
+          },
+          "onnx": {
+            "move": 0.000004231929779052734,
+            "bomb": 0.000002384185791015625,
+            "value": 0.0000021457672119140625
+          }
+        },
+        "masked_greedy_exact": true,
+        "training_bf16_diagnostic_errors": {
+          "move": 0.11297178268432617,
+          "bomb": 0.08536195755004883,
+          "value": 0.003652811050415039
+        }
+      },
+      {
+        "sample": 1,
+        "seat": 0,
+        "max_errors": {
+          "js": {
+            "move": 0.0000020749294495914228,
+            "bomb": 0.0000026910606285568406,
+            "value": 4.76837158203125e-7
+          },
+          "onnx": {
+            "move": 0.000002384185791015625,
+            "bomb": 0.0000020265579223632812,
+            "value": 0.0000019073486328125
+          }
+        },
+        "masked_greedy_exact": true,
+        "training_bf16_diagnostic_errors": {
+          "move": 0.06039023399353027,
+          "bomb": 0.04479265213012695,
+          "value": 0.09079360961914062
+        }
+      },
+      {
+        "sample": 1,
+        "seat": 1,
+        "max_errors": {
+          "js": {
+            "move": 0.0000016091586466648877,
+            "bomb": 5.687159327916191e-7,
+            "value": 4.76837158203125e-7
+          },
+          "onnx": {
+            "move": 0.0000022649765014648438,
+            "bomb": 0.0000027418136596679688,
+            "value": 0.00000476837158203125
+          }
+        },
+        "masked_greedy_exact": true,
+        "training_bf16_diagnostic_errors": {
+          "move": 0.06957671046257019,
+          "bomb": 0.020032405853271484,
+          "value": 0.029484272003173828
+        }
+      },
+      {
+        "sample": 2,
+        "seat": 0,
+        "max_errors": {
+          "js": {
+            "move": 0.0000019072408448117528,
+            "bomb": 0.000002250223211319735,
+            "value": 0.000001430511474609375
+          },
+          "onnx": {
+            "move": 0.00000286102294921875,
+            "bomb": 0.000001430511474609375,
+            "value": 0.000001430511474609375
+          }
+        },
+        "masked_greedy_exact": true,
+        "training_bf16_diagnostic_errors": {
+          "move": 0.04431259632110596,
+          "bomb": 0.0329279899597168,
+          "value": 0.011042594909667969
+        }
+      },
+      {
+        "sample": 2,
+        "seat": 1,
+        "max_errors": {
+          "js": {
+            "move": 6.184197200997943e-7,
+            "bomb": 5.780727059256918e-7,
+            "value": 4.76837158203125e-7
+          },
+          "onnx": {
+            "move": 0.0000016093254089355469,
+            "bomb": 0.000002562999725341797,
+            "value": 0.000001430511474609375
+          }
+        },
+        "masked_greedy_exact": true,
+        "training_bf16_diagnostic_errors": {
+          "move": 0.020464718341827393,
+          "bomb": 0.01216590404510498,
+          "value": 0.015435218811035156
+        }
+      },
+      {
+        "sample": 3,
+        "seat": 0,
+        "max_errors": {
+          "js": {
+            "move": 0.0000028823435025415733,
+            "bomb": 0.000001967310278683243,
+            "value": 9.5367431640625e-7
+          },
+          "onnx": {
+            "move": 0.0000035762786865234375,
+            "bomb": 0.000001430511474609375,
+            "value": 4.76837158203125e-7
+          }
+        },
+        "masked_greedy_exact": true,
+        "training_bf16_diagnostic_errors": {
+          "move": 0.03988105058670044,
+          "bomb": 0.028626203536987305,
+          "value": 0.016796588897705078
+        }
+      },
+      {
+        "sample": 3,
+        "seat": 1,
+        "max_errors": {
+          "js": {
+            "move": 0.000001430185286643848,
+            "bomb": 0.000004198393254384314,
+            "value": 7.152557373046875e-7
+          },
+          "onnx": {
+            "move": 0.0000030994415283203125,
+            "bomb": 0.00000286102294921875,
+            "value": 0.0000016689300537109375
+          }
+        },
+        "masked_greedy_exact": true,
+        "training_bf16_diagnostic_errors": {
+          "move": 0.0488886833190918,
+          "bomb": 0.009009838104248047,
+          "value": 0.0031998157501220703
+        }
+      }
+    ]
+  },
+  "release_tag": "web-bun392-transport1536-v1",
+  "release_url": "https://github.com/allwellll/qqt-RL/releases/tag/web-bun392-transport1536-v1",
+  "local_tests": {
+    "python": 27,
+    "npm_full_suite": true
+  },
+  "deployment_status": "PENDING_EXACT_HEAD_VALIDATION"
+}

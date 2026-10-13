@@ -19,7 +19,10 @@ async function verify(modelFile, graphFile, output) {
       sim.reset(authority.loadLevel(), {nativeItems:true,nativeTrap:true,teams:[0,1]});
       for (let t = 0; t < i*7; t++) sim.step([[i%4,0,0],[(i+1)%4,0,0]]);
       for (let seat = 0; seat < 2; seat++) {
-        const obs=sim.encodeObsJAX(seat,24), state=Float32Array.from(sim.encodeStateJAX(seat));
+        if(i===1)sim.trapped[1]=30;
+        if(i===2){sim.alive[1]=false;sim.bunRespawn[1]=40;}
+        if(i===3){sim.bunCarried[0]=1;sim.bunStored[1][1]=0;}
+        const obs=sim.encodeObsJAX(seat,24), state=Float32Array.from(sim.encodeStateJAX(seat,doc.meta.bun_state_encoding));
         assert.equal(obs.length,24*13*15); assert.equal(state.length,24);
         const expected=model.forward(obs,state);
         const actual=await session.run({obs:new ort.Tensor('float32',obs,[1,24,13,15]),state:new ort.Tensor('float32',state,[1,24])});
@@ -30,7 +33,10 @@ async function verify(modelFile, graphFile, output) {
         }
         errors.value=Math.abs(actual.value.data[0]-expected.value);
         assert.ok(errors.value<0.002 && Number.isFinite(actual.value.data[0]));
-        rows.push({sample:i,seat,max_errors:errors});
+        rows.push({sample:i,seat,max_errors:errors,obs:Array.from(obs),state:Array.from(state),
+          js:{move:Array.from(expected.move),bomb:Array.from(expected.bomb),value:expected.value},
+          onnx:{move:Array.from(actual.move.data),bomb:Array.from(actual.bomb.data),value:actual.value.data[0]},
+          masks:{move:sim.legalMask().mm[seat],bomb:model._abilityMask(sim,sim.legalMask(),seat)}});
       }
     }
   } finally { await session.release(); }

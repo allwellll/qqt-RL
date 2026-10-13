@@ -28,6 +28,22 @@ def test_public_reference_is_repository_relative():
             validate_reference(ref)
 
 
+def test_release_prefix_is_a_safe_portable_asset_name():
+    from scripts.export_bun_release import validate_prefix
+    assert validate_prefix('bun392-transport1536') == 'bun392-transport1536'
+    for value in ['../model', '/model', 'UPPER', 'model/name', '']:
+        with pytest.raises(ValueError):
+            validate_prefix(value)
+
+
+def test_committed_native_encoding_is_explicit_and_rejects_unknown():
+    from scripts.export_bun_release import native_encoding
+    assert native_encoding({}) is None
+    assert native_encoding({'input_encoding':'bun24-trap-timer-v2'}) == 'bun24-trap-timer-v2'
+    with pytest.raises(ValueError, match='encoding'):
+        native_encoding({'input_encoding':'unknown'})
+
+
 def test_privacy_scope_ignores_untracked_local_files(tmp_path):
     subprocess.run(['git', 'init', '-q', str(tmp_path)], check=True)
     (tmp_path / 'public.txt').write_text('relative/source\n')

@@ -2112,7 +2112,8 @@
     // （state token 输入）。
     // g[0..10]: 基础状态（进度/血量/当前属性/存活）
     // g[11..23]: 上限与饱和观测（当前地图上限 + 是否已满，对齐 jax_env）
-    encodeStateJAX(pid) {
+    encodeStateJAX(pid, encoding) {
+      if (encoding && encoding !== 'bun24-trap-timer-v2') throw Error('Unsupported native Bun encoding');
       const opp = 1 - pid;
       const g = new Float64Array(24);
       if (this.isBun) {
@@ -2129,6 +2130,10 @@
         g[8] = this.spdG[opp] / CFG.growthSpeedMax;
         g[9] = this.alive[pid] ? 1 : 0;
         g[10] = this.alive[opp] ? 1 : 0;
+        if (encoding === 'bun24-trap-timer-v2') {
+          g[9] += this.trapped[pid] / 60;
+          g[10] += this.trapped[opp] / 60;
+        }
         g[11] = this.bunRespawn[pid] / this.bunRespawnTicks;
         g[12] = this.bunRespawn[opp] / this.bunRespawnTicks;
         g[13] = carried[pid] >= 0 ? 1 : 0;
@@ -3370,7 +3375,7 @@
       const every = this.inferEvery || 1;
       const lagTicks = Math.max(0, Math.round(every - 1.0));
       const currObs = sim.encodeObsJAX(pid, this.obsShape[0]);
-      const currGv = sim.encodeStateJAX(pid);
+      const currGv = sim.encodeStateJAX(pid, this.meta.bun_state_encoding);
       if (lagTicks <= 0) return { obs: currObs, state: currGv };
 
       if (!this._obsHistory) this._obsHistory = [[], []];

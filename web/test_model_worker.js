@@ -1,4 +1,5 @@
 'use strict';
+require('./test_bun_model_encoding.js');
 const assert=require('node:assert/strict');
 const {Client}=require('./model_worker.js');
 const {verifyBuffer}=require('./model_loader.js');

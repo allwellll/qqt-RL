@@ -16,6 +16,14 @@ assert.throws(() => catalog.validateManifest({ schema: 'bad', models: [] }), /sc
 assert.throws(() => catalog.validateManifest({ schema: 'qqt.web-models/v1', models: [{ ...manifest.models[0], file: '../x' }] }), /file/);
 assert.strictEqual(catalog.modelUrl(rows[0]), 'models/safe-high-c16.json');
 const production = require('./models.json');
+const transport = production.models[0];
+assert.strictEqual(transport.id, 'bun392-transport1536', 'Evaluated transport policy is the catalog default');
+assert.strictEqual(transport.cycle, 1536);
+assert.strictEqual(transport.strategy, 'raw');
+assert.strictEqual(transport.source_sha256, '16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719');
+assert.strictEqual(transport.onnx.meta.bun_state_encoding, 'bun24-trap-timer-v2');
+assert(transport.onnx.file.includes(transport.onnx.sha256));
+assert(transport.file.includes(transport.sha256));
 const bun392 = production.models.find(row => row.id === 'bun392-selfplay3072');
 assert(bun392, 'g3072 must be selectable without replacing existing models');
 assert.strictEqual(bun392.display_name, 'Bun392动态自对弈3072');

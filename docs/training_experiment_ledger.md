@@ -347,3 +347,13 @@ Stage2动态12%联赛没有形成稳定三档共同优势。最值得扩大样�
 ## Bun392 网页推理性能修复（20261012）
 
 不停止JE04 GPU训练或CPU评估，网页独立在main实施专用Worker+同源ONNX Runtime Web1.23.2单线程SIMD WASM。原392纯JS p95 183.4ms，Worker/WASM27.8ms；16原生状态最大误差2.3222e-5、greedy0差异，32固定seed完整轨迹0差异。完整装配站两模式各10秒100逻辑tick/100完成，推理p95 14.8/36.0ms，rAF约16.7ms，无稳定窗口longtask。模型raw、Bun编码/动作/greedy及10Hz不变，不降低tick、不替换模型。JSON/ONNX下载和SHA/大小硬校验，运行时回退明确与性能成功区分；WebGPU无实际adapter，不声称测得更快。25项Python相关测试及网页回归，部署按精确head终态核验。详见 `docs/bun392_web_inference_performance_20261012.md` 和同日JSON报告。
+
+## JE05 raw g1536网页模型发布（20261013）
+
+按已完成的同协议权威结果选择JE05 `bun392_combat_transport_pfsp8` g1536 raw，而非正在训练的JE06或JE05终点。Hunter hard/normal/easy3/1/32（36/192）、死亡/自炸/换命3/0/1；Tactical22/64且安全项全0，原生carry15/16、near steal15/16（死亡1、无条件抢包1）。g3072同为36/192，但Tactical17、自炸3；JE04 g768 normal9且更安全，却原生carry0，g2048 Tactical26但Hunter死亡6/自炸1/换命2。全部候选route/full300以及600/900tick旁路未capture。g1536是综合Pareto折中，不宣称所有维度支配或统计显著提升，64/档仅快筛。
+
+raw SHA `16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719`；COMMITTED/raw/EMA、完整state、对应Critic、8副本和权威shard均核验。EMA未同协议评估，不套用raw成绩，发布实际被评估的raw。原生24/global24/392×4/15动作不变；网页按显式`bun24-trap-timer-v2`元数据兼容糖泡倒计时，旧模型编码不变。
+
+JSON与ONNX独立双导出字节一致、packed权重exact，Python FP32/JS/ONNX八个合法双席位状态最大误差4.77e-6、合法greedy动作一致；JAX训练BF16漂移单列诊断（最高约0.113），不冒称逐值等同FP32权威。27项Python发布/下载测试、完整npm网页回归、本地Chromium WASM worker实际1v1及三档Hunter300tick+危险结算smoke通过。Release `web-bun392-transport1536-v1`与网页首项“Bun392战斗运输1536”保留全部旧模型，资产JSON/ONNX均内容寻址；不上传state/优化器/日志。远端SHA与精确head的最终部署另留验证证据。报告见 `reports/model_releases/bun392_transport1536_release_20261013.md`及同名JSON。
+
+发布只在canonical main进行，JE06独立supervisor持续正常8卡训练，未停止、热改或污染其run；未发布JE06早期点。隐私边界严格为Git追踪/待提交与Release内容，AGENTS本地忽略，旧run/checkpoint保留。
