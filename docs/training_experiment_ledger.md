@@ -358,4 +358,6 @@ JSON与ONNX独立双导出字节一致、packed权重exact，Python FP32/JS/ONNX
 
 发布只在canonical main进行，JE06独立supervisor持续正常8卡训练，未停止、热改或污染其run；未发布JE06早期点。隐私边界严格为Git追踪/待提交与Release内容，AGENTS本地忽略，旧run/checkpoint保留。
 
+最终线上验收：修复head `195993d` 的Actions `38416916939` test-and-build/deploy均最终success，公网build-info与完整目录匹配。Chromium以worker-wasm实际加载，原生1v1完成16 tick/16推理，Hunter三档300 tick及危险结算通过，无页面错误或写请求。Release五项资产与Pages JSON/ONNX完整回读大小/SHA一致。首次网络超时失败证据保留，技术smoke不计能力成绩。
+
 Release五项资产认证API完整回读、Pages JSON/ONNX公开完整回读大小/SHA一致；首个发布head `abea27f` Actions `38411683710`两job最终success且公网目录匹配。首次Chromium真实加载因单连接约17KB/s触发worker20分钟超时，未推理，失败不作成功。追加有界8并发256KiB分段下载与确定性错误/完整性测试，最终仍要求完整SHA，推理/策略/10Hz语义不变；新head与公网浏览器终态继续核验。

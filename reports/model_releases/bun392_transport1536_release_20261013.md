@@ -35,6 +35,10 @@ JE04两点使用已补齐的JE05真实网页原生任务结果，不能沿用旧
 
 首个发布head `abea27f57a345a1258586c88c949b3d1c3d614e4` 的Actions `38411683710` test-and-build/deploy均最终success，公开build-info和完整models.json匹配。首次公网浏览器因约17KB/s的单连接ONNX下载触发worker20分钟初始化超时，未进入推理；失败证据保留，不记成功。补充有界8并发256KiB下载，每段核验Content-Range/长度，最终完整SHA/大小；仅瞬态HTTP和断连重试，永久错误及完整性失败硬失败。不支持range时回退完整下载并保留校验，不降低游戏tick或更换策略。验证脚本加载超时可配置且上限1小时；真实网页加载验收待新head完成后补记。
 
+## 最终线上验收
+
+修复head `195993d582fd972b367c9e628340687b3264f11d` 的Actions `38416916939` 两job最终success，公网build-info及完整模型目录一致。公网Chromium以`worker-wasm`实际加载`bun24-trap-timer-v2`模型，完成16 tick/16次推理及原生1v1开局；hard/normal/easy各300 tick加危险结算（残余0/5/13），无page error或写请求。Release五项资产、Pages JSON/ONNX已完整回读校验大小/SHA。首次慢网络超时失败证据保留；不将技术smoke计入能力评估成绩。
+
 ```sh
 CUDA_VISIBLE_DEVICES='' <PYTHON> scripts/export_bun_release.py --checkpoint <EXTERNAL_CHECKPOINT> --output <LOCAL_EXPORT> --source-ref runs/je05_bun_20261013/combat_transport_pfsp8_v1/formal/bun392_combat_transport_pfsp8/gen001536 --strategy raw --generated-at 2026-10-13T00:00:00Z --name Bun392战斗运输1536 --asset-prefix bun392-transport1536 --onnx
 CUDA_VISIBLE_DEVICES='' <PYTHON> -m pytest tests/test_bun_release.py tests/test_fetch_web_models.py -q
