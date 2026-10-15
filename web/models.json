@@ -2,6 +2,78 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "bytes": 40294827,
+      "candidate": "je09_stage_c_return_set_pfsp8_g8_raw",
+      "cycle": 8,
+      "description": "受控真实掉包后的返程已改善；fixed32长距离首拾及full自然链仍未解决。Stage D未综合晋升。",
+      "display_name": "Bun392 JE09运包桥接g8",
+      "file": "bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
+      "id": "bun392-je09-stage-c-g8",
+      "onnx": {
+        "file": "bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
+        "bytes": 30242279,
+        "sha256": "b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
+        "meta": {
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "arch": "transformer",
+          "arm": "bun392_bridge_pfsp8",
+          "attention_heads": 4,
+          "bun_state_encoding": "bun24-trap-timer-v2",
+          "checkpoint_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
+          "committed_sha256": "c37b32d5727140c727918a908fb007d8d523eeb369f2ef27088151f02bed2bbf",
+          "depth": 4,
+          "display_name": "Bun392 JE09运包桥接g8",
+          "embed": 392,
+          "generated_at": "2026-10-15T00:00:00Z",
+          "generation": 8,
+          "move_actions": 5,
+          "n_players": 2,
+          "name": "Bun392 JE09运包桥接g8",
+          "obs_shape": [
+            24,
+            13,
+            15
+          ],
+          "patch": 3,
+          "plan_sha256": "d1484490e180f1ed8a98e377f93c45c3d3fcaf7613f51868b6fbfc454ceacb0b",
+          "qqt_map_id": 806,
+          "rule": "bun",
+          "source": "runs/je09_bun_20261015/stage_c_return_set_pfsp8_v8/formal/bun392_bridge_pfsp8/gen000008/policy.pt",
+          "state_dim": 24,
+          "strategy": "raw",
+          "value_max": 20,
+          "value_min": -20
+        },
+        "reference_zero": {
+          "move": [
+            0.8898895713831178,
+            -0.7100460054738482,
+            1.6911690348127766,
+            0.4342138291123921,
+            0.5660775501322692
+          ],
+          "bomb": [
+            0.6696535161930481,
+            0.5922261795411865,
+            -2.022189189337481
+          ],
+          "value": 1.4379423910843636
+        }
+      },
+      "score": 0.17708333333333334,
+      "score_protocol": "Hunter hard/normal/easy safe kills 2/3/29 (64 each), Tactical17/64; controlled return capture15/16 main,13/16 holdout; fixed32 pickup0/16; full2400 pickup/capture0/16; exploratory, no significance claim",
+      "sha256": "b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2",
+      "source_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
+      "strategy": "raw",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json"
+    },
+    {
       "id": "bun392-transport1536",
       "display_name": "Bun392战斗运输1536",
       "file": "bun392-transport1536-raw-2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0.json",
@@ -21,7 +93,11 @@
         "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-transport1536-v1/bun392-transport1536-raw-d5c8eb84936c18610d50f7044a13ec7d2ad480d5024b96ee75f82e1441b7b60a.onnx",
         "meta": {
           "ability_actions": 3,
-          "ability_encoding": ["none", "bomb", "use_item"],
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
           "arch": "transformer",
           "arm": "bun392_combat_transport_pfsp8",
           "attention_heads": 4,
@@ -36,7 +112,11 @@
           "move_actions": 5,
           "n_players": 2,
           "name": "Bun392战斗运输1536",
-          "obs_shape": [24, 13, 15],
+          "obs_shape": [
+            24,
+            13,
+            15
+          ],
           "patch": 3,
           "plan_sha256": "abc7a055ec08109e70f34fc091fe2da387ad6bea0759abc212d8799773e6446c",
           "qqt_map_id": 806,
@@ -48,8 +128,18 @@
           "value_min": -20
         },
         "reference_zero": {
-          "move": [1.1989415916561712, 1.0549244209003237, 1.3396873589866025, 2.0958717961159268, -0.15305966680381727],
-          "bomb": [1.644230372592183, -2.383269040710049, 3.2146418852287018],
+          "move": [
+            1.1989415916561712,
+            1.0549244209003237,
+            1.3396873589866025,
+            2.0958717961159268,
+            -0.15305966680381727
+          ],
+          "bomb": [
+            1.644230372592183,
+            -2.383269040710049,
+            3.2146418852287018
+          ],
           "value": 2.2516169072456313
         }
       }

@@ -1,0 +1,508 @@
+{
+  "schema": "qqt.model-publication-receipt/v2",
+  "date": "20261015",
+  "status": "preflight_complete_external_publication_pending",
+  "tag": "web-bun392-je09-stage-c-g8-v1",
+  "release": "https://github.com/allwellll/qqt-RL/releases/tag/web-bun392-je09-stage-c-g8-v1",
+  "page": "https://allwellll.github.io/qqt-RL/",
+  "source_commit": "5777835e8e4195b6273781477cfd1d1f97b0e26a",
+  "source": {
+    "ability_actions": 3,
+    "ability_encoding": [
+      "none",
+      "bomb",
+      "use_item"
+    ],
+    "arch": "transformer",
+    "arm": "bun392_bridge_pfsp8",
+    "attention_heads": 4,
+    "bun_state_encoding": "bun24-trap-timer-v2",
+    "checkpoint_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
+    "committed_sha256": "c37b32d5727140c727918a908fb007d8d523eeb369f2ef27088151f02bed2bbf",
+    "depth": 4,
+    "display_name": "Bun392 JE09运包桥接g8",
+    "embed": 392,
+    "generated_at": "2026-10-15T00:00:00Z",
+    "generation": 8,
+    "move_actions": 5,
+    "n_players": 2,
+    "name": "Bun392 JE09运包桥接g8",
+    "obs_shape": [
+      24,
+      13,
+      15
+    ],
+    "patch": 3,
+    "plan_sha256": "d1484490e180f1ed8a98e377f93c45c3d3fcaf7613f51868b6fbfc454ceacb0b",
+    "qqt_map_id": 806,
+    "rule": "bun",
+    "source": "runs/je09_bun_20261015/stage_c_return_set_pfsp8_v8/formal/bun392_bridge_pfsp8/gen000008/policy.pt",
+    "state_dim": 24,
+    "strategy": "raw",
+    "value_max": 20,
+    "value_min": -20
+  },
+  "catalog_id": "bun392-je09-stage-c-g8",
+  "catalog_display_name": "Bun392 JE09运包桥接g8",
+  "assets": [
+    {
+      "file": "bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
+      "bytes": 40294827,
+      "sha256": "b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2"
+    },
+    {
+      "file": "bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
+      "bytes": 30242279,
+      "sha256": "b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d"
+    },
+    {
+      "file": "manifest.json",
+      "bytes": 8359,
+      "sha256": "26868118648925a911c05a43b939381e0fd0b2e4e16ba60f2eb47ca32336db3a"
+    },
+    {
+      "file": "evaluation.json",
+      "bytes": 4393,
+      "sha256": "e7e69546505986af0d5ca606529ee2dd46426758ad93c8bda470c96439264f04"
+    },
+    {
+      "file": "SHA256SUMS",
+      "bytes": 488,
+      "sha256": "841ddd897aa50d9c2aae174b0bc2cedc44053c5d117dbe570099508536233d6d"
+    }
+  ],
+  "evaluation": {
+    "schema": "qqt.je09-stage-c-release-evaluation/v1",
+    "source_commit": "5777835",
+    "policy_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
+    "strategy": "raw",
+    "generation": 8,
+    "assist": "off",
+    "selection": "Stage C g8 remains the integrated JE09 parent; Stage D has no integrated promotion; Stage D g16 is not published",
+    "hunter": {
+      "hard": {
+        "safe_win": 2,
+        "death_episode": 0,
+        "final_dead": 0,
+        "kill_then_death": 0,
+        "games": 64,
+        "self_episodes": 0,
+        "trade_episodes": 0,
+        "by_bot_episodes": 0,
+        "bombs_per_game": 8.328125
+      },
+      "normal": {
+        "safe_win": 3,
+        "death_episode": 1,
+        "final_dead": 1,
+        "kill_then_death": 0,
+        "games": 64,
+        "self_episodes": 0,
+        "trade_episodes": 1,
+        "by_bot_episodes": 0,
+        "bombs_per_game": 8.734375
+      },
+      "easy": {
+        "safe_win": 29,
+        "death_episode": 0,
+        "final_dead": 0,
+        "kill_then_death": 0,
+        "games": 64,
+        "self_episodes": 0,
+        "trade_episodes": 0,
+        "by_bot_episodes": 0,
+        "bombs_per_game": 9.546875
+      }
+    },
+    "tactical": {
+      "games": 64,
+      "safe_win": 17,
+      "death_episode": 0,
+      "self_episodes": 0,
+      "trade_episodes": 0,
+      "bombs_per_game": 7.625,
+      "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+    },
+    "controlled_real_drop_return": {
+      "STAGE_B.json": {
+        "games": 16,
+        "eligible_drop": 16,
+        "toward_drop": 16,
+        "arrival": 16,
+        "first_pickup": 16,
+        "pickup_return": 16,
+        "progress25": 16,
+        "progress50": 11,
+        "home_half": 16,
+        "capture": 15,
+        "death": 0,
+        "self": 0,
+        "trade": 0,
+        "lost": 0
+      },
+      "STAGE_B_HOLDOUT.json": {
+        "games": 16,
+        "eligible_drop": 16,
+        "toward_drop": 16,
+        "arrival": 16,
+        "first_pickup": 16,
+        "pickup_return": 16,
+        "progress25": 16,
+        "progress50": 9,
+        "home_half": 16,
+        "capture": 13,
+        "death": 0,
+        "self": 0,
+        "trade": 0,
+        "lost": 0
+      }
+    },
+    "fixed32": {
+      "games": 16,
+      "eligible_drop": 16,
+      "toward_drop": 8,
+      "arrival": 0,
+      "first_pickup": 0,
+      "pickup_return": 0,
+      "progress25": 0,
+      "progress50": 0,
+      "home_half": 0,
+      "capture": 0,
+      "death": 2,
+      "self": 2,
+      "trade": 0,
+      "lost": 0
+    },
+    "full2400": {
+      "games": 16,
+      "eligible_drop": 0,
+      "toward_drop": 0,
+      "arrival": 0,
+      "first_pickup": 0,
+      "pickup_return": 0,
+      "progress25": 0,
+      "progress50": 0,
+      "home_half": 0,
+      "capture": 0,
+      "death": 4,
+      "self": 0,
+      "trade": 2,
+      "lost": 0
+    },
+    "carry": {
+      "carry_near": {
+        "games": 16,
+        "first_pickups": 0,
+        "captures": 16,
+        "net_topology": 46
+      },
+      "carry_mid": {
+        "games": 16,
+        "first_pickups": 0,
+        "captures": 16,
+        "net_topology": 299
+      },
+      "carry_far": {
+        "games": 16,
+        "first_pickups": 0,
+        "captures": 2,
+        "net_topology": 92
+      }
+    },
+    "limitations": [
+      "Controlled return success is not a full natural chain success.",
+      "Stage C fixed32 first pickup 0/16, self-bomb 2/16; full2400 attributable drop/first pickup/capture all 0/16.",
+      "Hunter 64/tier, Tactical64 and task16 exploratory samples; no statistical significance or all-dimensional dominance claim."
+    ],
+    "source_evidence_sha256": {
+      "runs/je09_bun_20261015/stage_c_return_set_pfsp8_v8/authority_je09_v1/bun392_bridge_pfsp8_g000008/COMPLETE.json": "d087bbc3ab0897fa4980bff4fd2b13915d67022a8b8c127ea5135648fc5c9ed6",
+      "runs/je09_bun_20261015/stage_c_return_set_pfsp8_v8/authority_je09_v1/bun392_bridge_pfsp8_g000008/STAGE_B.json": "895d4c7acaf625a71648e1c9cb50c06dfeccc2bbb7d681d9819af1eb47f11996",
+      "runs/je09_bun_20261015/stage_c_return_set_pfsp8_v8/authority_je09_v1/bun392_bridge_pfsp8_g000008/STAGE_B_HOLDOUT.json": "67d0f1f72fdddf5c56a23ff6c2f11e6ee045e8dafe5f9a81391ab94df2a0e3db",
+      "runs/je09_bun_20261015/stage_c_return_set_pfsp8_v8/authority_je09_v1/bun392_bridge_pfsp8_g000008/CONTINUOUS_BRIDGE.json": "8b2fa1700d97e2bfb995c22f1164be5de374eb4bacd1f842a77ad72cf51edd79",
+      "runs/je09_bun_20261015/stage_c_return_set_pfsp8_v8/topology_diagnostics_v1/bun392_bridge_pfsp8_g000008/COMPLETE.json": "cf574ecb50eb2a94dd856749ddd2114d225856f68335994952988c242b39fcc9"
+    }
+  },
+  "validation": {
+    "two_official_exports_byte_identical": true,
+    "packed_tensors_exact_to_raw_actor": true,
+    "python_tests": 29,
+    "npm_full_suite": true,
+    "http_smoke": true,
+    "catalog_tdd": "RED missing new row, then GREEN",
+    "official_parity": {
+      "passed": true,
+      "backend": "cpu",
+      "python_precision": "fp32 frozen web authority",
+      "training_precision": "bf16 diagnostic only",
+      "packed_weights_exact": true,
+      "policy_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
+      "model_sha256": "b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2",
+      "onnx_sha256": "b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d",
+      "samples": [
+        {
+          "sample": 0,
+          "seat": 0,
+          "max_errors": {
+            "js": {
+              "move": 5.824285023159348e-06,
+              "bomb": 2.6596928643929374e-06,
+              "value": 0.0
+            },
+            "onnx": {
+              "move": 4.291534423828125e-06,
+              "bomb": 9.5367431640625e-07,
+              "value": 4.76837158203125e-07
+            }
+          },
+          "masked_greedy_exact": true,
+          "training_bf16_diagnostic_errors": {
+            "move": 0.028296709060668945,
+            "bomb": 0.04174375534057617,
+            "value": 0.005367279052734375
+          }
+        },
+        {
+          "sample": 0,
+          "seat": 1,
+          "max_errors": {
+            "js": {
+              "move": 1.5883394056670497e-06,
+              "bomb": 3.022478712644272e-06,
+              "value": 1.9073486328125e-06
+            },
+            "onnx": {
+              "move": 2.86102294921875e-06,
+              "bomb": 6.198883056640625e-06,
+              "value": 4.76837158203125e-07
+            }
+          },
+          "masked_greedy_exact": true,
+          "training_bf16_diagnostic_errors": {
+            "move": 0.0973367691040039,
+            "bomb": 0.03351140022277832,
+            "value": 0.016337871551513672
+          }
+        },
+        {
+          "sample": 1,
+          "seat": 0,
+          "max_errors": {
+            "js": {
+              "move": 5.738988908099429e-06,
+              "bomb": 3.6042166779992613e-06,
+              "value": 4.76837158203125e-07
+            },
+            "onnx": {
+              "move": 7.152557373046875e-06,
+              "bomb": 5.245208740234375e-06,
+              "value": 2.384185791015625e-06
+            }
+          },
+          "masked_greedy_exact": true,
+          "training_bf16_diagnostic_errors": {
+            "move": 0.02493429183959961,
+            "bomb": 0.0490071177482605,
+            "value": 0.003238201141357422
+          }
+        },
+        {
+          "sample": 1,
+          "seat": 1,
+          "max_errors": {
+            "js": {
+              "move": 2.8537891294533324e-06,
+              "bomb": 4.541027741611359e-06,
+              "value": 1.430511474609375e-06
+            },
+            "onnx": {
+              "move": 4.291534423828125e-06,
+              "bomb": 7.152557373046875e-06,
+              "value": 4.291534423828125e-06
+            }
+          },
+          "masked_greedy_exact": true,
+          "training_bf16_diagnostic_errors": {
+            "move": 0.07126879692077637,
+            "bomb": 0.028675556182861328,
+            "value": 0.005934715270996094
+          }
+        },
+        {
+          "sample": 2,
+          "seat": 0,
+          "max_errors": {
+            "js": {
+              "move": 2.8956642181832137e-06,
+              "bomb": 5.814367740164528e-06,
+              "value": 9.5367431640625e-07
+            },
+            "onnx": {
+              "move": 3.0994415283203125e-06,
+              "bomb": 3.814697265625e-06,
+              "value": 2.384185791015625e-06
+            }
+          },
+          "masked_greedy_exact": true,
+          "training_bf16_diagnostic_errors": {
+            "move": 0.05220365524291992,
+            "bomb": 0.04101395606994629,
+            "value": 0.013027667999267578
+          }
+        },
+        {
+          "sample": 2,
+          "seat": 1,
+          "max_errors": {
+            "js": {
+              "move": 1.481207049902622e-06,
+              "bomb": 7.745096342048896e-07,
+              "value": 9.5367431640625e-07
+            },
+            "onnx": {
+              "move": 3.2782554626464844e-06,
+              "bomb": 9.5367431640625e-07,
+              "value": 9.5367431640625e-07
+            }
+          },
+          "masked_greedy_exact": true,
+          "training_bf16_diagnostic_errors": {
+            "move": 0.029382824897766113,
+            "bomb": 0.059203505516052246,
+            "value": 0.027759552001953125
+          }
+        },
+        {
+          "sample": 3,
+          "seat": 0,
+          "max_errors": {
+            "js": {
+              "move": 3.4449537626990434e-06,
+              "bomb": 4.268467866497261e-06,
+              "value": 3.337860107421875e-06
+            },
+            "onnx": {
+              "move": 3.0994415283203125e-06,
+              "bomb": 2.384185791015625e-06,
+              "value": 4.76837158203125e-06
+            }
+          },
+          "masked_greedy_exact": true,
+          "training_bf16_diagnostic_errors": {
+            "move": 0.03010338544845581,
+            "bomb": 0.07494163513183594,
+            "value": 0.002621173858642578
+          }
+        },
+        {
+          "sample": 3,
+          "seat": 1,
+          "max_errors": {
+            "js": {
+              "move": 2.8647686427518693e-06,
+              "bomb": 4.503634596808581e-06,
+              "value": 2.384185791015625e-06
+            },
+            "onnx": {
+              "move": 4.410743713378906e-06,
+              "bomb": 3.814697265625e-06,
+              "value": 0.0
+            }
+          },
+          "masked_greedy_exact": true,
+          "training_bf16_diagnostic_errors": {
+            "move": 0.053347110748291016,
+            "bomb": 0.05816841125488281,
+            "value": 0.0053253173828125
+          }
+        }
+      ]
+    },
+    "zero_native_parity": {
+      "passed": true,
+      "states": 8,
+      "onnx_js_max_error": 8.690932815191843e-06,
+      "tolerance": 0.001,
+      "finite": true,
+      "source": "zero plus native Bun1v1 states from origin/main runtime; no adapter"
+    },
+    "privacy": {
+      "passed": true,
+      "changed_files": 4,
+      "new_findings": [],
+      "main_public_tree_findings": [],
+      "release_asset_findings": [],
+      "current_experiment_tracked_findings_count": 307,
+      "historical_policy": "Current experiment historical tracked findings are audited but not rewritten or integrated; only whitelist files enter main. Ignored historical runs are excluded."
+    },
+    "diff_check": true,
+    "local_chromium": {
+      "passed": true,
+      "ticks": 16,
+      "finite_inference_calls": 16,
+      "backend": "worker-wasm",
+      "native_bun": true,
+      "network_mock": false,
+      "hunter_smoke": [
+        {
+          "difficulty": "hard",
+          "primary_ticks": 300,
+          "residual_ticks": 4,
+          "inference_calls": 304,
+          "native_bun": true,
+          "native_trap": true,
+          "native_items": true,
+          "hazards_remaining": false,
+          "technical_smoke_only": true
+        },
+        {
+          "difficulty": "normal",
+          "primary_ticks": 300,
+          "residual_ticks": 9,
+          "inference_calls": 309,
+          "native_bun": true,
+          "native_trap": true,
+          "native_items": true,
+          "hazards_remaining": false,
+          "technical_smoke_only": true
+        },
+        {
+          "difficulty": "easy",
+          "primary_ticks": 300,
+          "residual_ticks": 9,
+          "inference_calls": 309,
+          "native_bun": true,
+          "native_trap": true,
+          "native_items": true,
+          "hazards_remaining": false,
+          "technical_smoke_only": true
+        }
+      ],
+      "pageerrors": [],
+      "console_errors": [],
+      "http_errors": [],
+      "unexpected_writes": [],
+      "runtime_warning": "ORT host CPU vendor detection warning recorded separately; inference/parity passed"
+    }
+  },
+  "integration": {
+    "base_main": "5ba6ccd9a54659fe5198f90f9992edd616b6d548",
+    "method": "Whitelist changes onto current main in a temporary Git index; preserve all experiment history and existing main runtime.",
+    "files": [
+      "web/models.json",
+      "web/test_model_catalog.js",
+      "web/test_http.js",
+      "scripts/verify_bun_release_browser.js",
+      "reports/model_releases/je09_stage_c_g8_release_20261015.json",
+      "reports/model_releases/je09_stage_c_g8_release_20261015.md"
+    ]
+  },
+  "exclusions": [
+    "Stage D g16",
+    "EMA",
+    "pickle",
+    "optimizer",
+    "training state",
+    "run logs",
+    "credentials"
+  ]
+}

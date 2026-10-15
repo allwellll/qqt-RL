@@ -16,8 +16,25 @@ assert.throws(() => catalog.validateManifest({ schema: 'bad', models: [] }), /sc
 assert.throws(() => catalog.validateManifest({ schema: 'qqt.web-models/v1', models: [{ ...manifest.models[0], file: '../x' }] }), /file/);
 assert.strictEqual(catalog.modelUrl(rows[0]), 'models/safe-high-c16.json');
 const production = require('./models.json');
-const transport = production.models[0];
-assert.strictEqual(transport.id, 'bun392-transport1536', 'Evaluated transport policy is the catalog default');
+const bridge = production.models[0];
+assert.strictEqual(bridge.id, 'bun392-je09-stage-c-g8');
+assert.strictEqual(bridge.display_name, 'Bun392 JE09运包桥接g8');
+assert.strictEqual(bridge.cycle, 8);
+assert.strictEqual(bridge.strategy, 'raw');
+assert.strictEqual(bridge.source_sha256, '53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe');
+assert.strictEqual(bridge.onnx.meta.bun_state_encoding, 'bun24-trap-timer-v2');
+assert.deepStrictEqual(bridge.onnx.meta.obs_shape, [24,13,15]);
+assert.strictEqual(bridge.onnx.meta.state_dim, 24);
+assert.strictEqual(bridge.onnx.meta.embed, 392);
+assert.strictEqual(bridge.onnx.meta.ability_actions, 3);
+assert(bridge.description.includes('fixed32') && bridge.description.includes('full'));
+for (const asset of [bridge, bridge.onnx]) {
+  assert(asset.file.includes(asset.sha256));
+  assert(asset.url.endsWith('/' + asset.file));
+  assert(asset.url.includes('/web-bun392-je09-stage-c-g8-v1/'));
+}
+const transport = production.models.find(row => row.id === 'bun392-transport1536');
+assert.strictEqual(transport.id, 'bun392-transport1536', 'Previous transport policy stays selectable');
 assert.strictEqual(transport.cycle, 1536);
 assert.strictEqual(transport.strategy, 'raw');
 assert.strictEqual(transport.source_sha256, '16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719');
