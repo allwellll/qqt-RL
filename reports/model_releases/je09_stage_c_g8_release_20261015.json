@@ -1,7 +1,7 @@
 {
   "schema": "qqt.model-publication-receipt/v2",
   "date": "20261015",
-  "status": "preflight_complete_external_publication_pending",
+  "status": "published_and_publicly_verified",
   "tag": "web-bun392-je09-stage-c-g8-v1",
   "release": "https://github.com/allwellll/qqt-RL/releases/tag/web-bun392-je09-stage-c-g8-v1",
   "page": "https://allwellll.github.io/qqt-RL/",
@@ -482,6 +482,40 @@
       "http_errors": [],
       "unexpected_writes": [],
       "runtime_warning": "ORT host CPU vendor detection warning recorded separately; inference/parity passed"
+    },
+    "evaluated_weight_binding": {
+      "passed": true,
+      "published_tensors_exactly_equal_evaluated_stage_c_model": true,
+      "policy_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
+      "original_evaluated_json_sha256": "1ccf216cfddd2318dc67fd14985b3267a6c640f6adae64af58e65e48cae8e744",
+      "published_json_sha256": "b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2",
+      "authority_reference": "runs/je09_bun_20261015/stage_c_return_set_pfsp8_v8/authority_je09_v1/bun392_bridge_pfsp8_g000008/model/model.json"
+    },
+    "browser_http1_transport_probe": {
+      "http2_disabled": true,
+      "seconds": 3.4465,
+      "rows": [
+        {
+          "status": 206,
+          "range": "bytes 0-262143/30242279",
+          "bytes": 262144
+        },
+        {
+          "status": 206,
+          "range": "bytes 262144-524287/30242279",
+          "bytes": 262144
+        },
+        {
+          "status": 206,
+          "range": "bytes 524288-786431/30242279",
+          "bytes": 262144
+        },
+        {
+          "status": 206,
+          "range": "bytes 786432-1048575/30242279",
+          "bytes": 262144
+        }
+      ]
     }
   },
   "integration": {
@@ -504,5 +538,884 @@
     "training state",
     "run logs",
     "credentials"
-  ]
+  ],
+  "publication_commit": "2784af81a1ae594a8514b08a6297f4e97f93cb62",
+  "transport": {
+    "git_branch_and_tag": "Git HTTPS push, immutable tag created once",
+    "main": "GitHub API non-force fast-forward to the exact already-uploaded Git commit after direct Git CONNECT503",
+    "release_upload": "GitHub Releases API; server SHA256 and size verified",
+    "release_public_readback": "Unauthenticated public gh-proxy HTTP ranges; direct github.com timed out in this environment; full bytes/size/SHA matched",
+    "pages": "Direct public HTTPS, no credentials; real Chromium downloads direct same-origin Pages assets"
+  },
+  "release_remote_audit": {
+    "passed": true,
+    "release": "https://github.com/allwellll/qqt-RL/releases/tag/web-bun392-je09-stage-c-g8-v1",
+    "draft": false,
+    "prerelease": false,
+    "tag": "web-bun392-je09-stage-c-g8-v1",
+    "tag_commit": "2784af81a1ae594a8514b08a6297f4e97f93cb62",
+    "assets": [
+      {
+        "file": "bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
+        "bytes": 40294827,
+        "sha256": "b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
+        "state": "uploaded"
+      },
+      {
+        "file": "bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
+        "bytes": 30242279,
+        "sha256": "b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
+        "state": "uploaded"
+      },
+      {
+        "file": "manifest.json",
+        "bytes": 8359,
+        "sha256": "26868118648925a911c05a43b939381e0fd0b2e4e16ba60f2eb47ca32336db3a",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/manifest.json",
+        "state": "uploaded"
+      },
+      {
+        "file": "evaluation.json",
+        "bytes": 4393,
+        "sha256": "e7e69546505986af0d5ca606529ee2dd46426758ad93c8bda470c96439264f04",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/evaluation.json",
+        "state": "uploaded"
+      },
+      {
+        "file": "SHA256SUMS",
+        "bytes": 488,
+        "sha256": "841ddd897aa50d9c2aae174b0bc2cedc44053c5d117dbe570099508536233d6d",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/SHA256SUMS",
+        "state": "uploaded"
+      }
+    ]
+  },
+  "public_asset_readback": {
+    "passed": true,
+    "tag": "web-bun392-je09-stage-c-g8-v1",
+    "assets": [
+      {
+        "file": "bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
+        "bytes": 40294827,
+        "sha256": "b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2",
+        "public_url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
+        "transport_url": "https://gh-proxy.com/https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
+        "credential_used": false,
+        "byte_identical": true,
+        "http_range_download": true
+      },
+      {
+        "file": "bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
+        "bytes": 30242279,
+        "sha256": "b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d",
+        "public_url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
+        "transport_url": "https://gh-proxy.com/https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
+        "credential_used": false,
+        "byte_identical": true,
+        "http_range_download": true
+      },
+      {
+        "file": "manifest.json",
+        "bytes": 8359,
+        "sha256": "26868118648925a911c05a43b939381e0fd0b2e4e16ba60f2eb47ca32336db3a",
+        "public_url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/manifest.json",
+        "transport_url": "https://gh-proxy.com/https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/manifest.json",
+        "credential_used": false,
+        "byte_identical": true,
+        "http_range_download": true
+      },
+      {
+        "file": "evaluation.json",
+        "bytes": 4393,
+        "sha256": "e7e69546505986af0d5ca606529ee2dd46426758ad93c8bda470c96439264f04",
+        "public_url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/evaluation.json",
+        "transport_url": "https://gh-proxy.com/https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/evaluation.json",
+        "credential_used": false,
+        "byte_identical": true,
+        "http_range_download": true
+      },
+      {
+        "file": "SHA256SUMS",
+        "bytes": 488,
+        "sha256": "841ddd897aa50d9c2aae174b0bc2cedc44053c5d117dbe570099508536233d6d",
+        "public_url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/SHA256SUMS",
+        "transport_url": "https://gh-proxy.com/https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/SHA256SUMS",
+        "credential_used": false,
+        "byte_identical": true,
+        "http_range_download": true
+      }
+    ]
+  },
+  "workflow": {
+    "head": "2784af81a1ae594a8514b08a6297f4e97f93cb62",
+    "remote_main": "2784af81a1ae594a8514b08a6297f4e97f93cb62",
+    "workflow": {
+      "id": 38749341434,
+      "head_sha": "2784af81a1ae594a8514b08a6297f4e97f93cb62",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/allwellll/qqt-RL/actions/runs/38749341434",
+      "event": "push"
+    },
+    "jobs": [
+      {
+        "name": "test-and-build",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "deployments": [
+      {
+        "id": 7095006037,
+        "sha": "2784af81a1ae594a8514b08a6297f4e97f93cb62",
+        "environment": "github-pages",
+        "statuses": [
+          {
+            "state": "success",
+            "environment_url": "https://allwellll.github.io/qqt-RL/",
+            "created_at": "2026-10-15T14:14:24Z"
+          },
+          {
+            "state": "in_progress",
+            "environment_url": "",
+            "created_at": "2026-10-15T14:13:53Z"
+          },
+          {
+            "state": "queued",
+            "environment_url": "",
+            "created_at": "2026-10-15T14:13:52Z"
+          },
+          {
+            "state": "queued",
+            "environment_url": "",
+            "created_at": "2026-10-15T14:13:52Z"
+          },
+          {
+            "state": "waiting",
+            "environment_url": "",
+            "created_at": "2026-10-15T14:13:50Z"
+          }
+        ]
+      }
+    ],
+    "passed": true
+  },
+  "exact_public_head": {
+    "passed": true,
+    "head": "2784af81a1ae594a8514b08a6297f4e97f93cb62",
+    "build_info": {
+      "version": "leaderboard-v1",
+      "commit": "2784af81a1ae594a8514b08a6297f4e97f93cb62"
+    },
+    "files": [
+      {
+        "file": "models.json",
+        "bytes": 12054,
+        "sha256": "39e184990b86bc6fbf7fbea0fd119c1553d80abf54ae98873ba0b924bf32b5a5",
+        "byte_identical": true
+      },
+      {
+        "file": "index.html",
+        "bytes": 9150,
+        "sha256": "158c81e25f978281e924f135d5fb8f669ad17c8603b0b936c5706f70756216a1",
+        "byte_identical": true
+      },
+      {
+        "file": "app.js",
+        "bytes": 27227,
+        "sha256": "53d51eb95b8645fecd12ff6a8f560328b95109e217d091bbe8956f5c288f3949",
+        "byte_identical": true
+      },
+      {
+        "file": "sim.js",
+        "bytes": 201529,
+        "sha256": "7d2047b7db2025608b38afec0f8283625b6f98a3d09ac49693f2a0a44d1d485b",
+        "byte_identical": true
+      },
+      {
+        "file": "model_catalog.js",
+        "bytes": 2341,
+        "sha256": "f7e6e1d601ea1ddd802b69bf2cc7ca026472d892c07bafef780e2f3fd979ebe0",
+        "byte_identical": true
+      },
+      {
+        "file": "model_loader.js",
+        "bytes": 5457,
+        "sha256": "b4a7e083dbecd4fe73a8b6f16cd4eaebc1953f2a9d2fe6361a11ca55657647ac",
+        "byte_identical": true
+      },
+      {
+        "file": "model_worker.js",
+        "bytes": 2571,
+        "sha256": "8684a530ccb33a97cc5525f9a5e8980b29ed01d91a581d7bb77f94464580b17b",
+        "byte_identical": true
+      },
+      {
+        "file": "model_inference_worker.js",
+        "bytes": 3924,
+        "sha256": "f263646ee0a6aa30bd659ad70700406f8e9550d17882b12ca8107e797b843392",
+        "byte_identical": true
+      }
+    ],
+    "credential_used": false
+  },
+  "public_browser": {
+    "passed": true,
+    "url": "https://allwellll.github.io/qqt-RL/",
+    "build_info": {
+      "version": "leaderboard-v1",
+      "commit": "2784af81a1ae594a8514b08a6297f4e97f93cb62"
+    },
+    "display_name": "Bun392 JE09运包桥接g8",
+    "catalog_id": "bun392-je09-stage-c-g8",
+    "downloads": [
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=0",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=1310720",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=524288",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=262144",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=1572864",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=1048576",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=786432",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=1835008",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=2097152",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=2359296",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=2621440",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=2883584",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=3145728",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=3407872",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=3670016",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=3932160",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=4194304",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=4456448",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=4718592",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=4980736",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=5242880",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=5505024",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=5767168",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=6029312",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=6291456",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=6553600",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=6815744",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=7077888",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=7340032",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=7602176",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=7864320",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=8126464",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=8388608",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=8650752",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=8912896",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=9175040",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=9437184",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=9699328",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=9961472",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=10223616",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=10485760",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=10747904",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=11010048",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=11272192",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=11534336",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=11796480",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=12058624",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=12320768",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=12582912",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=12845056",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=13107200",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=13369344",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=13631488",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=13893632",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=14155776",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=14417920",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=14680064",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=14942208",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=15204352",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=15466496",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=15728640",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=15990784",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=16252928",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=16515072",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=16777216",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=17039360",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=17301504",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=17563648",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=17825792",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=18087936",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=18350080",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=18612224",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=18874368",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=19136512",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=19398656",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=19660800",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=19922944",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=20185088",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=20447232",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=20709376",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=20971520",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=21233664",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=21495808",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=21757952",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=22020096",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=22282240",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=22544384",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=22806528",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=23068672",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=23330816",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=23592960",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=23855104",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=24117248",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=24379392",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=24641536",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=24903680",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=25165824",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=25427968",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=25690112",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=25952256",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=26214400",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=26476544",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=26738688",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=27000832",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=27262976",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=27525120",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=27787264",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=28049408",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=28311552",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=28573696",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=28835840",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=29097984",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=29360128",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=29622272",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=29884416",
+        "status": 206
+      },
+      {
+        "url": "https://allwellll.github.io/qqt-RL/models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx?range=30146560",
+        "status": 206
+      }
+    ],
+    "evidence": {
+      "calls": [
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        },
+        {
+          "embed": 392,
+          "obs": 4680,
+          "state": 24
+        }
+      ],
+      "modelStatus": "已加载：Bun392 JE09运包桥接g8",
+      "strategy": "model:bun392-je09-stage-c-g8",
+      "team": "1v1",
+      "tick": 16,
+      "nativeBun": true,
+      "nativeItems": true,
+      "nativeTrap": true,
+      "players": 2,
+      "loadingComplete": true,
+      "backend": "worker-wasm",
+      "encoding": "bun24-trap-timer-v2",
+      "inferenceTimes": [
+        15.099998474121094,
+        14.800003051757812,
+        16.599998474121094,
+        14.900001525878906,
+        14.300003051757812,
+        14.300003051757812,
+        14.5,
+        14.400001525878906,
+        14.100006103515625,
+        14.199996948242188,
+        14.199996948242188,
+        14.099998474121094,
+        14,
+        14,
+        14,
+        14.300003051757812
+      ]
+    },
+    "hunter_smoke": [
+      {
+        "difficulty": "hard",
+        "primary_ticks": 300,
+        "residual_ticks": 4,
+        "inference_calls": 304,
+        "native_bun": true,
+        "native_trap": true,
+        "native_items": true,
+        "hazards_remaining": false,
+        "technical_smoke_only": true
+      },
+      {
+        "difficulty": "normal",
+        "primary_ticks": 300,
+        "residual_ticks": 9,
+        "inference_calls": 309,
+        "native_bun": true,
+        "native_trap": true,
+        "native_items": true,
+        "hazards_remaining": false,
+        "technical_smoke_only": true
+      },
+      {
+        "difficulty": "easy",
+        "primary_ticks": 300,
+        "residual_ticks": 9,
+        "inference_calls": 309,
+        "native_bun": true,
+        "native_trap": true,
+        "native_items": true,
+        "hazards_remaining": false,
+        "technical_smoke_only": true
+      }
+    ],
+    "pageerrors": [],
+    "console_errors": [],
+    "http_errors": [],
+    "unexpected_write_requests": [],
+    "network_mock": false,
+    "cache_disabled": true,
+    "request_interception": false,
+    "http1_only": true,
+    "resource_warnings": [
+      {
+        "url": "https://allwellll.github.io/favicon.ico",
+        "status": 404,
+        "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      },
+      {
+        "url": "https://allwellll.github.io/favicon.ico",
+        "status": 404,
+        "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      }
+    ],
+    "runtime_warning_count": 1,
+    "runtime_warning": "ORT host CPU vendor detection warning recorded separately; finite inference and parity succeeded",
+    "screenshot": {
+      "file": "runs/je09_stage_c_release_20261015_v1/public_browser_initial.json.png",
+      "sha256": "322f4e12ecdd80905e589b8dfc0efce65a703fdfa4b89b48400250641b90fbb1"
+    }
+  },
+  "receipt_followup": "The subsequent main receipt commit changes only these reports and the browser verifier (passive request observation, fail-fast diagnostics, optional HTTP/1.1). The entire web tree is unchanged. Model tag stays on publication_commit; final exact-head deployment checks are saved under the relative verification namespace and reported separately, avoiding a self-referential commit hash.",
+  "verification_namespace": "runs/je09_stage_c_release_20261015_v1"
 }

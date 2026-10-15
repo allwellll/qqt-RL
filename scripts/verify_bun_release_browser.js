@@ -6,25 +6,28 @@ const base=process.env.WEB_URL || 'https://allwellll.github.io/qqt-RL/';
 const output=process.env.EVIDENCE_FILE || 'runs/bun-release-browser.json';
 const id=process.env.MODEL_ID || 'bun392-selfplay3072';
 const loadTimeout=Number(process.env.MODEL_LOAD_TIMEOUT_MS || 20*60*1000);
+const http1Only=process.env.BROWSER_HTTP1_ONLY==='1';
 assert.ok(Number.isFinite(loadTimeout) && loadTimeout>=30000 && loadTimeout<=60*60*1000);
 (async()=>{
-  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});
-  const errors=[],writes=[],downloads=[],consoleErrors=[],runtimeWarnings=[],httpErrors=[];
+  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH,
+    args:['--no-sandbox',...(http1Only?['--disable-http2','--disable-quic']:[])]});
+  const errors=[],writes=[],downloads=[],consoleErrors=[],runtimeWarnings=[],resourceWarnings=[],httpErrors=[];
   try {
     const context=await browser.newContext({viewport:{width:1440,height:1000}});
-    await context.route('**/*',route=>{
-      const request=route.request(),pathname=new URL(request.url()).pathname;
+    context.on('request',request=>{
+      const pathname=new URL(request.url()).pathname;
       if(['GET','HEAD'].includes(request.method()) ||
-          (request.method()==='POST' && /\/rpc\/qqt_(leaderboard|get_profile|my_win_leaderboard)$/.test(pathname))) return route.continue();
-      writes.push(pathname);return route.abort();
+          (request.method()==='POST' && /\/rpc\/qqt_(leaderboard|get_profile|my_win_leaderboard)$/.test(pathname))) return;
+      writes.push(pathname);
     });
     const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
     page.on('console',m=>{
       if(m.type()!=='error')return;
       // ORT writes this host CPU-detection warning to stderr even when WASM
       // inference and parity succeed. Preserve it separately, never hide it.
-      const text=m.text();
+      const text=m.text(),url=m.location().url;
       if(text.includes('[W:onnxruntime:') && text.includes('Unknown CPU vendor. cpuinfo_vendor value: 0'))runtimeWarnings.push(text);
+      else if(url==='https://allwellll.github.io/favicon.ico' && text.includes('status of 404'))resourceWarnings.push({url,status:404,message:text});
       else consoleErrors.push(text);
     });
     page.on('response',r=>{if(r.status()>=400)httpErrors.push({url:r.url(),status:r.status()});});
@@ -67,7 +70,11 @@ assert.ok(Number.isFinite(loadTimeout) && loadTimeout>=30000 && loadTimeout<=60*
     await page.fill('#settings-password', 'demaxiya');
     await page.click('#password-form button[type="submit"]');
     await page.selectOption('#opponent','model:'+id);
-    await page.waitForFunction(name=>document.querySelector('#model-status').textContent.startsWith('已加载：'+name) && !document.querySelector('#opponent').disabled,row.display_name,{timeout:loadTimeout});
+    await page.waitForFunction(name=>{
+      const status=document.querySelector('#model-status').textContent;
+      return status.startsWith('加载失败：') || (status.startsWith('已加载：'+name) && !document.querySelector('#opponent').disabled);
+    },row.display_name,{timeout:loadTimeout});
+    assert.ok((await page.textContent('#model-status')).startsWith('已加载：'+row.display_name),await page.textContent('#model-status'));
     await page.evaluate(async()=>{for(let i=0;i<16;i++)await appTick();});
     const evidence=await page.evaluate(()=>({calls:modelCalls,modelStatus:document.querySelector('#model-status').textContent,
       strategy:document.querySelector('#opponent').value,team:document.querySelector('#team-mode').value,
@@ -107,7 +114,7 @@ assert.ok(Number.isFinite(loadTimeout) && loadTimeout>=30000 && loadTimeout<=60*
     if(row.onnx)assert.equal(hunterSmoke.length,3);
     assert.ok(downloads.length>0 && downloads.every(r=>r.status===200 || r.status===206));assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);
     assert.deepEqual(consoleErrors,[]);assert.deepEqual(httpErrors,[]);
-    const result={passed:true,url:base,buildInfo,row,downloads,evidence,hunterSmoke,errors,consoleErrors,runtimeWarnings,httpErrors,writes,networkMock:false,cacheDisabled:true};
+    const result={passed:true,url:base,buildInfo,row,downloads,evidence,hunterSmoke,errors,consoleErrors,runtimeWarnings,resourceWarnings,httpErrors,writes,networkMock:false,cacheDisabled:true,requestInterception:false,http1Only};
     fs.mkdirSync(require('path').dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(result,null,2)+'\n');
     await page.screenshot({path:output+'.png',fullPage:true});console.log(JSON.stringify({passed:true,model:id,ticks:evidence.tick,inferenceCalls:evidence.calls.length}));
   } finally {await browser.close();}
