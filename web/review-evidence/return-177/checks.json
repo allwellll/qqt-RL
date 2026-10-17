@@ -7,7 +7,8 @@
       "warning": "当前持敌包返己笼 · 连续 61 tick 路线距离未下降 · 距离 38 · 上下往返 · 返程振荡失败",
       "layout": {
         "direct": true,
-        "overflow": false
+        "overflow": false,
+        "top_aligned": true
       },
       "failure_interval": {
         "start": 143,
@@ -29,7 +30,8 @@
       "warning": "当前持敌包返己笼 · 连续 61 tick 路线距离未下降 · 距离 38 · 上下往返 · 返程振荡失败",
       "layout": {
         "direct": true,
-        "overflow": false
+        "overflow": false,
+        "top_aligned": false
       },
       "failure_interval": {
         "start": 143,

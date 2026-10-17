@@ -36,6 +36,7 @@
 ### 页面与验证
 
 - 新增返程振荡/停滞中文警示与可点击失败区间轨，不把“目标已识别”表述为有效靠近。暂停详情展示真实候选概率、合法动作、一步位置/距离、两代Critic来源和具体缺失链；单步178能看到合法向下38→37与实际向上的差别。
+- 最终截图发现长右栏触发中心栏旧 `margin:auto` 的垂直居中，画布上方出现大片留白。新增真实浏览器顶部对齐断言先RED，再改为 `margin:0 auto`，消除留白；桌面手机重新验收。
 - 原始/塑形优势、两种增量、Reward、DAgger、授权、标注、深链、蓝色对手、中文Reward、多场景及浮点平滑保留。画布→播放控制/进度条→多轨时间轴DOM顺序保持。旁证单独按局懒加载并核hash；原录像SHA `207680e66de70c44652586fdc7f3aab1919bf5268a8f3e8ef88dcd95fdce69f2`、162526 raw / 7746 gzip bytes未改，旧标注继续绑定同hash。
 - 审计旁证SHA `3e9446f928f30a80273d8eaad979067b8a42e4233edfdeca144844477c37ef4e`、**106126 raw / 16175 gzip(level9) bytes**。生成脚本 `scripts/audit_route_return.js`，只读固定artifact；重复生成字节一致。source、Actor、Critic、simulator及反事实摘要hash全部在旁证内。
 - 新测试先RED再GREEN：真实tick177判定、整格平台不误判、动作坐标/路径/概率、手算策略加权A1与非法排除、Critic不可混用、首项/缺测delta null、hash绑定与伪造Q/A拒绝。`npm test`、`npm run test:review`及桌面/手机旧授权/标注/DAgger/多场景/深链回归通过。
