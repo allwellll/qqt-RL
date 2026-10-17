@@ -4,7 +4,7 @@
   const auth=QQTDeviceAuth.create(localStorage,crypto);
   QQTPanels.mount(document,{auth});
   if(auth.authorized())$('advanced-open').click();
-  const labels={enemy_drop_unpicked:'掉包后未拾',window_closed_empty:'窗口未切换',return_deviation:'返程偏航',cage_no_delivery:'到笼未交付',self_bomb:'自炸',stagnation:'停滞',bomb:'放泡',use_item:'使用道具',death:'死亡',revive:'复活',control:'进入糖泡',control_end:'解除控制',drop:'掉包',native_transfer:'接触转移',pickup:'拾取',stock_theft:'偷包',delivery:'交付',phase:'阶段切换'};
+  const labels={enemy_drop_unpicked:'掉包后未拾',window_closed_empty:'窗口未切换',return_deviation:'返程偏航',cage_no_delivery:'到笼未交付',self_bomb:'自炸',stagnation:'停滞',approx_phi_discontinuity:'近似势能跨步不连续',match_loss:'对局失利',no_delivery:'未交付',bomb:'放泡',use_item:'使用道具',death:'死亡',revive:'复活',control:'进入糖泡',control_end:'解除控制',drop:'掉包',native_transfer:'接触转移',pickup:'拾取',stock_theft:'偷包',delivery:'交付',phase:'阶段切换'};
   let catalog,doc,player,preview,renderer,playing=false,accumulator=0,last=performance.now(),rows=[],editing=null,loadToken=0;
   let lastDraw=0,frameStart=performance.now(),frameCount=0,actualFPS=0,rewardByTick=new Map(),curveCache=null;
   let daggerCatalog,daggerLoadToken=0;
@@ -120,6 +120,19 @@
     routeTick();
     returnTick();
     details($('state-details'),[['模型阶段',P.phase(s)],['对手阶段',P.phase(s,1)],['动作 [move, ability]',a?`${a[0]},${a[1]} | ${a[2]},${a[3]}`:'开局'],['包归属（模型 / 对手）',s.bunCarried.map(v=>v<0?'空手':`源队 ${v}`).join(' / ')],['糖泡剩余 tick',s.trapped.join(' / ')],['死亡 / 复活倒计时',s.bunRespawn.join(' / ')],['坐标 [row,col]',`${s.pos[0].toFixed(2)},${s.pos[1].toFixed(2)} | ${s.pos[2].toFixed(2)},${s.pos[3].toFixed(2)}`],['笼内存包',s.bunStored.map(a=>a.join(',')).join(' / ')],['终局',s.done?`胜者 ${s.winner===null?'平局':s.winner}`:'进行中']]);
+    const diagnostic=doc.diagnostic_ticks?.[t-1];
+    if(diagnostic){
+      const box=document.createElement('div'),decision=diagnostic.decision;
+      const offline=diagnostic.offline_recomputed_current_reward;
+      details(box,[['本步状态 SHA-256（前 → 后）',`${diagnostic.state_before_sha256} → ${diagnostic.state_after_sha256}`],['合法联合动作数（含道具）',String(decision.legal_count)],['移动策略概率（上/下/左/右/停）',decision.move_probability.map(v=>(100*v).toFixed(3)+'%').join(' / ')],['技能策略概率（无/泡/道具）',decision.ability_probability.map(v=>(100*v).toFixed(3)+'%').join(' / ')],['当前逻辑近似总 Reward（模型 / 对手）',offline?offline.approx_total_reward.map(number).join(' / '):'未记录'],['训练时 Reward / 严格 A₁','未记录；当前近似重算不代表训练时账本']]);
+      if(offline){
+        const route=offline.route[0];
+        box.append(text('p',`offline_recomputed_current_reward / 近似诊断 · 当前路线 phase=${route.route_phase}，target=${route.route_target_identity}，来源=${route.route_target_provenance}；连续 Phi ${number(route.route_phi_before)} → ${number(route.route_phi_after)}，ΔPhi ${number(route.route_potential_delta)}，PBRS ${number(route.route_shaped_reward)}。`));
+        if(offline.approx_phi_jump!==null&&Math.abs(offline.approx_phi_jump)>1e-6)box.append(text('p',`近似诊断异常：本步 Phi_before 与上一步 Phi_after 相差 ${offline.approx_phi_jump.toFixed(8)}；保留当前账本原值，未平滑。`,'return-warning'));
+        box.append(text('p','原始动作与事件保持真实；近似奖励分解见上方。Value、Logit 和 Reward 均未用作严格 A₁；本次未计算 approx_value / approx_A₁。'));
+      }
+      $('state-details').append(box);
+    }
     $('current-events').replaceChildren();const events=doc.events.filter(e=>e.tick===t);
     if(events.length)$('current-events').append(text('p',rewardEvidence(t),'event-reward'));
     for(const e of events)$('current-events').append(text('div',`${labels[e.kind]||e.kind} · ${e.player===0?'模型 P0':'对手 P1'}${e.origin===undefined?'':` · 源队${e.origin}`}${e.to?` → ${e.to}`:''}`,'event-line'));if(!events.length)$('current-events').append(text('span','—','empty'));
@@ -155,7 +168,7 @@
     $('route-status').textContent=(m?.kind==='fixture'?'测试 fixture · 非真实训练录像。':'')+(r.route_phase===null?'本 tick 路线：未记录':R.label(R.PHASES,r.route_phase))+` · γ ${v(m?.gamma)} · λ ${v(m?.lambda)}`+(m?.limitations?' · '+m.limitations:'');
     const fields=[['目标阶段 · route_phase',R.label(R.PHASES,r.route_phase)],['当前目标 · target_type',R.label(R.TARGETS,r.target_type)],['目标来源 · target_provenance',R.label(R.PROVENANCE,r.target_provenance)],['脱敏目标 ID · target_id',v(r.target_id)],['网格加权最短路（前 → 后）',`${v(r.distance_before)} → ${v(r.distance_after)}`],['路线势能（前 → 后） · Phi',`${v(r.phi_before)} → ${v(r.phi_after)}`],['路线势能变化 · route_potential_delta',R.signed(r.route_potential_delta)],['路线奖励 · route_shaped_reward',R.signed(r.route_shaped_reward)],['拓扑区域（前 → 后）',`${v(r.topology_region_before)} → ${v(r.topology_region_after)}`],['开墙 / 拓扑增益 · topology_gain',v(r.topology_gain)],['阶段转换 · phase_transition',v(r.phase_transition)],['目标失效 · invalidated',v(r.invalidated)],['终态边界修正 · terminal_correction',v(r.terminal_correction)],['安全拒绝 · safety_reject_reason',R.reason(r.safety_reject_reason)]];
     details($('route-details'),fields);
-    if(doc.meta.diagnostic)$('route-details').append(text('p',`原环境 Reward：未记录；训练总 Reward：未记录；本 tick 路线辅助 Reward：${R.signed(r.route_shaped_reward)}。三者独立，不能从路线值推断总奖励。`));
+    if(doc.meta.diagnostic)$('route-details').append(text('p',`${doc.meta.offline_recomputed_current_reward?'当前 Reward 是 offline_recomputed_current_reward / 近似诊断；':'原环境 Reward：未记录；'}训练时总 Reward：未记录；本 tick 路线辅助 Reward：${R.signed(r.route_shaped_reward)}。路线项已包含在近似总奖励中，不重复求和。`));
     $('shaped-status').textContent=m?.shaped_critic?`塑形回报训练 Critic · ${m.shaped_critic.critic_sha256.slice(0,12)} · 原始任务优势保持独立`:advantageBlocked?'无法严格复算：同代 Critic 与反事实训练奖励链未能同时证明':doc.meta.diagnostic?'未记录：尚无严格反事实结果，不能计算 A₁':'未记录：尚无经过验证的塑形训练 Critic';
     details($('shaped-details'),[['执行动作 Q₁ · shaped_critic_q1_taken',av(r.shaped_critic_q1_taken)],['策略平均 Q₁ · shaped_critic_q1_policy_mean',av(r.shaped_critic_q1_policy_mean)],['塑形一步优势 · shaped_advantage_a1',av(r.shaped_advantage_a1)],['塑形优势增量 · shaped_advantage_delta',av(r.shaped_advantage_delta)],['合法联合动作数',av(r.shaped_legal_count)]]);
     const option=$('advantage-mode').querySelector('[value="shaped"]');option.disabled=!m?.shaped_critic;option.textContent=m?.shaped_critic?'塑形 Critic':advantageBlocked?'塑形 Critic（无法严格复算）':'塑形 Critic（未记录）';
@@ -173,7 +186,7 @@
     }
     g.clearRect(0,0,w,h);g.drawImage(curveCache.base,0,0);g.strokeStyle='#e9f7ef';const x=player.sim.t/doc.actions.length*w;g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke();
   }
-  function rewardEvidence(tick,pid=Number($('reward-player').value)){const r=currentReward(tick,pid);return `${pid===0?'模型':'对手'} Reward ${doc.meta.reward_status==='unrecorded'?'未记录':number(sum(r))}（同 tick 事件共用一次） · ${doc.meta.reward_status==='unrecorded'?'原环境 / 训练总 Reward 未采集':Object.entries(r).map(([k,v])=>`${V.reward(k).name} ${number(v)}`).join('；')||'无非零分量'}`;}
+  function rewardEvidence(tick,pid=Number($('reward-player').value)){const r=currentReward(tick,pid);return `${pid===0?'模型':'对手'} ${doc.meta.offline_recomputed_current_reward?'近似 ':''}Reward ${doc.meta.reward_status==='unrecorded'?'未记录':number(sum(r))}（同 tick 事件共用一次） · ${doc.meta.reward_status==='unrecorded'?'原环境 / 训练总 Reward 未采集':Object.entries(r).map(([k,v])=>`${V.reward(k).name} ${number(v)}`).join('；')||'无非零分量'}`;}
   function marker(track,tick,color,title,width){const b=text('button','','mark'+(width?' phase-mark':''));b.dataset.tick=tick;b.style.left=`${tick/doc.actions.length*100}%`;b.style.background=color;b.title=`tick ${tick} · ${P.time(tick)} · ${title}`;b.setAttribute('aria-label',b.title);if(width)b.style.width=`${width/doc.actions.length*100}%`;b.onclick=e=>{e.stopPropagation();seek(tick);};$(track).append(b);return b;}
   function numericTrack(track,entries,format,dense=false){
     const lanes=[],width=$('timeline-scroll').clientWidth*Number($('zoom').value);let lastLabel=-1000,lastWidth=0;
@@ -191,7 +204,7 @@
     for(let t=0;t<=doc.actions.length;t+=200){const e=text('span',P.time(t).slice(0,5));e.style.left=`${t/doc.actions.length*100}%`;$('ruler').append(e);}
     let start=0,phase='战斗';for(const e of doc.events.filter(e=>e.kind==='phase'&&e.player===0)){marker('phase-track',start,phase==='持包返程'?'#77c6aa':phase==='运输窗口'?'#d4ab64':'#5ba6ba',phase,e.tick-start);start=e.tick;phase=e.to;}marker('phase-track',start,'#5ba6ba',phase,doc.actions.length-start);
     const eventGroups=new Map();for(const e of doc.events.filter(e=>e.kind!=='phase'&&e.kind!=='bomb')){if(!eventGroups.has(e.tick))eventGroups.set(e.tick,[]);eventGroups.get(e.tick).push(e);}
-    numericTrack('event-track',[...eventGroups].sort(([a],[b])=>a-b).map(([tick,events])=>({tick,value:sum(currentReward(tick)),title:events.map(e=>`${e.player===0?'模型':'对手'} ${labels[e.kind]||e.kind}`).join('；')+' · '+rewardEvidence(tick)})),v=>doc.meta.reward_status==='unrecorded'?'R 未记录':'R '+(v>0?'+':'')+number(v));
+    numericTrack('event-track',[...eventGroups].sort(([a],[b])=>a-b).map(([tick,events])=>({tick,value:sum(currentReward(tick)),title:events.map(e=>`${e.player===0?'模型':'对手'} ${labels[e.kind]||e.kind}`).join('；')+' · '+rewardEvidence(tick)})),v=>doc.meta.reward_status==='unrecorded'?'R 未记录':(doc.meta.offline_recomputed_current_reward?'近似 R ':'R ')+(v>0?'+':'')+number(v));
     for(const interval of returnAnalysis.intervals){const name=interval.kind==='return_oscillation'?'返程振荡失败':'返程停滞失败';const b=marker('failure-track',interval.start,'#8f4652',`${name} · tick ${interval.start}–${interval.end}（原始重复位置从 ${interval.observed_start} 起） · 网格距离 ${interval.distance} · 点击区间位置跳转`,interval.end-interval.start+1);b.textContent=name;b.classList.add('failure-mark');b.dataset.end=interval.end;b.onclick=e=>{e.stopPropagation();const rect=b.getBoundingClientRect(),fraction=Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width));seek(Math.round(interval.start+fraction*(interval.end-interval.start)));};}
     if(!returnAnalysis.intervals.length)$('failure-track').append(text('span',doc.route?'未达到判定条件':'本局未采集路线，未判定','dagger-empty'));
     const rewardPid=Number($('reward-player').value);for(const r of doc.rewards){const components=r[rewardPid+1];if(Object.keys(components).length)marker('reward-track',r[0],sum(components)<0?'#e78f94':'#7bcaac',`${rewardPid===0?'模型':'对手'}奖励增量 ${number(sum(components))} · ${Object.entries(components).map(([k,v])=>`${V.reward(k).name} ${number(v)}`).join('；')}`);}
@@ -235,8 +248,13 @@
     doc=next;returnAnalysis=nextAnalysis;returnAudit=nextReturnAudit;player=nextPlayer;preview=new P.Player(doc,level);preview.cache=player.cache;rewardByTick=new Map(doc.rewards.map(r=>[r[0],r]));curveCache=null;renderer=QQTVisual.createRenderer($('game'),level,assets);rows=[];editing=null;$('annotation-form').hidden=true;
     try{const saved=localStorage.getItem(storageKey());if(saved)rows=P.validateAnnotations(JSON.parse(saved),doc);}catch(_){say('已有标注无效或存储不可用');}
     $('episode-title').textContent=(doc.meta.route?.kind==='fixture'?'合成测试 fixture · ':'')+`模型 P0 · ${doc.meta.model} 对阵 对手 P1`;$('episode-meta').textContent=`${doc.meta.scene_name||'历史抢包对战'} · qqt_id ${doc.meta.map} · ${doc.meta.scene_rules||doc.meta.variant} · 对手 ${doc.meta.opponent} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)} · map ${doc.meta.map_sha256.slice(0,12)}`;$('terminal').textContent=doc.summary.done===false?'片段结束：对局仍在进行，未记录胜负':`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
-    $('route-experiment').hidden=!doc.meta.diagnostic;
-    let warning=$('episode-warning');if(!warning){warning=text('p','','diagnostic-warning');warning.id='episode-warning';document.querySelector('.episode-head').after(warning);}warning.hidden=!doc.meta.diagnostic;warning.textContent=doc.meta.diagnostic?'诊断场景，不代表自然完整对局成功 · 预置掉包 / assist-off / 固定向上对手':'';
+    const fixedEight=doc.meta.batch_id==='v36-fixed-eight-20261017';
+    $('route-experiment').hidden=!doc.meta.diagnostic||fixedEight;
+    let warning=$('episode-warning');if(!warning){warning=text('p','','diagnostic-warning');warning.id='episode-warning';document.querySelector('.episode-head').after(warning);}warning.hidden=!doc.meta.diagnostic;warning.textContent=fixedEight?`固定八局全部保留 · ${doc.meta.scene_rules} · 真实对手 ${doc.meta.opponent} · offline_recomputed_current_reward / 近似诊断，非 training-time reward；严格 A₁ 未计算`:doc.meta.diagnostic?'诊断场景，不代表自然完整对局成功 · 预置掉包 / assist-off / 固定向上对手':'';
+    document.querySelector('.reward-total > span').textContent=fixedEight?'近似奖励增量 / 累计':'奖励增量 / 累计';
+    document.querySelector('.component-head > span').textContent=fixedEight?'当前逻辑近似奖励分量 · 本 tick / 累计':'奖励分量 · 本 tick / 累计';
+    const rewardTrackLabel=[...document.querySelectorAll('.track-label strong')].find(e=>e.textContent==='Reward 轨'||e.textContent==='近似 Reward 轨');
+    if(rewardTrackLabel)rewardTrackLabel.textContent=fixedEight?'近似 Reward 轨':'Reward 轨';
     $('seek').max=doc.actions.length;$('duration').textContent=P.time(doc.actions.length);$('integrity').style.color='#82d2b6';
     curveOptions();daggerEpisode();
     if(daggerCatalog){const related=daggerCatalog.runs.find(r=>r.checkpoint_sha256===doc.meta.checkpoint_sha256);if(related)$('dagger-run').value=related.id;await daggerSummary($('dagger-run').value);}

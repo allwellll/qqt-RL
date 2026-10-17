@@ -59,7 +59,10 @@
       if(pb===null||pa===null){if(delta!==null||reward!==null)fail();}
       else if(delta===null||reward===null||Math.abs(delta-(m.gamma*pa-pb))>2||Math.abs(reward-m.lambda*delta)>1+m.lambda)fail();
       if(delta!==null)count++;
-      if(i&&t===d.ticks[i-1]+1&&pb!==null&&d.phi_after[i-1]!==null&&Math.abs(pb-d.phi_after[i-1])>1)fail();
+      if(i&&t===d.ticks[i-1]+1&&pb!==null&&d.phi_after[i-1]!==null&&Math.abs(pb-d.phi_after[i-1])>1){
+        const current=doc.meta.offline_recomputed_current_reward&&doc.diagnostic_ticks?.[t-1]?.offline_recomputed_current_reward;
+        if(!current||!Number.isFinite(current.approx_phi_jump)||Math.abs(pb-d.phi_after[i-1]-current.approx_phi_jump/d.scale)>2)fail();
+      }
       if(!diagnostic&&t===doc.actions.length&&pa!==null&&(pa!==0||d.terminal[i]!==true))fail();
       if(d.terminal[i]===true&&(t!==doc.actions.length||(!diagnostic&&pa!==0)))fail();
       if(d.terminal_correction[i]===true&&d.terminal[i]!==true)fail();

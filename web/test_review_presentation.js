@@ -11,7 +11,8 @@ const V=require('./review_presentation'),P=require('./review_protocol'),visual=r
       assert(/[\u4e00-\u9fff]/.test(V.reward(key).name));assert(V.reward(key).help.includes(key));
     }
   }
-  assert.equal(keys.size,19);
+  assert.equal(keys.size,20);
+  assert(keys.has('route_shaped_reward'),'current v36 reward includes the separately named PBRS component');
   assert.equal(V.reward('unknown_reward').name,'未翻译（unknown_reward）');
   assert(!V.reward('__proto__').known);
   assert(V.componentNames({meta:{},rewards:[[1,{}, {opponent_only:1}]]}).includes('opponent_only'));

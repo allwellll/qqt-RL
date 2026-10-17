@@ -7,7 +7,7 @@ const out=process.env.EVIDENCE_FILE||'runs/replay_review_20261017/release.json';
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 let token;
 try{const credential=execFileSync('git',['credential','fill'],{input:`url=https://github.com/${repo}.git\n\n`,encoding:'utf8',stdio:['pipe','pipe','pipe'],env:{...process.env,GIT_TERMINAL_PROMPT:'0'}});token=credential.split('\n').find(x=>x.startsWith('password='))?.slice(9);}catch(_){}
-function curl(url,auth=false){return new Promise((resolve,reject)=>{const config=`url = "${url}"\n${auth&&token?`header = "Authorization: Bearer ${token}"\n`:''}`;const p=execFile('curl',['--silent','--show-error','--fail','--retry','2','--max-time','60','--config','-'],{encoding:null,maxBuffer:5000000},(e,stdout)=>e?reject(new Error('HTTP verification failed')):resolve(stdout));p.stdin.end(config);});}
+function curl(url,auth=false){return new Promise((resolve,reject)=>{const config=`url = "${url}"\n${auth&&token?`header = "Authorization: Bearer ${token}"\n`:''}`;const p=execFile('curl',['--silent','--show-error','--fail','--retry','2','--max-time','60','--config','-'],{encoding:null,maxBuffer:30000000},(e,stdout)=>e?reject(new Error('HTTP verification failed')):resolve(stdout));p.stdin.end(config);});}
 const api=async suffix=>JSON.parse(await curl(`https://api.github.com/repos/${repo}/${suffix}`,true));
 (async()=>{
  const record={schema:'qqt.diagnostic-release-verification/v1',head,url:base+'review.html',files:[]};

@@ -64,6 +64,40 @@
     D.validateEvents(d.dagger_events,d.actions.length);
     A.validate(d);
     R.validate(d);
+    if(d.meta.offline_recomputed_current_reward){
+      const m=d.meta.offline_recomputed_current_reward;
+      if(m.status!=='offline_recomputed_current_reward'||d.meta.reward_status!==m.status||d.meta.training_reward_status!=='unrecorded'||
+        !Array.isArray(m.assumptions)||!m.assumptions.length||!Array.isArray(m.component_names)||!m.component_names.length||
+        !Array.isArray(d.diagnostic_ticks)||d.diagnostic_ticks.length!==d.actions.length||m.measured_count!==d.actions.length)fail('offline reward scope');
+      let previousPhi=null;
+      const totals=[0,0];
+      for(let i=0;i<d.diagnostic_ticks.length;i++){
+        const row=d.diagnostic_ticks[i],r=row.offline_recomputed_current_reward;
+        if(row.tick!==i+1||['training_reward','raw_a1','shaped_a1','cross_critic_delta_a','raw_time_delta_a','shaped_time_delta_a'].some(k=>row[k]!==null)||!r||r.status!==m.status||
+          r.components?.length!==2||r.approx_total_reward?.length!==2)fail('offline reward tick');
+        const decision=row.decision;
+        if(!decision||JSON.stringify(decision.action)!==JSON.stringify(d.actions[i].slice(0,2)))fail('offline actor action');
+        for(const [probability,mask,size]of [[decision.move_probability,decision.move_mask,5],[decision.ability_probability,decision.ability_mask,3]]){
+          if(probability?.length!==size||mask?.length!==size||probability.some((v,j)=>!Number.isFinite(v)||v<0||(!mask[j]&&v!==0))||
+            Math.abs(probability.reduce((a,b)=>a+b,0)-1)>1e-6)fail('offline actor probability');
+        }
+        for(let p=0;p<2;p++){
+          if(Object.keys(r.components[p]).sort().join(',')!==[...m.component_names].sort().join(',')||
+            Object.values(r.components[p]).some(v=>!Number.isFinite(v))||!Number.isFinite(r.approx_total_reward[p])||
+            Math.abs(Object.values(r.components[p]).reduce((a,b)=>a+b,0)-r.approx_total_reward[p])>2e-5)fail('offline reward component sum');
+          totals[p]+=r.approx_total_reward[p];
+        }
+        const route=r.route[0];
+        if(!route||!Object.values(route).every(Number.isFinite)||Math.abs(route.route_potential_delta-(.995*route.route_phi_after-route.route_phi_before))>2e-5||
+          Math.abs(route.route_shaped_reward-.05*route.route_potential_delta)>2e-6||
+          Math.abs(r.components[0].route_shaped_reward-route.route_shaped_reward)>2e-6||
+          (previousPhi===null?r.approx_phi_jump!==null:!Number.isFinite(r.approx_phi_jump)||Math.abs(route.route_phi_before-previousPhi-r.approx_phi_jump)>1e-7))fail('offline route formula');
+        previousPhi=route.route_phi_after;
+        const sparse=d.rewards.find(x=>x[0]===i+1);
+        for(let p=0;p<2;p++)for(const k of m.component_names)if((sparse?.[p+1]?.[k]||0)!==r.components[p][k])fail('offline sparse components');
+      }
+      if(totals.some((v,p)=>Math.abs(v-d.summary.reward[p])>1e-4)||previousPhi!==0)fail('offline reward terminal');
+    }
     previous = -1;
     for (const row of d.checks || []) {
       if (!Array.isArray(row) || row.length !== 2 || !Number.isInteger(row[0]) || row[0] <= previous || row[0] > d.actions.length || !/^[a-f0-9]{64}$/.test(row[1])) fail('state hash');
@@ -160,6 +194,7 @@
     if(d.dagger_events!==undefined)value.dagger_events=d.dagger_events;
     if(d.advantages!==undefined)value.advantages=d.advantages;
     if(d.route!==undefined)value.route=d.route;
+    if(d.diagnostic_ticks!==undefined)value.diagnostic_ticks=d.diagnostic_ticks;
     return value;
   }
   function time(tick, ms=100) {
