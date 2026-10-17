@@ -1,9 +1,10 @@
 'use strict';
 (function(root, factory) {
-  const api = factory(typeof module === 'object' && module.exports ? require('./sim') : root.QQT);
+  const node=typeof module === 'object' && module.exports;
+  const api = factory(node ? require('./sim') : root.QQT,node ? require('./review_dagger') : root.QQTReviewDagger);
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.QQTReview = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function(Q) {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function(Q,D) {
   const SCHEMA = 'qqt.diagnostic-replay/v1';
   const ANNOTATIONS = 'qqt.replay-annotations/v1';
   const stringify = value => JSON.stringify(value);
@@ -36,6 +37,7 @@
     if (!Array.isArray(d.summary.reward) || d.summary.reward.length !== 2 || totals.some((v,p) => !Number.isFinite(d.summary.reward[p]) || Math.abs(v-d.summary.reward[p]) > 1e-4)) fail('reward sum');
     if (!Array.isArray(d.events)) fail('events');
     for (const e of d.events) if (!Number.isInteger(e.tick) || e.tick < 0 || e.tick > d.actions.length || typeof e.kind !== 'string') fail('event');
+    D.validateEvents(d.dagger_events,d.actions.length);
     previous = -1;
     for (const row of d.checks || []) {
       if (!Array.isArray(row) || row.length !== 2 || !Number.isInteger(row[0]) || row[0] <= previous || row[0] > d.actions.length || !/^[a-f0-9]{64}$/.test(row[1])) fail('state hash');
@@ -90,7 +92,7 @@
       return this.sim;
     }
     async verify() {
-      if (await hash({meta:{...this.document.meta,replay_identity:undefined},actions:this.document.actions}) !== this.document.meta.replay_identity) throw new Error('replay identity hash');
+      if (await hash(identity(this.document)) !== this.document.meta.replay_identity) throw new Error('replay identity hash');
       this.cache.clear();
       this.reset();
       for (const [tick,expected] of this.document.checks) {
@@ -100,6 +102,11 @@
       if (!this.sim.done || this.sim.winner !== this.document.summary.winner) throw new Error('terminal mismatch');
       this.reset(); return true;
     }
+  }
+  function identity(d){
+    const value={meta:{...d.meta,replay_identity:undefined},actions:d.actions};
+    if(d.dagger_events!==undefined)value.dagger_events=d.dagger_events;
+    return value;
   }
   function time(tick, ms=100) {
     const total = tick*ms;
@@ -124,5 +131,5 @@
     if (!sim.alive[1-p] || sim.trapped[1-p]>0) return '运输窗口';
     return '战斗';
   }
-  return {SCHEMA,ANNOTATIONS,validate,hash,sha256,stringify,setup,unpack,state,Player,time,locator,annotationDocument,validateAnnotations,phase};
+  return {SCHEMA,ANNOTATIONS,validate,identity,hash,sha256,stringify,setup,unpack,state,Player,time,locator,annotationDocument,validateAnnotations,phase};
 });

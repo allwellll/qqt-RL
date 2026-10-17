@@ -403,7 +403,7 @@ button img {
   border-radius: 4px;
 }
 #timeline {
-  height: 168px;
+  height: 204px;
   position: relative;
   cursor: crosshair;
   background: #181b21;
@@ -621,6 +621,39 @@ dd {
 .inspector summary {
   cursor: pointer;
   color: #9ba7ba;
+}
+.dagger-episode { margin: 12px 0; padding: 10px 12px; border: 1px solid #495968; border-radius: 4px; background: #1b2026; line-height: 1.8; }
+.dagger-episode strong { display: block; font-size: 12px; margin: 3px 0; color: #d1dce9; }
+.dagger-episode p, #dagger-episode-counts { color: #a4afbd; font-size: 11px; overflow-wrap: anywhere; }
+.dagger-training { border-top: 1px solid #363c46; margin-top: 22px; padding-top: 8px; min-width: 0; overflow-wrap: anywhere; }
+.dagger-training .timeline-head { flex-wrap: wrap; }
+#dagger-run { max-width: 100%; min-width: 0; font-size: 11px; }
+#dagger-scope { line-height: 1.8; color: #9baabb; font-size: 11px; }
+.dagger-caveat { color: #b4af9f; font-size: 10px; line-height: 1.8; }
+#dagger-validation { display: block; margin: 8px 0; font-size: 12px; color: #e7b18b; }
+.dagger-metrics { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 20px; margin: 10px 0; }
+.dagger-metrics > div { align-items: center; min-height: 48px; }
+.dagger-metrics dt { overflow-wrap: anywhere; }
+.dagger-metrics small, #dagger-current small { display: block; font-size: 9px; color: #8593a5; overflow-wrap: anywhere; }
+.dagger-metrics dd { color: #c7e5db; font-size: 12px; flex-shrink: 0; }
+.dagger-training > h3 { margin: 16px 0 8px; }
+.dagger-table-scroll { overflow-x: auto; }
+#dagger-fragments { width: 100%; border-collapse: collapse; font-size: 11px; }
+#dagger-fragments th { color: #8f9daf; font-weight: 500; text-align: right; }
+#dagger-fragments td { text-align: right; font-variant-numeric: tabular-nums; }
+#dagger-fragments th:first-child, #dagger-fragments td:first-child { text-align: left; }
+#dagger-fragments th:first-child, #dagger-fragments td:first-child { position: sticky; left: 0; background: #101114; z-index: 1; }
+#dagger-fragments th, #dagger-fragments td { padding: 8px 6px; border-bottom: 1px solid #2c333d; }
+#dagger-fragments small { display: block; font-size: 9px; color: #8797aa; }
+.dagger-training details { margin-top: 14px; line-height: 1.8; }
+.dagger-training summary { color: #a5b7cb; cursor: pointer; }
+#dagger-sources { overflow-wrap: anywhere; font: 10px/1.8 ui-monospace,monospace; padding: 10px 0; }
+#dagger-current { line-height: 1.8; font-size: 11px; }
+#dagger-current-status { color: #a8b9cc; }
+.dagger-empty { position: absolute; top: 9px; left: 8px; white-space: nowrap; color: #8995a5; font-size: 10px; pointer-events: none; }
+@media (max-width:560px) {
+  .dagger-metrics { grid-template-columns: minmax(0,1fr); }
+  #dagger-fragments { min-width: 510px; }
 }
 #provenance {
   font:

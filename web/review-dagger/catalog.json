@@ -1,0 +1,36 @@
+{
+  "schema": "qqt.dagger-catalog/v1",
+  "generated_at": "2026-10-17T03:20:37.142Z",
+  "runs": [
+    {
+      "id": "h7-v33",
+      "title": "H7 v33 · 本模型训练汇总",
+      "scope": "run",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "file": "h7-v33.json",
+      "bytes": 3055,
+      "sha256": "8acf4d6e3a4d9e4e55896a5f8e86520de5b4faba963fc3308b4414f2fa890b43",
+      "gzip_bytes": 1264
+    },
+    {
+      "id": "h8-attempt06",
+      "title": "H8 v34 attempt06 · Smoke 严格验收失败",
+      "scope": "smoke",
+      "checkpoint_sha256": null,
+      "file": "h8-attempt06.json",
+      "bytes": 3306,
+      "sha256": "10da5f8205a2210e8c6df17daa3fa3955252548f87f6acc6575af419c1287f7b",
+      "gzip_bytes": 1344
+    },
+    {
+      "id": "h6-v28",
+      "title": "H6 v28 · 历史参考",
+      "scope": "historical",
+      "checkpoint_sha256": null,
+      "file": "h6-v28.json",
+      "bytes": 2677,
+      "sha256": "f05b7043a22b4e17ff42bb05418a48a7234e211215633b7beb8d1cccff1cf70f",
+      "gzip_bytes": 1095
+    }
+  ]
+}

@@ -55,3 +55,24 @@
 - `npm test` 全量生产回归通过；`npm run test:review` 的 156 项协议检查、19 项翻译完整性、palette、连续/不连续状态边界、终态 hash 和设备授权回归通过。真实第一局 2760 个双方转换中，1064 个允许插值、1696 个保守吸附，终态 hash 不变。
 - 无网络 mock 的 Chromium 桌面 1440×1050、手机 390×844 验收通过：默认 60 fps、rAF 多帧插值、同 tick 权威状态不变、控制断点不插值、4x 平滑播放与整数 tick 暂停、精确 seek / 双向单步、时间轴固定行首、中文 reward、红色模型及蓝色对手真实画布像素检查。授权记忆/撤销/版本失效、标注持久化/编辑/删除/导出/导入、错误 hash 拒绝、定位复制和深链全部通过；无横向溢出，诊断页 pageerror / console error / HTTP error 均为零。
 - 本轮本地截图、帧数和像素证据在 `runs/replay_review_20261017/browser-visual-local/`；同 SHA 发布证据与线上浏览器结果分别保存为 `release-visual.json`、`browser-visual-public/` 和 `release_visual_acceptance_20261017.md`，不覆盖原始审计。显示帧率为目标值，实际刷新取决于设备和浏览器。
+
+## DAgger 追加验收
+
+- 从干净且与远端一致的 `aae0565` 继续；该 SHA 的 Actions/Pages 成功，19 个公开资源字节/hash/尺寸一致。保留原生模型、蓝色对手、60 fps 插值、中文 reward、授权记忆、标注和深链。本次不改变模拟器、renderer、录像或录像 catalog；训练目录仅只读质量 JSON、已完成 COMMITTED 元数据及 smoke 日志，未读取 H8 checkpoint、访问 GPU 或操作训练进程。
+- 六局本身没有逐 tick DAgger telemetry。新增本局摘要、右栏及固定中文“DAgger 轨 / 教师与梯度采集”，均明确“本局逐tick DAgger：未记录”，不会把 reward、事件、阶段或 run 汇总转换成采集记录。H7 汇总通过 COMMITTED 的 policy SHA 与六局 checkpoint 精确关联；H8 smoke 和 H6 历史参考明确与本局/本 checkpoint 无关。
+- `web/review-dagger/` 独立小 catalog 与三份懒加载汇总，另有按需下载的原始质量快照和白名单数值日志投影。所有 source run/path 为项目相对路径，保留来源 schema、原始字节 SHA-256、来源生成时间与转换时间。H8 funnel 本身没有 schema/生成时间，保留 null；投影标明自身 schema 与原始日志 hash，并使用实际末代日志时间，不伪造原 artifact 时间。
+
+| 来源 | 范围 | 候选 | proposed | strict accepted | Actor 梯度查询 | 接受率 | 最终监督覆盖 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| H7 v33 g1–g32 | 同模型 run，formal + smoke 快照 | 2342320 | 695980 | 389036 | 2970 | 55.90% | 0.13% |
+| H8 v34 attempt06 g1–g4 | smoke；严格 A 链验收失败 | 196554 | 139554 | 53261 | 296 | 38.17% | 0.15% |
+| H6 v28 g1–g32 | 历史参考；accepted 为 query 下界 | 2035270 | 1102974 | 995127 | 995127 | 90.22% | 48.89% |
+
+- H8 无完整 DAGGER_QUALITY，smoke artifact 与四代实际日志逐项核验：stock theft 50、enemy-carried drop 44、enemy-origin pickup 0、enemy-path query 0、own-recovery pickup 2、A 课程 Actor query 26。26 与全 smoke 梯度查询 296 分开显示。原 funnel 的 `passed=true` 与 `strict_declared_acceptance=false` 原样保留；页面以严格条件明确显示 FAILED，缺少 native loose pickup / enemy-origin pickup / enemy-path query。己包回收不能满足敌源要求。`a_loose` 分段沿用来源未区分的聚合，不声称 A 真实敌源追拾成功。
+- H6 分段 accepted 为 A 71549 / B 371152 / 返程 540012 / 交付 12414，污染 0；全部从 JSON 重读。H7/H8/H6 的明确定位和拒标细因、教师短反事实存活/进展、专家一致率保留 null，显示“未记录”；合法率仅显示 artifact 或实际日志计数支持的数据。固定语义 fixture 不冒充模型识别精度。
+- 来源快照 SHA-256：H6 quality `aab926efa2cb1ca461b88d8123190af6de54fb08e4dc39b46aa4dfd419e164a0`；H7 quality `65d5f16f6bf850aaefd039ce054fb200e3b3cc6d7b9beab36dbbcb94d613b184`；H7 COMMITTED `d283f52d0ce8be4d1b472d62ede1d55008213f43732d9a0844a8c8a6c1f52aeb`；H8 funnel `25875950b5e2efd7b1e05c7bb2fe9ab884ebd3719db96fa45c2ad0ce0dd1a513`；H8 原日志 `2e947f3bbd06012ba18595e03291ef077c9341ef4b3af0428dfd16e22356b76e`。公开投影保留原日志 hash，完整日志不进入网页 bundle。
+- DAgger catalog 为 1086 / gzip 557 bytes；H7 汇总 3055 / 1264、H8 汇总 3306 / 1344、H6 汇总 2677 / 1095 bytes。6 局录像仍为 212179 / gzip 29369 bytes，逐局大小/hash不变。
+- 回放 v1 增加可选 `dagger_events`：按 tick/player 唯一有序的点观测，仅允许 tick/player、片段枚举、nullable boolean 的 candidate / explicit_localization / teacher_proposed / strict_accepted / actor_query / actor_gradient、拒标原因机器键及最小 `[move, ability]` 动作集合。禁止非法长度、动作、重复、未知字段、不一致接受/梯度标志。缺字段与非记录 tick 均保持未知，不延续上一记录。存在该字段时纳入 replay identity hash；旧录像身份兼容。A 来源未区分与 `A_ENEMY_DROP_RECOVERY` 明确区分，不凭泛 A 标签认定真实敌源掉包。
+- `npm test` 全量生产回归通过；`npm run test:review` 包含真实来源快照/hash、转换数值、缺字段 null、own/enemy 分离、不推断、稀疏 schema RED/GREEN 与 DAgger identity 篡改拒绝，另用只读原始目录复核来源字节 hash。原有 156 项协议及 19 项 reward 映射回归通过。
+- 无网络 mock 的 Chromium 桌面/手机通过真实质量数值、未记录状态、默认 60 fps / 4x 插值、断点吸附、整数 tick 暂停/seek/单步、蓝色像素与双方文字、授权、标注和深链回归。稀疏轨点击使用隔离的合成协议测试记录，真实录像未注入或持久化测试数据；点击生产轨道按钮确实跳到 tick 321。手机表格横向滚动保留类别列，页面无横向溢出；诊断页 pageerror / console error / HTTP error 为零。
+- 新证据保存在忽略目录 `runs/replay_review_20261017/browser-dagger-local/`、`browser-dagger-public/`、`release-dagger.json` 与 `release_dagger_acceptance_20261017.md`。发布必须等待同一最终 SHA 的 Actions/Pages，再验证页面、录像/catalog、DAgger catalog/汇总/来源文件 HTTP 200 与本地字节/hash/尺寸一致，不覆盖前述审计证据。

@@ -1,0 +1,296 @@
+{
+  "schema": "je09.h7.dagger-quality-live/v1",
+  "generated_unix": 1792186845.0279825,
+  "experiment_id": "JE09-STAGE-H7-NATIVE-COURIER-FSM-DAGGER-20261017-v33",
+  "generations": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ],
+  "source_runs": [
+    "formal",
+    "smoke"
+  ],
+  "funnel": {
+    "visited_ticks": 75497472.0,
+    "full_scene_ticks": 29983614.0,
+    "full_episode_ends": 13330.0,
+    "candidates": 2342320.0,
+    "explicit_localization": null,
+    "ambiguous_or_rejected_reasons": null,
+    "proposed": 695980.0,
+    "strict_accepted": 389036.0,
+    "gradient_query": 2970.0,
+    "location_coverage": null,
+    "location_precision_proxy": null,
+    "teacher_acceptance": 0.558975832638869,
+    "supervision_coverage": 0.0012679736329792683,
+    "noneligible_gradient_pollution": 0.0,
+    "missing_localization_fields": "Collector does not emit causal localization/rejection reason bits; null is unmeasured."
+  },
+  "fragments": {
+    "a_loose": {
+      "candidate_ticks": 58177.0,
+      "candidate_episodes": 1076.0,
+      "proposed": 57786.0,
+      "accepted": 52815.0,
+      "gradient_query": 517.0,
+      "query_episodes": 517.0,
+      "acceptance": 0.9139757034575848,
+      "query_per_candidate": 0.008886673427643228
+    },
+    "b_stock": {
+      "candidate_ticks": 1557615.0,
+      "candidate_episodes": 18284.0,
+      "proposed": 340137.0,
+      "accepted": 65689.0,
+      "gradient_query": 864.0,
+      "query_episodes": 864.0,
+      "acceptance": 0.19312512311215774,
+      "query_per_candidate": 0.0005546941959341686
+    },
+    "carry_return": {
+      "candidate_ticks": 711413.0,
+      "candidate_episodes": 10719.0,
+      "proposed": 282944.0,
+      "accepted": 259326.0,
+      "gradient_query": 1564.0,
+      "query_episodes": 1564.0,
+      "acceptance": 0.9165276521149062,
+      "query_per_candidate": 0.0021984416928001035
+    },
+    "cage_delivery": {
+      "candidate_ticks": 15115.0,
+      "candidate_episodes": 5563.0,
+      "proposed": 15113.0,
+      "accepted": 11206.0,
+      "gradient_query": 25.0,
+      "query_episodes": 25.0,
+      "acceptance": 0.7414808443062264,
+      "query_per_candidate": 0.0016539861065167053
+    }
+  },
+  "combat_control": {
+    "teacher_queries": 0.0,
+    "policy": "Audit-only; battle PPO, native safety expert and retention."
+  },
+  "teacher_quality": {
+    "action_set_size_histogram": {
+      "1": 2650.0,
+      "2": 320.0,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0
+    },
+    "legal_query_rate": 1.0,
+    "temporal_hazard_acceptance": null,
+    "counterfactual_survival": null,
+    "task_progress": null,
+    "drop_expert_consistency": null,
+    "return_expert_consistency": null,
+    "reason": "One-step labels are filtered through native survival and transition checks; rollout metrics are not emitted."
+  },
+  "opponent_roles": {
+    "strong_or_pfsp": {
+      "visited": 17729541.0,
+      "eligible": 1359504.0,
+      "query": 2702.0,
+      "candidate_a": 57380.0,
+      "candidate_b": 644870.0,
+      "candidate_carry_return": 644835.0,
+      "candidate_cage_delivery": 12419.0,
+      "path_a": 507.0,
+      "path_b": 765.0,
+      "carry_return": 1408.0,
+      "cage_delivery": 22.0,
+      "opponent_native_custody_ticks": 1339331.0
+    },
+    "weak_courier": {
+      "visited": 9209673.0,
+      "eligible": 960012.0,
+      "query": 241.0,
+      "candidate_a": 799.0,
+      "candidate_b": 899869.0,
+      "candidate_carry_return": 57837.0,
+      "candidate_cage_delivery": 1507.0,
+      "path_a": 10.0,
+      "path_b": 89.0,
+      "carry_return": 140.0,
+      "cage_delivery": 2.0,
+      "opponent_native_custody_ticks": 110598.0
+    },
+    "weak_guard": {
+      "visited": 3044400.0,
+      "eligible": 22804.0,
+      "query": 27.0,
+      "candidate_a": 0.0,
+      "candidate_b": 12876.0,
+      "candidate_carry_return": 8741.0,
+      "candidate_cage_delivery": 1187.0,
+      "path_a": 0.0,
+      "path_b": 10.0,
+      "carry_return": 16.0,
+      "cage_delivery": 1.0,
+      "opponent_native_custody_ticks": 2648.0
+    }
+  },
+  "targeted_weak_course": {
+    "none": {
+      "visited": 17729541.0,
+      "candidate": 1359504.0,
+      "query": 2702.0,
+      "weak_courier": 0.0,
+      "weak_guard": 0.0,
+      "native_transitions": [
+        11268.0,
+        10469.0,
+        8227.0,
+        134.0,
+        8397.0,
+        7576.0,
+        6410.0,
+        2167.0
+      ]
+    },
+    "a_loose": {
+      "visited": 8571388.0,
+      "candidate": 891336.0,
+      "query": 229.0,
+      "weak_courier": 8571388.0,
+      "weak_guard": 0.0,
+      "native_transitions": [
+        8767.0,
+        8522.0,
+        444.0,
+        2.0,
+        444.0,
+        929.0,
+        295.0,
+        695.0
+      ]
+    },
+    "b_stock": {
+      "visited": 565985.0,
+      "candidate": 3363.0,
+      "query": 10.0,
+      "weak_courier": 0.0,
+      "weak_guard": 565985.0,
+      "native_transitions": [
+        39.0,
+        39.0,
+        18.0,
+        0.0,
+        18.0,
+        19.0,
+        7.0,
+        3.0
+      ]
+    },
+    "carry_return": {
+      "visited": 638285.0,
+      "candidate": 68676.0,
+      "query": 12.0,
+      "weak_courier": 638285.0,
+      "weak_guard": 0.0,
+      "native_transitions": [
+        672.0,
+        655.0,
+        30.0,
+        0.0,
+        30.0,
+        55.0,
+        19.0,
+        39.0
+      ]
+    },
+    "cage_delivery": {
+      "visited": 2478415.0,
+      "candidate": 19441.0,
+      "query": 17.0,
+      "weak_courier": 0.0,
+      "weak_guard": 2478415.0,
+      "native_transitions": [
+        265.0,
+        257.0,
+        78.0,
+        0.0,
+        79.0,
+        74.0,
+        46.0,
+        9.0
+      ]
+    }
+  },
+  "fixed_gold_audit": {
+    "scope": "semantic fixture only; not learner-state recognition accuracy",
+    "cases": 14,
+    "correct": 14,
+    "explicit": 9,
+    "coverage": 0.6428571428571429,
+    "per_case_path": "DAGGER_QUALITY.json.fixed_gold_audit.rows",
+    "model_recognition_precision": null
+  },
+  "h5cr_baseline": {
+    "visited": 67108864,
+    "eligible": 1895745,
+    "eligible_fraction": 0.028249,
+    "query": 972034,
+    "query_of_eligible": 0.512745,
+    "query_of_visited": 0.014484,
+    "unlabeled_fraction": 0.487255,
+    "A": 53986,
+    "B": 396771,
+    "RETURN": 521277,
+    "noneligible_pollution": 0,
+    "interpretation": "Historical event-gate coverage, not gold-label precision."
+  },
+  "smoke_a_funnel_audit": {
+    "passed": false,
+    "failed_requirements": [
+      "native_loose_pickup_missing",
+      "enemy_origin_pickup_missing",
+      "enemy_path_query_missing"
+    ],
+    "counts": {
+      "native_courier_stock_theft": 70.0,
+      "enemy_carried_attributed_drop": 56.0,
+      "native_loose_pickup": 0.0,
+      "enemy_origin_pickup": 0.0,
+      "own_recovery_pickup": 2.0,
+      "enemy_path_query": 0.0,
+      "all_a_queries": 38,
+      "attributed_kill": 815.0,
+      "enemy_custody_ticks": 5356.0
+    },
+    "interpretation": "Own-recovery pickup is reported separately and cannot satisfy the enemy-carried drop-to-pickup requirement."
+  }
+}

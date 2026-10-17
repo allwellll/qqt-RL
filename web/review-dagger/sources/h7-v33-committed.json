@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "generation": 32,
+  "arm": "bun392_bridge_pfsp8",
+  "devices": 8,
+  "shape": [
+    8,
+    1024,
+    256,
+    4096
+  ],
+  "state_schema": "je09-eight-device-stage-h7-native-courier-fsm-dagger-v33",
+  "fresh_ticks": 67108864,
+  "plan_sha256": "6d289f7aeed5bc7c3ee27b851144f6442a5638860072a9f3b38d9ad0a69e12c1",
+  "state_sha256": "e37c75637c84016e79b2b2e32e637b6d1e4a46cf00e4f99281b2e84f8589bfe1",
+  "policy_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+  "adam_steps": [
+    4096,
+    4096,
+    4096,
+    4096,
+    4096,
+    4096,
+    4096,
+    4096
+  ],
+  "gradient_accumulation": 1,
+  "ema_policy_sha256": "b94dc63f50393a65bbf0ddc25735ecb0fbd07b90fab90489e84cbd60158d4ef2",
+  "full_state_digest": "15f1da5398a79b26522a01beb1f97503b8cae67300ce5141ba9d897226df1459",
+  "next_rng_digest": "8ca0b87813d73e26eb40dcdb1d1d364ec6c26e5a265a059db7af747af901188b",
+  "replicas_exact": true,
+  "input_encoding": "bun24-trap-timer-v2",
+  "regions_sha256": "04b5585637721be69e9f151ca91a7fa5d1034abf6c10309e785ae9183d0f09c1",
+  "checkpoint_seconds": 15.277488946914673,
+  "pool_versions": {
+    "current": 32,
+    "ring_interval": 8,
+    "ring_writes": 6,
+    "immutable": [
+      "stage1_2048",
+      "stage1_4096",
+      "stage2_512",
+      "stage2_1024",
+      "stage2_2048",
+      "stage2_3072"
+    ]
+  },
+  "unix": 1792186857.4344444
+}

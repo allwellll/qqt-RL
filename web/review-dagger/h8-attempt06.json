@@ -1,0 +1,120 @@
+{
+  "schema": "qqt.dagger-quality/v1",
+  "generated_at": "2026-10-17T03:20:37.142Z",
+  "id": "h8-attempt06",
+  "title": "H8 v34 attempt06 · Smoke 严格验收失败",
+  "scope": "smoke",
+  "source_run": "runs/je09_bun_20261017/stage_h8_native_courier_fsm_dagger_v34",
+  "checkpoint_sha256": null,
+  "generations": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "source_scopes": [
+    "smoke"
+  ],
+  "sources": [
+    {
+      "file": "h8-attempt06-funnel.json",
+      "path": "runs/je09_bun_20261017/stage_h8_native_courier_fsm_dagger_v34/state/H8_SMOKE_A_FUNNEL.json",
+      "schema": null,
+      "sha256": "25875950b5e2efd7b1e05c7bb2fe9ab884ebd3719db96fa45c2ad0ce0dd1a513",
+      "generated_at": null
+    },
+    {
+      "file": "h8-attempt06-counters.json",
+      "path": "runs/je09_bun_20261017/stage_h8_native_courier_fsm_dagger_v34/production_smoke_stage_h8_v34_attempt06/formal/bun392_bridge_pfsp8/events.jsonl",
+      "schema": "qqt.dagger-smoke-counters/v1",
+      "sha256": "93d3a1bb362d129accec22940623771d0c36288114275a77f68b65f39e46dc27",
+      "original_sha256": "2e947f3bbd06012ba18595e03291ef077c9341ef4b3af0428dfd16e22356b76e",
+      "generated_at": "2026-10-17T01:41:52.136Z"
+    }
+  ],
+  "source_generated_at": "2026-10-17T01:41:52.136Z",
+  "funnel": {
+    "candidate": 196554,
+    "explicit_localization": null,
+    "teacher_proposed": 139554,
+    "strict_accepted": 53261,
+    "actor_query": 296,
+    "teacher_acceptance": 0.38165154707138454,
+    "supervision_coverage": 0.0015059474749941491,
+    "noneligible_gradient_pollution": 0
+  },
+  "fragments": {
+    "A_LOOSE_RECOVERY": {
+      "candidate": 2483,
+      "teacher_proposed": 2483,
+      "strict_accepted": 2233,
+      "actor_query": 26
+    },
+    "B_CAGE_STOCK": {
+      "candidate": 151173,
+      "teacher_proposed": 95063,
+      "strict_accepted": 12709,
+      "actor_query": 73
+    },
+    "CARRY_RETURN": {
+      "candidate": 41897,
+      "teacher_proposed": 41007,
+      "strict_accepted": 37575,
+      "actor_query": 195
+    },
+    "CAGE_DELIVERY": {
+      "candidate": 1001,
+      "teacher_proposed": 1001,
+      "strict_accepted": 744,
+      "actor_query": 2
+    },
+    "COMBAT_CONTROL": {
+      "candidate": null,
+      "teacher_proposed": null,
+      "strict_accepted": null,
+      "actor_query": 0
+    }
+  },
+  "teacher_quality": {
+    "legal_action_rate": 1,
+    "counterfactual_survival": null,
+    "task_progress": null,
+    "drop_expert_consistency": null,
+    "return_expert_consistency": null
+  },
+  "refusal_reasons": {
+    "strict_verifier_reject": null,
+    "strict_verifier_reject_upper_bound": null,
+    "AMBIGUOUS": null,
+    "UNREACHABLE": null,
+    "DOOMED": null,
+    "UNCLEAR_PROVENANCE": null,
+    "FUTURE_DEPENDENT": null
+  },
+  "action_set_size_histogram": {
+    "1": 264,
+    "2": 32,
+    "3": 0,
+    "4": 0,
+    "5": 0
+  },
+  "accepted_is_query_lower_bound": false,
+  "smoke_a": {
+    "stock_theft": 50,
+    "enemy_carried_drop": 44,
+    "enemy_origin_pickup": 0,
+    "enemy_path_query": 0,
+    "own_recovery_pickup": 2,
+    "target_a_query": 26
+  },
+  "validation": {
+    "passed": false,
+    "original_passed": true,
+    "strict_declared_acceptance": false,
+    "failed_requirements": [
+      "native_loose_pickup_missing",
+      "enemy_origin_pickup_missing",
+      "enemy_path_query_missing"
+    ]
+  }
+}

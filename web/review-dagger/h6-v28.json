@@ -1,0 +1,123 @@
+{
+  "schema": "qqt.dagger-quality/v1",
+  "generated_at": "2026-10-17T03:20:37.142Z",
+  "id": "h6-v28",
+  "title": "H6 v28 · 历史参考",
+  "scope": "historical",
+  "source_run": "runs/je09_bun_20261016/stage_h6_full_trajectory_fragment_dagger_v28",
+  "checkpoint_sha256": null,
+  "generations": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ],
+  "source_scopes": [
+    "smoke",
+    "formal"
+  ],
+  "sources": [
+    {
+      "file": "h6-v28-quality.json",
+      "path": "runs/je09_bun_20261016/stage_h6_full_trajectory_fragment_dagger_v28/quality/DAGGER_QUALITY.json",
+      "schema": "je09.h6.dagger-quality/v1",
+      "sha256": "aab926efa2cb1ca461b88d8123190af6de54fb08e4dc39b46aa4dfd419e164a0",
+      "generated_at": "2026-10-16T16:22:50.104Z"
+    }
+  ],
+  "source_generated_at": "2026-10-16T16:22:50.104Z",
+  "funnel": {
+    "candidate": 2035270,
+    "explicit_localization": null,
+    "teacher_proposed": 1102974,
+    "strict_accepted": 995127,
+    "actor_query": 995127,
+    "teacher_acceptance": 0.9022216298842947,
+    "supervision_coverage": 0.48894102502370695,
+    "noneligible_gradient_pollution": 0
+  },
+  "fragments": {
+    "A_LOOSE_RECOVERY": {
+      "candidate": 84312,
+      "teacher_proposed": 84312,
+      "strict_accepted": 71549,
+      "actor_query": 71549
+    },
+    "B_CAGE_STOCK": {
+      "candidate": 1336899,
+      "teacher_proposed": 444047,
+      "strict_accepted": 371152,
+      "actor_query": 371152
+    },
+    "CARRY_RETURN": {
+      "candidate": 595444,
+      "teacher_proposed": 560625,
+      "strict_accepted": 540012,
+      "actor_query": 540012
+    },
+    "CAGE_DELIVERY": {
+      "candidate": 18615,
+      "teacher_proposed": 13990,
+      "strict_accepted": 12414,
+      "actor_query": 12414
+    },
+    "COMBAT_CONTROL": {
+      "candidate": null,
+      "teacher_proposed": null,
+      "strict_accepted": null,
+      "actor_query": 0
+    }
+  },
+  "teacher_quality": {
+    "legal_action_rate": 1,
+    "counterfactual_survival": null,
+    "task_progress": null,
+    "drop_expert_consistency": null,
+    "return_expert_consistency": null
+  },
+  "refusal_reasons": {
+    "strict_verifier_reject": null,
+    "strict_verifier_reject_upper_bound": 107847,
+    "AMBIGUOUS": null,
+    "UNREACHABLE": null,
+    "DOOMED": null,
+    "UNCLEAR_PROVENANCE": null,
+    "FUTURE_DEPENDENT": null
+  },
+  "action_set_size_histogram": {
+    "1": 714400,
+    "2": 280461,
+    "3": 215,
+    "4": 51,
+    "5": 0
+  },
+  "accepted_is_query_lower_bound": true
+}

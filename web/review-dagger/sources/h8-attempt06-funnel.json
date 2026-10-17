@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "strict_declared_acceptance": false,
+  "failed_requirements": [
+    "native_loose_pickup_missing",
+    "enemy_origin_pickup_missing",
+    "enemy_path_query_missing"
+  ],
+  "funnel": {
+    "drop_spawned": 44.0,
+    "actor_query": 26,
+    "own_recovery_pickup": 2.0,
+    "enemy_origin_pickup": 0.0,
+    "stock_theft": 50.0,
+    "custody": 4087.0
+  }
+}
