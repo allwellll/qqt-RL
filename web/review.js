@@ -245,6 +245,10 @@
     $('canvas-loading').hidden=true;list();timeline();annotations();seek(Math.min(doc.actions.length,Math.max(0,Number.isInteger(tick)?tick:0)));$('integrity').textContent='hash 已验证';say('录像与间隔状态 hash 校验通过');
   }
   function fail(e){playing=false;say(e.message);$('canvas-loading').hidden=false;$('canvas-loading').textContent=e.message;$('integrity').textContent='验证失败';}
+  const keyboardStep=ReviewKeyboard.bindReviewKeyboard({onStep:(direction,amount)=>{
+    if(player)seek(ReviewKeyboard.steppedTick(player.sim.t,direction,amount,doc.actions.length));
+  }});
+  document.addEventListener('keydown',keyboardStep);
   $('play').onclick=()=>{if(!player)return;if(playing)pause();else start();hashPosition();};
   $('replay-start').onclick=()=>{seek(0);start();};$('step-back').onclick=()=>seek(Math.max(0,player.sim.t-1));$('step-next').onclick=()=>seek(Math.min(doc.actions.length,player.sim.t+1));$('seek').oninput=()=>seek(Number($('seek').value));$('filter').oninput=()=>list();$('zoom').oninput=()=>timeline();
   $('timeline').onclick=e=>{const rect=$('timeline').getBoundingClientRect();seek(Math.round(Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width))*doc.actions.length));};
