@@ -871,3 +871,12 @@ dialog p {
  .diagnostic-warning,#diagnostic-warning{color:#f4ce7e;font-weight:600;line-height:1.5;overflow-wrap:anywhere}
  .route-experiment{border-top:1px solid #34343a;padding:12px 0;line-height:1.7;overflow-wrap:anywhere}
  .route-experiment a{color:#8fc8ed}
+.return-warning{padding:9px 12px;margin:4px 0 8px;border:1px solid #b65c66;border-radius:5px;color:#ffd4d8;background:#362027;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.return-audit{min-width:0;overflow-wrap:anywhere;border:1px solid #69444c;border-radius:5px;padding:10px;margin:12px 0}
+.return-audit p,#cross-critic-gap{font-size:11px;line-height:1.8;overflow-wrap:anywhere;color:#c3b9bf}
+.return-audit dl>div{flex-direction:column;gap:3px}.return-audit dd{text-align:left;max-width:100%}
+.return-audit table{width:100%;font-size:11px;border-collapse:collapse}.return-audit th,.return-audit td{padding:6px;text-align:left;border-bottom:1px solid #34343a;min-width:64px}
+.return-audit caption{caption-side:bottom;text-align:left;line-height:1.7;padding-top:8px;color:#b6bbc5}
+.return-audit .selected-action{background:#293c3a}.return-audit a{color:#8fc8ed}
+.failure-mark{color:#ffe4e8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;font-size:11px;min-height:22px}
+@media(max-width:560px){.return-warning{font-size:12px}.return-audit{padding:7px}.return-audit th,.return-audit td{padding:5px}}

@@ -15,6 +15,9 @@ Reward事件实际汇总：`route_shaped_reward=-1,440.96`（累计总combined r
 固定协议g32相对父点：受控drop-return进度由父点25%=1/16、50%=0、capture=0升至7/16、6/16、2/16；fixed32两边capture仍0/16，唯一g24中间点主评/holdout均8/16后g32回落至0。full仍未改善。结论：路线PBRS信号已真实进入production reward/GAE/PPO且累计含正负项，但当前λ=.05设置没有稳定提高固定限时交付或自然full；路线训练reward净负且Tactical/Hunter hard攻击保持回落。值得保留实现和回放用于分析，不建议按此单变量配置直接续训；按用户要求不自动启动新训练。
 
 真实网页模拟器回放包位于 `reports/je09_bun_20261017/route_pbrs_replay_g32/`：包含g32 Actor JSON/ONNX/raw policy、从同代state精确导出的Critic-only NPZ、配置、真实production `web/sim.js` 固定seed 1,200 tick状态/动作/route轨迹及独立PBRS算术复算证明。此轨迹使用明确声明的drop-return诊断fixture，不代表自然full成功。完整结果与逐checkpoint分母/耗时见 `reports/je09_bun_20261017/route_pbrs_training_20261017.md`；最终网页侧交接见本机 `.hermes/route_pbrs_final_handoff.md`。
+
+2026-10-17网页追加诊断：固定真实seed `2026101732` 的tick177不是有效返程，而是上下周期2振荡；位置为 `[y,x]=[1.80,9.64]→[1.98,9.64]`，move1向下，下一tick以55.92%选择move0向上（向下11.74%）。整格距离38、Phi=.421875不变；连续向下两步可降距37，无碰撞校正或目标错位。tick177连续61tick未下降，保守确认振荡143–590；完整窗口147–207、1200动作重推、244合法一步分支和来源hash见 `web/review-evidence/route-g32-return.json`。两代Critic存在，但该诊断外部Tracker因果预置与训练scene9 native归因、隐藏reward aux、terminal/阶段PBRS语义尚无严格同口径适配；原始/塑形Q/A及跨Critic差仍null，不能用路线reward冒充。未启动或改变训练；下一步需要完整版本化状态/info/ledger桥和独立反事实复算。页面增加失败区间、实际Actor概率/候选路径及缺测说明。详见 `reports/replay_review_20261017.md` 的tick177审计。原生winner0来自存包超时，敌包交付0，不是自然完整链成功。
+
 > 本文档是训练实验的唯一长期索引。任何会改变训练分布、优化目标、对手、场景、样本规模、训练规模、超参数或评估协议的动作，都必须在实验启动时新增记录，并在结果产生后原位回填。聊天结论、run 日志和单独报告不能替代本总账。
 
 ## 1. 记录规则

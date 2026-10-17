@@ -1,0 +1,28 @@
+'use strict';
+const fs=require('fs'),assert=require('node:assert/strict'),{chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const base=process.env.WEB_URL||'http://127.0.0.1:8097/',out=process.env.EVIDENCE_DIR||'runs/replay_review_20261017/browser-return-local',id='h8-route-v35-g32-drop-return-2026101732';
+(async()=>{
+  fs.mkdirSync(out,{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']}),results=[];
+  try{for(const mobile of [false,true]){
+    const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1600,height:1100},isMobile:mobile,hasTouch:mobile,recordVideo:{dir:out+'/'+(mobile?'mobile-video':'desktop-video')}}),page=await context.newPage(),errors=[],http=[],requested=[];
+    page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});page.on('response',r=>{if(r.status()>=400)http.push({path:new URL(r.url()).pathname,status:r.status()});});page.on('request',r=>{if(r.url().includes('/review-replays/')||r.url().includes('route-g32-return'))requested.push(new URL(r.url()).pathname);});
+    await page.goto(base+'review.html#replay='+id+'&tick=177');await page.waitForFunction(()=>document.getElementById('integrity').textContent==='hash 已验证',null,{timeout:90000});
+    await page.locator('#advanced-open').click();await page.locator('#settings-password').fill(process.env.QQT_SETTINGS_PASSWORD);await page.locator('#password-form button[type=submit]').click();await page.locator('#advanced-settings').waitFor({state:'visible'});
+    assert.equal(await page.locator('#exact-time').textContent(),'tick 177 · 00:17.700');const warning=await page.locator('#return-warning').textContent();for(const t of ['当前持敌包返己笼','61 tick','上下往返','返程振荡失败'])assert(warning.includes(t));assert(await page.locator('#return-warning').isVisible());
+    const detail=await page.locator('#return-details').textContent();for(const t of ['向下 [1]','向上 [0] 55.92%','向下 11.74%','行 y, 列 x'])assert(detail.includes(t));
+    assert.equal(await page.locator('#return-candidates .selected-action').count(),1);assert((await page.locator('#return-candidates').textContent()).includes('70.22%'));assert((await page.locator('#cross-critic-gap').textContent()).includes('未记录'));
+    await page.locator('.return-audit details summary').click();const missing=await page.locator('#return-missing').textContent();for(const t of ['H8 v34','H8 v35','trapped_source','terminal','aux'])assert(missing.includes(t));
+    await page.locator('#zoom').evaluate(e=>{e.value=8;e.dispatchEvent(new Event('input'));});
+    const row=page.locator('#failure-track .failure-mark').first(),start=Number(await row.getAttribute('data-tick')),end=Number(await row.getAttribute('data-end'));assert(start<=177&&end>=177);await row.scrollIntoViewIfNeeded();const bounds=await row.boundingBox();await row.click({position:{x:(177-start)/(end-start)*bounds.width,y:bounds.height/2}});assert.equal(await page.locator('#seek').inputValue(),'177');
+    await page.locator('#step-next').click();assert.equal(await page.locator('#seek').inputValue(),'178');assert((await page.locator('#return-candidates .selected-action').textContent()).includes('向上'));assert((await page.locator('#return-candidates').textContent()).includes('38→37'));
+    await page.locator('#step-back').click();assert.equal(await page.locator('#seek').inputValue(),'177');
+    const layout=await page.evaluate(()=>({direct:document.querySelector('.board').nextElementSibling.classList.contains('playback-region')&&document.querySelector('.playback-region').nextElementSibling.classList.contains('timeline-head'),overflow:document.documentElement.scrollWidth>innerWidth+1}));assert(layout.direct);assert(!layout.overflow);
+    await page.locator('#return-warning').scrollIntoViewIfNeeded();await page.screenshot({path:out+'/'+(mobile?'mobile':'desktop')+'.png',fullPage:true});await page.locator('#game').screenshot({path:out+'/'+(mobile?'mobile':'desktop')+'-canvas.png'});
+    await page.reload();await page.waitForFunction(()=>document.getElementById('integrity').textContent==='hash 已验证',null,{timeout:90000});assert(await page.locator('#advanced-settings').isVisible());assert.equal(await page.locator('#seek').inputValue(),'177');
+    const tab=await context.newPage();await tab.goto(base+'review.html#replay='+id+'&tick=177');await tab.waitForFunction(()=>document.getElementById('integrity').textContent==='hash 已验证',null,{timeout:90000});assert(await tab.locator('#advanced-settings').isVisible());await tab.close();
+    await page.locator('#seek').evaluate(e=>{e.value=20;e.dispatchEvent(new Event('input'));});assert(!await page.locator('#return-warning').isVisible());
+    assert.equal(new Set(requested.filter(v=>v.includes('/review-replays/'))).size,1);assert(requested.some(v=>v.endsWith('/route-g32-return.json')));assert.deepEqual(errors,[]);assert.deepEqual(http,[]);
+    results.push({mobile,tick:177,warning,layout,failure_interval:{start,end},actor_probabilities:{tick177_down:.702199204,tick178_up:.559185597},reward_q_advantage_status:'unavailable, explicit sealed-source and causal-ledger gaps',remembered_authorization:true,deep_link:true,errors,http});await context.close();
+  }}finally{await browser.close();}
+  fs.writeFileSync(out+'/checks.json',JSON.stringify({passed:true,results},null,2)+'\n');console.log('Return browser GREEN: real tick177 desktop/mobile, failure interval click, actual actor alternatives, null Q/A with causal-chain explanation, integer step, deep link/auth, no errors');
+})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "mobile": false,
+      "tick": 177,
+      "warning": "当前持敌包返己笼 · 连续 61 tick 路线距离未下降 · 距离 38 · 上下往返 · 返程振荡失败",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      },
+      "failure_interval": {
+        "start": 143,
+        "end": 590
+      },
+      "actor_probabilities": {
+        "tick177_down": 0.702199204,
+        "tick178_up": 0.559185597
+      },
+      "reward_q_advantage_status": "unavailable, explicit sealed-source and causal-ledger gaps",
+      "remembered_authorization": true,
+      "deep_link": true,
+      "errors": [],
+      "http": []
+    },
+    {
+      "mobile": true,
+      "tick": 177,
+      "warning": "当前持敌包返己笼 · 连续 61 tick 路线距离未下降 · 距离 38 · 上下往返 · 返程振荡失败",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      },
+      "failure_interval": {
+        "start": 143,
+        "end": 590
+      },
+      "actor_probabilities": {
+        "tick177_down": 0.702199204,
+        "tick178_up": 0.559185597
+      },
+      "reward_q_advantage_status": "unavailable, explicit sealed-source and causal-ledger gaps",
+      "remembered_authorization": true,
+      "deep_link": true,
+      "errors": [],
+      "http": []
+    }
+  ]
+}

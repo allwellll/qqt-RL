@@ -1,5 +1,52 @@
 # 低质量对局回放诊断验收（20261017）
 
+## tick177 返程振荡与优势链路追加审计
+
+本轮基线为 `54f8b7e067741c713af4fdaa276b56051bd96bd8`，同一网页工作树继续；只读冻结训练 artifact，未改训练 checkout、进程或使用 GPU。实验是在原任务奖励之外增加路线 PBRS，试图学会掉包后拾取、持包沿可达路线返己笼和交付；目标标签出现不代表动作已学会。以下保留真实失败，不改动作或录像字节，不把诊断场景冒充自然完整局成功。
+
+### 人话结论与坐标、路径
+
+- `tick177 / 00:17.700` 的抖动是真实策略上下往返，并非播放跳帧。生产动作 `0=向上、1=向下、2=向左、3=向右、4=停留`；位置数组是 `[行 y, 列 x]`。本 tick 从 `[1.80,9.64]` 向下到 `[1.98,9.64]`，变的是 y，x 恒为9.64。
+- 己方3×3包笼左上角 `[1,4]`，当前格 `[1,9]`。中央墙阻挡直接向左，唯一最短路首步是向下，沿右侧下到第9行后从底部向左，再沿左侧回笼。独立重复松弛最短路与路线字段一致，未发现己/敌笼、x/y或目标颠倒。
+- 网格距离采用 `floor(y), floor(x)` 的整格加权距离；1.80与1.98属于同格，距离均38，Phi均 `.421875`。格内前进未获得连续路线梯度，每 tick 路线项只剩折扣惩罚：`.05*(.995*.421875-.421875)=-.00010546875`，公开量化值为 `-.000105`。此数是诊断路线奖励，绝不是训练总 Reward 或 A1。
+- tick177向下的真实合法策略概率为 **70.2199204%**；tick178在 `[1.98,9.64]` 却以 **55.9185597%** 选择向上，向下仅 **11.7418620%**。两步均无碰撞校正。冻结生产状态、对手与随机流的见证显示：若连续向下，tick178到 `[2.16,9.64]`，距离立即降为37。因此除了整格信号平台，还存在面对可立即进展动作却折返的策略失败；概率和路径见证不能证明训练因果。
+- tick177已连续 **61 tick 距离未下降**，包括早前偏航导致35升至38，不是61tick距离始终为38。位置周期2从tick134起；保守检测须同目标返程、持敌包、存活、至少20tick无进展，且最近10个位置严格周期2或静止。确认振荡区间143–590；停滞599–1000、1010–1160、1170–1199。仅整格距离不变但人物仍连续前进，不会判成振荡。
+- 终态更正：此前本报告写“平局”有误；生产Sim原始终态 `winner=0`，笼内存包为模型 `[1,0]`、对手 `[0,0]`，按原生存包超时判模型胜；模型仍携敌包、交付为0。这不是自然返程交付成功。公开录像本身及其正确终态未改。
+
+固定用户定位窗口 **tick147–207（前后各30tick，61行）** 的逐行审计见 `web/review-evidence/route-g32-return.json`：包含每步动作、前后坐标、完整网格路径及首步、move/ability合法mask、实际Actor概率、事件、距离、244个合法联合一步分支的坐标/距离/hash。没有完整状态、全量Q表或模型张量。CPU ONNX重新推理整局1200动作全部一致；窗口独立生产JS forward概率最大差 `9.595731851330669e-7`；taken反事实分支与真实状态hash完全相同，随机流通过draw count恢复，固定对手动作。当前窗口无关键事件。
+
+### A1尚未补齐：有Critic，缺严格训练ledger适配
+
+所需定义保持 `Q1=r+gamma*V(next)`、`A1=Q_taken−sum(pi_legal*Q1)`，合法联合 `move×ability`（ability含放泡/道具）概率重归一，对手冻结；终局value为0。两种Critic若未来可算，将使用同一v35 Actor概率，以免把策略变化混进Critic差。跨Critic差 `A1_shaped−A1_original` 与时间增量 `A1(t)−A1(t−1)` 分开，首项/缺口时间增量为null。当前窗口及本局原始/塑形Q、策略均Q、A1、两种差值均null，不以reward/value/logit代替。
+
+| 角色 | checkpoint SHA-256 | Critic证据 SHA-256 |
+| --- | --- | --- |
+| H8 v34 g32 原始任务 | `b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11` | 参数规范摘要 `7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85` |
+| H8 v35 g32 塑形任务 | `e141311268c6eaf419f1f651252bb27d46c106aeb407230c20eed4c8897a34e2` | NPZ文件 `3174b62f39ea9d56f206c917d2107a8f5e31bda2fe693e88630f72715c0604d8` |
+
+追踪训练结果提交 `6358fa192c847016bf1745247efae2027804f549` 的不可变 Git 对象并按 `SOURCE_SEAL` 核验实际训练路径（不依赖训练工作树后续编辑）：PBRS collect → H8/H6/H5c collect → H2 observed_reward → H/F combined_reward → PBRS.apply_reward → PPO/GAE。gamma=.995、lambda=.05来自封存配置。具体缺口如下，不能把“Critic存在”误当“Q已测量”：
+
+1. 本诊断仅在外部Tracker预置trapCause，原生Sim tick1 causalDamageSource/creditedKill/causalKill均false；训练scene9却在native state预置trapped_source/trapped_causal。Tracker credit与native info不是同一因果ledger。
+2. 完整训练reward依赖scene、terminal/settlement、drop nonce/credit/cycle_paid、transport/bridge、carry_items、potential/routing等隐藏aux。源诊断没有初始化或采集这些训练aux，也没有声明JS→训练精确适配版本。训练COMMITTED批状态不属于本seed诊断episode。
+3. 训练PBRS有阶段边界、topology/safety、terminal Phi归零；诊断使用转移后目标offset且末Phi未归零，不能把公开路线reward加到旧env adapter后称实际train reward。
+4. 已用旧冻结authority CPU JAX适配器对tick176跑一步分支。合法动作0/1/2/4的位置与JS误差约3e-7以内，但blast causal/trigger linger、kill_window、milestones、danger/tactical标记、trapped_source/causal等未完整映射。位置parity并不证明reward/critic观测/隐藏状态parity；非法3本来不参与比较。
+
+下一步所需是版本化的完整JS-native event到冻结训练state/info桥、声明该诊断初态aux并逐tick推进ledger、对全部合法分支克隆ledger/RNG、两代同源Critic输出和独立reward/Q/A复算。此处缺的是可验证工程链路，不宣称数学上不可能；本轮不任意补隐藏状态、不启动训练。用户要求的真实A1数值是明确未完成项。
+
+### 页面与验证
+
+- 新增返程振荡/停滞中文警示与可点击失败区间轨，不把“目标已识别”表述为有效靠近。暂停详情展示真实候选概率、合法动作、一步位置/距离、两代Critic来源和具体缺失链；单步178能看到合法向下38→37与实际向上的差别。
+- 原始/塑形优势、两种增量、Reward、DAgger、授权、标注、深链、蓝色对手、中文Reward、多场景及浮点平滑保留。画布→播放控制/进度条→多轨时间轴DOM顺序保持。旁证单独按局懒加载并核hash；原录像SHA `207680e66de70c44652586fdc7f3aab1919bf5268a8f3e8ef88dcd95fdce69f2`、162526 raw / 7746 gzip bytes未改，旧标注继续绑定同hash。
+- 审计旁证SHA `3e9446f928f30a80273d8eaad979067b8a42e4233edfdeca144844477c37ef4e`、**106126 raw / 16175 gzip(level9) bytes**。生成脚本 `scripts/audit_route_return.js`，只读固定artifact；重复生成字节一致。source、Actor、Critic、simulator及反事实摘要hash全部在旁证内。
+- 新测试先RED再GREEN：真实tick177判定、整格平台不误判、动作坐标/路径/概率、手算策略加权A1与非法排除、Critic不可混用、首项/缺测delta null、hash绑定与伪造Q/A拒绝。`npm test`、`npm run test:review`及桌面/手机旧授权/标注/DAgger/多场景/深链回归通过。
+- 完整1200tick，4x桌面/手机、平滑开/关四组共7203显示帧；约60FPS，安全连续最大帧位移模型/对手：桌面12.39/12.31px、手机6.46/6.43px（4x）。异常跳变、alpha重置、浮点覆盖丢失、console/HTTP错误均0；合法碰撞/携包等snap保留。实际双方renderer锚点严格单调探针、pause/seek/step alpha=0验证通过。
+- 真实桌面1600×1100与手机390×844深链177验收：61tick警示、失败轨点击177、单步178、候选表、null解释、授权刷新/新tab、无横向溢出和单局懒加载通过；pageerror/console/HTTP均0。公开截图及小检查结果位于 `web/review-evidence/return-177/`，未使用网络mock或fixture。
+
+这例说明路线目标和奖励已经存在也不保证学到稳定返程，整格势函数可能形成局部平台；但单段反事实不能把全部训练退化归因于离散距离。结合fixed32/full交付未改善及攻击指标回落，维持“不建议lambda=.05原样续训”的结论，不自动改变训练。
+
+发布按同一head等待Actions/Pages成功并核公开字节/hash/尺寸及真实浏览器；最终SHA验收写入忽略目录，不为记录自身SHA再次触发部署。
+
+
 ## 真实路线 g32 接入与播放跳变追加审计
 
 下文既有审计按历史保留；此前真实 artifact 阻塞已解除。本轮从 `087e48ee073db885bc08e4038a27cb0fd63c7d38` 继续，远端 main 为 `167be513889569bd4835184e06cf66df1aa995fa`。训练结果来源 `6358fa192c847016bf1745247efae2027804f549`；采用无提交 cherry-pick 集成内容，保留 main 总账并只加入本实验条目，纠正该条 Hunter normal 与终态报告的不一致。发布提交使用项目维护者身份，不引入来源提交中的个人作者元数据。没有创建 workspace、启动/控制训练、读取可变 checkpoint 或使用 GPU。

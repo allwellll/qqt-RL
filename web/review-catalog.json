@@ -76,7 +76,14 @@
       },
       "sha256": "207680e66de70c44652586fdc7f3aab1919bf5268a8f3e8ef88dcd95fdce69f2",
       "bytes": 162526,
-      "gzip_bytes": 7746
+      "gzip_bytes": 7746,
+      "diagnostic_audit": {
+        "file": "review-evidence/route-g32-return.json",
+        "schema": "qqt.return-diagnostic/v1",
+        "sha256": "3e9446f928f30a80273d8eaad979067b8a42e4233edfdeca144844477c37ef4e",
+        "bytes": 106126,
+        "gzip_bytes": 16175
+      }
     },
     {
       "id": "h8-g32-native-2026101901",
