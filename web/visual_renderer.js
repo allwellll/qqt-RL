@@ -707,7 +707,7 @@
           const pixel=value=>visualOverride?value:Math.round(value);
           const x = pixel(gx * CELL - image.width / 2), y = Math.min(pixel(playerVisualY(gy, image.height)), 780 - image.height);
           if(motion?.playerLabels?.[pid])roleTags.push({x:gx*CELL,
-            y:y+image.height*SPRITE_HEAD_FRAC-(sim.bunCarried[pid]>=0?48:16),label:motion.playerLabels[pid],team:teamOf(sim,pid),advantage:motion.playerAdvantages?.[pid]});
+            y:y+image.height*SPRITE_HEAD_FRAC-(sim.bunCarried[pid]>=0?48:16),label:motion.playerLabels[pid],team:teamOf(sim,pid),advantage:motion.playerAdvantages?.[pid],route:motion.playerRoutes?.[pid]});
           // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
           if (pid === arrowPid) arrow = { x: gx * CELL, y: y + image.height * SPRITE_HEAD_FRAC };
           const playerCell = Math.floor(gy) * 15 + Math.floor(gx);
@@ -756,17 +756,23 @@
         for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
         for(let i=0;i<roleTags.length;i++){
           const scale=Math.max(1,Math.min(1.5,motion?.labelScale||1));
-          const tag=roleTags[i],extra=tag.advantage?54*scale:0;tag.y=Math.max(-BOARD_OFFSET+16*scale+extra,tag.y);
+          const tag=roleTags[i],extra=((tag.advantage?54:0)+(tag.route?28:0))*scale;tag.y=Math.max(-BOARD_OFFSET+16*scale+extra,tag.y);
+          // Measure the actual text group so edge clamping keeps labels close to the sprite.
+          const widths=[[tag.label,24]];
+          if(tag.advantage)widths.push([`${tag.advantage.kind==='shaped'?'塑形':''}优势增量 ΔA ${tag.advantage.delta===null?'未记录':(tag.advantage.delta>=0?'+':'')+tag.advantage.delta.toFixed(3)}`,20],['A '+(tag.advantage.advantage===null?'未记录':tag.advantage.advantage.toFixed(3)),18]);
+          if(tag.route)widths.push([tag.route.text,18]);
+          ctx.save();tag.inset=Math.max(...widths.map(([label,size])=>{ctx.font=`bold ${size*scale}px sans-serif`;return ctx.measureText(label).width/2+10;}));ctx.restore();
           const prior=roleTags[i-1];
-          if(prior&&Math.abs(tag.x-prior.x)<220*scale&&tag.y+17*scale>prior.y-(prior.advantage?71:17)*scale&&tag.y-extra-17*scale<prior.y+17*scale)tag.y=prior.y+38*scale+extra;
-          const inset=(tag.advantage?120:58)*scale,x=Math.max(inset,Math.min(canvas.width-inset,tag.x));
+          if(prior&&Math.abs(tag.x-prior.x)<tag.inset+prior.inset+8&&tag.y+17*scale>prior.y-((prior.advantage?71:17)+(prior.route?28:0))*scale&&tag.y-extra-17*scale<prior.y+17*scale)tag.y=prior.y+38*scale+extra;
+          const inset=tag.inset,x=Math.max(inset,Math.min(canvas.width-inset,tag.x));
           drawNameTag(x,tag.y,tag.label,tag.team,true,null,24*scale);
           if(tag.advantage){
             const fmt=v=>v===null?'未记录':(v>=0?'+':'')+v.toFixed(3);
             const delta=tag.advantage.delta,color=delta===null?'#d1d4dc':delta<0?'#ff9caa':'#8de3c5';
-            drawNameTag(x,tag.y-28*scale,`优势增量 ΔA ${fmt(delta)}`,tag.team,true,color,20*scale);
-            drawNameTag(x,tag.y-52*scale,`A ${fmt(tag.advantage.advantage)}`,tag.team,true,'#e2e5eb',18*scale);
+            drawNameTag(x,tag.y-28*scale,`${tag.advantage.kind==='shaped'?'塑形':''}优势增量 ΔA ${fmt(delta)}`,tag.team,true,color,20*scale);
+            drawNameTag(x,tag.y-52*scale,`${tag.advantage.kind==='shaped'?'塑形 ':''}A ${fmt(tag.advantage.advantage)}`,tag.team,true,'#e2e5eb',18*scale);
           }
+          if(tag.route)drawNameTag(x,tag.y-(tag.advantage?78:28)*scale,tag.route.text,tag.team,true,tag.route.value===null?'#c0c6d0':tag.route.value<0?'#ffb1b8':'#9cd8f5',18*scale);
         }
         const birdFraction = motion && !sim.done ? Math.max(0, Math.min(1, (now - motion.lastTickT) / motion.tickMs)) : 0;
         const bird = sim.birdFlight ? sim.birdFlight(birdFraction) : null;

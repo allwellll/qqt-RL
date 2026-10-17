@@ -13,7 +13,12 @@ const assert=require('assert'),fs=require('fs'),P=require('./review_protocol'),A
       const d=JSON.parse(fs.readFileSync('web/review-replays/'+row.file));
       const invalid=structuredClone(d);invalid.meta.scene='invented-map';assert.throws(()=>P.validate(invalid),/scene/);
       assert.equal(d.meta.map_sha256,await P.hash(level));
-      assert.equal(d.meta.scene_protocol_sha256,await P.sha256(fs.readFileSync('web/review_protocol.js')));
+      const currentProtocol=await P.sha256(fs.readFileSync('web/review_protocol.js'));
+      const legacyProtocol='77cce1b4d517a30d449348f21cccad06439fbe085d36e93a5032d3eaa62d91aa';
+      assert([currentProtocol,legacyProtocol].includes(d.meta.scene_protocol_sha256),'audited source version');
+      // Optional diagnostic extension changes the file hash, not scene initialization.
+      if(d.meta.scene_protocol_sha256===legacyProtocol)assert.equal(await P.sha256(new TextEncoder().encode(P.setup.toString())),
+        'bd6f6777a54ee218405d2721dba99cd7f73de8c05b18e8f13c04734bdddaa49d','legacy setup must remain byte identical');
       for(const [file,hash]of Object.entries(d.meta.source_hashes))assert.equal(hash,await P.sha256(fs.readFileSync(file)),'production source '+file);
       assert.equal(d.meta.reward_hashes['scripts/diagnostic_reward.py'],await P.sha256(fs.readFileSync('scripts/diagnostic_reward.py')));
       assert.match(d.meta.scene_source_sha256,/^[a-f0-9]{64}$/);

@@ -5,6 +5,14 @@
   else root.QQTReviewView = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function(Q) {
   const REWARDS = Object.freeze({
+    route_potential_delta: ['路线势能变化', 'γΦ(s_next)−Φ(s)，人工路线诊断量，不是 Critic 优势'],
+    route_potential_positive: ['路线正势能差', '路线势能差的正值统计，不额外叠加奖励'],
+    route_potential_negative: ['路线负势能差', '路线势能差的负值统计，不额外叠加奖励'],
+    route_shaped_reward: ['路线塑形奖励', 'λ×路线势能差，实际 reward ledger 中的人工辅助奖励'],
+    route_topology_gain: ['路线拓扑增益', '真实稳定开墙和路长改善诊断，不再叠加第二份奖励'],
+    route_phase_transition: ['路线阶段转换', '目标阶段转换诊断'],
+    route_invalidated: ['路线目标失效', '目标失效与结算诊断'],
+    route_terminal_correction: ['路线终态修正', '终态势能归零的边界修正诊断'],
     lesson_task: ['任务收益', '课程目标与包子任务的基础收益'],
     global_safety: ['全局安全', '自炸、可避免死亡等全局安全奖惩'],
     settled_kill: ['结算击杀', '危险消退后结算的有效击杀收益'],

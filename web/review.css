@@ -856,3 +856,15 @@ dialog p {
     padding: 4px;
   }
 }
+
+.critic-comparison { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; grid-column:1/-1; }
+.critic-comparison section { min-width:0; padding:8px; border:1px solid #343d49; border-radius:4px; }
+.critic-comparison h3 { font-size:12px; }
+.critic-comparison dl>div { flex-direction:column; gap:3px; }
+.critic-comparison dd { text-align:left; max-width:100%; }
+.critic-comparison p, .route-explanation, #route-status { font-size:11px; line-height:1.8; color:#a5b3c6; overflow-wrap:anywhere; }
+.route-details-panel { grid-column:1/-1; min-width:0; }
+#route-details dd { max-width:56%; }
+#advantage-mode { max-width:150px; }
+@media(max-width:560px) { .critic-comparison { gap:6px; } .critic-comparison section { padding:5px; } .critic-comparison dt { font-size:10px; } }
+.critic-comparison dt, .route-details-panel dt { min-width:0; overflow-wrap:anywhere; }

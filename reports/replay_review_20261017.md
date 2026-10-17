@@ -149,3 +149,35 @@
 - 完整浏览器回归另覆盖首次/错误密码无授权/正确/刷新/新 tab/撤销/版本与校验规则变化，蓝色实际像素与中文身份，Reward/事件证据去重，60fps、4x、断点吸附、整数 tick 暂停/seek/单步，标注持久化/编辑/删除/导入导出/错误 hash 拒绝，复制定位及深链，DAgger 未记录与真实历史汇总。证据位于忽略目录 `runs/replay_review_20261017/browser-a1-local/`、`browser-a1-regression-local/`、`motion-a1-local/`；截图包含 desktop/mobile 各场景及画布局部。公开裁切截图为 `web/review-evidence/screenshots/desktop.png` 与 `mobile.png`，保留真实页面像素，不加入标注或模拟内容。
 
 发布前扫描 git ls-files 与全部待提交文件，公开 evidence 不包含机器身份、凭据、绝对路径、内网地址或 PID。提交后按同一 head SHA 等待 Actions/Pages 成功，再核对公开 catalog、录像、DAgger、Critic/A1 evidence HTTP200、字节/hash/尺寸及线上真实浏览器。发布验收记录保存在忽略目录 `release-a1.json`、`browser-a1-public/`、`browser-a1-regression-public/`、`motion-a1-public/` 与 `release_a1_acceptance_20261017.md`，不为记录自身 SHA 追加部署。
+
+## 路线势能协议、网页与导出接口（等待真实实验 checkpoint）
+
+本轮从干净且与远端 main 同步的 `167be513889569bd4835184e06cf66df1aa995fa` 继续，保留前述全部审计。只读训练侧设计报告 `route_potential_advantage_analysis.md`、路线训练合同及训练总账；没有写训练目录、读可变 checkpoint、操作训练进程或使用 GPU。训练报告关于“未发现网页 A1”的旧描述已过时；本网页已发布的同代 Critic 严格 A1 仍按上节证据保留。
+
+### 已完成工程
+
+- 可选扩展 `qqt.route-potential/v1`：稀疏 tick、目标字典与 episode域 SHA-256 脱敏身份、真实来源/阶段、Phi前后、`gamma*Phi_after-Phi_before`、`lambda*delta`、网格加权路长（含显式 `INF`）、拓扑区域/增益/前后地图及安全证据hash、阶段切换、失效、terminal边界修正及安全拒绝原因。严格校验列长、时序、null、有限数、公式、相邻Phi连续性、终态归零、来源绑定、开墙证据和缺测计数。目标A/B不接受错误 provenance，own-recovery独立。route新增列纳入identity；未加字段的18局文件及其identity保持不变。
+- 塑形 Critic 的 Q/策略均值/A1/ΔA/合法数独立列和来源；没有经过塑形训练的Critic时全部null，不把人工路线reward加到原A/Q上。原始 `advantages`/`rewards` 不改名、不覆盖。塑形A1仍为全部合法move×ability的策略概率重归一一步反事实比较，首项和缺口后ΔA为null。
+- 画布后仍直接是播放控制+进度条，再紧接完整时间轴。新增中文“路线势能变化”“路线奖励”“塑形 Critic 优势”“塑形 Critic 增量”四轨，行名/解释常驻、正负数值和阶段直接可读、tooltip关联同tick原Reward证据且不重复求和、点击定位。稀疏点排成互不遮挡的行，密集点按实际标签宽度抽样显示文字。右栏原始/塑形Critic并排；路线详情展示目标/来源/脱敏ID/路长/Phi/ΔPhi/lambda/路线reward/拓扑/阶段边界/拒绝原因，明确人工辅助值与模型价值估计的区别。
+- 模型头顶默认保留原始A/ΔA并加紧凑路线行；值只取当前整数tick、不延用缺口。所有文字跟随生产renderer的浮点视觉坐标，按实际文字宽度夹紧边界；对手仍蓝色+文字身份且不套模型优势。可分别开关路线/优势叠加；只有存在经过验证的塑形Critic证据时才启用塑形口径切换。旧录像新增字段明确未记录。
+- `scripts/export_diagnostic_route.js` 和 `docs/replay_route_export_v1.md` 提供版本化训练侧交接：稀疏事件、独立采集/重算artifact、可选原始/塑形Critic反事实输入，转成量化列式数据、来源hash和raw/gzip报告。原始结果已有时只校验不覆盖；尚未记录时可按原协议导出。白名单字段、数学与量化一致性检查、固定同episode/动作/版本绑定，拒绝全量state/Q表输出，CLI不覆盖文件、不修改catalog、禁止fixture写进web。正式CLI额外校验生产Sim整局statehash/终态，并拒绝同一文件充当采集与独立复算两份输入。
+- 此适配器不自行证明上游训练/RNG/路由/反事实真实性；它校验输入证据与复算一致性。真实发布仍须审计独立CPU推理、全部合法分支、RNG/ledger克隆、训练Critic parity和不可变receipt。两份相同对象/fixture不构成真实训练效果证据。
+- 旧六局 `scene_protocol_sha256` 仍保留原始值。协议文件新增诊断扩展后，场景回归显式接受已审计旧版本，另锁定 `setup.toString()` 的原始hash并完整重放终态，未改旧录像的来源hash来假装重新生成。
+
+### 测试与本地浏览器证据
+
+先创建fixture及测试并确认缺模块RED，再实现转GREEN。`npm test`全量生产回归、`npm run test:review`、renderer/death/airdrop针对回归通过。新增测试覆盖旧identity、null/INF/负值、阶段切换、terminal、Phi连续性、同tick原Reward关联、来源脱敏、公式/量化/重算篡改拒绝、原始与塑形Critic独立、手算加权平均/非法项排除/terminal、首项/缺口ΔA、确定性重生成、CLI拒绝覆盖和fixture发布。
+
+真实Chromium桌面1600×1100及手机390×844：仅在隔离浏览器网络响应中使用带“合成测试fixture”标题的测试文档，磁盘/公开catalog及录像均未注入fixture。五个固定点检查正/负/缺测/阶段/INF/终态，原始与塑形面板/切换、轨道实际点击、同tickReward tooltip、暂停/seek/单步/深链、授权免输、只请求选中单局、画布后DOM顺序和零横向溢出均通过。生产renderer六个严格单调中间屏幕坐标证明路线文字跟随浮点移动，而数值固定在同一已测整数tick。两端console/pageerror/HTTP错误均为0。开发中发现并修复了路线点相互拦截点击、右栏长机器字段溢出，未用强制点击掩盖问题。
+
+另对未改动的真实六局跑完整浏览器回归：三种真实场景均可播放，tick50的原始Q/A/ΔA、头顶、时间轴与录像一致；1.4秒各87–88帧，浮点标签单调，蓝色对手/中文Reward、DAgger来源与缺测、授权首次/错误/刷新/新tab/撤销/版本失效、标注持久化/编辑/删除/导入导出、复制定位与深链全部通过。证据在忽略目录 `runs/replay_review_20261017/browser-route-local/`、`browser-route-regression/`、`browser-route-a1/`，截图明确为UI fixture或原始历史实录，不发布fixture截图为训练证据。
+
+合成五点路线列实测1522 raw / 556 gzip(level9) bytes；带原六局之一的完整测试文档为133936 / 46551 bytes。此数字仅说明接口紧凑性，不能冒充正式新录像大小。公开默认6局及历史12局的文件/catalog字节保持原样。最终真实新批次须重新逐局测量。
+
+### 当前发布阻塞和所需artifact
+
+训练侧总账的实验 `JE09-STAGE-H8-ROUTE-PBRS-20261017-v35` 尚为“预注册/实施中”；本轮收尾只读检查时，声明的路线实验namespace尚不存在，没有可用不可变正式路线checkpoint。旧H8 v34 g32没有本次路线塑形，不能改标签充当新实验录像。因此本轮提交协议/UI/接口/测试，不将fixture加入公开catalog，不提前推送main/Pages，不声称新的线上SHA或真实路线录像已验收。
+
+继续真实导出需要：(1)已COMMITTED的路线实验Actor/同代塑形Critic、state及hash/receipt、训练gamma与最终lambda、原始任务Critic的独立来源；(2)路线ledger/状态机/加权路由/安全核验源码版本和训练reward→GAE→PPO证据；(3)CPU Python与导出模型parity、生产JSSim/真实对手/ledger/RNG克隆一致性；(4)预声明seed×场景×对手矩阵，至少路线专项及完整局；(5)本接口的真实稀疏事件与独立重算结果、拓扑/目标来源证据及缺测说明。满足后再生成、核验、隐私扫描、安全集成main并等待同head Actions/Pages与线上HTTP/hash/桌面手机验收。此等待不要求网页任务启动或控制训练。
+
+本轮收尾隐私检查覆盖所有tracked及待提交文件：本机标识/绝对路径/内网IP/PID扫描0项，历史验证口令在当前文件中明文匹配0项；既有日期报告保留。只读公开 `build-info.json` 仍为 `167be513889569bd4835184e06cf66df1aa995fa`，没有发布本轮fixture或网页变更。路线数值显示保留最多六位小数，避免把非零微小路线reward显示成0。
