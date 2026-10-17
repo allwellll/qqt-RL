@@ -79,6 +79,53 @@ def _lookup(distance, cells):
     return distance[rows, teams, cells[..., 0], cells[..., 1]]
 
 
+def continuous_distance(states, route, phase, _target_identity=None):
+    """Topology-respecting path distance from continuous player coordinates.
+
+    The local connector is an axis-aligned Manhattan segment to one of the
+    current/adjacent cell centers. A connector may enter only its endpoint
+    cell; hard-wall endpoints are excluded. Taking the minimum over all four
+    neighbors keeps equally short first steps equivalent and is continuous at
+    clear cell boundaries. Brick traversal uses the production 1+3 entry
+    weight; dynamic hazards are intentionally absent from this static metric.
+    """
+    n = states.pos.shape[0]
+    h, w = states.wall.shape[-2:]
+    pos = states.pos.reshape((n, 2, 2))
+    cell = jnp.floor(pos).astype(jnp.int32)
+    offsets = jnp.asarray(((0, 0), (-1, 0), (1, 0), (0, -1), (0, 1)), jnp.int32)
+    candidates = cell[..., None, :] + offsets[None, None, :, :]
+    rr = candidates[..., 0]
+    cc = candidates[..., 1]
+    inside = (rr >= 0) & (rr < h) & (cc >= 0) & (cc < w)
+    rr_safe = jnp.clip(rr, 0, h - 1)
+    cc_safe = jnp.clip(cc, 0, w - 1)
+    rows = jnp.arange(n)[:, None, None]
+    teams = jnp.arange(2)[None, :, None]
+    blocked = states.wall[rows, rr_safe, cc_safe]
+    valid = inside & ~blocked
+
+    center = candidates.astype(jnp.float32) + .5
+    local = jnp.sum(jnp.abs(pos[..., None, :] - center), axis=-1)
+    brick = states.brick[rows, rr_safe, cc_safe]
+    entering = jnp.any(offsets != 0, axis=-1)[None, None, :]
+    local = jnp.where(entering, local * (1. + 3. * brick.astype(jnp.float32)), local)
+
+    team_ids = jnp.broadcast_to(jnp.arange(2)[None, :], (n, 2))
+    grid_index = jnp.where(phase == PHASE_CARRY, team_ids + 2, team_ids)
+    # Gather only the five local candidates. Selecting a full [n,2,h,w]
+    # distance map here makes that tensor live across the rollout scan and
+    # multiplies update memory; direct indexed gathers preserve the exact
+    # metric while keeping the intermediate O(n*2*5).
+    route_value = route['distance'][rows, grid_index[..., None], rr_safe, cc_safe]
+    stock_value = route['stock_distance'][rows, teams, rr_safe, cc_safe]
+    grid_value = jnp.where((phase == PHASE_STOCK)[..., None], stock_value, route_value)
+    total = local + grid_value.astype(jnp.float32)
+    total = jnp.where(valid & (grid_value < INF), total, jnp.inf)
+    result = jnp.min(total, axis=-1)
+    return jnp.where(jnp.isfinite(result), result, float(INF))
+
+
 def phase_values(states, route, drop_state):
     """Return observed objective phase, identity, distance and provenance.
 
@@ -128,7 +175,8 @@ def phase_values(states, route, drop_state):
         jnp.where(phase == PHASE_DROP, d_drop, d_home))
     # The route planner's brick weight is 1+3 per entered brick. Distances are
     # already topology-weighted; normalization keeps the feature bounded.
-    clipped = jnp.minimum(distance, 64).astype(jnp.float32)
+    continuous = continuous_distance(states, route, phase)
+    clipped = jnp.minimum(continuous, 64).astype(jnp.float32)
     base = jnp.where(phase == PHASE_NONE, 0.,
                      jnp.where(distance < INF, -clipped / 64., -1.))
     provenance = jnp.where(phase == PHASE_DROP, nonce,

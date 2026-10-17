@@ -48,6 +48,22 @@
         "rule_deaths": 2,
         "winner": null
       }
+    },
+    {
+      "id": "bun392-je09-route-pbrs-continuous-v36-g32-seed-2026101736",
+      "model_id": "Bun392 JE09路线势能连续g32",
+      "seed": 2026101736,
+      "file": "bun392-je09-route-pbrs-continuous-v36-g32-seed-2026101736.json",
+      "summary": {
+        "ticks": 300,
+        "model_bombs": 16,
+        "rule_bombs": 4,
+        "model_unique_cells": 21,
+        "rule_unique_cells": 13,
+        "model_deaths": 0,
+        "rule_deaths": 2,
+        "winner": null
+      }
     }
   ]
 }
