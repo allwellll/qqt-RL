@@ -16,10 +16,11 @@ async function main(){
   assert.equal(d.schema,'qqt.diagnostic-replay/v1');
   assert.equal(d.meta.model,'H8 v36 连续路线 PBRS g32');
   assert.equal(d.meta.outcome_status,'未胜、未交付；片段结束时仍未终局');
-  assert.equal(d.meta.advantage_status,'未记录');
+  assert.equal(d.meta.advantage_status,'无法严格复算');
   assert.equal(d.summary.winner,null);
   assert.deepEqual(d.summary.score,[0,0]);
-  assert.equal(d.meta.advantages_status,'unrecorded');
+  assert.equal(d.meta.advantages_status,'blocked');
+  assert.equal(d.meta.advantage_audit.status,'blocked');
   assert.equal(Object.hasOwn(d,'route'),false,'no unsupported route measurements');
   assert.equal(Object.hasOwn(d,'advantages'),false,'no fabricated advantage measurements');
   const source=JSON.parse(fs.readFileSync('web/replays/bun392-je09-route-pbrs-continuous-v36-g32-seed-2026101736.json'));

@@ -373,7 +373,8 @@
       for (const row of replayCatalog) {
         replaySelect.add(new Option(`${row.model_id} · seed ${row.seed} · ${row.summary.ticks} ticks`, row.id));
       }
-      replayStatus.textContent = `可选录像 ${replayCatalog.length} 局`;
+      const legacyNotice = document.deprecated === true ? ' · 旧版只读兼容；新诊断录像请使用 Review' : '';
+      replayStatus.textContent = `可选录像 ${replayCatalog.length} 局${legacyNotice}`;
     } catch (error) {
       replaySelect.replaceChildren(new Option('录像列表读取失败', ''));
       replayStatus.textContent = `录像列表读取失败：${error.message}`;

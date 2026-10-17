@@ -8,6 +8,7 @@ const authority=require('./eval_web_hunter');
 
 const sourcePath='web/replays/bun392-je09-route-pbrs-continuous-v36-g32-seed-2026101736.json';
 const modelPath='runs/je09_bun_20261017/stage_h8_route_pbrs_continuous_v36_attempt02/authority_je09_v1/bun392_bridge_pfsp8_g000032/model/model.json';
+const checkpointReceiptPath='runs/je09_bun_20261017/stage_h8_route_pbrs_continuous_v36_attempt02/formal/bun392_bridge_pfsp8/gen000032/COMMITTED.json';
 const outputPath='web/review-replays/h8-route-v36-g32-2026101736.json';
 const id='h8-route-v36-g32-2026101736';
 const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
@@ -15,6 +16,8 @@ const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 async function main(){
   const source=JSON.parse(fs.readFileSync(sourcePath));
   const modelBytes=fs.readFileSync(modelPath),model=JSON.parse(modelBytes);
+  const checkpointReceipt=JSON.parse(fs.readFileSync(checkpointReceiptPath));
+  if(!checkpointReceipt.passed||checkpointReceipt.generation!==32||checkpointReceipt.policy_sha256!==model.meta.checkpoint_sha256)throw Error('v36 g32 checkpoint receipt mismatch');
   if(source.meta.checkpoint_sha256!==model.meta.checkpoint_sha256)throw Error('source/checkpoint hash mismatch');
   if(sha(modelBytes)!==source.meta.model_json_sha256)throw Error('source/model JSON hash mismatch');
   if(source.meta.seed!==2026101736||source.actions.length!==300)throw Error('unexpected fixed-seed source trajectory');
@@ -37,7 +40,13 @@ async function main(){
     model_sha256:source.meta.model_json_sha256,simulator_sha256:sha(fs.readFileSync('web/sim.js')),
     opponent:'bun.tactical_v2',opponent_sha256:sha(fs.readFileSync('web/bun_rule_bot.js')),
     map:'806',map_sha256:await P.hash(authority.loadLevel()),arena_map_sha256:levelHash,policy:'greedy',backend:'production JavaScript TransformerModel / Tactical v2',
-    reward_status:'unrecorded',outcome_status:'未胜、未交付；片段结束时仍未终局',advantage_status:'未记录',advantages_status:'unrecorded',
+    reward_status:'unrecorded',outcome_status:'未胜、未交付；片段结束时仍未终局',advantage_status:'无法严格复算',advantages_status:'blocked',
+    advantage_audit:{status:'blocked',definition:'A1=Q1(taken)-sum(pi_legal*Q1); Q1=r+gamma*V(next)',
+      reason:'v36 checkpoint 仅保存训练用 PBRS Critic，没有独立原始任务 Critic；该 300-tick Tactical Arena 回放也没有可与全部反事实分支对齐的训练 reward ledger、终局和隐藏 aux 状态映射。仅有 Critic value 不能构成 A1。',
+      checkpoint_sha256:model.meta.checkpoint_sha256,training_state_sha256:checkpointReceipt.state_sha256,
+      policy_sha256:source.meta.model_json_sha256,critic_status:'present in sealed v36 state; PBRS-trained; not extracted for A1',
+      raw_task_critic_sha256:null,shaped_critic_sha256:null,simulator_sha256:sha(fs.readFileSync('web/sim.js')),
+      legal_action_count_status:'not_computed',raw_task_a1_status:'blocked',shaped_a1_status:'blocked'},
     source_replay_sha256:sha(fs.readFileSync(sourcePath)),checkpoint_model_json_sha256:sha(modelBytes),
     source_hashes:{'web/sim.js':sha(fs.readFileSync('web/sim.js')),'web/tactical_arena.js':sha(fs.readFileSync('web/tactical_arena.js')),
       'web/bun_rule_bot.js':sha(fs.readFileSync('web/bun_rule_bot.js')),'web/assets/maps/levels.json':sha(fs.readFileSync('web/assets/maps/levels.json')),
@@ -63,6 +72,6 @@ async function main(){
   console.log(JSON.stringify({id,file:outputPath,sha256:sha(bytes),bytes:bytes.length,ticks:actions.length,done:doc.summary.done,
     winner:doc.summary.winner,score:doc.summary.score,stored:doc.summary.stored,checkpoint_sha256:meta.checkpoint_sha256,
     model_json_sha256:meta.model_sha256,source_replay_sha256:meta.source_replay_sha256,map_sha256:levelHash,
-    checks:checks.length,deterministic:true,advantages:'unrecorded',route:'not present'}));
+    checks:checks.length,deterministic:true,advantages:meta.advantage_status,route:'not present'}));
 }
 main().catch(error=>{console.error(error);process.exitCode=1;});

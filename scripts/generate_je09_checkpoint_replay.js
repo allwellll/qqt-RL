@@ -72,17 +72,15 @@ function main() {
   if (!modelArg || !outputArg) throw new Error('usage: node scripts/generate_je09_checkpoint_replay.js MODEL.json OUTPUT.json');
   const modelPath = path.resolve(modelArg);
   const outputPath = path.resolve(outputArg);
+  const legacyDirectory = path.resolve(ROOT, 'web/replays') + path.sep;
+  if (outputPath === path.resolve(ROOT, 'web/replays.json') || outputPath.startsWith(legacyDirectory)) {
+    throw new Error('Deprecated legacy replay targets are read-only; publish recordings through the Review pipeline.');
+  }
   const replay = makeDocument(modelPath);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   const encoded = JSON.stringify(replay);
   fs.writeFileSync(outputPath, encoded);
 
-  const catalogPath = path.join(ROOT, 'web/replays.json');
-  const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
-  catalog.replays = catalog.replays.filter((row) => row.id !== REPLAY_ID);
-  catalog.replays.push({ id: REPLAY_ID, model_id: MODEL_ID, seed: SEED,
-    file: REPLAY_FILE, summary: replay.summary });
-  fs.writeFileSync(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`);
   console.log(JSON.stringify({ replay: REPLAY_FILE, replay_sha256: sha(encoded),
     model_json_sha256: replay.meta.model_json_sha256, checkpoint_sha256: replay.meta.checkpoint_sha256,
     seed: SEED, ticks: replay.summary.ticks, summary: replay.summary }));

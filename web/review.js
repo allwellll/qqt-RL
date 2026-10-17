@@ -111,9 +111,11 @@
     $('reward-chart').hidden=!rewardMeasured;$('curve-component').disabled=!rewardMeasured;$('curve-mode').disabled=!rewardMeasured;
     $('components').replaceChildren();for(const k of componentNames()){const translated=V.reward(k),e=text('div','',`component${translated.known?'':' untranslated'}`),v=delta[k]||0,name=text('span',translated.name);e.title=translated.help;e.dataset.component=k;if($('english-rewards').checked)name.append(text('small',k));e.append(name,text('span',`${number(v)} / ${number(total[k]||0)}`,v<0?'negative':'positive'));$('components').append(e);}
     const a=t?doc.actions[t-1]:null;
-    const advantage=A.atTick(doc,t),value=v=>v===null?'未记录':number(v);
-    details($('advantage-details'),[['选中模型动作 [move, ability]',a?`${a[0]}, ${a[1]}`:'开局'],['执行动作 Q₁',value(advantage.taken_q)],['策略平均 Q₁',value(advantage.mean_q)],['策略加权一步优势 A₁',value(advantage.advantage)],['优势增量 ΔA₁',value(advantage.delta)],['合法联合动作数',String(A.legalCount(doc,t)??'未记录')]]);
-    $('advantage-status').textContent=doc.meta.advantage?.status==='recorded'?`move × ability 联合动作（含道具） · γ=${doc.meta.advantage.gamma} · 合法策略概率重归一 · ${doc.meta.advantage.measured_count} tick 已测`:`未记录：${doc.meta.advantage?.reason||'历史录像未采集优势'}`;
+    const advantage=A.atTick(doc,t),advantageBlocked=doc.meta.advantage_audit?.status==='blocked',value=v=>v===null?(advantageBlocked?'无法严格复算':'未记录'):number(v);
+    const advantageFields=[['选中模型动作 [move, ability]',a?`${a[0]}, ${a[1]}`:'开局'],['执行动作 Q₁',value(advantage.taken_q)],['策略平均 Q₁',value(advantage.mean_q)],['策略加权一步优势 A₁',value(advantage.advantage)],['优势增量 ΔA₁',value(advantage.delta)],['合法联合动作数',String(A.legalCount(doc,t)??'未记录')]];
+    if(advantageBlocked)advantageFields.push(['严格复算证据',`checkpoint ${doc.meta.advantage_audit.checkpoint_sha256} · state ${doc.meta.advantage_audit.training_state_sha256} · policy ${doc.meta.advantage_audit.policy_sha256} · simulator ${doc.meta.advantage_audit.simulator_sha256}`],['Critic 来源',doc.meta.advantage_audit.critic_status],['原始任务 A₁',doc.meta.advantage_audit.raw_task_a1_status],['塑形 A₁',doc.meta.advantage_audit.shaped_a1_status]);
+    details($('advantage-details'),advantageFields);
+    $('advantage-status').textContent=doc.meta.advantage?.status==='recorded'?`move × ability 联合动作（含道具） · γ=${doc.meta.advantage.gamma} · 合法策略概率重归一 · ${doc.meta.advantage.measured_count} tick 已测`:advantageBlocked?`无法严格复算：${doc.meta.advantage_audit.reason}`:`未记录：${doc.meta.advantage?.reason||'历史录像未采集优势'}`;
     routeTick();
     returnTick();
     details($('state-details'),[['模型阶段',P.phase(s)],['对手阶段',P.phase(s,1)],['动作 [move, ability]',a?`${a[0]},${a[1]} | ${a[2]},${a[3]}`:'开局'],['包归属（模型 / 对手）',s.bunCarried.map(v=>v<0?'空手':`源队 ${v}`).join(' / ')],['糖泡剩余 tick',s.trapped.join(' / ')],['死亡 / 复活倒计时',s.bunRespawn.join(' / ')],['坐标 [row,col]',`${s.pos[0].toFixed(2)},${s.pos[1].toFixed(2)} | ${s.pos[2].toFixed(2)},${s.pos[3].toFixed(2)}`],['笼内存包',s.bunStored.map(a=>a.join(',')).join(' / ')],['终局',s.done?`胜者 ${s.winner===null?'平局':s.winner}`:'进行中']]);
@@ -148,14 +150,14 @@
     crossGap.textContent=`跨 Critic 优势差 ΔA(塑形−原始)：${gap===null?'未记录':R.signed(gap)}。这与相邻决策优势增量 A₁(t)−A₁(t−1) 分开；缺任一真实 A₁ 时不计算。`;
   }
   function routeTick(){
-    const t=player.sim.t,r=R.atTick(doc,t),m=doc.meta.route,v=R.value;
+    const t=player.sim.t,r=R.atTick(doc,t),m=doc.meta.route,v=R.value,advantageBlocked=doc.meta.advantage_audit?.status==='blocked',av=n=>n===null||n===undefined?(advantageBlocked?'无法严格复算':v(n)):v(n);
     $('route-status').textContent=(m?.kind==='fixture'?'测试 fixture · 非真实训练录像。':'')+(r.route_phase===null?'本 tick 路线：未记录':R.label(R.PHASES,r.route_phase))+` · γ ${v(m?.gamma)} · λ ${v(m?.lambda)}`+(m?.limitations?' · '+m.limitations:'');
     const fields=[['目标阶段 · route_phase',R.label(R.PHASES,r.route_phase)],['当前目标 · target_type',R.label(R.TARGETS,r.target_type)],['目标来源 · target_provenance',R.label(R.PROVENANCE,r.target_provenance)],['脱敏目标 ID · target_id',v(r.target_id)],['网格加权最短路（前 → 后）',`${v(r.distance_before)} → ${v(r.distance_after)}`],['路线势能（前 → 后） · Phi',`${v(r.phi_before)} → ${v(r.phi_after)}`],['路线势能变化 · route_potential_delta',R.signed(r.route_potential_delta)],['路线奖励 · route_shaped_reward',R.signed(r.route_shaped_reward)],['拓扑区域（前 → 后）',`${v(r.topology_region_before)} → ${v(r.topology_region_after)}`],['开墙 / 拓扑增益 · topology_gain',v(r.topology_gain)],['阶段转换 · phase_transition',v(r.phase_transition)],['目标失效 · invalidated',v(r.invalidated)],['终态边界修正 · terminal_correction',v(r.terminal_correction)],['安全拒绝 · safety_reject_reason',R.reason(r.safety_reject_reason)]];
     details($('route-details'),fields);
     if(doc.meta.diagnostic)$('route-details').append(text('p',`原环境 Reward：未记录；训练总 Reward：未记录；本 tick 路线辅助 Reward：${R.signed(r.route_shaped_reward)}。三者独立，不能从路线值推断总奖励。`));
-    $('shaped-status').textContent=m?.shaped_critic?`塑形回报训练 Critic · ${m.shaped_critic.critic_sha256.slice(0,12)} · 原始任务优势保持独立`:doc.meta.diagnostic?'未记录：同代塑形 Critic 已提取，缺训练 reward ledger 和严格反事实结果，不能计算 A₁':'未记录：尚无经过验证的塑形训练 Critic';
-    details($('shaped-details'),[['执行动作 Q₁ · shaped_critic_q1_taken',v(r.shaped_critic_q1_taken)],['策略平均 Q₁ · shaped_critic_q1_policy_mean',v(r.shaped_critic_q1_policy_mean)],['塑形一步优势 · shaped_advantage_a1',R.signed(r.shaped_advantage_a1)],['塑形优势增量 · shaped_advantage_delta',R.signed(r.shaped_advantage_delta)],['合法联合动作数',v(r.shaped_legal_count)]]);
-    const option=$('advantage-mode').querySelector('[value="shaped"]');option.disabled=!m?.shaped_critic;option.textContent=m?.shaped_critic?'塑形 Critic':'塑形 Critic（未记录）';
+    $('shaped-status').textContent=m?.shaped_critic?`塑形回报训练 Critic · ${m.shaped_critic.critic_sha256.slice(0,12)} · 原始任务优势保持独立`:advantageBlocked?'无法严格复算：同代 Critic 与反事实训练奖励链未能同时证明':doc.meta.diagnostic?'未记录：尚无严格反事实结果，不能计算 A₁':'未记录：尚无经过验证的塑形训练 Critic';
+    details($('shaped-details'),[['执行动作 Q₁ · shaped_critic_q1_taken',av(r.shaped_critic_q1_taken)],['策略平均 Q₁ · shaped_critic_q1_policy_mean',av(r.shaped_critic_q1_policy_mean)],['塑形一步优势 · shaped_advantage_a1',av(r.shaped_advantage_a1)],['塑形优势增量 · shaped_advantage_delta',av(r.shaped_advantage_delta)],['合法联合动作数',av(r.shaped_legal_count)]]);
+    const option=$('advantage-mode').querySelector('[value="shaped"]');option.disabled=!m?.shaped_critic;option.textContent=m?.shaped_critic?'塑形 Critic':advantageBlocked?'塑形 Critic（无法严格复算）':'塑形 Critic（未记录）';
     if(option.disabled)$('advantage-mode').value='task';
   }
   function componentNames(){return V.componentNames(doc);}

@@ -1,5 +1,8 @@
 {
   "schema": "qqt.replays/v1",
+  "deprecated": true,
+  "replacement": "review-catalog.json",
+  "compatibility": "Read-only compatibility catalog. New diagnostic replays must use the Review catalog and review-replays directory.",
   "replays": [
     {
       "id": "safe-high-c16-seed-202609280032",
