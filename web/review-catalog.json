@@ -1,0 +1,259 @@
+{
+  "schema": "qqt.diagnostic-catalog/v1",
+  "model": "H7 v33 g32 raw",
+  "screened_episodes": 24,
+  "seed_ranges": [
+    [
+      2026101700,
+      2026101711
+    ],
+    [
+      2026101720,
+      2026101731
+    ]
+  ],
+  "selection": "first episode per declared failure, then earliest failed episodes, maximum six",
+  "observed_failures": [
+    "window_closed_empty",
+    "return_deviation"
+  ],
+  "unobserved_failures": [
+    "enemy_drop_unpicked",
+    "cage_no_delivery",
+    "self_bomb",
+    "stagnation"
+  ],
+  "raw_bytes": 212179,
+  "gzip_bytes": 29369,
+  "replays": [
+    {
+      "id": "h7-g32-native-2026101700",
+      "file": "h7-g32-native-2026101700.json",
+      "seed": 2026101700,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 1380,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          -11.99999886751175,
+          -21.812499806284904
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "178b6d0448ad1dbc3577b8c2681fd80a385aebf29387a94a8207766e0c545b40",
+      "bytes": 26254,
+      "gzip_bytes": 4377
+    },
+    {
+      "id": "h7-g32-native-2026101705",
+      "file": "h7-g32-native-2026101705.json",
+      "seed": 2026101705,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 2359,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          -33.1875,
+          -96
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "2d2724809eb587faa6d727a30f1661324b93ece4db54a51aa21f58ab9634f59b",
+      "bytes": 41066,
+      "gzip_bytes": 5317
+    },
+    {
+      "id": "h7-g32-native-2026101701",
+      "file": "h7-g32-native-2026101701.json",
+      "seed": 2026101701,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          53.93749962747097,
+          -36.5
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "c2ea7ef8d5d5aef3bd0b9ef0115882ff69747531945c70734ab097d90fdc376c",
+      "bytes": 37912,
+      "gzip_bytes": 5056
+    },
+    {
+      "id": "h7-g32-native-2026101702",
+      "file": "h7-g32-native-2026101702.json",
+      "seed": 2026101702,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 1426,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          78.93749962747097,
+          -36
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "d3fc83e0b52a983ba8d5a710e369a02d01691478e11faa5e72a135ca792e8357",
+      "bytes": 26898,
+      "gzip_bytes": 4346
+    },
+    {
+      "id": "h7-g32-native-2026101704",
+      "file": "h7-g32-native-2026101704.json",
+      "seed": 2026101704,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          151.50000232458115,
+          -107.9999998062849
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "1195de86f276cc899f5af3f038789aa1889510425943231f37fbed44c6c91d3b",
+      "bytes": 42638,
+      "gzip_bytes": 5449
+    },
+    {
+      "id": "h7-g32-native-hard-2026101720",
+      "file": "h7-g32-native-hard-2026101720.json",
+      "seed": 2026101720,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/hard",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          36.99999850988388,
+          -23.999999806284904
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "0712209cb722e409c2f9c7afb56c199ee665716637f2a233b63c9312f8394582",
+      "bytes": 37411,
+      "gzip_bytes": 4824
+    }
+  ]
+}

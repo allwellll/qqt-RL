@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '20'
       - name: Test Bun-only web
-        run: npm ci && npm test
+        run: npm ci && npm test && npm run test:review
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Assemble static site

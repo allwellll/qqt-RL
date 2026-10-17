@@ -2,6 +2,8 @@
 // Real catalog, real model download and native 1v1 actions; no result submission.
 const assert=require('node:assert/strict'),fs=require('fs');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const password=process.env.QQT_SETTINGS_PASSWORD;
+assert(password,'QQT_SETTINGS_PASSWORD is required');
 const base=process.env.WEB_URL || 'https://allwellll.github.io/qqt-RL/';
 const output=process.env.EVIDENCE_FILE || 'runs/bun-release-browser.json';
 const id=process.env.MODEL_ID || 'bun392-selfplay3072';
@@ -67,7 +69,7 @@ assert.ok(Number.isFinite(loadTimeout) && loadTimeout>=30000 && loadTimeout<=60*
       QQT.Sim.prototype.reset=function(...args){window.appSim=this;return reset.apply(this,args);};
     });
     await page.click('#advanced-open');
-    await page.fill('#settings-password', 'demaxiya');
+    await page.fill('#settings-password', password);
     await page.click('#password-form button[type="submit"]');
     await page.selectOption('#opponent','model:'+id);
     await page.waitForFunction(name=>{

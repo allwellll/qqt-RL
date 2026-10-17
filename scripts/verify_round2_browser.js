@@ -3,6 +3,8 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const password = process.env.QQT_SETTINGS_PASSWORD;
+assert(password, 'QQT_SETTINGS_PASSWORD is required');
 const base = process.env.WEB_URL || 'http://127.0.0.1:8091/';
 const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round2_20261007/browser-local');
 (async () => {
@@ -66,8 +68,11 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round2_20261007/b
       const render = ()=>page.evaluate(()=>appFrame(performance.now()));
       const waitState = fn=>page.waitForFunction(fn,null,{polling:50,timeout:15000});
       const unlock = async()=>{
-        await action('#advanced-open'); await page.locator('#settings-password').fill('demaxiya');
-        await page.locator('#settings-password').press('Enter');
+        await action('#advanced-open');
+        if(await page.locator('#password-dialog').isVisible()) {
+          await page.locator('#settings-password').fill(password);
+          await page.locator('#settings-password').press('Enter');
+        }
         await page.waitForFunction(()=>!document.getElementById('advanced-settings').hidden,null,{polling:50});
       };
       await page.goto(base); await load();
@@ -75,6 +80,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round2_20261007/b
       assert.equal(await page.locator('#restart').isVisible(),false);
       const canvasBefore=await page.locator('#game').boundingBox();
       await action('#advanced-open'); await page.locator('#settings-password').fill('bad'); await page.keyboard.press('Enter');
+      await waitState(()=>document.getElementById('password-status').textContent.includes('口令不对'));
       assert.match(await page.locator('#password-status').textContent(),/口令不对/);
       assert.equal(await page.locator('#advanced-settings').evaluate(e=>e.hidden),true);
       await page.keyboard.press('Escape'); assert.equal(await page.locator('#password-dialog').evaluate(e=>e.open),false);
@@ -84,10 +90,15 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round2_20261007/b
         assert.equal(await page.locator('#'+id).evaluate(e=>!!e.closest('#advanced-settings')),true);
       }
       await page.locator('#advanced-close').focus(); await page.keyboard.press('Escape');
-      await action('#advanced-open'); assert.equal(await page.locator('#password-dialog').evaluate(e=>e.open),true);
+      await action('#advanced-open'); assert.equal(await page.locator('#password-dialog').evaluate(e=>e.open),false);
+      assert.equal(await page.locator('#advanced-settings').evaluate(e=>e.hidden),false);
+      await action('#advanced-forget'); await action('#advanced-open');
+      assert.equal(await page.locator('#password-dialog').evaluate(e=>e.open),true);
       assert.equal(await page.locator('#settings-password').inputValue(),''); await page.keyboard.press('Escape');
       await unlock(); await page.reload(); await load();
-      assert.equal(await page.locator('#advanced-settings').evaluate(e=>e.hidden),true,'reload locks');
+      assert.equal(await page.locator('#advanced-settings').evaluate(e=>e.hidden),true,'reload closes the panel');
+      await action('#advanced-open'); assert.equal(await page.locator('#password-dialog').evaluate(e=>e.open),false);
+      await action('#advanced-close');
       await action('#announcement-open');
       assert.equal(await page.locator('#announcement-dialog').evaluate(e=>e.open),true);
       const dialogBounds = await page.locator('#announcement-dialog').boundingBox();

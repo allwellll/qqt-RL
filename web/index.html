@@ -66,6 +66,8 @@
         <button id="advanced-open" type="button" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button>
         <section id="advanced-settings" hidden>
         <button id="advanced-close" type="button">关闭高阶设置</button>
+        <button id="advanced-forget" type="button">忘记本设备授权 / 锁定高阶设置</button>
+        <a href="review.html">回放诊断台</a>
         <button id="restart" type="button">重新开局</button>
         <button id="pending-submit" type="button">查看未完成的结算</button>
         <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效</label>
@@ -141,7 +143,7 @@
     <button type="button" class="close-button" data-dialog-close aria-label="关闭密码框">×</button>
     <h2 id="password-title">高阶设置</h2>
     <form id="password-form"><label>请输入设置密码<input id="settings-password" type="password" autocomplete="off" required></label>
-      <p id="password-status" role="status">每次打开都需验证，刷新后锁定。</p><button type="submit">解锁</button></form>
+      <p id="password-status" role="status">验证成功后记住本设备。</p><button type="submit">解锁</button></form>
   </dialog>
   <dialog id="announcement-dialog" class="game-dialog" aria-labelledby="announcement-title">
     <button type="button" class="close-button" data-dialog-close aria-label="关闭公告">×</button>
@@ -150,6 +152,7 @@
     <p>当前仍是初级版本，还在测试不同方法效果。</p>
     <p>有兴趣的盆友可以联系 <a href="mailto:1035628914@qq.com">1035628914@qq.com</a> 一起交流～</p>
   </dialog>
+  <script src="device_auth.js"></script>
   <script src="ui_panels.js"></script>
   <script src="sim.js"></script>
   <script src="controls.js"></script>

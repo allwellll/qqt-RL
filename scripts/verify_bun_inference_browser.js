@@ -1,6 +1,8 @@
 'use strict';
 const fs=require('fs'),assert=require('node:assert/strict');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const password=process.env.QQT_SETTINGS_PASSWORD;
+assert(password,'QQT_SETTINGS_PASSWORD is required');
 (async()=>{
   const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
   try {
@@ -25,7 +27,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
       const load=QQTModelWorker.load;QQTModelWorker.load=async(...args)=>{const m=await load(...args);window.performanceModel=m;return m;};
       const reset=QQT.Sim.prototype.reset;QQT.Sim.prototype.reset=function(...args){window.liveSim=this;return reset.apply(this,args);};
     });
-    await page.click('#advanced-open');await page.fill('#settings-password','demaxiya');await page.click('#password-form button[type="submit"]');
+    await page.click('#advanced-open');await page.fill('#settings-password',password);await page.click('#password-form button[type="submit"]');
     await page.selectOption('#opponent','model:bun392-selfplay3072');
     await page.waitForFunction(()=>document.querySelector('#model-status').textContent.startsWith('已加载：Bun392动态自对弈3072'),null,{timeout:20*60*1000});
     const modes=[];
