@@ -1,5 +1,20 @@
 # 训练优化实验总账
 
+### JE09 Route Potential PBRS H8 g32（2026-10-17，已完成）
+
+实验 ID：`JE09-STAGE-H8-ROUTE-PBRS-20261017-v35`。独立 namespace：`runs/je09_bun_20261017/stage_h8_route_pbrs_v35`；父点固定为 H8 v34 `formal/bun392_bridge_pfsp8/gen000032`。只读父点 SHA256：`policy.pt=b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11`、`state.pkl=f2fcf9c44401b924776e7e7e990bceebe1660fb1397de30d1476416766716ec7`。Control 为该父点原奖励历史评估，不启动第二训练臂；Treatment 唯一新增变量为严格路线 PBRS。网络、PPO、GAE、gamma=.995/GAE lambda=.95、课程、PFSP、DAgger、对手池和评估协议冻结；fresh Adam/RNG/env，正式固定32代/67,108,864 fresh ticks。
+
+按用户最新指令固定 λ=0.05，不做系数扫描；行为效果和路线信号幅度不作为正式启动或固定预算停止门槛。新 experiment/run/cache/train/eval seeds 派生并与历史身份互斥。smoke 仅验证 8 卡生产更新 finite/nonzero、8设备 exact、DAgger非eligible污染为0、fresh CPU restore与GPU exact replay；仅技术故障可停止固定32代预算。正式训练启动后异步观察既有 assist-off 协议，完整预算结束后评估路线专项、full、返程与Hunter安全。
+
+2026-10-17完成回填：代码/配置锁定 λ=0.05，未做系数扫描。聚焦测试 `tests/test_je09_route_pbrs.py` 7/7通过。真实8卡 smoke g1=2,097,152 fresh ticks、128 updates，Actor/Critic finite且非零、8副本exact，DAgger noneligible label=0；fresh CPU restore及fresh GPU replay下一更新state digest exact。正式固定32代/67,108,864 fresh ticks完成，32×128 updates finite/nonzero，g32 Actor/Critic更新L2=2.61813/2.91340，final CPU restore通过，GPU释放。训练墙钟约1,909秒；异步assist-off评估g0/4/8/12/16/24/32全部通过完成，无失败；每点16局/每协议分母见当天报告。
+
+Reward事件实际汇总：`route_shaped_reward=-1,440.96`（累计总combined reward 2,847,457.34的约-0.0506%）；正分量+3,281.75、负分量-4,722.71，32代均有非零route reward。路线阶段事件347,916、拓扑有效gain18,608、INF→finite 151,535、安全拒绝23,438、目标失效64,589、terminal归零94,235。mean reward从g1 .07456降至g32 .04178（中间最低 .03677）；路线奖惩并非单向正向密集优势。
+
+七个checkpoint固定32-step主评/holdout均toward/arrival/first_pickup/pickup_return=16/16。capture主评/holdout仅g24为8/16，其余g0/4/8/12/16/32为0/16；1200tick drop-return诊断g32为首拾/返程16/16、25%=7/16、50%=6/16、己方半场6/16、capture2/16。carry_home 16/16；near-steal 14–16/16。full2400七点首拾/capture均0/16。route-break 16局仅1局出现有效safe_win，开墙并未形成稳定收益。7点每点Tactical64局、Hunter hard/normal/easy各64局；g32 Tactical surviving causal kill 9/64，父H8 v34 g32为12/64；g32 Hunter hard/normal/easy surviving causal kills=1/5/9，对照父点=9/8/10（各64局），own-bomb defeat均为0，双方评估未见严重自炸或死亡计数。但安全存活不能抵消攻击效能明显回落。
+
+固定协议g32相对父点：受控drop-return进度由父点25%=1/16、50%=0、capture=0升至7/16、6/16、2/16；fixed32两边capture仍0/16，唯一g24中间点主评/holdout均8/16后g32回落至0。full仍未改善。结论：路线PBRS信号已真实进入production reward/GAE/PPO且累计含正负项，但当前λ=.05设置没有稳定提高固定限时交付或自然full；路线训练reward净负且Tactical/Hunter hard攻击保持回落。值得保留实现和回放用于分析，不建议按此单变量配置直接续训；按用户要求不自动启动新训练。
+
+真实网页模拟器回放包位于 `reports/je09_bun_20261017/route_pbrs_replay_g32/`：包含g32 Actor JSON/ONNX/raw policy、从同代state精确导出的Critic-only NPZ、配置、真实production `web/sim.js` 固定seed 1,200 tick状态/动作/route轨迹及独立PBRS算术复算证明。此轨迹使用明确声明的drop-return诊断fixture，不代表自然full成功。完整结果与逐checkpoint分母/耗时见 `reports/je09_bun_20261017/route_pbrs_training_20261017.md`；最终网页侧交接见本机 `.hermes/route_pbrs_final_handoff.md`。
 > 本文档是训练实验的唯一长期索引。任何会改变训练分布、优化目标、对手、场景、样本规模、训练规模、超参数或评估协议的动作，都必须在实验启动时新增记录，并在结果产生后原位回填。聊天结论、run 日志和单独报告不能替代本总账。
 
 ## 1. 记录规则

@@ -1,0 +1,53 @@
+{
+  "schema": "qqt.route-g32-audit/v1",
+  "source_commit": "6358fa192c847016bf1745247efae2027804f549",
+  "generated_at": "2026-10-17T08:48:07.000Z",
+  "files": {
+    "actor_model.json": {
+      "sha256": "7bdfea4b1f8d3cc05a931cf2760ac8d5edc64494f49d0050dcf7b2079f336a2c",
+      "bytes": 40296726
+    },
+    "actor.onnx": {
+      "sha256": "8590e94d3c2123945b493b8c792b6a8b0a76b4d4ad91eebf99164b5232ace484",
+      "bytes": 30242279
+    },
+    "actor_policy.pt": {
+      "sha256": "e141311268c6eaf419f1f651252bb27d46c106aeb407230c20eed4c8897a34e2",
+      "bytes": 30221463
+    },
+    "critic_params.npz": {
+      "sha256": "3174b62f39ea9d56f206c917d2107a8f5e31bda2fe693e88630f72715c0604d8",
+      "bytes": 223732680
+    },
+    "training_config.json": {
+      "sha256": "84592654e26735440a664afa3f85e85b496b07d733864b94d86b2b4352fd1e93",
+      "bytes": 21819
+    },
+    "trajectory.json": {
+      "sha256": "a98bcdaee0e3c5ca73049f0bae42fcfd571da083737a929aba00c3c4673d388c",
+      "bytes": 3586259
+    },
+    "recalculation_proof.json": {
+      "sha256": "c84fbe93dda39c68c2b28cd099baf3d1569eccd428c5894d4b054fd2803de187",
+      "bytes": 321
+    }
+  },
+  "simulator_sha256": "9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3",
+  "manifest_sha256": "bced5cbb6175a6ca74397675ccc024d1268e702b2f0f9edc4e04b69490e58e29",
+  "checkpoint_state_sha256": "cdc1e497c0fa83d3ba2f9a5986e365d3a3953ea63cbacd106016829ffdd98f12",
+  "ticks": 1200,
+  "actions_reinferred": 1200,
+  "state_transitions_verified": 1200,
+  "route_recalculated": 1200,
+  "max_residual": 0,
+  "onnx_js_max_error": 0.000007431419012604579,
+  "recomputed_sha256": "97ffc8b088bf51c8cc6735829c8e9ff57423dabe41726ef159c320fb5767e593",
+  "final_state_sha256": "ae0fbb94aa92a1f8d67fc847cabf871daa0468334ed96bf1ae6044f1bc5f3e5a",
+  "route_reward": -0.10258203125000304,
+  "final_phi": 0.421875,
+  "native_reward": null,
+  "training_total_reward": null,
+  "original_advantage": null,
+  "shaped_advantage": null,
+  "limitations": "诊断导出器按转移后目标分类；前后路程按该同一目标独立重算。敌方 trap 因果归属预置，非自然击杀。末 tick Phi 未归零，非训练 PBRS 账本；拓扑/安全/失效未采集。Critic 参数已交接，但本轨迹缺训练 reward ledger 及同口径反事实结果，不能计算两类 A1。"
+}

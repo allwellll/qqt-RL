@@ -32,8 +32,10 @@
     for(const key of ['reward_ledger_sha256','route_implementation_sha256','source_sha256','recomputed_sha256'])if(!hash(m[key]))fail();
     if(Object.keys(d).some(k=>!['schema','scale','targets',...COLUMNS].includes(k))||COLUMNS.some(k=>!Array.isArray(d[k])||d[k].length!==d.ticks.length)||d.ticks.length>doc.actions.length||!Array.isArray(d.targets)||d.targets.length>d.ticks.length)fail();
     for(const t of d.targets)if(!t||Object.keys(t).sort().join(',')!=='id,provenance,type'||!Object.hasOwn(TARGETS,t.type)||!Object.hasOwn(PROVENANCE,t.provenance)||!/^target-[a-f0-9]{64}$/.test(t.id))fail();
-    const metaKeys=['schema','kind','status','gamma','lambda','checkpoint_sha256','policy_sha256','simulator_sha256','reward_ledger_sha256','route_implementation_sha256','source_sha256','recomputed_sha256','source_run','generated_at','distance_metric','shaped_critic','measured_count','missing_count','shaped_measured_count','shaped_missing_count'];
+    const metaKeys=['schema','kind','status','gamma','lambda','checkpoint_sha256','policy_sha256','simulator_sha256','reward_ledger_sha256','route_implementation_sha256','source_sha256','recomputed_sha256','source_run','generated_at','distance_metric','shaped_critic','measured_count','missing_count','shaped_measured_count','shaped_missing_count','semantics','limitations'];
     if(Object.keys(m).some(k=>!metaKeys.includes(k)))fail();
+    const diagnostic=m.semantics==='diagnostic-post-target-uncorrected/v1';
+    if(m.semantics!==undefined&&(!diagnostic||doc.meta.diagnostic!==true||m.kind!=='production'||typeof m.limitations!=='string'||!m.limitations))fail();
     const c=m.shaped_critic;
     if(c!=null&&Object.keys(c).some(k=>!['schema','trained_on_route_reward','checkpoint_sha256','critic_sha256','reward_ledger_sha256','counterfactual_sha256','action_scope','legal_actions'].includes(k)))fail();
     if(c!=null&&(c.schema!=='qqt.route-shaped-a1/v1'||c.trained_on_route_reward!==true||c.checkpoint_sha256!==m.checkpoint_sha256||c.reward_ledger_sha256!==m.reward_ledger_sha256||!hash(c.critic_sha256)||!hash(c.counterfactual_sha256)||c.action_scope!=='joint_move_ability'||typeof c.legal_actions!=='string'||!c.legal_actions))fail();
@@ -58,8 +60,8 @@
       else if(delta===null||reward===null||Math.abs(delta-(m.gamma*pa-pb))>2||Math.abs(reward-m.lambda*delta)>1+m.lambda)fail();
       if(delta!==null)count++;
       if(i&&t===d.ticks[i-1]+1&&pb!==null&&d.phi_after[i-1]!==null&&Math.abs(pb-d.phi_after[i-1])>1)fail();
-      if(t===doc.actions.length&&pa!==null&&(pa!==0||d.terminal[i]!==true))fail();
-      if(d.terminal[i]===true&&(t!==doc.actions.length||pa!==0))fail();
+      if(!diagnostic&&t===doc.actions.length&&pa!==null&&(pa!==0||d.terminal[i]!==true))fail();
+      if(d.terminal[i]===true&&(t!==doc.actions.length||(!diagnostic&&pa!==0)))fail();
       if(d.terminal_correction[i]===true&&d.terminal[i]!==true)fail();
       if(d.topology_gain[i]>0&&(d.safety_reject_reason[i]!==null||d.invalidated[i]!==false||d.target[i]===null||!(
         (d.distance_before[i]==='INF'&&Number.isFinite(d.distance_after[i]))||

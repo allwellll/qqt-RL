@@ -868,3 +868,6 @@ dialog p {
 #advantage-mode { max-width:150px; }
 @media(max-width:560px) { .critic-comparison { gap:6px; } .critic-comparison section { padding:5px; } .critic-comparison dt { font-size:10px; } }
 .critic-comparison dt, .route-details-panel dt { min-width:0; overflow-wrap:anywhere; }
+ .diagnostic-warning,#diagnostic-warning{color:#f4ce7e;font-weight:600;line-height:1.5;overflow-wrap:anywhere}
+ .route-experiment{border-top:1px solid #34343a;padding:12px 0;line-height:1.7;overflow-wrap:anywhere}
+ .route-experiment a{color:#8fc8ed}

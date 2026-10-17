@@ -104,7 +104,7 @@ const out = path.resolve(process.env.EVIDENCE_DIR || 'runs/qqt_round2_20261007/b
       const dialogBounds = await page.locator('#announcement-dialog').boundingBox();
       assert(dialogBounds.x >= 0 && dialogBounds.y >= 0 && dialogBounds.x + dialogBounds.width <= viewport.width && dialogBounds.y + dialogBounds.height <= viewport.height);
       assert.match(await page.locator('#announcement-dialog').textContent(),/顶尖玩家的水平差距/);
-      assert.equal(await page.locator('#announcement-dialog a').getAttribute('href'),'mailto:1035628914@qq.com');
+      assert((await page.locator('#announcement-dialog').textContent()).includes('项目反馈与讨论请使用公开项目仓库'));
       for(let i=0;i<5;i++) await page.keyboard.press('Tab');
       assert.equal(await page.evaluate(()=>!!document.activeElement.closest('#announcement-dialog')),true,'native dialog traps focus');
       await page.screenshot({path:path.join(out,`${viewport.width}-announcement.png`),fullPage:true});

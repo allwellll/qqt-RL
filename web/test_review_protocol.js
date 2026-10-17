@@ -10,7 +10,7 @@ const assert=require('assert'),fs=require('fs'),P=require('./review_protocol');
   for(const tick of [0,1,199,200,201,Math.floor(d.actions.length/2),d.actions.length,17]){
    if(tick>d.actions.length)continue;player.seek(tick);const fresh=new P.Player(d,level);fresh.seek(tick);assert.equal(await P.hash(P.state(player.sim)),await P.hash(P.state(fresh.sim)));checks++;
   }
-  for(const mutate of [x=>x.schema='bad',x=>x.actions[0][0]=5,x=>x.actions[0][1]=3,x=>x.actions[0][0]=1.5,x=>x.actions.pop(),x=>x.summary.reward[0]+=1,x=>x.checks[0][1]='broken',x=>x.checks[1][0]=0,x=>x.summary.done=false,x=>x.rewards[0][1].invalid=NaN]){
+  for(const mutate of [x=>x.schema='bad',x=>x.actions[0][0]=5,x=>x.actions[0][1]=3,x=>x.actions[0][0]=1.5,x=>x.actions.pop(),x=>x.summary.reward[0]+=1,x=>x.checks[0][1]='broken',x=>x.checks[1][0]=0,x=>x.summary.done=false,x=>x.rewards.push([1,{invalid:NaN},{}])]){
    const bad=structuredClone(d);mutate(bad);assert.throws(()=>P.validate(bad));checks++;
   }
   const bad=structuredClone(d);bad.checks[1][1]='0'.repeat(64);await assert.rejects(new P.Player(bad,level).verify(),/state hash/);checks++;

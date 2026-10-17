@@ -7,6 +7,23 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function(Q,D,A,R) {
   const SCHEMA = 'qqt.diagnostic-replay/v1';
   const ANNOTATIONS = 'qqt.replay-annotations/v1';
+  const ROUTE_SIM_HASH='9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3';
+  const versions=new Map();
+  function registerSimulator(hash,api){if(hash!==ROUTE_SIM_HASH)throw Error('unknown simulator');versions.set(hash,api);}
+  function simulator(meta){
+    if(meta.simulator_sha256!==ROUTE_SIM_HASH)return Q;
+    if(!versions.has(ROUTE_SIM_HASH)&&typeof module==='object'&&module.exports)registerSimulator(ROUTE_SIM_HASH,require('./review-sim/route-v35'));
+    if(!versions.has(ROUTE_SIM_HASH))throw Error('versioned simulator not loaded');
+    return versions.get(ROUTE_SIM_HASH);
+  }
+  function replaySetup(meta,level){
+    if(meta.scene!=='route_drop_return')return setup(meta,level);
+    const api=simulator(meta),s=new api.Sim(meta.seed);
+    s.reset(level,{nativeTrap:true,nativeItems:true});s.maxSteps=1200;
+    s.initialHp=1;s.hp=[1,1];s.invuln=[0,0];s.brick.fill(0);
+    s.pos.set([5.5,5.5,5.5,9.5]);s.bunCarried[1]=1;s.bunStored[1][1]=0;s.trapped[1]=1;
+    s.bunSpawnPos=[[s.pos[0],s.pos[1]],[s.pos[2],s.pos[3]]];s._gen++;return s;
+  }
   const stringify = value => JSON.stringify(value);
   async function sha256(bytes) {
     const crypto = typeof module === 'object' && module.exports ? require('crypto').webcrypto : globalThis.crypto;
@@ -17,7 +34,8 @@
     const fail = message => { throw new Error(message); };
     if (!d || d.schema !== SCHEMA) fail('schema');
     if (!d.meta || !/^[\w-]+$/.test(d.meta.id) || !Number.isSafeInteger(d.meta.seed) || d.meta.tick_ms !== 100) fail('meta');
-    if (d.meta.scene !== undefined && !['native','open','carry_home'].includes(d.meta.scene)) fail('scene');
+    if (d.meta.scene !== undefined && !['native','open','carry_home','route_drop_return'].includes(d.meta.scene)) fail('scene');
+    if(d.meta.scene==='route_drop_return'&&(d.meta.simulator_sha256!==ROUTE_SIM_HASH||d.meta.diagnostic!==true||d.meta.reward_status!=='unrecorded'||d.meta.training_reward_status!=='unrecorded'))fail('diagnostic evidence');
     for (const k of ['checkpoint_sha256','model_sha256','simulator_sha256','opponent_sha256','map_sha256','replay_identity']) if (!/^[a-f0-9]{64}$/.test(d.meta[k])) fail(k);
     if (!Array.isArray(d.actions) || !d.actions.length || d.actions.length > 10000 || d.actions.length !== d.summary?.ticks) fail('length');
     for (const a of d.actions) if (!Array.isArray(a) || a.length !== 4 || a.some((v,i) => !Number.isInteger(v) || v < 0 || v > (i%2 ? 2 : 4))) fail('illegal action');
@@ -35,7 +53,9 @@
         }
       }
     }
-    if (!Array.isArray(d.summary.reward) || d.summary.reward.length !== 2 || totals.some((v,p) => !Number.isFinite(d.summary.reward[p]) || Math.abs(v-d.summary.reward[p]) > 1e-4)) fail('reward sum');
+    if(d.meta.reward_status==='unrecorded'){
+      if(d.rewards.length||JSON.stringify(d.summary.reward)!=='[null,null]')fail('unrecorded reward');
+    }else if (!Array.isArray(d.summary.reward) || d.summary.reward.length !== 2 || totals.some((v,p) => !Number.isFinite(d.summary.reward[p]) || Math.abs(v-d.summary.reward[p]) > 1e-4)) fail('reward sum');
     if (!Array.isArray(d.events)) fail('events');
     for (const e of d.events) if (!Number.isInteger(e.tick) || e.tick < 0 || e.tick > d.actions.length || typeof e.kind !== 'string') fail('event');
     D.validateEvents(d.dagger_events,d.actions.length);
@@ -78,15 +98,15 @@
       this.cache.set(this.sim.t, {data:structuredClone(data),draws:this.draws,info:structuredClone(this.info)});
     }
     reset() {
-      this.sim = setup(this.document.meta,this.level); this.info = null;
+      this.sim = replaySetup(this.document.meta,this.level); this.info = null;
       this.countRandom(this.sim,this.sim.rng);
       if (!this.cache.has(0)) this.checkpoint();
     }
     restore(tick) {
-      const cached = this.cache.get(tick), fresh = setup(this.document.meta,this.level);
+      const cached = this.cache.get(tick), fresh = replaySetup(this.document.meta,this.level);
       // Rebuild the exact seeded random stream; snapshots alone omit its closure.
       for (let i=0;i<cached.draws;i++) fresh.rng();
-      this.sim = Object.assign(Object.create(Q.Sim.prototype),structuredClone(cached.data));
+      this.sim = Object.assign(Object.create(Object.getPrototypeOf(fresh)),structuredClone(cached.data));
       this.info = structuredClone(cached.info);
       this.countRandom(this.sim,fresh.rng,cached.draws);
     }
@@ -145,5 +165,5 @@
     if (!sim.alive[1-p] || sim.trapped[1-p]>0) return '运输窗口';
     return '战斗';
   }
-  return {SCHEMA,ANNOTATIONS,validate,identity,hash,sha256,stringify,setup,unpack,state,Player,time,locator,annotationDocument,validateAnnotations,phase};
+  return {SCHEMA,ANNOTATIONS,ROUTE_SIM_HASH,registerSimulator,simulator,replaySetup,validate,identity,hash,sha256,stringify,setup,unpack,state,Player,time,locator,annotationDocument,validateAnnotations,phase};
 });

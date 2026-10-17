@@ -27,7 +27,7 @@ const base=process.env.WEB_URL||'http://127.0.0.1:8097/',out=process.env.EVIDENC
         const result=render(sim,now,motion);routeFrames.push(frame);if(routeFrames.length>2000)routeFrames.shift();frame=null;return result;
       };return renderer;};}});
     });
-    await page.goto(base+'review.html');await page.waitForFunction(()=>document.getElementById('integrity').textContent==='hash 已验证',null,{timeout:90000});
+    await page.goto(base+'review.html#replay='+row.id);await page.waitForFunction(()=>document.getElementById('integrity').textContent==='hash 已验证',null,{timeout:90000});
     await page.locator('#advanced-open').click();await page.locator('#settings-password').fill(process.env.QQT_SETTINGS_PASSWORD);await page.locator('#password-form button[type=submit]').click();await page.locator('#advanced-settings').waitFor({state:'visible'});
     assert.equal(await page.locator('#route-potential-track .mark').count(),0);assert((await page.locator('#route-status').textContent()).includes('未记录'));assert(await page.locator('#advantage-mode [value="shaped"]').evaluate(e=>e.disabled));
     await page.route('**/review-catalog.json',r=>r.fulfill({json:catalog}));

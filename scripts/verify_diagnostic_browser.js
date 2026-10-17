@@ -45,12 +45,12 @@ assert(password,'QQT_SETTINGS_PASSWORD is required; never saved in evidence');
           return render(sim,now,motion);};return renderer;};
     }});
   });
-  await page.goto(base+'review.html');await page.waitForFunction(()=>document.getElementById('integrity').textContent==='hash 已验证',null,{timeout:90000});
+  await page.goto(base+'review.html#replay='+require('../web/review-catalog.json').replays.find(r=>!r.diagnostic).id);await page.waitForFunction(()=>document.getElementById('integrity').textContent==='hash 已验证',null,{timeout:90000});
   assert(await page.locator('#advanced-settings').isVisible());assert(!await page.locator('#password-dialog').isVisible());
-  const catalog=await page.evaluate(async()=>await(await fetch('review-catalog.json')).json()),id=catalog.replays[0].id;
+  const catalog=await page.evaluate(async()=>await(await fetch('review-catalog.json')).json()),id=catalog.replays.find(r=>!r.diagnostic).id;
   assert.equal(await page.locator('.replay-row').count(),catalog.replays.length);
   assert.equal(new Set(replayRequests).size,1,'only selected replay is fetched');
-  if(catalog.replays.length>1){await page.locator(`[data-replay="${catalog.replays[1].id}"]`).click();await page.waitForFunction(id=>document.getElementById('locator').value.startsWith(id+'@'),catalog.replays[1].id);assert.equal(new Set(replayRequests).size,2);await page.locator(`[data-replay="${id}"]`).click();await page.waitForFunction(id=>document.getElementById('locator').value.startsWith(id+'@'),id);}
+  if(catalog.replays.length>1){await page.locator(`[data-replay="${catalog.replays.find(r=>!r.diagnostic&&r.id!==id).id}"]`).click();await page.waitForFunction(id=>document.getElementById('locator').value.startsWith(id+'@'),catalog.replays.find(r=>!r.diagnostic&&r.id!==id).id);assert.equal(new Set(replayRequests).size,2);await page.locator(`[data-replay="${id}"]`).click();await page.waitForFunction(id=>document.getElementById('locator').value.startsWith(id+'@'),id);}
   await page.waitForFunction(()=>Array.from(document.querySelectorAll('button img')).every(i=>i.complete&&i.naturalWidth>0));
   const iconPixels=await page.locator('#play-icon').evaluate(i=>{const c=document.createElement('canvas');c.width=c.height=24;const g=c.getContext('2d');g.drawImage(i,0,0,24,24);const pixels=g.getImageData(0,0,24,24).data;return Array.from(pixels).filter((v,k)=>k%4===3&&v>0).length;});assert(iconPixels>15);
   assert.equal(await page.locator('#frame-rate').inputValue(),'60');assert(await page.locator('#smooth').isChecked());
@@ -87,7 +87,7 @@ assert(password,'QQT_SETTINGS_PASSWORD is required; never saved in evidence');
   assert(await page.locator('#curve-component option').evaluateAll(es=>es.every(e=>/[\u4e00-\u9fff]/.test(e.textContent))));
   await page.locator('#english-rewards').check();assert(await page.locator('#components small').count()>0);await page.locator('#english-rewards').uncheck();
   const visualFixture=await page.evaluate(async()=>{
-    const c=await(await fetch('review-catalog.json')).json(),d=await(await fetch('review-replays/'+c.replays[0].file)).json();
+    const c=await(await fetch('review-catalog.json')).json(),d=await(await fetch('review-replays/'+c.replays.find(r=>!r.diagnostic).file)).json();
     const level=(await(await fetch('assets/maps/levels.json')).json()).find(l=>l.qqt_id===806),p=new QQTReview.Player(d,level);
     let safeTick=0;while(p.sim.t<d.actions.length){const before=QQTReview.state(p.sim),intent=d.actions[p.sim.t][0];p.step();if(QQTReviewView.canInterpolate(before,p.sim,0,d.events,intent)){safeTick=before.t;break;}}
     return {safeTick,breakpoint:d.events.find(e=>['death','revive','control','drop','pickup'].includes(e.kind)&&e.tick>1)};
@@ -132,7 +132,7 @@ assert(password,'QQT_SETTINGS_PASSWORD is required; never saved in evidence');
   assert(await page.locator('#reward-track .mark').evaluateAll(es=>es.every(e=>e.title.includes('奖励')&&!/lesson_task|clawback|settled_/.test(e.title))));
   for(const track of ['phase-track','event-track','reward-track']){const mark=page.locator(`#${track} .mark`).first(),title=await mark.getAttribute('title'),tick=Number(title.match(/^tick (\d+)/)[1]);await mark.click();assert.equal(Number(await page.locator('#seek').inputValue()),tick);}
   const eventEvidence=await page.evaluate(async()=>{
-    const c=await(await fetch('review-catalog.json')).json(),d=await(await fetch('review-replays/'+c.replays[0].file)).json(),marks=[...document.querySelectorAll('#event-track .mark')];
+    const c=await(await fetch('review-catalog.json')).json(),d=await(await fetch('review-replays/'+c.replays.find(r=>!r.diagnostic).file)).json(),marks=[...document.querySelectorAll('#event-track .mark')];
     const expected=new Set(d.events.filter(e=>e.kind!=='phase'&&e.kind!=='bomb').map(e=>e.tick));
     return {count:marks.length,expected:expected.size,valid:marks.every(m=>{const tick=Number(m.dataset.tick),r=d.rewards.find(r=>r[0]===tick)?.[1]||{};return m.textContent.startsWith('R ')&&Number(m.dataset.value)===Object.values(r).reduce((a,b)=>a+b,0)&&Object.keys(r).every(k=>m.title.includes(QQTReviewView.reward(k).name));})};
   });assert.equal(eventEvidence.count,eventEvidence.expected);assert(eventEvidence.valid);results.push({event_reward:eventEvidence,same_tick_shared_evidence:true});
@@ -147,7 +147,7 @@ assert(password,'QQT_SETTINGS_PASSWORD is required; never saved in evidence');
   await daggerMark.click();assert.equal(await page.locator('#exact-time').textContent(),'tick 321 · 00:32.100');
   assert.equal(await page.locator('#dagger-track .mark').count(),0);await page.locator('#dagger-protocol-fixture').evaluate(e=>e.remove());
   results.push({dagger_sparse_track_fixture:'isolated synthetic protocol record; production click seeks tick 321; real replay stays unrecorded'});
-  const expectedReward=await page.evaluate(async()=>{const c=await(await fetch('review-catalog.json')).json(),d=await(await fetch('review-replays/'+c.replays[0].file)).json(),r=d.rewards.find(r=>Object.keys(r[1]).length),sum=o=>Object.values(o).reduce((a,b)=>a+b,0);return {tick:r[0],delta:sum(r[1]),total:d.rewards.filter(v=>v[0]<=r[0]).reduce((n,v)=>n+sum(v[1]),0),opponent:sum(r[2])};});assert(expectedReward.tick);
+  const expectedReward=await page.evaluate(async()=>{const c=await(await fetch('review-catalog.json')).json(),d=await(await fetch('review-replays/'+c.replays.find(r=>!r.diagnostic).file)).json(),r=d.rewards.find(r=>Object.keys(r[1]).length),sum=o=>Object.values(o).reduce((a,b)=>a+b,0);return {tick:r[0],delta:sum(r[1]),total:d.rewards.filter(v=>v[0]<=r[0]).reduce((n,v)=>n+sum(v[1]),0),opponent:sum(r[2])};});assert(expectedReward.tick);
   await page.locator('#seek').evaluate((e,t)=>{e.value=t;e.dispatchEvent(new Event('input'));},String(expectedReward.tick));
   const formatted=n=>Math.abs(n)<1e-8?'0':n.toFixed(3);
   assert.equal(await page.locator('#reward-delta').textContent(),formatted(expectedReward.delta));assert.equal(await page.locator('#reward-total').textContent(),formatted(expectedReward.total));assert(await page.locator('#components .component').count()>0);

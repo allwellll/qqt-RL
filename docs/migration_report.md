@@ -87,7 +87,7 @@
 
 ## Git 与远程
 
-- 本地身份：`allwellll <1035628914@qq.com>`。
+- 发布提交统一使用项目维护者身份。
 - 本地 credential helper 与旧仓库一致；报告和提交不记录 helper 内容或任何凭据。
 - `.git/config` 的 `remote.origin.url` 为 `https://github.com/allwellll/qqt-RL.git`。
 - 本地已创建清晰的 Bun-only 初始提交。

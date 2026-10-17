@@ -66,7 +66,7 @@ const fixture=require('../tests/fixtures/route_replay');
   verifyExisting.task_results[0].candidates[0].reward++;
   await assert.rejects(E.convert(task,verifyExisting,structuredClone(verifyExisting)),/original task mismatch/);
   assert.deepEqual(d.advantages,replay.advantages,'original task critic untouched');assert.deepEqual(d.rewards,replay.rewards);
-  for(const row of require('./review-catalog.json').replays){const old=JSON.parse(fs.readFileSync('web/review-replays/'+row.file));P.validate(old);assert.equal(R.atTick(old,1).phi_before,null);}
+  for(const row of require('./review-catalog.json').replays.filter(r=>!r.diagnostic)){const old=JSON.parse(fs.readFileSync('web/review-replays/'+row.file));P.validate(old);assert.equal(R.atTick(old,1).phi_before,null);}
   const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'qqt-route-export-'));
   try{
     for(const [name,value]of [['replay',replay],['source',source],['recomputed',recomputed]])fs.writeFileSync(path.join(tmp,name+'.json'),JSON.stringify(value));

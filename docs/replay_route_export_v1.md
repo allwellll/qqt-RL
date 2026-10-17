@@ -87,3 +87,12 @@ identity 纳入新增 route 和 meta.route；旧局没有字段时 identity 不�
 ## 当前交接状态
 
 训练侧设计报告说明旧 H8 v34 g32 未加入本次路线塑形。只读训练总账最新记录实验 `JE09-STAGE-H8-ROUTE-PBRS-20261017-v35` 为预注册/实施中；本轮检查时没有该实验的可读不可变正式 checkpoint 或完成的真实路线导出。本接口与 UI 可先提交，最终路线录像、main/Pages 发布和线上同SHA验收等待上述真实 artifact。网页任务不启动/停止训练，不使用 GPU，不写训练目录。
+# g32 诊断交接语义
+
+真实 v35 g32 交接使用 `scripts/import_route_pbrs_g32.js SOURCE_PACKAGE [WEB_OUTPUT]`，仅 CPU；显式设置 `CUDA_VISIBLE_DEVICES=''` 与可用的 `ORT_NODE_MODULE`。首次导入记录实际 UTC 时间，复算沿用已发布 receipt 的 `generated_at`；可用 `ROUTE_GENERATED_AT` 固定该时间以重生成相同字节。
+
+`meta.route.semantics=diagnostic-post-target-uncorrected/v1` 只允许明确 `diagnostic=true` 的生产诊断场景：分类和目标取转移后的真实状态，前后距离按这个相同目标独立重算；末 tick 保留源导出器的非零 Phi，`terminal=true, terminal_correction=false`。这不是训练 PBRS 的终态归零语义，不能把该路线辅助奖励称作训练总 Reward。未声明该版本的原协议仍严格要求 terminal Phi=0。
+
+本交接未包含原环境与训练奖励账本，使用 `reward_status=unrecorded`、`training_reward_status=unrecorded`、`summary.reward=[null,null]` 和空 rewards；显示未记录，禁止当零收益。原始/塑形反事实优势均为空列；Critic 参数来源校验不等于 Q/A 计算。独立审计 receipt 记录原始包所有 SHA、1200 次动作重推/状态/最短路/Phi 复算和缺测范围。目标 ID 按 episode 域 SHA 脱敏；拓扑增益、安全拒绝、失效未采集时保持 null。阶段切换从生产状态连续序列计算，不推断教师信号。
+
+播放器只按允许的模拟器哈希加载 `review-sim/route-v35.js`（原生产源码字节不变），使用现有生产 renderer，不用轨迹快照冒充权威 Sim。旧录像继续使用当前生产 Sim；模型张量无需下发浏览器，页面资源同源，Git 仅存动作/量化路线列/周期 hash/小型审计证据。

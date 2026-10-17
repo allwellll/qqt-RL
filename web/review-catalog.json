@@ -1,7 +1,13 @@
 {
   "schema": "qqt.diagnostic-catalog/v1",
-  "model": "H8 v34 g32 raw · 真实 Critic A1",
+  "model": "H8 v35 g32 路线诊断 / H8 v34 g32 原始任务优势",
   "scenes": [
+    {
+      "id": "route_drop_return",
+      "name": "掉包返程诊断（非自然完整对局）",
+      "source": "je08 production drop_return diagnostic; not a natural full match",
+      "base_map": 806
+    },
     {
       "id": "native",
       "name": "原生抢包对战",
@@ -21,12 +27,57 @@
       "base_map": 806
     }
   ],
-  "screened_episodes": 6,
+  "screened_episodes": 7,
   "selection": "Retain every declared episode; report rule-based failure labels without post-hoc selection",
   "predeclared_matrix": "review-evidence/matrix.json",
-  "raw_bytes": 337836,
-  "gzip_bytes": 122296,
+  "raw_bytes": 500362,
+  "gzip_bytes": 130042,
   "replays": [
+    {
+      "id": "h8-route-v35-g32-drop-return-2026101732",
+      "seed": 2026101732,
+      "scene": "route_drop_return",
+      "scene_name": "掉包返程诊断（非自然完整对局）",
+      "scene_rules": "生产诊断初态：清砖、1HP、敌持己包且 trap=1；assist-off；120秒；不是自然击杀证据",
+      "model": "H8 v35 路线 PBRS g32 raw",
+      "opponent": "固定向上 / 不放泡 / 不用道具 [0,0,0]",
+      "checkpoint_sha256": "e141311268c6eaf419f1f651252bb27d46c106aeb407230c20eed4c8897a34e2",
+      "critic_sha256": "3174b62f39ea9d56f206c917d2107a8f5e31bda2fe693e88630f72715c0604d8",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "file": "h8-route-v35-g32-drop-return-2026101732.json",
+      "summary": {
+        "ticks": 1200,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          null,
+          null
+        ],
+        "failures": [
+          "return_deviation"
+        ],
+        "route_reward": -0.10258203125000304
+      },
+      "sha256": "207680e66de70c44652586fdc7f3aab1919bf5268a8f3e8ef88dcd95fdce69f2",
+      "bytes": 162526,
+      "gzip_bytes": 7746
+    },
     {
       "id": "h8-g32-native-2026101901",
       "file": "h8-g32-native-2026101901.json",

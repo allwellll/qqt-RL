@@ -4,8 +4,8 @@ const assert=require('assert'),fs=require('fs'),P=require('./review_protocol'),A
   const catalog=JSON.parse(fs.readFileSync('web/review-catalog.json'));
   const matrix=JSON.parse(fs.readFileSync('reports/replay_a1_matrix_20261017.json'));
   const level=require('../scripts/eval_web_hunter').loadLevel(),scenes=new Map();
-  assert.deepEqual(catalog.scenes.map(s=>s.id),['native','open','carry_home']);
-  assert.equal(catalog.replays.length,6);
+  assert.deepEqual(catalog.scenes.filter(s=>s.id!=='route_drop_return').map(s=>s.id),['native','open','carry_home']);
+  assert.equal(catalog.replays.filter(r=>!r.diagnostic).length,6);
   for(const declared of matrix.scenes){
     const rows=catalog.replays.filter(r=>r.scene===declared.id);
     assert.equal(rows.length,2);assert.deepEqual(rows.map(r=>r.seed).sort(),declared.seeds);

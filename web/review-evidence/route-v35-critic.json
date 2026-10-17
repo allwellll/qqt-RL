@@ -1,0 +1,10 @@
+{
+  "schema": "qqt.route-g32-critic-audit/v1",
+  "generation": 32,
+  "state_sha256": "cdc1e497c0fa83d3ba2f9a5986e365d3a3953ea63cbacd106016829ffdd98f12",
+  "policy_sha256": "e141311268c6eaf419f1f651252bb27d46c106aeb407230c20eed4c8897a34e2",
+  "critic_sha256": "3174b62f39ea9d56f206c917d2107a8f5e31bda2fe693e88630f72715c0604d8",
+  "tensor_count": 75,
+  "all_tensors_exact": true,
+  "scope": "same-generation parameter equality; no counterfactual Q/A measurement"
+}

@@ -707,7 +707,9 @@
           const pixel=value=>visualOverride?value:Math.round(value);
           const x = pixel(gx * CELL - image.width / 2), y = Math.min(pixel(playerVisualY(gy, image.height)), 780 - image.height);
           if(motion?.playerLabels?.[pid])roleTags.push({x:gx*CELL,
-            y:y+image.height*SPRITE_HEAD_FRAC-(sim.bunCarried[pid]>=0?48:16),label:motion.playerLabels[pid],team:teamOf(sim,pid),advantage:motion.playerAdvantages?.[pid],route:motion.playerRoutes?.[pid]});
+            y:y+image.height*SPRITE_HEAD_FRAC-(sim.bunCarried[pid]>=0?48:16),anchorX:gx*CELL,anchorY:y+image.height*SPRITE_HEAD_FRAC,
+            spriteTop:y+image.height*SPRITE_HEAD_FRAC,spriteBottom:y+image.height,spriteHalf:image.width/2,
+            label:motion.playerLabels[pid],team:teamOf(sim,pid),advantage:motion.playerAdvantages?.[pid],route:motion.playerRoutes?.[pid]});
           // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
           if (pid === arrowPid) arrow = { x: gx * CELL, y: y + image.height * SPRITE_HEAD_FRAC };
           const playerCell = Math.floor(gy) * 15 + Math.floor(gx);
@@ -762,9 +764,17 @@
           if(tag.advantage)widths.push([`${tag.advantage.kind==='shaped'?'塑形':''}优势增量 ΔA ${tag.advantage.delta===null?'未记录':(tag.advantage.delta>=0?'+':'')+tag.advantage.delta.toFixed(3)}`,20],['A '+(tag.advantage.advantage===null?'未记录':tag.advantage.advantage.toFixed(3)),18]);
           if(tag.route)widths.push([tag.route.text,18]);
           ctx.save();tag.inset=Math.max(...widths.map(([label,size])=>{ctx.font=`bold ${size*scale}px sans-serif`;return ctx.measureText(label).width/2+10;}));ctx.restore();
+          const inset=tag.inset;
+          const top=tag.y-((tag.advantage?78:0)+(tag.route?28:0))*scale-12*scale,bottom=tag.y+17*scale;
+          tag.x=Math.max(inset,Math.min(canvas.width-inset,tag.x));
+          for(const other of roleTags)if(other!==tag&&bottom>other.spriteTop&&top<other.spriteBottom&&Math.abs(tag.x-other.anchorX)<inset+other.spriteHalf+8){
+            const candidates=[other.anchorX-inset-other.spriteHalf-12,other.anchorX+inset+other.spriteHalf+12].filter(x=>x>=inset&&x<=canvas.width-inset);
+            if(candidates.length)tag.x=candidates.sort((a,b)=>Math.abs(a-tag.anchorX)-Math.abs(b-tag.anchorX))[0];
+          }
           const prior=roleTags[i-1];
           if(prior&&Math.abs(tag.x-prior.x)<tag.inset+prior.inset+8&&tag.y+17*scale>prior.y-((prior.advantage?71:17)+(prior.route?28:0))*scale&&tag.y-extra-17*scale<prior.y+17*scale)tag.y=prior.y+38*scale+extra;
-          const inset=tag.inset,x=Math.max(inset,Math.min(canvas.width-inset,tag.x));
+          const x=Math.max(inset,Math.min(canvas.width-inset,tag.x));
+          if(Math.abs(x-tag.anchorX)>2){ctx.save();ctx.strokeStyle=tag.team===0?'#f1b0a5':'#99caff';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,tag.y+12*scale);ctx.lineTo(tag.anchorX,tag.anchorY);ctx.stroke();ctx.restore();}
           drawNameTag(x,tag.y,tag.label,tag.team,true,null,24*scale);
           if(tag.advantage){
             const fmt=v=>v===null?'未记录':(v>=0?'+':'')+v.toFixed(3);

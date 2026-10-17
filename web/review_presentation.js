@@ -43,34 +43,42 @@
       ...doc.rewards.flatMap(row => [...Object.keys(row[1]), ...Object.keys(row[2])])])];
   }
   const DISCONTINUITIES = new Set(['death','revive','control','control_end','drop','pickup',
-    'native_transfer','stock_theft','delivery','use_item','self_bomb','bomb']);
+    'native_transfer','stock_theft','delivery','use_item','self_bomb']);
   const MAX_DISTANCE = 0.6;
-  function canInterpolate(before, after, pid, events = [], intent) {
-    if (!after || after.t !== before.t+1 || before.done || after.done ||
-        !before.alive[pid] || !after.alive[pid] || before.trapped[pid] || after.trapped[pid]) return false;
+  function interpolationReason(before, after, pid, events = [], intent) {
+    const production=typeof before._tryMove==='function'?before:Q.Sim.prototype;
+    if (!after || after.t !== before.t+1)return 'missing_adjacent_tick';
+    if(before.done||after.done)return 'terminal';
+    if(!before.alive[pid]||!after.alive[pid])return 'death_or_respawn';
+    if(before.trapped[pid]||after.trapped[pid])return 'control';
     for (const key of ['bunCarried','heldItem','hp','movementStatus','slideDir','spdG']) {
-      if (before[key]?.[pid] !== after[key]?.[pid]) return false;
+      if (before[key]?.[pid] !== after[key]?.[pid]) return 'state_change:'+key;
     }
     for (const key of ['spawnProtection','invuln','bunRespawn']) {
-      if (Boolean(before[key]?.[pid]) !== Boolean(after[key]?.[pid])) return false;
+      if (Boolean(before[key]?.[pid]) !== Boolean(after[key]?.[pid])) return 'threshold:'+key;
     }
-    if (events.some(e => e.tick===after.t && e.player===pid && DISCONTINUITIES.has(e.kind))) return false;
+    const boundary=events.find(e => e.tick===after.t && e.player===pid && DISCONTINUITIES.has(e.kind));
+    if(boundary)return 'event:'+boundary.kind;
     const y=before.pos[pid*2],x=before.pos[pid*2+1],ny=after.pos[pid*2],nx=after.pos[pid*2+1];
     const origin=Math.floor(y)*15+Math.floor(x);
-    if(before.wall[origin]||before.brick[origin])return false;
+    if(before.wall[origin]||before.brick[origin])return 'solid_origin';
+    const placing=events.some(e=>e.tick===after.t&&e.player===pid&&e.kind==='bomb');
+    const ownPlacement=placing&&!before.fuse[origin]&&after.fuse[origin]>0&&after.owner?.[origin]===pid;
+    if(placing&&!ownPlacement)return 'unverified_bomb';
     const distance=Math.abs(ny-y)+Math.abs(nx-x);
-    if (!Number.isFinite(distance) || distance>MAX_DISTANCE || distance<1e-8) return false;
-    if(Math.abs(ny-y)>1e-8 && Math.abs(nx-x)>1e-8)return false;
+    if (!Number.isFinite(distance)||distance>MAX_DISTANCE)return 'distance_threshold';
+    if(distance<1e-8)return 'stationary';
+    if(Math.abs(ny-y)>1e-8 && Math.abs(nx-x)>1e-8)return 'collision_alignment';
     const direction=ny<y?0:ny>y?1:nx<x?2:3;
     // Side steering, collision clamps and alignment corrections snap at the boundary.
-    if(intent!==undefined && (direction!==intent ||
-      Math.abs(distance-Q.CFG.stepLen*before.spdG[pid]*Q.Sim.prototype.playerMoveScale.call(before,pid))>1e-6))return false;
+    if(intent!==undefined&&direction!==intent)return 'collision_side_steering';
+    if(intent!==undefined&&Math.abs(distance-Q.CFG.stepLen*before.spdG[pid]*production.playerMoveScale.call(before,pid))>1e-6)return 'collision_clamp';
     const blocked=new Uint8Array(195);
     for(let i=0;i<195;i++)blocked[i]=Boolean(before.wall[i]||before.brick[i]||before.fuse[i]>0||after.wall[i]||after.brick[i]||after.fuse[i]>0);
     // Use production collision resolution, including its start-cell exemption.
     for(let n=1;n<=8;n++){
-      const f=n/8,actual=Q.Sim.prototype._tryMove.call(before,y,x,direction,blocked,distance*f);
-      if(Math.abs(actual[0]-(y+(ny-y)*f))>1e-7||Math.abs(actual[1]-(x+(nx-x)*f))>1e-7)return false;
+      const f=n/8,actual=production._tryMove.call(before,y,x,direction,blocked,distance*f);
+      if(Math.abs(actual[0]-(y+(ny-y)*f))>1e-7||Math.abs(actual[1]-(x+(nx-x)*f))>1e-7)return 'collision_sweep';
     }
     const radius=.36;
     for(let r=Math.floor(Math.min(y,ny)-radius);r<=Math.floor(Math.max(y,ny)+radius);r++) {
@@ -78,23 +86,30 @@
         if(r<0||r>=13||c<0||c>=15)continue;
         const i=r*15+c;
         for(const key of ['wall','brick','pushable','crate','fuse','fieldItem']) {
-          if(Boolean(before[key]?.[i])!==Boolean(after[key]?.[i]))return false;
+          if(Boolean(before[key]?.[i])!==Boolean(after[key]?.[i])){
+            // A new own bubble stays discrete. Production permits leaving its start cell;
+            // its creation alone does not invalidate an independently swept straight move.
+            if(key==='fuse'&&i===origin&&ownPlacement)continue;
+            return 'topology_change:'+key;
+          }
         }
       }
     }
-    return true;
+    return null;
   }
+  const canInterpolate=(before,after,pid,events=[],intent)=>interpolationReason(before,after,pid,events,intent)===null;
   function motion(before, after, fraction, enabled, events = [], intents) {
-    const curPos=Array.from(before.pos),smooth=[];
+    const curPos=Array.from(before.pos),smooth=[],snapReasons=[];
     for(let p=0;p<before.alive.length;p++) {
-      smooth[p]=Boolean(enabled && canInterpolate(before,after,p,events,intents?.[p]));
+      snapReasons[p]=interpolationReason(before,after,p,events,intents?.[p]);
+      smooth[p]=Boolean(enabled && snapReasons[p]===null);
       if(smooth[p]){curPos[p*2]=after.pos[p*2];curPos[p*2+1]=after.pos[p*2+1];}
     }
     const alpha=enabled?Math.max(0,Math.min(1,fraction)):0;
     const visualPos=Array.from(before.pos,(v,i)=>v+(curPos[i]-v)*alpha);
     return {humanPid:-1,tickMs:100,lastTickT:before.t*100,prevPos:Array.from(before.pos),curPos,visualPos,
-      fraction:enabled?Math.max(0,Math.min(1,fraction)):0,smooth,
+      fraction:enabled?Math.max(0,Math.min(1,fraction)):0,smooth,snapReasons,sourceTick:before.t,nextTick:after?.t??null,
       characters:['maomao','maomao'],playerPalettes:[null,'blue'],playerLabels:['模型 P0','对手 P1'],hideResult:true};
   }
-  return { REWARDS, reward, componentNames, MAX_DISTANCE, canInterpolate, motion };
+  return { REWARDS, reward, componentNames, MAX_DISTANCE, interpolationReason, canInterpolate, motion };
 });

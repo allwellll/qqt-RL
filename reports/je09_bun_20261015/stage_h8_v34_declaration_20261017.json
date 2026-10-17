@@ -1,0 +1,391 @@
+{
+  "experiment_id": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34",
+  "namespace": "runs/je09_bun_20261017/stage_h8_native_courier_fsm_dagger_v34",
+  "parent_commit": "7572dc90de6d03bf5e90282e9ecd6e8bd5c23657",
+  "parent": "runs/je09_bun_20261017/stage_h7_native_courier_fsm_dagger_v33/formal/bun392_bridge_pfsp8/gen000032",
+  "round": 1,
+  "seed": 1044969507,
+  "seeds": {
+    "train": 1044969507,
+    "scan": 4121390439,
+    "diagnostic": 2930876722,
+    "combat_probe": 191857977,
+    "technical": 4196447025,
+    "curriculum_gate": 217953845,
+    "oracle": 3748420725,
+    "fixed_main": 1800325042,
+    "fixed_holdout": 2950936866,
+    "stage_b_main": 2954817593,
+    "stage_b_holdout": 521215077,
+    "stage_a_main": 2261191435,
+    "stage_a_holdout": 855111792
+  },
+  "seed_derivation": {
+    "train": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:train",
+      "nonce": 0
+    },
+    "scan": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:scan",
+      "nonce": 0
+    },
+    "diagnostic": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:diagnostic",
+      "nonce": 0
+    },
+    "combat_probe": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:combat_probe",
+      "nonce": 0
+    },
+    "technical": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:technical",
+      "nonce": 0
+    },
+    "curriculum_gate": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:curriculum_gate",
+      "nonce": 0
+    },
+    "oracle": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:oracle",
+      "nonce": 0
+    },
+    "fixed_main": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:fixed_main",
+      "nonce": 0
+    },
+    "fixed_holdout": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:fixed_holdout",
+      "nonce": 0
+    },
+    "stage_b_main": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:stage_b_main",
+      "nonce": 0
+    },
+    "stage_b_holdout": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:stage_b_holdout",
+      "nonce": 0
+    },
+    "stage_a_main": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:stage_a_main",
+      "nonce": 0
+    },
+    "stage_a_holdout": {
+      "identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:stage_a_holdout",
+      "nonce": 0
+    }
+  },
+  "stage_b_reward": {
+    "window": 120,
+    "scale": 2.0
+  },
+  "return_expert": {
+    "coefficient": 0.05,
+    "temperature": 0.5,
+    "window": 120,
+    "action_override": false
+  },
+  "drop_expert": {
+    "coefficient": 0.1,
+    "temperature": 1,
+    "hazard_mode": "local_safe",
+    "action_override": false,
+    "action_set": true
+  },
+  "distance_buckets": [
+    [
+      8,
+      12
+    ],
+    [
+      12,
+      16
+    ],
+    [
+      16,
+      24
+    ],
+    [
+      24,
+      32
+    ]
+  ],
+  "change": "Only repair the weak native A courier episode FSM (return to its own cage after native stock pickup) and rebalance weak target sampling to A/B/return/delivery = 50/20/15/15. Preserve H6 strict labels/verifier, reward, loss, network, opponent pool and evaluation protocols.",
+  "budget": {
+    "formal_generations": 32,
+    "fresh_ticks": 67108864,
+    "fixed": true,
+    "evaluation": "existing assist-off protocols asynchronously; observational only"
+  },
+  "curriculum": {
+    "combat": 0.6,
+    "bridge": 0.25,
+    "other": 0.15,
+    "bridge_short_fraction": 0.5,
+    "advance": "time schedule buckets 0/1/2/3 every4 generations; no CPU or ability gate",
+    "initial_bucket_semantics": "admission frozen per real-drop nonce at initial distance; labels remain on actual deviations until native expiry",
+    "long_return_fraction": 0.25,
+    "short_return_distance": [
+      1,
+      23
+    ],
+    "long_return_distance": [
+      24,
+      36
+    ],
+    "short_return_fraction_min": 0.5,
+    "coverage_mechanism": "unchanged D native scene course; .05 return loss=(1-f)*.5*(online_short+native_C_short_replay)+f*.5*(online_long+native_D_long_replay); replay never enters PPO/value/reward"
+  },
+  "selection": "Observation only; choose by complete existing protocols after the fixed budget, never by a short score.",
+  "stop": "Fixed32 generations/67108864 fresh ticks; no capability trend stopper. Stop only NaN/OOM/state corruption or declared gross native safety failure.",
+  "immutable": {
+    "reward": true,
+    "phase_features": false,
+    "network": true,
+    "native_fixed_max_steps": 1200,
+    "native_respawn_ticks": 100,
+    "return_window": 120,
+    "dynamic_pool": true,
+    "retention_reference": "unchanged historical retention_parent.pkl; actual raw reference Stage A v5 g8",
+    "ring_offset": 16,
+    "stage_c_d_sources": {
+      "scripts/je09_bun_migration.py": "9121710a62c8bb8dfdc300e77ad69fd5dd34ddea042ef5138020df523ad0e637",
+      "scripts/je09_bun_continuation.py": "986410d4c241136191501ebb2f10fa844ff479f016cfa98bc6f7bfd2b84e41e4",
+      "scripts/je09_bun_worker.py": "5a219477be46f474295ea66154188e7f01439cb5b23ad10e2513db51ba6d9108",
+      "scripts/je09_bun_scenes.py": "58b39b831b2b21961c2a1d3f051a5ea1370c6fc94992f0389f2611a5540c73fd",
+      "scripts/je09_bun_ops.py": "f942b429828d64a65e765211ee73c9f4197bf46ccae6b204bc21b5a9d450a53c",
+      "scripts/je09_return_expert.py": "aa76450a6ca1e115a0119b5a4f54e3c5b541642099fc320dc1acac40d9ca484a",
+      "scripts/je09_chase_expert.py": "437c6a0cf03b586ea6fadc34068814316370aa515ad74e65a14bb79dcf0c7fff",
+      "scripts/je09_stage_d.py": "94fa271fa8cc16f5fa75a6721ad8e9a93e488abd3133c2931b023ca9d968cb8b"
+    }
+  },
+  "old_runs_read_only": true,
+  "parent_status": "H6 v32 fixed32 completed; use its raw g32 Actor/Critic and full pool. Parent selection follows current request; no later completed same-protocol point is established as superior.",
+  "evaluation_policy": "Existing assist-off authority/fixed32/controlled/Hunter/Tactical/carry/full2400 protocols run asynchronously; they never control training.",
+  "reason": "Read-only native same-state oracle proves reachable own sugar/death windows with cage stock, but learner often fails Objective Rush. Strict loose-first full metric is not all-path inventory acquisition.",
+  "combat_expert": {
+    "coefficient": 0.05,
+    "temperature": 1.0,
+    "teacher": "existing native rule hard tier4, current state only, escape BFS certificate",
+    "scope": "self alive/untrapped/empty; enemy alive/untrapped; not terminal",
+    "actions": "move5 and ability3, training labels only",
+    "unsafe_fallback": "zero auxiliary loss",
+    "action_override": false
+  },
+  "item_events": {
+    "glue_hit_reward": 0.5,
+    "banana_per_cell": 0.1,
+    "banana_event_cap": 0.5,
+    "episode_combined_cap": 2.0,
+    "capture_unchanged": 24.0,
+    "real_custody": "same-episode native pickup/steal/transfer required; initialized carry excluded",
+    "glue": "actual own eligible placement token then first trigger by free alive enemy; placement has no positive payment",
+    "banana": "self native trigger; field owner/cell/tick; full native slide net legal home reduction; alive still holding; no tick payments",
+    "safety": "legal safe home path; cage placement excluded; terminal/topology/sugar/death/drop/trade invalid; loss clawback; gross cap never refunded",
+    "team_scope": "production1v1, no teammate proxy",
+    "action_override": false
+  },
+  "item_state_coverage": {
+    "fraction": 0.75,
+    "scene": 9,
+    "initial_learner_inventory": [
+      2,
+      1
+    ],
+    "counts": [
+      1,
+      1
+    ],
+    "field": "one enemy-owned armed banana on a legal equal-shortest homeward neighbor of initial carrier cell; exclude learner start and goal",
+    "time": "episode initialization only; actual native attributed death/drop and learner first pickup required for reward",
+    "unaffected": "all non-scene9 states byte-exact; positions, carry, topology, combat birth .60 and pool unchanged"
+  },
+  "hard_safety": {
+    "per_generation_native_death_fraction_fresh": 0.02,
+    "own_bomb_defeat_fraction_fresh": 0.005,
+    "mutual_death_fraction_fresh": 0.005,
+    "ordinary_retention_degradation": "observe only; does not truncate fixed budget"
+  },
+  "parent_preservation": "H3g24 Hunter37 hard5 Tactical10 controlled14/12 carry16 versus H3g32 35/4/8/13,12; H4g4 36/4/17/11,10; H4Rg16 39/1/15/11,14. Prefer hard combat plus balanced controlled retention; protocols share definitions but derived seeds differ, so no paired significance claimed.",
+  "full_scene_coverage": {
+    "scene": 8,
+    "fraction": 0.35,
+    "combat_fraction": 0.4,
+    "controlled_bridge_fraction": 0.25,
+    "source": "complete native full games; learner drives both seats; no initialized bun/drop/pickup"
+  },
+  "parent_generation": 32,
+  "dagger": {
+    "coefficient": 0.05,
+    "temperature": 1.0,
+    "natural_scene": 8,
+    "rollout": "current learner actual actions; new policy resamples every generation; no oracle takeover",
+    "oracle": "attributed native sugar/death: A actual credited loose target; B enemy stock cage; after actual pickup same-trajectory return120",
+    "exclude": "free alive enemy while empty; glue/banana; terminal/dead/trapped learner; danger/unreachable; no future information",
+    "capacity_per_device": 2048,
+    "new_per_generation_per_device": 256,
+    "replay_per_microbatch": 64,
+    "current_history_ratio": [
+      0.5,
+      0.5
+    ],
+    "shortage": "fallback to available half; padded invalid rows have exact zero gradient",
+    "aggregation": "bounded FIFO across updated learner rounds; round provenance and full buffer checkpointed",
+    "retention": "unchanged combat .60, bridge .25, natural .10, other .05; unchanged C/E replay, D chase, F mode, G combat, H items and parent KL",
+    "failure_fragments": [
+      "A_attributed_loose_recovery",
+      "B_enemy_cage_stock_rush",
+      "CARRY_RETURN",
+      "CAGE_DELIVERY"
+    ],
+    "combat_policy": "COMBAT_CONTROL is quality-audit-only and receives no H6 DAgger replay query; combat learning remains existing PPO, native safe-attack expert, and historical retention.",
+    "query_policy": "Only learner-visited states in scene 8. A, B, carry return, and cage delivery each retain their own first currently failing state per episode, so a sparse earlier fragment cannot starve later fragments. Only native sugar/death windows, attributed loose pickup, real custody, and delivery boundary are eligible. Unreachable, unsafe, terminal, dead, trapped, free-enemy objective, glue, and banana states are rejected.",
+    "stratified_query": {
+      "per_episode_first_deviation": [
+        "A",
+        "B",
+        "CARRY_RETURN",
+        "CAGE_DELIVERY"
+      ],
+      "verifier_slots_per_rollout": {
+        "A": 4,
+        "B": 4,
+        "CARRY_RETURN": 4,
+        "CAGE_DELIVERY": 4
+      },
+      "combat_control_dagger_slots": 0,
+      "source": "current learner native full-game interactions only; no state injection or action override"
+    },
+    "iteration": "At every generation the updated learner samples fresh complete games; current states are queried and aggregated with prior learner rounds; next generation uses the updated learner. No expert action takes over env.step.",
+    "replay_fragment_mix": "equal current and historical valid fragments; fallback to available side; invalid rows exact zero gradient"
+  },
+  "dagger_opponent_course": {
+    "weak_episode_fraction": [
+      0.5,
+      0.35,
+      0.2,
+      0.1
+    ],
+    "generations_per_level": 8,
+    "split_courier_guard": [
+      0.5,
+      0.5
+    ],
+    "carry_move_duty": [
+      0,
+      0.15,
+      0.35,
+      0.6
+    ],
+    "guard_move_duty": [
+      0,
+      0.1,
+      0.25,
+      0.5
+    ],
+    "bomb_period": [
+      64,
+      32,
+      16,
+      8
+    ],
+    "live_bomb_action_capacity": [
+      1,
+      1,
+      2,
+      2
+    ],
+    "escape_response": [
+      0,
+      0.25,
+      0.5,
+      1
+    ],
+    "approach_dig_period": 4,
+    "approach_move_duty": 1.0,
+    "native_only": "Only opponent legal move/ability decisions; no state modifications, teleport, ownership injection, forced drop/death.",
+    "origin_semantics": "Opponent taking learner stock carries learner-origin bun: its recovery is A-own-recovery, not enemy acquisition/capture. Both origins logged separately.",
+    "strong": "At least nominal50% natural-full episodes retain original responsive/g0/stage1/PFSP mix; all nonfull lessons unchanged; observed ticks reported.",
+    "evaluation": "Unchanged strong assist-off protocols; course never enters evaluation.",
+    "targeted_fragment_sampling": {
+      "weak_episode_targets": {
+        "A_LOOSE_RECOVERY": 0.55,
+        "B_CAGE_STOCK": 0.1,
+        "CARRY_RETURN": 0.05,
+        "CAGE_DELIVERY": 0.3
+      },
+      "target_role": {
+        "A_LOOSE_RECOVERY": "weak_courier",
+        "B_CAGE_STOCK": "weak_guard",
+        "CARRY_RETURN": "weak_courier",
+        "CAGE_DELIVERY": "weak_guard"
+      },
+      "weakness_schedule": [
+        0.5,
+        0.35,
+        0.2,
+        0.1
+      ],
+      "courier_fsm": {
+        "empty": "native path into learner cage for stock pickup",
+        "carrying": "native path back to opponent own cage; carry move duty [.2,.3,.4,.55]"
+      },
+      "difficulty_independent": true,
+      "target_metadata_actor_input": false,
+      "state_source": "learner actual native full-game interactions only; no injected custody/drop/death/window"
+    }
+  },
+  "terminal_relay": {
+    "successor": null,
+    "policy": "at fixed terminal notify and directly launch the predeclared independent H8 replication after acceptance; no marker-only handoff"
+  },
+  "technical_shape": {
+    "devices": 8,
+    "envs_per_device": 256,
+    "steps": 1024,
+    "fresh_ticks": 2097152
+  },
+  "parent_selection": {
+    "generation": 32,
+    "checkpoint": "runs/je09_bun_20261017/stage_h7_native_courier_fsm_dagger_v33/formal/bun392_bridge_pfsp8/gen000032",
+    "reason": "Use v32 g32 as requested; fixed32 budget completed with finite nonzero updates and no completed same-protocol superior parent established."
+  },
+  "training_owner": "unique H8 controller; notify on startup, terminal, or any technical failure",
+  "smoke_attempts": [
+    {
+      "attempt": 1,
+      "seed": 4196447025,
+      "target_weights": {
+        "A": 0.5,
+        "B": 0.2,
+        "return": 0.15,
+        "delivery": 0.15
+      },
+      "carry_move_duty": [
+        0.75,
+        0.8,
+        0.85,
+        0.9
+      ],
+      "result": "failed: A target had zero native loose pickup and zero A query"
+    },
+    {
+      "attempt": 2,
+      "seed_identity": "JE09-STAGE-H8-NATIVE-DROP-RECOVERY-DAgger-20261017-v34:technical_smoke02",
+      "target_weights": {
+        "A": 0.55,
+        "B": 0.1,
+        "return": 0.05,
+        "delivery": 0.3
+      },
+      "carry_move_duty": [
+        0.2,
+        0.3,
+        0.4,
+        0.55
+      ],
+      "acceptance": "A-target native theft/custody, attributed learner kill, learner loose pickup, and A query all positive"
+    }
+  ],
+  "smoke_policy": "attempt06 is a four-generation eight-device iterative DAgger smoke; formal campaign remains fixed32.",
+  "smoke_generations": 4
+}

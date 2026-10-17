@@ -24,7 +24,7 @@ const base=process.env.WEB_URL||'http://127.0.0.1:8097/',out=process.env.EVIDENC
       const catalog=await page.evaluate(async()=>await(await fetch('review-catalog.json')).json());
       const layout=await page.evaluate(()=>{const c=document.querySelector('.center'),children=[...c.children],board=c.querySelector('.board'),play=c.querySelector('.playback-region'),time=c.querySelector('.timeline-head');return {direct:board.nextElementSibling===play&&play.nextElementSibling===time&&time.nextElementSibling.classList.contains('timeline-layout'),boardBottom:board.getBoundingClientRect().bottom,playTop:play.getBoundingClientRect().top,overflow:document.documentElement.scrollWidth>innerWidth+1};});
       assert(layout.direct,'canvas, playback, timeline must be consecutive');assert(Math.abs(layout.playTop-layout.boardBottom)<4);assert(!layout.overflow);
-      for(const scene of catalog.scenes){
+      for(const scene of catalog.scenes.filter(s=>s.id!=='route_drop_return')){
         await page.locator('#scene-filter').selectOption(scene.id);assert.equal(await page.locator('.replay-row').count(),2);
         const row=catalog.replays.find(r=>r.scene===scene.id);await page.locator(`[data-replay="${row.id}"]`).click();await page.waitForFunction(id=>document.getElementById('locator').value.startsWith(id+'@'),row.id);
         const doc=await page.evaluate(async file=>await(await fetch('review-replays/'+file)).json(),row.file);

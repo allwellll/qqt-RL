@@ -1,5 +1,39 @@
 # 低质量对局回放诊断验收（20261017）
 
+## 真实路线 g32 接入与播放跳变追加审计
+
+下文既有审计按历史保留；此前真实 artifact 阻塞已解除。本轮从 `087e48ee073db885bc08e4038a27cb0fd63c7d38` 继续，远端 main 为 `167be513889569bd4835184e06cf66df1aa995fa`。训练结果来源 `6358fa192c847016bf1745247efae2027804f549`；采用无提交 cherry-pick 集成内容，保留 main 总账并只加入本实验条目，纠正该条 Hunter normal 与终态报告的不一致。发布提交使用项目维护者身份，不引入来源提交中的个人作者元数据。没有创建 workspace、启动/控制训练、读取可变 checkpoint 或使用 GPU。
+
+- 只读核验真实包 Actor JSON、ONNX、policy、同代 Critic NPZ、配置、trajectory、recalculation_proof 的全部字节哈希。另从封存 g32 `COMMITTED.json` 及 `state.pkl` 独立核验 policy/state 哈希，CPU 读取 `live.params.critic`，75 个参数叶与 NPZ 全部精确相等且 finite。Critic 是本实验塑形 Critic，不是原始任务 Critic；参数相等不等于反事实 Q/A 已测量。
+- `scripts/import_route_pbrs_g32.js` CPU ONNX 逐 tick 重推 1200 个动作全部一致；与原版本生产 Sim 的每个前后快照全部一致。独立重复松弛最短路算法重新计算目标、路程、连续 offset/Phi、delta 与 reward，1200 tick 最大残差 0。原始 verifier 的状态链/公式也通过。完整再次生成字节相同，seed 固定 `2026101732`，不看结果筛选、不改动作。
+- 原生产 Sim SHA 为 `9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3`，与当前生产版本不同。按哈希加载字节不变的 `web/review-sim/route-v35.js`，旧录像继续使用原来的当前 Sim；共用生产 renderer，不创建近似 renderer。周期 state hash、seek RNG 重建、终态和 identity 校验通过。
+- 明显标注“诊断场景，不代表自然完整对局成功”。这是预声明 drop-return 初态，敌方持己包、trap=1、归因预置，assist-off；不是模型自然击杀。源 manifest 对手文字误称 stationary，真实动作是 `[0,0,0]`（固定向上、不放泡/道具），页面按动作真实标注。终局 1200 tick 平局，仍持敌包，未交付。
+- 路线导出器不是完整训练 PBRS ledger：按转移后目标分类，末 tick Phi `.421875` 未归零。扩展语义 `diagnostic-post-target-uncorrected/v1` 保留原值，明确 terminal correction=false，不称训练总 Reward；原协议对其他录像仍要求 terminal Phi=0。前后距离按转移后同一目标独立复算；topology/safety/invalidated 等未采集字段保持 null。
+- 原环境 Reward、训练总 Reward、原始任务 Critic A1/ΔA1、塑形 Critic A1/ΔA1 均未记录。该轨迹没有训练 reward ledger 与严格联合动作反事实结果，因此不从路线 reward 推断、不把塑形 Critic 冒充原始 Critic。已发布六局原始 A1/Q/ΔA、Reward、三种真实场景及十二局历史文件字节不变。
+- 新增真实录像 1 局，raw **162526** / gzip(level9) **7746** bytes，SHA `207680e66de70c44652586fdc7f3aab1919bf5268a8f3e8ef88dcd95fdce69f2`。每局独立懒加载，最小双方动作、量化路线列、目标字典和周期 hash，没有逐 tick 完整 state、模型张量或全动作 Q 表入 Git。来源/复算小型证据为 `web/review-evidence/route-v35-g32.json` 与 `route-v35-critic.json`。
+- 页面结论使用终态报告：32代 / 67,108,864步；g32 诊断 pickup16/16、25%7/16、50%6/16、home6/16、capture2/16；fixed32 主评/holdout capture 均0/16；full2400 pickup/capture 均0/16；Tactical causal kill12→9/64，Hunter hard9→1/64，不建议当前 lambda=.05 原样续训。不得从本录像宣称自然完整链成功。
+
+### 跳变 RED 与根因
+
+真实 g32 前240 tick，桌面/手机、平滑开关分别逐帧采样实际 production `drawImage` 坐标。桌面平滑开时约60.06 FPS，最大连续安全帧位移约3.10px，但放泡 tick3/21/37/61 出现约18.55–20.53px位移；手机相应约9.68–10.67px。相邻 next state 始终可用，alpha 在播放中没有重置，CSS 比例恒定，浮点 override 在所有采样帧均完整到达 renderer。因此没有证据支持缺少预读 tick、整数取整或 Canvas/CSS 缩放为本次原因。
+
+根因是旧门控把 `bomb` 一律当作人物不连续事件，并把自身起始格新泡泡也一律当作路径拓扑变化，导致真实安全直线移动整个 tick 静止、边界瞬跳。`web/test_review_motion_regression.js` 在真实 tick2 先失败 RED。修复只对已记录自身放泡、真实新泡泡归属和生产 `_tryMove` 全路径扫掠均验证通过的直线移动允许插值；泡泡及所有其他权威字段仍在整数 tick 切换。死亡/复活、携包变化/拾取/掉落/交付、控制、碰撞对齐/侧移/截停、速度阈值、异常位移和终局仍 snap。显式输出每方 `snapReasons` 及 source/next tick，便于把合法 snap 与视觉错误区分。
+
+原播放器已预读独立 next Sim，修复不额外延迟动作或改证据 tick。暂停/seek/单步清零 alpha，吸附当前整数 tick。开关显示“平滑播放”，保留实际 FPS / 10 tick/s / alpha。真实头顶多行信息与靠近的对手冲突时，将文字组移到空侧并画引线，保留蓝色对手和文字身份，不遮住人物。
+
+`npm test` 全量生产回归与 `npm run test:review`（19局、488项原协议检查、真实来源/紧凑 schema/数学/单调移动/合法 snap/旧功能）通过；原训练来源同版本的10个聚焦 CPU 测试通过。修复后再次通过真实 g32 页面与三旧场景、授权/标注/DAgger/深链的桌面手机浏览器回归，pageerror/console/HTTP 均为0。
+
+### 完整播放验收
+
+- 无 mock 的真实 Chromium 桌面1600×1100和手机390×844：4x 播放完整1200tick，平滑开/关四组各1801帧，实测约60.03FPS；另以正常1x播放相同前240tick，四组各1444帧，约60.05–60.06FPS。完整录屏和逐帧原始采样保存在忽略目录 `runs/replay_review_20261017/motion-route-after-full/` 与 `motion-route-after-1x/`。不是通过减速、模糊或隐藏人物获得结果；场景原生屋檐遮挡仍沿用 production z-order。
+- 两方五组真实安全片段（模型放泡前tick2/20/36/60、对手tick101），逐一实际调用 production renderer，8个 `drawImage` 锚点严格单调且有小数；Sim state不变。正常1x采样分别观察到模型112个、对手6个具有多个严格单调中间绘制点的tick组。4x每tick通常只分到1–2帧，因此另用确定性真实片段证明中间位置，不拿帧数代替坐标验证。
+- 正常1x，放泡tick3/21/37/61的模型最大连续帧位移：桌面修复前18.55/20.53/20.49/20.48px，修复后3.08/3.10/3.08/3.08px；手机修复前9.68/10.67/10.66/10.65px，修复后1.61/1.62/1.61/1.61px。正常1x全部安全连续帧最大位移：桌面模型/对手3.10/3.08px，手机1.62/1.62px。4x对应12.39/12.31px和6.46/6.43px，按真实倍速比例增加。
+- 仍保留合法snap。4x桌面最大单帧21.42px在碰撞侧移边界，手机最大11.61px在拾包边界；完整列表包含tick10/18/23/59/64/116/117/118的碰撞侧移和tick80的携包状态变化，未将其强行平滑。死亡/复活通过权威事件单独记录；角色不可见期间不伪造精灵位置。末tick终局也保持整数边界。
+- 相邻显示帧扫描未发现超出安全速度上界的位移、缺少相邻预读状态、浮点覆盖丢失或播放中alpha重置；八组 `unexpected_jumps=[]`、scheduler gaps=0、console/HTTP错误=0。暂停/seek/双向单步在tick79/80/104/115/116/500逐项验证：alpha=0、visualPos完全等于权威pos，实际绘图锚点也一致。开关关闭时保留明确的离散10tick/s画面，作为对照。
+- 公开小型报告 `web/review-evidence/route-g32-motion.json`（47161bytes）包含测量定义、每组最大位移、合法snap的tick/分类、双方严格单调锚点、原始录屏采样摘要SHA和缺测范围，不发布巨量逐帧state。真实页面截图/检查结果位于 `web/review-evidence/route-g32-browser/`，包含桌面/手机整页及画布，未使用fixture或网络替换。
+
+本地跳变修复与原合同验证完成后才恢复提交/发布步骤。发布后按同一head SHA等待Actions/Pages终态、逐文件HTTP/hash/尺寸与线上桌面手机验收；最终同SHA记录保存到忽略目录，避免为记录自身SHA再触发一次部署。
+
 ## H8 新批次预声明与平滑根因审计
 
 - 新任务起点 `41b16967f33fc2c6538cc5b717ef6263b0cd67f0`，远端与当前分支一致且干净；保留此前审计。仅只读已完成 H8 v34 g32 的固定 COMMITTED、policy 与生产 Web 导出，不读取 LATEST 或训练中 checkpoint，不使用 GPU。

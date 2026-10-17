@@ -3,7 +3,7 @@
 const fs=require('fs');
 module.exports=function fixture(){
   const catalog=require('../../web/review-catalog.json');
-  const replay=JSON.parse(fs.readFileSync('web/review-replays/'+catalog.replays[0].file));
+  const replay=JSON.parse(fs.readFileSync('web/review-replays/'+catalog.replays.find(r=>!r.diagnostic).file));
   const h='a'.repeat(64);
   const meta={schema:'qqt.route-potential/v1',kind:'fixture',status:'recorded',gamma:.995,lambda:.05,
     checkpoint_sha256:replay.meta.checkpoint_sha256,policy_sha256:replay.meta.model_sha256,

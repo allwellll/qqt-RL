@@ -23,7 +23,11 @@
   const routePanel=document.createElement('section');routePanel.className='route-details-panel';
   routePanel.innerHTML='<h3>路线势能 · 人工辅助值</h3><p id="route-status"></p><p class="route-explanation">原始任务 Critic 估计任务回报；路线奖励是人工路线辅助值。塑形 Critic 只有经过塑形回报训练并验证才展示，不能用路线奖励代替。两种 Critic 的 A₁ 均是模型估计，不是观测收益。</p><div id="route-details"></div>';
   $('state-details').before(comparison,routePanel);
+  const experiment=document.createElement('section');experiment.id='route-experiment';experiment.hidden=true;experiment.className='route-experiment';
+  experiment.innerHTML='<h3>路线 PBRS · g32 实验结论</h3><p>32代 / 67,108,864步；λ=0.05。诊断返程 pickup 16/16、25% 7/16、50% 6/16、home 6/16、capture 2/16。fixed32 g32 capture 主评 / holdout 均 0/16；full2400 pickup / capture 均 0/16。Tactical causal kill 12→9/64；Hunter hard 9→1/64。诊断返程有所进展，自然完整对局未改善，攻击效能下降，不建议当前 λ=.05 原样续训。</p><p id="diagnostic-warning">诊断场景，不代表自然完整对局成功</p><p>本局 trap 初态和掉包归因预置，非模型自然击杀；对手固定向上、不放泡。路线值来自诊断导出器，末 tick Phi 未归零，不能当作训练 PBRS 账本。原环境 Reward、训练总 Reward、原始 / 塑形 Critic A₁ 均未记录；同代塑形 Critic 参数存在，但缺同口径 reward 与联合反事实结果。</p><a href="review-evidence/route-v35-g32.json" target="_blank" rel="noopener">逐 tick 复算与来源 SHA-256</a>';
+  document.querySelector('.display-controls').after(experiment);
   const currentDagger=document.createElement('section');
+  new MutationObserver(()=>{if(doc&&!$('advanced-settings').hidden){timeline();draw();}}).observe($('advanced-settings'),{attributes:true,attributeFilter:['hidden']});
   currentDagger.innerHTML='<h3>当前 tick · DAgger</h3><p id="dagger-current-status"></p><div id="dagger-current"></div>';
   $('teacher').previousElementSibling.before(currentDagger);
   function metricList(target,values){
@@ -85,6 +89,7 @@
       if(!`${r.id} ${r.scene_name||''} ${r.summary.failures.map(k=>labels[k]).join(' ')}`.toLowerCase().includes(filter))continue;
       const b=text('button','',`replay-row${doc?.meta.id===r.id?' active':''}`);b.dataset.replay=r.id;
       b.append(text('strong',`${r.model} · ${r.scene_name||(r.variant==='open'?'清砖图':'原始图')}`),text('small',`seed ${r.seed} · ${P.time(r.summary.ticks)} · ${r.summary.winner===null?'平局':r.summary.winner===0?'模型胜':'对手胜'}`));
+      if(r.diagnostic)b.append(text('strong','诊断场景，不代表自然完整对局成功','diagnostic-warning'));
       if(r.scene)b.append(text('small',`▦ ${r.map||806} · ${r.scene_rules} · map ${r.map_sha256.slice(0,8)}`,'scene-summary'));
       const tags=text('div','','tags');if(r.scene)tags.append(text('span',({native:'▦ 原生',open:'□ 开放',carry_home:'↩ 返程'})[r.scene]||r.scene,'badge'));for(const k of r.summary.failures)tags.append(text('span',labels[k]||k,'tag'));b.append(tags);b.onclick=()=>load(r.id,0).catch(fail);$('replay-list').append(b);
     }
@@ -97,7 +102,8 @@
     $('exact-time').textContent=`tick ${t} · ${P.time(t)}`;$('play-state').textContent=playing?'播放中':'已暂停';$('position-panel').classList.toggle('playing',playing);
     $('locator').value=P.locator(doc,t);$('seek').value=t;$('playhead').style.left=`${t/doc.actions.length*100}%`;
     $('play').title=playing?'暂停':'播放';$('play').setAttribute('aria-label',playing?'暂停':'播放');$('play-icon').src=`assets/review-icons/${playing?'pause':'play'}.svg`;
-    const delta=currentReward(t),total=rewardValues();$('reward-delta').textContent=number(sum(delta));$('reward-total').textContent=number(sum(total));
+    const delta=currentReward(t),total=rewardValues(),rewardMeasured=doc.meta.reward_status!=='unrecorded';$('reward-delta').textContent=rewardMeasured?number(sum(delta)):'未记录';$('reward-total').textContent=rewardMeasured?number(sum(total)):'未记录';
+    $('reward-chart').hidden=!rewardMeasured;$('curve-component').disabled=!rewardMeasured;$('curve-mode').disabled=!rewardMeasured;
     $('components').replaceChildren();for(const k of componentNames()){const translated=V.reward(k),e=text('div','',`component${translated.known?'':' untranslated'}`),v=delta[k]||0,name=text('span',translated.name);e.title=translated.help;e.dataset.component=k;if($('english-rewards').checked)name.append(text('small',k));e.append(name,text('span',`${number(v)} / ${number(total[k]||0)}`,v<0?'negative':'positive'));$('components').append(e);}
     const a=t?doc.actions[t-1]:null;
     const advantage=A.atTick(doc,t),value=v=>v===null?'未记录':number(v);
@@ -113,10 +119,11 @@
   }
   function routeTick(){
     const t=player.sim.t,r=R.atTick(doc,t),m=doc.meta.route,v=R.value;
-    $('route-status').textContent=(m?.kind==='fixture'?'测试 fixture · 非真实训练录像。':'')+(r.route_phase===null?'本 tick 路线：未记录':R.label(R.PHASES,r.route_phase))+` · γ ${v(m?.gamma)} · λ ${v(m?.lambda)}`;
+    $('route-status').textContent=(m?.kind==='fixture'?'测试 fixture · 非真实训练录像。':'')+(r.route_phase===null?'本 tick 路线：未记录':R.label(R.PHASES,r.route_phase))+` · γ ${v(m?.gamma)} · λ ${v(m?.lambda)}`+(m?.limitations?' · '+m.limitations:'');
     const fields=[['目标阶段 · route_phase',R.label(R.PHASES,r.route_phase)],['当前目标 · target_type',R.label(R.TARGETS,r.target_type)],['目标来源 · target_provenance',R.label(R.PROVENANCE,r.target_provenance)],['脱敏目标 ID · target_id',v(r.target_id)],['网格加权最短路（前 → 后）',`${v(r.distance_before)} → ${v(r.distance_after)}`],['路线势能（前 → 后） · Phi',`${v(r.phi_before)} → ${v(r.phi_after)}`],['路线势能变化 · route_potential_delta',R.signed(r.route_potential_delta)],['路线奖励 · route_shaped_reward',R.signed(r.route_shaped_reward)],['拓扑区域（前 → 后）',`${v(r.topology_region_before)} → ${v(r.topology_region_after)}`],['开墙 / 拓扑增益 · topology_gain',v(r.topology_gain)],['阶段转换 · phase_transition',v(r.phase_transition)],['目标失效 · invalidated',v(r.invalidated)],['终态边界修正 · terminal_correction',v(r.terminal_correction)],['安全拒绝 · safety_reject_reason',R.reason(r.safety_reject_reason)]];
     details($('route-details'),fields);
-    $('shaped-status').textContent=m?.shaped_critic?`塑形回报训练 Critic · ${m.shaped_critic.critic_sha256.slice(0,12)} · 原始任务优势保持独立`:'未记录：尚无经过验证的塑形训练 Critic';
+    if(doc.meta.diagnostic)$('route-details').append(text('p',`原环境 Reward：未记录；训练总 Reward：未记录；本 tick 路线辅助 Reward：${R.signed(r.route_shaped_reward)}。三者独立，不能从路线值推断总奖励。`));
+    $('shaped-status').textContent=m?.shaped_critic?`塑形回报训练 Critic · ${m.shaped_critic.critic_sha256.slice(0,12)} · 原始任务优势保持独立`:doc.meta.diagnostic?'未记录：同代塑形 Critic 已提取，缺训练 reward ledger 和严格反事实结果，不能计算 A₁':'未记录：尚无经过验证的塑形训练 Critic';
     details($('shaped-details'),[['执行动作 Q₁ · shaped_critic_q1_taken',v(r.shaped_critic_q1_taken)],['策略平均 Q₁ · shaped_critic_q1_policy_mean',v(r.shaped_critic_q1_policy_mean)],['塑形一步优势 · shaped_advantage_a1',R.signed(r.shaped_advantage_a1)],['塑形优势增量 · shaped_advantage_delta',R.signed(r.shaped_advantage_delta)],['合法联合动作数',v(r.shaped_legal_count)]]);
     const option=$('advantage-mode').querySelector('[value="shaped"]');option.disabled=!m?.shaped_critic;option.textContent=m?.shaped_critic?'塑形 Critic':'塑形 Critic（未记录）';
     if(option.disabled)$('advantage-mode').value='task';
@@ -133,7 +140,7 @@
     }
     g.clearRect(0,0,w,h);g.drawImage(curveCache.base,0,0);g.strokeStyle='#e9f7ef';const x=player.sim.t/doc.actions.length*w;g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke();
   }
-  function rewardEvidence(tick,pid=Number($('reward-player').value)){const r=currentReward(tick,pid);return `${pid===0?'模型':'对手'} Reward ${number(sum(r))}（同 tick 事件共用一次） · ${Object.entries(r).map(([k,v])=>`${V.reward(k).name} ${number(v)}`).join('；')||'无非零分量'}`;}
+  function rewardEvidence(tick,pid=Number($('reward-player').value)){const r=currentReward(tick,pid);return `${pid===0?'模型':'对手'} Reward ${doc.meta.reward_status==='unrecorded'?'未记录':number(sum(r))}（同 tick 事件共用一次） · ${doc.meta.reward_status==='unrecorded'?'原环境 / 训练总 Reward 未采集':Object.entries(r).map(([k,v])=>`${V.reward(k).name} ${number(v)}`).join('；')||'无非零分量'}`;}
   function marker(track,tick,color,title,width){const b=text('button','','mark'+(width?' phase-mark':''));b.dataset.tick=tick;b.style.left=`${tick/doc.actions.length*100}%`;b.style.background=color;b.title=`tick ${tick} · ${P.time(tick)} · ${title}`;b.setAttribute('aria-label',b.title);if(width)b.style.width=`${width/doc.actions.length*100}%`;b.onclick=e=>{e.stopPropagation();seek(tick);};$(track).append(b);return b;}
   function numericTrack(track,entries,format,dense=false){
     const lanes=[],width=$('timeline-scroll').clientWidth*Number($('zoom').value);let lastLabel=-1000,lastWidth=0;
@@ -151,7 +158,7 @@
     for(let t=0;t<=doc.actions.length;t+=200){const e=text('span',P.time(t).slice(0,5));e.style.left=`${t/doc.actions.length*100}%`;$('ruler').append(e);}
     let start=0,phase='战斗';for(const e of doc.events.filter(e=>e.kind==='phase'&&e.player===0)){marker('phase-track',start,phase==='持包返程'?'#77c6aa':phase==='运输窗口'?'#d4ab64':'#5ba6ba',phase,e.tick-start);start=e.tick;phase=e.to;}marker('phase-track',start,'#5ba6ba',phase,doc.actions.length-start);
     const eventGroups=new Map();for(const e of doc.events.filter(e=>e.kind!=='phase'&&e.kind!=='bomb')){if(!eventGroups.has(e.tick))eventGroups.set(e.tick,[]);eventGroups.get(e.tick).push(e);}
-    numericTrack('event-track',[...eventGroups].sort(([a],[b])=>a-b).map(([tick,events])=>({tick,value:sum(currentReward(tick)),title:events.map(e=>`${e.player===0?'模型':'对手'} ${labels[e.kind]||e.kind}`).join('；')+' · '+rewardEvidence(tick)})),v=>'R '+(v>0?'+':'')+number(v));
+    numericTrack('event-track',[...eventGroups].sort(([a],[b])=>a-b).map(([tick,events])=>({tick,value:sum(currentReward(tick)),title:events.map(e=>`${e.player===0?'模型':'对手'} ${labels[e.kind]||e.kind}`).join('；')+' · '+rewardEvidence(tick)})),v=>doc.meta.reward_status==='unrecorded'?'R 未记录':'R '+(v>0?'+':'')+number(v));
     const rewardPid=Number($('reward-player').value);for(const r of doc.rewards){const components=r[rewardPid+1];if(Object.keys(components).length)marker('reward-track',r[0],sum(components)<0?'#e78f94':'#7bcaac',`${rewardPid===0?'模型':'对手'}奖励增量 ${number(sum(components))} · ${Object.entries(components).map(([k,v])=>`${V.reward(k).name} ${number(v)}`).join('；')}`);}
     for(const a of rows)marker('annotation-track',a.tick,'#e192a6',a.note||a.category);
     D.renderTrack($('dagger-track'),doc,seek,P.time);
@@ -182,12 +189,16 @@
     const row=[...catalog.replays,...(catalog.history_replays||[])].find(r=>r.id===id);if(!row)throw Error('未知 replay ID');
     const response=await fetch(`review-replays/${row.file}`);if(!response.ok)throw Error(`录像 HTTP ${response.status}`);const bytes=new Uint8Array(await response.arrayBuffer());if(bytes.length!==row.bytes||await P.sha256(bytes)!==row.sha256)throw Error('录像文件 hash / 大小不匹配');
     const next=P.validate(JSON.parse(new TextDecoder().decode(bytes)));const mapResponse=await fetch('assets/maps/levels.json');if(!mapResponse.ok)throw Error('地图 HTTP');const level=(await mapResponse.json()).find(x=>x.qqt_id===806);if(await P.hash(level)!==next.meta.map_sha256)throw Error('地图 hash');
-    const simBytes=await(await fetch('sim.js')).arrayBuffer();if(await P.sha256(simBytes)!==next.meta.simulator_sha256)throw Error('模拟器版本不匹配');
+    const versioned=next.meta.simulator_sha256===P.ROUTE_SIM_HASH,simPath=versioned?'review-sim/route-v35.js':'sim.js';
+    const sr=await fetch(simPath);if(!sr.ok)throw Error('模拟器 HTTP');const simBytes=await sr.arrayBuffer();if(await P.sha256(simBytes)!==next.meta.simulator_sha256)throw Error('模拟器版本不匹配');
+    if(versioned){const current=window.QQT;try{await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=simPath;script.onload=resolve;script.onerror=()=>reject(Error('模拟器加载失败'));document.head.append(script);});P.registerSimulator(P.ROUTE_SIM_HASH,window.QQT);}finally{window.QQT=current;}}
     const nextPlayer=new P.Player(next,level);await nextPlayer.verify();const assets=await QQTVisual.loadAssets(level);if(token!==loadToken)return;
     Object.defineProperty(next,'asset_sha256',{value:row.sha256});
     doc=next;player=nextPlayer;preview=new P.Player(doc,level);preview.cache=player.cache;rewardByTick=new Map(doc.rewards.map(r=>[r[0],r]));curveCache=null;renderer=QQTVisual.createRenderer($('game'),level,assets);rows=[];editing=null;$('annotation-form').hidden=true;
     try{const saved=localStorage.getItem(storageKey());if(saved)rows=P.validateAnnotations(JSON.parse(saved),doc);}catch(_){say('已有标注无效或存储不可用');}
     $('episode-title').textContent=(doc.meta.route?.kind==='fixture'?'合成测试 fixture · ':'')+`模型 P0 · ${doc.meta.model} 对阵 对手 P1`;$('episode-meta').textContent=`${doc.meta.scene_name||'历史抢包对战'} · qqt_id ${doc.meta.map} · ${doc.meta.scene_rules||doc.meta.variant} · 对手 ${doc.meta.opponent} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)} · map ${doc.meta.map_sha256.slice(0,12)}`;$('terminal').textContent=`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
+    $('route-experiment').hidden=!doc.meta.diagnostic;
+    let warning=$('episode-warning');if(!warning){warning=text('p','','diagnostic-warning');warning.id='episode-warning';document.querySelector('.episode-head').after(warning);}warning.hidden=!doc.meta.diagnostic;warning.textContent=doc.meta.diagnostic?'诊断场景，不代表自然完整对局成功 · 预置掉包 / assist-off / 固定向上对手':'';
     $('seek').max=doc.actions.length;$('duration').textContent=P.time(doc.actions.length);$('integrity').style.color='#82d2b6';
     curveOptions();daggerEpisode();
     if(daggerCatalog){const related=daggerCatalog.runs.find(r=>r.checkpoint_sha256===doc.meta.checkpoint_sha256);if(related)$('dagger-run').value=related.id;await daggerSummary($('dagger-run').value);}
@@ -195,6 +206,7 @@
     details($('teacher'),['eligible','query','accept','reject'].map(k=>[k,doc.meta.teacher?.[k]??'未测量']));
     $('provenance').replaceChildren();for(const [k,v] of [['Episode',doc.meta.episode_id],['Checkpoint SHA',doc.meta.checkpoint_sha256],['Model SHA',doc.meta.model_sha256],['Simulator SHA',doc.meta.simulator_sha256],['Opponent SHA',doc.meta.opponent_sha256],['Replay SHA',row.sha256],['Reward',doc.meta.reward_source||'未测量'],['原始 / gzip',`${row.bytes} / ${row.gzip_bytes} bytes`]])$('provenance').append(text('div',`${k}: ${v}`));
     if(doc.meta.route)for(const [k,v]of Object.entries(doc.meta.route).filter(([k])=>k.endsWith('_sha256'))) $('provenance').append(text('div',`路线 ${k}: ${v}`));
+    if(doc.meta.critic_sha256)$('provenance').append(text('div',`同代塑形 Critic NPZ SHA: ${doc.meta.critic_sha256}`));
     $('canvas-loading').hidden=true;list();timeline();annotations();seek(Math.min(doc.actions.length,Math.max(0,Number.isInteger(tick)?tick:0)));$('integrity').textContent='hash 已验证';say('录像与间隔状态 hash 校验通过');
   }
   function fail(e){playing=false;say(e.message);$('canvas-loading').hidden=false;$('canvas-loading').textContent=e.message;$('integrity').textContent='验证失败';}
