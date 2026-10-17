@@ -39,4 +39,12 @@ for(const [name,expected]of Object.entries(evidence.source_hashes)){
   }else if(fs.existsSync(name))assert.equal(hash(fs.readFileSync(name)),expected,'sealed local training source '+name);
 }
 const html=fs.readFileSync('web/review.html','utf8');assert(html.includes('data-track-label="failure-track"'));assert(html.includes('返程失败区间'));assert(html.includes('src="review_return.js"'));
+const css=fs.readFileSync('web/review.css','utf8');
+const compactBlock=css.match(/^\.position\s*\{([^}]*)\}/m)?.[1]||'';
+const locatorBlock=css.match(/\.locator-row\s*\{([^}]*)\}/)?.[1]||'';
+const copyButtonBlock=css.match(/\.locator-row button\s*,[\s\S]*?\{([^}]*)\}/)?.[1]||'';
+assert.match(compactBlock,/padding:\s*4px\s+8px/,'定位容器应使用紧凑内边距');
+assert.match(locatorBlock,/gap:\s*4px/,'定位行应缩小垂直留白');
+assert.match(copyButtonBlock,/min-height:\s*30px/,'复制按钮保持易点高度');
+assert.match(css,/\.locator-row input\s*\{[^}]*min-width:\s*0/s,'定位文本允许在窄屏收缩');
 console.log('Return diagnostic GREEN: real tick177, actual vertical period-two motion, plateau not progress, path direction, role separation, normalized A1, null gaps');

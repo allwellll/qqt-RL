@@ -265,8 +265,8 @@ h3 {
   color: #9dd4c7;
 }
 .position {
-  margin-top: 10px;
-  padding: 10px 12px;
+  margin-top: 4px;
+  padding: 4px 8px;
   border: 1px solid #4b7268;
   background: #192923;
   border-radius: 4px;
@@ -293,11 +293,12 @@ h3 {
 }
 .locator-row {
   display: flex;
-  gap: 5px;
-  margin-top: 8px;
+  gap: 4px;
+  margin-top: 4px;
 }
 .locator-row input {
   width: 100%;
+  min-width: 0;
   font:
     10px ui-monospace,
     monospace;
@@ -305,6 +306,9 @@ h3 {
   background: transparent;
   border: 0;
   padding: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .locator-row button,
 .transport button,
@@ -312,6 +316,7 @@ h3 {
 .annotation-row button {
   width: 30px;
   height: 30px;
+  min-height: 30px;
   padding: 6px;
   flex-shrink: 0;
 }
