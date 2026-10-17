@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),P=require('./review_protocol'),V=require('./review_presentation');
-const d=require('./review-replays/'+require('./review-catalog.json').replays.find(r=>r.diagnostic).file),level=require('../scripts/eval_web_hunter').loadLevel();
+const d=require('./review-replays/'+require('./review-catalog.json').replays.find(r=>r.id==='h8-route-v35-g32-drop-return-2026101732').file),level=require('../scripts/eval_web_hunter').loadLevel();
 function pair(tick){const before=new P.Player(d,level),after=new P.Player(d,level);before.seek(tick);after.seek(tick+1);return [before.sim,after.sim];}
 for(const [pid,tick]of [[0,2],[0,20],[0,36],[0,60],[1,104]]){
   const [before,after]=pair(tick),a=d.actions[tick],intents=[a[0],a[2]],authority=JSON.stringify(P.state(before));

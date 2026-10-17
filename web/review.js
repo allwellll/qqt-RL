@@ -280,7 +280,7 @@
     }
     requestAnimationFrame(frame);
   }requestAnimationFrame(frame);
-  try{const r=await fetch('review-catalog.json');if(!r.ok)throw Error(`目录 HTTP ${r.status}`);catalog=await r.json();if(catalog.schema!=='qqt.diagnostic-catalog/v1')throw Error('目录 schema');
+  try{const r=await fetch('review-catalog.json',{cache:'no-store'});if(!r.ok)throw Error(`目录 HTTP ${r.status}`);catalog=await r.json();if(catalog.schema!=='qqt.diagnostic-catalog/v1')throw Error('目录 schema');
     const dr=await fetch('review-dagger/catalog.json');if(!dr.ok)throw Error('DAgger 目录 HTTP');daggerCatalog=await dr.json();if(daggerCatalog.schema!=='qqt.dagger-catalog/v1')throw Error('DAgger 目录 schema');
     for(const row of daggerCatalog.runs)$('dagger-run').add(new Option(row.title+' · '+row.scope,row.id));
     for(const s of catalog.scenes||[])sceneFilter.add(new Option(s.name,s.id));

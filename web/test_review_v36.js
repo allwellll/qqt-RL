@@ -8,6 +8,7 @@ async function main(){
   const catalog=JSON.parse(fs.readFileSync('web/review-catalog.json','utf8'));
   const row=catalog.replays.find(r=>r.id==='h8-route-v36-g32-2026101736');
   assert(row,'v36 must be listed in the review catalog');
+  assert.equal(catalog.replays[0].id,row.id,'the current v36 replay must be the first visible activity');
   assert.equal(row.name,'H8 v36 连续路线 PBRS g32');
   const bytes=fs.readFileSync('web/review-replays/'+row.file);
   assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),row.sha256);
@@ -33,6 +34,11 @@ async function main(){
   assert.equal(d.meta.arena_map_sha256,await P.hash(require('./tactical_arena').buildTacticalArena(level)));
   const player=new P.Player(d,level);
   assert.equal(await player.verify(),true);
+  const app=fs.readFileSync('web/review.js','utf8');
+  assert.match(app,/fetch\(['"]review-catalog\.json['"],\s*\{\s*cache:\s*['"]no-store['"]\s*\}\)/,
+    'catalog fetch must bypass stale browser and intermediary cache entries');
+  assert.match(app,/const p=new URLSearchParams\(location\.hash\.slice\(1\)\);await load\(p\.get\(['"]replay['"]\)\|\|catalog\.replays\[0\]\.id/,
+    'deep links must continue loading by replay ID after catalog reordering');
   console.log('v36 review replay RED/GREEN contract passed');
 }
 main().catch(error=>{console.error(error);process.exitCode=1;});

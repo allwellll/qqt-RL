@@ -34,6 +34,48 @@
   "gzip_bytes": 132397,
   "replays": [
     {
+      "id": "h8-route-v36-g32-2026101736",
+      "name": "H8 v36 连续路线 PBRS g32",
+      "file": "h8-route-v36-g32-2026101736.json",
+      "seed": 2026101736,
+      "variant": "native",
+      "scene": "native",
+      "scene_name": "自然规则对局片段（战术清砖图，300 tick 截断）",
+      "scene_rules": "固定 seed production Sim 对局片段；Tactical Arena 清除可破坏砖，无道具；原生模拟器规则配置；300 tick 截断，非完整终局",
+      "model": "H8 v36 连续路线 PBRS g32",
+      "opponent": "bun.tactical_v2",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "summary": {
+        "ticks": 300,
+        "done": false,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          null,
+          null
+        ]
+      },
+      "sha256": "be911c70b7ddc22857c709f86ff42da0f575bf3c2055d1499846291dd9aebc48",
+      "bytes": 6839,
+      "gzip_bytes": 2355
+    },
+    {
       "id": "h8-route-v35-g32-drop-return-2026101732",
       "seed": 2026101732,
       "scene": "route_drop_return",
@@ -344,48 +386,6 @@
       "sha256": "67349c6814d85d82e9a4082826914cb28de7a5ab23beae06351456798762e88b",
       "bytes": 12639,
       "gzip_bytes": 5261
-    },
-    {
-      "id": "h8-route-v36-g32-2026101736",
-      "name": "H8 v36 连续路线 PBRS g32",
-      "file": "h8-route-v36-g32-2026101736.json",
-      "seed": 2026101736,
-      "variant": "native",
-      "scene": "native",
-      "scene_name": "自然规则对局片段（战术清砖图，300 tick 截断）",
-      "scene_rules": "固定 seed production Sim 对局片段；Tactical Arena 清除可破坏砖，无道具；原生模拟器规则配置；300 tick 截断，非完整终局",
-      "model": "H8 v36 连续路线 PBRS g32",
-      "opponent": "bun.tactical_v2",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "summary": {
-        "ticks": 300,
-        "done": false,
-        "winner": null,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          null,
-          null
-        ]
-      },
-      "sha256": "be911c70b7ddc22857c709f86ff42da0f575bf3c2055d1499846291dd9aebc48",
-      "bytes": 6839,
-      "gzip_bytes": 2355
     }
   ],
   "history_replays": [

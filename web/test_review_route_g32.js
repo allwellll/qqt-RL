@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('fs'),zlib=require('zlib'),P=require('./review_protocol'),R=require('./review_route'),V=require('./review_presentation'),A=require('./review_advantage');
 (async()=>{
-  const c=require('./review-catalog.json'),row=c.replays[0];assert(row.diagnostic);assert.equal(row.seed,2026101732);
+  const c=require('./review-catalog.json'),row=c.replays.find(r=>r.id==='h8-route-v35-g32-drop-return-2026101732');assert(row?.diagnostic);assert.equal(row.seed,2026101732);
   const bytes=fs.readFileSync('web/review-replays/'+row.file),d=JSON.parse(bytes),proof=require('./review-evidence/route-v35-g32.json'),critic=require('./review-evidence/route-v35-critic.json');
   assert.equal(await P.sha256(bytes),row.sha256);assert.equal(bytes.length,row.bytes);assert.equal(zlib.gzipSync(bytes,{level:9}).length,row.gzip_bytes);
   assert.equal(await P.sha256(fs.readFileSync('web/review-sim/route-v35.js')),P.ROUTE_SIM_HASH);
