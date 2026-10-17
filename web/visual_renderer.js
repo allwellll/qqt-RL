@@ -15,6 +15,12 @@
   const MOVE_TO_SPRITE_ROW = [3, 0, 1, 2];
   const MOVE_IDLE = 4;
 
+  function bluePaletteColor(r, g, b) {
+    return r>60 && r>g*1.35 && r>b*1.3
+      ? [Math.round(r*.2), Math.round(r*.55+g*.15), Math.min(255,Math.round(r*.95+b*.05))]
+      : [r,g,b];
+  }
+
   const BUN_ELEMENT_IDS = [8001, 8002, 8003, 8004, 8005, 8006, 8009, 8010, 8011, 8012, 8013, 8028];
   // DIMG 无逐帧时长；与上游 GM 预览一致取 100ms/帧。
   const ITEM_FRAME_MS = 100;
@@ -326,6 +332,21 @@
     const ctx = canvas.getContext('2d', { alpha: false });
     ctx.imageSmoothingEnabled = false;
     const explosions = [];
+    const blueFrames = new WeakMap();
+    function skinFrame(image, palette) {
+      if(palette!=='blue')return image;
+      if(!blueFrames.has(image)) {
+        const frame=document.createElement('canvas');frame.width=image.width;frame.height=image.height;
+        const g=frame.getContext('2d');g.drawImage(image,0,0);
+        const pixels=g.getImageData(0,0,frame.width,frame.height);
+        for(let i=0;i<pixels.data.length;i+=4) {
+          const rgb=bluePaletteColor(pixels.data[i],pixels.data[i+1],pixels.data[i+2]);
+          pixels.data[i]=rgb[0];pixels.data[i+1]=rgb[1];pixels.data[i+2]=rgb[2];
+        }
+        g.putImageData(pixels,0,0);blueFrames.set(image,frame);
+      }
+      return blueFrames.get(image);
+    }
     const faces = [1, 1, 1, 1];
     const movingUntil = [0, 0, 0, 0];
     const pops = [];
@@ -502,9 +523,10 @@
       ctx.beginPath(); ctx.ellipse(cx, cy, CELL * 0.4, CELL * 0.16, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
       ctx.restore();
     }
-    function drawNameTag(cx, y, label, team) {
+    function drawNameTag(cx, y, label, team, prominent = false) {
       ctx.save();
-      ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      ctx.font = `bold ${prominent?24:13}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      if(prominent){const width=ctx.measureText(label).width+14;ctx.fillStyle='rgba(15,18,23,.86)';ctx.fillRect(cx-width/2,y-16,width,32);}
       ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.fillStyle = team ? '#9cc8ff' : '#ffaaa8';
       ctx.strokeText(label, cx, y); ctx.fillText(label, cx, y);
       ctx.restore();
@@ -639,7 +661,7 @@
             airdropVisuals.splice(i, 1);
           }
         }
-        const items = [];
+        const items = [], roleTags = [];
         const coveredCells = structureItems(sim, items);
         groundItems(sim, now, items, coveredCells);
         for (const token of bunTokens(sim)) items.push([
@@ -678,8 +700,10 @@
           const character = motion && motion.characters && assets.characters && assets.characters[motion.characters[pid]];
           const walking = !trapTicks && now < movingUntil[pid];
           const frames = character ? character[walking ? 'walk' : 'stand'][row] : assets.players[team][row];
-          const image = frames[walking ? Math.floor(now / 100) % frames.length : 0];
+          const image = skinFrame(frames[walking ? Math.floor(now / 100) % frames.length : 0],motion?.playerPalettes?.[pid]);
           const x = Math.round(gx * CELL - image.width / 2), y = Math.min(Math.round(playerVisualY(gy, image.height)), 780 - image.height);
+          if(motion?.playerLabels?.[pid])roleTags.push({x:gx*CELL,
+            y:y+image.height*SPRITE_HEAD_FRAC-(sim.bunCarried[pid]>=0?48:16),label:motion.playerLabels[pid],team:teamOf(sim,pid)});
           // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
           if (pid === arrowPid) arrow = { x: gx * CELL, y: y + image.height * SPRITE_HEAD_FRAC };
           const playerCell = Math.floor(gy) * 15 + Math.floor(gx);
@@ -688,10 +712,10 @@
           const z = Math.floor(gy) * Z_ROW_STRIDE + (onWall ? 23 : 18);
           items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
           // 多人时同队共用精灵：脚下队伍色光圈 + 头顶名牌区分。
-          if (playerCount(sim) > 2) {
+          if (playerCount(sim) > 2 || motion?.playerLabels) {
             items.push([z - 1, () => drawTeamRing(gx * CELL, y + image.height - 6, team)]);
             // 真人只靠箭头标识，不另画名牌。
-            if (pid !== (motion ? motion.humanPid : 0)) {
+            if (!motion?.playerLabels && pid !== (motion ? motion.humanPid : 0)) {
               const label = playerLabel(sim, pid, motion ? motion.humanPid : 0, humanTeam);
               items.push([z + 4, () => drawNameTag(gx * CELL, y + image.height * SPRITE_HEAD_FRAC - 6, label, team)]);
             }
@@ -726,6 +750,11 @@
         }
         items.sort((a, b) => a[0] - b[0]);
         for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
+        for(let i=0;i<roleTags.length;i++){
+          const tag=roleTags[i];tag.y=Math.max(-BOARD_OFFSET+16,tag.y);
+          if(i && Math.abs(tag.x-roleTags[i-1].x)<112 && Math.abs(tag.y-roleTags[i-1].y)<34)tag.y+=34;
+          drawNameTag(Math.max(58,Math.min(canvas.width-58,tag.x)),tag.y,tag.label,tag.team,true);
+        }
         const birdFraction = motion && !sim.done ? Math.max(0, Math.min(1, (now - motion.lastTickT) / motion.tickMs)) : 0;
         const bird = sim.birdFlight ? sim.birdFlight(birdFraction) : null;
         if (assets.items) for (const { drop, startedAt } of airdropVisuals) {
@@ -744,7 +773,7 @@
           ctx.fillRect(0, 0, canvas.width, BOARD_H);
         }
         ctx.filter = 'none';
-        if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0);
+        if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0, motion?.playerLabels);
       } finally { ctx.restore(); }
       // Only the playfield was dimmed; HUD/result rendering remains legible.
       ctx.filter = 'none';
@@ -787,7 +816,7 @@
       ctx.drawImage(image, ax, ay);
     }
     // Compact spawn markers keep paths visible, including in spectator/replay views.
-    function drawRespawnCountdowns(sim, humanPid) {
+    function drawRespawnCountdowns(sim, humanPid, labels) {
       for (const marker of respawnMarkers(sim, humanPid)) {
         const x = marker.col * CELL, y = marker.row * CELL;
         ctx.save();
@@ -795,7 +824,7 @@
         ctx.lineJoin = 'round';
         ctx.strokeStyle = marker.team === 0 ? '#8ee9ff' : '#ffa6bf'; ctx.lineWidth = 3;
         ctx.beginPath(); ctx.ellipse(x, y + CELL * .2, CELL * .36, CELL * .16, 0, 0, Math.PI * 2); ctx.stroke();
-        const text = `${marker.label} · ${marker.seconds}秒复活`;
+        const text = `${labels?.[marker.pid] || marker.label} · ${marker.seconds}秒复活`;
         const labelX = Math.max(96, Math.min(canvas.width - 96, x));
         const labelY = Math.max(16, y - CELL * .35);
         ctx.font = 'bold 24px sans-serif'; ctx.lineWidth = 5;
@@ -807,5 +836,5 @@
     return { render, addExplosion, reset };
   }
 
-  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, AIRDROP_ANIMATION_TICKS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, respawnMarkers, deathOverlayAlpha, withContextState, heldItemSpriteKey, playerLabel, matchResult, bunTokens, explosionFrame, loadAssets, createRenderer };
+  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, AIRDROP_ANIMATION_TICKS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, playerVisualY, respawnSeconds, respawnMarkers, deathOverlayAlpha, withContextState, heldItemSpriteKey, playerLabel, matchResult, bunTokens, explosionFrame, loadAssets, createRenderer, bluePaletteColor };
 });

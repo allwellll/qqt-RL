@@ -344,6 +344,25 @@ button img {
   gap: 8px;
   margin: 12px 0 9px;
 }
+.seat-legend { display: flex; gap: 8px 16px; flex-wrap: wrap; margin: 9px 0 12px; font-size: 11px; font-weight: 600; }
+.model-seat { color: #ffa6a5; border-left: 3px solid #e86868; padding-left: 7px; }
+.opponent-seat { color: #9dcaff; border-left: 3px solid #438fed; padding-left: 7px; }
+.display-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; padding: 7px 0 9px; border-bottom: 1px solid #2f333d; font-size: 11px; }
+.display-controls label, .component-head label { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.display-controls select { min-height: 26px; padding: 3px 5px; }
+.display-controls output { color: #9ca6b4; font-size: 10px; font-variant-numeric: tabular-nums; }
+.display-controls details { color: #a4b4c5; }
+.display-controls details p { max-width: 620px; line-height: 1.7; margin-top: 8px; color: #abb5c2; }
+.timeline-layout { display: grid; grid-template-columns: 104px minmax(0,1fr); border: 1px solid #2f333d; border-radius: 4px; overflow: hidden; }
+#timeline-labels { background: #20232b; border-right: 1px solid #363c48; }
+.ruler-label { height: 24px; font-size: 10px; color: #8995a6; padding: 5px 8px; }
+.track-label { height: 36px; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 0 8px; border-bottom: 1px solid #303642; cursor: help; }
+.track-label strong { font-size: 11px; font-weight: 600; }
+.track-label small { font-size: 9px; color: #99a5b7; white-space: nowrap; }
+.component-head { display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; color: #9aa7b9; font-size: 10px; margin: 12px 0 8px; }
+.component span:first-child { min-width: 0; overflow-wrap: anywhere; font-family: inherit; }
+.component small { display: block; color: #939eae; font: 9px ui-monospace,monospace; }
+.component.untranslated { color: #ffb76b; border: 1px solid #ce9447; }
 .timeline-head span {
   font-size: 9px;
   color: #9099a7;
@@ -378,12 +397,13 @@ button img {
   background: #e18aa0;
 }
 #timeline-scroll {
+  min-width: 0;
   overflow-x: auto;
   border: 1px solid #2f333d;
   border-radius: 4px;
 }
 #timeline {
-  height: 124px;
+  height: 168px;
   position: relative;
   cursor: crosshair;
   background: #181b21;
@@ -403,13 +423,13 @@ button img {
   top: 6px;
 }
 .track {
-  height: 22px;
+  height: 36px;
   position: relative;
   border-bottom: 1px solid #282d35;
 }
 .mark {
   position: absolute;
-  top: 4px;
+  top: 10px;
   width: 7px;
   height: 14px;
   border: 0;
@@ -420,7 +440,7 @@ button img {
 }
 .phase-mark {
   height: 13px;
-  top: 4px;
+  top: 10px;
   transform: none;
   min-width: 2px;
   opacity: 0.65;

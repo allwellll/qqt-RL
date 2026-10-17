@@ -31,6 +31,20 @@ assert(password,'QQT_SETTINGS_PASSWORD is required; never saved in evidence');
   const page=await context.newPage(),errors=[],consoleErrors=[],httpErrors=[],replayRequests=[];
   page.on('request',r=>{if(new URL(r.url()).pathname.includes('/review-replays/'))replayRequests.push(new URL(r.url()).pathname);});
   page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text());});page.on('response',r=>{if(r.status()>=400)httpErrors.push({path:new URL(r.url()).pathname,status:r.status()});});
+  await page.addInitScript(()=>{
+    window.reviewFrames=[];window.reviewCanvasLabels=new Set();
+    const fillText=CanvasRenderingContext2D.prototype.fillText;
+    CanvasRenderingContext2D.prototype.fillText=function(value,...args){if(value==='模型 P0'||value==='对手 P1')reviewCanvasLabels.add(value);return fillText.call(this,value,...args);};
+    let visual;
+    Object.defineProperty(window,'QQTVisual',{configurable:true,get:()=>visual,set(api){
+      visual=api;const create=api.createRenderer;
+      api.createRenderer=(...args)=>{const renderer=create(...args),render=renderer.render;
+        renderer.render=(sim,now,motion)=>{if(motion?.playerLabels){reviewFrames.push({tick:sim.t,now,
+          prev:motion.prevPos.slice(),next:motion.curPos.slice(),fraction:motion.fraction,smooth:motion.smooth.slice(),
+          authority:JSON.stringify({pos:Array.from(sim.pos),alive:sim.alive,carried:sim.bunCarried,trapped:sim.trapped,fuse:Array.from(sim.fuse)})});if(reviewFrames.length>2000)reviewFrames.shift();}
+          return render(sim,now,motion);};return renderer;};
+    }});
+  });
   await page.goto(base+'review.html');await page.waitForFunction(()=>document.getElementById('integrity').textContent==='hash 已验证',null,{timeout:90000});
   assert(await page.locator('#advanced-settings').isVisible());assert(!await page.locator('#password-dialog').isVisible());
   const catalog=await page.evaluate(async()=>await(await fetch('review-catalog.json')).json()),id=catalog.replays[0].id;
@@ -39,15 +53,58 @@ assert(password,'QQT_SETTINGS_PASSWORD is required; never saved in evidence');
   if(catalog.replays.length>1){await page.locator(`[data-replay="${catalog.replays[1].id}"]`).click();await page.waitForFunction(id=>document.getElementById('locator').value.startsWith(id+'@'),catalog.replays[1].id);assert.equal(new Set(replayRequests).size,2);await page.locator(`[data-replay="${id}"]`).click();await page.waitForFunction(id=>document.getElementById('locator').value.startsWith(id+'@'),id);}
   await page.waitForFunction(()=>Array.from(document.querySelectorAll('button img')).every(i=>i.complete&&i.naturalWidth>0));
   const iconPixels=await page.locator('#play-icon').evaluate(i=>{const c=document.createElement('canvas');c.width=c.height=24;const g=c.getContext('2d');g.drawImage(i,0,0,24,24);const pixels=g.getImageData(0,0,24,24).data;return Array.from(pixels).filter((v,k)=>k%4===3&&v>0).length;});assert(iconPixels>15);
-  await page.locator('#play').click();await page.waitForFunction(()=>Number(document.getElementById('seek').value)>=3);await page.locator('#play').click();
+  assert.equal(await page.locator('#frame-rate').inputValue(),'60');assert(await page.locator('#smooth').isChecked());
+  assert((await page.locator('#episode-title').textContent()).includes('模型 P0'));assert((await page.locator('#episode-title').textContent()).includes('对手 P1'));
+  assert((await page.locator('.inspector .seat-legend').textContent()).includes('对手 P1'));
+  assert.deepEqual(await page.locator('.track-label strong').allTextContents(),['阶段轨','关键事件轨','Reward 轨','我的标注轨']);
+  assert(await page.locator('.track-label').evaluateAll(es=>es.every(e=>e.title&&e.querySelector('small').textContent)));
+  assert.equal(await page.locator('.untranslated').count(),0);
+  assert(await page.locator('#components .component').evaluateAll(es=>es.every(e=>/[\u4e00-\u9fff]/.test(e.textContent)&&e.title.includes(e.dataset.component))));
+  assert(await page.locator('#curve-component option').evaluateAll(es=>es.every(e=>/[\u4e00-\u9fff]/.test(e.textContent))));
+  await page.locator('#english-rewards').check();assert(await page.locator('#components small').count()>0);await page.locator('#english-rewards').uncheck();
+  const visualFixture=await page.evaluate(async()=>{
+    const c=await(await fetch('review-catalog.json')).json(),d=await(await fetch('review-replays/'+c.replays[0].file)).json();
+    const level=(await(await fetch('assets/maps/levels.json')).json()).find(l=>l.qqt_id===806),p=new QQTReview.Player(d,level);
+    let safeTick=0;while(p.sim.t<d.actions.length){const before=QQTReview.state(p.sim);p.step();if(QQTReviewView.canInterpolate(before,p.sim,0,d.events)){safeTick=before.t;break;}}
+    return {safeTick,breakpoint:d.events.find(e=>['death','revive','control','drop','pickup'].includes(e.kind)&&e.tick>1)};
+  });assert(visualFixture.breakpoint);
+  await page.locator('#seek').evaluate((e,t)=>{e.value=t;e.dispatchEvent(new Event('input'));},String(visualFixture.safeTick));
+  await page.evaluate(()=>reviewFrames.length=0);await page.locator('#play').click();await page.waitForTimeout(1800);await page.locator('#play').click();
+  const samples=await page.evaluate(()=>reviewFrames);assert(samples.length>50,'60 fps target renders substantially above 10 Hz');
+  const grouped=new Map();for(const f of samples){assert(Number.isInteger(f.tick));const group=grouped.get(f.tick)||[];group.push(f);grouped.set(f.tick,group);}
+  for(const group of grouped.values())assert.equal(new Set(group.map(f=>f.authority)).size,1,'authoritative state is fixed inside tick');
+  assert([...grouped.values()].some(group=>group.filter(f=>f.smooth.some(Boolean)).length>2&&new Set(group.map(f=>f.fraction.toFixed(3))).size>2),'rAF interpolates adjacent-tick positions');
+  const smoothFrames=samples.filter(f=>f.fraction>0&&f.smooth.some(Boolean)).length;assert(smoothFrames>5);
+  await page.locator('#smooth').uncheck();await page.evaluate(()=>reviewFrames.length=0);await page.locator('#play').click();await page.waitForTimeout(350);await page.locator('#play').click();
+  assert(await page.evaluate(()=>reviewFrames.every(f=>JSON.stringify(f.prev)===JSON.stringify(f.next))));await page.locator('#smooth').check();
+  await page.locator('#frame-rate').selectOption('30');assert((await page.locator('#refresh-status').textContent()).includes('30 fps'));await page.locator('#frame-rate').selectOption('60');
+  const breakpoint=visualFixture.breakpoint;await page.locator('#seek').evaluate((e,t)=>{e.value=t;e.dispatchEvent(new Event('input'));},String(breakpoint.tick-1));
+  await page.locator('#speed').selectOption('0.25');await page.evaluate(()=>reviewFrames.length=0);await page.locator('#play').click();await page.waitForFunction(t=>Number(document.getElementById('seek').value)>=t,breakpoint.tick);await page.locator('#play').click();
+  const discontinuityFrames=await page.evaluate(t=>reviewFrames.filter(f=>f.tick===t),breakpoint.tick-1);assert(discontinuityFrames.length>2);assert(discontinuityFrames.every(f=>!f.smooth[breakpoint.player]));
+  await page.locator('#speed').selectOption('1');
+  results.push({visual:'production renderer',default_fps:60,raf_frames_1800ms:samples.length,interpolated_frames:smoothFrames,discrete_state_inside_tick:true,breakpoint:breakpoint.kind,breakpoint_snapped:true,reward_translations:19});
   const paused=await page.locator('#exact-time').textContent();await page.waitForTimeout(350);assert.equal(await page.locator('#exact-time').textContent(),paused);
   await page.locator('#seek').evaluate(e=>{e.value='123';e.dispatchEvent(new Event('input',{bubbles:true}));});
   assert.equal(await page.locator('#exact-time').textContent(),'tick 123 · 00:12.300');assert((await page.locator('#locator').inputValue()).includes('@tick=123'));
+  assert(await page.evaluate(()=>reviewCanvasLabels.has('模型 P0')&&reviewCanvasLabels.has('对手 P1')));
+  const palettePixels=await page.locator('#game').evaluate(c=>{const f=reviewFrames.at(-1),s=JSON.parse(f.authority),g=c.getContext('2d');return [0,1].map(p=>{
+    const x=s.pos[p*2+1]*60,y=30+QQTVisual.playerVisualY(s.pos[p*2],128)+128*.3;
+    const pixels=g.getImageData(Math.round(x-17),Math.round(y),34,25).data;let red=0,blue=0;
+    for(let i=0;i<pixels.length;i+=4){const r=pixels[i],gg=pixels[i+1],b=pixels[i+2];if(r>100&&r>gg*1.5&&r>b*1.5)red++;if(b>100&&b>r*1.5&&b>gg*1.3)blue++;}return {red,blue};});});
+  assert(palettePixels[0].red>30,'model retains original red Maomao');assert(palettePixels[1].blue>30,'opponent is visibly blue');
+  results.push({canvas_role_labels:true,palette_pixels:palettePixels});
   assert(page.url().includes('tick=123'));await page.locator('#step-next').click();assert.equal(await page.locator('#exact-time').textContent(),'tick 124 · 00:12.400');await page.locator('#step-back').click();assert.equal(await page.locator('#exact-time').textContent(),'tick 123 · 00:12.300');
   await page.locator('#copy-position').click();assert((await page.evaluate(()=>navigator.clipboard.readText())).includes('@tick=123'));
   await page.locator('#copy-link').click();assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),page.url());
-  await page.locator('#speed').selectOption('4');await page.locator('#play').click();await page.waitForFunction(()=>Number(document.getElementById('seek').value)>=135);await page.locator('#play').click();
+  await page.locator('#seek').evaluate((e,t)=>{e.value=t;e.dispatchEvent(new Event('input'));},String(visualFixture.safeTick));
+  await page.locator('#speed').selectOption('4');await page.evaluate(()=>reviewFrames.length=0);await page.locator('#play').click();await page.waitForTimeout(700);await page.locator('#play').click();
+  const fastFrames=await page.evaluate(()=>reviewFrames);assert(fastFrames.length>15);assert(Number(await page.locator('#seek').inputValue())>visualFixture.safeTick+10);
+  assert(fastFrames.some(f=>f.fraction>0&&f.smooth.some(Boolean)),'4x retains rAF interpolation');
+  assert(fastFrames.every(f=>Number.isInteger(f.tick)));assert.equal(fastFrames.at(-1).fraction,0,'pause snaps visual position to integer tick');
+  results.push({speed:4,raf_frames_700ms:fastFrames.length,interpolation:true,integer_tick_pause:true});
   await page.locator('#zoom').fill('3');await page.locator('#zoom').dispatchEvent('input');assert.equal(await page.locator('#timeline').evaluate(e=>e.style.width),'300%');
+  const labelLeft=await page.locator('#timeline-labels').evaluate(e=>e.getBoundingClientRect().left);await page.locator('#timeline-scroll').evaluate(e=>e.scrollLeft=300);assert.equal(await page.locator('#timeline-labels').evaluate(e=>e.getBoundingClientRect().left),labelLeft);await page.locator('#timeline-scroll').evaluate(e=>e.scrollLeft=0);
+  assert(await page.locator('#reward-track .mark').evaluateAll(es=>es.every(e=>e.title.includes('奖励')&&!/lesson_task|clawback|settled_/.test(e.title))));
   for(const track of ['phase-track','event-track','reward-track']){const mark=page.locator(`#${track} .mark`).first(),title=await mark.getAttribute('title'),tick=Number(title.match(/^tick (\d+)/)[1]);await mark.click();assert.equal(Number(await page.locator('#seek').inputValue()),tick);}
   const expectedReward=await page.evaluate(async()=>{const c=await(await fetch('review-catalog.json')).json(),d=await(await fetch('review-replays/'+c.replays[0].file)).json(),r=d.rewards.find(r=>Object.keys(r[1]).length),sum=o=>Object.values(o).reduce((a,b)=>a+b,0);return {tick:r[0],delta:sum(r[1]),total:d.rewards.filter(v=>v[0]<=r[0]).reduce((n,v)=>n+sum(v[1]),0),opponent:sum(r[2])};});assert(expectedReward.tick);
   await page.locator('#seek').evaluate((e,t)=>{e.value=t;e.dispatchEvent(new Event('input'));},String(expectedReward.tick));

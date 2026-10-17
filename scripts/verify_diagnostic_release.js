@@ -22,7 +22,7 @@ const api=async suffix=>JSON.parse(await curl(`https://api.github.com/repos/${re
  }
  const info=JSON.parse(await curl(base+'build-info.json?verify='+head));assert.equal(info.commit,head,'public Pages is not expected SHA');record.build_info=info;
  const catalog=JSON.parse(await curl(base+'review-catalog.json?verify='+head));assert.equal(catalog.schema,'qqt.diagnostic-catalog/v1');
- const files=['review.html','review.js','review.css','review_protocol.js','device_auth.js','ui_panels.js','index.html','sim.js','visual_renderer.js','review-catalog.json','assets/review-icons/play.svg','assets/review-icons/copy.svg',...catalog.replays.map(r=>'review-replays/'+r.file)];
+ const files=['review.html','review.js','review.css','review_protocol.js','review_presentation.js','device_auth.js','ui_panels.js','index.html','sim.js','visual_renderer.js','review-catalog.json','assets/review-icons/play.svg','assets/review-icons/copy.svg',...catalog.replays.map(r=>'review-replays/'+r.file)];
  for(const file of files){
   const bytes=await curl(base+file+'?verify='+head),local=fs.readFileSync(path.join('web',file));assert(bytes.equals(local),`public bytes mismatch: ${file}`);
   const row={file,http:200,bytes:bytes.length,sha256:sha(bytes),gzip_bytes:zlib.gzipSync(bytes,{level:9}).length};
