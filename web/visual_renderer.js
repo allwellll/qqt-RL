@@ -523,11 +523,11 @@
       ctx.beginPath(); ctx.ellipse(cx, cy, CELL * 0.4, CELL * 0.16, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
       ctx.restore();
     }
-    function drawNameTag(cx, y, label, team, prominent = false) {
+    function drawNameTag(cx, y, label, team, prominent = false, color = null, size = 24) {
       ctx.save();
-      ctx.font = `bold ${prominent?24:13}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
-      if(prominent){const width=ctx.measureText(label).width+14;ctx.fillStyle='rgba(15,18,23,.86)';ctx.fillRect(cx-width/2,y-16,width,32);}
-      ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.fillStyle = team ? '#9cc8ff' : '#ffaaa8';
+      ctx.font = `bold ${prominent?size:13}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      if(prominent){const width=ctx.measureText(label).width+14,height=Math.max(32,size*1.35);ctx.fillStyle='rgba(15,18,23,.86)';ctx.fillRect(cx-width/2,y-height/2,width,height);}
+      ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.fillStyle = color || (team ? '#9cc8ff' : '#ffaaa8');
       ctx.strokeText(label, cx, y); ctx.fillText(label, cx, y);
       ctx.restore();
     }
@@ -707,7 +707,7 @@
           const pixel=value=>visualOverride?value:Math.round(value);
           const x = pixel(gx * CELL - image.width / 2), y = Math.min(pixel(playerVisualY(gy, image.height)), 780 - image.height);
           if(motion?.playerLabels?.[pid])roleTags.push({x:gx*CELL,
-            y:y+image.height*SPRITE_HEAD_FRAC-(sim.bunCarried[pid]>=0?48:16),label:motion.playerLabels[pid],team:teamOf(sim,pid)});
+            y:y+image.height*SPRITE_HEAD_FRAC-(sim.bunCarried[pid]>=0?48:16),label:motion.playerLabels[pid],team:teamOf(sim,pid),advantage:motion.playerAdvantages?.[pid]});
           // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
           if (pid === arrowPid) arrow = { x: gx * CELL, y: y + image.height * SPRITE_HEAD_FRAC };
           const playerCell = Math.floor(gy) * 15 + Math.floor(gx);
@@ -755,9 +755,18 @@
         items.sort((a, b) => a[0] - b[0]);
         for (const item of items) typeof item[1] === 'function' ? item[1]() : ctx.drawImage(item[1], item[2], item[3]);
         for(let i=0;i<roleTags.length;i++){
-          const tag=roleTags[i];tag.y=Math.max(-BOARD_OFFSET+16,tag.y);
-          if(i && Math.abs(tag.x-roleTags[i-1].x)<112 && Math.abs(tag.y-roleTags[i-1].y)<34)tag.y+=34;
-          drawNameTag(Math.max(58,Math.min(canvas.width-58,tag.x)),tag.y,tag.label,tag.team,true);
+          const scale=Math.max(1,Math.min(1.5,motion?.labelScale||1));
+          const tag=roleTags[i],extra=tag.advantage?54*scale:0;tag.y=Math.max(-BOARD_OFFSET+16*scale+extra,tag.y);
+          const prior=roleTags[i-1];
+          if(prior&&Math.abs(tag.x-prior.x)<220*scale&&tag.y+17*scale>prior.y-(prior.advantage?71:17)*scale&&tag.y-extra-17*scale<prior.y+17*scale)tag.y=prior.y+38*scale+extra;
+          const inset=(tag.advantage?120:58)*scale,x=Math.max(inset,Math.min(canvas.width-inset,tag.x));
+          drawNameTag(x,tag.y,tag.label,tag.team,true,null,24*scale);
+          if(tag.advantage){
+            const fmt=v=>v===null?'未记录':(v>=0?'+':'')+v.toFixed(3);
+            const delta=tag.advantage.delta,color=delta===null?'#d1d4dc':delta<0?'#ff9caa':'#8de3c5';
+            drawNameTag(x,tag.y-28*scale,`优势增量 ΔA ${fmt(delta)}`,tag.team,true,color,20*scale);
+            drawNameTag(x,tag.y-52*scale,`A ${fmt(tag.advantage.advantage)}`,tag.team,true,'#e2e5eb',18*scale);
+          }
         }
         const birdFraction = motion && !sim.done ? Math.max(0, Math.min(1, (now - motion.lastTickT) / motion.tickMs)) : 0;
         const bird = sim.birdFlight ? sim.birdFlight(birdFraction) : null;

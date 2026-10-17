@@ -1,0 +1,14 @@
+{
+  "schema": "qqt.diagnostic-matrix/v1",
+  "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+  "selection": "Retain every declared episode; report rule-based failure labels without post-hoc selection",
+  "policy": "production greedy ONNX actor, joint move x ability (item use is ability=2)",
+  "cpu_only": true,
+  "base_map": 806,
+  "scene_scope": "Three production rule/start configurations on the sole verified native Bun map, not three different map assets",
+  "scenes": [
+    {"id":"native","name":"原生抢包对战","seeds":[2026101900,2026101901],"opponent":"bun.hunter/normal","max_ticks":2400,"source":"QQT.Sim.reset / native rules"},
+    {"id":"open","name":"开放抢包对战","seeds":[2026101902,2026101903],"opponent":"bun.hunter/normal","max_ticks":2400,"source":"scripts/eval_web_hunter.js / cleared destructibles"},
+    {"id":"carry_home","name":"持包返程任务","seeds":[2026101904,2026101905],"opponent":"bun.hunter/normal","max_ticks":300,"source":"H8 sealed scripts/je05_web_tasks.js setup(carry_home)"}
+  ]
+}

@@ -36,7 +36,7 @@ COMPONENTS = ('lesson_task', 'global_safety', 'settled_kill', 'settled_shaping',
               'item_positive', 'item_clawback')
 
 
-def convert(frame, linger):
+def convert(frame, linger, scene=8):
     core = TEMPLATE.core
     mapping = {'pos': 'pos', 'fuse': 'fuse', 'owner': 'owner', 'bomb_blast': 'bombBlast',
                'blast_linger': 'blastLinger', 'brick_linger': 'brickLinger', 'wall': 'wall',
@@ -54,7 +54,7 @@ def convert(frame, linger):
                'slide_dir': 'slideDir', 'last_move_dir': 'lastMoveDir', 'trapped': 'trapped'}
     fields = {k: np.asarray(frame[v], dtype=getattr(TEMPLATE, k).dtype).reshape(getattr(TEMPLATE, k).shape)
               for k, v in mapping.items()}
-    fields.update(core=core, scene=np.array([8], np.int32),
+    fields.update(core=core, scene=np.array([scene], np.int32),
                   blast_owner_linger=linger[None],
                   item_slots=np.array([[([s['item'] for s in row]+[0]*7)[:7] for row in frame['itemSlots']]], np.int8),
                   item_counts=np.array([[([s['count'] for s in row]+[0]*7)[:7] for row in frame['itemSlots']]], np.int16))
@@ -186,7 +186,8 @@ def run(file, verify=False):
     zeros = jnp.zeros((1, 2), bool)
     carry = (aux, jnp.zeros((1, 2), jnp.int16), zeros, zeros, zeros)
     linger = np.zeros((2, 2, 13, 15), np.int8)
-    converted = [convert(frames[0]['state'], linger)]
+    scene={'native':8,'open':0,'carry_home':2}.get(doc['meta'].get('scene'),8)
+    converted = [convert(frames[0]['state'], linger,scene)]
     infos, causes = [], [[False, False], [False, False]]
     for i, entry in enumerate(frames[1:]):
         entry['prior_legal'] = frames[i]['legal']
@@ -197,7 +198,7 @@ def run(file, verify=False):
                 for axis, key in enumerate(['horzCovered', 'vertCovered']):
                     mask = np.array(source[key], bool).reshape(13, 15)
                     linger[source['owner'], axis][mask] = 2
-        converted.append(convert(entry['state'], linger))
+        converted.append(convert(entry['state'], linger,scene))
     sparse, totals, self_ticks = [], np.zeros(2), []
     for start in range(0, len(infos), CHUNK):
         n = min(CHUNK, len(infos)-start)

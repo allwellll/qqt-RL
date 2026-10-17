@@ -1,0 +1,53 @@
+{
+  "schema": "qqt.h8-critic/v1",
+  "status": "extracted",
+  "generation": 32,
+  "architecture": {
+    "name": "transformer",
+    "obs": [
+      24,
+      13,
+      15
+    ],
+    "global_dim": 24,
+    "embed": 392,
+    "depth": 4,
+    "heads": 4,
+    "patch": 3,
+    "value_bins": 128
+  },
+  "gamma": 0.995,
+  "value_range": [
+    -20.0,
+    20.0
+  ],
+  "replicas": 8,
+  "replicas_exact": true,
+  "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+  "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+  "ema_policy_sha256": "a40d60aae90cb1f57a8a54c35b2b4f644e62b361ea2a44f8ec0f3ce87b214d1c",
+  "selected_actor": "raw policy.pt; state.live.params.actor exact; EMA has matching architecture but is not used",
+  "state_sha256": "f2fcf9c44401b924776e7e7e990bceebe1660fb1397de30d1476416766716ec7",
+  "parameters": 75,
+  "device": "cpu",
+  "input_encoding": "bun24-trap-timer-v2",
+  "output": "expected HL-Gauss value over 128 bins",
+  "actor_state_policy_exact": true,
+  "observation_normalization": "production encodeObsJAX(24) and encodeStateJAX(bun24-trap-timer-v2); fixed channel/global scaling; no fitted running normalization",
+  "network_sha256": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+  "plan_sha256": "210385d933f8695f1ee1be239fe4ee93b434c428a7cd7a7b05f83264300fe2f2",
+  "parity": {
+    "fixture_count": 3,
+    "checkpoint_values": [
+      5.153899669647217,
+      5.152127742767334,
+      5.185464382171631
+    ],
+    "extracted_values": [
+      5.153899669647217,
+      5.152127742767334,
+      5.185464382171631
+    ],
+    "max_error": 0.0
+  }
+}

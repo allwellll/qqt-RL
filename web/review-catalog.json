@@ -1,234 +1,137 @@
 {
   "schema": "qqt.diagnostic-catalog/v1",
-  "model": "H8 v34 g32 raw",
-  "screened_episodes": 24,
-  "seed_ranges": [
-    [
-      2026101740,
-      2026101751
-    ],
-    [
-      2026101760,
-      2026101771
-    ]
+  "model": "H8 v34 g32 raw · 真实 Critic A1",
+  "scenes": [
+    {
+      "id": "native",
+      "name": "原生抢包对战",
+      "source": "QQT.Sim.reset / native rules",
+      "base_map": 806
+    },
+    {
+      "id": "open",
+      "name": "开放抢包对战",
+      "source": "scripts/eval_web_hunter.js / cleared destructibles",
+      "base_map": 806
+    },
+    {
+      "id": "carry_home",
+      "name": "持包返程任务",
+      "source": "H8 sealed scripts/je05_web_tasks.js setup(carry_home)",
+      "base_map": 806
+    }
   ],
-  "selection": "first episode per declared failure, then earliest failed episodes, maximum six",
-  "observed_failures": [
-    "enemy_drop_unpicked",
-    "window_closed_empty",
-    "return_deviation",
-    "self_bomb"
-  ],
-  "unobserved_failures": [
-    "cage_no_delivery",
-    "stagnation"
-  ],
-  "raw_bytes": 277988,
-  "gzip_bytes": 55243,
+  "screened_episodes": 6,
+  "selection": "Retain every declared episode; report rule-based failure labels without post-hoc selection",
+  "predeclared_matrix": "review-evidence/matrix.json",
+  "raw_bytes": 337836,
+  "gzip_bytes": 122296,
   "replays": [
     {
-      "id": "h8-g32-native-hard-2026101760",
-      "file": "h8-g32-native-hard-2026101760.json",
-      "seed": 2026101760,
+      "id": "h8-g32-native-2026101901",
+      "file": "h8-g32-native-2026101901.json",
+      "seed": 2026101901,
       "variant": "native",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/hard",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          18.650000765919685,
-          -12.500000208616257
-        ],
-        "failures": [
-          "enemy_drop_unpicked",
-          "window_closed_empty"
-        ]
-      },
-      "sha256": "f1aab13aaf34e8e996ed52d4a8e6bc2bc930307dd4096fbf369cadb4a372f7ff",
-      "bytes": 43881,
-      "gzip_bytes": 8635
-    },
-    {
-      "id": "h8-g32-native-2026101740",
-      "file": "h8-g32-native-2026101740.json",
-      "seed": 2026101740,
-      "variant": "native",
+      "scene": "native",
+      "scene_name": "原生抢包对战",
+      "scene_rules": "原生砖块、糖泡、道具；240秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "6ec0edba759335ac38fa4b2ef934324438698f04439e65a9b99185524fe2b5c3",
       "model": "H8 v34 g32 raw",
       "opponent": "bun.hunter/normal",
       "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
       "summary": {
-        "ticks": 1783,
+        "ticks": 2400,
         "done": true,
-        "winner": 0,
+        "winner": null,
         "score": [
-          1,
+          0,
           0
         ],
         "stored": [
           [
             1,
-            1
+            0
           ],
           [
             0,
-            0
+            1
           ]
         ],
         "reward": [
-          58.13749997317791,
-          -35.99999921023846
+          149.9999981224537,
+          -107.99999976158142
         ],
         "failures": [
           "window_closed_empty"
         ]
       },
-      "sha256": "6cc7a2426d58aba8f00cee36edef1ec4d48e60a15cd848dcfe1977c30587efa1",
-      "bytes": 41637,
-      "gzip_bytes": 9037
+      "sha256": "33b22524b9ba0c0c4ea3cfe077c7a5ea32dea844585fdfaa732ff0d72a15b496",
+      "bytes": 131448,
+      "gzip_bytes": 45577
     },
     {
-      "id": "h8-g32-native-2026101742",
-      "file": "h8-g32-native-2026101742.json",
-      "seed": 2026101742,
+      "id": "h8-g32-native-2026101900",
+      "file": "h8-g32-native-2026101900.json",
+      "seed": 2026101900,
       "variant": "native",
+      "scene": "native",
+      "scene_name": "原生抢包对战",
+      "scene_rules": "原生砖块、糖泡、道具；240秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "6ec0edba759335ac38fa4b2ef934324438698f04439e65a9b99185524fe2b5c3",
       "model": "H8 v34 g32 raw",
       "opponent": "bun.hunter/normal",
       "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
       "summary": {
         "ticks": 2400,
         "done": true,
-        "winner": 1,
+        "winner": null,
         "score": [
           0,
-          0
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          -12,
-          -22.5
-        ],
-        "failures": [
-          "window_closed_empty",
-          "return_deviation"
-        ]
-      },
-      "sha256": "411ddc6f80ff1b2af361f9496f5365173d5b7fbcb231cc0e0dbdcccf7bbb0b4f",
-      "bytes": 53502,
-      "gzip_bytes": 10135
-    },
-    {
-      "id": "h8-g32-native-2026101741",
-      "file": "h8-g32-native-2026101741.json",
-      "seed": 2026101741,
-      "variant": "native",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          -27.99999998509884,
-          3.925000011920929
-        ],
-        "failures": [
-          "self_bomb"
-        ]
-      },
-      "sha256": "713884823b0c12552b3104607f1f67474f69c6d873bc0f74d9fed07596f5fc17",
-      "bytes": 43788,
-      "gzip_bytes": 8313
-    },
-    {
-      "id": "h8-g32-native-2026101745",
-      "file": "h8-g32-native-2026101745.json",
-      "seed": 2026101745,
-      "variant": "native",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "summary": {
-        "ticks": 2094,
-        "done": true,
-        "winner": 0,
-        "score": [
-          1,
           0
         ],
         "stored": [
           [
             1,
-            1
+            0
           ],
           [
             0,
-            0
+            1
           ]
         ],
         "reward": [
-          12.625000014901161,
-          -63.999999806284904
+          5.000000014901161,
+          -27.999996706843376
         ],
-        "failures": [
-          "window_closed_empty",
-          "return_deviation"
-        ]
+        "failures": []
       },
-      "sha256": "ecbae874fe6248c16617f15f87b0714728bef48dc27bad4ca2ad1701763ae584",
-      "bytes": 48562,
-      "gzip_bytes": 9612
+      "sha256": "9baf54887cff0d323a9d47cdf01e0f9e90556fbb7ad6bf8c131f3280ad501b4c",
+      "bytes": 124965,
+      "gzip_bytes": 44278
     },
     {
-      "id": "h8-g32-open-2026101750",
-      "file": "h8-g32-open-2026101750.json",
-      "seed": 2026101750,
+      "id": "h8-g32-open-2026101902",
+      "file": "h8-g32-open-2026101902.json",
+      "seed": 2026101902,
       "variant": "open",
+      "scene": "open",
+      "scene_name": "开放抢包对战",
+      "scene_rules": "清除可破坏砖块；原生糖泡与道具；240秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "b797292034732d4d5b000ebdae2a5565a26e96aa72e310f28b31b153e4d4ced2",
       "model": "H8 v34 g32 raw",
       "opponent": "bun.hunter/normal",
       "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
       "summary": {
-        "ticks": 2344,
+        "ticks": 291,
         "done": true,
         "winner": 1,
         "score": [
@@ -246,16 +149,143 @@
           ]
         ],
         "reward": [
-          -12.00000187754631,
-          0.49999965727329254
+          1.100000023841858,
+          3.287500023841858
         ],
-        "failures": [
-          "window_closed_empty"
-        ]
+        "failures": []
       },
-      "sha256": "873926035be3c38f8c00baafba6f974ebc213fe10866da53fbc0fbba43472a30",
-      "bytes": 46618,
-      "gzip_bytes": 9511
+      "sha256": "c5e899daed1e2b535821ebc2886cdb3ef0fa42d1fb1afc758d792d7a3c7b3437",
+      "bytes": 22682,
+      "gzip_bytes": 8918
+    },
+    {
+      "id": "h8-g32-open-2026101903",
+      "file": "h8-g32-open-2026101903.json",
+      "seed": 2026101903,
+      "variant": "open",
+      "scene": "open",
+      "scene_name": "开放抢包对战",
+      "scene_rules": "清除可破坏砖块；原生糖泡与道具；240秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "b797292034732d4d5b000ebdae2a5565a26e96aa72e310f28b31b153e4d4ced2",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "summary": {
+        "ticks": 512,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          0.9000000059604645,
+          4.687499970197678
+        ],
+        "failures": []
+      },
+      "sha256": "2f84deaf92bb93f4f4f8ad653e681a4306366f778ed2746bc9895d2e8b567f7e",
+      "bytes": 33414,
+      "gzip_bytes": 13037
+    },
+    {
+      "id": "h8-g32-carry_home-2026101904",
+      "file": "h8-g32-carry_home-2026101904.json",
+      "seed": 2026101904,
+      "variant": "native",
+      "scene": "carry_home",
+      "scene_name": "持包返程任务",
+      "scene_rules": "je05 carry_home：清砖、1HP、持敌包、返程出生；30秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "ba4d95ff1ca61130e034a9e6b362e67da4690afe912ce4c71031717e5b28f854",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "summary": {
+        "ticks": 100,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          0.9375,
+          0
+        ],
+        "failures": []
+      },
+      "sha256": "86d520221777dd20f30fd13f0207e6e0354d1a1c2e1df594f2932343c91cf769",
+      "bytes": 12688,
+      "gzip_bytes": 5225
+    },
+    {
+      "id": "h8-g32-carry_home-2026101905",
+      "file": "h8-g32-carry_home-2026101905.json",
+      "seed": 2026101905,
+      "variant": "native",
+      "scene": "carry_home",
+      "scene_name": "持包返程任务",
+      "scene_rules": "je05 carry_home：清砖、1HP、持敌包、返程出生；30秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "ba4d95ff1ca61130e034a9e6b362e67da4690afe912ce4c71031717e5b28f854",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "summary": {
+        "ticks": 103,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          1,
+          0
+        ],
+        "failures": []
+      },
+      "sha256": "67349c6814d85d82e9a4082826914cb28de7a5ab23beae06351456798762e88b",
+      "bytes": 12639,
+      "gzip_bytes": 5261
     }
   ],
   "history_replays": [
@@ -487,6 +517,237 @@
       "sha256": "0712209cb722e409c2f9c7afb56c199ee665716637f2a233b63c9312f8394582",
       "bytes": 37411,
       "gzip_bytes": 4824
+    },
+    {
+      "id": "h8-g32-native-hard-2026101760",
+      "file": "h8-g32-native-hard-2026101760.json",
+      "seed": 2026101760,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/hard",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          18.650000765919685,
+          -12.500000208616257
+        ],
+        "failures": [
+          "enemy_drop_unpicked",
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "f1aab13aaf34e8e996ed52d4a8e6bc2bc930307dd4096fbf369cadb4a372f7ff",
+      "bytes": 43881,
+      "gzip_bytes": 8635
+    },
+    {
+      "id": "h8-g32-native-2026101740",
+      "file": "h8-g32-native-2026101740.json",
+      "seed": 2026101740,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 1783,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          58.13749997317791,
+          -35.99999921023846
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "6cc7a2426d58aba8f00cee36edef1ec4d48e60a15cd848dcfe1977c30587efa1",
+      "bytes": 41637,
+      "gzip_bytes": 9037
+    },
+    {
+      "id": "h8-g32-native-2026101742",
+      "file": "h8-g32-native-2026101742.json",
+      "seed": 2026101742,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          -12,
+          -22.5
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "411ddc6f80ff1b2af361f9496f5365173d5b7fbcb231cc0e0dbdcccf7bbb0b4f",
+      "bytes": 53502,
+      "gzip_bytes": 10135
+    },
+    {
+      "id": "h8-g32-native-2026101741",
+      "file": "h8-g32-native-2026101741.json",
+      "seed": 2026101741,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          -27.99999998509884,
+          3.925000011920929
+        ],
+        "failures": [
+          "self_bomb"
+        ]
+      },
+      "sha256": "713884823b0c12552b3104607f1f67474f69c6d873bc0f74d9fed07596f5fc17",
+      "bytes": 43788,
+      "gzip_bytes": 8313
+    },
+    {
+      "id": "h8-g32-native-2026101745",
+      "file": "h8-g32-native-2026101745.json",
+      "seed": 2026101745,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2094,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          12.625000014901161,
+          -63.999999806284904
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "ecbae874fe6248c16617f15f87b0714728bef48dc27bad4ca2ad1701763ae584",
+      "bytes": 48562,
+      "gzip_bytes": 9612
+    },
+    {
+      "id": "h8-g32-open-2026101750",
+      "file": "h8-g32-open-2026101750.json",
+      "seed": 2026101750,
+      "variant": "open",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2344,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          -12.00000187754631,
+          0.49999965727329254
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "873926035be3c38f8c00baafba6f974ebc213fe10866da53fbc0fbba43472a30",
+      "bytes": 46618,
+      "gzip_bytes": 9511
     }
   ]
 }

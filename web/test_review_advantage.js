@@ -28,7 +28,7 @@ const assert=require('assert'),fs=require('fs'),A=require('./review_advantage'),
   }
   const old=await P.hash(P.identity(doc));doc.advantages.taken_q[0]++;assert.notEqual(old,await P.hash(P.identity(doc)));
   for(const row of catalog.replays){const real=JSON.parse(fs.readFileSync('web/review-replays/'+row.file));
-    if(row.id.startsWith('h8-')){assert.equal(real.meta.advantage.status,'not_recorded');assert.equal(real.meta.advantage.critic_sha256,null);assert.equal(real.advantages.ticks.length,0);A.validate(real);}
+    if(row.id.startsWith('h8-')){assert.equal(real.meta.advantage.status,'recorded');assert.match(real.meta.advantage.critic_sha256,/^[a-f0-9]{64}$/);assert.equal(real.advantages.ticks.length,real.actions.length);assert.equal(real.advantages.delta[0],null);assert(A.legalCount(real,1)>0);A.validate(real);}
   }
-  console.log('A1 GREEN: manual weighted joint fixture, illegal exclusion, terminal, first/gap delta null, sparse columns RED/GREEN, hash, honest missing critic');
+  console.log('A1 GREEN: weighted joint fixture, illegal exclusion, terminal, first/gap delta null, sparse columns RED/GREEN, hash, real H8 critic measurements');
 })().catch(e=>{console.error(e);process.exitCode=1;});

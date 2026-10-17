@@ -25,10 +25,12 @@
     if(!meta||meta.schema!==SCHEMA||!['recorded','not_recorded'].includes(meta.status)||!Number.isFinite(meta.gamma)||meta.gamma<0||meta.gamma>1||meta.action_scope!=='joint_move_ability'||typeof meta.legal_actions!=='string'||!meta.legal_actions||typeof meta.reason!=='string')fail();
     for(const k of ['checkpoint_sha256','policy_sha256','simulator_sha256'])if(meta[k]!==doc.meta[k==='policy_sha256'?'model_sha256':k])fail();
     if(meta.critic_sha256!==null&&!/^[a-f0-9]{64}$/.test(meta.critic_sha256))fail();
-    if(!data||data.schema!==SCHEMA||Object.keys(data).some(k=>!['schema','scale',...COLUMNS].includes(k))||!Number.isFinite(data.scale)||data.scale<=0||data.scale>1e-3)fail();
+    if(!data||data.schema!==SCHEMA||Object.keys(data).some(k=>!['schema','scale','legal_count',...COLUMNS].includes(k))||!Number.isFinite(data.scale)||data.scale<=0||data.scale>1e-3)fail();
+    if(data.legal_count!==undefined&&(!Array.isArray(data.legal_count)||data.legal_count.length!==data.ticks.length||data.legal_count.some(n=>!Number.isInteger(n)||n<1||n>15)))fail();
     if(COLUMNS.some(k=>!Array.isArray(data[k])||data[k].length!==data.ticks.length))fail();
     if(meta.status==='not_recorded'&&(data.ticks.length||meta.critic_sha256!==null||!meta.reason))fail();
     if(meta.status==='recorded'&&(!meta.critic_sha256||!data.ticks.length||!meta.counterfactual_sha256||!/^[a-f0-9]{64}$/.test(meta.counterfactual_sha256)))fail();
+    if(meta.calculation_version&&(meta.measured_count!==data.ticks.length||meta.missing_count!==doc.actions.length-data.ticks.length||!data.legal_count||!meta.reward_hashes||!doc.meta.reward_hashes||JSON.stringify(Object.keys(meta.reward_hashes).sort())!==JSON.stringify(Object.keys(doc.meta.reward_hashes).sort())||Object.keys(meta.reward_hashes).some(k=>meta.reward_hashes[k]!==doc.meta.reward_hashes[k])))fail();
     for(let i=0;i<data.ticks.length;i++){
       const t=data.ticks[i],prior=data.ticks[i-1];
       if(!Number.isInteger(t)||t<1||t>doc.actions.length||(i&&t<=prior))fail();
@@ -43,6 +45,7 @@
     const data=doc.advantages,i=data?.ticks.indexOf(tick)??-1;
     return Object.fromEntries(['taken_q','mean_q','advantage','delta'].map(k=>[k,i<0||data[k][i]===null?null:data[k][i]*data.scale]));
   }
+  function legalCount(doc,tick){const i=doc.advantages?.ticks.indexOf(tick)??-1;return i<0?null:doc.advantages.legal_count?.[i]??null;}
   function missing(meta){
     return {schema:SCHEMA,definition:'Q1=r+gamma*V(next); A1=Q1(taken)-sum(pi_legal*Q1)',
       status:'not_recorded',reason:'生产 Web 导出仅含 Actor；独立训练 Critic 未导出并验证，反事实 reward ledger 分支未验证',gamma:meta.gamma,
@@ -51,5 +54,5 @@
       rng_status:'seeded simulator RNG restorable by draw count; counterfactual ledger equivalence not measured'};
   }
   const empty=()=>({schema:SCHEMA,scale:1e-6,ticks:[],taken_q:[],mean_q:[],advantage:[],delta:[]});
-  return {SCHEMA,calculate,validate,atTick,missing,empty};
+  return {SCHEMA,calculate,validate,atTick,legalCount,missing,empty};
 });

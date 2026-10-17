@@ -108,3 +108,44 @@
 - `npm test` 全量生产回归通过；`npm run test:review` 包含真实来源快照/hash、转换数值、缺字段 null、own/enemy 分离、不推断、稀疏 schema RED/GREEN 与 DAgger identity 篡改拒绝，另用只读原始目录复核来源字节 hash。原有 156 项协议及 19 项 reward 映射回归通过。
 - 无网络 mock 的 Chromium 桌面/手机通过真实质量数值、未记录状态、默认 60 fps / 4x 插值、断点吸附、整数 tick 暂停/seek/单步、蓝色像素与双方文字、授权、标注和深链回归。稀疏轨点击使用隔离的合成协议测试记录，真实录像未注入或持久化测试数据；点击生产轨道按钮确实跳到 tick 321。手机表格横向滚动保留类别列，页面无横向溢出；诊断页 pageerror / console error / HTTP error 为零。
 - 新证据保存在忽略目录 `runs/replay_review_20261017/browser-dagger-local/`、`browser-dagger-public/`、`release-dagger.json` 与 `release_dagger_acceptance_20261017.md`。发布必须等待同一最终 SHA 的 Actions/Pages，再验证页面、录像/catalog、DAgger catalog/汇总/来源文件 HTTP 200 与本地字节/hash/尺寸一致，不覆盖前述审计证据。
+
+## 真实 Critic A1 与多场景追加验收
+
+从干净且同步远端的 `6d1e7a7184aed66f8e00e9279b49f899f9ef50bc` 继续，保留前述 H7、H8、视觉、DAgger 和授权审计。全程 CPU，读取已完成 H8 v34 formal g32 的不可变文件与封存代码；没有训练新模型、使用其他代 Critic、读取可变 checkpoint 或操作训练进程。
+
+### Critic 与优势真实性
+
+- 校验 COMMITTED、policy.pt、ema_policy.pt、state.pkl 与 plan hash。选择 raw policy.pt，确认它与 state.live.params.actor replica 0 逐元素一致；EMA 同架构、不同权重，未参与本批次。Critic 从同一 state.live.params.critic 提取，75 个参数叶、8 副本完全一致；没有从 Actor 的未使用 value head 取值。
+- 原始 checkpoint policy SHA 为 `b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11`；state SHA 为 `f2fcf9c44401b924776e7e7e990bceebe1660fb1397de30d1476416766716ec7`；Critic 规范参数 SHA 为 `7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85`。公开安全提取证据在 `web/review-evidence/h8-g32-critic.json`，保留 EMA、网络和 plan hash。
+- 运行真实训练 Transformer BF16 forward 与 128 bins 的 HL-Gauss value decode（范围 -20 到 20）。输入为生产 encodeObsJAX 的 24×13×15 与 bun24-trap-timer-v2 state24，使用原有固定通道缩放，没有另加 running normalization。3 个固定生产观测在原 checkpoint 与提取模型上的 value 完全相同：5.153899669647217、5.152127742767334、5.185464382171631，最大误差 0。
+- 定义严格为 `Q1=r+0.995*V(next)`、`A1=Q1(taken)-sum(pi_legal*Q1)`，terminal next value=0。gamma=0.995 从真实 plan 及其 receipt hash 重读。动作口径为合法 move×ability 联合动作，ability=2 已包含模型道具决策；每个合法联合分支固定同一对手动作、完整生产 Sim 状态、RNG draw 位置与有状态 reward ledger。取实际生产 ONNX FP32 actor 的 masked move/ability softmax 乘积，再对合法联合动作重归一；执行动作为同 checkpoint 的 greedy policy。该比较分布是生产导出策略分布，不声称 ONNX FP32 logits 与训练 BF16 logits 逐位相同。
+- tick t 的数值对应 s[t-1]→s[t] 的动作与 Reward。ΔA 使用相邻有效决策之差；首项与缺口后为 null。开局 tick 0 不存在已执行决策，显示未记录；对手没有本 checkpoint 的优势，绝不套用模型数值。新批次 5,806 个决策均测得 A1，缺测 0。
+- 所有 tick 的 taken 反事实分支完整 snapshot/info 与原录像一致，全部非零 Reward 分量一致。全量第二次计算的量化列和反事实摘要 hash 完全一致，双方原 reward ledger 又分别整局重算通过。从原始 state.pkl（不用提取 pkl）重载 Critic，以 seed xor 0xA100 的固定 PCG64 抽取每局 8 个随机 tick，另含开局、终局及所需前驱，共复算 112 个 tick 的全部合法分支；Q、均值、A 与 ΔA 最大误差为 4.997314446697487e-07，小于量化半单位 0.0000005。证据为 `reports/replay_a1_verification_20261017.json` 与公开副本。
+
+### 冻结矩阵与文件大小
+
+原生关卡资源审计只确认一张完整可复现的 Bun 底图 806；其他项目的 242 个真实关卡涉及不同玩法，不把它们套成未经验证的 Bun 地图。本批次采用三种真实规则/出生场景，共享底图，页面明确显示规则、qqt_id、map/scene hash 与区分标识：原生抢包；生产 eval 已支持的开放清砖；封存 je05_web_tasks.setup(carry_home) 的清砖、1HP、持敌包返程任务。最后一项初态与原始封存函数的生产 snapshot 完全相同。场景协议及来源代码 hash 单独保留，不伪称三张不同地图。
+
+`reports/replay_a1_matrix_20261017.json` 在生成前冻结 seeds 2026101900–2026101905、场景和真实 Hunter normal 对手。全部预声明局保留，无按结果手选、无修改动作。观察到原生局窗口未切换，开放局两局对手胜，返程两局交付获胜；没有给未观察到的失败类型造标签。原有历史录像继续提供其他已观测失败证据。新批次为默认目录，历史 12 局按需显示，仍按单局懒加载。
+
+| 场景 / seed | ticks | 终局 | raw bytes | gzip bytes |
+| --- | ---: | --- | ---: | ---: |
+| 原生抢包对战 / 2026101900 | 2400 | 平局 | 124965 | 44278 |
+| 原生抢包对战 / 2026101901 | 2400 | 平局 | 131448 | 45577 |
+| 开放抢包对战 / 2026101902 | 291 | 对手胜 | 22682 | 8918 |
+| 开放抢包对战 / 2026101903 | 512 | 对手胜 | 33414 | 13037 |
+| 持包返程任务 / 2026101904 | 100 | 模型胜 | 12688 | 5225 |
+| 持包返程任务 / 2026101905 | 103 | 模型胜 | 12639 | 5261 |
+| 合计 | 5806 | | 337836 | 122296 |
+
+大小按实际 UTF-8 与 gzip level 9 测量。公开协议只增加量化列式 Q、策略均值、A、ΔA、合法动作数（scale=1e-6）及 provenance；没有逐 tick 完整 state、候选 Q 表或 logits。私有原 trace、Critic 参数和反事实分支只保存在忽略目录。六局再次从真实 ONNX 策略与 Hunter 重新生成，双方动作、状态 hash 和终态完全一致，Reward 和与优势复算通过。
+
+### 页面与本地验收
+
+- 画面后第一块为精确时间、定位、播放/暂停、单步、速度和主进度条，紧接完整七轨时间轴；DAgger 卡片移到时间轴之后。桌面和手机 DOM 与实际坐标均验证无间隔卡片，画布底部与播放区顶部相等。行名常驻，优势密集点在缩放后保持轨道紧凑，数值标签及 tooltip 可点击定位。
+- 模型头顶默认显示三行 A、带正负号的“优势增量 ΔA”、模型 P0；对手保留蓝色与“对手 P1”。文字跟随插值浮点位置，边界夹紧并避免双方标签相叠；手机按 Canvas 实际 CSS 尺寸放大，ΔA 实际字号至少 10px。可关闭优势叠加。暂停、seek、单步与深链按整数 tick 同步头顶、右栏与时间轴数值。
+- `npm test` 全量生产回归通过；追加 renderer 改动后 visual parity、death overlay、airdrop/death 与 `npm run test:review` 通过。后者含 18 局当前/历史共 462 项协议检查，19 分量中文映射、连续/不连续状态、手算联合优势/非法动作排除/概率归一/terminal/首项与缺口 delta、合法数/来源证据 schema RED/GREEN、三个场景 production Sim/hash、来源函数初态、设备授权与 DAgger 来源真实性回归。
+- 无网络 mock 的 Chromium 桌面 1600×1100、手机 390×844：三个场景逐一播放，固定 tick 50 的头顶、右栏与时间轴 Q/A/ΔA 和文件一致，真实 ΔA 随动作变化，优势轨点击定位、开关、深链刷新、授权免输通过。每次 1.4 秒播放约 87 帧；确定性生产 renderer 的优势标签 6 个中间屏幕坐标严格单调，权威状态不改。手机无横向溢出，诊断页 console/pageerror/HTTP 错误为 0。
+- 完整浏览器回归另覆盖首次/错误密码无授权/正确/刷新/新 tab/撤销/版本与校验规则变化，蓝色实际像素与中文身份，Reward/事件证据去重，60fps、4x、断点吸附、整数 tick 暂停/seek/单步，标注持久化/编辑/删除/导入导出/错误 hash 拒绝，复制定位及深链，DAgger 未记录与真实历史汇总。证据位于忽略目录 `runs/replay_review_20261017/browser-a1-local/`、`browser-a1-regression-local/`、`motion-a1-local/`；截图包含 desktop/mobile 各场景及画布局部。公开裁切截图为 `web/review-evidence/screenshots/desktop.png` 与 `mobile.png`，保留真实页面像素，不加入标注或模拟内容。
+
+发布前扫描 git ls-files 与全部待提交文件，公开 evidence 不包含机器身份、凭据、绝对路径、内网地址或 PID。提交后按同一 head SHA 等待 Actions/Pages 成功，再核对公开 catalog、录像、DAgger、Critic/A1 evidence HTTP200、字节/hash/尺寸及线上真实浏览器。发布验收记录保存在忽略目录 `release-a1.json`、`browser-a1-public/`、`browser-a1-regression-public/`、`motion-a1-public/` 与 `release_a1_acceptance_20261017.md`，不为记录自身 SHA 追加部署。

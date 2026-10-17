@@ -17,6 +17,7 @@
     const fail = message => { throw new Error(message); };
     if (!d || d.schema !== SCHEMA) fail('schema');
     if (!d.meta || !/^[\w-]+$/.test(d.meta.id) || !Number.isSafeInteger(d.meta.seed) || d.meta.tick_ms !== 100) fail('meta');
+    if (d.meta.scene !== undefined && !['native','open','carry_home'].includes(d.meta.scene)) fail('scene');
     for (const k of ['checkpoint_sha256','model_sha256','simulator_sha256','opponent_sha256','map_sha256','replay_identity']) if (!/^[a-f0-9]{64}$/.test(d.meta[k])) fail(k);
     if (!Array.isArray(d.actions) || !d.actions.length || d.actions.length > 10000 || d.actions.length !== d.summary?.ticks) fail('length');
     for (const a of d.actions) if (!Array.isArray(a) || a.length !== 4 || a.some((v,i) => !Number.isInteger(v) || v < 0 || v > (i%2 ? 2 : 4))) fail('illegal action');
@@ -49,8 +50,17 @@
   }
   function setup(meta, level) {
     const sim = new Q.Sim(meta.seed);
+    const scene = meta.scene || meta.variant || 'native';
     sim.reset(level, {nativeTrap:true,nativeItems:true});
-    if (meta.variant === 'open') sim.brick.fill(0);
+    if (scene === 'open' || meta.variant === 'open') sim.brick.fill(0);
+    if (scene === 'carry_home') {
+      // je05_web_tasks.setup('carry_home'): declared initial task state only.
+      sim.brick.fill(0);
+      sim.initialHp=1;sim.hp=[1,1];sim.invuln=[0,0];
+      sim.pos[0]=9.5;sim.pos[1]=4.5+(meta.seed%3);
+      sim.bunCarried[0]=1;sim.bunStored[1][1]=0;
+      sim.bunSpawnPos[0]=[sim.pos[0],sim.pos[1]];
+    }
     sim.maxSteps = meta.max_ticks;
     return sim;
   }

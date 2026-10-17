@@ -51,7 +51,7 @@ async function load() {
   const ort=require(process.env.ORT_NODE_MODULE || 'onnxruntime-node');
   const session=await ort.InferenceSession.create(path.join(input,'model.onnx'),{executionProviders:['cpu'],intraOpNumThreads:1,interOpNumThreads:1});
   const model=new Q.TransformerModel(doc);model.greedy=true;model.inferEvery=1;
-  let parity;
+  let parity,lastDecision;
   async function act(s,rng){
     const {obs,state}=model._getLaggedInputs(s,0);
     // Historical H7 re-inference preserves its original input bug; new batches use production encoding.
@@ -60,17 +60,19 @@ async function load() {
     const logits={move:result.move.data,bomb:result.bomb.data};
     assert([...logits.move,...logits.bomb].every(Number.isFinite));
     if(parity===undefined){const ref=model.forward(obs,state);parity=Math.max(...['move','bomb'].flatMap(k=>Array.from(logits[k],(v,i)=>Math.abs(v-ref[k][i]))));assert(parity<.002,`ONNX parity ${parity}`);}
-    const mask=s.legalMask();return [model._sampleMasked(logits.move,mask.mm[0],rng),model._sampleMasked(logits.bomb,model._abilityMask(s,mask,0),rng)];
+    const mask=s.legalMask(),ability=model._abilityMask(s,mask,0);
+    lastDecision={move:Array.from(logits.move),ability:Array.from(logits.bomb),move_mask:Array.from(mask.mm[0]),ability_mask:Array.from(ability)};
+    return [model._sampleMasked(logits.move,mask.mm[0],rng),model._sampleMasked(logits.bomb,ability,rng)];
   }
-  return {proof,act,session,getParity:()=>parity};
+  return {proof,act,session,getParity:()=>parity,getDecision:()=>lastDecision};
 }
-async function episode(seed,variant,loaded,verify=false,opponent='normal') {
-  const meta={id:`${stage}-g32-${variant}-${opponent==='normal'?'':opponent+'-'}${seed}`,episode_id:`offline-${stage}-g32-${opponent==='tactical'?'tactical-v2':'hunter-'+opponent}-${seed}`,seed,variant,tick_ms:100,max_ticks:2400,
+async function episode(seed,variant,loaded,verify=false,opponent='normal',scene=variant==='open'?'open':'native') {
+  const meta={id:`${stage}-g32-${scene}-${opponent==='normal'?'':opponent+'-'}${seed}`,episode_id:`offline-${stage}-g32-${opponent==='tactical'?'tactical-v2':'hunter-'+opponent}-${seed}`,seed,variant,tick_ms:100,max_ticks:scene==='carry_home'?300:2400,
     model:stage==='h8'?'H8 v34 g32 raw':'H7 v33 g32 raw',checkpoint:`${stage.toUpperCase()}/g32/policy.pt`,checkpoint_sha256:loaded.proof.checkpoint_sha256,
     model_sha256:loaded.proof.model_sha256,onnx_sha256:loaded.proof.onnx_sha256,opponent:opponent==='tactical'?'bun.tactical/v2':`bun.hunter/${opponent}`,
     simulator_sha256:sha(fs.readFileSync('web/sim.js')),opponent_sha256:sha(fs.readFileSync(opponent==='tactical'?'web/bun_rule_bot.js':'web/bun_hunter_bot.js')),
     source_hashes:Object.fromEntries(['web/sim.js','web/bun_hunter_bot.js','web/bun_rule_bot.js','web/bot_contract.js','scripts/generate_diagnostic_replays.js'].map(n=>[n,sha(fs.readFileSync(n))])),
-    map:'806',map_sha256:await P.hash(level),policy:'greedy',backend:'onnxruntime-node/cpu/fp32',teacher:{eligible:null,query:null,accept:null,reject:null}};
+    map:'806',map_sha256:await P.hash(level),scene,scene_name:scene==='native'?'原生抢包对战':scene==='open'?'开放抢包对战':'持包返程任务',scene_rules:scene==='native'?'原生砖块、糖泡、道具；240秒':scene==='open'?'清除可破坏砖块；原生糖泡与道具；240秒':'je05 carry_home：清砖、1HP、持敌包、返程出生；30秒',scene_sha256:sha(Buffer.from(JSON.stringify({map:await P.hash(level),scene}))),policy:'greedy',backend:'onnxruntime-node/cpu/fp32',teacher:{eligible:null,query:null,accept:null,reject:null}};
   const s=P.setup(meta,level),hunter=opponent==='tactical'?null:authority.createHunter(opponent),tactical=opponent==='tactical'?new BunRuleTacticalBot():null,rng=Q.mulberry32(seed^0x515154);
   let bunBefore,drops,explosions;
   const updateBun=s._bunUpdate.bind(s),dropBun=s._bunDrop.bind(s),resolve=s._resolveExplosions.bind(s);
@@ -101,7 +103,15 @@ async function episode(seed,variant,loaded,verify=false,opponent='normal') {
 async function run(){
   assert.equal(process.env.CUDA_VISIBLE_DEVICES,'','explicit CPU isolation required');
   fs.mkdirSync(output,{recursive:true});const loaded=await load(),summaries=[];
-  for(let index=0;index<12;index++){
+  const multi=process.argv.includes('--multi-scene');
+  const count=multi?6:12;
+  for(let index=0;index<count;index++){
+    if(multi){
+      const scene=['native','open','carry_home'][Math.floor(index/2)],seed=2026101900+index;
+      const file=path.join(output,`${stage}-g32-${scene}-${seed}.json`);
+      if(fs.existsSync(file)){summaries.push({id:JSON.parse(fs.readFileSync(file)).meta.id,seed,scene});continue;}
+      const d=await episode(seed,scene==='open'?'open':'native',loaded,false,'normal',scene);fs.writeFileSync(file,JSON.stringify(d));summaries.push({id:d.meta.id,seed,scene,...d.summary});console.log(JSON.stringify(summaries.at(-1)));continue;
+    }
     const supplement=process.argv.includes('--supplement'),seed=(stage==='h8'?(supplement?2026101760:2026101740):(supplement?2026101720:2026101700))+index,variant=supplement?'native':index<6?'native':'open',opponent=supplement?(index<6?'hard':'tactical'):'normal',file=path.join(output,`${stage}-g32-${variant}-${opponent==='normal'?'':opponent+'-'}${seed}.json`);
     if(fs.existsSync(file)){const d=JSON.parse(fs.readFileSync(file));assert.equal(d.meta.checkpoint_sha256,loaded.proof.checkpoint_sha256);summaries.push({id:d.meta.id,seed,variant,...d.summary});continue;}
     const d=await episode(seed,variant,loaded,false,opponent);fs.writeFileSync(file,JSON.stringify(d));summaries.push({id:d.meta.id,seed,variant,...d.summary});console.log(JSON.stringify(summaries.at(-1)));

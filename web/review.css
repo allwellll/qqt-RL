@@ -15,6 +15,13 @@
 * {
   box-sizing: border-box;
 }
+.playback-region { margin-top: 0; border-bottom: 1px solid #36383f; }
+.playback-region .position { margin-top: 0; border-radius: 0; }
+.playback-region + .timeline-head { margin-top: 8px; }
+#scene-filter { width: 100%; margin: 8px 0; }
+.scene-summary { color: #a8b8bf; line-height: 1.5; }
+.mark.dense-point { width: 3px; min-width: 3px; height: 10px; min-height: 10px; padding: 0; border: 0; border-radius: 0; }
+.mark.dense-label { height: 22px; min-height: 22px; padding: 1px 3px; font-size: 10px; }
 body {
   margin: 0;
 }

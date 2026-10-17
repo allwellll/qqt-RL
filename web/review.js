@@ -13,7 +13,8 @@
   const say=value=>$('notice').textContent=value;
   const sum=o=>Object.values(o).reduce((a,b)=>a+b,0);
   const number=n=>Math.abs(n)<1e-8?'0':n.toFixed(3);
-  const historyControl=text('label','','history-control'),historyToggle=document.createElement('input');historyToggle.type='checkbox';historyToggle.id='show-history';historyControl.append(historyToggle,document.createTextNode('历史 H7 录像'));$('filter').after(historyControl);historyToggle.onchange=list;
+  const historyControl=text('label','','history-control'),historyToggle=document.createElement('input');historyToggle.type='checkbox';historyToggle.id='show-history';historyControl.append(historyToggle,document.createTextNode('历史 H7 / H8 录像'));$('filter').after(historyControl);historyToggle.onchange=list;
+  const sceneFilter=document.createElement('select');sceneFilter.id='scene-filter';sceneFilter.setAttribute('aria-label','场景筛选');sceneFilter.add(new Option('全部场景',''));historyControl.before(sceneFilter);sceneFilter.onchange=list;
   const advantagePanel=document.createElement('section');
   advantagePanel.innerHTML='<h3>模型动作 · 一步优势</h3><p id="advantage-status"></p><div id="advantage-details"></div>';
   $('state-details').before(advantagePanel);
@@ -75,10 +76,12 @@
     const filter=$('filter').value.toLowerCase();$('replay-list').replaceChildren();
     const visible=[...catalog.replays,...(historyToggle.checked?catalog.history_replays||[]:[])];
     for(const r of visible){
-      if(!`${r.id} ${r.summary.failures.map(k=>labels[k]).join(' ')}`.toLowerCase().includes(filter))continue;
+      if(sceneFilter.value&&r.scene!==sceneFilter.value)continue;
+      if(!`${r.id} ${r.scene_name||''} ${r.summary.failures.map(k=>labels[k]).join(' ')}`.toLowerCase().includes(filter))continue;
       const b=text('button','',`replay-row${doc?.meta.id===r.id?' active':''}`);b.dataset.replay=r.id;
-      b.append(text('strong',`${r.model} · ${r.variant==='open'?'清砖图':'原始图'}`),text('small',`seed ${r.seed} · ${P.time(r.summary.ticks)} · ${r.summary.winner===null?'平局':r.summary.winner===0?'模型胜':'对手胜'}`));
-      const tags=text('div','','tags');for(const k of r.summary.failures)tags.append(text('span',labels[k]||k,'tag'));b.append(tags);b.onclick=()=>load(r.id,0).catch(fail);$('replay-list').append(b);
+      b.append(text('strong',`${r.model} · ${r.scene_name||(r.variant==='open'?'清砖图':'原始图')}`),text('small',`seed ${r.seed} · ${P.time(r.summary.ticks)} · ${r.summary.winner===null?'平局':r.summary.winner===0?'模型胜':'对手胜'}`));
+      if(r.scene)b.append(text('small',`▦ ${r.map||806} · ${r.scene_rules} · map ${r.map_sha256.slice(0,8)}`,'scene-summary'));
+      const tags=text('div','','tags');if(r.scene)tags.append(text('span',({native:'▦ 原生',open:'□ 开放',carry_home:'↩ 返程'})[r.scene]||r.scene,'badge'));for(const k of r.summary.failures)tags.append(text('span',labels[k]||k,'tag'));b.append(tags);b.onclick=()=>load(r.id,0).catch(fail);$('replay-list').append(b);
     }
   }
   function details(target,values){const dl=document.createElement('dl');for(const [key,value] of values){const div=document.createElement('div');div.append(text('dt',key),text('dd',value));dl.append(div);}target.replaceChildren(dl);}
@@ -93,8 +96,8 @@
     $('components').replaceChildren();for(const k of componentNames()){const translated=V.reward(k),e=text('div','',`component${translated.known?'':' untranslated'}`),v=delta[k]||0,name=text('span',translated.name);e.title=translated.help;e.dataset.component=k;if($('english-rewards').checked)name.append(text('small',k));e.append(name,text('span',`${number(v)} / ${number(total[k]||0)}`,v<0?'negative':'positive'));$('components').append(e);}
     const a=t?doc.actions[t-1]:null;
     const advantage=A.atTick(doc,t),value=v=>v===null?'未记录':number(v);
-    details($('advantage-details'),[['选中模型动作 [move, ability]',a?`${a[0]}, ${a[1]}`:'开局'],['执行动作 Q₁',value(advantage.taken_q)],['策略平均 Q₁',value(advantage.mean_q)],['策略加权一步优势 A₁',value(advantage.advantage)],['优势增量 ΔA₁',value(advantage.delta)]]);
-    $('advantage-status').textContent=doc.meta.advantage?.status==='recorded'?`联合动作 · γ=${doc.meta.advantage.gamma}`:`未记录：${doc.meta.advantage?.reason||'历史录像未采集优势'}`;
+    details($('advantage-details'),[['选中模型动作 [move, ability]',a?`${a[0]}, ${a[1]}`:'开局'],['执行动作 Q₁',value(advantage.taken_q)],['策略平均 Q₁',value(advantage.mean_q)],['策略加权一步优势 A₁',value(advantage.advantage)],['优势增量 ΔA₁',value(advantage.delta)],['合法联合动作数',String(A.legalCount(doc,t)??'未记录')]]);
+    $('advantage-status').textContent=doc.meta.advantage?.status==='recorded'?`move × ability 联合动作（含道具） · γ=${doc.meta.advantage.gamma} · 合法策略概率重归一 · ${doc.meta.advantage.measured_count} tick 已测`:`未记录：${doc.meta.advantage?.reason||'历史录像未采集优势'}`;
     details($('state-details'),[['模型阶段',P.phase(s)],['对手阶段',P.phase(s,1)],['动作 [move, ability]',a?`${a[0]},${a[1]} | ${a[2]},${a[3]}`:'开局'],['包归属（模型 / 对手）',s.bunCarried.map(v=>v<0?'空手':`源队 ${v}`).join(' / ')],['糖泡剩余 tick',s.trapped.join(' / ')],['死亡 / 复活倒计时',s.bunRespawn.join(' / ')],['坐标 [row,col]',`${s.pos[0].toFixed(2)},${s.pos[1].toFixed(2)} | ${s.pos[2].toFixed(2)},${s.pos[3].toFixed(2)}`],['笼内存包',s.bunStored.map(a=>a.join(',')).join(' / ')],['终局',s.done?`胜者 ${s.winner===null?'平局':s.winner}`:'进行中']]);
     $('current-events').replaceChildren();const events=doc.events.filter(e=>e.tick===t);
     if(events.length)$('current-events').append(text('p',rewardEvidence(t),'event-reward'));
@@ -116,14 +119,15 @@
   }
   function rewardEvidence(tick){const r=currentReward(tick);return `${$('reward-player').value==='0'?'模型':'对手'} Reward ${number(sum(r))}（同 tick 事件共用一次） · ${Object.entries(r).map(([k,v])=>`${V.reward(k).name} ${number(v)}`).join('；')||'无非零分量'}`;}
   function marker(track,tick,color,title,width){const b=text('button','','mark'+(width?' phase-mark':''));b.dataset.tick=tick;b.style.left=`${tick/doc.actions.length*100}%`;b.style.background=color;b.title=`tick ${tick} · ${P.time(tick)} · ${title}`;b.setAttribute('aria-label',b.title);if(width)b.style.width=`${width/doc.actions.length*100}%`;b.onclick=e=>{e.stopPropagation();seek(tick);};$(track).append(b);return b;}
-  function numericTrack(track,entries,format){
-    const lanes=[],width=$('timeline-scroll').clientWidth*Number($('zoom').value);
+  function numericTrack(track,entries,format,dense=false){
+    const lanes=[],width=$('timeline-scroll').clientWidth*Number($('zoom').value);let lastLabel=-100;
     for(const entry of entries){const x=entry.tick/doc.actions.length*width;
       const b=marker(track,entry.tick,entry.value<0?'#603b43':'#254c41',entry.title);b.textContent=format(entry.value);b.classList.add('numeric-mark');
+      if(dense){const labeled=x-lastLabel>=86;b.classList.add(labeled?'dense-label':'dense-point');if(labeled)lastLabel=x;else b.textContent='';b.style.top=labeled?'6px':'31px';b.dataset.value=entry.value;continue;}
       let lane=lanes.findIndex(end=>x>=end+4);if(lane<0)lane=lanes.length;lanes[lane]=x+b.offsetWidth;
       b.style.top=`${7+lane*22}px`;b.dataset.value=entry.value;
     }
-    const height=Math.max(36,lanes.length*22+14);$(track).style.height=height+'px';document.querySelector(`[data-track-label="${track}"]`).style.height=height+'px';
+    const height=dense?48:Math.max(36,lanes.length*22+14);$(track).style.height=height+'px';document.querySelector(`[data-track-label="${track}"]`).style.height=height+'px';
   }
   function timeline(){
     for(const id of ['ruler','phase-track','event-track','reward-track','advantage-track','advantage-delta-track','dagger-track','annotation-track'])$(id).replaceChildren();
@@ -136,8 +140,8 @@
     for(const a of rows)marker('annotation-track',a.tick,'#e192a6',a.note||a.category);
     D.renderTrack($('dagger-track'),doc,seek,P.time);
     for(const [track,key]of [['advantage-track','advantage'],['advantage-delta-track','delta']]){
-      const entries=(doc.advantages?.ticks||[]).map(tick=>({tick,value:A.atTick(doc,tick)[key]})).filter(e=>e.value!==null).map(e=>({...e,title:`${key==='delta'?'优势增量':'策略加权一步优势'} ${number(e.value)} · 联合动作`}));
-      numericTrack(track,entries,v=>(v>0?'+':'')+number(v));if(!entries.length)$(track).append(text('span','未记录','dagger-empty'));
+      const entries=(doc.advantages?.ticks||[]).map(tick=>({tick,value:A.atTick(doc,tick)[key]})).filter(e=>e.value!==null).map(e=>({...e,title:`${key==='delta'?'优势增量（相邻决策 A₁ 之差）':'策略加权一步优势（执行 Q₁ 减合法策略平均 Q₁）'} · ${key} ${number(e.value)} · move × ability 联合动作`}));
+      numericTrack(track,entries,v=>(v>0?'+':'')+number(v),true);if(!entries.length)$(track).append(text('span','未记录','dagger-empty'));
     }
   }
   const storageKey=()=>`qqt.annotations.v1.${doc.meta.id}.${doc.asset_sha256}`;
@@ -151,7 +155,7 @@
     if(!rows.length)$('annotations').append(text('div','暂无标注','empty'));
   }
   function form(a){pause();editing=a?.id||null;$('annotation-tick').value=a?.tick??player.sim.t;$('annotation-tick').max=doc.actions.length;$('annotation-category').value=a?.category||'other';$('annotation-severity').value=a?.severity||'medium';$('annotation-note').value=a?.note||'';$('annotation-form').hidden=false;$('annotation-note').focus();}
-  function draw(){if(renderer&&player){const nextAction=doc.actions[player.sim.t],intents=nextAction?[nextAction[0],nextAction[2]]:[4,4];const motion=V.motion(player.sim,preview.sim,playing?accumulator/100:0,playing&&$('smooth').checked,doc.events,intents);motion.intents=intents;renderer.render(player.sim,player.sim.t*100+motion.fraction*100,motion);$('refresh-status').textContent=`实际 ${actualFPS} FPS · 模拟 10 tick/s · α ${motion.fraction.toFixed(3)} · 目标 ${$('frame-rate').value} FPS`;}}
+  function draw(){if(renderer&&player){const nextAction=doc.actions[player.sim.t],intents=nextAction?[nextAction[0],nextAction[2]]:[4,4];const motion=V.motion(player.sim,preview.sim,playing?accumulator/100:0,playing&&$('smooth').checked,doc.events,intents);motion.intents=intents;motion.labelScale=Math.max(1,Math.min(1.5,500/$('game').getBoundingClientRect().width));if($('advantage-overlay').checked)motion.playerAdvantages=[A.atTick(doc,player.sim.t),null];renderer.render(player.sim,player.sim.t*100+motion.fraction*100,motion);$('refresh-status').textContent=`实际 ${actualFPS} FPS · 模拟 10 tick/s · α ${motion.fraction.toFixed(3)} · 目标 ${$('frame-rate').value} FPS`;}}
   async function load(id,tick){
     const token=++loadToken;playing=false;$('canvas-loading').hidden=false;$('canvas-loading').textContent='正在验证录像与状态 hash';$('integrity').textContent='验证中';
     const row=[...catalog.replays,...(catalog.history_replays||[])].find(r=>r.id===id);if(!row)throw Error('未知 replay ID');
@@ -162,7 +166,7 @@
     Object.defineProperty(next,'asset_sha256',{value:row.sha256});
     doc=next;player=nextPlayer;preview=new P.Player(doc,level);preview.cache=player.cache;rewardByTick=new Map(doc.rewards.map(r=>[r[0],r]));curveCache=null;renderer=QQTVisual.createRenderer($('game'),level,assets);rows=[];editing=null;$('annotation-form').hidden=true;
     try{const saved=localStorage.getItem(storageKey());if(saved)rows=P.validateAnnotations(JSON.parse(saved),doc);}catch(_){say('已有标注无效或存储不可用');}
-    $('episode-title').textContent=`模型 P0 · ${doc.meta.model} 对阵 对手 P1`;$('episode-meta').textContent=`对手 ${doc.meta.opponent} · ${doc.meta.variant==='open'?'806 清砖图':'806 原始图'} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)}`;$('terminal').textContent=`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
+    $('episode-title').textContent=`模型 P0 · ${doc.meta.model} 对阵 对手 P1`;$('episode-meta').textContent=`${doc.meta.scene_name||'历史抢包对战'} · qqt_id ${doc.meta.map} · ${doc.meta.scene_rules||doc.meta.variant} · 对手 ${doc.meta.opponent} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)} · map ${doc.meta.map_sha256.slice(0,12)}`;$('terminal').textContent=`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
     $('seek').max=doc.actions.length;$('duration').textContent=P.time(doc.actions.length);$('integrity').style.color='#82d2b6';
     curveOptions();daggerEpisode();
     if(daggerCatalog){const related=daggerCatalog.runs.find(r=>r.checkpoint_sha256===doc.meta.checkpoint_sha256);if(related)$('dagger-run').value=related.id;await daggerSummary($('dagger-run').value);}
@@ -176,7 +180,7 @@
   $('replay-start').onclick=()=>{seek(0);start();};$('step-back').onclick=()=>seek(Math.max(0,player.sim.t-1));$('step-next').onclick=()=>seek(Math.min(doc.actions.length,player.sim.t+1));$('seek').oninput=()=>seek(Number($('seek').value));$('filter').oninput=()=>list();$('zoom').oninput=()=>timeline();
   $('timeline').onclick=e=>{const rect=$('timeline').getBoundingClientRect();seek(Math.round(Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width))*doc.actions.length));};
   $('reward-chart').onclick=e=>{const rect=e.target.getBoundingClientRect();seek(Math.round((e.clientX-rect.left)/rect.width*doc.actions.length));};
-  $('curve-component').onchange=chart;$('curve-mode').onchange=chart;$('reward-player').onchange=()=>{update();timeline();};$('english-rewards').onchange=()=>{curveOptions();update();};$('smooth').onchange=draw;
+  $('curve-component').onchange=chart;$('curve-mode').onchange=chart;$('reward-player').onchange=()=>{update();timeline();};$('english-rewards').onchange=()=>{curveOptions();update();};$('smooth').onchange=draw;$('advantage-overlay').onchange=draw;
   $('dagger-run').onchange=()=>daggerSummary($('dagger-run').value).catch(e=>say(e.message));
   $('frame-rate').onchange=()=>{lastDraw=0;frameStart=performance.now();frameCount=0;$('refresh-status').textContent=`目标 ${$('frame-rate').value} fps · 逻辑 10 tick/s`;};
   $('advanced-close').addEventListener('click',pause);$('advanced-forget').addEventListener('click',pause);
@@ -187,7 +191,7 @@
   $('export-annotations').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(P.annotationDocument(doc,rows),null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='annotations.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
   $('import-annotations').onclick=()=>$('annotation-file').click();$('annotation-file').onchange=async()=>{try{const file=$('annotation-file').files[0];if(!file)return;if(file.size>1024*1024)throw Error('标注文件过大');const next=P.validateAnnotations(JSON.parse(await file.text()),doc);rows=next;persist();say('标注导入成功');}catch(e){say(`导入失败：${e.message}`);}finally{$('annotation-file').value='';}};
   window.addEventListener('hashchange',()=>{const p=new URLSearchParams(location.hash.slice(1)),id=p.get('replay'),tick=Number(p.get('tick')||0);if(!Number.isInteger(tick)||tick<0){say('非法深链 tick');return;}if(doc?.meta.id===id)seek(Math.min(tick,doc.actions.length));else load(id,tick).catch(fail);});
-  window.addEventListener('resize',()=>{if(doc)timeline();});
+  window.addEventListener('resize',()=>{if(doc){timeline();draw();}});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
   function frame(now){
     const dt=Math.min(now-last,250);last=now;
@@ -204,5 +208,6 @@
   try{const r=await fetch('review-catalog.json');if(!r.ok)throw Error(`目录 HTTP ${r.status}`);catalog=await r.json();if(catalog.schema!=='qqt.diagnostic-catalog/v1')throw Error('目录 schema');
     const dr=await fetch('review-dagger/catalog.json');if(!dr.ok)throw Error('DAgger 目录 HTTP');daggerCatalog=await dr.json();if(daggerCatalog.schema!=='qqt.dagger-catalog/v1')throw Error('DAgger 目录 schema');
     for(const row of daggerCatalog.runs)$('dagger-run').add(new Option(row.title+' · '+row.scope,row.id));
-    $('count').textContent=catalog.replays.length;$('catalog-meta').textContent=`${catalog.replays.length} 局 · ${catalog.model}\n${catalog.screened_episodes} 个固定 seed 已筛查\n${catalog.raw_bytes} bytes / gzip ${catalog.gzip_bytes} bytes`;list();const p=new URLSearchParams(location.hash.slice(1));await load(p.get('replay')||catalog.replays[0].id,Number(p.get('tick')||0));}catch(e){fail(e);}
+    for(const s of catalog.scenes||[])sceneFilter.add(new Option(s.name,s.id));
+    $('count').textContent=catalog.replays.length;$('catalog-meta').textContent=`${catalog.replays.length} 局 · ${catalog.model}\n${catalog.scenes?.length||1} 种场景 · ${catalog.screened_episodes} 个固定 seed\n${catalog.raw_bytes} bytes / gzip ${catalog.gzip_bytes} bytes`;list();const p=new URLSearchParams(location.hash.slice(1));await load(p.get('replay')||catalog.replays[0].id,Number(p.get('tick')||0));}catch(e){fail(e);}
 })();
