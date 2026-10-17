@@ -90,13 +90,14 @@
     const visible=[...catalog.replays,...(historyToggle.checked?catalog.history_replays||[]:[])];
     for(const r of visible){
       if(sceneFilter.value&&r.scene!==sceneFilter.value)continue;
-      if(!`${r.id} ${r.scene_name||''} ${r.summary.failures.map(k=>labels[k]).join(' ')} ${r.diagnostic_audit?'返程振荡 停滞':''}`.toLowerCase().includes(filter))continue;
+      const failures=Array.isArray(r.summary?.failures)?r.summary.failures:[];
+      if(!`${r.id} ${r.scene_name||''} ${failures.map(k=>labels[k]||k).join(' ')} ${r.diagnostic_audit?'返程振荡 停滞':''}`.toLowerCase().includes(filter))continue;
       const b=text('button','',`replay-row${doc?.meta.id===r.id?' active':''}`);b.dataset.replay=r.id;
       b.append(text('strong',`${r.model} · ${r.scene_name||(r.variant==='open'?'清砖图':'原始图')}`),text('small',`seed ${r.seed} · ${P.time(r.summary.ticks)} · ${r.summary.done===false?'片段未终局':r.summary.winner===null?'平局':r.summary.winner===0?'模型胜':'对手胜'}`));
       if(r.diagnostic)b.append(text('strong','诊断场景，不代表自然完整对局成功','diagnostic-warning'));
       if(r.diagnostic_audit)b.append(text('span','返程振荡 / 停滞失败已审计','tag'));
       if(r.scene)b.append(text('small',`▦ ${r.map||806} · ${r.scene_rules} · map ${r.map_sha256.slice(0,8)}`,'scene-summary'));
-      const tags=text('div','','tags');if(r.scene)tags.append(text('span',({native:'▦ 原生',open:'□ 开放',carry_home:'↩ 返程'})[r.scene]||r.scene,'badge'));for(const k of r.summary.failures)tags.append(text('span',labels[k]||k,'tag'));b.append(tags);b.onclick=()=>load(r.id,0).catch(fail);$('replay-list').append(b);
+      const tags=text('div','','tags');if(r.scene)tags.append(text('span',({native:'▦ 原生',open:'□ 开放',carry_home:'↩ 返程'})[r.scene]||r.scene,'badge'));for(const k of failures)tags.append(text('span',labels[k]||k,'tag'));b.append(tags);b.onclick=()=>load(r.id,0).catch(fail);$('replay-list').append(b);
     }
   }
   function details(target,values){const dl=document.createElement('dl');for(const [key,value] of values){const div=document.createElement('div');div.append(text('dt',key),text('dd',value));dl.append(div);}target.replaceChildren(dl);}

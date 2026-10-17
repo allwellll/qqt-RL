@@ -9,6 +9,7 @@ async function main(){
   const row=catalog.replays.find(r=>r.id==='h8-route-v36-g32-2026101736');
   assert(row,'v36 must be listed in the review catalog');
   assert.equal(catalog.replays[0].id,row.id,'the current v36 replay must be the first visible activity');
+  assert(Array.isArray(row.summary.failures),'v36 summary.failures must be an array for Review list rendering');
   assert.equal(row.name,'H8 v36 连续路线 PBRS g32');
   const bytes=fs.readFileSync('web/review-replays/'+row.file);
   assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),row.sha256);

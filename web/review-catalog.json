@@ -69,7 +69,8 @@
         "reward": [
           null,
           null
-        ]
+        ],
+        "failures": []
       },
       "sha256": "be911c70b7ddc22857c709f86ff42da0f575bf3c2055d1499846291dd9aebc48",
       "bytes": 6839,
