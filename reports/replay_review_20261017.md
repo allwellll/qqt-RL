@@ -1,5 +1,37 @@
 # 低质量对局回放诊断验收（20261017）
 
+## H8 新批次预声明与平滑根因审计
+
+- 新任务起点 `41b16967f33fc2c6538cc5b717ef6263b0cd67f0`，远端与当前分支一致且干净；保留此前审计。仅只读已完成 H8 v34 g32 的固定 COMMITTED、policy 与生产 Web 导出，不读取 LATEST 或训练中 checkpoint，不使用 GPU。
+- 在运行新批次前冻结 24 个 seed：2026101740–2026101751（前 6 原图 Hunter normal，后 6 清砖图 Hunter normal）；2026101760–2026101771（前 6 原图 Hunter hard，后 6 原图 Tactical v2）。上限 2400 tick，真实 greedy 联合动作，禁止修改动作。沿用原先六类失败规则，每类最早 seed 优先，再按 seed 补足最多 6 局；缺少的失败类型如实报告，不追加看结果挑 seed。
+- H8 g32 policy SHA-256 `b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11`；CAMPAIGN_COMPLETE completed/actual_generation=32，COMMITTED passed/generation=32；生产导出 ONNX SHA-256 `0c4df18e853a833476afa8e18fce660645ed4075974025e051eae3f2f59972fa`。
+- 先线上采样真实生产画布，963 帧，CSS 比例恒定 0.7；双方实际 drawImage 坐标全部整数，旧测试只验证 fraction 变化。前 200 tick 模型移动 185 次中 58 次、对手移动 80 次中 15 次被吸附，含正常贴墙或离开泡泡。无相位重复重置证据。原始坐标证据保留 `runs/replay_review_20261017/motion-baseline/`。
+- critic 审计：冻结 worker 保存 policy.pt=host.params.actor，训练 critic 为独立参数树；Web exporter 仅导出该 actor。actor 内 head_wv 不证明是训练 critic。当前生产导出缺少可验证的 trained critic，因此本批 A1 / taken Q / policy mean Q / advantage delta 一律 null，绝不由 reward/logprob 估算。生产 Sim 的随机性均来自 seeded rng，可从起始随机流与 draw count 恢复；reward 另有跨 tick ledger，未经同状态 ledger 分支验证也不可宣称反事实等价。本批不伪造 rollout GAE。
+- 新生成器移除重复 trap timer 注入，直接采用生产 `_getLaggedInputs` 的 bun24-trap-timer-v2 编码；历史 H7 文件保持原样，历史动作重推证据仍对应其当时生成器版本。
+
+### H8 与浮点渲染验收
+
+- 原因已从线上实际 drawImage 坐标复现：人物/阴影坐标取整，旧 AABB 门控把相邻实体和脚下泡泡当作整段不可插值；并非只在 tick 刷新或 CSS 比例变化。修复向生产 renderer 传入独立浮点 `visualPos`，不修改 Sim。沿用时间戳累积器与 rAF，前瞻状态只用于安全人物位置；生产 `_tryMove` 校验直线全部中间点，真实碰撞截停、侧向校正、死亡/复活/携包/交付/控制/放泡及变化格仍吸附。真实策略停顿、反向及状态断点仍会可见，不人为平滑动作或事件。
+- 旧线上 SHA 的生产坐标断言真实触发 RED（整数精灵丢弃小数位置）；新页面双方均在同一安全 tick 画出 8 个严格单调的中间锚点，包含非整数位置，权威状态不变。桌面 H7 同录像前后对照各采 963 帧，CSS 比例均为 0.7；新 H8 手机 390×844 采 483 帧，比率恒定 0.411111，双方都出现真实中间绘制坐标。相位未在同 tick 重置。`motion-red/`、`motion-baseline/`、`motion-h7-green/`、`motion-h8-mobile/` 保存详细证据。
+- 页面显示实际 FPS / 模拟 10 tick/s / 插值 alpha；暂停、seek、单步清零 alpha，保持整数 tick、精确局内时间及 URL 定位。蓝色对手、中文 Reward、授权记忆、标注与深链均保留。关键事件轨按 tick 合并死亡/控制/包子/失误标记，每个显示 R 数值；悬浮与详情列非零中文分量。同 tick 多事件共享该 tick 证据，不声称因果分摊，不重复求和。放泡仍是权威状态事件，沿用此前关键事件轨的筛选范围。
+- 优势定义为联合 move×ability 的策略加权一步优势：`Q1=r+gamma*V(next)`，`A1=Q1(taken)-Σ pi_legal Q1`，合法候选策略概率重归一；终局 next value 为零。`gamma=0.995` 来自冻结 H8 plan。metadata 记录计算 schema、checkpoint / policy export / simulator hash、critic=null、合法动作口径及缺测原因。本批 `advantages` 为版本化稀疏量化列式空记录，读取任何 tick 的 Q/A/delta 均为 null；没有导出全 Q 表、logits 或伪造轨迹优势。未来有效记录必须校验 A1 公式、量化误差、相邻 delta、首项/断档 delta=null 及反事实证据 hash。
+- 预声明 24 局全部 CPU/JS 真实重跑；按原规则选出 6 局，覆盖 enemy_drop_unpicked / window_closed_empty / return_deviation / self_bomb。未观察到 cage_no_delivery / stagnation；没有为覆盖失败类型改动作。6 局再次真实推理，双方逐 tick 动作、状态 hash、终局完全一致，ONNX/JS logits 首次最大误差 `0.000005449342688645942`。独立 Python CPU 进程复算 6 局的生产 Reward ledger 完全一致；仍明确它是冻结 ledger 在真实 Web 轨迹上的重建，不是训练 episode telemetry。
+- 全量重新生成后 catalog 与 6 局文件字节完全一致。旧 6 局文件字节不变，catalog 默认 H8，可切换历史 H7，旧 replay+tick 深链和标注仍绑定原始文件 hash。每局独立懒加载，静态 metadata 一次，最小动作、稀疏 Reward、空优势列和周期 hash，无逐 tick 完整 state 或全动作 Q 表。
+
+| 新 Replay seed / 地图 / 对手 | ticks | raw bytes | gzip bytes |
+| --- | ---: | ---: | ---: |
+| 2026101760 / 原图 / hard | 2400 | 43881 | 8635 |
+| 2026101740 / 原图 / normal | 1783 | 41637 | 9037 |
+| 2026101742 / 原图 / normal | 2400 | 53502 | 10135 |
+| 2026101741 / 原图 / normal | 2400 | 43788 | 8313 |
+| 2026101745 / 原图 / normal | 2094 | 48562 | 9612 |
+| 2026101750 / 清砖 / normal | 2344 | 46618 | 9511 |
+| 合计 | | 277988 | 55243 |
+
+- catalog（含历史摘要）11358 / gzip 1765 bytes。筛查明细见 `reports/replay_screen_h8_20261017.json`，逐局 provenance/hash 见 catalog 与录像 metadata；尺寸按实际 UTF-8 与 gzip level 9 测量。
+- `npm test` 生产全量回归通过；`npm run test:review` 覆盖新旧 12 局共 312 项原协议校验，另含浮点严格单调/断点吸附、19 项 Reward 翻译、A1 手算/策略加权/非法动作/终局/首项与断档增量/稀疏 schema/hash、DAgger 与授权回归。真实 Chromium 桌面与手机通过播放/暂停/FPS/alpha、4x、seek/逐步、事件 Reward、优势缺测、标注持久化/编辑/删除/导入/导出、深链及授权记忆；pageerror / console error / HTTP error 为零。证据在 `browser-h8-local/`，发布后同 SHA 证据另存 `release-h8.json`、`browser-h8-public/` 及 `release_h8_acceptance_20261017.md`，不覆盖既有审计。
+- 提交范围 `git ls-files`（含本次已暂存文件）隐私扫描 0 项，`git diff --check` 通过；未修改生产模拟器或训练目录，未调用 GPU。
+
 ## 冻结协议
 
 - 独立分支 `feat/je09-replay-review`，初始 HEAD `6e5f69698889187e1ed07e89ce05bd4d0a475128`，初始工作区干净。

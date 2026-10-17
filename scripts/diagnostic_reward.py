@@ -13,7 +13,7 @@ from pathlib import Path
 os.environ.update(CUDA_VISIBLE_DEVICES='', JAX_PLATFORMS='cpu', JAX_PLATFORM_NAME='cpu',
                   JAXBOMB_RULE='bun', OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1')
 ROOT = Path(__file__).resolve().parents[1]
-AUTHORITY = ROOT / 'runs/replay_review_20261017/inputs/authority'
+AUTHORITY = ROOT / os.environ.get('REPLAY_INPUT', 'runs/replay_review_20261017/inputs') / 'authority'
 sys.path.insert(0, str(AUTHORITY))
 import numpy as np
 import jax
@@ -237,7 +237,7 @@ def run(file, verify=False):
                     'scripts/je04_bun_ops.py', 'scripts/je05_bun_transport.py',
                     'scripts/je07_bun_curriculum.py', 'scripts/je08_bun_potential.py',
                     'jax_bomb/bun_safety.py', 'jax_bomb/je07_bun_env.py']
-    doc['meta']['reward_source'] = 'H7 sealed production ledger on observed Web transitions; CPU safety detectors; not training episode telemetry'
+    doc['meta']['reward_source'] = os.environ.get('REPLAY_STAGE', 'h7').upper() + ' sealed production ledger on observed Web transitions; CPU safety detectors; not training episode telemetry'
     doc['meta']['reward_hashes'] = {name: hashlib.sha256((AUTHORITY/name).read_bytes()).hexdigest() for name in source_names}
     doc['meta']['reward_hashes']['scripts/diagnostic_reward.py'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     doc['meta']['reward_bridge'] = {'window': 120, 'scale': 2}

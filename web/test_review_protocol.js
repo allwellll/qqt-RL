@@ -3,7 +3,7 @@ const assert=require('assert'),fs=require('fs'),P=require('./review_protocol');
 (async()=>{
  const catalog=JSON.parse(fs.readFileSync('web/review-catalog.json'));
  const level=require('../scripts/eval_web_hunter').loadLevel();let checks=0;
- for(const row of catalog.replays){
+ for(const row of [...catalog.replays,...(catalog.history_replays||[])]){
   const bytes=fs.readFileSync(`web/review-replays/${row.file}`),d=JSON.parse(bytes);
   assert.equal(await P.sha256(bytes),row.sha256);assert.equal(bytes.length,row.bytes);P.validate(d);
   const player=new P.Player(d,level);await player.verify();

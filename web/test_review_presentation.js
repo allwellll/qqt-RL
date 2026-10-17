@@ -26,6 +26,15 @@ const V=require('./review_presentation'),P=require('./review_protocol'),visual=r
   const motion=V.motion(before,after,.5,true);
   assert.equal(motion.prevPos[1]+(motion.curPos[1]-motion.prevPos[1])*motion.fraction,5.65);
   assert.equal(JSON.stringify(before),original,'presentation must not mutate authoritative state');
+  for(const pid of [0,1]){
+    const next=structuredClone(before);next.t++;next.pos[pid*2+1]+=.3;
+    const coordinates=[0,.13,.27,.41,.59,.73,.87,1].map(alpha=>V.motion(before,next,alpha,true,[],[3,3]).visualPos[pid*2+1]*visual.CELL);
+    assert(coordinates.every((v,i)=>!i||v>coordinates[i-1]),'strict monotonic intermediate screen anchors');
+    assert(coordinates.some(v=>!Number.isInteger(v)),'float override must reach production draw coordinates');
+    assert.deepEqual(V.motion(before,next,.7,false).visualPos,before.pos);
+    assert(!V.canInterpolate(before,next,pid,[],0),'collision side steering must snap');
+    next.pos[pid*2+1]=before.pos[pid*2+1]+.1;assert(!V.canInterpolate(before,next,pid,[],3),'collision shortened step must snap');
+  }
   assert.deepEqual(V.motion(before,after,.5,false).curPos,before.pos);
   assert.deepEqual(motion.playerLabels,['模型 P0','对手 P1']);
   assert.equal(motion.characters[0],'maomao');assert.equal(motion.playerPalettes[1],'blue');
@@ -36,8 +45,9 @@ const V=require('./review_presentation'),P=require('./review_protocol'),visual=r
     const bad=structuredClone(after);mutate(bad);assert(!V.canInterpolate(before,bad,0));
   }
   const dead=structuredClone(before);dead.alive[0]=false;assert(!V.canInterpolate(dead,after,0));
-  for(const kind of ['death','revive','control','control_end','drop','pickup','native_transfer','delivery']) {
+  for(const kind of ['death','revive','control','control_end','drop','pickup','native_transfer','delivery','bomb']) {
     assert(!V.canInterpolate(before,after,0,[{tick:2,player:0,kind}]));
+    assert.deepEqual(V.motion(before,after,.75,true,[{tick:2,player:0,kind}]).visualPos,before.pos);
   }
   const wall=structuredClone(before),wallNext=structuredClone(after);wall.wall[80]=wallNext.wall[80]=1;
   assert(!V.canInterpolate(wall,wallNext,0),'reject swept solid box');

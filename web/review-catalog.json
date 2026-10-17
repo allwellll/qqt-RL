@@ -1,31 +1,264 @@
 {
   "schema": "qqt.diagnostic-catalog/v1",
-  "model": "H7 v33 g32 raw",
+  "model": "H8 v34 g32 raw",
   "screened_episodes": 24,
   "seed_ranges": [
     [
-      2026101700,
-      2026101711
+      2026101740,
+      2026101751
     ],
     [
-      2026101720,
-      2026101731
+      2026101760,
+      2026101771
     ]
   ],
   "selection": "first episode per declared failure, then earliest failed episodes, maximum six",
   "observed_failures": [
+    "enemy_drop_unpicked",
     "window_closed_empty",
-    "return_deviation"
+    "return_deviation",
+    "self_bomb"
   ],
   "unobserved_failures": [
-    "enemy_drop_unpicked",
     "cage_no_delivery",
-    "self_bomb",
     "stagnation"
   ],
-  "raw_bytes": 212179,
-  "gzip_bytes": 29369,
+  "raw_bytes": 277988,
+  "gzip_bytes": 55243,
   "replays": [
+    {
+      "id": "h8-g32-native-hard-2026101760",
+      "file": "h8-g32-native-hard-2026101760.json",
+      "seed": 2026101760,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/hard",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          18.650000765919685,
+          -12.500000208616257
+        ],
+        "failures": [
+          "enemy_drop_unpicked",
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "f1aab13aaf34e8e996ed52d4a8e6bc2bc930307dd4096fbf369cadb4a372f7ff",
+      "bytes": 43881,
+      "gzip_bytes": 8635
+    },
+    {
+      "id": "h8-g32-native-2026101740",
+      "file": "h8-g32-native-2026101740.json",
+      "seed": 2026101740,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 1783,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          58.13749997317791,
+          -35.99999921023846
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "6cc7a2426d58aba8f00cee36edef1ec4d48e60a15cd848dcfe1977c30587efa1",
+      "bytes": 41637,
+      "gzip_bytes": 9037
+    },
+    {
+      "id": "h8-g32-native-2026101742",
+      "file": "h8-g32-native-2026101742.json",
+      "seed": 2026101742,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          -12,
+          -22.5
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "411ddc6f80ff1b2af361f9496f5365173d5b7fbcb231cc0e0dbdcccf7bbb0b4f",
+      "bytes": 53502,
+      "gzip_bytes": 10135
+    },
+    {
+      "id": "h8-g32-native-2026101741",
+      "file": "h8-g32-native-2026101741.json",
+      "seed": 2026101741,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          -27.99999998509884,
+          3.925000011920929
+        ],
+        "failures": [
+          "self_bomb"
+        ]
+      },
+      "sha256": "713884823b0c12552b3104607f1f67474f69c6d873bc0f74d9fed07596f5fc17",
+      "bytes": 43788,
+      "gzip_bytes": 8313
+    },
+    {
+      "id": "h8-g32-native-2026101745",
+      "file": "h8-g32-native-2026101745.json",
+      "seed": 2026101745,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2094,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          12.625000014901161,
+          -63.999999806284904
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "ecbae874fe6248c16617f15f87b0714728bef48dc27bad4ca2ad1701763ae584",
+      "bytes": 48562,
+      "gzip_bytes": 9612
+    },
+    {
+      "id": "h8-g32-open-2026101750",
+      "file": "h8-g32-open-2026101750.json",
+      "seed": 2026101750,
+      "variant": "open",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2344,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          -12.00000187754631,
+          0.49999965727329254
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "873926035be3c38f8c00baafba6f974ebc213fe10866da53fbc0fbba43472a30",
+      "bytes": 46618,
+      "gzip_bytes": 9511
+    }
+  ],
+  "history_replays": [
     {
       "id": "h7-g32-native-2026101700",
       "file": "h7-g32-native-2026101700.json",

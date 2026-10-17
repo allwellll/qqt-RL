@@ -1,8 +1,9 @@
 'use strict';
 const fs=require('fs'),path=require('path'),crypto=require('crypto'),assert=require('assert');
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
-const source=process.env.H7_COMPLETE_ROOT;
-assert(source,'H7_COMPLETE_ROOT must point to the completed H7 namespace');
+const source=process.env.COMPLETE_ROOT||process.env.H7_COMPLETE_ROOT;
+const stage=process.env.REPLAY_STAGE||'h7';
+assert(source,'COMPLETE_ROOT must point to a completed immutable namespace');
 const complete=JSON.parse(fs.readFileSync(path.join(source,'CAMPAIGN_COMPLETE.json')));
 assert(complete.completed && complete.actual_generation===32);
 const cp=path.join(source,'formal/bun392_bridge_pfsp8/gen000032');
@@ -14,15 +15,17 @@ const bytes=fs.readFileSync(path.join(modelRoot,'model.json')),doc=JSON.parse(by
 assert.equal(doc.meta.checkpoint_sha256,proof.policy_sha256);
 const onnx=fs.readFileSync(path.join(modelRoot,'model.onnx'));
 assert.equal(sha(onnx),doc.meta.onnx_sha256);
-const out='runs/replay_review_20261017/inputs';fs.mkdirSync(out,{recursive:true});
-if(process.env.H7_CODE_ROOT){
-  for(const folder of ['scripts','jax_bomb'])fs.cpSync(path.join(process.env.H7_CODE_ROOT,folder),path.join(out,'authority',folder),{recursive:true,filter:p=>!p.includes('__pycache__')&&(fs.statSync(p).isDirectory()||/\.(py|js)$/.test(p))});
+const out=process.env.REPLAY_INPUT||'runs/replay_review_20261017/inputs';fs.mkdirSync(out,{recursive:true});
+const codeRoot=process.env.CODE_ROOT||process.env.H7_CODE_ROOT;
+if(codeRoot){
+  for(const folder of ['scripts','jax_bomb'])fs.cpSync(path.join(codeRoot,folder),path.join(out,'authority',folder),{recursive:true,filter:p=>!p.includes('__pycache__')&&(fs.statSync(p).isDirectory()||/\.(py|js)$/.test(p))});
   const target=path.join(out,'authority/web/assets/maps');fs.mkdirSync(target,{recursive:true});
   fs.copyFileSync('web/assets/maps/levels.json',path.join(target,'levels.json'));
 }
 fs.copyFileSync(path.join(cp,'policy.pt'),path.join(out,'policy.pt'));
 fs.writeFileSync(path.join(out,'model.json'),bytes);fs.writeFileSync(path.join(out,'model.onnx'),onnx);
 const seal=JSON.parse(fs.readFileSync(path.join(source,'SOURCE_SEAL.json')));
+const plan=JSON.parse(fs.readFileSync(path.join(source,'plan.json')));
 const sourceHashes={};
 for(const [name,expected] of Object.entries(seal.sources)) {
   const file=path.join(source,'inputs/sealed_sources',name);
@@ -30,7 +33,9 @@ for(const [name,expected] of Object.entries(seal.sources)) {
   const data=fs.readFileSync(file);assert.equal(sha(data),expected,name);
   const target=path.join(out,'authority',name);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,data);sourceHashes[name]=expected;
 }
-const receipt={schema:'qqt.h7-input-proof/v1',generation:32,checkpoint_sha256:proof.policy_sha256,
+const receipt={schema:'qqt.diagnostic-input-proof/v1',stage,generation:32,checkpoint_sha256:proof.policy_sha256,
+  gamma:plan.gamma,critic_sha256:null,critic_status:'trained critic absent from production actor export',
+  plan_sha256:sha(fs.readFileSync(path.join(source,'plan.json'))),
   committed_sha256:sha(fs.readFileSync(path.join(cp,'COMMITTED.json'))),model_sha256:sha(bytes),onnx_sha256:sha(onnx),
   complete_sha256:sha(fs.readFileSync(path.join(source,'CAMPAIGN_COMPLETE.json'))),source_hashes:sourceHashes,cpu_only:true};
-fs.writeFileSync(path.join(out,'proof.json'),JSON.stringify(receipt,null,2)+'\n');console.log('Verified and copied immutable H7 g32 policy, CPU model and sealed sources');
+fs.writeFileSync(path.join(out,'proof.json'),JSON.stringify(receipt,null,2)+'\n');console.log(`Verified and copied immutable ${stage} g32 policy, CPU model and sealed sources`);

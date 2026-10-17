@@ -3,7 +3,8 @@ const fs=require('fs'),path=require('path'),assert=require('assert'),crypto=requ
 const Q=require('../web/sim'),P=require('../web/review_protocol'),authority=require('./eval_web_hunter');
 const {BunRuleTacticalBot,stateFromSim}=require('../web/bun_rule_bot');
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
-const input='runs/replay_review_20261017/inputs',output='runs/replay_review_20261017/episodes';
+const input=process.env.REPLAY_INPUT||'runs/replay_review_20261017/inputs',output=process.env.REPLAY_EPISODES||'runs/replay_review_20261017/episodes';
+const stage=process.env.REPLAY_STAGE||'h7';
 const level=authority.loadLevel();
 function distance(s,team) {
   const d=new Int16Array(195).fill(32767),queue=[],b=s.bunBases[team];
@@ -52,7 +53,9 @@ async function load() {
   const model=new Q.TransformerModel(doc);model.greedy=true;model.inferEvery=1;
   let parity;
   async function act(s,rng){
-    const {obs,state}=model._getLaggedInputs(s,0);state[9]+=s.trapped[0]/60;state[10]+=s.trapped[1]/60;
+    const {obs,state}=model._getLaggedInputs(s,0);
+    // Historical H7 re-inference preserves its original input bug; new batches use production encoding.
+    if(stage==='h7'){state[9]+=s.trapped[0]/60;state[10]+=s.trapped[1]/60;}
     const result=await session.run({obs:new ort.Tensor('float32',obs,[1,24,13,15]),state:new ort.Tensor('float32',Float32Array.from(state),[1,24])});
     const logits={move:result.move.data,bomb:result.bomb.data};
     assert([...logits.move,...logits.bomb].every(Number.isFinite));
@@ -62,8 +65,8 @@ async function load() {
   return {proof,act,session,getParity:()=>parity};
 }
 async function episode(seed,variant,loaded,verify=false,opponent='normal') {
-  const meta={id:`h7-g32-${variant}-${opponent==='normal'?'':opponent+'-'}${seed}`,episode_id:`offline-h7-g32-${opponent==='tactical'?'tactical-v2':'hunter-'+opponent}-${seed}`,seed,variant,tick_ms:100,max_ticks:2400,
-    model:'H7 v33 g32 raw',checkpoint:'H7/g32/policy.pt',checkpoint_sha256:loaded.proof.checkpoint_sha256,
+  const meta={id:`${stage}-g32-${variant}-${opponent==='normal'?'':opponent+'-'}${seed}`,episode_id:`offline-${stage}-g32-${opponent==='tactical'?'tactical-v2':'hunter-'+opponent}-${seed}`,seed,variant,tick_ms:100,max_ticks:2400,
+    model:stage==='h8'?'H8 v34 g32 raw':'H7 v33 g32 raw',checkpoint:`${stage.toUpperCase()}/g32/policy.pt`,checkpoint_sha256:loaded.proof.checkpoint_sha256,
     model_sha256:loaded.proof.model_sha256,onnx_sha256:loaded.proof.onnx_sha256,opponent:opponent==='tactical'?'bun.tactical/v2':`bun.hunter/${opponent}`,
     simulator_sha256:sha(fs.readFileSync('web/sim.js')),opponent_sha256:sha(fs.readFileSync(opponent==='tactical'?'web/bun_rule_bot.js':'web/bun_hunter_bot.js')),
     source_hashes:Object.fromEntries(['web/sim.js','web/bun_hunter_bot.js','web/bun_rule_bot.js','web/bot_contract.js','scripts/generate_diagnostic_replays.js'].map(n=>[n,sha(fs.readFileSync(n))])),
@@ -99,7 +102,7 @@ async function run(){
   assert.equal(process.env.CUDA_VISIBLE_DEVICES,'','explicit CPU isolation required');
   fs.mkdirSync(output,{recursive:true});const loaded=await load(),summaries=[];
   for(let index=0;index<12;index++){
-    const supplement=process.argv.includes('--supplement'),seed=(supplement?2026101720:2026101700)+index,variant=supplement?'native':index<6?'native':'open',opponent=supplement?(index<6?'hard':'tactical'):'normal',file=path.join(output,`h7-g32-${variant}-${opponent==='normal'?'':opponent+'-'}${seed}.json`);
+    const supplement=process.argv.includes('--supplement'),seed=(stage==='h8'?(supplement?2026101760:2026101740):(supplement?2026101720:2026101700))+index,variant=supplement?'native':index<6?'native':'open',opponent=supplement?(index<6?'hard':'tactical'):'normal',file=path.join(output,`${stage}-g32-${variant}-${opponent==='normal'?'':opponent+'-'}${seed}.json`);
     if(fs.existsSync(file)){const d=JSON.parse(fs.readFileSync(file));assert.equal(d.meta.checkpoint_sha256,loaded.proof.checkpoint_sha256);summaries.push({id:d.meta.id,seed,variant,...d.summary});continue;}
     const d=await episode(seed,variant,loaded,false,opponent);fs.writeFileSync(file,JSON.stringify(d));summaries.push({id:d.meta.id,seed,variant,...d.summary});console.log(JSON.stringify(summaries.at(-1)));
   }

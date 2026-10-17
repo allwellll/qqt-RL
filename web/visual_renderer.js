@@ -683,7 +683,10 @@
         const humanTeam = teamOf(sim, motion ? motion.humanPid : 0);
         for (let pid = 0; pid < playerCount(sim); pid++) if (sim.alive[pid]) {
           let gy = sim.pos[pid * 2], gx = sim.pos[pid * 2 + 1];
-          if (motion && pid !== motion.humanPid) {
+          const visualOverride=motion?.visualPos;
+          if(visualOverride && Number.isFinite(visualOverride[pid*2]) && Number.isFinite(visualOverride[pid*2+1])){
+            gy=visualOverride[pid*2];gx=visualOverride[pid*2+1];
+          } else if (motion && pid !== motion.humanPid) {
             const py = motion.prevPos[pid * 2], px = motion.prevPos[pid * 2 + 1];
             const cy = motion.curPos[pid * 2], cx = motion.curPos[pid * 2 + 1];
             // 位移过大（复活/传送）不插值，避免角色横扫全图
@@ -701,7 +704,8 @@
           const walking = !trapTicks && now < movingUntil[pid];
           const frames = character ? character[walking ? 'walk' : 'stand'][row] : assets.players[team][row];
           const image = skinFrame(frames[walking ? Math.floor(now / 100) % frames.length : 0],motion?.playerPalettes?.[pid]);
-          const x = Math.round(gx * CELL - image.width / 2), y = Math.min(Math.round(playerVisualY(gy, image.height)), 780 - image.height);
+          const pixel=value=>visualOverride?value:Math.round(value);
+          const x = pixel(gx * CELL - image.width / 2), y = Math.min(pixel(playerVisualY(gy, image.height)), 780 - image.height);
           if(motion?.playerLabels?.[pid])roleTags.push({x:gx*CELL,
             y:y+image.height*SPRITE_HEAD_FRAC-(sim.bunCarried[pid]>=0?48:16),label:motion.playerLabels[pid],team:teamOf(sim,pid)});
           // 箭头先记录：进包子笼等遮挡被隐藏时仍要标出位置。
@@ -710,7 +714,7 @@
           const onWall = sim.wall[playerCell] || sim.brick[playerCell];
           if (coveredCells.has(playerCell) && !onWall) continue;
           const z = Math.floor(gy) * Z_ROW_STRIDE + (onWall ? 23 : 18);
-          items.push([z - 1, assets.shadow, Math.round(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
+          items.push([z - 1, assets.shadow, pixel(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
           // 多人时同队共用精灵：脚下队伍色光圈 + 头顶名牌区分。
           if (playerCount(sim) > 2 || motion?.playerLabels) {
             items.push([z - 1, () => drawTeamRing(gx * CELL, y + image.height - 6, team)]);
@@ -726,8 +730,8 @@
             const frame = halo.frames[Math.floor(now / halo.frameMs) % halo.frames.length];
             // magic0139 的原点来自 DIMG，换算为角色中心锚点，保持官方环形光效偏移。
             items.push([z + 3, () => ctx.drawImage(frame,
-              Math.round(gx * CELL + halo.ox * SCALE),
-              Math.round(gy * CELL + halo.oy * SCALE), frame.width,
+              pixel(gx * CELL + halo.ox * SCALE),
+              pixel(gy * CELL + halo.oy * SCALE), frame.width,
               Math.round(frame.width * halo.aspect))]);
           }
           // 包子底边落在头顶附近（帧顶约 30% 为透明留白），贴着头顶而不是悬在上方。

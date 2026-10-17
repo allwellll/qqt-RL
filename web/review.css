@@ -208,6 +208,7 @@ h3 {
   padding: 12px 4px;
   overflow-wrap: anywhere;
 }
+.history-control { display:flex; align-items:center; gap:6px; color:#a1a8b6; font-size:11px; margin-bottom:8px; }
 .center {
   padding: 16px 20px;
   min-width: 0;
@@ -403,7 +404,7 @@ button img {
   border-radius: 4px;
 }
 #timeline {
-  height: 204px;
+  min-height: 276px;
   position: relative;
   cursor: crosshair;
   background: #181b21;
@@ -449,6 +450,9 @@ button img {
   opacity: 1;
   filter: brightness(1.4);
 }
+.numeric-mark { width: max-content; min-width: 44px; height: 18px; padding: 1px 3px; color: #f1f3f6; font: 9px/16px ui-monospace,monospace; white-space: nowrap; transform: none; }
+#advantage-status { color: #c2b29d; font-size: 10px; line-height: 1.8; overflow-wrap: anywhere; }
+.event-reward { color: #b8dfcd; font-size: 11px; line-height: 1.8; border-bottom: 1px solid #39453f; padding-bottom: 6px; }
 #playhead {
   position: absolute;
   top: 0;

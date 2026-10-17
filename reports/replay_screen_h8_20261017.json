@@ -1,0 +1,862 @@
+{
+  "schema": "qqt.diagnostic-screen/v1",
+  "seed_ranges": [
+    [
+      2026101740,
+      2026101751
+    ],
+    [
+      2026101760,
+      2026101771
+    ]
+  ],
+  "selection": "first episode per declared failure, then earliest failed episodes, maximum six",
+  "episodes": [
+    {
+      "id": "h8-g32-native-2026101740",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101740",
+      "seed": 2026101740,
+      "variant": "native",
+      "opponent": "bun.hunter/normal",
+      "selected": true,
+      "summary": {
+        "ticks": 1783,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          58.13749997317791,
+          -35.99999921023846
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      }
+    },
+    {
+      "id": "h8-g32-native-2026101741",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101741",
+      "seed": 2026101741,
+      "variant": "native",
+      "opponent": "bun.hunter/normal",
+      "selected": true,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          -27.99999998509884,
+          3.925000011920929
+        ],
+        "failures": [
+          "self_bomb"
+        ]
+      }
+    },
+    {
+      "id": "h8-g32-native-2026101742",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101742",
+      "seed": 2026101742,
+      "variant": "native",
+      "opponent": "bun.hunter/normal",
+      "selected": true,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          -12,
+          -22.5
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      }
+    },
+    {
+      "id": "h8-g32-native-2026101743",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101743",
+      "seed": 2026101743,
+      "variant": "native",
+      "opponent": "bun.hunter/normal",
+      "selected": false,
+      "summary": {
+        "ticks": 830,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          2.2000000029802322,
+          4.1875
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-2026101744",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101744",
+      "seed": 2026101744,
+      "variant": "native",
+      "opponent": "bun.hunter/normal",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          3.0000000447034836,
+          6.125000044703484
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-2026101745",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101745",
+      "seed": 2026101745,
+      "variant": "native",
+      "opponent": "bun.hunter/normal",
+      "selected": true,
+      "summary": {
+        "ticks": 2094,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          12.625000014901161,
+          -63.999999806284904
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      }
+    },
+    {
+      "id": "h8-g32-open-2026101746",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101746",
+      "seed": 2026101746,
+      "variant": "open",
+      "opponent": "bun.hunter/normal",
+      "selected": false,
+      "summary": {
+        "ticks": 359,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          1.600000023841858,
+          4.087499976158142
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-open-2026101747",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101747",
+      "seed": 2026101747,
+      "variant": "open",
+      "opponent": "bun.hunter/normal",
+      "selected": false,
+      "summary": {
+        "ticks": 326,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          0.699999988079071,
+          3.087499976158142
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-open-2026101748",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101748",
+      "seed": 2026101748,
+      "variant": "open",
+      "opponent": "bun.hunter/normal",
+      "selected": false,
+      "summary": {
+        "ticks": 287,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          0.699999988079071,
+          26.88749998807907
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-open-2026101749",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101749",
+      "seed": 2026101749,
+      "variant": "open",
+      "opponent": "bun.hunter/normal",
+      "selected": false,
+      "summary": {
+        "ticks": 334,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          0.5,
+          3.487500011920929
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-open-2026101750",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101750",
+      "seed": 2026101750,
+      "variant": "open",
+      "opponent": "bun.hunter/normal",
+      "selected": true,
+      "summary": {
+        "ticks": 2344,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          -12.00000187754631,
+          0.49999965727329254
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      }
+    },
+    {
+      "id": "h8-g32-open-2026101751",
+      "episode_id": "offline-h8-g32-hunter-normal-2026101751",
+      "seed": 2026101751,
+      "variant": "open",
+      "opponent": "bun.hunter/normal",
+      "selected": false,
+      "summary": {
+        "ticks": 1106,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          20.40000009536743,
+          14.1875
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      }
+    },
+    {
+      "id": "h8-g32-native-hard-2026101760",
+      "episode_id": "offline-h8-g32-hunter-hard-2026101760",
+      "seed": 2026101760,
+      "variant": "native",
+      "opponent": "bun.hunter/hard",
+      "selected": true,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          18.650000765919685,
+          -12.500000208616257
+        ],
+        "failures": [
+          "enemy_drop_unpicked",
+          "window_closed_empty"
+        ]
+      }
+    },
+    {
+      "id": "h8-g32-native-hard-2026101761",
+      "episode_id": "offline-h8-g32-hunter-hard-2026101761",
+      "seed": 2026101761,
+      "variant": "native",
+      "opponent": "bun.hunter/hard",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          0.5,
+          1
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-hard-2026101762",
+      "episode_id": "offline-h8-g32-hunter-hard-2026101762",
+      "seed": 2026101762,
+      "variant": "native",
+      "opponent": "bun.hunter/hard",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          4.300000071525574,
+          3.4500000029802322
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-hard-2026101763",
+      "episode_id": "offline-h8-g32-hunter-hard-2026101763",
+      "seed": 2026101763,
+      "variant": "native",
+      "opponent": "bun.hunter/hard",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          16.162500396370888,
+          -39.99999922513962
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      }
+    },
+    {
+      "id": "h8-g32-native-hard-2026101764",
+      "episode_id": "offline-h8-g32-hunter-hard-2026101764",
+      "seed": 2026101764,
+      "variant": "native",
+      "opponent": "bun.hunter/hard",
+      "selected": false,
+      "summary": {
+        "ticks": 1504,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          20.737499237060547,
+          -12
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-hard-2026101765",
+      "episode_id": "offline-h8-g32-hunter-hard-2026101765",
+      "seed": 2026101765,
+      "variant": "native",
+      "opponent": "bun.hunter/hard",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          67.40000231564045,
+          -47.999999806284904
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      }
+    },
+    {
+      "id": "h8-g32-native-tactical-2026101766",
+      "episode_id": "offline-h8-g32-tactical-v2-2026101766",
+      "seed": 2026101766,
+      "variant": "native",
+      "opponent": "bun.tactical/v2",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          0.5,
+          0
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-tactical-2026101767",
+      "episode_id": "offline-h8-g32-tactical-v2-2026101767",
+      "seed": 2026101767,
+      "variant": "native",
+      "opponent": "bun.tactical/v2",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          0.5,
+          0
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-tactical-2026101768",
+      "episode_id": "offline-h8-g32-tactical-v2-2026101768",
+      "seed": 2026101768,
+      "variant": "native",
+      "opponent": "bun.tactical/v2",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          0.5,
+          0
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-tactical-2026101769",
+      "episode_id": "offline-h8-g32-tactical-v2-2026101769",
+      "seed": 2026101769,
+      "variant": "native",
+      "opponent": "bun.tactical/v2",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          0.5,
+          0
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-tactical-2026101770",
+      "episode_id": "offline-h8-g32-tactical-v2-2026101770",
+      "seed": 2026101770,
+      "variant": "native",
+      "opponent": "bun.tactical/v2",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          0.5,
+          0
+        ],
+        "failures": []
+      }
+    },
+    {
+      "id": "h8-g32-native-tactical-2026101771",
+      "episode_id": "offline-h8-g32-tactical-v2-2026101771",
+      "seed": 2026101771,
+      "variant": "native",
+      "opponent": "bun.tactical/v2",
+      "selected": false,
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          1,
+          0
+        ],
+        "failures": []
+      }
+    }
+  ],
+  "verification": [
+    {
+      "id": "h8-g32-native-hard-2026101760",
+      "actions_exact": true,
+      "state_hashes_exact": true,
+      "terminal_exact": true,
+      "sha256": "f1aab13aaf34e8e996ed52d4a8e6bc2bc930307dd4096fbf369cadb4a372f7ff",
+      "bytes": 43881,
+      "gzip_bytes": 8635
+    },
+    {
+      "id": "h8-g32-native-2026101740",
+      "actions_exact": true,
+      "state_hashes_exact": true,
+      "terminal_exact": true,
+      "sha256": "6cc7a2426d58aba8f00cee36edef1ec4d48e60a15cd848dcfe1977c30587efa1",
+      "bytes": 41637,
+      "gzip_bytes": 9037
+    },
+    {
+      "id": "h8-g32-native-2026101742",
+      "actions_exact": true,
+      "state_hashes_exact": true,
+      "terminal_exact": true,
+      "sha256": "411ddc6f80ff1b2af361f9496f5365173d5b7fbcb231cc0e0dbdcccf7bbb0b4f",
+      "bytes": 53502,
+      "gzip_bytes": 10135
+    },
+    {
+      "id": "h8-g32-native-2026101741",
+      "actions_exact": true,
+      "state_hashes_exact": true,
+      "terminal_exact": true,
+      "sha256": "713884823b0c12552b3104607f1f67474f69c6d873bc0f74d9fed07596f5fc17",
+      "bytes": 43788,
+      "gzip_bytes": 8313
+    },
+    {
+      "id": "h8-g32-native-2026101745",
+      "actions_exact": true,
+      "state_hashes_exact": true,
+      "terminal_exact": true,
+      "sha256": "ecbae874fe6248c16617f15f87b0714728bef48dc27bad4ca2ad1701763ae584",
+      "bytes": 48562,
+      "gzip_bytes": 9612
+    },
+    {
+      "id": "h8-g32-open-2026101750",
+      "actions_exact": true,
+      "state_hashes_exact": true,
+      "terminal_exact": true,
+      "sha256": "873926035be3c38f8c00baafba6f974ebc213fe10866da53fbc0fbba43472a30",
+      "bytes": 46618,
+      "gzip_bytes": 9511
+    }
+  ]
+}

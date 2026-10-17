@@ -1,10 +1,10 @@
 'use strict';
 (function(root, factory) {
   const node=typeof module === 'object' && module.exports;
-  const api = factory(node ? require('./sim') : root.QQT,node ? require('./review_dagger') : root.QQTReviewDagger);
+  const api = factory(node ? require('./sim') : root.QQT,node ? require('./review_dagger') : root.QQTReviewDagger,node ? require('./review_advantage') : root.QQTReviewAdvantage);
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.QQTReview = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function(Q,D) {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function(Q,D,A) {
   const SCHEMA = 'qqt.diagnostic-replay/v1';
   const ANNOTATIONS = 'qqt.replay-annotations/v1';
   const stringify = value => JSON.stringify(value);
@@ -38,6 +38,7 @@
     if (!Array.isArray(d.events)) fail('events');
     for (const e of d.events) if (!Number.isInteger(e.tick) || e.tick < 0 || e.tick > d.actions.length || typeof e.kind !== 'string') fail('event');
     D.validateEvents(d.dagger_events,d.actions.length);
+    A.validate(d);
     previous = -1;
     for (const row of d.checks || []) {
       if (!Array.isArray(row) || row.length !== 2 || !Number.isInteger(row[0]) || row[0] <= previous || row[0] > d.actions.length || !/^[a-f0-9]{64}$/.test(row[1])) fail('state hash');
@@ -106,6 +107,7 @@
   function identity(d){
     const value={meta:{...d.meta,replay_identity:undefined},actions:d.actions};
     if(d.dagger_events!==undefined)value.dagger_events=d.dagger_events;
+    if(d.advantages!==undefined)value.advantages=d.advantages;
     return value;
   }
   function time(tick, ms=100) {

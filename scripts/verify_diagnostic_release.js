@@ -24,11 +24,12 @@ const api=async suffix=>JSON.parse(await curl(`https://api.github.com/repos/${re
  const catalog=JSON.parse(await curl(base+'review-catalog.json?verify='+head));assert.equal(catalog.schema,'qqt.diagnostic-catalog/v1');
  const dagger=JSON.parse(await curl(base+'review-dagger/catalog.json?verify='+head));assert.equal(dagger.schema,'qqt.dagger-catalog/v1');
  const daggerFiles=new Set(['review-dagger/catalog.json']);for(const row of dagger.runs){daggerFiles.add('review-dagger/'+row.file);const doc=JSON.parse(fs.readFileSync('web/review-dagger/'+row.file));for(const source of doc.sources)daggerFiles.add('review-dagger/sources/'+source.file);}
- const files=['review.html','review.js','review.css','review_protocol.js','review_presentation.js','review_dagger.js','device_auth.js','ui_panels.js','index.html','sim.js','visual_renderer.js','review-catalog.json','assets/review-icons/play.svg','assets/review-icons/copy.svg',...catalog.replays.map(r=>'review-replays/'+r.file),...daggerFiles];
+ const replayRows=[...catalog.replays,...(catalog.history_replays||[])];
+ const files=['review.html','review.js','review.css','review_protocol.js','review_presentation.js','review_advantage.js','review_dagger.js','device_auth.js','ui_panels.js','index.html','sim.js','visual_renderer.js','review-catalog.json','assets/review-icons/play.svg','assets/review-icons/copy.svg',...replayRows.map(r=>'review-replays/'+r.file),...daggerFiles];
  for(const file of files){
   const bytes=await curl(base+file+'?verify='+head),local=fs.readFileSync(path.join('web',file));assert(bytes.equals(local),`public bytes mismatch: ${file}`);
   const row={file,http:200,bytes:bytes.length,sha256:sha(bytes),gzip_bytes:zlib.gzipSync(bytes,{level:9}).length};
-  const expected=catalog.replays.find(r=>'review-replays/'+r.file===file)||dagger.runs.find(r=>'review-dagger/'+r.file===file);if(expected){assert.equal(row.sha256,expected.sha256);assert.equal(row.bytes,expected.bytes);assert.equal(row.gzip_bytes,expected.gzip_bytes);}record.files.push(row);
+  const expected=replayRows.find(r=>'review-replays/'+r.file===file)||dagger.runs.find(r=>'review-dagger/'+r.file===file);if(expected){assert.equal(row.sha256,expected.sha256);assert.equal(row.bytes,expected.bytes);assert.equal(row.gzip_bytes,expected.gzip_bytes);}record.files.push(row);
  }
  const deployments=await api('deployments?environment=github-pages&per_page=10');const deployment=deployments.find(d=>d.sha===head);assert(deployment,'same SHA Pages deployment absent');
  const statuses=await api(`deployments/${deployment.id}/statuses`);assert.equal(statuses[0].state,'success');record.deployment={sha:deployment.sha,state:statuses[0].state,url:statuses[0].environment_url};
