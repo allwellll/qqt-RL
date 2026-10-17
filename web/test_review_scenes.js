@@ -7,7 +7,7 @@ const assert=require('assert'),fs=require('fs'),P=require('./review_protocol'),A
   assert.deepEqual(catalog.scenes.filter(s=>s.id!=='route_drop_return').map(s=>s.id),['native','open','carry_home']);
   assert.equal(catalog.replays.filter(r=>!r.diagnostic).length,6);
   for(const declared of matrix.scenes){
-    const rows=catalog.replays.filter(r=>r.scene===declared.id);
+    const rows=catalog.replays.filter(r=>r.scene===declared.id&&!r.diagnostic);
     assert.equal(rows.length,2);assert.deepEqual(rows.map(r=>r.seed).sort(),declared.seeds);
     for(const row of rows){
       const d=JSON.parse(fs.readFileSync('web/review-replays/'+row.file));

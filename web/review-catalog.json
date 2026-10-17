@@ -1,6 +1,6 @@
 {
   "schema": "qqt.diagnostic-catalog/v1",
-  "model": "H8 v35 g32 路线诊断 / H8 v34 g32 原始任务优势",
+  "model": "H8 v36 连续路线 PBRS g32；含既有 H8 v35/v34 对照",
   "scenes": [
     {
       "id": "route_drop_return",
@@ -27,11 +27,11 @@
       "base_map": 806
     }
   ],
-  "screened_episodes": 7,
+  "screened_episodes": 8,
   "selection": "Retain every declared episode; report rule-based failure labels without post-hoc selection",
   "predeclared_matrix": "review-evidence/matrix.json",
-  "raw_bytes": 500362,
-  "gzip_bytes": 130042,
+  "raw_bytes": 506232,
+  "gzip_bytes": 131921,
   "replays": [
     {
       "id": "h8-route-v35-g32-drop-return-2026101732",
@@ -344,6 +344,48 @@
       "sha256": "67349c6814d85d82e9a4082826914cb28de7a5ab23beae06351456798762e88b",
       "bytes": 12639,
       "gzip_bytes": 5261
+    },
+    {
+      "id": "h8-route-v36-g32-2026101736",
+      "name": "H8 v36 连续路线 PBRS g32",
+      "file": "h8-route-v36-g32-2026101736.json",
+      "seed": 2026101736,
+      "variant": "native",
+      "scene": "native",
+      "scene_name": "自然规则对局片段（战术清砖图，300 tick 截断）",
+      "scene_rules": "固定 seed production Sim 对局片段；Tactical Arena 清除可破坏砖，无道具；原生模拟器规则配置；300 tick 截断，非完整终局",
+      "model": "H8 v36 连续路线 PBRS g32",
+      "opponent": "bun.tactical_v2",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "summary": {
+        "ticks": 300,
+        "done": false,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          null,
+          null
+        ]
+      },
+      "sha256": "b82d8e53d64384d949c91baab33ee4ab3f5086499b8c5b9d7340978acc470a3b",
+      "bytes": 5870,
+      "gzip_bytes": 1879
     }
   ],
   "history_replays": [

@@ -1,10 +1,10 @@
 'use strict';
 (function(root, factory) {
   const node=typeof module === 'object' && module.exports;
-  const api = factory(node ? require('./sim') : root.QQT,node ? require('./review_dagger') : root.QQTReviewDagger,node ? require('./review_advantage') : root.QQTReviewAdvantage,node ? require('./review_route') : root.QQTReviewRoute);
+  const api = factory(node ? require('./sim') : root.QQT,node ? require('./review_dagger') : root.QQTReviewDagger,node ? require('./review_advantage') : root.QQTReviewAdvantage,node ? require('./review_route') : root.QQTReviewRoute,node ? require('./tactical_arena') : root.QQTTacticalArena);
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.QQTReview = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function(Q,D,A,R) {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function(Q,D,A,R,T) {
   const SCHEMA = 'qqt.diagnostic-replay/v1';
   const ANNOTATIONS = 'qqt.replay-annotations/v1';
   const ROUTE_SIM_HASH='9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3';
@@ -17,7 +17,7 @@
     return versions.get(ROUTE_SIM_HASH);
   }
   function replaySetup(meta,level){
-    if(meta.scene!=='route_drop_return')return setup(meta,level);
+    if(meta.scene!=='route_drop_return')return meta.arena||meta.native_rules===false||meta.truncated?setupExtended(meta,level):setup(meta,level);
     const api=simulator(meta),s=new api.Sim(meta.seed);
     s.reset(level,{nativeTrap:true,nativeItems:true});s.maxSteps=1200;
     s.initialHp=1;s.hp=[1,1];s.invuln=[0,0];s.brick.fill(0);
@@ -35,6 +35,9 @@
     if (!d || d.schema !== SCHEMA) fail('schema');
     if (!d.meta || !/^[\w-]+$/.test(d.meta.id) || !Number.isSafeInteger(d.meta.seed) || d.meta.tick_ms !== 100) fail('meta');
     if (d.meta.scene !== undefined && !['native','open','carry_home','route_drop_return'].includes(d.meta.scene)) fail('scene');
+    if(d.meta.arena!==undefined&&d.meta.arena!=='tactical_v2')fail('arena');
+    if(d.meta.native_rules!==undefined&&typeof d.meta.native_rules!=='boolean')fail('native rules');
+    if(d.meta.arena!==undefined&&!/^[a-f0-9]{64}$/.test(d.meta.arena_map_sha256||''))fail('arena map hash');
     if(d.meta.scene==='route_drop_return'&&(d.meta.simulator_sha256!==ROUTE_SIM_HASH||d.meta.diagnostic!==true||d.meta.reward_status!=='unrecorded'||d.meta.training_reward_status!=='unrecorded'))fail('diagnostic evidence');
     for (const k of ['checkpoint_sha256','model_sha256','simulator_sha256','opponent_sha256','map_sha256','replay_identity']) if (!/^[a-f0-9]{64}$/.test(d.meta[k])) fail(k);
     if (!Array.isArray(d.actions) || !d.actions.length || d.actions.length > 10000 || d.actions.length !== d.summary?.ticks) fail('length');
@@ -66,7 +69,8 @@
       if (!Array.isArray(row) || row.length !== 2 || !Number.isInteger(row[0]) || row[0] <= previous || row[0] > d.actions.length || !/^[a-f0-9]{64}$/.test(row[1])) fail('state hash');
       previous = row[0];
     }
-    if (d.checks?.[0]?.[0] !== 0 || previous !== d.actions.length || d.summary.done !== true) fail('terminal');
+    const truncated=d.summary.done===false&&d.meta.truncated===true&&d.actions.length===d.meta.max_ticks;
+    if (d.checks?.[0]?.[0] !== 0 || previous !== d.actions.length || (d.summary.done!==true&&!truncated)) fail('terminal');
     return d;
   }
   function setup(meta, level) {
@@ -83,6 +87,22 @@
       sim.bunSpawnPos[0]=[sim.pos[0],sim.pos[1]];
     }
     sim.maxSteps = meta.max_ticks;
+    return sim;
+  }
+  function setupExtended(meta,level){
+    if(meta.arena==='tactical_v2'){
+      if(!T)throw Error('tactical arena support unavailable');
+      level=T.buildTacticalArena(level);
+    }
+    const sim=new Q.Sim(meta.seed),scene=meta.scene||meta.variant||'native';
+    sim.reset(level,meta.native_rules===false?{}:{nativeTrap:true,nativeItems:true});
+    if(scene==='open'||meta.variant==='open')sim.brick.fill(0);
+    if(scene==='carry_home'){
+      sim.brick.fill(0);sim.initialHp=1;sim.hp=[1,1];sim.invuln=[0,0];
+      sim.pos[0]=9.5;sim.pos[1]=4.5+(meta.seed%3);sim.bunCarried[0]=1;sim.bunStored[1][1]=0;
+      sim.bunSpawnPos[0]=[sim.pos[0],sim.pos[1]];
+    }
+    sim.maxSteps=meta.truncated?Math.max(meta.max_ticks+1,2400):meta.max_ticks;
     return sim;
   }
   const unpack = row => [[row[0],Number(row[1]===1),Number(row[1]===2)],[row[2],Number(row[3]===1),Number(row[3]===2)]];
@@ -131,7 +151,7 @@
         this.seek(tick);
         if (await hash(state(this.sim)) !== expected) throw new Error(`state hash @${tick}`);
       }
-      if (!this.sim.done || this.sim.winner !== this.document.summary.winner) throw new Error('terminal mismatch');
+      if (this.sim.done !== this.document.summary.done || this.sim.winner !== this.document.summary.winner) throw new Error('terminal mismatch');
       this.reset(); return true;
     }
   }

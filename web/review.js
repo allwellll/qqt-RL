@@ -92,7 +92,7 @@
       if(sceneFilter.value&&r.scene!==sceneFilter.value)continue;
       if(!`${r.id} ${r.scene_name||''} ${r.summary.failures.map(k=>labels[k]).join(' ')} ${r.diagnostic_audit?'返程振荡 停滞':''}`.toLowerCase().includes(filter))continue;
       const b=text('button','',`replay-row${doc?.meta.id===r.id?' active':''}`);b.dataset.replay=r.id;
-      b.append(text('strong',`${r.model} · ${r.scene_name||(r.variant==='open'?'清砖图':'原始图')}`),text('small',`seed ${r.seed} · ${P.time(r.summary.ticks)} · ${r.summary.winner===null?'平局':r.summary.winner===0?'模型胜':'对手胜'}`));
+      b.append(text('strong',`${r.model} · ${r.scene_name||(r.variant==='open'?'清砖图':'原始图')}`),text('small',`seed ${r.seed} · ${P.time(r.summary.ticks)} · ${r.summary.done===false?'片段未终局':r.summary.winner===null?'平局':r.summary.winner===0?'模型胜':'对手胜'}`));
       if(r.diagnostic)b.append(text('strong','诊断场景，不代表自然完整对局成功','diagnostic-warning'));
       if(r.diagnostic_audit)b.append(text('span','返程振荡 / 停滞失败已审计','tag'));
       if(r.scene)b.append(text('small',`▦ ${r.map||806} · ${r.scene_rules} · map ${r.map_sha256.slice(0,8)}`,'scene-summary'));
@@ -231,7 +231,7 @@
     Object.defineProperty(next,'asset_sha256',{value:row.sha256});
     doc=next;returnAnalysis=nextAnalysis;returnAudit=nextReturnAudit;player=nextPlayer;preview=new P.Player(doc,level);preview.cache=player.cache;rewardByTick=new Map(doc.rewards.map(r=>[r[0],r]));curveCache=null;renderer=QQTVisual.createRenderer($('game'),level,assets);rows=[];editing=null;$('annotation-form').hidden=true;
     try{const saved=localStorage.getItem(storageKey());if(saved)rows=P.validateAnnotations(JSON.parse(saved),doc);}catch(_){say('已有标注无效或存储不可用');}
-    $('episode-title').textContent=(doc.meta.route?.kind==='fixture'?'合成测试 fixture · ':'')+`模型 P0 · ${doc.meta.model} 对阵 对手 P1`;$('episode-meta').textContent=`${doc.meta.scene_name||'历史抢包对战'} · qqt_id ${doc.meta.map} · ${doc.meta.scene_rules||doc.meta.variant} · 对手 ${doc.meta.opponent} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)} · map ${doc.meta.map_sha256.slice(0,12)}`;$('terminal').textContent=`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
+    $('episode-title').textContent=(doc.meta.route?.kind==='fixture'?'合成测试 fixture · ':'')+`模型 P0 · ${doc.meta.model} 对阵 对手 P1`;$('episode-meta').textContent=`${doc.meta.scene_name||'历史抢包对战'} · qqt_id ${doc.meta.map} · ${doc.meta.scene_rules||doc.meta.variant} · 对手 ${doc.meta.opponent} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)} · map ${doc.meta.map_sha256.slice(0,12)}`;$('terminal').textContent=doc.summary.done===false?'片段结束：对局仍在进行，未记录胜负':`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
     $('route-experiment').hidden=!doc.meta.diagnostic;
     let warning=$('episode-warning');if(!warning){warning=text('p','','diagnostic-warning');warning.id='episode-warning';document.querySelector('.episode-head').after(warning);}warning.hidden=!doc.meta.diagnostic;warning.textContent=doc.meta.diagnostic?'诊断场景，不代表自然完整对局成功 · 预置掉包 / assist-off / 固定向上对手':'';
     $('seek').max=doc.actions.length;$('duration').textContent=P.time(doc.actions.length);$('integrity').style.color='#82d2b6';

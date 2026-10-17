@@ -36,7 +36,7 @@ const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
   for(const row of rcat.replays){
     if(row.id.startsWith('h7-'))assert.equal(row.checkpoint_sha256,h7.checkpoint_sha256);const replay=JSON.parse(fs.readFileSync('web/review-replays/'+row.file));
     assert.equal(replay.dagger_events,undefined);assert.equal(D.episodeStatus(replay),'本局逐tick DAgger：未记录');
-    assert.deepEqual(D.atTick(replay,replay.events[0].tick),[],'never infer DAgger from key events/reward');
+    assert.deepEqual(D.atTick(replay,replay.events[0]?.tick??0),[],'never infer DAgger from key events/reward');
     assert(Object.values(D.episodeCounts(replay)).every(v=>v===null));
   }
   const event={tick:123,player:0,fragment:'A_ENEMY_DROP_RECOVERY',candidate:true,explicit_localization:true,
