@@ -16,7 +16,10 @@ assert.throws(() => catalog.validateManifest({ schema: 'bad', models: [] }), /sc
 assert.throws(() => catalog.validateManifest({ schema: 'qqt.web-models/v1', models: [{ ...manifest.models[0], file: '../x' }] }), /file/);
 assert.strictEqual(catalog.modelUrl(rows[0]), 'models/safe-high-c16.json');
 const production = require('./models.json');
-const bridge = production.models[0];
+const latest=production.models[0];
+assert.strictEqual(latest.id,'bun392-je10-v38-r01-g8');
+assert.strictEqual(latest.source_sha256,'d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc');
+const bridge = production.models.find(row=>row.id==='bun392-je09-stage-c-g8');
 assert.strictEqual(bridge.id, 'bun392-je09-stage-c-g8');
 assert.strictEqual(bridge.display_name, 'Bun392 JE09运包桥接g8');
 assert.strictEqual(bridge.cycle, 8);

@@ -2,6 +2,75 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-je10-v38-r01-g8",
+      "display_name": "Bun392 JE10 v38 r01 g8",
+      "file": "bun392-je10-v38-r01-g8-19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45.json",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je10-v38-r01-g8-20261018/bun392-je10-v38-r01-g8-19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45.json",
+      "sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
+      "bytes": 40296711,
+      "candidate": "je10_v38_r01_attempt04_g8_raw",
+      "cycle": 8,
+      "source_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "strategy": "raw",
+      "score": 0.2641064787299655,
+      "description": "已完成固定协议的平衡选择：natural full交付6/16、七类路线62/112、Tactical12/64；Hunter hard0/64，困难战斗仍薄弱。诊断不代表综合晋升。",
+      "score_protocol": "zero observed self harm first; maximize geometric mean of natural delivery/16, seven route delivery/112, Tactical safe kills/64, pooled Hunter safe kills/192; ties lexical round then generation. Exploratory selection, not significance or admission.",
+      "onnx": {
+        "file": "bun392-je10-v38-r01-g8-b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16.onnx",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je10-v38-r01-g8-20261018/bun392-je10-v38-r01-g8-b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16.onnx",
+        "sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
+        "bytes": 30242279,
+        "meta": {
+          "name": "model",
+          "display_name": "model",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20,
+          "value_max": 20,
+          "obs_shape": [
+            24,
+            13,
+            15
+          ],
+          "n_players": 2,
+          "source": "policy.pt",
+          "generated_at": "2026-10-17T17:48:54.361411+00:00",
+          "arch": "transformer",
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "bun_state_encoding": "bun24-trap-timer-v2",
+          "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
+          "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+          "state_dim": 24,
+          "attention_heads": 4,
+          "generation": 8
+        },
+        "reference_zero": {
+          "move": [
+            0.8917693411222556,
+            -0.7955194826411595,
+            -3.8797543025079086,
+            -0.36386929587026695,
+            -2.5932989688495725
+          ],
+          "bomb": [
+            0.1348083248853454,
+            1.854656975807751,
+            -3.6403719898069338
+          ],
+          "value": -7.2872450605375665
+        }
+      }
+    },
+    {
       "bytes": 40294827,
       "candidate": "je09_stage_c_return_set_pfsp8_g8_raw",
       "cycle": 8,

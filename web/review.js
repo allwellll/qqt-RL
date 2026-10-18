@@ -20,13 +20,14 @@
   advantagePanel.innerHTML='<h3>原始任务 Critic · 一步优势</h3><p id="advantage-status"></p><div id="advantage-details"></div>';
   const shapedPanel=document.createElement('section');
   shapedPanel.innerHTML='<h3>塑形 Critic · 一步优势</h3><p id="shaped-status"></p><div id="shaped-details"></div>';
+  const approxPanel=document.createElement('section');approxPanel.id='je10-advantage';approxPanel.hidden=true;approxPanel.innerHTML='<h3>raw A1 / shaped A1 / ΔA · 离线一步近似</h3><p id="je10-advantage-status"></p><div id="je10-advantage-details"></div>';
   const comparison=document.createElement('div');comparison.className='critic-comparison';comparison.append(advantagePanel,shapedPanel);
   const crossGap=document.createElement('p');crossGap.id='cross-critic-gap';
   const returnPanel=document.createElement('section');returnPanel.className='return-audit';returnPanel.innerHTML='<h3>返程行为诊断 · 观测与策略</h3><p id="return-status"></p><div id="return-details"></div><div class="dagger-table-scroll"><table id="return-candidates"></table></div><details><summary>优势为何未记录 · 两代 Critic 与训练链路</summary><div id="return-missing"></div></details>';
   const returnWarning=text('p','','return-warning');returnWarning.id='return-warning';returnWarning.hidden=true;document.querySelector('.seat-legend').after(returnWarning);
   const routePanel=document.createElement('section');routePanel.className='route-details-panel';
   routePanel.innerHTML='<h3>路线势能 · 人工辅助值</h3><p id="route-status"></p><p class="route-explanation">原始任务 Critic 估计任务回报；路线奖励是人工路线辅助值。塑形 Critic 只有经过塑形回报训练并验证才展示，不能用路线奖励代替。两种 Critic 的 A₁ 均是模型估计，不是观测收益。</p><div id="route-details"></div>';
-  $('state-details').before(returnPanel,comparison,crossGap,routePanel);
+  $('state-details').before(returnPanel,comparison,approxPanel,crossGap,routePanel);
   const experiment=document.createElement('section');experiment.id='route-experiment';experiment.hidden=true;experiment.className='route-experiment';
   experiment.innerHTML='<h3>路线 PBRS · g32 实验结论</h3><p>32代 / 67,108,864步；λ=0.05。诊断返程 pickup 16/16、25% 7/16、50% 6/16、home 6/16、capture 2/16。fixed32 g32 capture 主评 / holdout 均 0/16；full2400 pickup / capture 均 0/16。Tactical causal kill 12→9/64；Hunter hard 9→1/64。诊断返程有所进展，自然完整对局未改善，攻击效能下降，不建议当前 λ=.05 原样续训。</p><p id="diagnostic-warning">诊断场景，不代表自然完整对局成功</p><p>本局 trap 初态和掉包归因预置，非模型自然击杀；对手固定向上、不放泡。路线值来自诊断导出器，末 tick Phi 未归零，不能当作训练 PBRS 账本。原环境 Reward、训练总 Reward、原始 / 塑形 Critic A₁ 均未记录；同代塑形 Critic 参数存在，但缺同口径 reward 与联合反事实结果。</p><a href="review-evidence/route-v35-g32.json" target="_blank" rel="noopener">逐 tick 复算与来源 SHA-256</a>';
   document.querySelector('.display-controls').after(experiment);
@@ -121,10 +122,18 @@
     returnTick();
     details($('state-details'),[['模型阶段',P.phase(s)],['对手阶段',P.phase(s,1)],['动作 [move, ability]',a?`${a[0]},${a[1]} | ${a[2]},${a[3]}`:'开局'],['包归属（模型 / 对手）',s.bunCarried.map(v=>v<0?'空手':`源队 ${v}`).join(' / ')],['糖泡剩余 tick',s.trapped.join(' / ')],['死亡 / 复活倒计时',s.bunRespawn.join(' / ')],['坐标 [row,col]',`${s.pos[0].toFixed(2)},${s.pos[1].toFixed(2)} | ${s.pos[2].toFixed(2)},${s.pos[3].toFixed(2)}`],['笼内存包',s.bunStored.map(a=>a.join(',')).join(' / ')],['终局',s.done?`胜者 ${s.winner===null?'平局':s.winner}`:'进行中']]);
     const diagnostic=doc.diagnostic_ticks?.[t-1];
-    if(diagnostic){
+    approxPanel.hidden=!doc.meta.approximate_a1;
+    if(doc.meta.approximate_a1){
+      if(!approxPanel.isConnected)comparison.after(approxPanel);
+      const m=doc.meta.approximate_a1,v=diagnostic?.approximate_a1,n=x=>x==null?'未记录':x.toFixed(8);
+      $('je10-advantage-status').textContent=m.limitations+' 公式：'+m.definition+'；任务代理奖励：'+m.reward_definition;
+      details($('je10-advantage-details'),[['raw A1（近似）',n(v?.raw_a1)],['shaped A1（近似）',n(v?.shaped_a1)],['ΔA = shaped A1 − raw A1（近似）',n(v?.delta_a)],['raw A1 相邻 tick 增量',n(v?.raw_a1_increment)],['shaped A1 相邻 tick 增量',n(v?.shaped_a1_increment)],['ΔA 相邻 tick 增量',n(v?.delta_a_increment)],['raw Q1 执行动作 / 策略均值',n(v?.raw_q1_taken)+' / '+n(v?.raw_q1_mean)],['shaped Q1 执行动作 / 策略均值',n(v?.shaped_q1_taken)+' / '+n(v?.shaped_q1_mean)],['严格训练 raw / shaped A1','未记录：没有历史训练 rollout 与 hidden aux；这里 V=0，不调用未经验证 Critic'],['覆盖率',m.measured_count+'/'+doc.actions.length+' tick；全部合法 move×ability 反事实，按同 checkpoint 策略加权']]);
+    }
+    if(diagnostic?.decision){
       const box=document.createElement('div'),decision=diagnostic.decision;
       const offline=diagnostic.offline_recomputed_current_reward;
       details(box,[['本步状态 SHA-256（前 → 后）',`${diagnostic.state_before_sha256} → ${diagnostic.state_after_sha256}`],['合法联合动作数（含道具）',String(decision.legal_count)],['移动策略概率（上/下/左/右/停）',decision.move_probability.map(v=>(100*v).toFixed(3)+'%').join(' / ')],['技能策略概率（无/泡/道具）',decision.ability_probability.map(v=>(100*v).toFixed(3)+'%').join(' / ')],['当前逻辑近似总 Reward（模型 / 对手）',offline?offline.approx_total_reward.map(number).join(' / '):'未记录'],['训练时 Reward / 严格 A₁','未记录；当前近似重算不代表训练时账本']]);
+      if(doc.meta.approximate_a1){const r=diagnostic.route_diagnostic;box.append(text('p',`可观测路线（近似）：${r.phase} / ${JSON.stringify(r.target)}；距离 ${diagnostic.distance??'未记录'} / oracle ${JSON.stringify(diagnostic.oracle)}；连续 Phi ${r.phi_before.toFixed(8)} → ${r.phi_after.toFixed(8)}；奖励分量 ${JSON.stringify(diagnostic.approximate_reward_components)}；原始事件 ${JSON.stringify(diagnostic.events)}。训练 Reward 完整分量未记录；仅展示声明的任务代理/控制/路线分量。`));}
       if(offline){
         const route=offline.route[0];
         box.append(text('p',`offline_recomputed_current_reward / 近似诊断 · 当前路线 phase=${route.route_phase}，target=${route.route_target_identity}，来源=${route.route_target_provenance}；连续 Phi ${number(route.route_phi_before)} → ${number(route.route_phi_after)}，ΔPhi ${number(route.route_potential_delta)}，PBRS ${number(route.route_shaped_reward)}。`));
@@ -248,9 +257,9 @@
     doc=next;returnAnalysis=nextAnalysis;returnAudit=nextReturnAudit;player=nextPlayer;preview=new P.Player(doc,level);preview.cache=player.cache;rewardByTick=new Map(doc.rewards.map(r=>[r[0],r]));curveCache=null;renderer=QQTVisual.createRenderer($('game'),level,assets);rows=[];editing=null;$('annotation-form').hidden=true;
     try{const saved=localStorage.getItem(storageKey());if(saved)rows=P.validateAnnotations(JSON.parse(saved),doc);}catch(_){say('已有标注无效或存储不可用');}
     $('episode-title').textContent=(doc.meta.route?.kind==='fixture'?'合成测试 fixture · ':'')+`模型 P0 · ${doc.meta.model} 对阵 对手 P1`;$('episode-meta').textContent=`${doc.meta.scene_name||'历史抢包对战'} · qqt_id ${doc.meta.map} · ${doc.meta.scene_rules||doc.meta.variant} · 对手 ${doc.meta.opponent} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)} · map ${doc.meta.map_sha256.slice(0,12)}`;$('terminal').textContent=doc.summary.done===false?'片段结束：对局仍在进行，未记录胜负':`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
-    const fixedEight=doc.meta.batch_id==='v36-fixed-eight-20261017';
-    $('route-experiment').hidden=!doc.meta.diagnostic||fixedEight;
-    let warning=$('episode-warning');if(!warning){warning=text('p','','diagnostic-warning');warning.id='episode-warning';document.querySelector('.episode-head').after(warning);}warning.hidden=!doc.meta.diagnostic;warning.textContent=fixedEight?`固定八局全部保留 · ${doc.meta.scene_rules} · 真实对手 ${doc.meta.opponent} · offline_recomputed_current_reward / 近似诊断，非 training-time reward；严格 A₁ 未计算`:doc.meta.diagnostic?'诊断场景，不代表自然完整对局成功 · 预置掉包 / assist-off / 固定向上对手':'';
+    const fixedEight=doc.meta.batch_id==='v36-fixed-eight-20261017',je10=doc.meta.batch_id==='je10-best-completed-20261018';
+    $('route-experiment').hidden=!doc.meta.diagnostic||fixedEight||je10;
+    let warning=$('episode-warning');if(!warning){warning=text('p','','diagnostic-warning');warning.id='episode-warning';document.querySelector('.episode-head').after(warning);}warning.hidden=!doc.meta.diagnostic;warning.textContent=je10?`固定四场全部保留、不择优 · ${doc.meta.scene_rules} · 真实对手 ${doc.meta.opponent} · 已完成训练 checkpoint 的异步评估诊断，非历史训练 rollout。raw/shaped A1 为零后续值、策略加权反事实一步近似；严格训练 Reward / A1 未记录。`:fixedEight?`固定八局全部保留 · ${doc.meta.scene_rules} · 真实对手 ${doc.meta.opponent} · offline_recomputed_current_reward / 近似诊断，非 training-time reward；严格 A₁ 未计算`:doc.meta.diagnostic?'诊断场景，不代表自然完整对局成功 · 预置掉包 / assist-off / 固定向上对手':'';
     document.querySelector('.reward-total > span').textContent=fixedEight?'近似奖励增量 / 累计':'奖励增量 / 累计';
     document.querySelector('.component-head > span').textContent=fixedEight?'当前逻辑近似奖励分量 · 本 tick / 累计':'奖励分量 · 本 tick / 累计';
     const rewardTrackLabel=[...document.querySelectorAll('.track-label strong')].find(e=>e.textContent==='Reward 轨'||e.textContent==='近似 Reward 轨');

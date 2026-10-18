@@ -17,6 +17,16 @@
     return versions.get(ROUTE_SIM_HASH);
   }
   function replaySetup(meta,level){
+    if(meta.native_fixture){
+      validateFixture(meta.native_fixture);
+      const sim=new Q.Sim(meta.seed);
+      sim.reset(level,{nativeTrap:true,nativeItems:true});
+      sim.restoreReplay(meta.native_fixture.frame);
+      sim.initialHp=meta.native_fixture.initial_hp;
+      sim.maxSteps=meta.max_ticks;
+      return sim;
+    }
+
     if(meta.scene!=='route_drop_return')return meta.arena||meta.native_rules===false||meta.truncated?setupExtended(meta,level):setup(meta,level);
     const api=simulator(meta),s=new api.Sim(meta.seed);
     s.reset(level,{nativeTrap:true,nativeItems:true});s.maxSteps=1200;
@@ -30,9 +40,18 @@
     return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), x => x.toString(16).padStart(2, '0')).join('');
   }
   const hash = value => sha256(new TextEncoder().encode(stringify(value)));
+  function validateFixture(f){
+    const tasks=['native_death_stock','native_sugar_stock','real_drop','carry_near','carry_mid','carry_far','recovery_threat'];
+    if(!f||f.schema!=='qqt.native-reset-fixture/v1'||!tasks.includes(f.task)||f.initial_hp!==1||
+      !/^[a-f0-9]{64}$/.test(f.frame_sha256||'')||f.frame?.t!==0||f.frame.nativeTrap!==true||f.frame.nativeItems!==true||
+      f.frame.done!==false||f.frame.nPlayers!==2||f.frame.pos?.length!==4||f.frame.wall?.length!==195||
+      f.frame.brick?.length!==195||f.frame.bunLoose?.length!==390||
+      f.frame.pos.some(v=>!Number.isFinite(v)||v<0||v>15))throw Error('native reset fixture');
+  }
   function validate(d) {
     const fail = message => { throw new Error(message); };
     if (!d || d.schema !== SCHEMA) fail('schema');
+    if(d.meta?.native_fixture)validateFixture(d.meta.native_fixture);
     if (!d.meta || !/^[\w-]+$/.test(d.meta.id) || !Number.isSafeInteger(d.meta.seed) || d.meta.tick_ms !== 100) fail('meta');
     if (d.meta.scene !== undefined && !['native','open','carry_home','route_drop_return'].includes(d.meta.scene)) fail('scene');
     if(d.meta.arena!==undefined&&d.meta.arena!=='tactical_v2')fail('arena');
@@ -97,6 +116,24 @@
         for(let p=0;p<2;p++)for(const k of m.component_names)if((sparse?.[p+1]?.[k]||0)!==r.components[p][k])fail('offline sparse components');
       }
       if(totals.some((v,p)=>Math.abs(v-d.summary.reward[p])>1e-4)||previousPhi!==0)fail('offline reward terminal');
+    }
+    if(d.meta.approximate_a1){
+      const m=d.meta.approximate_a1,rows=d.diagnostic_ticks;
+      if(m.schema!=='qqt.je10-approx-a1/v1'||m.status!=='offline_approximation'||m.future_value!==0||m.measured_count!==d.actions.length||rows?.length!==d.actions.length||!m.definition||!m.limitations)fail('approximate A1 scope');
+      for(let i=0;i<rows.length;i++){
+        const r=rows[i],a=r.approximate_a1,cs=r.counterfactuals;
+        if(r.tick!==i+1||r.raw_a1!==null||r.shaped_a1!==null||r.training_reward!==null||!a||!cs?.length||cs.length>15)fail('approximate A1 tick');
+        const mass=cs.reduce((n,c)=>n+c.probability,0),taken=cs.find(c=>c.action[0]===d.actions[i][0]&&c.action[1]===d.actions[i][1]);
+        if(!taken||Math.abs(mass-1)>1e-6||cs.some(c=>!Number.isFinite(c.probability)||c.probability<0||!Number.isFinite(c.raw_reward)||!Number.isFinite(c.shaped_reward)))fail('approximate A1 candidates');
+        const unique=new Set(cs.map(c=>c.action.join(',')));
+        if(unique.size!==cs.length||cs.length!==r.decision.move_mask.filter(Boolean).length*r.decision.ability_mask.filter(Boolean).length||cs.some(c=>!r.decision.move_mask[c.action[0]]||!r.decision.ability_mask[c.action[1]]||Math.abs(c.probability-r.decision.move_probability[c.action[0]]*r.decision.ability_probability[c.action[1]])>1e-8))fail('approximate A1 legal policy');
+        for(const role of ['raw','shaped']){
+          const mean=cs.reduce((n,c)=>n+c.probability*c[role+'_reward'],0)/mass;
+          if(![a[role+'_a1'],a[role+'_q1_taken'],a[role+'_q1_mean']].every(Number.isFinite)||Math.abs(a[role+'_q1_taken']-taken[role+'_reward'])>1e-10||Math.abs(a[role+'_q1_mean']-mean)>1e-10||Math.abs(a[role+'_a1']-(taken[role+'_reward']-mean))>1e-10)fail('approximate A1 centering');
+        }
+        if(!Number.isFinite(a.delta_a)||Math.abs(a.delta_a-(a.shaped_a1-a.raw_a1))>1e-10)fail('approximate A1 gap');
+        for(const k of ['raw_a1','shaped_a1','delta_a'])if(i?(!Number.isFinite(a[k+'_increment'])||Math.abs(a[k+'_increment']-(a[k]-rows[i-1].approximate_a1[k]))>1e-10):a[k+'_increment']!==null)fail('approximate A1 increment');
+      }
     }
     previous = -1;
     for (const row of d.checks || []) {
@@ -178,6 +215,8 @@
       return this.sim;
     }
     async verify() {
+      const fixture=this.document.meta.native_fixture;
+      if(fixture&&await hash(fixture.frame)!==fixture.frame_sha256)throw Error('native fixture frame hash');
       if (await hash(identity(this.document)) !== this.document.meta.replay_identity) throw new Error('replay identity hash');
       this.cache.clear();
       this.reset();

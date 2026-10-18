@@ -26,10 +26,11 @@ async function initialize(row) {
     const onnx=await verifiedDownload(row.onnx);
     try {
       importScripts('vendor/ort/ort.wasm.min.js');runtime=ort;
+      runtime.env.logLevel='error'; // Native WASM warnings otherwise reach console.error on some CPUs.
       runtime.env.wasm.numThreads=1; // Pages has no COOP/COEP / SharedArrayBuffer.
       runtime.env.wasm.proxy=false; // Already in our dedicated worker.
       runtime.env.wasm.wasmPaths=new URL('vendor/ort/',self.location.href).href;
-      session=await runtime.InferenceSession.create(onnx,{executionProviders:['wasm'],graphOptimizationLevel:'all'});
+      session=await runtime.InferenceSession.create(onnx,{executionProviders:['wasm'],graphOptimizationLevel:'all',logSeverityLevel:3});
       const obs=new Float32Array(meta.obs_shape.reduce((a,b)=>a*b,1));
       const state=new Float32Array(meta.global_dim || 24);
       const expected=row.onnx.reference_zero || reference.forward(obs,state),actual=await infer(obs,state);

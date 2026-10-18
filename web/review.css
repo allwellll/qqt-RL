@@ -885,3 +885,7 @@ dialog p {
 .return-audit .selected-action{background:#293c3a}.return-audit a{color:#8fc8ed}
 .failure-mark{color:#ffe4e8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;font-size:11px;min-height:22px}
 @media(max-width:560px){.return-warning{font-size:12px}.return-audit{padding:7px}.return-audit th,.return-audit td{padding:5px}}
+
+#je10-advantage { margin: 14px 0; padding: 14px; border: 1px solid var(--line, #46536a); border-radius: 10px; overflow-wrap: anywhere; }
+#je10-advantage-status { line-height: 1.7; }
+#state-details { overflow-wrap: anywhere; }
