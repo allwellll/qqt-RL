@@ -28,7 +28,7 @@ class Formula(unittest.TestCase):
         if not p.exists():self.skipTest('export not finalized')
         meta=json.loads(p.read_text());self.assertEqual(meta['parity']['max_error'],0)
         self.assertEqual(meta['gamma'],.995);self.assertTrue(meta['replicas_exact'])
-        catalog=json.loads(Path('web/review-catalog.json').read_text())
+        catalog=json.loads(Path('reports/review_catalog_before_gate_20261018.json').read_text())
         self.assertEqual(len([s for s in catalog['scenes'] if s['id'] != 'route_drop_return']),3)
         for row in catalog['replays']:
             if row.get('diagnostic'):

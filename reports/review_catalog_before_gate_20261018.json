@@ -1,0 +1,5753 @@
+{
+  "schema": "qqt.diagnostic-catalog/v1",
+  "model": "Bun392 JE10 v38 r01 g8；保留历史 Review 对照",
+  "scenes": [
+    {
+      "id": "route_drop_return",
+      "name": "掉包返程诊断（非自然完整对局）",
+      "source": "je08 production drop_return diagnostic; not a natural full match",
+      "base_map": 806
+    },
+    {
+      "id": "native",
+      "name": "原生抢包对战",
+      "source": "QQT.Sim.reset / native rules",
+      "base_map": 806
+    },
+    {
+      "id": "open",
+      "name": "开放抢包对战",
+      "source": "scripts/eval_web_hunter.js / cleared destructibles",
+      "base_map": 806
+    },
+    {
+      "id": "carry_home",
+      "name": "持包返程任务",
+      "source": "H8 sealed scripts/je05_web_tasks.js setup(carry_home)",
+      "base_map": 806
+    }
+  ],
+  "screened_episodes": 16,
+  "selection": "Retain every declared episode; report rule-based failure labels without post-hoc selection",
+  "predeclared_matrix": "review-evidence/matrix.json",
+  "raw_bytes": 50731966,
+  "gzip_bytes": 5400217,
+  "replays": [
+    {
+      "id": "je10-d392bf8cae-real_drop-2026101800",
+      "file": "je10-d392bf8cae-real_drop-2026101800.json",
+      "seed": 2026101800,
+      "scene": "native",
+      "task": "real_drop",
+      "scene_name": "真实掉包追取及返程诊断",
+      "scene_rules": "固定合法 reset fixture，1HP；生产原生规则；1200 tick上限；非自然初始化",
+      "model": "Bun392 JE10 v38 r01 g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
+      "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "je10-best-completed-20261018",
+      "summary": {
+        "ticks": 451,
+        "done": true,
+        "winner": 1,
+        "reward": [
+          null,
+          null
+        ],
+        "failures": [
+          "route_deviation"
+        ]
+      },
+      "sha256": "27aa70746fd03ee13f8de548f1fdb3d3a0609ef77bd8b7bde9b10231f161e315",
+      "bytes": 1442830,
+      "gzip_bytes": 260512
+    },
+    {
+      "id": "je10-d392bf8cae-native_death_stock-2026101800",
+      "file": "je10-d392bf8cae-native_death_stock-2026101800.json",
+      "seed": 2026101800,
+      "scene": "native",
+      "task": "native_death_stock",
+      "scene_name": "死亡窗口库存取包及返程诊断",
+      "scene_rules": "固定合法 reset fixture，1HP；生产原生规则；1200 tick上限；非自然初始化",
+      "model": "Bun392 JE10 v38 r01 g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
+      "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "je10-best-completed-20261018",
+      "summary": {
+        "ticks": 1200,
+        "done": true,
+        "winner": 0,
+        "reward": [
+          null,
+          null
+        ],
+        "failures": []
+      },
+      "sha256": "7f2a80cd4a855a20b22498c0e56f5af5837fc97a73312220a8b204150b7c51a5",
+      "bytes": 4197976,
+      "gzip_bytes": 776626
+    },
+    {
+      "id": "je10-d392bf8cae-native_sugar_stock-2026101800",
+      "file": "je10-d392bf8cae-native_sugar_stock-2026101800.json",
+      "seed": 2026101800,
+      "scene": "native",
+      "task": "native_sugar_stock",
+      "scene_name": "糖泡窗口库存取包及返程诊断",
+      "scene_rules": "固定合法 reset fixture，1HP；生产原生规则；1200 tick上限；非自然初始化",
+      "model": "Bun392 JE10 v38 r01 g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
+      "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "je10-best-completed-20261018",
+      "summary": {
+        "ticks": 1200,
+        "done": true,
+        "winner": 0,
+        "reward": [
+          null,
+          null
+        ],
+        "failures": []
+      },
+      "sha256": "319accbe85507dfb5690e5bcc69c06a720ba1d088293452bbb4ac0e37dba5f6b",
+      "bytes": 4061965,
+      "gzip_bytes": 732516
+    },
+    {
+      "id": "je10-d392bf8cae-natural_full2400-2026101800",
+      "file": "je10-d392bf8cae-natural_full2400-2026101800.json",
+      "seed": 2026101800,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整对局",
+      "scene_rules": "生产原生砖块/糖泡/道具；2400 tick上限；完整终局",
+      "model": "Bun392 JE10 v38 r01 g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
+      "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "je10-best-completed-20261018",
+      "summary": {
+        "ticks": 1773,
+        "done": true,
+        "winner": 0,
+        "reward": [
+          null,
+          null
+        ],
+        "failures": [
+          "route_deviation"
+        ]
+      },
+      "sha256": "3b7ab090983b18b66b7c521aeb5f1cd631836067caf1225c6bb9bd01f563e4d5",
+      "bytes": 6852556,
+      "gzip_bytes": 1401516
+    },
+    {
+      "id": "h8-v36-g32-native-2026101780",
+      "file": "h8-v36-g32-native-2026101780.json",
+      "seed": 2026101780,
+      "scene": "native",
+      "variant": "native",
+      "scene_name": "原生抢包对战",
+      "scene_rules": "原生砖块/糖泡/道具；2400 tick",
+      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "v36-fixed-eight-20261017",
+      "summary": {
+        "ticks": 1771,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          -12.04370779764939,
+          -13.078046202617315
+        ],
+        "failures": [
+          "window_closed_empty",
+          "match_loss",
+          "no_delivery"
+        ]
+      },
+      "sha256": "62f81e15a4cdc5325f1a47b0d228e6bc95880efbb0e01d13df1d6c68d0ed73e1",
+      "bytes": 5706376,
+      "gzip_bytes": 384333
+    },
+    {
+      "id": "h8-v36-g32-native-2026101781",
+      "file": "h8-v36-g32-native-2026101781.json",
+      "seed": 2026101781,
+      "scene": "native",
+      "variant": "native",
+      "scene_name": "原生抢包对战",
+      "scene_rules": "原生砖块/糖泡/道具；2400 tick",
+      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "v36-fixed-eight-20261017",
+      "summary": {
+        "ticks": 2145,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          39.34387732806073,
+          -24.03314079082884
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "4ae377674ea6385d524202c2577715739422a615a0eb4982ff606e0d401e54f8",
+      "bytes": 7197150,
+      "gzip_bytes": 476978
+    },
+    {
+      "id": "h8-v36-g32-open-2026101782",
+      "file": "h8-v36-g32-open-2026101782.json",
+      "seed": 2026101782,
+      "scene": "open",
+      "variant": "open",
+      "scene_name": "开放抢包对战",
+      "scene_rules": "清可破坏砖；原生糖泡/道具；2400 tick",
+      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "v36-fixed-eight-20261017",
+      "summary": {
+        "ticks": 552,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          1.5000000298023224,
+          28.87755458551146
+        ],
+        "failures": [
+          "match_loss",
+          "no_delivery"
+        ]
+      },
+      "sha256": "04a572ad739b70acff36cba744817bc185b854f1617f571b30b439e2a17ec5cb",
+      "bytes": 1729222,
+      "gzip_bytes": 121574
+    },
+    {
+      "id": "h8-v36-g32-open-2026101783",
+      "file": "h8-v36-g32-open-2026101783.json",
+      "seed": 2026101783,
+      "scene": "open",
+      "variant": "open",
+      "scene_name": "开放抢包对战",
+      "scene_rules": "清可破坏砖；原生糖泡/道具；2400 tick",
+      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "v36-fixed-eight-20261017",
+      "summary": {
+        "ticks": 809,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          1.3000000268220901,
+          5.877318984832527
+        ],
+        "failures": [
+          "match_loss",
+          "no_delivery"
+        ]
+      },
+      "sha256": "aad8be88ef9d3c524995853f0dd70803851ebe3084cc5cd981ecd6b357151bd8",
+      "bytes": 2502885,
+      "gzip_bytes": 168045
+    },
+    {
+      "id": "h8-v36-g32-carry_home-2026101784",
+      "file": "h8-v36-g32-carry_home-2026101784.json",
+      "seed": 2026101784,
+      "scene": "carry_home",
+      "variant": "native",
+      "scene_name": "预置持包返程诊断",
+      "scene_rules": "je05 carry_home：预置持敌包、清砖、1HP；300 tick；非自然抢包",
+      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "v36-fixed-eight-20261017",
+      "summary": {
+        "ticks": 92,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          1.4375,
+          0.699999988079071
+        ],
+        "failures": []
+      },
+      "sha256": "04e88c235ec2bfa1098cc7b2d8a1817814c885a807bdd624bab26799b545ab60",
+      "bytes": 321372,
+      "gzip_bytes": 30124
+    },
+    {
+      "id": "h8-v36-g32-carry_home-2026101785",
+      "file": "h8-v36-g32-carry_home-2026101785.json",
+      "seed": 2026101785,
+      "scene": "carry_home",
+      "variant": "native",
+      "scene_name": "预置持包返程诊断",
+      "scene_rules": "je05 carry_home：预置持敌包、清砖、1HP；300 tick；非自然抢包",
+      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "v36-fixed-eight-20261017",
+      "summary": {
+        "ticks": 107,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          1,
+          0
+        ],
+        "failures": []
+      },
+      "sha256": "22f0359884838fff2a5d57c8fcbd12952b2547d44d0042e80f6f5499e1309114",
+      "bytes": 369468,
+      "gzip_bytes": 32918
+    },
+    {
+      "id": "h8-v36-g32-tactical_v2-2026101786",
+      "file": "h8-v36-g32-tactical_v2-2026101786.json",
+      "seed": 2026101786,
+      "scene": "native",
+      "variant": "native",
+      "scene_name": "Tactical Arena 完整规则终局",
+      "scene_rules": "Tactical Arena 清砖、无道具、默认 Sim 规则；2400 tick 完整终局",
+      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
+      "opponent": "bun.tactical_v2",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "v36-fixed-eight-20261017",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          0.8171243826236605,
+          -12
+        ],
+        "failures": [
+          "window_closed_empty",
+          "no_delivery"
+        ]
+      },
+      "sha256": "13ac9d060a70d1eb22b117e28e2e1addc6a731d648ae4f9509ac04895c6150d4",
+      "bytes": 7958608,
+      "gzip_bytes": 439411
+    },
+    {
+      "id": "h8-v36-g32-tactical_v2-2026101787",
+      "file": "h8-v36-g32-tactical_v2-2026101787.json",
+      "seed": 2026101787,
+      "scene": "native",
+      "variant": "native",
+      "scene_name": "Tactical Arena 完整规则终局",
+      "scene_rules": "Tactical Arena 清砖、无道具、默认 Sim 规则；2400 tick 完整终局",
+      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
+      "opponent": "bun.tactical_v2",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "batch_id": "v36-fixed-eight-20261017",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          1.0045995645073162,
+          -40
+        ],
+        "failures": [
+          "window_closed_empty",
+          "no_delivery"
+        ]
+      },
+      "sha256": "7f6a9d5fab78fda82077b192dae9cf95d24841ab039240a29f4a13f5d401b158",
+      "bytes": 7884357,
+      "gzip_bytes": 443267
+    },
+    {
+      "id": "h8-route-v36-g32-2026101736",
+      "name": "H8 v36 连续路线 PBRS g32",
+      "file": "h8-route-v36-g32-2026101736.json",
+      "seed": 2026101736,
+      "variant": "native",
+      "scene": "native",
+      "scene_name": "自然规则对局片段（战术清砖图，300 tick 截断）",
+      "scene_rules": "固定 seed production Sim 对局片段；Tactical Arena 清除可破坏砖，无道具；原生模拟器规则配置；300 tick 截断，非完整终局",
+      "model": "H8 v36 连续路线 PBRS g32",
+      "opponent": "bun.tactical_v2",
+      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "summary": {
+        "ticks": 300,
+        "done": false,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          null,
+          null
+        ],
+        "failures": []
+      },
+      "sha256": "be911c70b7ddc22857c709f86ff42da0f575bf3c2055d1499846291dd9aebc48",
+      "bytes": 6839,
+      "gzip_bytes": 2355
+    },
+    {
+      "id": "h8-route-v35-g32-drop-return-2026101732",
+      "seed": 2026101732,
+      "scene": "route_drop_return",
+      "scene_name": "掉包返程诊断（非自然完整对局）",
+      "scene_rules": "生产诊断初态：清砖、1HP、敌持己包且 trap=1；assist-off；120秒；不是自然击杀证据",
+      "model": "H8 v35 路线 PBRS g32 raw",
+      "opponent": "固定向上 / 不放泡 / 不用道具 [0,0,0]",
+      "checkpoint_sha256": "e141311268c6eaf419f1f651252bb27d46c106aeb407230c20eed4c8897a34e2",
+      "critic_sha256": "3174b62f39ea9d56f206c917d2107a8f5e31bda2fe693e88630f72715c0604d8",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "diagnostic": true,
+      "file": "h8-route-v35-g32-drop-return-2026101732.json",
+      "summary": {
+        "ticks": 1200,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          null,
+          null
+        ],
+        "failures": [
+          "return_deviation"
+        ],
+        "route_reward": -0.10258203125000304
+      },
+      "sha256": "207680e66de70c44652586fdc7f3aab1919bf5268a8f3e8ef88dcd95fdce69f2",
+      "bytes": 162526,
+      "gzip_bytes": 7746,
+      "diagnostic_audit": {
+        "file": "review-evidence/route-g32-return.json",
+        "schema": "qqt.return-diagnostic/v1",
+        "sha256": "3e9446f928f30a80273d8eaad979067b8a42e4233edfdeca144844477c37ef4e",
+        "bytes": 106126,
+        "gzip_bytes": 16175
+      }
+    },
+    {
+      "id": "h8-g32-native-2026101901",
+      "file": "h8-g32-native-2026101901.json",
+      "seed": 2026101901,
+      "variant": "native",
+      "scene": "native",
+      "scene_name": "原生抢包对战",
+      "scene_rules": "原生砖块、糖泡、道具；240秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "6ec0edba759335ac38fa4b2ef934324438698f04439e65a9b99185524fe2b5c3",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          149.9999981224537,
+          -107.99999976158142
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "33b22524b9ba0c0c4ea3cfe077c7a5ea32dea844585fdfaa732ff0d72a15b496",
+      "bytes": 131448,
+      "gzip_bytes": 45577
+    },
+    {
+      "id": "h8-g32-native-2026101900",
+      "file": "h8-g32-native-2026101900.json",
+      "seed": 2026101900,
+      "variant": "native",
+      "scene": "native",
+      "scene_name": "原生抢包对战",
+      "scene_rules": "原生砖块、糖泡、道具；240秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "6ec0edba759335ac38fa4b2ef934324438698f04439e65a9b99185524fe2b5c3",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          5.000000014901161,
+          -27.999996706843376
+        ],
+        "failures": []
+      },
+      "sha256": "9baf54887cff0d323a9d47cdf01e0f9e90556fbb7ad6bf8c131f3280ad501b4c",
+      "bytes": 124965,
+      "gzip_bytes": 44278
+    },
+    {
+      "id": "h8-g32-open-2026101902",
+      "file": "h8-g32-open-2026101902.json",
+      "seed": 2026101902,
+      "variant": "open",
+      "scene": "open",
+      "scene_name": "开放抢包对战",
+      "scene_rules": "清除可破坏砖块；原生糖泡与道具；240秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "b797292034732d4d5b000ebdae2a5565a26e96aa72e310f28b31b153e4d4ced2",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "summary": {
+        "ticks": 291,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          1.100000023841858,
+          3.287500023841858
+        ],
+        "failures": []
+      },
+      "sha256": "c5e899daed1e2b535821ebc2886cdb3ef0fa42d1fb1afc758d792d7a3c7b3437",
+      "bytes": 22682,
+      "gzip_bytes": 8918
+    },
+    {
+      "id": "h8-g32-open-2026101903",
+      "file": "h8-g32-open-2026101903.json",
+      "seed": 2026101903,
+      "variant": "open",
+      "scene": "open",
+      "scene_name": "开放抢包对战",
+      "scene_rules": "清除可破坏砖块；原生糖泡与道具；240秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "b797292034732d4d5b000ebdae2a5565a26e96aa72e310f28b31b153e4d4ced2",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "summary": {
+        "ticks": 512,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          0.9000000059604645,
+          4.687499970197678
+        ],
+        "failures": []
+      },
+      "sha256": "2f84deaf92bb93f4f4f8ad653e681a4306366f778ed2746bc9895d2e8b567f7e",
+      "bytes": 33414,
+      "gzip_bytes": 13037
+    },
+    {
+      "id": "h8-g32-carry_home-2026101904",
+      "file": "h8-g32-carry_home-2026101904.json",
+      "seed": 2026101904,
+      "variant": "native",
+      "scene": "carry_home",
+      "scene_name": "持包返程任务",
+      "scene_rules": "je05 carry_home：清砖、1HP、持敌包、返程出生；30秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "ba4d95ff1ca61130e034a9e6b362e67da4690afe912ce4c71031717e5b28f854",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "summary": {
+        "ticks": 100,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          0.9375,
+          0
+        ],
+        "failures": []
+      },
+      "sha256": "86d520221777dd20f30fd13f0207e6e0354d1a1c2e1df594f2932343c91cf769",
+      "bytes": 12688,
+      "gzip_bytes": 5225
+    },
+    {
+      "id": "h8-g32-carry_home-2026101905",
+      "file": "h8-g32-carry_home-2026101905.json",
+      "seed": 2026101905,
+      "variant": "native",
+      "scene": "carry_home",
+      "scene_name": "持包返程任务",
+      "scene_rules": "je05 carry_home：清砖、1HP、持敌包、返程出生；30秒",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "scene_sha256": "ba4d95ff1ca61130e034a9e6b362e67da4690afe912ce4c71031717e5b28f854",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "summary": {
+        "ticks": 103,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          1,
+          0
+        ],
+        "failures": []
+      },
+      "sha256": "67349c6814d85d82e9a4082826914cb28de7a5ab23beae06351456798762e88b",
+      "bytes": 12639,
+      "gzip_bytes": 5261
+    }
+  ],
+  "history_replays": [
+    {
+      "id": "h7-g32-native-2026101700",
+      "file": "h7-g32-native-2026101700.json",
+      "seed": 2026101700,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 1380,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          -11.99999886751175,
+          -21.812499806284904
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "178b6d0448ad1dbc3577b8c2681fd80a385aebf29387a94a8207766e0c545b40",
+      "bytes": 26254,
+      "gzip_bytes": 4377
+    },
+    {
+      "id": "h7-g32-native-2026101705",
+      "file": "h7-g32-native-2026101705.json",
+      "seed": 2026101705,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 2359,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          -33.1875,
+          -96
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "2d2724809eb587faa6d727a30f1661324b93ece4db54a51aa21f58ab9634f59b",
+      "bytes": 41066,
+      "gzip_bytes": 5317
+    },
+    {
+      "id": "h7-g32-native-2026101701",
+      "file": "h7-g32-native-2026101701.json",
+      "seed": 2026101701,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          53.93749962747097,
+          -36.5
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "c2ea7ef8d5d5aef3bd0b9ef0115882ff69747531945c70734ab097d90fdc376c",
+      "bytes": 37912,
+      "gzip_bytes": 5056
+    },
+    {
+      "id": "h7-g32-native-2026101702",
+      "file": "h7-g32-native-2026101702.json",
+      "seed": 2026101702,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 1426,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          78.93749962747097,
+          -36
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "d3fc83e0b52a983ba8d5a710e369a02d01691478e11faa5e72a135ca792e8357",
+      "bytes": 26898,
+      "gzip_bytes": 4346
+    },
+    {
+      "id": "h7-g32-native-2026101704",
+      "file": "h7-g32-native-2026101704.json",
+      "seed": 2026101704,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          151.50000232458115,
+          -107.9999998062849
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "1195de86f276cc899f5af3f038789aa1889510425943231f37fbed44c6c91d3b",
+      "bytes": 42638,
+      "gzip_bytes": 5449
+    },
+    {
+      "id": "h7-g32-native-hard-2026101720",
+      "file": "h7-g32-native-hard-2026101720.json",
+      "seed": 2026101720,
+      "variant": "native",
+      "model": "H7 v33 g32 raw",
+      "opponent": "bun.hunter/hard",
+      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          36.99999850988388,
+          -23.999999806284904
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "0712209cb722e409c2f9c7afb56c199ee665716637f2a233b63c9312f8394582",
+      "bytes": 37411,
+      "gzip_bytes": 4824
+    },
+    {
+      "id": "h8-g32-native-hard-2026101760",
+      "file": "h8-g32-native-hard-2026101760.json",
+      "seed": 2026101760,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/hard",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          18.650000765919685,
+          -12.500000208616257
+        ],
+        "failures": [
+          "enemy_drop_unpicked",
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "f1aab13aaf34e8e996ed52d4a8e6bc2bc930307dd4096fbf369cadb4a372f7ff",
+      "bytes": 43881,
+      "gzip_bytes": 8635
+    },
+    {
+      "id": "h8-g32-native-2026101740",
+      "file": "h8-g32-native-2026101740.json",
+      "seed": 2026101740,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 1783,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          58.13749997317791,
+          -35.99999921023846
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "6cc7a2426d58aba8f00cee36edef1ec4d48e60a15cd848dcfe1977c30587efa1",
+      "bytes": 41637,
+      "gzip_bytes": 9037
+    },
+    {
+      "id": "h8-g32-native-2026101742",
+      "file": "h8-g32-native-2026101742.json",
+      "seed": 2026101742,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          -12,
+          -22.5
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "411ddc6f80ff1b2af361f9496f5365173d5b7fbcb231cc0e0dbdcccf7bbb0b4f",
+      "bytes": 53502,
+      "gzip_bytes": 10135
+    },
+    {
+      "id": "h8-g32-native-2026101741",
+      "file": "h8-g32-native-2026101741.json",
+      "seed": 2026101741,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          -27.99999998509884,
+          3.925000011920929
+        ],
+        "failures": [
+          "self_bomb"
+        ]
+      },
+      "sha256": "713884823b0c12552b3104607f1f67474f69c6d873bc0f74d9fed07596f5fc17",
+      "bytes": 43788,
+      "gzip_bytes": 8313
+    },
+    {
+      "id": "h8-g32-native-2026101745",
+      "file": "h8-g32-native-2026101745.json",
+      "seed": 2026101745,
+      "variant": "native",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2094,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          12.625000014901161,
+          -63.999999806284904
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "ecbae874fe6248c16617f15f87b0714728bef48dc27bad4ca2ad1701763ae584",
+      "bytes": 48562,
+      "gzip_bytes": 9612
+    },
+    {
+      "id": "h8-g32-open-2026101750",
+      "file": "h8-g32-open-2026101750.json",
+      "seed": 2026101750,
+      "variant": "open",
+      "model": "H8 v34 g32 raw",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
+      "summary": {
+        "ticks": 2344,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          -12.00000187754631,
+          0.49999965727329254
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "873926035be3c38f8c00baafba6f974ebc213fe10866da53fbc0fbba43472a30",
+      "bytes": 46618,
+      "gzip_bytes": 9511
+    }
+  ],
+  "v36_fixed_eight": {
+    "schema": "qqt.fixed-seed-batch/v1",
+    "seeds": [
+      {
+        "seed": 2026101780,
+        "scene": "native",
+        "opponent": "bun.hunter/normal",
+        "max_ticks": 2400
+      },
+      {
+        "seed": 2026101781,
+        "scene": "native",
+        "opponent": "bun.hunter/normal",
+        "max_ticks": 2400
+      },
+      {
+        "seed": 2026101782,
+        "scene": "open",
+        "opponent": "bun.hunter/normal",
+        "max_ticks": 2400
+      },
+      {
+        "seed": 2026101783,
+        "scene": "open",
+        "opponent": "bun.hunter/normal",
+        "max_ticks": 2400
+      },
+      {
+        "seed": 2026101784,
+        "scene": "carry_home",
+        "opponent": "bun.hunter/normal",
+        "max_ticks": 300
+      },
+      {
+        "seed": 2026101785,
+        "scene": "carry_home",
+        "opponent": "bun.hunter/normal",
+        "max_ticks": 300
+      },
+      {
+        "seed": 2026101786,
+        "scene": "tactical_v2",
+        "opponent": "bun.tactical_v2",
+        "max_ticks": 2400
+      },
+      {
+        "seed": 2026101787,
+        "scene": "tactical_v2",
+        "opponent": "bun.tactical_v2",
+        "max_ticks": 2400
+      }
+    ],
+    "selection": "all eight declared seeds retained; no post-hoc selection or replacement",
+    "predeclared_contract": "reports/v36_multiseed_review_20261017.md",
+    "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+    "policy_sha256": "3643e9e2bbf4b2c48dc40a8fff5e2fb2191811ff9df23e0849c6aa80a39bf4b6",
+    "onnx_js_max_error": 0.000004366623995499808,
+    "full_policy_opponent_reruns": 8,
+    "strict_advantage_coverage": 0,
+    "training_trajectory_status": "blocked: no preserved v36 historical rollout",
+    "limitations": "同 checkpoint 只有 PBRS Critic，没有独立原始任务 Critic；自然 Web 状态没有完整训练 reward ledger / 隐藏 aux 映射，不能计算严格原始/塑形 Q1/A1/ΔA。未找到 v36 历史训练 trajectory；不能用 v35 轨迹或新评估局冒充。",
+    "current_reward_status": "offline_recomputed_current_reward",
+    "current_reward_coverage": 1,
+    "route_coverage": 1,
+    "critical_scope": "Current logic approximate diagnosis; never training-time reward or strict A1"
+  },
+  "je10_selection": {
+    "schema": "qqt.je10-release-selection/v1",
+    "protocol_sha256": "f2fcf50022fbb61e9630855ca3d08ccef4b1d390d89a783a5bdf998b9205a936",
+    "rule": "zero observed self harm first; maximize geometric mean of natural delivery/16, seven route delivery/112, Tactical safe kills/64, pooled Hunter safe kills/192; ties lexical round then generation. Exploratory selection, not significance or admission.",
+    "candidates": [
+      {
+        "round": "control_route_v38_r01_attempt04",
+        "generation": 8,
+        "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+        "complete_sha256": "1a33de5ab47ddc37db4fa44c0b946c4c29889ca367489c3a2d2c0038558d2709",
+        "summary_sha256": "be406f3e828783c31c3edcd3f2bab0150d7c226e6861e2778b2fb44abe5a28e2",
+        "metrics": [
+          0.375,
+          0.5535714285714286,
+          0.1875,
+          0.125
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.2641064787299655,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 2,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 3,
+            "death": 0,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 8,
+            "delivery_episodes": 8,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 14,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 3,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 9,
+            "delivery_episodes": 6,
+            "death": 5,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 12,
+          "death_episode": 1,
+          "self_episodes": 0,
+          "trade_episodes": 1,
+          "bombs_per_game": 5.5625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 0,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 7.1875
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 7.5625
+          },
+          "easy": {
+            "safe_win": 22,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 7.765625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r02",
+        "generation": 16,
+        "checkpoint_sha256": "73ade21e8f8dda035e701cad1277bc663f70ce06a5ef8a5510621a4fa21bbe5e",
+        "complete_sha256": "619e91e1de642ab4fce3e430bd5c3a42836b0fac7d10d714c90152b618def808",
+        "summary_sha256": "d0fced532cde76cae8151b9083b99502e2cbcac8ea891011b913e68a7898c6ef",
+        "metrics": [
+          0.375,
+          0.5714285714285714,
+          0.15625,
+          0.140625
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.26195032712175365,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 4,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 8,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 11,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 5,
+            "death": 0,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 6,
+            "death": 7,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 10,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.234375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 3,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.625
+          },
+          "normal": {
+            "safe_win": 9,
+            "death_episode": 2,
+            "final_dead": 2,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 2,
+            "bombs_per_game": 6.546875
+          },
+          "easy": {
+            "safe_win": 15,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.71875
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r02",
+        "generation": 32,
+        "checkpoint_sha256": "785accfb0d36521628c0564ef22d4cd121c54ec6c11caef642996d757149da49",
+        "complete_sha256": "b9fa7f8f95a50d5340870391fec80381a5c8a657f86bd65639f89d4527df8b84",
+        "summary_sha256": "aad83fc5021e41aa54cf8171db3fbd52f6cf9e171e165001a497e1f611a2da21",
+        "metrics": [
+          0.5,
+          0.5982142857142857,
+          0.171875,
+          0.08333333333333333
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.25583771195460664,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 2,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 3,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 14,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 15,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 13,
+            "death": 0,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 4,
+            "death": 0,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 8,
+            "death": 3,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 11,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.9375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 5,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.03125
+          },
+          "normal": {
+            "safe_win": 3,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.46875
+          },
+          "easy": {
+            "safe_win": 8,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.046875
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r01_attempt04",
+        "generation": 96,
+        "checkpoint_sha256": "8719608d7e96a370d46952d5371c36ceb039e97df5e5034f0a17f1588cb67052",
+        "complete_sha256": "06e45f5bcc3576abd3066a4662abcaf82bb1c8da70505ae5ba16ccfb03b018f8",
+        "summary_sha256": "d1abd56f5231a1a5d4190b560b532dfd5344e9046a15262b26cde907af0a51f6",
+        "metrics": [
+          0.4375,
+          0.6517857142857143,
+          0.171875,
+          0.08333333333333333
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.25280088500108827,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 6,
+            "death": 4,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 3,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 13,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 15,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 7,
+            "death": 4,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 11,
+          "death_episode": 1,
+          "self_episodes": 0,
+          "trade_episodes": 1,
+          "bombs_per_game": 3.28125,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.40625
+          },
+          "normal": {
+            "safe_win": 3,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 7.046875
+          },
+          "easy": {
+            "safe_win": 12,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.609375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r01_attempt04",
+        "generation": 64,
+        "checkpoint_sha256": "f28f33a46499cc216ad4f8564ee4e34741d7f3c2505a734fd3387da908adb249",
+        "complete_sha256": "2ffabde2202583130fd65813351aef6fac0f835f736bf55123f59a5af8b9b78c",
+        "summary_sha256": "5bb83fbc08682b0f5a644dabc5c03653a54a90ce212be2c305fc5c8a730e9046",
+        "metrics": [
+          0.375,
+          0.5714285714285714,
+          0.15625,
+          0.11979166666666667
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.25165754933816087,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 3,
+            "death": 2,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 2,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 14,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 15,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 13,
+            "death": 0,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 1,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 8,
+            "delivery_episodes": 6,
+            "death": 5,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 10,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.765625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 3,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.375
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.78125
+          },
+          "easy": {
+            "safe_win": 18,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 7.375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r02",
+        "generation": 96,
+        "checkpoint_sha256": "14fa6d72aa68a1228b830bf520e3e4b818be9133c781a1727787a9fd6edd9adc",
+        "complete_sha256": "bf2470017f9cb0c0298f3813a0fccf481f80692ccf56c067e020d26e597904e2",
+        "summary_sha256": "22c7cc154b310344e9edd190608c22d5877dedf95272bf96cd28846a5df2032f",
+        "metrics": [
+          0.375,
+          0.6071428571428571,
+          0.171875,
+          0.08333333333333333
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.23896726095872675,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 5,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 6,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 7,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 14,
+            "death": 0,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 4,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 8,
+            "delivery_episodes": 6,
+            "death": 8,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 11,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.21875,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.671875
+          },
+          "normal": {
+            "safe_win": 5,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.546875
+          },
+          "easy": {
+            "safe_win": 9,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.453125
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r03",
+        "generation": 8,
+        "checkpoint_sha256": "62d1d49144c828b18cd1c057a6cccc61802491389ef9a17fd556cd130f7fdb3e",
+        "complete_sha256": "39819635fef471a373f1ee44f01215e684df50dd8f110effa2c6cc8551458e27",
+        "summary_sha256": "61e815f3e77dea330a7bcd6e7e10f517b10ca9e051393e1cde7bc09f3e4e0608",
+        "metrics": [
+          0.5,
+          0.6607142857142857,
+          0.15625,
+          0.057291666666666664
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.23319744937596493,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 7,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 13,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 2,
+            "delivery_episodes": 12,
+            "death": 2,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 6,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 8,
+            "death": 6,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 10,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.796875,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.1875
+          },
+          "normal": {
+            "safe_win": 3,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.25
+          },
+          "easy": {
+            "safe_win": 7,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.828125
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r04",
+        "generation": 64,
+        "checkpoint_sha256": "1e2c4ace00b3e3a50c6ea0924674557056ae27084bc079fa299cec4012659cf8",
+        "complete_sha256": "74be348ba4197bc2315a7fef8b2eca771147575bd5389ba43a039ca4383bdea4",
+        "summary_sha256": "499581541350a1e12012b84d2fb56e26714bf2a70b3278ef9784d3f8f6edf6fe",
+        "metrics": [
+          0.3125,
+          0.5982142857142857,
+          0.15625,
+          0.08854166666666667
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.2255114669727814,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 8,
+            "death": 3,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 14,
+            "death": 0,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 5,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 12,
+            "delivery_episodes": 5,
+            "death": 3,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 10,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.546875,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 5,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 4.5625
+          },
+          "normal": {
+            "safe_win": 1,
+            "death_episode": 2,
+            "final_dead": 2,
+            "kill_then_death": 1,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 5.140625
+          },
+          "easy": {
+            "safe_win": 11,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.640625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r05",
+        "generation": 4,
+        "checkpoint_sha256": "d02ba7b78cd2a7d16b1c2469c9283709dcba44ac058648159cee3c2b8312c6af",
+        "complete_sha256": "378729b390b6582459483310e37ee93b35b4951a27f36e714b42f7ebac0bb74d",
+        "summary_sha256": "a07102a4ce53571019804ab741f32f9e19465ce2db4befadfea735861f21e71a",
+        "metrics": [
+          0.3125,
+          0.5357142857142857,
+          0.171875,
+          0.08854166666666667
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.2246652551769428,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 2,
+            "death": 0,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 12,
+            "death": 3,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 2,
+            "delivery_episodes": 7,
+            "death": 5,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 3,
+            "death": 3,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 6,
+            "delivery_episodes": 5,
+            "death": 4,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 11,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.390625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 4,
+            "death_episode": 2,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.21875
+          },
+          "normal": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.578125
+          },
+          "easy": {
+            "safe_win": 12,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.390625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r02",
+        "generation": 128,
+        "checkpoint_sha256": "018454c752aafa7bb290b46566775a94efebf2625fcaf6f180f40505efb6203f",
+        "complete_sha256": "5e3ce402dc8e9378f6d1036288d68f86e26c1ad37eb65999ce9dbd2697d1c814",
+        "summary_sha256": "43dca845093108219029f80c40a86ea429f7182d019dc57eaef3d31f37e005b4",
+        "metrics": [
+          0.3125,
+          0.6071428571428571,
+          0.15625,
+          0.08333333333333333
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.22294355547571335,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 3,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 6,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 11,
+            "death": 4,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 13,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 3,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 7,
+            "delivery_episodes": 5,
+            "death": 4,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 10,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.734375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 4,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.328125
+          },
+          "normal": {
+            "safe_win": 1,
+            "death_episode": 2,
+            "final_dead": 2,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 2,
+            "bombs_per_game": 6.046875
+          },
+          "easy": {
+            "safe_win": 11,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.609375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r03",
+        "generation": 0,
+        "checkpoint_sha256": "259d5202db22f5d732ffb7ec16f35187b632a892374aadce75c4ffc48165ef5c",
+        "complete_sha256": "12d218b8c7d1345226684bfd514b91e965c4163111bc3c28e84c69f3180db12a",
+        "summary_sha256": "6631c10b38987c93e08d0cc527033e9d0245d1e2cfb2d544c4002225a2042854",
+        "metrics": [
+          0.3125,
+          0.6071428571428571,
+          0.15625,
+          0.08333333333333333
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.22294355547571335,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 3,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 6,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 11,
+            "death": 4,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 13,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 3,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 7,
+            "delivery_episodes": 5,
+            "death": 4,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 10,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.734375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 4,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.328125
+          },
+          "normal": {
+            "safe_win": 1,
+            "death_episode": 2,
+            "final_dead": 2,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 2,
+            "bombs_per_game": 6.046875
+          },
+          "easy": {
+            "safe_win": 11,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.609375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r01_attempt04",
+        "generation": 128,
+        "checkpoint_sha256": "7f8d835bdb70075ec29121d3ffcc6c12b9f0c183dcb3770142c1fe58d6efd744",
+        "complete_sha256": "67989be811fd53631e55a4d695f81572c6cbd8bee852ba5658b14723c1e8a42e",
+        "summary_sha256": "ba976794f6ae6c25ad0de308d37e52d3ea87807449f35a912e1fb7192d852bcd",
+        "metrics": [
+          0.5,
+          0.5714285714285714,
+          0.078125,
+          0.109375
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.22228492625486534,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 3,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 4,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 11,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 15,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 2,
+            "delivery_episodes": 11,
+            "death": 3,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 4,
+            "death": 0,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 12,
+            "delivery_episodes": 8,
+            "death": 3,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 5,
+          "death_episode": 1,
+          "self_episodes": 0,
+          "trade_episodes": 1,
+          "bombs_per_game": 4.953125,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.40625
+          },
+          "normal": {
+            "safe_win": 5,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.375
+          },
+          "easy": {
+            "safe_win": 15,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.921875
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r02",
+        "generation": 0,
+        "checkpoint_sha256": "c1200d0f4b3c92530b98c3c7a15f336fde9526125c7d441e154fd8476628457b",
+        "complete_sha256": "fef2cea01aa2aeb3825bb476fef4ffb648b5fe84d6650832b2cd8ca54a1b806d",
+        "summary_sha256": "552d95b4e470cedf43be184191c78e25216e1bb51eca12e7a42e32347e836234",
+        "metrics": [
+          0.5,
+          0.5714285714285714,
+          0.078125,
+          0.109375
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.22228492625486534,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 3,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 4,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 11,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 15,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 2,
+            "delivery_episodes": 11,
+            "death": 3,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 4,
+            "death": 0,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 12,
+            "delivery_episodes": 8,
+            "death": 3,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 5,
+          "death_episode": 1,
+          "self_episodes": 0,
+          "trade_episodes": 1,
+          "bombs_per_game": 4.953125,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.40625
+          },
+          "normal": {
+            "safe_win": 5,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.375
+          },
+          "easy": {
+            "safe_win": 15,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.921875
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r05",
+        "generation": 16,
+        "checkpoint_sha256": "4d9d89d437d3717f202ede551081462794fbe8180ead2cd4257e25731116c881",
+        "complete_sha256": "e019a502e77b9727c62c627b275f1aa1ba0f3049e86575db482b29c4d1976ac2",
+        "summary_sha256": "f2e293951001feb2be0be2bf80f74cd9fae9adb1d3e3c76aa7065af4e92bd4ad",
+        "metrics": [
+          0.375,
+          0.5,
+          0.125,
+          0.09895833333333333
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.2194526928479009,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 2,
+            "death": 5,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 3,
+            "death": 3,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 9,
+            "death": 4,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 15,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 9,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 2,
+            "death": 3,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 12,
+            "delivery_episodes": 6,
+            "death": 6,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 8,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.9375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.15625
+          },
+          "normal": {
+            "safe_win": 4,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.390625
+          },
+          "easy": {
+            "safe_win": 13,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.859375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r05",
+        "generation": 8,
+        "checkpoint_sha256": "b07a546bf3c9fddecc8ea7ffae3cbc0c70a1aaac52ccadb13e5cde64f5f8121d",
+        "complete_sha256": "6ce96e683da45b258406693f6a88a603d1c3b910dff322960327e33024d53340",
+        "summary_sha256": "e504534690c16fea337d73913ffed1ff9acc8658dcf8e77e05f5ee68dcca8a90",
+        "metrics": [
+          0.25,
+          0.5178571428571429,
+          0.1875,
+          0.08333333333333333
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.21207647752770173,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 2,
+            "death": 4,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 9,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 2,
+            "delivery_episodes": 8,
+            "death": 3,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 3,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 9,
+            "delivery_episodes": 4,
+            "death": 9,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 12,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.09375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 0,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.734375
+          },
+          "normal": {
+            "safe_win": 5,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.390625
+          },
+          "easy": {
+            "safe_win": 11,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.5625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r03",
+        "generation": 32,
+        "checkpoint_sha256": "d17e5ef8b2eba5c400d636bc7b0f6a3f9dadd85bca90635fc41e8c85436818b4",
+        "complete_sha256": "b0bfc26bd3b2c8d169c354e48f7e33d35b3e118e64f7bfe8a86fc914b1c4cb01",
+        "summary_sha256": "f879eadfb78afcf0cbad926afd8fc178e365840975cf071c462f938469b1dd05",
+        "metrics": [
+          0.375,
+          0.5892857142857143,
+          0.125,
+          0.07291666666666667
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.21184757651688713,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 4,
+            "death": 4,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 6,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 9,
+            "death": 4,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 3,
+            "delivery_episodes": 12,
+            "death": 4,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 5,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 6,
+            "death": 4,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 8,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.234375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 4,
+            "death_episode": 2,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 5.546875
+          },
+          "normal": {
+            "safe_win": 0,
+            "death_episode": 2,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 5.15625
+          },
+          "easy": {
+            "safe_win": 10,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.171875
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r01_attempt04",
+        "generation": 0,
+        "checkpoint_sha256": "12d690e6740d647894e7aa7f2db1a62b8a617f45cd1a0d678757500c940f3ea5",
+        "complete_sha256": "bfc0499cf8ce06c9309373f3747cc7f8733f94b002ad8ee7dc197bf5b70d3da9",
+        "summary_sha256": "1d538869788f27ebfdd1495c5ef46c1a41d7d9b998b7e97f31fe394a93a78a1b",
+        "metrics": [
+          0.125,
+          0.35714285714285715,
+          0.265625,
+          0.16666666666666666
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.21084699687248995,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 8,
+            "delivery_episodes": 0,
+            "death": 3,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 0,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 0,
+            "death": 3,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 8,
+            "death": 2,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 0,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 6,
+            "delivery_episodes": 2,
+            "death": 4,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 17,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 7.453125,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 8.328125
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 9.109375
+          },
+          "easy": {
+            "safe_win": 28,
+            "death_episode": 2,
+            "final_dead": 2,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 2,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 10.109375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r02",
+        "generation": 8,
+        "checkpoint_sha256": "b0f578c8355c7ec4badbdbf821b2bc1125cda9d68c142c567591225ecb90067c",
+        "complete_sha256": "6cde3c86f97fae39a39355a44fd8920e3f7a3f3a0f2c20a61f61bd4c8c8179db",
+        "summary_sha256": "7cc26e8c03eb61730fa10c2cf8fad091e9d7eec426b9026001bc813f206aad07",
+        "metrics": [
+          0.3125,
+          0.5446428571428571,
+          0.109375,
+          0.10416666666666667
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.2098467109997464,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 4,
+            "death": 1,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 6,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 6,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 9,
+            "death": 2,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 4,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 8,
+            "delivery_episodes": 5,
+            "death": 5,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 7,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.890625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.0625
+          },
+          "normal": {
+            "safe_win": 3,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.265625
+          },
+          "easy": {
+            "safe_win": 16,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.859375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r02",
+        "generation": 64,
+        "checkpoint_sha256": "b1a43ab33f8cd9a51f09f7dd3979772054385cd11d687d7b8b8132389c26594c",
+        "complete_sha256": "2e5dcec54369d3bba8e48063986e3e3339509f9bfe35c5a007a7f73fa96dbc90",
+        "summary_sha256": "c0d221470c556af5cd0710f1637ad6608cdcb7849ed5c2e655a16d2c8e1fb961",
+        "metrics": [
+          0.375,
+          0.6071428571428571,
+          0.078125,
+          0.09895833333333333
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.20482885632263212,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 4,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 3,
+            "death": 0,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 10,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 14,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 5,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 6,
+            "death": 4,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 5,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.5,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 4.90625
+          },
+          "normal": {
+            "safe_win": 6,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 5.578125
+          },
+          "easy": {
+            "safe_win": 11,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.75
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r03",
+        "generation": 96,
+        "checkpoint_sha256": "4cbe554113dd19643260249bd1863ce6799767d7471ad166e222e8667aa7ea84",
+        "complete_sha256": "a68b311ec56fbc9d287aef72cc299d2bdb3935071bc5b7dbc166598843d68833",
+        "summary_sha256": "5bb19415d734722c77b6354053f44354f6a2eb576b8f60019f37d223b40743b4",
+        "metrics": [
+          0.375,
+          0.5803571428571429,
+          0.09375,
+          0.08333333333333333
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.20306223316998237,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 5,
+            "death": 2,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 6,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 8,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 10,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 6,
+            "death": 10,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 6,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.734375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.375
+          },
+          "normal": {
+            "safe_win": 4,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.484375
+          },
+          "easy": {
+            "safe_win": 11,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 7.0625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r05",
+        "generation": 32,
+        "checkpoint_sha256": "8da70b41eda0dd07be9abd46291239254f0da1782693288fce73a614a95bdaa2",
+        "complete_sha256": "3eb3437d1daece23ff486c086953a094418b906d38ea6670c764a74c42a3880d",
+        "summary_sha256": "c9715e6462b688853dff7c4e65a20f8501be2e0bf4c7174bc3e92c8ff826ffaa",
+        "metrics": [
+          0.375,
+          0.5803571428571429,
+          0.125,
+          0.057291666666666664
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.19869274869389597,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 3,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 10,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 13,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 2,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 6,
+            "death": 6,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 8,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.6875,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.03125
+          },
+          "normal": {
+            "safe_win": 4,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.296875
+          },
+          "easy": {
+            "safe_win": 5,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.15625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r01_attempt04",
+        "generation": 32,
+        "checkpoint_sha256": "334e925c2ca6b48898de72231abdc68c3b17a30a326e06de4f1c9a6e2844ac7c",
+        "complete_sha256": "e4e632f92fae2a93236ae2aa712bd3d7dcdbb97c0205874afedc3e5082b95bfb",
+        "summary_sha256": "2c80a850a84c8339a4d8f944ee25f413882de433282c5128c22d68e69c206718",
+        "metrics": [
+          0.3125,
+          0.49107142857142855,
+          0.078125,
+          0.109375
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.19029426337982916,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 2,
+            "death": 2,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 1,
+            "death": 0,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 10,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 8,
+            "death": 0,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 2,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 5,
+            "death": 3,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 5,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 5.109375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 7.640625
+          },
+          "normal": {
+            "safe_win": 3,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 7.84375
+          },
+          "easy": {
+            "safe_win": 16,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 7.09375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r04",
+        "generation": 16,
+        "checkpoint_sha256": "8ae7750f13dc59373b95b188f448400f53f47f8960aa7031584bfb22a47a6a1a",
+        "complete_sha256": "76b8e0b573416fe1edd205b9a53fe13328786349227642e7d684f6109efeb1c6",
+        "summary_sha256": "9c0026f20a0fe621523f71169f6e756b6ddd123bae7128217ea957701e58a39b",
+        "metrics": [
+          0.1875,
+          0.5803571428571429,
+          0.09375,
+          0.125
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.18897070088810913,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 3,
+            "death": 2,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 4,
+            "death": 3,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 7,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 16,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 14,
+            "death": 0,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 5,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 5,
+            "delivery_episodes": 3,
+            "death": 2,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 6,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.125,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 5,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.015625
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.640625
+          },
+          "easy": {
+            "safe_win": 17,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.609375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r01_attempt04",
+        "generation": 16,
+        "checkpoint_sha256": "c2302f5ba602ee426d557ac817dc4428c579a7adb4948390e0ad8cd8465cc658",
+        "complete_sha256": "7aa068827e459f1815ec7f0004c0c2a268495957fd27bb6aa4b2fc7dda86c976",
+        "summary_sha256": "efaf26df116cc6354000a0958dcb27b6f7560ddc1c4c76b732fd36b5c2539cdb",
+        "metrics": [
+          0.25,
+          0.5089285714285714,
+          0.078125,
+          0.10416666666666667
+        ],
+        "self_episodes": 0,
+        "balanced_score": 0.1793820197938164,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 5,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 12,
+            "delivery_episodes": 1,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 8,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 10,
+            "death": 2,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 1,
+            "death": 0,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 7,
+            "delivery_episodes": 4,
+            "death": 6,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 5,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.796875,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 0,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.0625
+          },
+          "normal": {
+            "safe_win": 3,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.53125
+          },
+          "easy": {
+            "safe_win": 17,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.765625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r03",
+        "generation": 16,
+        "checkpoint_sha256": "c34e4ebc5237eaeb5e1c4bae9bc3a650ff3058da2b2aaccb2558dad3423d0faf",
+        "complete_sha256": "58cb42f836cbd3a48e788699dce1b415432464138f58c013badff5f10485f9f6",
+        "summary_sha256": "78d23e6c5ba48f8735a722949ba5edfe4f309c4cdb616559c4d0ec974f0893d1",
+        "metrics": [
+          0.4375,
+          0.6428571428571429,
+          0.15625,
+          0.0625
+        ],
+        "self_episodes": 2,
+        "balanced_score": 0.22892759384279415,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 5,
+            "death": 1,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 2,
+            "death": 5,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 12,
+            "death": 3,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 15,
+            "death": 0,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 6,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 9,
+            "delivery_episodes": 7,
+            "death": 7,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 10,
+          "death_episode": 2,
+          "self_episodes": 2,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.609375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 4,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.28125
+          },
+          "normal": {
+            "safe_win": 3,
+            "death_episode": 3,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.34375
+          },
+          "easy": {
+            "safe_win": 5,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.640625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r02",
+        "generation": 4,
+        "checkpoint_sha256": "26c41475a06c4a209334e8586698b2370407255babacd648c93f50216af8233f",
+        "complete_sha256": "14192f52735256b7a9411be62fd7536cd993b1843c21572d2291adb355b39934",
+        "summary_sha256": "807d66c48eef9698bfacccf9cf855a5010eeeac013d229bc625c041dcb07827a",
+        "metrics": [
+          0.1875,
+          0.5357142857142857,
+          0.125,
+          0.14583333333333334
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.20685943247792957,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 5,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 5,
+            "death": 1,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 10,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 7,
+            "delivery_episodes": 3,
+            "death": 6,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 8,
+          "death_episode": 1,
+          "self_episodes": 1,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.390625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 8,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.328125
+          },
+          "normal": {
+            "safe_win": 3,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.65625
+          },
+          "easy": {
+            "safe_win": 17,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.515625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r04",
+        "generation": 96,
+        "checkpoint_sha256": "6c3e0cd57191277e02dc59bc0c196797c2c296feb2c0a87ccc7a7a431e709eb1",
+        "complete_sha256": "1335e2511d038b1179ee4c8c4c600999ae38711afb124e04654311d128f98c3f",
+        "summary_sha256": "0b065d15ee064e2ceed08788295cab3e85c993e66e58e4de3f3f4374adcd6c44",
+        "metrics": [
+          0.375,
+          0.5714285714285714,
+          0.09375,
+          0.08854166666666667
+        ],
+        "self_episodes": 2,
+        "balanced_score": 0.20536576487632804,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 3,
+            "death": 3,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 2,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 10,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 13,
+            "death": 0,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 4,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 6,
+            "death": 6,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 6,
+          "death_episode": 1,
+          "self_episodes": 1,
+          "trade_episodes": 0,
+          "bombs_per_game": 5.46875,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.515625
+          },
+          "normal": {
+            "safe_win": 4,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.796875
+          },
+          "easy": {
+            "safe_win": 12,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 2,
+            "games": 64,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.8125
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r03",
+        "generation": 128,
+        "checkpoint_sha256": "ccb8e5aa4dbe3647c309dc317b8a1d7235316bc47d410080c3ee772fd3400151",
+        "complete_sha256": "c3e678f722b9747026490f7057f4996a415f0b72df9619882227d4e748ee2de4",
+        "summary_sha256": "1b14e0899115ae483dfa1ccbf7374cd1d8234fdead46b1f0f4daff00530d67d2",
+        "metrics": [
+          0.25,
+          0.5982142857142857,
+          0.140625,
+          0.08333333333333333
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.20460654387877172,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 5,
+            "death": 1,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 5,
+            "death": 3,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 9,
+            "death": 3,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 13,
+            "death": 2,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 3,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 9,
+            "delivery_episodes": 4,
+            "death": 10,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 9,
+          "death_episode": 1,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.40625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 1,
+            "games": 64,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.3125
+          },
+          "normal": {
+            "safe_win": 5,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.359375
+          },
+          "easy": {
+            "safe_win": 9,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.28125
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r04",
+        "generation": 0,
+        "checkpoint_sha256": "90c5030776550770ad8c7ec473a6c6d4e1dcde18366089ddf9cb80415b238b46",
+        "complete_sha256": "8f91ae1eee2de2655b5da47e5c8c925944cfdbb81387d5c7d97e511307670728",
+        "summary_sha256": "35feba432ef9ded1a970f081323a89fb1c2fe0898792d59f140fa08b118ba840",
+        "metrics": [
+          0.25,
+          0.5982142857142857,
+          0.140625,
+          0.08333333333333333
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.20460654387877172,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 5,
+            "death": 1,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 5,
+            "death": 3,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 9,
+            "death": 3,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 13,
+            "death": 2,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 3,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 9,
+            "delivery_episodes": 4,
+            "death": 10,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 9,
+          "death_episode": 1,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.40625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 1,
+            "games": 64,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.3125
+          },
+          "normal": {
+            "safe_win": 5,
+            "death_episode": 2,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.359375
+          },
+          "easy": {
+            "safe_win": 9,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.28125
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r04",
+        "generation": 4,
+        "checkpoint_sha256": "3da4cf2e1e290f68e89c09e430f58febd0d0fbbcce3fb9445b65e4e8604717ea",
+        "complete_sha256": "b0f36ebe8e4ec91ba20e17083f044a74829ef9eab751d7ba02c276e3c3d3706e",
+        "summary_sha256": "af7ea69ba4a64a3e46d56bb60bd8a9a1cc8cdda596a3f1cad916aa264678bf64",
+        "metrics": [
+          0.3125,
+          0.5446428571428571,
+          0.125,
+          0.06770833333333333
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.19481773627214816,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 7,
+            "death": 2,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 0,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 7,
+            "death": 3,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 2,
+            "delivery_episodes": 7,
+            "death": 4,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 6,
+            "delivery_episodes": 5,
+            "death": 5,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 8,
+          "death_episode": 2,
+          "self_episodes": 1,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.09375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 4,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 1,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.375
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 2,
+            "final_dead": 2,
+            "kill_then_death": 1,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 5.625
+          },
+          "easy": {
+            "safe_win": 7,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.03125
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r04",
+        "generation": 8,
+        "checkpoint_sha256": "b698ba1d4c9ca018247f565d2789fe6ca5ff5f4fc65758df1a96c428e8148b69",
+        "complete_sha256": "c849477b5e17c3d8df07c08b08a7cf70b6dca753b3f7787ae0760d0b3803f20c",
+        "summary_sha256": "46804774f1a4a2c32c6b47c7a1e4dd0890e7048cbe4e840c948c3821b28b5388",
+        "metrics": [
+          0.25,
+          0.5089285714285714,
+          0.125,
+          0.078125
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.18774752529133845,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 4,
+            "death": 3,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 3,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 7,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 2,
+            "delivery_episodes": 9,
+            "death": 3,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 2,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 4,
+            "death": 3,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 8,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 2.765625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 4.921875
+          },
+          "normal": {
+            "safe_win": 3,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.421875
+          },
+          "easy": {
+            "safe_win": 10,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.46875
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r01_attempt04",
+        "generation": 4,
+        "checkpoint_sha256": "b21ba9d1c6aba48e068d1839ff97a25eb2330c139fa6f77a6cb95efaaaca4ea0",
+        "complete_sha256": "5944ce870cd2c4e8d3a0d320f77beb6ff0b49070782dda0d87b6a122d86a4dad",
+        "summary_sha256": "e360fe27b611e212b021786b37d145b59d10d782190f1f5a6b305f68a37db6ce",
+        "metrics": [
+          0.125,
+          0.39285714285714285,
+          0.203125,
+          0.11979166666666667
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.18592323318718124,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 8,
+            "delivery_episodes": 0,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 10,
+            "delivery_episodes": 0,
+            "death": 2,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 0,
+            "death": 2,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 2,
+            "delivery_episodes": 12,
+            "death": 2,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 9,
+            "delivery_episodes": 0,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 6,
+            "delivery_episodes": 2,
+            "death": 4,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 13,
+          "death_episode": 0,
+          "self_episodes": 0,
+          "trade_episodes": 0,
+          "bombs_per_game": 6.359375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.65625
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 7.59375
+          },
+          "easy": {
+            "safe_win": 20,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 8.609375
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r03",
+        "generation": 4,
+        "checkpoint_sha256": "a11db6653e5f879e87c9036d4ebf320b484a8e3fc5bc2f27e3c3ecf2f81c54a6",
+        "complete_sha256": "5f810ce61fbdd198159cdfaa61f90492371feaf0190c8f906e45daef1e0700da",
+        "summary_sha256": "bad9baa08fbfb7dba1dadb5ebd601fe067d37f72dce992b7b5f754ecb0f6d61e",
+        "metrics": [
+          0.25,
+          0.5714285714285714,
+          0.140625,
+          0.057291666666666664
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.18418912636570892,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 12,
+            "delivery_episodes": 2,
+            "death": 3,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 2,
+            "death": 4,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 13,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 13,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 2,
+            "death": 3,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 9,
+            "delivery_episodes": 4,
+            "death": 5,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 9,
+          "death_episode": 1,
+          "self_episodes": 1,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.703125,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.5
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.234375
+          },
+          "easy": {
+            "safe_win": 7,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.515625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r04",
+        "generation": 128,
+        "checkpoint_sha256": "7525ca9a6d3ddd3c9e3c49068874867c2e91f18f3ee9d47f9c0d9ef46a838f52",
+        "complete_sha256": "5c1d90269fbf5798aa7b54eaed35e869161ed32222db01498950e198a917297a",
+        "summary_sha256": "94df49f7fec83a965e32949eea169ba39362384f4c1bfa90df14403d9c5090bd",
+        "metrics": [
+          0.25,
+          0.5892857142857143,
+          0.15625,
+          0.041666666666666664
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.1759821731885359,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 6,
+            "death": 3,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 3,
+            "death": 3,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 13,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 15,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 9,
+            "death": 2,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 4,
+            "death": 6,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 10,
+          "death_episode": 1,
+          "self_episodes": 1,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.71875,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.671875
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 2,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 2,
+            "bombs_per_game": 5.9375
+          },
+          "easy": {
+            "safe_win": 5,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.3125
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r05",
+        "generation": 0,
+        "checkpoint_sha256": "3fcf76cdb1329ac4f3c55c19047c62d84437e965fbc9366b1b71f659313ac24c",
+        "complete_sha256": "9bd847ac2ac27c5c8e49699777d9c5f141058ad26aa24b44a53951f923d058a3",
+        "summary_sha256": "a8f3d413fac85efd892e8bf31779db04ed536890aeefc554a7f079081c7bc488",
+        "metrics": [
+          0.25,
+          0.5892857142857143,
+          0.15625,
+          0.041666666666666664
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.1759821731885359,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 6,
+            "death": 3,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 3,
+            "death": 3,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 13,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 15,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 9,
+            "death": 2,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 4,
+            "death": 2,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 11,
+            "delivery_episodes": 4,
+            "death": 6,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 10,
+          "death_episode": 1,
+          "self_episodes": 1,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.71875,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 1,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.671875
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 2,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 2,
+            "bombs_per_game": 5.9375
+          },
+          "easy": {
+            "safe_win": 5,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.3125
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r03",
+        "generation": 64,
+        "checkpoint_sha256": "2d590d46913291877cf62b835fbecd726344669c4dd0604d9f4da7e3f42c9757",
+        "complete_sha256": "0fe7d26e31eac5409792f301e0dd1f2e41e9863d62183a3f7e3a1155f1259c90",
+        "summary_sha256": "18b65087085a58221ef38f7d45bcf55adcf487a44719067098d62cfea15f34f0",
+        "metrics": [
+          0.125,
+          0.5892857142857143,
+          0.09375,
+          0.08333333333333333
+        ],
+        "self_episodes": 1,
+        "balanced_score": 0.15488397608963805,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 13,
+            "delivery_episodes": 4,
+            "death": 7,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 1,
+            "death": 5,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 12,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 4,
+            "delivery_episodes": 10,
+            "death": 4,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 7,
+            "death": 3,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 7,
+            "delivery_episodes": 2,
+            "death": 8,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 6,
+          "death_episode": 1,
+          "self_episodes": 1,
+          "trade_episodes": 0,
+          "bombs_per_game": 4.390625,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 3,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.75
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 1,
+            "final_dead": 1,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 5.953125
+          },
+          "easy": {
+            "safe_win": 11,
+            "death_episode": 1,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 6.640625
+          }
+        }
+      },
+      {
+        "round": "control_route_v38_r04",
+        "generation": 32,
+        "checkpoint_sha256": "600388e2984378dc7ea3143c4b57e99ac9320f1786d93f950d49854d22747e62",
+        "complete_sha256": "a415a292cf867a77346f3ef921455853330922856fc1d84d92db346ff29adf49",
+        "summary_sha256": "6186d1eb3e4d5038d57f82c33606ce11c39b48c55c73519d05d8d2809864938f",
+        "metrics": [
+          0.1875,
+          0.5089285714285714,
+          0.125,
+          0.046875
+        ],
+        "self_episodes": 2,
+        "balanced_score": 0.1537720307159644,
+        "route": {
+          "native_death_stock": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 2,
+            "death": 0,
+            "self_death": 0
+          },
+          "native_sugar_stock": {
+            "games": 16,
+            "pickup_episodes": 15,
+            "delivery_episodes": 2,
+            "death": 3,
+            "self_death": 0
+          },
+          "real_drop": {
+            "games": 16,
+            "pickup_episodes": 16,
+            "delivery_episodes": 9,
+            "death": 1,
+            "self_death": 0
+          },
+          "carry_near": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 16,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_mid": {
+            "games": 16,
+            "pickup_episodes": 0,
+            "delivery_episodes": 15,
+            "death": 0,
+            "self_death": 0
+          },
+          "carry_far": {
+            "games": 16,
+            "pickup_episodes": 1,
+            "delivery_episodes": 11,
+            "death": 1,
+            "self_death": 0
+          },
+          "recovery_threat": {
+            "games": 16,
+            "pickup_episodes": 14,
+            "delivery_episodes": 2,
+            "death": 1,
+            "self_death": 0
+          },
+          "natural_full2400": {
+            "games": 16,
+            "pickup_episodes": 7,
+            "delivery_episodes": 3,
+            "death": 6,
+            "self_death": 0
+          }
+        },
+        "tactical": {
+          "games": 64,
+          "safe_win": 8,
+          "death_episode": 1,
+          "self_episodes": 1,
+          "trade_episodes": 0,
+          "bombs_per_game": 3.734375,
+          "limitation": "Tactical300 native JAX protocol, no web residual; report separately from Hunter"
+        },
+        "hunter": {
+          "hard": {
+            "safe_win": 0,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 5.15625
+          },
+          "normal": {
+            "safe_win": 2,
+            "death_episode": 2,
+            "final_dead": 2,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 1,
+            "trade_episodes": 0,
+            "by_bot_episodes": 1,
+            "bombs_per_game": 5.46875
+          },
+          "easy": {
+            "safe_win": 7,
+            "death_episode": 0,
+            "final_dead": 0,
+            "kill_then_death": 0,
+            "games": 64,
+            "self_episodes": 0,
+            "trade_episodes": 0,
+            "by_bot_episodes": 0,
+            "bombs_per_game": 6.859375
+          }
+        }
+      }
+    ],
+    "selected": {
+      "round": "control_route_v38_r01_attempt04",
+      "generation": 8,
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc"
+    },
+    "source": "same frozen asynchronous protocol; 37 completed points at release snapshot"
+  }
+}

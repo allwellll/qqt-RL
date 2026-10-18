@@ -61,7 +61,8 @@
       if(delta!==null)count++;
       if(i&&t===d.ticks[i-1]+1&&pb!==null&&d.phi_after[i-1]!==null&&Math.abs(pb-d.phi_after[i-1])>1){
         const current=doc.meta.offline_recomputed_current_reward&&doc.diagnostic_ticks?.[t-1]?.offline_recomputed_current_reward;
-        if(!current||!Number.isFinite(current.approx_phi_jump)||Math.abs(pb-d.phi_after[i-1]-current.approx_phi_jump/d.scale)>2)fail();
+        const jump=current?.approx_phi_jump??doc.meta.metrics?.potential_discontinuities?.find(r=>r[0]===t)?.[1];
+        if(!Number.isFinite(jump)||Math.abs(pb-d.phi_after[i-1]-jump/d.scale)>2)fail();
       }
       if(!diagnostic&&t===doc.actions.length&&pa!==null&&(pa!==0||d.terminal[i]!==true))fail();
       if(d.terminal[i]===true&&(t!==doc.actions.length||(!diagnostic&&pa!==0)))fail();
@@ -84,11 +85,13 @@
     const d=doc.route,i=d?.ticks.indexOf(tick)??-1,r={};
     for(const k of COLUMNS.filter(k=>!['ticks','target'].includes(k)))r[k]=i<0?null:d[k][i]===null?null:VALUES.includes(k)?d[k][i]*d.scale:d[k][i];
     const target=i<0||d.target[i]===null?null:d.targets[d.target[i]];
+    if(r.route_phase==='NONE'){r.distance_before=null;r.distance_after=null;}
+    if(doc.metrics){const i=tick-1,d=doc.metrics;for(const [k,c]of [['shaped_critic_q1_taken','shaped_q1_taken'],['shaped_critic_q1_policy_mean','shaped_q1_mean'],['shaped_advantage_a1','shaped_a1'],['shaped_advantage_delta','shaped_a1_increment']])r[k]=i<0||i>=doc.actions.length||d[c][i]===null?null:d[c][i]*d.scale;r.shaped_legal_count=d.legal_count[i]??null;}
     return {...r,target_type:target?.type??null,target_provenance:target?.provenance??null,target_id:target?.id??null};
   }
   function summary(doc,tick){
     const r=atTick(doc,tick),m=doc.meta.route;
-    return `${label(PHASES,r.route_phase)} · 路线ΔΦ ${signed(r.route_potential_delta)} · 路线奖励 ${signed(r.route_shaped_reward)} · λ ${value(m?.lambda)} · 路程 ${value(r.distance_before)}→${value(r.distance_after)} · Phi ${value(r.phi_before)}→${value(r.phi_after)} · 目标 ${label(TARGETS,r.target_type)} / ${label(PROVENANCE,r.target_provenance)} / ${value(r.target_id)} · 区域 ${value(r.topology_region_before)}→${value(r.topology_region_after)} · 开墙增益 ${value(r.topology_gain)} · 拓扑证据 ${r.topology_evidence?.join(' / ')||'未记录'} · 阶段切换 ${value(r.phase_transition)} · 失效 ${value(r.invalidated)} · 终态修正 ${value(r.terminal_correction)} · 安全拒绝 ${reason(r.safety_reject_reason)}`;
+    return `${r.route_phase==='NONE'?'无激活路线目标（未满足合法库存窗口或归因散包条件），无目标距离 · ':''}${label(PHASES,r.route_phase)} · 路线ΔΦ ${signed(r.route_potential_delta)} · 路线奖励 ${signed(r.route_shaped_reward)} · λ ${value(m?.lambda)} · 路程 ${value(r.distance_before)}→${value(r.distance_after)} · Phi ${value(r.phi_before)}→${value(r.phi_after)} · 目标 ${label(TARGETS,r.target_type)} / ${label(PROVENANCE,r.target_provenance)} / ${value(r.target_id)} · 区域 ${value(r.topology_region_before)}→${value(r.topology_region_after)} · 开墙增益 ${value(r.topology_gain)} · 拓扑证据 ${r.topology_evidence?.join(' / ')||'未记录'} · 阶段切换 ${value(r.phase_transition)} · 失效 ${value(r.invalidated)} · 终态修正 ${value(r.terminal_correction)} · 安全拒绝 ${reason(r.safety_reject_reason)}`;
   }
   function overlay(doc,tick){
     const r=atTick(doc,tick),distance=v=>v==='INF'?'∞':v===null?'?':String(v);

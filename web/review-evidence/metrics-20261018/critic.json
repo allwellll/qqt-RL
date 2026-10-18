@@ -1,0 +1,27 @@
+{
+  "schema": "qqt.je10-critic/v1",
+  "generation": 8,
+  "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+  "state_sha256": "fbdc05d14ab682553a4040198ed05d3993531dabfc8d862e802a157f1ba5f0fc",
+  "critic_sha256": "0d2ad5345e4a38f63dbba5379c1a582dd47a7b34985d1073aede9b8ae878c278",
+  "gamma": 0.995,
+  "network_sha256": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+  "replicas_exact": true,
+  "actor_exact": true,
+  "parity": {
+    "original": [
+      12.228440284729004,
+      0.7150187492370605,
+      -12.513144493103027
+    ],
+    "extracted": [
+      12.228440284729004,
+      0.7150187492370605,
+      -12.513144493103027
+    ],
+    "max_error": 0.0
+  },
+  "device": "cpu",
+  "input_encoding": "bun24-trap-timer-v2",
+  "role": "trained JE10 total reward Critic; raw-reward A1 is an explicitly approximate same-Critic diagnostic, not a separately raw-trained Critic"
+}

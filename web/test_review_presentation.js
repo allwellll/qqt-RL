@@ -1,8 +1,10 @@
 'use strict';
+// Historical compatibility fixtures remain verified independently of public admission.
+// The current catalog is exhaustively gated by test_review_admission.js.
 const assert=require('assert'),fs=require('fs');
 const V=require('./review_presentation'),P=require('./review_protocol'),visual=require('./visual_renderer');
 (async()=>{
-  const catalog=JSON.parse(fs.readFileSync('web/review-catalog.json'));
+  const catalog=JSON.parse(fs.readFileSync('reports/review_catalog_before_gate_20261018.json'));
   const keys=new Set();
   for(const row of catalog.replays){
     const doc=JSON.parse(fs.readFileSync(`web/review-replays/${row.file}`));

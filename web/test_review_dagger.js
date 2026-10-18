@@ -1,4 +1,6 @@
 'use strict';
+// Historical compatibility fixtures remain verified independently of public admission.
+// The current catalog is exhaustively gated by test_review_admission.js.
 const assert=require('assert'),fs=require('fs'),crypto=require('crypto'),zlib=require('zlib');
 const D=require('./review_dagger'),P=require('./review_protocol'),E=require('../scripts/export_diagnostic_dagger');
 const read=file=>JSON.parse(fs.readFileSync('web/review-dagger/'+file));
@@ -32,7 +34,7 @@ const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
   assert.deepEqual(Object.values(h8.smoke_a),[50,44,0,0,2,26]);assert.equal(h8.scope,'smoke');assert.equal(h8.validation.passed,false);
   assert.equal(h8.validation.original_passed,true);assert.equal(h8.funnel.actor_query,296,'full smoke query is distinct from target A query 26');
   assert(D.FRAGMENTS.A_LOOSE_RECOVERY.includes('来源未区分'));
-  const rcat=JSON.parse(fs.readFileSync('web/review-catalog.json'));
+  const rcat=JSON.parse(fs.readFileSync('reports/review_catalog_before_gate_20261018.json'));
   for(const row of rcat.replays){
     if(row.id.startsWith('h7-'))assert.equal(row.checkpoint_sha256,h7.checkpoint_sha256);const replay=JSON.parse(fs.readFileSync('web/review-replays/'+row.file));
     assert.equal(replay.dagger_events,undefined);assert.equal(D.episodeStatus(replay),'本局逐tick DAgger：未记录');

@@ -1,10 +1,10 @@
 'use strict';
 (function(root, factory) {
   const node=typeof module === 'object' && module.exports;
-  const api = factory(node ? require('./sim') : root.QQT,node ? require('./review_dagger') : root.QQTReviewDagger,node ? require('./review_advantage') : root.QQTReviewAdvantage,node ? require('./review_route') : root.QQTReviewRoute,node ? require('./tactical_arena') : root.QQTTacticalArena);
+  const api = factory(node ? require('./sim') : root.QQT,node ? require('./review_dagger') : root.QQTReviewDagger,node ? require('./review_advantage') : root.QQTReviewAdvantage,node ? require('./review_route') : root.QQTReviewRoute,node ? require('./tactical_arena') : root.QQTTacticalArena,node ? require('./review_metrics') : root.QQTReviewMetrics);
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.QQTReview = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function(Q,D,A,R,T) {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function(Q,D,A,R,T,M) {
   const SCHEMA = 'qqt.diagnostic-replay/v1';
   const ANNOTATIONS = 'qqt.replay-annotations/v1';
   const ROUTE_SIM_HASH='9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3';
@@ -82,6 +82,7 @@
     for (const e of d.events) if (!Number.isInteger(e.tick) || e.tick < 0 || e.tick > d.actions.length || typeof e.kind !== 'string') fail('event');
     D.validateEvents(d.dagger_events,d.actions.length);
     A.validate(d);
+    M.validate(d);
     R.validate(d);
     if(d.meta.offline_recomputed_current_reward){
       const m=d.meta.offline_recomputed_current_reward;
@@ -234,6 +235,7 @@
     if(d.advantages!==undefined)value.advantages=d.advantages;
     if(d.route!==undefined)value.route=d.route;
     if(d.diagnostic_ticks!==undefined)value.diagnostic_ticks=d.diagnostic_ticks;
+    if(d.metrics!==undefined)value.metrics=d.metrics;
     return value;
   }
   function time(tick, ms=100) {

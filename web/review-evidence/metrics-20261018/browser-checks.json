@@ -1,0 +1,1520 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "mobile": false,
+      "smooth": true,
+      "frames": 284,
+      "monotonic": [
+        true,
+        true
+      ],
+      "maxFrameDisplacement": [
+        0.3954653835927874,
+        0.39000077998731886
+      ],
+      "jumps": [
+        {
+          "tick": 3,
+          "player": 0,
+          "distance": 0.359901901753901,
+          "reason": "collision_clamp",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 0,
+          "distance": 0.22000138270182865,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 1,
+          "distance": 0.39000077998731886,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 22,
+          "player": 0,
+          "distance": 0.25010121629195786,
+          "reason": "collision_side_steering",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 30,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "threshold:spawnProtection",
+          "events": []
+        },
+        {
+          "tick": 31,
+          "player": 1,
+          "distance": 0.20000038023803537,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 35,
+          "player": 1,
+          "distance": 0.39000019499400096,
+          "reason": "collision_side_steering",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 36,
+          "player": 0,
+          "distance": 0.17000044733870096,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 38,
+          "player": 0,
+          "distance": 0.3900001949940005,
+          "reason": "state_change:heldItem",
+          "events": []
+        },
+        {
+          "tick": 40,
+          "player": 0,
+          "distance": 0.3954653835927874,
+          "reason": "topology_change:crate",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 46,
+          "player": 0,
+          "distance": 0.38961000595092776,
+          "reason": "topology_change:crate",
+          "events": []
+        },
+        {
+          "tick": 47,
+          "player": 0,
+          "distance": 0.19538999404907242,
+          "reason": "pause_or_seek",
+          "events": []
+        }
+      ],
+      "refresh": "实际 60 FPS · 模拟 10 tick/s · α 0.000 · 目标 60 FPS"
+    },
+    {
+      "mobile": false,
+      "smooth": false,
+      "frames": 278,
+      "monotonic": [
+        false,
+        false
+      ],
+      "maxFrameDisplacement": [
+        0.3900000000000001,
+        0.39000000000000057
+      ],
+      "jumps": [
+        {
+          "tick": 1,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 1,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 2,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 2,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 3,
+          "player": 0,
+          "distance": 0.35989999999999966,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 4,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 4,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 5,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 5,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 0,
+          "distance": 0.21999999999999975,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 7,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 7,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 8,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 8,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 9,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 9,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 10,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 10,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 12,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 12,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 13,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 13,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 14,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 14,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 15,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 15,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 16,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 16,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 17,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 17,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 18,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 18,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 19,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 19,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 20,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 20,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 21,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 21,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 22,
+          "player": 0,
+          "distance": 0.2501000000000002,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 22,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 23,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 23,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 24,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 24,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 25,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 25,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 26,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 26,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 27,
+          "player": 0,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 27,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 28,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 29,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 30,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 31,
+          "player": 1,
+          "distance": 0.20000000000000107,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 32,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 33,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 34,
+          "player": 0,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 34,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 35,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 35,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 36,
+          "player": 0,
+          "distance": 0.17000000000000037,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 36,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 37,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 37,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 38,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 39,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 40,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 41,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 42,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 43,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 44,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 45,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 46,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        }
+      ],
+      "refresh": "实际 60 FPS · 模拟 10 tick/s · α 0.000 · 目标 60 FPS"
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-recomputed-natural-2026101800",
+      "sha256": "ba828ae1f4405690958988c8f4e89a87936661b6dab4304d192920ce6bd503b2",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-natural-2026101810",
+      "sha256": "cd3675fd764c9e5fa8c760215e811a5a16f95359d2c96319c81d950aa5ca54f6",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-natural-2026101811",
+      "sha256": "1692fa391dd983d0dc2389c87172210261d149eb0aa0f3c88b3c35b51fe31069",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-open-2026101812",
+      "sha256": "c470e430ae850fddac29eecf9f5b5e372c26acea0bf62a0027128c52cf85e321",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-open-2026101813",
+      "sha256": "caf0fb7f19e075ea0511518f15a0f550ff4d89198ad24b270104fe2790dd46cf",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-carry_home-2026101814",
+      "sha256": "8e4d56fca153714165467b8a72819ed8be6a67d2cde46da9138959bc89be762b",
+      "deep_link": 84,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-carry_home-2026101815",
+      "sha256": "8230e966d82671555323a039087968c0df2852c0fc6b10505f6d6753f6d156ff",
+      "deep_link": 90,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "auth": "wrong/correct/refresh/new-tab/forget/version invalidation",
+      "annotations": "persist/export/import",
+      "console_errors": [],
+      "http_errors": [],
+      "excluded_deep_links": "honest unavailability, no fallback"
+    },
+    {
+      "mobile": true,
+      "smooth": true,
+      "frames": 281,
+      "monotonic": [
+        true,
+        true
+      ],
+      "maxFrameDisplacement": [
+        0.39540095517039986,
+        0.39000077997541704
+      ],
+      "jumps": [
+        {
+          "tick": 3,
+          "player": 0,
+          "distance": 0.3599019017345554,
+          "reason": "collision_clamp",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 0,
+          "distance": 0.2200013826807303,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 1,
+          "distance": 0.39000077997541704,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 22,
+          "player": 0,
+          "distance": 0.2501003040596248,
+          "reason": "collision_side_steering",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 30,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "threshold:spawnProtection",
+          "events": []
+        },
+        {
+          "tick": 31,
+          "player": 1,
+          "distance": 0.20000038022643135,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 35,
+          "player": 1,
+          "distance": 0.39000019498805016,
+          "reason": "collision_side_steering",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 36,
+          "player": 0,
+          "distance": 0.17000178934774005,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 38,
+          "player": 0,
+          "distance": 0.3900001949880497,
+          "reason": "state_change:heldItem",
+          "events": []
+        },
+        {
+          "tick": 40,
+          "player": 0,
+          "distance": 0.39540095517039986,
+          "reason": "topology_change:crate",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 46,
+          "player": 0,
+          "distance": 0.38961001190185707,
+          "reason": "topology_change:crate",
+          "events": []
+        },
+        {
+          "tick": 46,
+          "player": 0,
+          "distance": 0.19499998809814523,
+          "reason": "pause_or_seek",
+          "events": []
+        }
+      ],
+      "refresh": "实际 60 FPS · 模拟 10 tick/s · α 0.000 · 目标 60 FPS"
+    },
+    {
+      "mobile": true,
+      "smooth": false,
+      "frames": 278,
+      "monotonic": [
+        false,
+        false
+      ],
+      "maxFrameDisplacement": [
+        0.3900000000000001,
+        0.39000000000000057
+      ],
+      "jumps": [
+        {
+          "tick": 1,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 1,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 2,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 2,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 3,
+          "player": 0,
+          "distance": 0.35989999999999966,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 4,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 4,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 5,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 5,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 0,
+          "distance": 0.21999999999999975,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 7,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 7,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 8,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 8,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 9,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 9,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 10,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 10,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 12,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 12,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 13,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 13,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 14,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 14,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 15,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 15,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 16,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 16,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 17,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 17,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 18,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 18,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 19,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 19,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 20,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 20,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 21,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 21,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 22,
+          "player": 0,
+          "distance": 0.2501000000000002,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 22,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 23,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 23,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 24,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 24,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 25,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 25,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 26,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 26,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 27,
+          "player": 0,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 27,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 28,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 29,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 30,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 31,
+          "player": 1,
+          "distance": 0.20000000000000107,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 32,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 33,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 34,
+          "player": 0,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 34,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 35,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 35,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 36,
+          "player": 0,
+          "distance": 0.17000000000000037,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 36,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 37,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 37,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 38,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 39,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 40,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 41,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 42,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 43,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 44,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 45,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        }
+      ],
+      "refresh": "实际 60 FPS · 模拟 10 tick/s · α 0.000 · 目标 60 FPS"
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-recomputed-natural-2026101800",
+      "sha256": "ba828ae1f4405690958988c8f4e89a87936661b6dab4304d192920ce6bd503b2",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-natural-2026101810",
+      "sha256": "cd3675fd764c9e5fa8c760215e811a5a16f95359d2c96319c81d950aa5ca54f6",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-natural-2026101811",
+      "sha256": "1692fa391dd983d0dc2389c87172210261d149eb0aa0f3c88b3c35b51fe31069",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-open-2026101812",
+      "sha256": "c470e430ae850fddac29eecf9f5b5e372c26acea0bf62a0027128c52cf85e321",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-open-2026101813",
+      "sha256": "caf0fb7f19e075ea0511518f15a0f550ff4d89198ad24b270104fe2790dd46cf",
+      "deep_link": 176,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-carry_home-2026101814",
+      "sha256": "8e4d56fca153714165467b8a72819ed8be6a67d2cde46da9138959bc89be762b",
+      "deep_link": 84,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-carry_home-2026101815",
+      "sha256": "8230e966d82671555323a039087968c0df2852c0fc6b10505f6d6753f6d156ff",
+      "deep_link": 90,
+      "metrics": "five sample ticks equal quantized source",
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "auth": "wrong/correct/refresh/new-tab/forget/version invalidation",
+      "annotations": "persist/export/import",
+      "console_errors": [],
+      "http_errors": [],
+      "excluded_deep_links": "honest unavailability, no fallback"
+    }
+  ]
+}

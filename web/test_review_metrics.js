@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict'),M=require('./review_metrics'),A=require('./review_advantage');
+// Hand-calculated nonzero future values, illegal action excluded, probability
+// mass .5 deliberately requires renormalization. Never added to public catalog.
+const cs=[{action:[0,0],legal:true,probability:.2,reward:2,nextValue:4,terminal:false},{action:[1,0],legal:true,probability:.3,reward:-1,nextValue:6,terminal:false},{action:[2,0],legal:false,probability:.5,reward:100,nextValue:100,terminal:false}];
+assert.deepEqual(A.calculate(cs,[0,0],.5),{taken_q:4,mean_q:2.8,advantage:1.2000000000000002});
+assert.equal(A.calculate(cs.map(c=>({...c,terminal:true})),[0,0],.5).taken_q,2);
+const hash='a'.repeat(64),meta={schema:M.SCHEMA,status:'offline_approximate_one_step',future_value:'same_checkpoint_critic',measured_count:2,missing_count:0,gamma:.995,limitations:'same shaped-trained Critic on both sides, offline Web ledger; not historical rollout',action_scope:'joint_move_ability',checkpoint_sha256:hash,policy_sha256:hash,simulator_sha256:hash,critic_sha256:hash,state_sha256:hash,network_sha256:hash,counterfactual_sha256:hash,reward_ledger_sha256:hash,adapter_sha256:hash,source_metrics_sha256:hash,reward_hashes:{'sealed/reward.py':hash},component_names:['route_shaped_reward'],origin:'original_trajectory_recomputed',selection_rule:'fixed seeds all retained'};
+const d={meta:{metrics:meta,checkpoint_sha256:hash,model_sha256:hash,simulator_sha256:hash,reward_status:'offline_recomputed_sealed_reward',diagnostic_admission:{status:'qualified'}},actions:[[0,0,4,0],[1,0,4,0]],rewards:[[1,{route_shaped_reward:1},{}],[2,{route_shaped_reward:-1},{}]],metrics:{schema:M.SCHEMA,scale:1e-6,legal_count:[2,2]}};
+const vals={raw_q1_taken:[4,3],raw_q1_mean:[2,2],raw_a1:[2,1],shaped_q1_taken:[5,2],shaped_q1_mean:[2,2],shaped_a1:[3,0],delta_a:[1,-1],raw_a1_increment:[null,-1],shaped_a1_increment:[null,-3],delta_a_increment:[null,-2]};
+for(const [k,v]of Object.entries(vals))d.metrics[k]=v.map(x=>x===null?null:Math.round(x/1e-6));
+d.route={shaped_legal_count:d.metrics.legal_count.slice()};for(const [rk,mk]of [['shaped_critic_q1_taken','shaped_q1_taken'],['shaped_critic_q1_policy_mean','shaped_q1_mean'],['shaped_advantage_a1','shaped_a1'],['shaped_advantage_delta','shaped_a1_increment']])d.route[rk]=d.metrics[mk].slice();
+M.validate(d);assert.equal(M.atTick(d,2).delta_a,-1);assert.equal(M.atTick(d,0).raw_a1,null);
+for(const mutate of [x=>x.metrics.raw_a1[0]=null,x=>x.metrics.raw_a1_increment[0]=0,x=>x.metrics.shaped_a1[1]=Infinity,x=>x.meta.metrics.future_value=0,x=>x.meta.metrics.checkpoint_sha256='b'.repeat(64),x=>x.meta.metrics.critic_sha256=null,x=>x.metrics.legal_count[1]=0,x=>x.metrics.raw_a1_increment[1]=0,x=>x.rewards[0][1].unknown=1,x=>x.meta.metrics.reward_hashes={},x=>x.route.shaped_advantage_a1[1]=100,x=>x.rewards[0][1].route_shaped_reward=0]){const bad=structuredClone(d);mutate(bad);assert.throws(()=>M.validate(bad),/metrics admission/);}
+console.log('Metrics formula / legal renormalization / terminal / null / provenance RED-GREEN');

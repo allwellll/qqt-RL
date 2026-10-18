@@ -1,9 +1,11 @@
 'use strict';
+// Historical compatibility fixtures remain verified independently of public admission.
+// The current catalog is exhaustively gated by test_review_admission.js.
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const crypto=require('node:crypto');
 
-const catalog=JSON.parse(fs.readFileSync('web/review-catalog.json','utf8'));
+const catalog=JSON.parse(fs.readFileSync('reports/review_catalog_before_gate_20261018.json','utf8'));
 const row=catalog.replays.find(x=>x.id==='h8-route-v36-g32-2026101736');
 assert(row,'v36 review entry exists');
 const doc=JSON.parse(fs.readFileSync('web/review-replays/'+row.file,'utf8'));

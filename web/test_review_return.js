@@ -1,4 +1,6 @@
 'use strict';
+// Historical compatibility fixtures remain verified independently of public admission.
+// The current catalog is exhaustively gated by test_review_admission.js.
 const assert=require('node:assert/strict'),P=require('./review_protocol'),F=require('./review_return'),A=require('./review_advantage');
 const doc=require('./review-replays/h8-route-v35-g32-drop-return-2026101732.json'),level=require('../scripts/eval_web_hunter').loadLevel();
 const audit=F.analyze(doc,level,P),r=audit.points[177];
@@ -17,7 +19,7 @@ assert.equal(F.temporalDelta(null,1),null);assert.equal(F.temporalDelta(1,null),
 const moving=Array.from({length:30},(_,i)=>({tick:i+1,pos:[1+i*.01,4],distance:38,target:'a',phase:'C_RETURN',alive:true,carrying:true}));
 assert(F.classify(moving,29).kind===null,'grid plateau alone is not oscillation');
 assert.equal(F.classify(moving.map(p=>({...p,phase:'NONE'})),29).kind,null);
-const fs=require('node:fs'),crypto=require('node:crypto'),catalog=require('./review-catalog.json'),row=catalog.replays.find(r=>r.id===doc.meta.id),raw=fs.readFileSync('web/'+row.diagnostic_audit.file),evidence=JSON.parse(raw);
+const fs=require('node:fs'),crypto=require('node:crypto'),catalog=require('../reports/review_catalog_before_gate_20261018.json'),row=catalog.replays.find(r=>r.id===doc.meta.id),raw=fs.readFileSync('web/'+row.diagnostic_audit.file),evidence=JSON.parse(raw);
 const hash=b=>crypto.createHash('sha256').update(b).digest('hex');assert.equal(hash(raw),row.diagnostic_audit.sha256);assert.equal(raw.length,row.diagnostic_audit.bytes);
 F.validateAudit(evidence,doc,row.sha256);assert.deepEqual(evidence.intervals,audit.intervals);
 const swapped=structuredClone(evidence),original=swapped.advantage_audit.original,shaped=swapped.advantage_audit.shaped;

@@ -1,4 +1,6 @@
 'use strict';
+// Historical compatibility fixtures remain verified independently of public admission.
+// The current catalog is exhaustively gated by test_review_admission.js.
 const assert=require('assert'),fs=require('fs'),A=require('./review_advantage'),P=require('./review_protocol');
 (async()=>{
   const candidates=[
@@ -12,7 +14,7 @@ const assert=require('assert'),fs=require('fs'),A=require('./review_advantage'),
   assert.equal(A.calculate([{...candidates[0],terminal:true}],[0,0],.5).taken_q,1);
   assert.throws(()=>A.calculate(candidates,[2,0],.5));assert.throws(()=>A.calculate(candidates,[0,0],NaN));
   assert.throws(()=>A.calculate(candidates.map(c=>({...c,probability:0})),[0,0],.5));
-  const catalog=JSON.parse(fs.readFileSync('web/review-catalog.json'));
+  const catalog=JSON.parse(fs.readFileSync('reports/review_catalog_before_gate_20261018.json'));
   const doc=JSON.parse(fs.readFileSync('web/review-replays/'+catalog.replays[0].file));
   doc.meta.advantage=A.missing({...doc.meta,gamma:.995});doc.advantages=A.empty();A.validate(doc);
   assert.deepEqual(A.atTick(doc,10),{taken_q:null,mean_q:null,advantage:null,delta:null});

@@ -42,10 +42,11 @@
     }
   }
   function atTick(doc,tick){
+    if(doc.metrics){const i=tick-1,d=doc.metrics;return Object.fromEntries([['taken_q','raw_q1_taken'],['mean_q','raw_q1_mean'],['advantage','raw_a1'],['delta','raw_a1_increment']].map(([k,c])=>[k,i<0||i>=doc.actions.length||d[c][i]===null?null:d[c][i]*d.scale]));}
     const data=doc.advantages,i=data?.ticks.indexOf(tick)??-1;
     return Object.fromEntries(['taken_q','mean_q','advantage','delta'].map(k=>[k,i<0||data[k][i]===null?null:data[k][i]*data.scale]));
   }
-  function legalCount(doc,tick){const i=doc.advantages?.ticks.indexOf(tick)??-1;return i<0?null:doc.advantages.legal_count?.[i]??null;}
+  function legalCount(doc,tick){if(doc.metrics)return doc.metrics.legal_count[tick-1]??null;const i=doc.advantages?.ticks.indexOf(tick)??-1;return i<0?null:doc.advantages.legal_count?.[i]??null;}
   function missing(meta){
     return {schema:SCHEMA,definition:'Q1=r+gamma*V(next); A1=Q1(taken)-sum(pi_legal*Q1)',
       status:'not_recorded',reason:'生产 Web 导出仅含 Actor；独立训练 Critic 未导出并验证，反事实 reward ledger 分支未验证',gamma:meta.gamma,

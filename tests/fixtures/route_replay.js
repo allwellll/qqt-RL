@@ -2,7 +2,7 @@
 // Synthetic protocol tests only. Never add this document to a public catalog.
 const fs=require('fs');
 module.exports=function fixture(){
-  const catalog=require('../../web/review-catalog.json');
+  const catalog=require('../../reports/review_catalog_before_gate_20261018.json');
   const replay=JSON.parse(fs.readFileSync('web/review-replays/'+catalog.replays.find(r=>!r.diagnostic).file));
   const h='a'.repeat(64);
   const meta={schema:'qqt.route-potential/v1',kind:'fixture',status:'recorded',gamma:.995,lambda:.05,

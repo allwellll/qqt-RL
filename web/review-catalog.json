@@ -1,136 +1,48 @@
 {
   "schema": "qqt.diagnostic-catalog/v1",
-  "model": "Bun392 JE10 v38 r01 g8；保留历史 Review 对照",
+  "model": "JE10 v38 r01 g8 · 完整封存账本 / 同代Critic离线指标",
   "scenes": [
-    {
-      "id": "route_drop_return",
-      "name": "掉包返程诊断（非自然完整对局）",
-      "source": "je08 production drop_return diagnostic; not a natural full match",
-      "base_map": 806
-    },
     {
       "id": "native",
       "name": "原生抢包对战",
       "source": "QQT.Sim.reset / native rules",
-      "base_map": 806
+      "base_map": 806,
+      "seeds": [
+        2026101800,
+        2026101810,
+        2026101811
+      ]
     },
     {
       "id": "open",
       "name": "开放抢包对战",
       "source": "scripts/eval_web_hunter.js / cleared destructibles",
-      "base_map": 806
+      "base_map": 806,
+      "seeds": [
+        2026101812,
+        2026101813
+      ]
     },
     {
       "id": "carry_home",
       "name": "持包返程任务",
       "source": "H8 sealed scripts/je05_web_tasks.js setup(carry_home)",
-      "base_map": 806
+      "base_map": 806,
+      "seeds": [
+        2026101814,
+        2026101815
+      ]
     }
   ],
-  "screened_episodes": 16,
+  "screened_episodes": 7,
   "selection": "Retain every declared episode; report rule-based failure labels without post-hoc selection",
   "predeclared_matrix": "review-evidence/matrix.json",
-  "raw_bytes": 50731966,
-  "gzip_bytes": 5400217,
+  "raw_bytes": 2324015,
+  "gzip_bytes": 446136,
   "replays": [
     {
-      "id": "je10-d392bf8cae-real_drop-2026101800",
-      "file": "je10-d392bf8cae-real_drop-2026101800.json",
-      "seed": 2026101800,
-      "scene": "native",
-      "task": "real_drop",
-      "scene_name": "真实掉包追取及返程诊断",
-      "scene_rules": "固定合法 reset fixture，1HP；生产原生规则；1200 tick上限；非自然初始化",
-      "model": "Bun392 JE10 v38 r01 g8",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
-      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
-      "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "je10-best-completed-20261018",
-      "summary": {
-        "ticks": 451,
-        "done": true,
-        "winner": 1,
-        "reward": [
-          null,
-          null
-        ],
-        "failures": [
-          "route_deviation"
-        ]
-      },
-      "sha256": "27aa70746fd03ee13f8de548f1fdb3d3a0609ef77bd8b7bde9b10231f161e315",
-      "bytes": 1442830,
-      "gzip_bytes": 260512
-    },
-    {
-      "id": "je10-d392bf8cae-native_death_stock-2026101800",
-      "file": "je10-d392bf8cae-native_death_stock-2026101800.json",
-      "seed": 2026101800,
-      "scene": "native",
-      "task": "native_death_stock",
-      "scene_name": "死亡窗口库存取包及返程诊断",
-      "scene_rules": "固定合法 reset fixture，1HP；生产原生规则；1200 tick上限；非自然初始化",
-      "model": "Bun392 JE10 v38 r01 g8",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
-      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
-      "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "je10-best-completed-20261018",
-      "summary": {
-        "ticks": 1200,
-        "done": true,
-        "winner": 0,
-        "reward": [
-          null,
-          null
-        ],
-        "failures": []
-      },
-      "sha256": "7f2a80cd4a855a20b22498c0e56f5af5837fc97a73312220a8b204150b7c51a5",
-      "bytes": 4197976,
-      "gzip_bytes": 776626
-    },
-    {
-      "id": "je10-d392bf8cae-native_sugar_stock-2026101800",
-      "file": "je10-d392bf8cae-native_sugar_stock-2026101800.json",
-      "seed": 2026101800,
-      "scene": "native",
-      "task": "native_sugar_stock",
-      "scene_name": "糖泡窗口库存取包及返程诊断",
-      "scene_rules": "固定合法 reset fixture，1HP；生产原生规则；1200 tick上限；非自然初始化",
-      "model": "Bun392 JE10 v38 r01 g8",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
-      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
-      "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "je10-best-completed-20261018",
-      "summary": {
-        "ticks": 1200,
-        "done": true,
-        "winner": 0,
-        "reward": [
-          null,
-          null
-        ],
-        "failures": []
-      },
-      "sha256": "319accbe85507dfb5690e5bcc69c06a720ba1d088293452bbb4ac0e37dba5f6b",
-      "bytes": 4061965,
-      "gzip_bytes": 732516
-    },
-    {
-      "id": "je10-d392bf8cae-natural_full2400-2026101800",
-      "file": "je10-d392bf8cae-natural_full2400-2026101800.json",
+      "id": "je10-g8-metrics-recomputed-natural-2026101800",
+      "file": "je10-g8-metrics-recomputed-natural-2026101800.json",
       "seed": 2026101800,
       "scene": "native",
       "task": "natural_full2400",
@@ -140,91 +52,46 @@
       "opponent": "bun.hunter/normal",
       "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
       "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
-      "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
       "map": "806",
       "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "je10-critic-metrics-20261018",
       "diagnostic": true,
-      "batch_id": "je10-best-completed-20261018",
+      "origin": "original_trajectory_recomputed",
       "summary": {
         "ticks": 1773,
         "done": true,
         "winner": 0,
         "reward": [
-          null,
-          null
+          38.306576285511255,
+          -92
         ],
         "failures": [
           "route_deviation"
         ]
       },
-      "sha256": "3b7ab090983b18b66b7c521aeb5f1cd631836067caf1225c6bb9bd01f563e4d5",
-      "bytes": 6852556,
-      "gzip_bytes": 1401516
+      "sha256": "ba828ae1f4405690958988c8f4e89a87936661b6dab4304d192920ce6bd503b2",
+      "bytes": 441057,
+      "gzip_bytes": 94178
     },
     {
-      "id": "h8-v36-g32-native-2026101780",
-      "file": "h8-v36-g32-native-2026101780.json",
-      "seed": 2026101780,
+      "id": "je10-g8-metrics-natural-2026101810",
+      "file": "je10-g8-metrics-natural-2026101810.json",
+      "seed": 2026101810,
       "scene": "native",
-      "variant": "native",
-      "scene_name": "原生抢包对战",
-      "scene_rules": "原生砖块/糖泡/道具；2400 tick",
-      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整对局",
+      "scene_rules": "生产原生806砖块、糖泡、道具；2400 tick上限；真实Hunter normal；无预置携包/控制/掉包；assist-off",
+      "model": "Bun392 JE10 v38 r01 g8",
       "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
       "map": "806",
       "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "je10-critic-metrics-20261018",
       "diagnostic": true,
-      "batch_id": "v36-fixed-eight-20261017",
+      "origin": "best_model_replacement",
       "summary": {
-        "ticks": 1771,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          1
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            1,
-            1
-          ]
-        ],
-        "reward": [
-          -12.04370779764939,
-          -13.078046202617315
-        ],
-        "failures": [
-          "window_closed_empty",
-          "match_loss",
-          "no_delivery"
-        ]
-      },
-      "sha256": "62f81e15a4cdc5325f1a47b0d228e6bc95880efbb0e01d13df1d6c68d0ed73e1",
-      "bytes": 5706376,
-      "gzip_bytes": 384333
-    },
-    {
-      "id": "h8-v36-g32-native-2026101781",
-      "file": "h8-v36-g32-native-2026101781.json",
-      "seed": 2026101781,
-      "scene": "native",
-      "variant": "native",
-      "scene_name": "原生抢包对战",
-      "scene_rules": "原生砖块/糖泡/道具；2400 tick",
-      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "v36-fixed-eight-20261017",
-      "summary": {
-        "ticks": 2145,
+        "ticks": 1493,
         "done": true,
         "winner": 0,
         "score": [
@@ -242,443 +109,34 @@
           ]
         ],
         "reward": [
-          39.34387732806073,
-          -24.03314079082884
-        ],
-        "failures": [
-          "window_closed_empty",
-          "return_deviation"
-        ]
-      },
-      "sha256": "4ae377674ea6385d524202c2577715739422a615a0eb4982ff606e0d401e54f8",
-      "bytes": 7197150,
-      "gzip_bytes": 476978
-    },
-    {
-      "id": "h8-v36-g32-open-2026101782",
-      "file": "h8-v36-g32-open-2026101782.json",
-      "seed": 2026101782,
-      "scene": "open",
-      "variant": "open",
-      "scene_name": "开放抢包对战",
-      "scene_rules": "清可破坏砖；原生糖泡/道具；2400 tick",
-      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "v36-fixed-eight-20261017",
-      "summary": {
-        "ticks": 552,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          1
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            1,
-            1
-          ]
-        ],
-        "reward": [
-          1.5000000298023224,
-          28.87755458551146
-        ],
-        "failures": [
-          "match_loss",
-          "no_delivery"
-        ]
-      },
-      "sha256": "04a572ad739b70acff36cba744817bc185b854f1617f571b30b439e2a17ec5cb",
-      "bytes": 1729222,
-      "gzip_bytes": 121574
-    },
-    {
-      "id": "h8-v36-g32-open-2026101783",
-      "file": "h8-v36-g32-open-2026101783.json",
-      "seed": 2026101783,
-      "scene": "open",
-      "variant": "open",
-      "scene_name": "开放抢包对战",
-      "scene_rules": "清可破坏砖；原生糖泡/道具；2400 tick",
-      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "v36-fixed-eight-20261017",
-      "summary": {
-        "ticks": 809,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          1
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            1,
-            1
-          ]
-        ],
-        "reward": [
-          1.3000000268220901,
-          5.877318984832527
-        ],
-        "failures": [
-          "match_loss",
-          "no_delivery"
-        ]
-      },
-      "sha256": "aad8be88ef9d3c524995853f0dd70803851ebe3084cc5cd981ecd6b357151bd8",
-      "bytes": 2502885,
-      "gzip_bytes": 168045
-    },
-    {
-      "id": "h8-v36-g32-carry_home-2026101784",
-      "file": "h8-v36-g32-carry_home-2026101784.json",
-      "seed": 2026101784,
-      "scene": "carry_home",
-      "variant": "native",
-      "scene_name": "预置持包返程诊断",
-      "scene_rules": "je05 carry_home：预置持敌包、清砖、1HP；300 tick；非自然抢包",
-      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "v36-fixed-eight-20261017",
-      "summary": {
-        "ticks": 92,
-        "done": true,
-        "winner": 0,
-        "score": [
-          1,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            1
-          ],
-          [
-            0,
-            0
-          ]
-        ],
-        "reward": [
-          1.4375,
-          0.699999988079071
-        ],
-        "failures": []
-      },
-      "sha256": "04e88c235ec2bfa1098cc7b2d8a1817814c885a807bdd624bab26799b545ab60",
-      "bytes": 321372,
-      "gzip_bytes": 30124
-    },
-    {
-      "id": "h8-v36-g32-carry_home-2026101785",
-      "file": "h8-v36-g32-carry_home-2026101785.json",
-      "seed": 2026101785,
-      "scene": "carry_home",
-      "variant": "native",
-      "scene_name": "预置持包返程诊断",
-      "scene_rules": "je05 carry_home：预置持敌包、清砖、1HP；300 tick；非自然抢包",
-      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "v36-fixed-eight-20261017",
-      "summary": {
-        "ticks": 107,
-        "done": true,
-        "winner": 0,
-        "score": [
-          1,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            1
-          ],
-          [
-            0,
-            0
-          ]
-        ],
-        "reward": [
-          1,
-          0
-        ],
-        "failures": []
-      },
-      "sha256": "22f0359884838fff2a5d57c8fcbd12952b2547d44d0042e80f6f5499e1309114",
-      "bytes": 369468,
-      "gzip_bytes": 32918
-    },
-    {
-      "id": "h8-v36-g32-tactical_v2-2026101786",
-      "file": "h8-v36-g32-tactical_v2-2026101786.json",
-      "seed": 2026101786,
-      "scene": "native",
-      "variant": "native",
-      "scene_name": "Tactical Arena 完整规则终局",
-      "scene_rules": "Tactical Arena 清砖、无道具、默认 Sim 规则；2400 tick 完整终局",
-      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
-      "opponent": "bun.tactical_v2",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "v36-fixed-eight-20261017",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": null,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          0.8171243826236605,
-          -12
-        ],
-        "failures": [
-          "window_closed_empty",
-          "no_delivery"
-        ]
-      },
-      "sha256": "13ac9d060a70d1eb22b117e28e2e1addc6a731d648ae4f9509ac04895c6150d4",
-      "bytes": 7958608,
-      "gzip_bytes": 439411
-    },
-    {
-      "id": "h8-v36-g32-tactical_v2-2026101787",
-      "file": "h8-v36-g32-tactical_v2-2026101787.json",
-      "seed": 2026101787,
-      "scene": "native",
-      "variant": "native",
-      "scene_name": "Tactical Arena 完整规则终局",
-      "scene_rules": "Tactical Arena 清砖、无道具、默认 Sim 规则；2400 tick 完整终局",
-      "model": "H8 v36 连续路线 PBRS g32 raw Actor",
-      "opponent": "bun.tactical_v2",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "batch_id": "v36-fixed-eight-20261017",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": null,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          1.0045995645073162,
-          -40
-        ],
-        "failures": [
-          "window_closed_empty",
-          "no_delivery"
-        ]
-      },
-      "sha256": "7f6a9d5fab78fda82077b192dae9cf95d24841ab039240a29f4a13f5d401b158",
-      "bytes": 7884357,
-      "gzip_bytes": 443267
-    },
-    {
-      "id": "h8-route-v36-g32-2026101736",
-      "name": "H8 v36 连续路线 PBRS g32",
-      "file": "h8-route-v36-g32-2026101736.json",
-      "seed": 2026101736,
-      "variant": "native",
-      "scene": "native",
-      "scene_name": "自然规则对局片段（战术清砖图，300 tick 截断）",
-      "scene_rules": "固定 seed production Sim 对局片段；Tactical Arena 清除可破坏砖，无道具；原生模拟器规则配置；300 tick 截断，非完整终局",
-      "model": "H8 v36 连续路线 PBRS g32",
-      "opponent": "bun.tactical_v2",
-      "checkpoint_sha256": "e2dd2cb9890abf5753b34adcdb14abc93b3f977229c29326fd2033e584a73945",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "summary": {
-        "ticks": 300,
-        "done": false,
-        "winner": null,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          null,
-          null
-        ],
-        "failures": []
-      },
-      "sha256": "be911c70b7ddc22857c709f86ff42da0f575bf3c2055d1499846291dd9aebc48",
-      "bytes": 6839,
-      "gzip_bytes": 2355
-    },
-    {
-      "id": "h8-route-v35-g32-drop-return-2026101732",
-      "seed": 2026101732,
-      "scene": "route_drop_return",
-      "scene_name": "掉包返程诊断（非自然完整对局）",
-      "scene_rules": "生产诊断初态：清砖、1HP、敌持己包且 trap=1；assist-off；120秒；不是自然击杀证据",
-      "model": "H8 v35 路线 PBRS g32 raw",
-      "opponent": "固定向上 / 不放泡 / 不用道具 [0,0,0]",
-      "checkpoint_sha256": "e141311268c6eaf419f1f651252bb27d46c106aeb407230c20eed4c8897a34e2",
-      "critic_sha256": "3174b62f39ea9d56f206c917d2107a8f5e31bda2fe693e88630f72715c0604d8",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "diagnostic": true,
-      "file": "h8-route-v35-g32-drop-return-2026101732.json",
-      "summary": {
-        "ticks": 1200,
-        "done": true,
-        "winner": 0,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            0
-          ],
-          [
-            0,
-            0
-          ]
-        ],
-        "reward": [
-          null,
-          null
-        ],
-        "failures": [
-          "return_deviation"
-        ],
-        "route_reward": -0.10258203125000304
-      },
-      "sha256": "207680e66de70c44652586fdc7f3aab1919bf5268a8f3e8ef88dcd95fdce69f2",
-      "bytes": 162526,
-      "gzip_bytes": 7746,
-      "diagnostic_audit": {
-        "file": "review-evidence/route-g32-return.json",
-        "schema": "qqt.return-diagnostic/v1",
-        "sha256": "3e9446f928f30a80273d8eaad979067b8a42e4233edfdeca144844477c37ef4e",
-        "bytes": 106126,
-        "gzip_bytes": 16175
-      }
-    },
-    {
-      "id": "h8-g32-native-2026101901",
-      "file": "h8-g32-native-2026101901.json",
-      "seed": 2026101901,
-      "variant": "native",
-      "scene": "native",
-      "scene_name": "原生抢包对战",
-      "scene_rules": "原生砖块、糖泡、道具；240秒",
-      "map": "806",
-      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "scene_sha256": "6ec0edba759335ac38fa4b2ef934324438698f04439e65a9b99185524fe2b5c3",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": null,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          149.9999981224537,
-          -107.99999976158142
+          -13.358773635700345,
+          -72
         ],
         "failures": [
           "window_closed_empty"
         ]
       },
-      "sha256": "33b22524b9ba0c0c4ea3cfe077c7a5ea32dea844585fdfaa732ff0d72a15b496",
-      "bytes": 131448,
-      "gzip_bytes": 45577
+      "sha256": "cd3675fd764c9e5fa8c760215e811a5a16f95359d2c96319c81d950aa5ca54f6",
+      "bytes": 349359,
+      "gzip_bytes": 68662
     },
     {
-      "id": "h8-g32-native-2026101900",
-      "file": "h8-g32-native-2026101900.json",
-      "seed": 2026101900,
-      "variant": "native",
+      "id": "je10-g8-metrics-natural-2026101811",
+      "file": "je10-g8-metrics-natural-2026101811.json",
+      "seed": 2026101811,
       "scene": "native",
-      "scene_name": "原生抢包对战",
-      "scene_rules": "原生砖块、糖泡、道具；240秒",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整对局",
+      "scene_rules": "生产原生806砖块、糖泡、道具；2400 tick上限；真实Hunter normal；无预置携包/控制/掉包；assist-off",
+      "model": "Bun392 JE10 v38 r01 g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
       "map": "806",
       "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "scene_sha256": "6ec0edba759335ac38fa4b2ef934324438698f04439e65a9b99185524fe2b5c3",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "batch_id": "je10-critic-metrics-20261018",
+      "diagnostic": true,
+      "origin": "best_model_replacement",
       "summary": {
         "ticks": 2400,
         "done": true,
@@ -698,37 +156,41 @@
           ]
         ],
         "reward": [
-          5.000000014901161,
-          -27.999996706843376
+          10.565339103806764,
+          -96
         ],
-        "failures": []
+        "failures": [
+          "window_closed_empty"
+        ]
       },
-      "sha256": "9baf54887cff0d323a9d47cdf01e0f9e90556fbb7ad6bf8c131f3280ad501b4c",
-      "bytes": 124965,
-      "gzip_bytes": 44278
+      "sha256": "1692fa391dd983d0dc2389c87172210261d149eb0aa0f3c88b3c35b51fe31069",
+      "bytes": 604400,
+      "gzip_bytes": 122718
     },
     {
-      "id": "h8-g32-open-2026101902",
-      "file": "h8-g32-open-2026101902.json",
-      "seed": 2026101902,
-      "variant": "open",
+      "id": "je10-g8-metrics-open-2026101812",
+      "file": "je10-g8-metrics-open-2026101812.json",
+      "seed": 2026101812,
       "scene": "open",
-      "scene_name": "开放抢包对战",
-      "scene_rules": "清除可破坏砖块；原生糖泡与道具；240秒",
+      "task": "open_full2400",
+      "scene_name": "开放布局完整对局",
+      "scene_rules": "生产806清砖变体；原生糖泡/道具；2400 tick；完整对局；无预置携包；assist-off",
+      "model": "Bun392 JE10 v38 r01 g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
       "map": "806",
       "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "scene_sha256": "b797292034732d4d5b000ebdae2a5565a26e96aa72e310f28b31b153e4d4ced2",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "batch_id": "je10-critic-metrics-20261018",
+      "diagnostic": true,
+      "origin": "best_model_replacement",
       "summary": {
-        "ticks": 291,
+        "ticks": 2400,
         "done": true,
         "winner": 1,
         "score": [
           0,
-          1
+          0
         ],
         "stored": [
           [
@@ -736,37 +198,42 @@
             0
           ],
           [
-            1,
+            0,
             1
           ]
         ],
         "reward": [
-          1.100000023841858,
-          3.287500023841858
+          13.566006310167722,
+          -25.230355859501287
         ],
-        "failures": []
+        "failures": [
+          "enemy_drop_unpicked",
+          "window_closed_empty"
+        ]
       },
-      "sha256": "c5e899daed1e2b535821ebc2886cdb3ef0fa42d1fb1afc758d792d7a3c7b3437",
-      "bytes": 22682,
-      "gzip_bytes": 8918
+      "sha256": "c470e430ae850fddac29eecf9f5b5e372c26acea0bf62a0027128c52cf85e321",
+      "bytes": 710845,
+      "gzip_bytes": 112100
     },
     {
-      "id": "h8-g32-open-2026101903",
-      "file": "h8-g32-open-2026101903.json",
-      "seed": 2026101903,
-      "variant": "open",
+      "id": "je10-g8-metrics-open-2026101813",
+      "file": "je10-g8-metrics-open-2026101813.json",
+      "seed": 2026101813,
       "scene": "open",
-      "scene_name": "开放抢包对战",
-      "scene_rules": "清除可破坏砖块；原生糖泡与道具；240秒",
+      "task": "open_full2400",
+      "scene_name": "开放布局完整对局",
+      "scene_rules": "生产806清砖变体；原生糖泡/道具；2400 tick；完整对局；无预置携包；assist-off",
+      "model": "Bun392 JE10 v38 r01 g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
       "map": "806",
       "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "scene_sha256": "b797292034732d4d5b000ebdae2a5565a26e96aa72e310f28b31b153e4d4ced2",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "batch_id": "je10-critic-metrics-20261018",
+      "diagnostic": true,
+      "origin": "best_model_replacement",
       "summary": {
-        "ticks": 512,
+        "ticks": 560,
         "done": true,
         "winner": 1,
         "score": [
@@ -785,31 +252,33 @@
         ],
         "reward": [
           0.9000000059604645,
-          4.687499970197678
+          3.7951305599417537
         ],
         "failures": []
       },
-      "sha256": "2f84deaf92bb93f4f4f8ad653e681a4306366f778ed2746bc9895d2e8b567f7e",
-      "bytes": 33414,
-      "gzip_bytes": 13037
+      "sha256": "caf0fb7f19e075ea0511518f15a0f550ff4d89198ad24b270104fe2790dd46cf",
+      "bytes": 137703,
+      "gzip_bytes": 27645
     },
     {
-      "id": "h8-g32-carry_home-2026101904",
-      "file": "h8-g32-carry_home-2026101904.json",
-      "seed": 2026101904,
-      "variant": "native",
+      "id": "je10-g8-metrics-carry_home-2026101814",
+      "file": "je10-g8-metrics-carry_home-2026101814.json",
+      "seed": 2026101814,
       "scene": "carry_home",
-      "scene_name": "持包返程任务",
-      "scene_rules": "je05 carry_home：清砖、1HP、持敌包、返程出生；30秒",
+      "task": "carry_home",
+      "scene_name": "预置持包返程诊断",
+      "scene_rules": "生产carry_home初始化；1HP/清砖/预置持敌包；300 tick；诊断场景，不代表自然完整对局成功；assist-off",
+      "model": "Bun392 JE10 v38 r01 g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
       "map": "806",
       "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "scene_sha256": "ba4d95ff1ca61130e034a9e6b362e67da4690afe912ce4c71031717e5b28f854",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "batch_id": "je10-critic-metrics-20261018",
+      "diagnostic": true,
+      "origin": "best_model_replacement",
       "summary": {
-        "ticks": 100,
+        "ticks": 85,
         "done": true,
         "winner": 0,
         "score": [
@@ -818,7 +287,7 @@
         ],
         "stored": [
           [
-            1,
+            0,
             1
           ],
           [
@@ -827,32 +296,34 @@
           ]
         ],
         "reward": [
-          0.9375,
-          0
+          0.7610137164592743,
+          -0.0625
         ],
         "failures": []
       },
-      "sha256": "86d520221777dd20f30fd13f0207e6e0354d1a1c2e1df594f2932343c91cf769",
-      "bytes": 12688,
-      "gzip_bytes": 5225
+      "sha256": "8e4d56fca153714165467b8a72819ed8be6a67d2cde46da9138959bc89be762b",
+      "bytes": 39890,
+      "gzip_bytes": 10168
     },
     {
-      "id": "h8-g32-carry_home-2026101905",
-      "file": "h8-g32-carry_home-2026101905.json",
-      "seed": 2026101905,
-      "variant": "native",
+      "id": "je10-g8-metrics-carry_home-2026101815",
+      "file": "je10-g8-metrics-carry_home-2026101815.json",
+      "seed": 2026101815,
       "scene": "carry_home",
-      "scene_name": "持包返程任务",
-      "scene_rules": "je05 carry_home：清砖、1HP、持敌包、返程出生；30秒",
+      "task": "carry_home",
+      "scene_name": "预置持包返程诊断",
+      "scene_rules": "生产carry_home初始化；1HP/清砖/预置持敌包；300 tick；诊断场景，不代表自然完整对局成功；assist-off",
+      "model": "Bun392 JE10 v38 r01 g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
       "map": "806",
       "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
-      "scene_sha256": "ba4d95ff1ca61130e034a9e6b362e67da4690afe912ce4c71031717e5b28f854",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "critic_sha256": "7002b1b4f40d87021462d69a4bd3594964698ce2608592c5c4e17db6d1d5cf85",
+      "batch_id": "je10-critic-metrics-20261018",
+      "diagnostic": true,
+      "origin": "best_model_replacement",
       "summary": {
-        "ticks": 103,
+        "ticks": 91,
         "done": true,
         "winner": 0,
         "score": [
@@ -870,478 +341,17 @@
           ]
         ],
         "reward": [
-          1,
+          0.8089351654052734,
           0
         ],
         "failures": []
       },
-      "sha256": "67349c6814d85d82e9a4082826914cb28de7a5ab23beae06351456798762e88b",
-      "bytes": 12639,
-      "gzip_bytes": 5261
+      "sha256": "8230e966d82671555323a039087968c0df2852c0fc6b10505f6d6753f6d156ff",
+      "bytes": 40761,
+      "gzip_bytes": 10665
     }
   ],
-  "history_replays": [
-    {
-      "id": "h7-g32-native-2026101700",
-      "file": "h7-g32-native-2026101700.json",
-      "seed": 2026101700,
-      "variant": "native",
-      "model": "H7 v33 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
-      "summary": {
-        "ticks": 1380,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          1
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            1,
-            1
-          ]
-        ],
-        "reward": [
-          -11.99999886751175,
-          -21.812499806284904
-        ],
-        "failures": [
-          "window_closed_empty"
-        ]
-      },
-      "sha256": "178b6d0448ad1dbc3577b8c2681fd80a385aebf29387a94a8207766e0c545b40",
-      "bytes": 26254,
-      "gzip_bytes": 4377
-    },
-    {
-      "id": "h7-g32-native-2026101705",
-      "file": "h7-g32-native-2026101705.json",
-      "seed": 2026101705,
-      "variant": "native",
-      "model": "H7 v33 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
-      "summary": {
-        "ticks": 2359,
-        "done": true,
-        "winner": 0,
-        "score": [
-          1,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            1
-          ],
-          [
-            0,
-            0
-          ]
-        ],
-        "reward": [
-          -33.1875,
-          -96
-        ],
-        "failures": [
-          "window_closed_empty",
-          "return_deviation"
-        ]
-      },
-      "sha256": "2d2724809eb587faa6d727a30f1661324b93ece4db54a51aa21f58ab9634f59b",
-      "bytes": 41066,
-      "gzip_bytes": 5317
-    },
-    {
-      "id": "h7-g32-native-2026101701",
-      "file": "h7-g32-native-2026101701.json",
-      "seed": 2026101701,
-      "variant": "native",
-      "model": "H7 v33 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": 0,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            0
-          ],
-          [
-            0,
-            0
-          ]
-        ],
-        "reward": [
-          53.93749962747097,
-          -36.5
-        ],
-        "failures": [
-          "window_closed_empty"
-        ]
-      },
-      "sha256": "c2ea7ef8d5d5aef3bd0b9ef0115882ff69747531945c70734ab097d90fdc376c",
-      "bytes": 37912,
-      "gzip_bytes": 5056
-    },
-    {
-      "id": "h7-g32-native-2026101702",
-      "file": "h7-g32-native-2026101702.json",
-      "seed": 2026101702,
-      "variant": "native",
-      "model": "H7 v33 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
-      "summary": {
-        "ticks": 1426,
-        "done": true,
-        "winner": 0,
-        "score": [
-          1,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            1
-          ],
-          [
-            0,
-            0
-          ]
-        ],
-        "reward": [
-          78.93749962747097,
-          -36
-        ],
-        "failures": [
-          "window_closed_empty"
-        ]
-      },
-      "sha256": "d3fc83e0b52a983ba8d5a710e369a02d01691478e11faa5e72a135ca792e8357",
-      "bytes": 26898,
-      "gzip_bytes": 4346
-    },
-    {
-      "id": "h7-g32-native-2026101704",
-      "file": "h7-g32-native-2026101704.json",
-      "seed": 2026101704,
-      "variant": "native",
-      "model": "H7 v33 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": null,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          151.50000232458115,
-          -107.9999998062849
-        ],
-        "failures": [
-          "window_closed_empty"
-        ]
-      },
-      "sha256": "1195de86f276cc899f5af3f038789aa1889510425943231f37fbed44c6c91d3b",
-      "bytes": 42638,
-      "gzip_bytes": 5449
-    },
-    {
-      "id": "h7-g32-native-hard-2026101720",
-      "file": "h7-g32-native-hard-2026101720.json",
-      "seed": 2026101720,
-      "variant": "native",
-      "model": "H7 v33 g32 raw",
-      "opponent": "bun.hunter/hard",
-      "checkpoint_sha256": "779fa8a20587f2df7e6e34242ce23cfba16183108fe57c4618e22b4b247ccc63",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": null,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          36.99999850988388,
-          -23.999999806284904
-        ],
-        "failures": [
-          "window_closed_empty"
-        ]
-      },
-      "sha256": "0712209cb722e409c2f9c7afb56c199ee665716637f2a233b63c9312f8394582",
-      "bytes": 37411,
-      "gzip_bytes": 4824
-    },
-    {
-      "id": "h8-g32-native-hard-2026101760",
-      "file": "h8-g32-native-hard-2026101760.json",
-      "seed": 2026101760,
-      "variant": "native",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/hard",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          18.650000765919685,
-          -12.500000208616257
-        ],
-        "failures": [
-          "enemy_drop_unpicked",
-          "window_closed_empty"
-        ]
-      },
-      "sha256": "f1aab13aaf34e8e996ed52d4a8e6bc2bc930307dd4096fbf369cadb4a372f7ff",
-      "bytes": 43881,
-      "gzip_bytes": 8635
-    },
-    {
-      "id": "h8-g32-native-2026101740",
-      "file": "h8-g32-native-2026101740.json",
-      "seed": 2026101740,
-      "variant": "native",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "summary": {
-        "ticks": 1783,
-        "done": true,
-        "winner": 0,
-        "score": [
-          1,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            1
-          ],
-          [
-            0,
-            0
-          ]
-        ],
-        "reward": [
-          58.13749997317791,
-          -35.99999921023846
-        ],
-        "failures": [
-          "window_closed_empty"
-        ]
-      },
-      "sha256": "6cc7a2426d58aba8f00cee36edef1ec4d48e60a15cd848dcfe1977c30587efa1",
-      "bytes": 41637,
-      "gzip_bytes": 9037
-    },
-    {
-      "id": "h8-g32-native-2026101742",
-      "file": "h8-g32-native-2026101742.json",
-      "seed": 2026101742,
-      "variant": "native",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          -12,
-          -22.5
-        ],
-        "failures": [
-          "window_closed_empty",
-          "return_deviation"
-        ]
-      },
-      "sha256": "411ddc6f80ff1b2af361f9496f5365173d5b7fbcb231cc0e0dbdcccf7bbb0b4f",
-      "bytes": 53502,
-      "gzip_bytes": 10135
-    },
-    {
-      "id": "h8-g32-native-2026101741",
-      "file": "h8-g32-native-2026101741.json",
-      "seed": 2026101741,
-      "variant": "native",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "summary": {
-        "ticks": 2400,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          0
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            1
-          ]
-        ],
-        "reward": [
-          -27.99999998509884,
-          3.925000011920929
-        ],
-        "failures": [
-          "self_bomb"
-        ]
-      },
-      "sha256": "713884823b0c12552b3104607f1f67474f69c6d873bc0f74d9fed07596f5fc17",
-      "bytes": 43788,
-      "gzip_bytes": 8313
-    },
-    {
-      "id": "h8-g32-native-2026101745",
-      "file": "h8-g32-native-2026101745.json",
-      "seed": 2026101745,
-      "variant": "native",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "summary": {
-        "ticks": 2094,
-        "done": true,
-        "winner": 0,
-        "score": [
-          1,
-          0
-        ],
-        "stored": [
-          [
-            1,
-            1
-          ],
-          [
-            0,
-            0
-          ]
-        ],
-        "reward": [
-          12.625000014901161,
-          -63.999999806284904
-        ],
-        "failures": [
-          "window_closed_empty",
-          "return_deviation"
-        ]
-      },
-      "sha256": "ecbae874fe6248c16617f15f87b0714728bef48dc27bad4ca2ad1701763ae584",
-      "bytes": 48562,
-      "gzip_bytes": 9612
-    },
-    {
-      "id": "h8-g32-open-2026101750",
-      "file": "h8-g32-open-2026101750.json",
-      "seed": 2026101750,
-      "variant": "open",
-      "model": "H8 v34 g32 raw",
-      "opponent": "bun.hunter/normal",
-      "checkpoint_sha256": "b491758761b32872555555f08cf4e42f9cab120215501509a2bdbf905e64ce11",
-      "summary": {
-        "ticks": 2344,
-        "done": true,
-        "winner": 1,
-        "score": [
-          0,
-          1
-        ],
-        "stored": [
-          [
-            0,
-            0
-          ],
-          [
-            1,
-            1
-          ]
-        ],
-        "reward": [
-          -12.00000187754631,
-          0.49999965727329254
-        ],
-        "failures": [
-          "window_closed_empty"
-        ]
-      },
-      "sha256": "873926035be3c38f8c00baafba6f974ebc213fe10866da53fbc0fbba43472a30",
-      "bytes": 46618,
-      "gzip_bytes": 9511
-    }
-  ],
+  "history_replays": [],
   "v36_fixed_eight": {
     "schema": "qqt.fixed-seed-batch/v1",
     "seeds": [
@@ -5749,5 +4759,176 @@
       "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc"
     },
     "source": "same frozen asynchronous protocol; 37 completed points at release snapshot"
+  },
+  "excluded_replays": [
+    {
+      "id": "je10-d392bf8cae-real_drop-2026101800",
+      "sha256": "27aa70746fd03ee13f8de548f1fdb3d3a0609ef77bd8b7bde9b10231f161e315",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "je10-d392bf8cae-native_death_stock-2026101800",
+      "sha256": "7f2a80cd4a855a20b22498c0e56f5af5837fc97a73312220a8b204150b7c51a5",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "je10-d392bf8cae-native_sugar_stock-2026101800",
+      "sha256": "319accbe85507dfb5690e5bcc69c06a720ba1d088293452bbb4ac0e37dba5f6b",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "je10-d392bf8cae-natural_full2400-2026101800",
+      "sha256": "3b7ab090983b18b66b7c521aeb5f1cd631836067caf1225c6bb9bd01f563e4d5",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-v36-g32-native-2026101780",
+      "sha256": "62f81e15a4cdc5325f1a47b0d228e6bc95880efbb0e01d13df1d6c68d0ed73e1",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-v36-g32-native-2026101781",
+      "sha256": "4ae377674ea6385d524202c2577715739422a615a0eb4982ff606e0d401e54f8",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-v36-g32-open-2026101782",
+      "sha256": "04a572ad739b70acff36cba744817bc185b854f1617f571b30b439e2a17ec5cb",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-v36-g32-open-2026101783",
+      "sha256": "aad8be88ef9d3c524995853f0dd70803851ebe3084cc5cd981ecd6b357151bd8",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-v36-g32-carry_home-2026101784",
+      "sha256": "04e88c235ec2bfa1098cc7b2d8a1817814c885a807bdd624bab26799b545ab60",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-v36-g32-carry_home-2026101785",
+      "sha256": "22f0359884838fff2a5d57c8fcbd12952b2547d44d0042e80f6f5499e1309114",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-v36-g32-tactical_v2-2026101786",
+      "sha256": "13ac9d060a70d1eb22b117e28e2e1addc6a731d648ae4f9509ac04895c6150d4",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-v36-g32-tactical_v2-2026101787",
+      "sha256": "7f6a9d5fab78fda82077b192dae9cf95d24841ab039240a29f4a13f5d401b158",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-route-v36-g32-2026101736",
+      "sha256": "be911c70b7ddc22857c709f86ff42da0f575bf3c2055d1499846291dd9aebc48",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-route-v35-g32-drop-return-2026101732",
+      "sha256": "207680e66de70c44652586fdc7f3aab1919bf5268a8f3e8ef88dcd95fdce69f2",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-native-2026101901",
+      "sha256": "33b22524b9ba0c0c4ea3cfe077c7a5ea32dea844585fdfaa732ff0d72a15b496",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-native-2026101900",
+      "sha256": "9baf54887cff0d323a9d47cdf01e0f9e90556fbb7ad6bf8c131f3280ad501b4c",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-open-2026101902",
+      "sha256": "c5e899daed1e2b535821ebc2886cdb3ef0fa42d1fb1afc758d792d7a3c7b3437",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-open-2026101903",
+      "sha256": "2f84deaf92bb93f4f4f8ad653e681a4306366f778ed2746bc9895d2e8b567f7e",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-carry_home-2026101904",
+      "sha256": "86d520221777dd20f30fd13f0207e6e0354d1a1c2e1df594f2932343c91cf769",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-carry_home-2026101905",
+      "sha256": "67349c6814d85d82e9a4082826914cb28de7a5ab23beae06351456798762e88b",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h7-g32-native-2026101700",
+      "sha256": "178b6d0448ad1dbc3577b8c2681fd80a385aebf29387a94a8207766e0c545b40",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h7-g32-native-2026101705",
+      "sha256": "2d2724809eb587faa6d727a30f1661324b93ece4db54a51aa21f58ab9634f59b",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h7-g32-native-2026101701",
+      "sha256": "c2ea7ef8d5d5aef3bd0b9ef0115882ff69747531945c70734ab097d90fdc376c",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h7-g32-native-2026101702",
+      "sha256": "d3fc83e0b52a983ba8d5a710e369a02d01691478e11faa5e72a135ca792e8357",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h7-g32-native-2026101704",
+      "sha256": "1195de86f276cc899f5af3f038789aa1889510425943231f37fbed44c6c91d3b",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h7-g32-native-hard-2026101720",
+      "sha256": "0712209cb722e409c2f9c7afb56c199ee665716637f2a233b63c9312f8394582",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-native-hard-2026101760",
+      "sha256": "f1aab13aaf34e8e996ed52d4a8e6bc2bc930307dd4096fbf369cadb4a372f7ff",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-native-2026101740",
+      "sha256": "6cc7a2426d58aba8f00cee36edef1ec4d48e60a15cd848dcfe1977c30587efa1",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-native-2026101742",
+      "sha256": "411ddc6f80ff1b2af361f9496f5365173d5b7fbcb231cc0e0dbdcccf7bbb0b4f",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-native-2026101741",
+      "sha256": "713884823b0c12552b3104607f1f67474f69c6d873bc0f74d9fed07596f5fc17",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-native-2026101745",
+      "sha256": "ecbae874fe6248c16617f15f87b0714728bef48dc27bad4ca2ad1701763ae584",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    },
+    {
+      "id": "h8-g32-open-2026101750",
+      "sha256": "873926035be3c38f8c00baafba6f974ebc213fe10866da53fbc0fbba43472a30",
+      "reason": "缺完整同版本Reward/真实Critic逐决策一步优势；历史原资产保留，已由完整诊断替代"
+    }
+  ],
+  "metrics_admission": {
+    "schema": "qqt.review-admission/v1",
+    "status": "qualified",
+    "excluded_count": 32,
+    "original_trajectory_recomputed": 1,
+    "same_checkpoint_new_seed": 0,
+    "best_model_replacement": 6,
+    "audit_file": "review-evidence/metrics-20261018/route-target-audit.json"
   }
 }

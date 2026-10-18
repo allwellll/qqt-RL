@@ -1,8 +1,10 @@
 'use strict';
+// Historical compatibility fixtures remain verified independently of public admission.
+// The current catalog is exhaustively gated by test_review_admission.js.
 const assert=require('node:assert/strict'),fs=require('fs'),crypto=require('crypto');
 const P=require('./review_protocol');
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
-const catalog=require('./review-catalog.json'),model=require('./models.json').models[0];
+const catalog=require('../reports/review_catalog_before_gate_20261018.json'),model=require('./models.json').models[0];
 const tasks=['real_drop','native_death_stock','native_sugar_stock','natural_full2400'];
 async function main(){
   assert.equal(model.id,'bun392-je10-v38-r01-g8','RED: selected JE10 must lead model selector');

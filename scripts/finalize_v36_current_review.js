@@ -3,15 +3,20 @@ const fs=require('node:fs'),crypto=require('node:crypto'),assert=require('node:a
 const P=require('../web/review_protocol'),R=require('../web/review_route'),G=require('./generate_v36_multiseed_review');
 const hash=v=>crypto.createHash('sha256').update(typeof v==='string'||Buffer.isBuffer(v)?v:JSON.stringify(v)).digest('hex');
 const PHASE=['NONE','B_STOCK','A_ENEMY_DROP','C_RETURN','D_DELIVERY'];
-function columns(rows,seed){
+function columns(rows,seed,beforeStates){
   const out={schema:R.SCHEMA,scale:1e-6,targets:[]},ids=new Map();for(const k of R.COLUMNS)out[k]=[];
-  for(const row of rows){
+  for(const [index,row] of rows.entries()){
     const m=row.route[0],phase=PHASE[m.route_phase];let target=null;
+    if(!phase)throw Error('unknown route phase');
+    if(phase==='D_DELIVERY'){
+      const s=beforeStates?.[index],base=s?.bunBases?.[0],y=s?.pos?.[0],x=s?.pos?.[1];
+      if(!base||s.bunCarried[0]!==1||!(y>=base[0]&&y<base[0]+3&&x>=base[1]&&x<base[1]+3))throw Error('route phase D_DELIVERY requires actual home cage target evidence; HOME half is not cage');
+    }
     if(phase!=='NONE'){
       const key=phase+':'+m.route_target_identity;
       if(!ids.has(key)){ids.set(key,out.targets.length);out.targets.push({type:phase==='B_STOCK'?'enemy_cage':phase==='A_ENEMY_DROP'?'loose_bun':'home_cage',provenance:phase==='B_STOCK'?'enemy_stock':phase==='A_ENEMY_DROP'?'enemy_carried_drop':'held_enemy_bun',id:'target-'+hash({seed,key})});}target=ids.get(key);
     }
-    const values={ticks:row.tick,route_phase:phase,target,distance_before:m.route_distance_before===32767?'INF':m.route_distance_before,distance_after:m.route_distance_after===32767?'INF':m.route_distance_after,phi_before:m.route_phi_before,phi_after:m.route_phi_after,route_potential_delta:m.route_potential_delta,route_shaped_reward:m.route_shaped_reward,phase_transition:Boolean(m.route_phase_transition),invalidated:Boolean(m.route_invalidated),terminal_correction:Boolean(m.route_terminal_correction),terminal:row.tick===rows.length};
+    const values={ticks:row.tick,route_phase:phase,target,distance_before:phase==='NONE'?null:m.route_distance_before===32767?'INF':m.route_distance_before,distance_after:phase==='NONE'?null:m.route_distance_after===32767?'INF':m.route_distance_after,phi_before:m.route_phi_before,phi_after:m.route_phi_after,route_potential_delta:m.route_potential_delta,route_shaped_reward:m.route_shaped_reward,phase_transition:Boolean(m.route_phase_transition),invalidated:Boolean(m.route_invalidated),terminal_correction:Boolean(m.route_terminal_correction),terminal:row.tick===rows.length};
     // Topology gain is a current-ledger statistic, not additional reward. Full
     // branch-specific safety provenance is not published as an exact certificate.
     for(const k of R.COLUMNS){let value=values[k]??null;if(value!==null&&R.VALUES.includes(k))value=Math.round(value/out.scale);out[k].push(value);}
