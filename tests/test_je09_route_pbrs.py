@@ -216,4 +216,6 @@ def test_continuous_route_distance_does_not_charge_starting_brick_cell():
     route = dict(distance=grid, stock_distance=grid[:, :2])
     phase = jnp.full((1, 2), PHASE_CARRY, jnp.int8)
     value = continuous_distance(states, route, phase, jnp.full((1, 2), 11.))
-    assert abs(float(value[0, 0]) - ((12. - 1.) - .3)) < 1e-5
+    # The shared JE10 field adds a continuous centering cost, independently of
+    # the starting brick. The brick itself still adds no entry surcharge here.
+    assert abs(float(value[0, 0]) - ((12. - 1.) - .3 + .125 * .3)) < 1e-5

@@ -79,54 +79,19 @@ def _lookup(distance, cells):
     return distance[rows, teams, cells[..., 0], cells[..., 1]]
 
 
-def continuous_distance(states, route, phase, _target_identity=None):
-    """Topology-respecting path distance from continuous player coordinates.
-
-    The local connector is an axis-aligned Manhattan segment to one of the
-    current/adjacent cell centers. A connector may enter only its endpoint
-    cell; hard-wall endpoints are excluded. Taking the minimum over all four
-    neighbors keeps equally short first steps equivalent and is continuous at
-    clear cell boundaries. Brick traversal uses the production 1+3 entry
-    weight; dynamic hazards are intentionally absent from this static metric.
-    """
-    n = states.pos.shape[0]
-    h, w = states.wall.shape[-2:]
-    pos = states.pos.reshape((n, 2, 2))
-    cell = jnp.floor(pos).astype(jnp.int32)
-    offsets = jnp.asarray(((0, 0), (-1, 0), (1, 0), (0, -1), (0, 1)), jnp.int32)
-    candidates = cell[..., None, :] + offsets[None, None, :, :]
-    rr = candidates[..., 0]
-    cc = candidates[..., 1]
-    inside = (rr >= 0) & (rr < h) & (cc >= 0) & (cc < w)
-    rr_safe = jnp.clip(rr, 0, h - 1)
-    cc_safe = jnp.clip(cc, 0, w - 1)
-    rows = jnp.arange(n)[:, None, None]
-    teams = jnp.arange(2)[None, :, None]
-    blocked = states.wall[rows, rr_safe, cc_safe]
-    valid = inside & ~blocked
-
-    center = candidates.astype(jnp.float32) + .5
-    local = jnp.sum(jnp.abs(pos[..., None, :] - center), axis=-1)
-    brick = states.brick[rows, rr_safe, cc_safe]
-    entering = jnp.any(offsets != 0, axis=-1)[None, None, :]
-    local = jnp.where(entering, local * (1. + 3. * brick.astype(jnp.float32)), local)
-
-    team_ids = jnp.broadcast_to(jnp.arange(2)[None, :], (n, 2))
-    grid_index = jnp.where(phase == PHASE_CARRY, team_ids + 2, team_ids)
-    # Gather only the five local candidates. Selecting a full [n,2,h,w]
-    # distance map here makes that tensor live across the rollout scan and
-    # multiplies update memory; direct indexed gathers preserve the exact
-    # metric while keeping the intermediate O(n*2*5).
-    route_value = route['distance'][rows, grid_index[..., None], rr_safe, cc_safe]
-    stock_value = route['stock_distance'][rows, teams, rr_safe, cc_safe]
-    grid_value = jnp.where((phase == PHASE_STOCK)[..., None], stock_value, route_value)
-    total = local + grid_value.astype(jnp.float32)
-    total = jnp.where(valid & (grid_value < INF), total, jnp.inf)
-    result = jnp.min(total, axis=-1)
-    return jnp.where(jnp.isfinite(result), result, float(INF))
+def continuous_distance(states,route,phase,_target_identity=None):
+    # Shared topology-continuous field, successor-only recipe.
+    from scripts.continuous_route_metric import sampled_distance
+    n=states.pos.shape[0]
+    teams=jnp.broadcast_to(jnp.arange(2)[None],(n,2))
+    channels=jnp.where(phase>=PHASE_CARRY,teams+2,teams)
+    pos=states.pos.reshape(n,2,2)
+    main=sampled_distance(pos,route['distance'],states.wall,channels)
+    stock=sampled_distance(pos,route['stock_distance'],states.wall,teams)
+    return jnp.where(phase==PHASE_STOCK,stock,main)
 
 
-def phase_values(states, route, drop_state):
+def _phase_values_before_recovery_alignment(states, route, drop_state):
     """Return observed objective phase, identity, distance and provenance.
 
     Stock access is enabled only for native death/respawn or native trap
@@ -184,6 +149,13 @@ def phase_values(states, route, drop_state):
     return phase, identity, base, distance, provenance
 
 
+def phase_values(states, route, drop_state):
+    # Attributed own-recovery target alignment, successor-only recipe.
+    from scripts.route_objective_consistency import align_recovery
+    values = _phase_values_before_recovery_alignment(states, route, drop_state)
+    return align_recovery(states, route, drop_state, values)
+
+
 def apply_reward(states, next_states, info, aux, reward, newaux, parts, coefficient):
     """Attach a single PBRS delta after the unchanged H8 reward composition."""
     from scripts import je09_bun_scenes as scenes
@@ -204,6 +176,10 @@ def apply_reward(states, next_states, info, aux, reward, newaux, parts, coeffici
         lambda _: route_state['stock_distance'], None)
     now_route = dict(old_route, stock_distance=stock_now)
     phase, identity, base_now, dist_now, provenance = phase_values(states, now_route, aux['drop'])
+    # Shared native preparation potential.
+    from scripts.prestock_training_state import potential as prestock_potential,update as prestock_update
+    phase,identity,base_now,dist_now,provenance=prestock_potential(states,aux['prestock'],
+        (phase,identity,base_now,dist_now,provenance))
     dirty_next = (jnp.any(next_states.wall != states.wall, (-2, -1)) |
         jnp.any(next_states.brick != states.brick, (-2, -1)))
     stock_next = jax.lax.cond(jnp.any(dirty_next),
@@ -213,6 +189,10 @@ def apply_reward(states, next_states, info, aux, reward, newaux, parts, coeffici
         lambda _: stock_now, None)
     phase_next, identity_next, base_next, dist_next, _ = phase_values(
         next_states, dict(new_route, stock_distance=stock_next), newaux['drop'])
+    next_selection_aux=dict(newaux,terminal=aux['terminal']|info['h_route_terminal'])
+    newaux['prestock']=prestock_update(next_states,next_selection_aux,aux['prestock'])
+    phase_next,identity_next,base_next,dist_next,_=prestock_potential(next_states,newaux['prestock'],
+        (phase_next,identity_next,base_next,dist_next,jnp.zeros_like(identity_next)))
     # Preserve the active objective at event edges; phase/identity transitions
     # are offset-continuous. The next state's native observable classification
     # is used only to select its potential, never as an Actor input.

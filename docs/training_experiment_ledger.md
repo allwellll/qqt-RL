@@ -1,5 +1,25 @@
 # 训练优化实验总账
 
+<!-- JE10-LEDGER:BEGIN -->
+
+### JE10 v38 击杀信用与搬包路线（2026-10-18，持续研究）
+
+证据截至 **2026-10-18 13:33:24 UTC+8**。长期解释与复现边界见[JE10训练总结](je10_control_route_training_summary.md)，全部固定点/曲线见[当日报告](../reports/je10_training_20261018.md)，哈希及分母见[冻结摘要](../reports/je10_evidence_20261018.json)。
+
+本条选择性整合训练账本的JE10方案与逐轮终态，保留本账本既有实验。网页当前发布仍为r01 attempt04 g8 raw；最近完整轮为r06 g128。
+
+正在训练r07：STATE g68，COMMITTED g68；最新完整固定评估g32。运行状态与固定能力分列，不把训练事件当泛化。
+
+r01整合首控4/主动残余.25、受控legacy16去重、连续PBRS .5、set-valued learner-state DAgger .2及完整custody；r02只改reset mix为.35 combat/.20 bridge/.35 full/.10其他原生路线；r03 native端点progress set；r04共享连续场；r05己方回收目标链对齐；r06统一prestock corridor与joint teacher；r07分阶段current/history回放。每轮8×1024×256、128代/268,435,456 fresh ticks，g0/4/8/16/32/64/96/128固定协议不变。
+
+r06终态natural full1/16、drop5/16、far7/16、recovery0/16，对比父点7/16、10/16、13/16、5/16均退化；Tactical从8/64升17/64，Hunter难/中/易1/3/11（各64）。原墙库存三层pickup8/8仍delivery0/8；不使用战斗末点或JAX训练事件覆盖路线失败。阶段回放是后续诊断假设，顺序迭代不构成同父单变量因果。
+
+按用户覆盖策略，JE10不设置能力/admission/promotion门禁；中间诊断不改变健康固定预算或阻塞后继，技术有效性另查。r08是同配方同预算连续后备预声明，尚未运行；具体下一因素须由完成点证据支持。完整启动/历史bootstrap和外部资产未入main，公开源码边界见总结，不能假称开箱可续训。
+
+v37技术无效attempt、INVALID_FIXTURE/INVALID_METRICS不纳入v38能力表。网页发布选择、最新完整轮与进行轮不得混称综合最佳。
+
+<!-- JE10-LEDGER:END -->
+
 ### JE09 Route Potential PBRS H8 g32（2026-10-17，已完成）
 
 实验 ID：`JE09-STAGE-H8-ROUTE-PBRS-CONTINUOUS-20261017-v36`。首次技术 attempt namespace `runs/je09_bun_20261017/stage_h8_route_pbrs_continuous_v36` 因8卡 smoke OOM终止，`optimizer_updates=0`，只保留失败证据，不作为训练结果。有效独立 attempt02 namespace `runs/je09_bun_20261017/stage_h8_route_pbrs_continuous_v36_attempt02` 从不可变 H8 v34 g32 raw Actor/Critic 与完整对手池启动，不从 v35 g32 续训。唯一变量为将既有严格路线 PBRS 的整数格距离替换为连续位置到当前格/四个轴向可达候选格的生产加权路径距离；固定 `lambda=0.05`、`gamma=.995`，其余阶段、身份、offset、反刷、安全、课程、PFSP、DAgger、网络、PPO/GAE、seed体系与评估协议保持。固定32代/67,108,864 fresh ticks，g0/4/8/12/16/24/32；正式更新 finite/nonzero，8副本一致，fresh CPU restore通过。聚焦连续格、格边界和生产地图语义测试通过；训练墙钟1,918.95秒。每个checkpoint同协议544局，逐点评估结果和任务计时见 `reports/je09_bun_20261017/route_pbrs_training_20261017.md`。

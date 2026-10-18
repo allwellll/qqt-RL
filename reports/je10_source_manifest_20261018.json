@@ -1,0 +1,1637 @@
+{
+  "schema": "je10.source-dependency-manifest/v1",
+  "scope": "Callable numerical kernels, CPU/JS evaluation components and diagnostics; excludes historical training launchers and external weights/replays",
+  "roots": [
+    "scripts/je10_ops.py",
+    "scripts/je10_web_hunter.js",
+    "scripts/je10_route_funnel.js",
+    "scripts/je10_diagnostics.py",
+    "scripts/analyze_control_route_curve.py",
+    "scripts/plot_control_route_curve.py",
+    "tests/test_je10_control_credit.py",
+    "tests/test_je10_native_credit_wiring.py",
+    "tests/test_je10_route_oracle.py",
+    "tests/test_je10_custody.py",
+    "tests/je10_control_funnel_test.js",
+    "tests/test_continuous_route_metric.py",
+    "tests/test_native_route_certificate.py",
+    "tests/test_route_objective_consistency.py",
+    "tests/test_prestock_route_preparation.py",
+    "tests/test_prestock_native_teacher.py",
+    "tests/test_prestock_joint_oracle.py",
+    "tests/test_prestock_joint_replay.py",
+    "tests/test_prestock_joint_payload.py",
+    "tests/test_prestock_training_state.py",
+    "tests/test_prestock_verified_labels.py",
+    "tests/test_prestock_fragment_queries.py",
+    "tests/test_phase_balanced_joint_replay.py",
+    "tests/test_frontier_native_witness.py",
+    "tests/test_control_route_analysis.py",
+    "scripts/summarize_je10_evidence.py",
+    "scripts/verify_je10_source_manifest.py",
+    "tests/test_je10_evidence.py",
+    "scripts/render_je10_training_report.py",
+    "tests/test_je09_route_pbrs.py"
+  ],
+  "files": {
+    "jax_bomb/__init__.py": {
+      "published_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "jax_bomb/bun_env.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_env.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je05_core_env.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/frontier_native_witness.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_ops.py",
+        "scripts/je05_bun_scenes.py",
+        "scripts/je07_bun_ops.py",
+        "scripts/je07_bun_scenes.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_g_combat.py",
+        "scripts/je09_stage_h5_course.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h8_course.py",
+        "scripts/je09_stage_h8_pbrs_ops.py",
+        "scripts/je09_stage_h_items.py",
+        "scripts/je09_stage_h_ops.py",
+        "scripts/je10_ops.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/prestock_joint_oracle.py",
+        "scripts/prestock_joint_replay.py",
+        "scripts/prestock_native_teacher.py",
+        "scripts/prestock_route_preparation.py",
+        "scripts/prestock_training_state.py",
+        "scripts/prestock_verified_labels.py",
+        "tests/test_continuous_route_metric.py",
+        "tests/test_native_route_certificate.py",
+        "tests/test_prestock_native_teacher.py",
+        "tests/test_prestock_verified_labels.py",
+        "tests/test_route_objective_consistency.py"
+      ]
+    },
+    "jax_bomb/bun_env.py": {
+      "published_sha256": "ca88ee847583680ff717ac6775cb756780ef75870d63d307fbb63b0ebe5051ac",
+      "source_sha256": "ca88ee847583680ff717ac6775cb756780ef75870d63d307fbb63b0ebe5051ac",
+      "origin": "existing main",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_env.py",
+        "jax_bomb/levels.py"
+      ],
+      "required_by": [
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_net.py",
+        "jax_bomb/jax_train.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_scenes.py"
+      ]
+    },
+    "jax_bomb/bun_jax_bots.py": {
+      "published_sha256": "fc9ac9a8a3bb2537a54fe84b67dee51ee98fe6b8183e09e642611baf8c15cdc8",
+      "source_sha256": "fc9ac9a8a3bb2537a54fe84b67dee51ee98fe6b8183e09e642611baf8c15cdc8",
+      "origin": "existing main",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_env.py"
+      ],
+      "required_by": [
+        "jax_bomb/jax_train.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_ops.py",
+        "scripts/je07_bun_ops.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_g_combat.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "jax_bomb/bun_safety.py": {
+      "published_sha256": "d2bee3f1b0d620503865b3faf1d0fa7fdc538b5f2577360ac1b23c8f133964bd",
+      "source_sha256": "d2bee3f1b0d620503865b3faf1d0fa7fdc538b5f2577360ac1b23c8f133964bd",
+      "origin": "existing main",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_env.py"
+      ],
+      "required_by": [
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/prestock_verified_labels.py"
+      ]
+    },
+    "jax_bomb/jax_env.py": {
+      "published_sha256": "b0a8acbbcac13ff0479cb47eb8327752d84e02e1e9079e0d5106e704ac7c3f6f",
+      "source_sha256": "b0a8acbbcac13ff0479cb47eb8327752d84e02e1e9079e0d5106e704ac7c3f6f",
+      "origin": "existing main",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/levels.py"
+      ],
+      "required_by": [
+        "jax_bomb/bun_env.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_net.py",
+        "jax_bomb/jax_train.py",
+        "scripts/je09_drop_expert.py"
+      ]
+    },
+    "jax_bomb/jax_net.py": {
+      "published_sha256": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+      "source_sha256": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+      "origin": "existing main",
+      "dependencies": [
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_env.py"
+      ],
+      "required_by": [
+        "jax_bomb/jax_train.py"
+      ]
+    },
+    "jax_bomb/jax_train.py": {
+      "published_sha256": "7e040bb1f4aa2c2db16ba0acdca493b9cdee8f9e0111b900d384c5f1efc98bd6",
+      "source_sha256": "7e040bb1f4aa2c2db16ba0acdca493b9cdee8f9e0111b900d384c5f1efc98bd6",
+      "origin": "existing main",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_env.py",
+        "jax_bomb/jax_net.py",
+        "jax_bomb/levels.py",
+        "jax_bomb/platform.py"
+      ],
+      "required_by": [
+        "scripts/je03_bun_selfplay_ops_20261012.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_ops.py",
+        "scripts/je05_bun_scenes.py",
+        "scripts/je07_bun_ops.py",
+        "scripts/je07_bun_scenes.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py",
+        "scripts/prestock_joint_replay.py"
+      ]
+    },
+    "jax_bomb/je05_bun_env.py": {
+      "published_sha256": "e67ae435cc4a27adc6952f8e6dae0dbd58a3abd61d5cea5ee601bc4b91accaec",
+      "source_sha256": "e67ae435cc4a27adc6952f8e6dae0dbd58a3abd61d5cea5ee601bc4b91accaec",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/je05_core_env.py",
+        "jax_bomb/levels.py",
+        "scripts/je05_bun_transport.py",
+        "web/assets/maps/levels.json"
+      ],
+      "required_by": [
+        "scripts/je05_bun_ops.py",
+        "scripts/je05_bun_scenes.py",
+        "scripts/je07_bun_scenes.py",
+        "scripts/je09_bun_scenes.py"
+      ]
+    },
+    "jax_bomb/je05_core_env.py": {
+      "published_sha256": "6b664f01706022f432bd29865fa7f85e8fd9b6a2cac0beb3d128cb9f9c6f0a37",
+      "source_sha256": "6b664f01706022f432bd29865fa7f85e8fd9b6a2cac0beb3d128cb9f9c6f0a37",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/levels.py"
+      ],
+      "required_by": [
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je07_bun_env.py",
+        "tests/test_continuous_route_metric.py",
+        "tests/test_native_route_certificate.py"
+      ]
+    },
+    "jax_bomb/je07_bun_env.py": {
+      "published_sha256": "f34fea09fcfe22c7d087c1f3ea3cdcd614361dd6546c696800a09ea2191c46b6",
+      "source_sha256": "f34fea09fcfe22c7d087c1f3ea3cdcd614361dd6546c696800a09ea2191c46b6",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/je05_core_env.py",
+        "jax_bomb/levels.py",
+        "scripts/je05_bun_transport.py",
+        "web/assets/maps/levels.json"
+      ],
+      "required_by": [
+        "scripts/frontier_native_witness.py",
+        "scripts/je07_bun_ops.py",
+        "scripts/je07_bun_scenes.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_h5_course.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h8_course.py",
+        "scripts/je09_stage_h8_pbrs_ops.py",
+        "scripts/je09_stage_h_items.py",
+        "scripts/je09_stage_h_ops.py",
+        "scripts/je10_ops.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/prestock_joint_oracle.py",
+        "scripts/prestock_native_teacher.py",
+        "scripts/prestock_route_preparation.py",
+        "scripts/prestock_training_state.py",
+        "scripts/prestock_verified_labels.py",
+        "tests/test_prestock_native_teacher.py",
+        "tests/test_prestock_verified_labels.py",
+        "tests/test_route_objective_consistency.py"
+      ]
+    },
+    "jax_bomb/levels.py": {
+      "published_sha256": "dd7932e33500383055c24b5d9e4f183b9da85b061821db82f8b217975f864444",
+      "source_sha256": "dd7932e33500383055c24b5d9e4f183b9da85b061821db82f8b217975f864444",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_env.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je05_core_env.py",
+        "jax_bomb/je07_bun_env.py"
+      ]
+    },
+    "jax_bomb/platform.py": {
+      "published_sha256": "17e30b702523152264bbb70c1c7a3db1475f00d4ef731090da63045fb090e80e",
+      "source_sha256": "17e30b702523152264bbb70c1c7a3db1475f00d4ef731090da63045fb090e80e",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "jax_bomb/jax_train.py"
+      ]
+    },
+    "scripts/analyze_control_route_curve.py": {
+      "published_sha256": "2223941729383b445d84e265baf389950c322778ab546f788cdb20c474d42e58",
+      "source_sha256": "2223941729383b445d84e265baf389950c322778ab546f788cdb20c474d42e58",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": [
+        "scripts/summarize_je10_evidence.py",
+        "tests/test_control_route_analysis.py"
+      ]
+    },
+    "scripts/continuous_route_metric.py": {
+      "published_sha256": "815fed3373fb04eaba4a36e2dc19542c01de488dfec7167ee76e089062a4361e",
+      "source_sha256": "815fed3373fb04eaba4a36e2dc19542c01de488dfec7167ee76e089062a4361e",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je08_bun_potential.py"
+      ],
+      "required_by": [
+        "scripts/je09_route_pbrs.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/prestock_route_preparation.py",
+        "scripts/route_objective_consistency.py",
+        "tests/test_continuous_route_metric.py",
+        "tests/test_prestock_native_teacher.py"
+      ]
+    },
+    "scripts/eval_web_hunter.js": {
+      "published_sha256": "d617fc549f5ab75a767fc708bf7c78375a452591683473aeef36c0f8efbcea86",
+      "source_sha256": "d617fc549f5ab75a767fc708bf7c78375a452591683473aeef36c0f8efbcea86",
+      "origin": "existing main",
+      "dependencies": [
+        "web/assets/maps/levels.json",
+        "web/bot_contract.js",
+        "web/bun_hunter_bot.js",
+        "web/sim.js"
+      ],
+      "required_by": [
+        "scripts/eval_web_hunter_residual.js",
+        "scripts/je05_web_hunter.js",
+        "scripts/je08_web_diagnostics.js",
+        "scripts/je10_route_funnel.js",
+        "scripts/je10_web_hunter.js"
+      ]
+    },
+    "scripts/eval_web_hunter_residual.js": {
+      "published_sha256": "e15e85454ed4137083f5b0206df925a60a59b5164aff5bb99cdd7ac46717dc36",
+      "source_sha256": "e15e85454ed4137083f5b0206df925a60a59b5164aff5bb99cdd7ac46717dc36",
+      "origin": "existing main",
+      "dependencies": [
+        "scripts/eval_web_hunter.js"
+      ],
+      "required_by": [
+        "scripts/je05_web_hunter.js",
+        "scripts/je08_web_diagnostics.js",
+        "scripts/je10_route_funnel.js"
+      ]
+    },
+    "scripts/frontier_native_witness.py": {
+      "published_sha256": "cacc924588a38e7c95b59f8c258ccdc75f9695171d0812d327488bd0341030bc",
+      "source_sha256": "cacc924588a38e7c95b59f8c258ccdc75f9695171d0812d327488bd0341030bc",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je08_bun_potential.py"
+      ],
+      "required_by": [
+        "scripts/prestock_joint_oracle.py",
+        "tests/test_frontier_native_witness.py",
+        "tests/test_prestock_joint_oracle.py"
+      ]
+    },
+    "scripts/je03_bun_selfplay_ops_20261012.py": {
+      "published_sha256": "e7fe3f46cebc4df120d5cbb06af9eecfacff723db37babca794bcbda207a5693",
+      "source_sha256": "e7fe3f46cebc4df120d5cbb06af9eecfacff723db37babca794bcbda207a5693",
+      "origin": "existing main",
+      "dependencies": [
+        "jax_bomb/jax_train.py"
+      ],
+      "required_by": [
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_ops.py",
+        "scripts/je07_bun_ops.py",
+        "scripts/je09_bun_ops.py"
+      ]
+    },
+    "scripts/je04_bun_ops.py": {
+      "published_sha256": "98b2a5f3c59591812feb3a4e75eb39b3c6e2c72691c54f661f14f2ee1365373f",
+      "source_sha256": "98b2a5f3c59591812feb3a4e75eb39b3c6e2c72691c54f661f14f2ee1365373f",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "scripts/je03_bun_selfplay_ops_20261012.py"
+      ],
+      "required_by": [
+        "scripts/je05_bun_ops.py",
+        "scripts/je07_bun_ops.py",
+        "scripts/je09_bun_ops.py"
+      ]
+    },
+    "scripts/je05_bun_encoding.js": {
+      "published_sha256": "24357c84aaf42c4b7fec860081928c9d8437507da55232ab2f49611c43942fe7",
+      "source_sha256": "24357c84aaf42c4b7fec860081928c9d8437507da55232ab2f49611c43942fe7",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": [
+        "scripts/je05_web_hunter.js"
+      ]
+    },
+    "scripts/je05_bun_ops.py": {
+      "published_sha256": "16e7a3f68784435ef7fd774b5825dfa7e267d398ea96758d69fb71864b74801e",
+      "source_sha256": "16e7a3f68784435ef7fd774b5825dfa7e267d398ea96758d69fb71864b74801e",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "scripts/je03_bun_selfplay_ops_20261012.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_scenes.py",
+        "scripts/je05_bun_transport.py"
+      ],
+      "required_by": [
+        "scripts/je07_bun_ops.py",
+        "scripts/je09_bun_ops.py"
+      ]
+    },
+    "scripts/je05_bun_scenes.py": {
+      "published_sha256": "98cd66e45122e0ba43cd6a3b436b3e25df6a0bf630e5321da2edb1bbf2beb19e",
+      "source_sha256": "98cd66e45122e0ba43cd6a3b436b3e25df6a0bf630e5321da2edb1bbf2beb19e",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "scripts/je05_bun_transport.py"
+      ],
+      "required_by": [
+        "scripts/je05_bun_ops.py"
+      ]
+    },
+    "scripts/je05_bun_transport.py": {
+      "published_sha256": "a7ca207e7f8cb471442e3f5ab0f247c6ad14284a3e843c4dad14edd9af05634f",
+      "source_sha256": "a7ca207e7f8cb471442e3f5ab0f247c6ad14284a3e843c4dad14edd9af05634f",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": [
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je05_bun_ops.py",
+        "scripts/je05_bun_scenes.py",
+        "scripts/je07_bun_ops.py",
+        "scripts/je07_bun_scenes.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py"
+      ]
+    },
+    "scripts/je05_web_hunter.js": {
+      "published_sha256": "c2b6e53841ede961e89558a4a6ba7730bf3401a9f057a5acbcde3ac84d394916",
+      "source_sha256": "c2b6e53841ede961e89558a4a6ba7730bf3401a9f057a5acbcde3ac84d394916",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/eval_web_hunter.js",
+        "scripts/eval_web_hunter_residual.js",
+        "scripts/je05_bun_encoding.js",
+        "web/sim.js"
+      ],
+      "required_by": [
+        "scripts/je08_web_diagnostics.js",
+        "scripts/je10_route_funnel.js",
+        "scripts/je10_web_hunter.js"
+      ]
+    },
+    "scripts/je07_bun_curriculum.py": {
+      "published_sha256": "97ff64624670cb795d1a894c381728fd9ab5db3b2d0c3940a09efff3ea920968",
+      "source_sha256": "97ff64624670cb795d1a894c381728fd9ab5db3b2d0c3940a09efff3ea920968",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": [
+        "scripts/je07_bun_ops.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "scripts/je07_bun_ops.py": {
+      "published_sha256": "0acc302a6c7412959278815c60c691e6796078023abe24005857a1c61a1496fa",
+      "source_sha256": "0acc302a6c7412959278815c60c691e6796078023abe24005857a1c61a1496fa",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je03_bun_selfplay_ops_20261012.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_ops.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je07_bun_scenes.py"
+      ],
+      "required_by": [
+        "scripts/je09_bun_ops.py"
+      ]
+    },
+    "scripts/je07_bun_scenes.py": {
+      "published_sha256": "90c30c359ba1ceaddb0dff48f043ac4e8902de9d085c95656d61216fb46b77d1",
+      "source_sha256": "90c30c359ba1ceaddb0dff48f043ac4e8902de9d085c95656d61216fb46b77d1",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je05_bun_transport.py"
+      ],
+      "required_by": [
+        "scripts/je07_bun_ops.py"
+      ]
+    },
+    "scripts/je08_bun_potential.py": {
+      "published_sha256": "76098b76eef438bcb04814d7f411a31d8b0c62bf87984a77156784e18f220580",
+      "source_sha256": "76098b76eef438bcb04814d7f411a31d8b0c62bf87984a77156784e18f220580",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "scripts/continuous_route_metric.py",
+        "scripts/frontier_native_witness.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_return_expert.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h_items.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/prestock_route_preparation.py",
+        "scripts/route_frontier.py",
+        "tests/test_continuous_route_metric.py",
+        "tests/test_prestock_verified_labels.py",
+        "tests/test_route_objective_consistency.py"
+      ]
+    },
+    "scripts/je08_web_diagnostics.js": {
+      "published_sha256": "ceb1daefd060948946b8ac03e988ae3767a75215b49bb05cad0a0076ebc9d42a",
+      "source_sha256": "ceb1daefd060948946b8ac03e988ae3767a75215b49bb05cad0a0076ebc9d42a",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/eval_web_hunter.js",
+        "scripts/eval_web_hunter_residual.js",
+        "scripts/je05_web_hunter.js",
+        "web/sim.js"
+      ],
+      "required_by": [
+        "scripts/je10_route_funnel.js"
+      ]
+    },
+    "scripts/je09_bun_bridge.py": {
+      "published_sha256": "27651916af29a9282f58d6123be10481ca0eeb9c7a974751761f5c19871109c0",
+      "source_sha256": "27651916af29a9282f58d6123be10481ca0eeb9c7a974751761f5c19871109c0",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": [
+        "scripts/je09_bun_ops.py"
+      ]
+    },
+    "scripts/je09_bun_ops.py": {
+      "published_sha256": "f942b429828d64a65e765211ee73c9f4197bf46ccae6b204bc21b5a9d450a53c",
+      "source_sha256": "f942b429828d64a65e765211ee73c9f4197bf46ccae6b204bc21b5a9d450a53c",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je03_bun_selfplay_ops_20261012.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_ops.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je07_bun_ops.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_bun_bridge.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_return_expert.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_e_coverage.py",
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_f_reward.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "scripts/je09_bun_scenes.py": {
+      "published_sha256": "58b39b831b2b21961c2a1d3f051a5ea1370c6fc94992f0389f2611a5540c73fd",
+      "source_sha256": "58b39b831b2b21961c2a1d3f051a5ea1370c6fc94992f0389f2611a5540c73fd",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je08_bun_potential.py"
+      ],
+      "required_by": [
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/je09_stage_e_coverage.py",
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_h5_course.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h8_course.py",
+        "scripts/je09_stage_h8_pbrs_ops.py",
+        "scripts/je09_stage_h_ops.py",
+        "scripts/je09_stage_h_reward.py",
+        "scripts/je10_ops.py",
+        "tests/test_frontier_native_witness.py",
+        "tests/test_je09_route_pbrs.py",
+        "tests/test_je10_custody.py",
+        "tests/test_route_objective_consistency.py"
+      ]
+    },
+    "scripts/je09_chase_expert.py": {
+      "published_sha256": "437c6a0cf03b586ea6fadc34068814316370aa515ad74e65a14bb79dcf0c7fff",
+      "source_sha256": "437c6a0cf03b586ea6fadc34068814316370aa515ad74e65a14bb79dcf0c7fff",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_return_expert.py"
+      ],
+      "required_by": [
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_f_mode.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "scripts/je09_drop_expert.py": {
+      "published_sha256": "6864f581d2175b544a6b8ee08fa46275a903d6bbf58c2554ba351561f9729ee9",
+      "source_sha256": "6864f581d2175b544a6b8ee08fa46275a903d6bbf58c2554ba351561f9729ee9",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_env.py",
+        "scripts/je08_bun_potential.py"
+      ],
+      "required_by": [
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_f_mode.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "scripts/je09_return_expert.py": {
+      "published_sha256": "aa76450a6ca1e115a0119b5a4f54e3c5b541642099fc320dc1acac40d9ca484a",
+      "source_sha256": "aa76450a6ca1e115a0119b5a4f54e3c5b541642099fc320dc1acac40d9ca484a",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je08_bun_potential.py"
+      ],
+      "required_by": [
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_stage_e_coverage.py",
+        "scripts/je09_stage_h5_course.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h8_course.py",
+        "scripts/je10_ops.py"
+      ]
+    },
+    "scripts/je09_route_pbrs.py": {
+      "published_sha256": "b0a87f1ad7ac306762dbadb856211e75e49a283d9f81bf764ae615512a08dc50",
+      "source_sha256": "b0a87f1ad7ac306762dbadb856211e75e49a283d9f81bf764ae615512a08dc50",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "scripts/continuous_route_metric.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/prestock_training_state.py",
+        "scripts/route_objective_consistency.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h8_pbrs_ops.py",
+        "scripts/je10_ops.py",
+        "tests/test_je09_route_pbrs.py",
+        "tests/test_route_objective_consistency.py"
+      ]
+    },
+    "scripts/je09_stage_e_coverage.py": {
+      "published_sha256": "84958c5f1815bd398b95939f494ed95540e4e88294c506d6cba14caee0800ef6",
+      "source_sha256": "84958c5f1815bd398b95939f494ed95540e4e88294c506d6cba14caee0800ef6",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_return_expert.py",
+        "scripts/je09_stage_e_ops.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_e_ops.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "scripts/je09_stage_e_ops.py": {
+      "published_sha256": "d14bd9b68e911f8c56ab5110bb8d8e7d531718a25997637f25dd1283e9ee411e",
+      "source_sha256": "d14bd9b68e911f8c56ab5110bb8d8e7d531718a25997637f25dd1283e9ee411e",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_stage_e_coverage.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_e_coverage.py"
+      ]
+    },
+    "scripts/je09_stage_f_mode.py": {
+      "published_sha256": "d56be99252820c85c47dd557ba0f3c7541cd3550ac77a845f56f9c3a9d8c1869",
+      "source_sha256": "d56be99252820c85c47dd557ba0f3c7541cd3550ac77a845f56f9c3a9d8c1869",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_f_reward.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "scripts/je09_stage_f_reward.py": {
+      "published_sha256": "5202dedd2066c5ba978258a37103f61128770ad042d65728606313ac0434aa81",
+      "source_sha256": "5202dedd2066c5ba978258a37103f61128770ad042d65728606313ac0434aa81",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_stage_f_mode.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h_reward.py"
+      ]
+    },
+    "scripts/je09_stage_g_combat.py": {
+      "published_sha256": "6ae95ebcee57da79280cd065ce6ccec532b0d91efe2a35ccf5988d9928e5b42e",
+      "source_sha256": "6ae95ebcee57da79280cd065ce6ccec532b0d91efe2a35ccf5988d9928e5b42e",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "scripts/je09_stage_h2_ops.py": {
+      "published_sha256": "d020973ccb78d70e751d1abd93120895c13daa7927502208bf79b751043286dc",
+      "source_sha256": "d020973ccb78d70e751d1abd93120895c13daa7927502208bf79b751043286dc",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_stage_h_ops.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h3_ops.py",
+        "scripts/je09_stage_h5c_ops.py"
+      ]
+    },
+    "scripts/je09_stage_h3_ops.py": {
+      "published_sha256": "c64ed6e024638f13aa99aa7f610b1d0b7298235ca82109d2f7ab456a2a187fbf",
+      "source_sha256": "c64ed6e024638f13aa99aa7f610b1d0b7298235ca82109d2f7ab456a2a187fbf",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_stage_h2_ops.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h6_ops.py"
+      ]
+    },
+    "scripts/je09_stage_h5_course.py": {
+      "published_sha256": "ca31624b66e47c6b1d6aa64a08c5918a8bfa77b16ba56bd7c6d5a06858c19aee",
+      "source_sha256": "ca31624b66e47c6b1d6aa64a08c5918a8bfa77b16ba56bd7c6d5a06858c19aee",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_return_expert.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h5c_ops.py"
+      ]
+    },
+    "scripts/je09_stage_h5c_dagger.py": {
+      "published_sha256": "1654d6e6efb45dc85ed82a68b4afb701b4533a715f538b03e816b67c9e39a136",
+      "source_sha256": "1654d6e6efb45dc85ed82a68b4afb701b4533a715f538b03e816b67c9e39a136",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_return_expert.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h6_ops.py",
+        "scripts/je10_ops.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/phase_balanced_joint_replay.py",
+        "scripts/prestock_joint_replay.py",
+        "tests/test_je10_custody.py",
+        "tests/test_prestock_joint_replay.py"
+      ]
+    },
+    "scripts/je09_stage_h5c_ops.py": {
+      "published_sha256": "6dd8ef69ce58b317b05b7babec5dc28a4246fd8d2416325d8459088281ae7b51",
+      "source_sha256": "6dd8ef69ce58b317b05b7babec5dc28a4246fd8d2416325d8459088281ae7b51",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_stage_e_coverage.py",
+        "scripts/je09_stage_f_mode.py",
+        "scripts/je09_stage_g_combat.py",
+        "scripts/je09_stage_h2_ops.py",
+        "scripts/je09_stage_h3_ops.py",
+        "scripts/je09_stage_h5_course.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h_items.py",
+        "scripts/je10_control_credit.py",
+        "scripts/prestock_training_state.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h6_ops.py",
+        "scripts/je09_stage_h8_ops.py",
+        "scripts/je09_stage_h8_pbrs_ops.py",
+        "scripts/je10_ops.py"
+      ]
+    },
+    "scripts/je09_stage_h6_ops.py": {
+      "published_sha256": "f577d6a2cf28c1d09a7a8cc7d99cde53f32da5d535ae7fb97bf6c093085b03fc",
+      "source_sha256": "f577d6a2cf28c1d09a7a8cc7d99cde53f32da5d535ae7fb97bf6c093085b03fc",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_stage_h3_ops.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/prestock_fragment_queries.py",
+        "scripts/prestock_verified_labels.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h8_ops.py",
+        "scripts/je10_ops.py",
+        "scripts/prestock_verified_labels.py",
+        "tests/test_prestock_fragment_queries.py"
+      ]
+    },
+    "scripts/je09_stage_h8_course.py": {
+      "published_sha256": "f37f57b33818625a4d36897186edaffe5c1e838bf81d8800b958d0a1f79a88f0",
+      "source_sha256": "f37f57b33818625a4d36897186edaffe5c1e838bf81d8800b958d0a1f79a88f0",
+      "origin": "existing main",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_return_expert.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h8_ops.py"
+      ]
+    },
+    "scripts/je09_stage_h8_ops.py": {
+      "published_sha256": "ce17a1a11cb5036a2213ddc502489bbfe8b172416bef2b2aa99567faadc8e2d6",
+      "source_sha256": "ce17a1a11cb5036a2213ddc502489bbfe8b172416bef2b2aa99567faadc8e2d6",
+      "origin": "existing main",
+      "dependencies": [
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h6_ops.py",
+        "scripts/je09_stage_h8_course.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h8_pbrs_ops.py",
+        "scripts/je10_ops.py",
+        "tests/test_je09_route_pbrs.py"
+      ]
+    },
+    "scripts/je09_stage_h8_pbrs_ops.py": {
+      "published_sha256": "f46371e98632fd7a3f5e6d8129ff664ded0e6a7ca83baf95e6f84109acacea5d",
+      "source_sha256": "f46371e98632fd7a3f5e6d8129ff664ded0e6a7ca83baf95e6f84109acacea5d",
+      "origin": "existing main",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h8_ops.py"
+      ],
+      "required_by": [
+        "tests/test_je09_route_pbrs.py"
+      ]
+    },
+    "scripts/je09_stage_h_items.py": {
+      "published_sha256": "e16c93709f14e4f9d78a14543f36da3841269e8c0b854030d15f0eeccd65fb89",
+      "source_sha256": "e16c93709f14e4f9d78a14543f36da3841269e8c0b854030d15f0eeccd65fb89",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je08_bun_potential.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h_ops.py",
+        "scripts/je09_stage_h_reward.py"
+      ]
+    },
+    "scripts/je09_stage_h_ops.py": {
+      "published_sha256": "43cee7cc1d89866ca838de47de7518156e359e430a3093002d72197343dbd28b",
+      "source_sha256": "43cee7cc1d89866ca838de47de7518156e359e430a3093002d72197343dbd28b",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_stage_e_coverage.py",
+        "scripts/je09_stage_f_mode.py",
+        "scripts/je09_stage_g_combat.py",
+        "scripts/je09_stage_h_items.py",
+        "scripts/je09_stage_h_reward.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h2_ops.py"
+      ]
+    },
+    "scripts/je09_stage_h_reward.py": {
+      "published_sha256": "bee558ff20b07e48e2bfd498e641fa56ec73715c6e1299930263914be21520c2",
+      "source_sha256": "bee558ff20b07e48e2bfd498e641fa56ec73715c6e1299930263914be21520c2",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_stage_f_reward.py",
+        "scripts/je09_stage_h_items.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "scripts/je10_control_credit.py": {
+      "published_sha256": "87ab187a13608768cf276e37a9af583b0df642dbc244e2652e546bcb6b9af5ff",
+      "source_sha256": "87ab187a13608768cf276e37a9af583b0df642dbc244e2652e546bcb6b9af5ff",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": [
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je10_ops.py",
+        "tests/test_je10_control_credit.py",
+        "tests/test_je10_native_credit_wiring.py"
+      ]
+    },
+    "scripts/je10_control_funnel.js": {
+      "published_sha256": "1342ae5ff4ea58f3649a873d9c7c8103f054bb6c0c485e0ee3aceef905d9e9ab",
+      "source_sha256": "1342ae5ff4ea58f3649a873d9c7c8103f054bb6c0c485e0ee3aceef905d9e9ab",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": [
+        "scripts/je10_route_funnel.js",
+        "scripts/je10_web_hunter.js",
+        "tests/je10_control_funnel_test.js"
+      ]
+    },
+    "scripts/je10_diagnostics.py": {
+      "published_sha256": "0f712468ec7893b7f8de69d0e34c776b664b580cab036dd7628dc5d83372039c",
+      "source_sha256": "0f712468ec7893b7f8de69d0e34c776b664b580cab036dd7628dc5d83372039c",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/population_run_state.py"
+      ],
+      "required_by": []
+    },
+    "scripts/je10_ops.py": {
+      "published_sha256": "70b3193d520b39849aa544b25a36d8ded67f556fc2f006337a5204c05e14604c",
+      "source_sha256": "70b3193d520b39849aa544b25a36d8ded67f556fc2f006337a5204c05e14604c",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_return_expert.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h6_ops.py",
+        "scripts/je09_stage_h8_ops.py",
+        "scripts/je10_control_credit.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/phase_balanced_joint_replay.py",
+        "scripts/prestock_joint_replay.py",
+        "scripts/prestock_training_state.py"
+      ],
+      "required_by": [
+        "tests/test_je10_custody.py",
+        "tests/test_prestock_training_state.py",
+        "tests/test_prestock_verified_labels.py",
+        "tests/test_route_objective_consistency.py"
+      ]
+    },
+    "scripts/je10_route_funnel.js": {
+      "published_sha256": "0b1465001ff188fc4c0ba0ee5d3cc5ee76605b3906ddf104e7629cebc89ec135",
+      "source_sha256": "0b1465001ff188fc4c0ba0ee5d3cc5ee76605b3906ddf104e7629cebc89ec135",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/eval_web_hunter.js",
+        "scripts/eval_web_hunter_residual.js",
+        "scripts/je05_web_hunter.js",
+        "scripts/je08_web_diagnostics.js",
+        "scripts/je10_control_funnel.js",
+        "web/review_protocol.js",
+        "web/sim.js"
+      ],
+      "required_by": []
+    },
+    "scripts/je10_route_oracle.py": {
+      "published_sha256": "6de97d5e82ab90977e450d8597f387c9786c81b5858379f28a5e19683e2a8632",
+      "source_sha256": "6de97d5e82ab90977e450d8597f387c9786c81b5858379f28a5e19683e2a8632",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/continuous_route_metric.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_stage_h5c_dagger.py"
+      ],
+      "required_by": [
+        "scripts/je10_ops.py",
+        "scripts/native_route_certificate.py",
+        "tests/test_continuous_route_metric.py",
+        "tests/test_je10_route_oracle.py",
+        "tests/test_native_route_certificate.py",
+        "tests/test_prestock_joint_payload.py",
+        "tests/test_prestock_verified_labels.py",
+        "tests/test_route_objective_consistency.py"
+      ]
+    },
+    "scripts/je10_web_hunter.js": {
+      "published_sha256": "7b0cc0faf0862a799832b70207802f2fb8249b4723fe95382cf13db8e076195e",
+      "source_sha256": "7b0cc0faf0862a799832b70207802f2fb8249b4723fe95382cf13db8e076195e",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/eval_web_hunter.js",
+        "scripts/je05_web_hunter.js",
+        "scripts/je10_control_funnel.js",
+        "web/sim.js"
+      ],
+      "required_by": []
+    },
+    "scripts/native_route_certificate.py": {
+      "published_sha256": "485d23b5391ab50170f1511f73432b108d9303b4746c2a9631c26bd9b2c1cc44",
+      "source_sha256": "485d23b5391ab50170f1511f73432b108d9303b4746c2a9631c26bd9b2c1cc44",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je10_route_oracle.py"
+      ],
+      "required_by": [
+        "scripts/prestock_native_teacher.py",
+        "scripts/prestock_verified_labels.py",
+        "tests/test_native_route_certificate.py"
+      ]
+    },
+    "scripts/phase_balanced_joint_replay.py": {
+      "published_sha256": "84256990e62623325cc81e1fce2f32fd1413a8a9656d1d952ef7c4a91f335a1e",
+      "source_sha256": "84256990e62623325cc81e1fce2f32fd1413a8a9656d1d952ef7c4a91f335a1e",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/prestock_joint_replay.py"
+      ],
+      "required_by": [
+        "scripts/je10_ops.py",
+        "tests/test_phase_balanced_joint_replay.py"
+      ]
+    },
+    "scripts/plot_control_route_curve.py": {
+      "published_sha256": "aa9d128e7adad71a8f1aa441098d9cdfcaa2f50e1e7d1114fd319ef9b34bc9fd",
+      "source_sha256": "afbb1b00d3ee0c848040c9566a40f918da5dc44953295ef1927a3e46eca725db",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": []
+    },
+    "scripts/population_run_state.py": {
+      "published_sha256": "ddd3f2dff880bdadc60c3e0a410a8b6208d5799c8a5e16f0f88b610bf9e55f04",
+      "source_sha256": "ddd3f2dff880bdadc60c3e0a410a8b6208d5799c8a5e16f0f88b610bf9e55f04",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "scripts/je10_diagnostics.py"
+      ]
+    },
+    "scripts/prestock_fragment_queries.py": {
+      "published_sha256": "75861b6e9b02f5f8123c2dac3060886a584aedca30b612889fab3fd4a2c59a31",
+      "source_sha256": "75861b6e9b02f5f8123c2dac3060886a584aedca30b612889fab3fd4a2c59a31",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": [
+        "scripts/je09_stage_h6_ops.py",
+        "tests/test_prestock_fragment_queries.py"
+      ]
+    },
+    "scripts/prestock_joint_oracle.py": {
+      "published_sha256": "f00ece341d08e20128aa4d08d78ac45b2463b8bcbfe03a26c96fd5ad15efa14d",
+      "source_sha256": "f00ece341d08e20128aa4d08d78ac45b2463b8bcbfe03a26c96fd5ad15efa14d",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/frontier_native_witness.py"
+      ],
+      "required_by": [
+        "scripts/prestock_joint_replay.py",
+        "scripts/prestock_native_teacher.py",
+        "tests/test_prestock_joint_oracle.py",
+        "tests/test_prestock_joint_payload.py"
+      ]
+    },
+    "scripts/prestock_joint_payload.py": {
+      "published_sha256": "992cf8a39f572639aea89d0ff4588f14849c8850b23529bacb430ba989eac653",
+      "source_sha256": "992cf8a39f572639aea89d0ff4588f14849c8850b23529bacb430ba989eac653",
+      "origin": "JE10 transplant",
+      "dependencies": [],
+      "required_by": [
+        "scripts/prestock_verified_labels.py",
+        "tests/test_prestock_joint_payload.py"
+      ]
+    },
+    "scripts/prestock_joint_replay.py": {
+      "published_sha256": "f43a6fc411f71d080bcb6d83fdb4da0152e8179a4a6e2f478e0c9c456cfcbe5a",
+      "source_sha256": "f43a6fc411f71d080bcb6d83fdb4da0152e8179a4a6e2f478e0c9c456cfcbe5a",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_train.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/prestock_joint_oracle.py"
+      ],
+      "required_by": [
+        "scripts/je10_ops.py",
+        "scripts/phase_balanced_joint_replay.py",
+        "tests/test_phase_balanced_joint_replay.py",
+        "tests/test_prestock_joint_replay.py"
+      ]
+    },
+    "scripts/prestock_native_teacher.py": {
+      "published_sha256": "393d760fae4ef77b97fe6588565a80ac20790036984d865ad1d7ea3a1f074045",
+      "source_sha256": "393d760fae4ef77b97fe6588565a80ac20790036984d865ad1d7ea3a1f074045",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/native_route_certificate.py",
+        "scripts/prestock_joint_oracle.py",
+        "scripts/prestock_route_preparation.py"
+      ],
+      "required_by": [
+        "scripts/prestock_verified_labels.py",
+        "tests/test_prestock_native_teacher.py"
+      ]
+    },
+    "scripts/prestock_route_preparation.py": {
+      "published_sha256": "537e465e5c879a79d89d5e1c7052c54d806bbf67ce244913674a75432420a356",
+      "source_sha256": "537e465e5c879a79d89d5e1c7052c54d806bbf67ce244913674a75432420a356",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/continuous_route_metric.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/route_frontier.py"
+      ],
+      "required_by": [
+        "scripts/prestock_native_teacher.py",
+        "scripts/prestock_training_state.py",
+        "tests/test_prestock_joint_oracle.py",
+        "tests/test_prestock_native_teacher.py",
+        "tests/test_prestock_route_preparation.py"
+      ]
+    },
+    "scripts/prestock_training_state.py": {
+      "published_sha256": "adff7b7085182c0a2740e0d10fe7b00e2291bc5c742572ef8ffa264980071a20",
+      "source_sha256": "adff7b7085182c0a2740e0d10fe7b00e2291bc5c742572ef8ffa264980071a20",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/prestock_route_preparation.py"
+      ],
+      "required_by": [
+        "scripts/je09_route_pbrs.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je10_ops.py",
+        "tests/test_prestock_native_teacher.py",
+        "tests/test_prestock_training_state.py",
+        "tests/test_prestock_verified_labels.py"
+      ]
+    },
+    "scripts/prestock_verified_labels.py": {
+      "published_sha256": "f37c87dd99dabe5cd1134e4cae0460f2c948963727994b1998221dbde390c5c7",
+      "source_sha256": "f37c87dd99dabe5cd1134e4cae0460f2c948963727994b1998221dbde390c5c7",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_stage_h6_ops.py",
+        "scripts/native_route_certificate.py",
+        "scripts/prestock_joint_payload.py",
+        "scripts/prestock_native_teacher.py"
+      ],
+      "required_by": [
+        "scripts/je09_stage_h6_ops.py",
+        "tests/test_prestock_verified_labels.py"
+      ]
+    },
+    "scripts/render_je10_training_report.py": {
+      "published_sha256": "190a5734f2db429f5cc8860786f4385c94617ddeb42b6f9c8a7c865cc1ef7018",
+      "source_sha256": null,
+      "origin": "integration",
+      "dependencies": [],
+      "required_by": []
+    },
+    "scripts/route_frontier.py": {
+      "published_sha256": "6e4cc4fa9c6af8d679b02b4bb1ccb2b2666491ae6b9560dce6b379e6450cd19a",
+      "source_sha256": "6e4cc4fa9c6af8d679b02b4bb1ccb2b2666491ae6b9560dce6b379e6450cd19a",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je08_bun_potential.py"
+      ],
+      "required_by": [
+        "scripts/prestock_route_preparation.py"
+      ]
+    },
+    "scripts/route_objective_consistency.py": {
+      "published_sha256": "475cc660819c261404e30e6c0e98b02d56e44297c1fdd49b15987fd94a62ba53",
+      "source_sha256": "475cc660819c261404e30e6c0e98b02d56e44297c1fdd49b15987fd94a62ba53",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/continuous_route_metric.py"
+      ],
+      "required_by": [
+        "scripts/je09_route_pbrs.py",
+        "tests/test_route_objective_consistency.py"
+      ]
+    },
+    "scripts/summarize_je10_evidence.py": {
+      "published_sha256": "1681105f9340c6e99fc6b7eaa158c4e42658364941763c6cdf47060ac5ac6986",
+      "source_sha256": null,
+      "origin": "integration",
+      "dependencies": [
+        "scripts/analyze_control_route_curve.py"
+      ],
+      "required_by": [
+        "tests/test_je10_evidence.py"
+      ]
+    },
+    "scripts/verify_je10_source_manifest.py": {
+      "published_sha256": "44de30275c1b43d2f90a789c3b1f67f3d85112dff22a80fe3db9312a01e53258",
+      "source_sha256": null,
+      "origin": "integration",
+      "dependencies": [],
+      "required_by": []
+    },
+    "tests/je10_control_funnel_test.js": {
+      "published_sha256": "7fc37ff07940e0c7fe08112edb703cd127a7d28622949bead0cd8c3461cbc39b",
+      "source_sha256": "7fc37ff07940e0c7fe08112edb703cd127a7d28622949bead0cd8c3461cbc39b",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je10_control_funnel.js"
+      ],
+      "required_by": []
+    },
+    "tests/test_continuous_route_metric.py": {
+      "published_sha256": "fe602d618dce56b4e3d40754ba355d6566ca5f9440457e5a8c3b518a09474c18",
+      "source_sha256": "ba506fda73f12b98289369b55a95deae053c382d6fc261b3684e5abedaf5fc41",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je05_core_env.py",
+        "scripts/continuous_route_metric.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je10_route_oracle.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_control_route_analysis.py": {
+      "published_sha256": "863c5a5b9a52234bfdbc69f59e2a9128b600a8852f1b8a904c3a34b9e2242411",
+      "source_sha256": "863c5a5b9a52234bfdbc69f59e2a9128b600a8852f1b8a904c3a34b9e2242411",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/analyze_control_route_curve.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_frontier_native_witness.py": {
+      "published_sha256": "344adf0cbf31e191afdc702d68866742ad818f03f62eaddf76383fac846562e2",
+      "source_sha256": "344adf0cbf31e191afdc702d68866742ad818f03f62eaddf76383fac846562e2",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/frontier_native_witness.py",
+        "scripts/je09_bun_scenes.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_je09_route_pbrs.py": {
+      "published_sha256": "e6fa89a4f3e1e4d9888255dd2f5129789183b2d1a84b6bf148e6b662d257aa4a",
+      "source_sha256": "5ebe1164d890aab902f39d1c6f8a306911273d8fc4cbcaff34089c6cc6cef062",
+      "origin": "existing main",
+      "dependencies": [
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/je09_stage_h8_ops.py",
+        "scripts/je09_stage_h8_pbrs_ops.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_je10_control_credit.py": {
+      "published_sha256": "1cc47123e1e8abe9fc4a5949036ef3cdcf084cc85e7846b6b79aefa2cdcbcdcd",
+      "source_sha256": "1cc47123e1e8abe9fc4a5949036ef3cdcf084cc85e7846b6b79aefa2cdcbcdcd",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je10_control_credit.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_je10_custody.py": {
+      "published_sha256": "7ec8fb027f8c421898d6692ab0bdc40fe2fce9edb4fc11e937d0f9f67804fc37",
+      "source_sha256": "7ec8fb027f8c421898d6692ab0bdc40fe2fce9edb4fc11e937d0f9f67804fc37",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je10_ops.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_je10_evidence.py": {
+      "published_sha256": "7dfe43ede6b4b793ab821863ca98a1a1a859b139952f4e5ff181f2c5413f3088",
+      "source_sha256": null,
+      "origin": "integration",
+      "dependencies": [
+        "scripts/summarize_je10_evidence.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_je10_native_credit_wiring.py": {
+      "published_sha256": "459c7452dc893441270b1dea102274d6a601adad7b09de8b759bbea964bc433c",
+      "source_sha256": "459c7452dc893441270b1dea102274d6a601adad7b09de8b759bbea964bc433c",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je10_control_credit.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_je10_route_oracle.py": {
+      "published_sha256": "4820b8019d69384a30457d9e6d9e1b726c57410c6ff96c414cab850a943d398a",
+      "source_sha256": "4820b8019d69384a30457d9e6d9e1b726c57410c6ff96c414cab850a943d398a",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je10_route_oracle.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_native_route_certificate.py": {
+      "published_sha256": "321637abfdc01c0d20caaa952492fad170ab2a8934ca9dc303f5c34df74780d9",
+      "source_sha256": "aff3bb087288aa8434013d9cd83ddcb596c8f24223baee8471e4d28e231db3f1",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je05_core_env.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/native_route_certificate.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_phase_balanced_joint_replay.py": {
+      "published_sha256": "3d08748242b106b304f74b8be3a6fd22bb94e81cdb267cefc66bc98538d9d11c",
+      "source_sha256": "e33c84ac72c5643bf9d8aa746cd4d80703c917ed13d86ec946064db435214612",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/phase_balanced_joint_replay.py",
+        "scripts/prestock_joint_replay.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_prestock_fragment_queries.py": {
+      "published_sha256": "ca0674945ed4a167821f4b7a6fa50623d3363889a6067b067f1abe0907565174",
+      "source_sha256": "ca0674945ed4a167821f4b7a6fa50623d3363889a6067b067f1abe0907565174",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_stage_h6_ops.py",
+        "scripts/prestock_fragment_queries.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_prestock_joint_oracle.py": {
+      "published_sha256": "3a1309048e0d060ec941e7177bc8e46e2ede3b8f948824cad8144e5d6e765677",
+      "source_sha256": "3a1309048e0d060ec941e7177bc8e46e2ede3b8f948824cad8144e5d6e765677",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/frontier_native_witness.py",
+        "scripts/prestock_joint_oracle.py",
+        "scripts/prestock_route_preparation.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_prestock_joint_payload.py": {
+      "published_sha256": "2b92e58fb81bc2287a1cd83b4e57d9f86b82bcb5a00ab235dcc1ab88baff7f2e",
+      "source_sha256": "2b92e58fb81bc2287a1cd83b4e57d9f86b82bcb5a00ab235dcc1ab88baff7f2e",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je10_route_oracle.py",
+        "scripts/prestock_joint_oracle.py",
+        "scripts/prestock_joint_payload.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_prestock_joint_replay.py": {
+      "published_sha256": "08b46a86d905b4726b04b4b04b1b30714d5f6fd4cfaa4fb2acc916314308f46c",
+      "source_sha256": "08b46a86d905b4726b04b4b04b1b30714d5f6fd4cfaa4fb2acc916314308f46c",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/prestock_joint_replay.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_prestock_native_teacher.py": {
+      "published_sha256": "d2ee153a39b75fdaf49e8963f66d14d0a6ccfb0e7149692a30345dec79efbb8a",
+      "source_sha256": "d2ee153a39b75fdaf49e8963f66d14d0a6ccfb0e7149692a30345dec79efbb8a",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/continuous_route_metric.py",
+        "scripts/prestock_native_teacher.py",
+        "scripts/prestock_route_preparation.py",
+        "scripts/prestock_training_state.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_prestock_route_preparation.py": {
+      "published_sha256": "769890f4213a44b2fdda5934d8a7d449161beef13f55e344360f43744985a2dd",
+      "source_sha256": "769890f4213a44b2fdda5934d8a7d449161beef13f55e344360f43744985a2dd",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/prestock_route_preparation.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_prestock_training_state.py": {
+      "published_sha256": "019d52ad6acdc17aaa93774b71bc0b31a818aefc2d5d9b50ee19f69a79feb373",
+      "source_sha256": "019d52ad6acdc17aaa93774b71bc0b31a818aefc2d5d9b50ee19f69a79feb373",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "scripts/je10_ops.py",
+        "scripts/prestock_training_state.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_prestock_verified_labels.py": {
+      "published_sha256": "0893af21d95dc04787a88bfdae45d92c44d76f5625f13bf7d0e7035ec29d9dee",
+      "source_sha256": "0893af21d95dc04787a88bfdae45d92c44d76f5625f13bf7d0e7035ec29d9dee",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je10_ops.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/prestock_training_state.py",
+        "scripts/prestock_verified_labels.py"
+      ],
+      "required_by": []
+    },
+    "tests/test_route_objective_consistency.py": {
+      "published_sha256": "e59b26e9b25ef62262c87ea6f2185c10c7966609b675d23c6bbb5064e1161277",
+      "source_sha256": "7b79e70f006c7b19be4120c26dbe09efdbe485109a92e6bccf294c01621c27ec",
+      "origin": "JE10 transplant",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/je10_ops.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/route_objective_consistency.py"
+      ],
+      "required_by": []
+    },
+    "web/assets/maps/levels.json": {
+      "published_sha256": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+      "source_sha256": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/eval_web_hunter.js"
+      ]
+    },
+    "web/bot_contract.js": {
+      "published_sha256": "3aadb87859f7dea0c483ee352a5c595f812f10b96a0104a23ef0a0b98a4ec411",
+      "source_sha256": "3aadb87859f7dea0c483ee352a5c595f812f10b96a0104a23ef0a0b98a4ec411",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "scripts/eval_web_hunter.js"
+      ]
+    },
+    "web/bun_hunter_bot.js": {
+      "published_sha256": "5cf5e78b2c7251eb6a8995a6cf39fceaea5892e523b6141a84c25f8e903e05a1",
+      "source_sha256": "5cf5e78b2c7251eb6a8995a6cf39fceaea5892e523b6141a84c25f8e903e05a1",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "scripts/eval_web_hunter.js"
+      ]
+    },
+    "web/review-sim/route-v35.js": {
+      "published_sha256": "9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3",
+      "source_sha256": "9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "web/review_protocol.js"
+      ]
+    },
+    "web/review_advantage.js": {
+      "published_sha256": "c81f3265475228d68e12f19bc2ba8c13da44e30ff51ca5a516b705cd675ec1d6",
+      "source_sha256": "c81f3265475228d68e12f19bc2ba8c13da44e30ff51ca5a516b705cd675ec1d6",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "web/review_protocol.js"
+      ]
+    },
+    "web/review_dagger.js": {
+      "published_sha256": "9628bab670c6aacba90a3fef73d7929d61d8ad81df202c9ed8f9f7a4b4564643",
+      "source_sha256": "9628bab670c6aacba90a3fef73d7929d61d8ad81df202c9ed8f9f7a4b4564643",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "web/review_protocol.js"
+      ]
+    },
+    "web/review_protocol.js": {
+      "published_sha256": "e85a324c689215180032064dd1dcaeed7f1f8915e3766829c2d76554b503e92d",
+      "source_sha256": "ba011981cb3357f7172a1afd9ab1e22e7983d2f6d3db37385298ada851b4d9bf",
+      "origin": "existing main",
+      "dependencies": [
+        "web/review-sim/route-v35.js",
+        "web/review_advantage.js",
+        "web/review_dagger.js",
+        "web/review_route.js",
+        "web/sim.js",
+        "web/tactical_arena.js"
+      ],
+      "required_by": [
+        "scripts/je10_route_funnel.js"
+      ]
+    },
+    "web/review_route.js": {
+      "published_sha256": "bd0cd1d02af7030f954d899c442a8c8ee25c081bf2104cf4c52d1150d75ea607",
+      "source_sha256": "bd0cd1d02af7030f954d899c442a8c8ee25c081bf2104cf4c52d1150d75ea607",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "web/review_protocol.js"
+      ]
+    },
+    "web/sim.js": {
+      "published_sha256": "7d2047b7db2025608b38afec0f8283625b6f98a3d09ac49693f2a0a44d1d485b",
+      "source_sha256": "7d2047b7db2025608b38afec0f8283625b6f98a3d09ac49693f2a0a44d1d485b",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "scripts/eval_web_hunter.js",
+        "scripts/je05_web_hunter.js",
+        "scripts/je08_web_diagnostics.js",
+        "scripts/je10_route_funnel.js",
+        "scripts/je10_web_hunter.js",
+        "web/review_protocol.js"
+      ]
+    },
+    "web/tactical_arena.js": {
+      "published_sha256": "aa44a558b4e084b19f1c619c03a4610c91dcde31a3de2eb8619b6aa0078deea9",
+      "source_sha256": "aa44a558b4e084b19f1c619c03a4610c91dcde31a3de2eb8619b6aa0078deea9",
+      "origin": "existing main",
+      "dependencies": [],
+      "required_by": [
+        "web/review_protocol.js"
+      ]
+    }
+  }
+}

@@ -32,10 +32,14 @@ assert(evidence.native_first_tick.causalDamageSource.flat().every(v=>v===false))
 for(const change of [a=>a.replay_sha256='0'.repeat(64),a=>a.policy_sha256='0'.repeat(64),a=>a.rows[0].original_a1=1,a=>a.rows[0].candidates[0].q_original=1,a=>a.advantage_audit.shaped.critic=a.advantage_audit.original.critic,a=>a.rows[0].move_probabilities[0]=1]){const changed=structuredClone(evidence);change(changed);assert.throws(()=>F.validateAudit(changed,doc,row.sha256));}
 for(const [name,expected]of Object.entries(evidence.source_hashes)){
   assert(/^[a-f0-9]{64}$/.test(expected));
-  // The v35 audit records the exact pre-v36 PBRS source; v36 extends that
-  // module while preserving this immutable historical receipt.
+  // Historical source identities remain frozen when later training recipes
+  // extend a module. Current JE10 sources have their own hash manifest.
   if(name==='scripts/je09_route_pbrs.py'){
     assert.equal(expected,'3e1a1a224f852c6f6c361dd1903bd7d3be45ca9b15506b17f5353ec1ad505d1b');
+  }else if(name==='scripts/je09_stage_h5c_ops.py'){
+    assert.equal(expected,'9ddd8134098155442e81233d33979b2041976d8a9442d7000b2ec86549c83f0c');
+    const manifest=require('../reports/je10_source_manifest_20261018.json');
+    assert.equal(hash(fs.readFileSync(name)),manifest.files[name].published_sha256,'current JE10 source');
   }else if(fs.existsSync(name))assert.equal(hash(fs.readFileSync(name)),expected,'sealed local training source '+name);
 }
 const html=fs.readFileSync('web/review.html','utf8');assert(html.includes('data-track-label="failure-track"'));assert(html.includes('返程失败区间'));assert(html.includes('src="review_return.js"'));
