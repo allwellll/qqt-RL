@@ -8,3 +8,10 @@ for(const [id,t,hash]of specs){const b=fs.readFileSync('web/review-replays/'+id+
  else {const p=new P.Player(d,level);p.seek(t-1);assert.throws(()=>columns([{tick:t,route:raw.route}],d.meta.seed,[p.sim]),/target|phase/,'D_DELIVERY must not accept a point in the home half outside the actual cage');}
 }
 console.log('Route target export GREEN');
+// Sealed causal-clean checkpoints add two pre-stock frontier objectives.
+// Neither is carrying a bag or already reaching either cage.
+for(const [phase,name,provenance]of [[5,'PRESTOCK_HOME','home_corridor_preparation'],[6,'PRESTOCK_ENEMY','stock_corridor_preparation']]){
+ const c=columns([{tick:1,route:[{route_phase:phase,route_target_identity:500001,route_distance_before:3,route_distance_after:2,route_phi_before:-.1,route_phi_after:0,route_potential_delta:.1,route_shaped_reward:.05}]}],123);
+ assert.equal(c.route_phase[0],name);assert.equal(c.targets[c.target[0]].type,'route_frontier');assert.equal(c.targets[c.target[0]].provenance,provenance);
+}
+console.log('Pre-stock corridor frontier phases GREEN');

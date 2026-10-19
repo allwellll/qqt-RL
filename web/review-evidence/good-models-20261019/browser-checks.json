@@ -1,0 +1,5494 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "mobile": false,
+      "smooth": true,
+      "frames": 280,
+      "monotonic": [
+        true,
+        true
+      ],
+      "maxFrameDisplacement": [
+        0.3943630976461092,
+        0.39447955741986046
+      ],
+      "jumps": [
+        {
+          "tick": 3,
+          "player": 0,
+          "distance": 0.3647494088030415,
+          "reason": "collision_clamp",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 0,
+          "distance": 0.22774554859228646,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 1,
+          "distance": 0.39447955741986046,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 22,
+          "player": 0,
+          "distance": 0.25693976901912585,
+          "reason": "collision_side_steering",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 30,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "threshold:spawnProtection",
+          "events": []
+        },
+        {
+          "tick": 31,
+          "player": 1,
+          "distance": 0.20848989161012593,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 35,
+          "player": 1,
+          "distance": 0.39436309764610966,
+          "reason": "collision_side_steering",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 36,
+          "player": 0,
+          "distance": 0.17991118615472956,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 38,
+          "player": 0,
+          "distance": 0.3943630976461092,
+          "reason": "state_change:heldItem",
+          "events": []
+        },
+        {
+          "tick": 40,
+          "player": 0,
+          "distance": 0.3943630976461092,
+          "reason": "topology_change:crate",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 46,
+          "player": 0,
+          "distance": 0.3314999761962907,
+          "reason": "topology_change:crate",
+          "events": []
+        },
+        {
+          "tick": 46,
+          "player": 0,
+          "distance": 0.2535000238037095,
+          "reason": "pause_or_seek",
+          "events": []
+        }
+      ],
+      "refresh": "实际 59 FPS · 模拟 10 tick/s · α 0.000 · 目标 60 FPS"
+    },
+    {
+      "mobile": false,
+      "smooth": false,
+      "frames": 278,
+      "monotonic": [
+        false,
+        false
+      ],
+      "maxFrameDisplacement": [
+        0.3900000000000001,
+        0.39000000000000057
+      ],
+      "jumps": [
+        {
+          "tick": 1,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 1,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 2,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 2,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 3,
+          "player": 0,
+          "distance": 0.35989999999999966,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 4,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 4,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 5,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 5,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 0,
+          "distance": 0.21999999999999975,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 7,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 7,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 8,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 8,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 9,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 9,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 10,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 10,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 12,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 12,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 13,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 13,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 14,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 14,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 15,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 15,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 16,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 16,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 17,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 17,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 18,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 18,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 19,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 19,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 20,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 20,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 21,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 21,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 22,
+          "player": 0,
+          "distance": 0.2501000000000002,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 22,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 23,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 23,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 24,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 24,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 25,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 25,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 26,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 26,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 27,
+          "player": 0,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 27,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 28,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 29,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 30,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 31,
+          "player": 1,
+          "distance": 0.20000000000000107,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 32,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 33,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 34,
+          "player": 0,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 34,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 35,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 35,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 36,
+          "player": 0,
+          "distance": 0.17000000000000037,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 36,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 37,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 37,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 38,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 39,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 40,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 41,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 42,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 43,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 44,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 45,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 46,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        }
+      ],
+      "refresh": "实际 60 FPS · 模拟 10 tick/s · α 0.000 · 目标 60 FPS"
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-recomputed-natural-2026101800",
+      "sha256": "ba828ae1f4405690958988c8f4e89a87936661b6dab4304d192920ce6bd503b2",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 1.799728,
+          "raw_q1_mean": 1.970734,
+          "raw_a1": -0.171006,
+          "shaped_q1_taken": 1.799728,
+          "shaped_q1_mean": 1.970734,
+          "shaped_a1": -0.171006,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 1.87185,
+          "raw_q1_mean": 1.871565,
+          "raw_a1": 0.000285,
+          "shaped_q1_taken": 1.87185,
+          "shaped_q1_mean": 1.871565,
+          "shaped_a1": 0.000285,
+          "delta_a": 0,
+          "raw_a1_increment": 0.171291,
+          "shaped_a1_increment": 0.171291,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.773038,
+          "raw_q1_mean": 1.780922,
+          "raw_a1": -0.007883,
+          "shaped_q1_taken": 1.773038,
+          "shaped_q1_mean": 1.780922,
+          "shaped_a1": -0.007883,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000236,
+          "shaped_a1_increment": -0.000236,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 886,
+          "raw_q1_taken": 1.5420099999999999,
+          "raw_q1_mean": 1.5248279999999999,
+          "raw_a1": 0.017181,
+          "shaped_q1_taken": 1.5417729999999998,
+          "shaped_q1_mean": 1.524592,
+          "shaped_a1": 0.017181,
+          "delta_a": 0,
+          "raw_a1_increment": 0.025040999999999997,
+          "shaped_a1_increment": 0.025040999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1773,
+          "raw_q1_taken": 24,
+          "raw_q1_mean": 23.984063,
+          "raw_a1": 0.015937,
+          "shaped_q1_taken": 23.647790999999998,
+          "shaped_q1_mean": 23.632096,
+          "shaped_a1": 0.015695,
+          "delta_a": -0.000242,
+          "raw_a1_increment": 0.015941999999999998,
+          "shaped_a1_increment": 0.015698999999999998,
+          "delta_a_increment": -0.000242,
+          "legal_count": 8
+        },
+        {
+          "tick": 1542,
+          "raw_q1_taken": 0.186583,
+          "raw_q1_mean": 0.212141,
+          "raw_a1": -0.025557999999999997,
+          "shaped_q1_taken": 0.18619,
+          "shaped_q1_mean": 0.211748,
+          "shaped_a1": -0.025557999999999997,
+          "delta_a": 0,
+          "raw_a1_increment": -0.019259,
+          "shaped_a1_increment": -0.019259,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-natural-2026101810",
+      "sha256": "cd3675fd764c9e5fa8c760215e811a5a16f95359d2c96319c81d950aa5ca54f6",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 2.544116,
+          "raw_q1_mean": 2.5214179999999997,
+          "raw_a1": 0.022697,
+          "shaped_q1_taken": 2.544116,
+          "shaped_q1_mean": 2.5214179999999997,
+          "shaped_a1": 0.022697,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 2.535139,
+          "raw_q1_mean": 2.535151,
+          "raw_a1": -0.000012,
+          "shaped_q1_taken": 2.535139,
+          "shaped_q1_mean": 2.535151,
+          "shaped_a1": -0.000012,
+          "delta_a": 0,
+          "raw_a1_increment": -0.022709,
+          "shaped_a1_increment": -0.022709,
+          "delta_a_increment": 0,
+          "legal_count": 3
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 0.997637,
+          "raw_q1_mean": 0.945,
+          "raw_a1": 0.052636999999999996,
+          "shaped_q1_taken": 0.997637,
+          "shaped_q1_mean": 0.945,
+          "shaped_a1": 0.052636999999999996,
+          "delta_a": 0,
+          "raw_a1_increment": 0.10578599999999999,
+          "shaped_a1_increment": 0.10578599999999999,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 746,
+          "raw_q1_taken": 3.3480909999999997,
+          "raw_q1_mean": 3.313147,
+          "raw_a1": 0.034943999999999996,
+          "shaped_q1_taken": 3.3480909999999997,
+          "shaped_q1_mean": 3.313147,
+          "shaped_a1": 0.034943999999999996,
+          "delta_a": 0,
+          "raw_a1_increment": 0.024301999999999997,
+          "shaped_a1_increment": 0.024301999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1493,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0.000357,
+          "raw_a1": -0.000357,
+          "shaped_q1_taken": -0.302967,
+          "shaped_q1_mean": -0.302604,
+          "shaped_a1": -0.000363,
+          "delta_a": -0.000006,
+          "raw_a1_increment": -0.00036199999999999996,
+          "shaped_a1_increment": -0.000368,
+          "delta_a_increment": -0.000006,
+          "legal_count": 10
+        },
+        {
+          "tick": 539,
+          "raw_q1_taken": -22.985965,
+          "raw_q1_mean": -22.985965,
+          "raw_a1": 0,
+          "shaped_q1_taken": -22.985965,
+          "shaped_q1_mean": -22.985965,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1290,
+          "raw_q1_taken": 5.423639,
+          "raw_q1_mean": 5.3765279999999995,
+          "raw_a1": 0.047112,
+          "shaped_q1_taken": 5.423171,
+          "shaped_q1_mean": 5.375986999999999,
+          "shaped_a1": 0.047185,
+          "delta_a": 0.000073,
+          "raw_a1_increment": 0.046967999999999996,
+          "shaped_a1_increment": 0.046873,
+          "delta_a_increment": -0.00009499999999999999,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-natural-2026101811",
+      "sha256": "1692fa391dd983d0dc2389c87172210261d149eb0aa0f3c88b3c35b51fe31069",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 1.5158859999999998,
+          "raw_q1_mean": 1.614369,
+          "raw_a1": -0.098482,
+          "shaped_q1_taken": 1.5158859999999998,
+          "shaped_q1_mean": 1.614369,
+          "shaped_a1": -0.098482,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 1.541497,
+          "raw_q1_mean": 1.542363,
+          "raw_a1": -0.0008659999999999999,
+          "shaped_q1_taken": 1.541497,
+          "shaped_q1_mean": 1.542363,
+          "shaped_a1": -0.0008659999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": 0.097616,
+          "shaped_a1_increment": 0.097616,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 2.048806,
+          "raw_q1_mean": 2.067952,
+          "raw_a1": -0.019146,
+          "shaped_q1_taken": 2.048806,
+          "shaped_q1_mean": 2.067952,
+          "shaped_a1": -0.019146,
+          "delta_a": 0,
+          "raw_a1_increment": -0.050185,
+          "shaped_a1_increment": -0.050185,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 1.383448,
+          "raw_q1_mean": 1.3717199999999998,
+          "raw_a1": 0.011727999999999999,
+          "shaped_q1_taken": 1.382998,
+          "shaped_q1_mean": 1.37127,
+          "shaped_a1": 0.011727999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": 0.029741,
+          "shaped_a1_increment": 0.029741,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.057588,
+          "shaped_q1_mean": -0.057588,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.00216,
+          "shaped_a1_increment": -0.0021639999999999997,
+          "delta_a_increment": -0.0000049999999999999996,
+          "legal_count": 15
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-open-2026101812",
+      "sha256": "c470e430ae850fddac29eecf9f5b5e372c26acea0bf62a0027128c52cf85e321",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 4.561898,
+          "raw_q1_mean": 4.563766,
+          "raw_a1": -0.0018679999999999999,
+          "shaped_q1_taken": 4.561898,
+          "shaped_q1_mean": 4.563766,
+          "shaped_a1": -0.0018679999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 4.822537,
+          "raw_q1_mean": 4.807352,
+          "raw_a1": 0.015184999999999999,
+          "shaped_q1_taken": 4.822537,
+          "shaped_q1_mean": 4.807352,
+          "shaped_a1": 0.015184999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": 0.017054,
+          "shaped_a1_increment": 0.017054,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.042656,
+          "raw_q1_mean": 0.987436,
+          "raw_a1": 0.05522,
+          "shaped_q1_taken": 1.042656,
+          "shaped_q1_mean": 0.987436,
+          "shaped_a1": 0.05522,
+          "delta_a": 0,
+          "raw_a1_increment": 0.10278799999999999,
+          "shaped_a1_increment": 0.10278799999999999,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": -0.5092019999999999,
+          "raw_q1_mean": -0.492909,
+          "raw_a1": -0.016293,
+          "shaped_q1_taken": -0.509605,
+          "shaped_q1_mean": -0.493311,
+          "shaped_a1": -0.016293,
+          "delta_a": 0,
+          "raw_a1_increment": -0.019835,
+          "shaped_a1_increment": -0.019835,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.080547,
+          "shaped_q1_mean": -0.080547,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.039472,
+          "shaped_a1_increment": 0.039472,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 892,
+          "raw_q1_taken": -0.508467,
+          "raw_q1_mean": -0.078153,
+          "raw_a1": -0.430315,
+          "shaped_q1_taken": -0.5088699999999999,
+          "shaped_q1_mean": -0.079196,
+          "shaped_a1": -0.429674,
+          "delta_a": 0.000641,
+          "raw_a1_increment": -0.402454,
+          "shaped_a1_increment": -0.40391499999999997,
+          "delta_a_increment": -0.0014609999999999998,
+          "legal_count": 10
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-open-2026101813",
+      "sha256": "caf0fb7f19e075ea0511518f15a0f550ff4d89198ad24b270104fe2790dd46cf",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 4.526146,
+          "raw_q1_mean": 4.524398,
+          "raw_a1": 0.001748,
+          "shaped_q1_taken": 4.526146,
+          "shaped_q1_mean": 4.524398,
+          "shaped_a1": 0.001748,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 10
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 4.769569,
+          "raw_q1_mean": 4.747739999999999,
+          "raw_a1": 0.021828999999999998,
+          "shaped_q1_taken": 4.769569,
+          "shaped_q1_mean": 4.747739999999999,
+          "shaped_a1": 0.021828999999999998,
+          "delta_a": 0,
+          "raw_a1_increment": 0.020082,
+          "shaped_a1_increment": 0.020082,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.485881,
+          "raw_q1_mean": 1.464192,
+          "raw_a1": 0.021688,
+          "shaped_q1_taken": 1.485881,
+          "shaped_q1_mean": 1.464192,
+          "shaped_a1": 0.021688,
+          "delta_a": 0,
+          "raw_a1_increment": 0.016759,
+          "shaped_a1_increment": 0.016759,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 280,
+          "raw_q1_taken": 1.071647,
+          "raw_q1_mean": 1.063984,
+          "raw_a1": 0.007663,
+          "shaped_q1_taken": 1.071647,
+          "shaped_q1_mean": 1.063984,
+          "shaped_a1": 0.007663,
+          "delta_a": 0,
+          "raw_a1_increment": 0.015318,
+          "shaped_a1_increment": 0.015318,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 560,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": 0,
+          "shaped_q1_mean": 0,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.028079,
+          "shaped_a1_increment": -0.028079,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-carry_home-2026101814",
+      "sha256": "8e4d56fca153714165467b8a72819ed8be6a67d2cde46da9138959bc89be762b",
+      "deep_link": 84,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 12.783761,
+          "raw_q1_mean": 12.783750999999999,
+          "raw_a1": 0.000011,
+          "shaped_q1_taken": 13.158285999999999,
+          "shaped_q1_mean": 13.158273999999999,
+          "shaped_a1": 0.000012,
+          "delta_a": 0.000001,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 5
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 12.693527999999999,
+          "raw_q1_mean": 12.693508999999999,
+          "raw_a1": 0.000018999999999999998,
+          "shaped_q1_taken": 12.693045,
+          "shaped_q1_mean": 12.693024999999999,
+          "shaped_a1": 0.000019999999999999998,
+          "delta_a": 0.000001,
+          "raw_a1_increment": 0.000008,
+          "shaped_a1_increment": 0.000008,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 85,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 1.3113569999999999,
+          "raw_a1": -1.3113569999999999,
+          "shaped_q1_taken": -0.43484399999999995,
+          "shaped_q1_mean": 0.906551,
+          "shaped_a1": -1.341395,
+          "delta_a": -0.030038,
+          "raw_a1_increment": -1.310683,
+          "shaped_a1_increment": -1.34072,
+          "delta_a_increment": -0.030038,
+          "legal_count": 5
+        },
+        {
+          "tick": 42,
+          "raw_q1_taken": 15.119057,
+          "raw_q1_mean": 15.131174999999999,
+          "raw_a1": -0.012118,
+          "shaped_q1_taken": 15.116883,
+          "shaped_q1_mean": 15.129000999999999,
+          "shaped_a1": -0.012118,
+          "delta_a": 0,
+          "raw_a1_increment": -0.07999099999999999,
+          "shaped_a1_increment": -0.08033499999999999,
+          "delta_a_increment": -0.00034399999999999996,
+          "legal_count": 5
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-g8-metrics-carry_home-2026101815",
+      "sha256": "8230e966d82671555323a039087968c0df2852c0fc6b10505f6d6753f6d156ff",
+      "deep_link": 90,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 12.942822,
+          "raw_q1_mean": 12.942832,
+          "raw_a1": -0.000009999999999999999,
+          "shaped_q1_taken": 13.309572999999999,
+          "shaped_q1_mean": 13.309583,
+          "shaped_a1": -0.000009999999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 5
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 12.725109,
+          "raw_q1_mean": 12.725117,
+          "raw_a1": -0.000008,
+          "shaped_q1_taken": 12.724665,
+          "shaped_q1_mean": 12.724673,
+          "shaped_a1": -0.000008,
+          "delta_a": 0,
+          "raw_a1_increment": 0.000002,
+          "shaped_a1_increment": 0.000002,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 91,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0.051682,
+          "raw_a1": -0.051682,
+          "shaped_q1_taken": -0.455312,
+          "shaped_q1_mean": -0.402346,
+          "shaped_a1": -0.052967,
+          "delta_a": -0.001285,
+          "raw_a1_increment": -0.051795,
+          "shaped_a1_increment": -0.053079999999999995,
+          "delta_a_increment": -0.001285,
+          "legal_count": 5
+        },
+        {
+          "tick": 45,
+          "raw_q1_taken": 15.860351999999999,
+          "raw_q1_mean": 15.86036,
+          "raw_a1": -0.000009,
+          "shaped_q1_taken": 15.859601,
+          "shaped_q1_mean": 15.85961,
+          "shaped_a1": -0.000009,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000007,
+          "shaped_a1_increment": -0.000007,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r01-g8-metrics-natural_full2400-2026101900",
+      "sha256": "f5ddf493551c06d74d530b0d4c0f12c29fa28f513df9b2300225ab03a784ded2",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 1.799728,
+          "raw_q1_mean": 1.970734,
+          "raw_a1": -0.171006,
+          "shaped_q1_taken": 1.799728,
+          "shaped_q1_mean": 1.970734,
+          "shaped_a1": -0.171006,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 1.87185,
+          "raw_q1_mean": 1.871565,
+          "raw_a1": 0.000285,
+          "shaped_q1_taken": 1.87185,
+          "shaped_q1_mean": 1.871565,
+          "shaped_a1": 0.000285,
+          "delta_a": 0,
+          "raw_a1_increment": 0.171291,
+          "shaped_a1_increment": 0.171291,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.1155979999999999,
+          "raw_q1_mean": 1.185525,
+          "raw_a1": -0.069927,
+          "shaped_q1_taken": 1.1155979999999999,
+          "shaped_q1_mean": 1.185525,
+          "shaped_a1": -0.069927,
+          "delta_a": 0,
+          "raw_a1_increment": -0.08205599999999999,
+          "shaped_a1_increment": -0.08205599999999999,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 601,
+          "raw_q1_taken": 2.036142,
+          "raw_q1_mean": 1.961689,
+          "raw_a1": 0.07445299999999999,
+          "shaped_q1_taken": 2.0404809999999998,
+          "shaped_q1_mean": 1.961693,
+          "shaped_a1": 0.078787,
+          "delta_a": 0.004334,
+          "raw_a1_increment": 0.05798,
+          "shaped_a1_increment": 0.066579,
+          "delta_a_increment": 0.008598,
+          "legal_count": 12
+        },
+        {
+          "tick": 1202,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.08112699999999999,
+          "shaped_q1_mean": -0.08112699999999999,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.019592,
+          "shaped_a1_increment": -0.019592,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 908,
+          "raw_q1_taken": -12.690836,
+          "raw_q1_mean": -12.690836,
+          "raw_a1": 0,
+          "shaped_q1_taken": -16.941243,
+          "shaped_q1_mean": -16.941243,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r01-g8-metrics-natural_full2400-2026101901",
+      "sha256": "e0d55567a6497c2a9cec59d547a0475bf4e40946f8ffd91b6d54868994b819d6",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 2.067066,
+          "raw_q1_mean": 2.0738749999999997,
+          "raw_a1": -0.006808,
+          "shaped_q1_taken": 2.067066,
+          "shaped_q1_mean": 2.0738749999999997,
+          "shaped_a1": -0.006808,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 1.972899,
+          "raw_q1_mean": 1.97492,
+          "raw_a1": -0.002021,
+          "shaped_q1_taken": 1.972899,
+          "shaped_q1_mean": 1.97492,
+          "shaped_a1": -0.002021,
+          "delta_a": 0,
+          "raw_a1_increment": 0.004788,
+          "shaped_a1_increment": 0.004788,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.3975339999999998,
+          "raw_q1_mean": 1.430421,
+          "raw_a1": -0.032887,
+          "shaped_q1_taken": 1.3975339999999998,
+          "shaped_q1_mean": 1.430421,
+          "shaped_a1": -0.032887,
+          "delta_a": 0,
+          "raw_a1_increment": -0.030771999999999997,
+          "shaped_a1_increment": -0.030771999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 1.336731,
+          "raw_q1_mean": 1.337548,
+          "raw_a1": -0.0008169999999999999,
+          "shaped_q1_taken": 1.336731,
+          "shaped_q1_mean": 1.337548,
+          "shaped_a1": -0.0008169999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.006598,
+          "shaped_a1_increment": -0.006598,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": 0,
+          "shaped_q1_mean": 0,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.014745,
+          "shaped_a1_increment": -0.014745,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r01-g8-metrics-recovery_threat-2026101902",
+      "sha256": "1b17f12cb73279c2c847240ccdeb06435deca5c7648eef75028159079b326688",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 0.424969,
+          "raw_q1_mean": 0.482759,
+          "raw_a1": -0.057789999999999994,
+          "shaped_q1_taken": 0.42800099999999996,
+          "shaped_q1_mean": 0.48537199999999997,
+          "shaped_a1": -0.057371,
+          "delta_a": 0.000419,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 0.149254,
+          "raw_q1_mean": 0.151222,
+          "raw_a1": -0.0019679999999999997,
+          "shaped_q1_taken": 0.152271,
+          "shaped_q1_mean": 0.154215,
+          "shaped_a1": -0.001944,
+          "delta_a": 0.000024,
+          "raw_a1_increment": 0.055822,
+          "shaped_a1_increment": 0.055427,
+          "delta_a_increment": -0.000395,
+          "legal_count": 3
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.603703,
+          "raw_q1_mean": -0.576851,
+          "raw_a1": -0.026851999999999997,
+          "shaped_q1_taken": -0.603757,
+          "shaped_q1_mean": -0.576905,
+          "shaped_a1": -0.026851999999999997,
+          "delta_a": 0,
+          "raw_a1_increment": -0.013652,
+          "shaped_a1_increment": -0.013652,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.8093929999999999,
+          "raw_q1_mean": -0.750321,
+          "raw_a1": -0.059073,
+          "shaped_q1_taken": -0.809448,
+          "shaped_q1_mean": -0.750375,
+          "shaped_a1": -0.059073,
+          "delta_a": 0,
+          "raw_a1_increment": -0.067079,
+          "shaped_a1_increment": -0.067079,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": -0.0625,
+          "raw_q1_mean": -0.028897,
+          "raw_a1": -0.033603,
+          "shaped_q1_taken": -0.073359,
+          "shaped_q1_mean": -0.039756,
+          "shaped_a1": -0.033603,
+          "delta_a": 0,
+          "raw_a1_increment": -0.383437,
+          "shaped_a1_increment": -0.383437,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 5,
+          "raw_q1_taken": 1.067273,
+          "raw_q1_mean": 0.494233,
+          "raw_a1": 0.573041,
+          "shaped_q1_taken": 1.067219,
+          "shaped_q1_mean": 0.492683,
+          "shaped_a1": 0.5745359999999999,
+          "delta_a": 0.001495,
+          "raw_a1_increment": 0.648998,
+          "shaped_a1_increment": 0.6480319999999999,
+          "delta_a_increment": -0.000966,
+          "legal_count": 8
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r01-g128-metrics-natural_full2400-2026101900",
+      "sha256": "90c3d998731dc4416140b98036ffe30f2436ead089745d63b78e1a9b5cb38ce7",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 0.047230999999999995,
+          "raw_q1_mean": 0.00157,
+          "raw_a1": 0.045661,
+          "shaped_q1_taken": 0.047230999999999995,
+          "shaped_q1_mean": 0.00157,
+          "shaped_a1": 0.045661,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.073526,
+          "raw_q1_mean": -0.076108,
+          "raw_a1": 0.002582,
+          "shaped_q1_taken": -0.073526,
+          "shaped_q1_mean": -0.076108,
+          "shaped_a1": 0.002582,
+          "delta_a": 0,
+          "raw_a1_increment": -0.043079,
+          "shaped_a1_increment": -0.043079,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 0.005195,
+          "raw_q1_mean": 0.002804,
+          "raw_a1": 0.002392,
+          "shaped_q1_taken": 0.005195,
+          "shaped_q1_mean": 0.002804,
+          "shaped_a1": 0.002392,
+          "delta_a": 0,
+          "raw_a1_increment": -0.004162,
+          "shaped_a1_increment": -0.004162,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 723,
+          "raw_q1_taken": 0.280066,
+          "raw_q1_mean": 0.294402,
+          "raw_a1": -0.014334999999999999,
+          "shaped_q1_taken": 0.280066,
+          "shaped_q1_mean": 0.294402,
+          "shaped_a1": -0.014334999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.06206,
+          "shaped_a1_increment": -0.06206,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1446,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.421411,
+          "shaped_q1_mean": -0.421411,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 1253,
+          "raw_q1_taken": 4.629954,
+          "raw_q1_mean": 4.628482,
+          "raw_a1": 0.001473,
+          "shaped_q1_taken": 4.628976,
+          "shaped_q1_mean": 4.627503,
+          "shaped_a1": 0.001473,
+          "delta_a": 0,
+          "raw_a1_increment": 0.00114,
+          "shaped_a1_increment": 0.001084,
+          "delta_a_increment": -0.000056999999999999996,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r01-g128-metrics-natural_full2400-2026101901",
+      "sha256": "b29f399f5502f13d7e29eedb8715fbaa89461f1ba47ae214d09bc58f240e1227",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 0.075504,
+          "raw_q1_mean": 0.063538,
+          "raw_a1": 0.011966,
+          "shaped_q1_taken": 0.075504,
+          "shaped_q1_mean": 0.063538,
+          "shaped_a1": 0.011966,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 0.081939,
+          "raw_q1_mean": 0.074298,
+          "raw_a1": 0.007640999999999999,
+          "shaped_q1_taken": 0.081939,
+          "shaped_q1_mean": 0.074298,
+          "shaped_a1": 0.007640999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.004325,
+          "shaped_a1_increment": -0.004325,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 0.680829,
+          "raw_q1_mean": 0.68284,
+          "raw_a1": -0.0020109999999999998,
+          "shaped_q1_taken": 0.680829,
+          "shaped_q1_mean": 0.68284,
+          "shaped_a1": -0.0020109999999999998,
+          "delta_a": 0,
+          "raw_a1_increment": -0.001369,
+          "shaped_a1_increment": -0.001369,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 873,
+          "raw_q1_taken": 1.275178,
+          "raw_q1_mean": 1.268811,
+          "raw_a1": 0.006366,
+          "shaped_q1_taken": 1.2706119999999999,
+          "shaped_q1_mean": 1.26531,
+          "shaped_a1": 0.005301999999999999,
+          "delta_a": -0.001064,
+          "raw_a1_increment": 0.064068,
+          "shaped_a1_increment": 0.058605,
+          "delta_a_increment": -0.005463,
+          "legal_count": 9
+        },
+        {
+          "tick": 1746,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.149031,
+          "shaped_q1_mean": -0.149031,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.0019979999999999998,
+          "shaped_a1_increment": 0.0019979999999999998,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1477,
+          "raw_q1_taken": -17.235228,
+          "raw_q1_mean": -17.235228,
+          "raw_a1": 0,
+          "shaped_q1_taken": -25.235974,
+          "shaped_q1_mean": -25.235974,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r01-g128-metrics-recovery_threat-2026101902",
+      "sha256": "a9c233c44968456a017e97d11d0f85947201edb4853c8c76200cd37e662c0799",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 0.419931,
+          "raw_q1_mean": 0.42442799999999997,
+          "raw_a1": -0.004496,
+          "shaped_q1_taken": 0.422963,
+          "shaped_q1_mean": 0.42728,
+          "shaped_a1": -0.004317,
+          "delta_a": 0.00017999999999999998,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 0.450216,
+          "raw_q1_mean": 0.450092,
+          "raw_a1": 0.000124,
+          "shaped_q1_taken": 0.45323199999999997,
+          "shaped_q1_mean": 0.45309699999999997,
+          "shaped_a1": 0.000135,
+          "delta_a": 0.000011,
+          "raw_a1_increment": 0.004621,
+          "shaped_a1_increment": 0.004452,
+          "delta_a_increment": -0.000169,
+          "legal_count": 3
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.241422,
+          "raw_q1_mean": -0.23322199999999998,
+          "raw_a1": -0.008199999999999999,
+          "shaped_q1_taken": -0.241476,
+          "shaped_q1_mean": -0.23327599999999998,
+          "shaped_a1": -0.008199999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.021535,
+          "shaped_a1_increment": -0.021535,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.47631399999999996,
+          "raw_q1_mean": -0.503918,
+          "raw_a1": 0.027604999999999998,
+          "shaped_q1_taken": -0.47636799999999996,
+          "shaped_q1_mean": -0.503973,
+          "shaped_a1": 0.027604999999999998,
+          "delta_a": 0,
+          "raw_a1_increment": 0.047133999999999995,
+          "shaped_a1_increment": 0.047133999999999995,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": -0.000024999999999999998,
+          "raw_a1": 0.000024999999999999998,
+          "shaped_q1_taken": -0.010858999999999999,
+          "shaped_q1_mean": -0.010884999999999999,
+          "shaped_a1": 0.000024999999999999998,
+          "delta_a": 0,
+          "raw_a1_increment": 0.002858,
+          "shaped_a1_increment": 0.002858,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 5,
+          "raw_q1_taken": 1.200227,
+          "raw_q1_mean": 0.9691289999999999,
+          "raw_a1": 0.231098,
+          "shaped_q1_taken": 1.200173,
+          "shaped_q1_mean": 0.9681989999999999,
+          "shaped_a1": 0.23197399999999999,
+          "delta_a": 0.0008759999999999999,
+          "raw_a1_increment": 0.218249,
+          "shaped_a1_increment": 0.217948,
+          "delta_a_increment": -0.00030199999999999997,
+          "legal_count": 8
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r13-g128-metrics-natural_full2400-2026101900",
+      "sha256": "ab579dc28d42c05db195a3973a72e12e78084fe84babf766c856cf11814be845",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.17203,
+          "raw_q1_mean": -0.17183099999999998,
+          "raw_a1": -0.00019899999999999999,
+          "shaped_q1_taken": -0.17203,
+          "shaped_q1_mean": -0.17183099999999998,
+          "shaped_a1": -0.00019899999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.160222,
+          "raw_q1_mean": -0.152809,
+          "raw_a1": -0.0074129999999999995,
+          "shaped_q1_taken": -0.160222,
+          "shaped_q1_mean": -0.152809,
+          "shaped_a1": -0.0074129999999999995,
+          "delta_a": 0,
+          "raw_a1_increment": -0.007215,
+          "shaped_a1_increment": -0.007215,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.30736399999999997,
+          "raw_q1_mean": -0.307838,
+          "raw_a1": 0.000474,
+          "shaped_q1_taken": -0.30736399999999997,
+          "shaped_q1_mean": -0.307838,
+          "shaped_a1": 0.000474,
+          "delta_a": 0,
+          "raw_a1_increment": -0.006081,
+          "shaped_a1_increment": -0.006081,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 697,
+          "raw_q1_taken": 1.6762299999999999,
+          "raw_q1_mean": 1.685694,
+          "raw_a1": -0.009464,
+          "shaped_q1_taken": 1.6751429999999998,
+          "shaped_q1_mean": 1.684607,
+          "shaped_a1": -0.009464,
+          "delta_a": 0,
+          "raw_a1_increment": 0.009809,
+          "shaped_a1_increment": 0.009809,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 1394,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.642153,
+          "shaped_q1_mean": -0.642152,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 783,
+          "raw_q1_taken": -24.860651999999998,
+          "raw_q1_mean": -24.860651999999998,
+          "raw_a1": 0,
+          "shaped_q1_taken": -28.861855,
+          "shaped_q1_mean": -28.861855,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1097,
+          "raw_q1_taken": 7.921861,
+          "raw_q1_mean": 7.921856999999999,
+          "raw_a1": 0.000004,
+          "shaped_q1_taken": 7.919410999999999,
+          "shaped_q1_mean": 7.919408,
+          "shaped_a1": 0.000004,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000013,
+          "shaped_a1_increment": -0.000013,
+          "delta_a_increment": 0,
+          "legal_count": 9
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r13-g128-metrics-natural_full2400-2026101901",
+      "sha256": "e56d6bd6659892e92d6cb27b92710a94445e6252691251c1823cd55c3a7e9153",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.120458,
+          "raw_q1_mean": -0.128296,
+          "raw_a1": 0.007838,
+          "shaped_q1_taken": -0.120458,
+          "shaped_q1_mean": -0.128296,
+          "shaped_a1": 0.007838,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.10681299999999999,
+          "raw_q1_mean": -0.10667399999999999,
+          "raw_a1": -0.00014,
+          "shaped_q1_taken": -0.10681299999999999,
+          "shaped_q1_mean": -0.10667399999999999,
+          "shaped_a1": -0.00014,
+          "delta_a": 0,
+          "raw_a1_increment": -0.007977,
+          "shaped_a1_increment": -0.007977,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.234287,
+          "raw_q1_mean": -0.23416499999999998,
+          "raw_a1": -0.000122,
+          "shaped_q1_taken": -0.234287,
+          "shaped_q1_mean": -0.23416499999999998,
+          "shaped_a1": -0.000122,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000155,
+          "shaped_a1_increment": -0.000155,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 2.8831119999999997,
+          "raw_q1_mean": 2.880706,
+          "raw_a1": 0.0024059999999999997,
+          "shaped_q1_taken": 2.8826099999999997,
+          "shaped_q1_mean": 2.880204,
+          "shaped_a1": 0.0024059999999999997,
+          "delta_a": 0,
+          "raw_a1_increment": 0.053796,
+          "shaped_a1_increment": 0.053796,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": -0.000021,
+          "raw_a1": 0.000021,
+          "shaped_q1_taken": -0.206512,
+          "shaped_q1_mean": -0.206533,
+          "shaped_a1": 0.000021,
+          "delta_a": 0,
+          "raw_a1_increment": 0.000017,
+          "shaped_a1_increment": 0.000017,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 1900,
+          "raw_q1_taken": 4.564913,
+          "raw_q1_mean": 4.5130609999999995,
+          "raw_a1": 0.051851999999999995,
+          "shaped_q1_taken": 4.564219,
+          "shaped_q1_mean": 4.512324,
+          "shaped_a1": 0.051895,
+          "delta_a": 0.000044,
+          "raw_a1_increment": 0.049379,
+          "shaped_a1_increment": 0.049412,
+          "delta_a_increment": 0.000032999999999999996,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r13-g128-metrics-recovery_threat-2026101902",
+      "sha256": "7d40c9ab02855ff17ccf8bb37f5fdaad9f22e8b904c8232564cae93232ae49f8",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.19924999999999998,
+          "raw_q1_mean": -0.19924999999999998,
+          "raw_a1": -0.000001,
+          "shaped_q1_taken": -0.19924999999999998,
+          "shaped_q1_mean": -0.19924999999999998,
+          "shaped_a1": -0.000001,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.183023,
+          "raw_q1_mean": -0.180662,
+          "raw_a1": -0.002362,
+          "shaped_q1_taken": -0.17982599999999999,
+          "shaped_q1_mean": -0.17754299999999998,
+          "shaped_a1": -0.002283,
+          "delta_a": 0.000078,
+          "raw_a1_increment": -0.002361,
+          "shaped_a1_increment": -0.002283,
+          "delta_a_increment": 0.000078,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.427477,
+          "raw_q1_mean": -0.42735,
+          "raw_a1": -0.000127,
+          "shaped_q1_taken": -0.427531,
+          "shaped_q1_mean": -0.427404,
+          "shaped_a1": -0.000127,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000012,
+          "shaped_a1_increment": -0.000012,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.17174299999999998,
+          "raw_q1_mean": -0.172679,
+          "raw_a1": 0.000936,
+          "shaped_q1_taken": -0.171797,
+          "shaped_q1_mean": -0.172733,
+          "shaped_a1": 0.000936,
+          "delta_a": 0,
+          "raw_a1_increment": 0.007411,
+          "shaped_a1_increment": 0.007411,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": -0.000075,
+          "raw_a1": 0.000075,
+          "shaped_q1_taken": -0.010761,
+          "shaped_q1_mean": -0.010836,
+          "shaped_a1": 0.000075,
+          "delta_a": 0,
+          "raw_a1_increment": -0.002449,
+          "shaped_a1_increment": -0.002449,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 155,
+          "raw_q1_taken": -0.13960999999999998,
+          "raw_q1_mean": -0.146067,
+          "raw_a1": 0.006457,
+          "shaped_q1_taken": -0.13966399999999998,
+          "shaped_q1_mean": -0.146121,
+          "shaped_a1": 0.006457,
+          "delta_a": 0,
+          "raw_a1_increment": -0.002869,
+          "shaped_a1_increment": -0.002869,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r16-g128-metrics-natural_full2400-2026101900",
+      "sha256": "f811211c99ec0fb181458612ced7139bd4dd24c76106363eecb4e8d1011c70a3",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.31973999999999997,
+          "raw_q1_mean": -0.312144,
+          "raw_a1": -0.0075959999999999995,
+          "shaped_q1_taken": -0.31973999999999997,
+          "shaped_q1_mean": -0.312144,
+          "shaped_a1": -0.0075959999999999995,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.310554,
+          "raw_q1_mean": -0.314476,
+          "raw_a1": 0.003921,
+          "shaped_q1_taken": -0.310554,
+          "shaped_q1_mean": -0.314476,
+          "shaped_a1": 0.003921,
+          "delta_a": 0,
+          "raw_a1_increment": 0.011517,
+          "shaped_a1_increment": 0.011517,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.304404,
+          "raw_q1_mean": -0.30767,
+          "raw_a1": 0.003266,
+          "shaped_q1_taken": -0.304404,
+          "shaped_q1_mean": -0.30767,
+          "shaped_a1": 0.003266,
+          "delta_a": 0,
+          "raw_a1_increment": 0.013816,
+          "shaped_a1_increment": 0.013816,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": -0.7581169999999999,
+          "raw_q1_mean": -0.744153,
+          "raw_a1": -0.013963999999999999,
+          "shaped_q1_taken": -0.7581169999999999,
+          "shaped_q1_mean": -0.744153,
+          "shaped_a1": -0.013963999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.018279,
+          "shaped_a1_increment": -0.018279,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": 0,
+          "shaped_q1_mean": 0,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.026199,
+          "shaped_a1_increment": -0.026199,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r16-g128-metrics-natural_full2400-2026101901",
+      "sha256": "4e5c3e8645723e4e4319ceb6a13eb99162442bafd7bae90799eb8c93c3b05c27",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.167271,
+          "raw_q1_mean": -0.167369,
+          "raw_a1": 0.000098,
+          "shaped_q1_taken": -0.167271,
+          "shaped_q1_mean": -0.167369,
+          "shaped_a1": 0.000098,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.18980899999999998,
+          "raw_q1_mean": -0.18953299999999998,
+          "raw_a1": -0.000277,
+          "shaped_q1_taken": -0.18980899999999998,
+          "shaped_q1_mean": -0.18953299999999998,
+          "shaped_a1": -0.000277,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000375,
+          "shaped_a1_increment": -0.000375,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.326221,
+          "raw_q1_mean": -0.326169,
+          "raw_a1": -0.000053,
+          "shaped_q1_taken": -0.326221,
+          "shaped_q1_mean": -0.326169,
+          "shaped_a1": -0.000053,
+          "delta_a": 0,
+          "raw_a1_increment": -0.0047,
+          "shaped_a1_increment": -0.0047,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 1.8687859999999998,
+          "raw_q1_mean": 1.9172609999999999,
+          "raw_a1": -0.048475,
+          "shaped_q1_taken": 1.8673929999999999,
+          "shaped_q1_mean": 1.915868,
+          "shaped_a1": -0.048475,
+          "delta_a": 0,
+          "raw_a1_increment": -0.058765,
+          "shaped_a1_increment": -0.058765,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.41568,
+          "shaped_q1_mean": -0.41568,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.003238,
+          "shaped_a1_increment": 0.003238,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r16-g128-metrics-recovery_threat-2026101902",
+      "sha256": "dd4cdbebe606842fd47f75fe4760e61a3004f66c850fdeb1f0c35cee5de75e5c",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.070454,
+          "raw_q1_mean": -0.070454,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.070454,
+          "shaped_q1_mean": -0.070454,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.146266,
+          "raw_q1_mean": -0.146013,
+          "raw_a1": -0.00025299999999999997,
+          "shaped_q1_taken": -0.143069,
+          "shaped_q1_mean": -0.142821,
+          "shaped_a1": -0.000248,
+          "delta_a": 0.0000049999999999999996,
+          "raw_a1_increment": -0.00025299999999999997,
+          "shaped_a1_increment": -0.000248,
+          "delta_a_increment": 0.0000049999999999999996,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.325654,
+          "raw_q1_mean": -0.308919,
+          "raw_a1": -0.016736,
+          "shaped_q1_taken": -0.325708,
+          "shaped_q1_mean": -0.30897199999999997,
+          "shaped_a1": -0.016736,
+          "delta_a": 0,
+          "raw_a1_increment": -0.023781999999999998,
+          "shaped_a1_increment": -0.023781999999999998,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.294637,
+          "raw_q1_mean": -0.294054,
+          "raw_a1": -0.000583,
+          "shaped_q1_taken": -0.29469,
+          "shaped_q1_mean": -0.294108,
+          "shaped_a1": -0.000583,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000052,
+          "shaped_a1_increment": -0.000052,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.010761,
+          "shaped_q1_mean": -0.010761,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.000008,
+          "shaped_a1_increment": 0.000008,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 113,
+          "raw_q1_taken": -0.051004999999999995,
+          "raw_q1_mean": -0.081024,
+          "raw_a1": 0.030018999999999997,
+          "shaped_q1_taken": -0.051059,
+          "shaped_q1_mean": -0.081078,
+          "shaped_a1": 0.030018999999999997,
+          "delta_a": 0,
+          "raw_a1_increment": 0.038923,
+          "shaped_a1_increment": 0.038923,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r17-g128-metrics-natural_full2400-2026101900",
+      "sha256": "3adf5d1cdaa739e704414cd2b55b4cf66653dcea9a2e738581a2454a05ab1d17",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.820759,
+          "raw_q1_mean": -0.827934,
+          "raw_a1": 0.007175,
+          "shaped_q1_taken": -0.820759,
+          "shaped_q1_mean": -0.827934,
+          "shaped_a1": 0.007175,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.760695,
+          "raw_q1_mean": -0.765957,
+          "raw_a1": 0.005261,
+          "shaped_q1_taken": -0.760695,
+          "shaped_q1_mean": -0.765957,
+          "shaped_a1": 0.005261,
+          "delta_a": 0,
+          "raw_a1_increment": -0.001914,
+          "shaped_a1_increment": -0.001914,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.538606,
+          "raw_q1_mean": -0.540505,
+          "raw_a1": 0.001898,
+          "shaped_q1_taken": -0.538606,
+          "shaped_q1_mean": -0.540505,
+          "shaped_a1": 0.001898,
+          "delta_a": 0,
+          "raw_a1_increment": 0.016693,
+          "shaped_a1_increment": 0.016693,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 623,
+          "raw_q1_taken": -0.494083,
+          "raw_q1_mean": -0.490158,
+          "raw_a1": -0.003925,
+          "shaped_q1_taken": -0.494083,
+          "shaped_q1_mean": -0.490158,
+          "shaped_a1": -0.003925,
+          "delta_a": 0,
+          "raw_a1_increment": -0.0075899999999999995,
+          "shaped_a1_increment": -0.0075899999999999995,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1246,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.41554399999999997,
+          "shaped_q1_mean": -0.41554399999999997,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 1008,
+          "raw_q1_taken": 3.740735,
+          "raw_q1_mean": 3.5558739999999998,
+          "raw_a1": 0.184861,
+          "shaped_q1_taken": 3.7399299999999998,
+          "shaped_q1_mean": 3.5546659999999997,
+          "shaped_a1": 0.18526299999999998,
+          "delta_a": 0.00040199999999999996,
+          "raw_a1_increment": 0.293697,
+          "shaped_a1_increment": 0.291279,
+          "delta_a_increment": -0.002418,
+          "legal_count": 9
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r17-g128-metrics-natural_full2400-2026101901",
+      "sha256": "311d30d74d37584c7ebe4fdb2c23b54e5791e538d1f03a2597c90b163d8fd64f",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.698936,
+          "raw_q1_mean": -0.70021,
+          "raw_a1": 0.001274,
+          "shaped_q1_taken": -0.698936,
+          "shaped_q1_mean": -0.70021,
+          "shaped_a1": 0.001274,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.6938679999999999,
+          "raw_q1_mean": -0.693512,
+          "raw_a1": -0.000356,
+          "shaped_q1_taken": -0.6938679999999999,
+          "shaped_q1_mean": -0.693512,
+          "shaped_a1": -0.000356,
+          "delta_a": 0,
+          "raw_a1_increment": -0.00163,
+          "shaped_a1_increment": -0.00163,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.868884,
+          "raw_q1_mean": -0.8446389999999999,
+          "raw_a1": -0.024245,
+          "shaped_q1_taken": -0.868884,
+          "shaped_q1_mean": -0.8446389999999999,
+          "shaped_a1": -0.024245,
+          "delta_a": 0,
+          "raw_a1_increment": -0.036497999999999996,
+          "shaped_a1_increment": -0.036497999999999996,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0.784171,
+          "raw_q1_mean": 0.7841319999999999,
+          "raw_a1": 0.000039,
+          "shaped_q1_taken": 0.78687,
+          "shaped_q1_mean": 0.7868229999999999,
+          "shaped_a1": 0.000046,
+          "delta_a": 0.000008,
+          "raw_a1_increment": -0.00014099999999999998,
+          "shaped_a1_increment": -0.000146,
+          "delta_a_increment": -0.000004,
+          "legal_count": 15
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.5702309999999999,
+          "shaped_q1_mean": -0.5702309999999999,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.00015199999999999998,
+          "shaped_a1_increment": 0.00015199999999999998,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 1123,
+          "raw_q1_taken": 0.23571899999999998,
+          "raw_q1_mean": 0.382697,
+          "raw_a1": -0.146978,
+          "shaped_q1_taken": 0.48556499999999997,
+          "shaped_q1_mean": 0.5976699999999999,
+          "shaped_a1": -0.112105,
+          "delta_a": 0.034873,
+          "raw_a1_increment": -0.16727499999999998,
+          "shaped_a1_increment": -0.13222399999999998,
+          "delta_a_increment": 0.035051,
+          "legal_count": 15
+        },
+        {
+          "tick": 1369,
+          "raw_q1_taken": -27.85579,
+          "raw_q1_mean": -27.85579,
+          "raw_a1": 0,
+          "shaped_q1_taken": -32.10695,
+          "shaped_q1_mean": -32.10695,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1636,
+          "raw_q1_taken": 4.252994999999999,
+          "raw_q1_mean": 4.253259,
+          "raw_a1": -0.000265,
+          "shaped_q1_taken": 4.250827999999999,
+          "shaped_q1_mean": 4.251092,
+          "shaped_a1": -0.00026399999999999997,
+          "delta_a": 0.000001,
+          "raw_a1_increment": -0.00027299999999999997,
+          "shaped_a1_increment": -0.000272,
+          "delta_a_increment": 0.000001,
+          "legal_count": 15
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "id": "je10-r17-g128-metrics-recovery_threat-2026101902",
+      "sha256": "3fd263e6655862bf4e7429cbd29c4795b5384fe6b0732b1dfc21b7c14806d03a",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.20957499999999998,
+          "raw_q1_mean": -0.20957499999999998,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.20957499999999998,
+          "shaped_q1_mean": -0.20957499999999998,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.33152,
+          "raw_q1_mean": -0.33152,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.328324,
+          "shaped_q1_mean": -0.328324,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.881535,
+          "raw_q1_mean": -0.880717,
+          "raw_a1": -0.0008179999999999999,
+          "shaped_q1_taken": -0.881589,
+          "shaped_q1_mean": -0.880771,
+          "shaped_a1": -0.0008179999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": 0.0036179999999999997,
+          "shaped_a1_increment": 0.0036179999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.094401,
+          "raw_q1_mean": -0.099258,
+          "raw_a1": 0.004857,
+          "shaped_q1_taken": -0.094455,
+          "shaped_q1_mean": -0.099312,
+          "shaped_a1": 0.004857,
+          "delta_a": 0,
+          "raw_a1_increment": 0.004837,
+          "shaped_a1_increment": 0.004837,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.010761,
+          "shaped_q1_mean": -0.010761,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.00040699999999999997,
+          "shaped_a1_increment": 0.00040699999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 113,
+          "raw_q1_taken": -0.296624,
+          "raw_q1_mean": -0.40162499999999995,
+          "raw_a1": 0.105002,
+          "shaped_q1_taken": -0.29667699999999997,
+          "shaped_q1_mean": -0.401679,
+          "shaped_a1": 0.105002,
+          "delta_a": 0,
+          "raw_a1_increment": 0.143618,
+          "shaped_a1_increment": 0.143618,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": false,
+      "auth": "wrong/correct/refresh/new-tab/forget/version invalidation",
+      "annotations": "persist/export/import",
+      "console_errors": [],
+      "http_errors": [],
+      "excluded_deep_links": "honest unavailability, no fallback"
+    },
+    {
+      "mobile": true,
+      "smooth": true,
+      "frames": 280,
+      "monotonic": [
+        true,
+        true
+      ],
+      "maxFrameDisplacement": [
+        0.3947169943136478,
+        0.3947772953197795
+      ],
+      "jumps": [
+        {
+          "tick": 3,
+          "player": 0,
+          "distance": 0.36513700771080404,
+          "reason": "collision_clamp",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 0,
+          "distance": 0.2283618026290735,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 1,
+          "distance": 0.39477729531977945,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 22,
+          "player": 0,
+          "distance": 0.2574861605989728,
+          "reason": "collision_side_steering",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 30,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "threshold:spawnProtection",
+          "events": []
+        },
+        {
+          "tick": 31,
+          "player": 1,
+          "distance": 0.20904905070341867,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 35,
+          "player": 1,
+          "distance": 0.3947772953197795,
+          "reason": "collision_side_steering",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 36,
+          "player": 0,
+          "distance": 0.18069065526473702,
+          "reason": "collision_side_steering",
+          "events": []
+        },
+        {
+          "tick": 38,
+          "player": 0,
+          "distance": 0.3947169943136478,
+          "reason": "state_change:heldItem",
+          "events": []
+        },
+        {
+          "tick": 40,
+          "player": 0,
+          "distance": 0.3947169943136478,
+          "reason": "topology_change:crate",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 46,
+          "player": 0,
+          "distance": 0.32915999999999856,
+          "reason": "topology_change:crate",
+          "events": []
+        },
+        {
+          "tick": 46,
+          "player": 0,
+          "distance": 0.19070999999999882,
+          "reason": "pause_or_seek",
+          "events": []
+        }
+      ],
+      "refresh": "实际 60 FPS · 模拟 10 tick/s · α 0.000 · 目标 60 FPS"
+    },
+    {
+      "mobile": true,
+      "smooth": false,
+      "frames": 277,
+      "monotonic": [
+        false,
+        false
+      ],
+      "maxFrameDisplacement": [
+        0.3900000000000001,
+        0.39000000000000057
+      ],
+      "jumps": [
+        {
+          "tick": 1,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 1,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 2,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 2,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 3,
+          "player": 0,
+          "distance": 0.35989999999999966,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 4,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 4,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 5,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 5,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 0,
+          "distance": 0.21999999999999975,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 6,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 7,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 7,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 8,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 8,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 9,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 9,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 10,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 10,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 11,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 12,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 12,
+          "player": 1,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 13,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 13,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 14,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 14,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 15,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 15,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 16,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 16,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 17,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 17,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 18,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 18,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 19,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 19,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 20,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 20,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 21,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 21,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 22,
+          "player": 0,
+          "distance": 0.2501000000000002,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 22,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 23,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 23,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 24,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 24,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 25,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 25,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 26,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 26,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 27,
+          "player": 0,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 27,
+          "player": 1,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 28,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 29,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 30,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 31,
+          "player": 1,
+          "distance": 0.20000000000000107,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 32,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 33,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 34,
+          "player": 0,
+          "distance": 0.3899999999999997,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 34,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 35,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 35,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 36,
+          "player": 0,
+          "distance": 0.17000000000000037,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 36,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 37,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 37,
+          "player": 1,
+          "distance": 0.39000000000000057,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 38,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 39,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 40,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 41,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 42,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": [
+            "bomb"
+          ]
+        },
+        {
+          "tick": 43,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 44,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        },
+        {
+          "tick": 45,
+          "player": 0,
+          "distance": 0.3900000000000001,
+          "reason": "smoothing_disabled",
+          "events": []
+        }
+      ],
+      "refresh": "实际 60 FPS · 模拟 10 tick/s · α 0.000 · 目标 60 FPS"
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-recomputed-natural-2026101800",
+      "sha256": "ba828ae1f4405690958988c8f4e89a87936661b6dab4304d192920ce6bd503b2",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 1.799728,
+          "raw_q1_mean": 1.970734,
+          "raw_a1": -0.171006,
+          "shaped_q1_taken": 1.799728,
+          "shaped_q1_mean": 1.970734,
+          "shaped_a1": -0.171006,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 1.87185,
+          "raw_q1_mean": 1.871565,
+          "raw_a1": 0.000285,
+          "shaped_q1_taken": 1.87185,
+          "shaped_q1_mean": 1.871565,
+          "shaped_a1": 0.000285,
+          "delta_a": 0,
+          "raw_a1_increment": 0.171291,
+          "shaped_a1_increment": 0.171291,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.773038,
+          "raw_q1_mean": 1.780922,
+          "raw_a1": -0.007883,
+          "shaped_q1_taken": 1.773038,
+          "shaped_q1_mean": 1.780922,
+          "shaped_a1": -0.007883,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000236,
+          "shaped_a1_increment": -0.000236,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 886,
+          "raw_q1_taken": 1.5420099999999999,
+          "raw_q1_mean": 1.5248279999999999,
+          "raw_a1": 0.017181,
+          "shaped_q1_taken": 1.5417729999999998,
+          "shaped_q1_mean": 1.524592,
+          "shaped_a1": 0.017181,
+          "delta_a": 0,
+          "raw_a1_increment": 0.025040999999999997,
+          "shaped_a1_increment": 0.025040999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1773,
+          "raw_q1_taken": 24,
+          "raw_q1_mean": 23.984063,
+          "raw_a1": 0.015937,
+          "shaped_q1_taken": 23.647790999999998,
+          "shaped_q1_mean": 23.632096,
+          "shaped_a1": 0.015695,
+          "delta_a": -0.000242,
+          "raw_a1_increment": 0.015941999999999998,
+          "shaped_a1_increment": 0.015698999999999998,
+          "delta_a_increment": -0.000242,
+          "legal_count": 8
+        },
+        {
+          "tick": 1542,
+          "raw_q1_taken": 0.186583,
+          "raw_q1_mean": 0.212141,
+          "raw_a1": -0.025557999999999997,
+          "shaped_q1_taken": 0.18619,
+          "shaped_q1_mean": 0.211748,
+          "shaped_a1": -0.025557999999999997,
+          "delta_a": 0,
+          "raw_a1_increment": -0.019259,
+          "shaped_a1_increment": -0.019259,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-natural-2026101810",
+      "sha256": "cd3675fd764c9e5fa8c760215e811a5a16f95359d2c96319c81d950aa5ca54f6",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 2.544116,
+          "raw_q1_mean": 2.5214179999999997,
+          "raw_a1": 0.022697,
+          "shaped_q1_taken": 2.544116,
+          "shaped_q1_mean": 2.5214179999999997,
+          "shaped_a1": 0.022697,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 2.535139,
+          "raw_q1_mean": 2.535151,
+          "raw_a1": -0.000012,
+          "shaped_q1_taken": 2.535139,
+          "shaped_q1_mean": 2.535151,
+          "shaped_a1": -0.000012,
+          "delta_a": 0,
+          "raw_a1_increment": -0.022709,
+          "shaped_a1_increment": -0.022709,
+          "delta_a_increment": 0,
+          "legal_count": 3
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 0.997637,
+          "raw_q1_mean": 0.945,
+          "raw_a1": 0.052636999999999996,
+          "shaped_q1_taken": 0.997637,
+          "shaped_q1_mean": 0.945,
+          "shaped_a1": 0.052636999999999996,
+          "delta_a": 0,
+          "raw_a1_increment": 0.10578599999999999,
+          "shaped_a1_increment": 0.10578599999999999,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 746,
+          "raw_q1_taken": 3.3480909999999997,
+          "raw_q1_mean": 3.313147,
+          "raw_a1": 0.034943999999999996,
+          "shaped_q1_taken": 3.3480909999999997,
+          "shaped_q1_mean": 3.313147,
+          "shaped_a1": 0.034943999999999996,
+          "delta_a": 0,
+          "raw_a1_increment": 0.024301999999999997,
+          "shaped_a1_increment": 0.024301999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1493,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0.000357,
+          "raw_a1": -0.000357,
+          "shaped_q1_taken": -0.302967,
+          "shaped_q1_mean": -0.302604,
+          "shaped_a1": -0.000363,
+          "delta_a": -0.000006,
+          "raw_a1_increment": -0.00036199999999999996,
+          "shaped_a1_increment": -0.000368,
+          "delta_a_increment": -0.000006,
+          "legal_count": 10
+        },
+        {
+          "tick": 539,
+          "raw_q1_taken": -22.985965,
+          "raw_q1_mean": -22.985965,
+          "raw_a1": 0,
+          "shaped_q1_taken": -22.985965,
+          "shaped_q1_mean": -22.985965,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1290,
+          "raw_q1_taken": 5.423639,
+          "raw_q1_mean": 5.3765279999999995,
+          "raw_a1": 0.047112,
+          "shaped_q1_taken": 5.423171,
+          "shaped_q1_mean": 5.375986999999999,
+          "shaped_a1": 0.047185,
+          "delta_a": 0.000073,
+          "raw_a1_increment": 0.046967999999999996,
+          "shaped_a1_increment": 0.046873,
+          "delta_a_increment": -0.00009499999999999999,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-natural-2026101811",
+      "sha256": "1692fa391dd983d0dc2389c87172210261d149eb0aa0f3c88b3c35b51fe31069",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 1.5158859999999998,
+          "raw_q1_mean": 1.614369,
+          "raw_a1": -0.098482,
+          "shaped_q1_taken": 1.5158859999999998,
+          "shaped_q1_mean": 1.614369,
+          "shaped_a1": -0.098482,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 1.541497,
+          "raw_q1_mean": 1.542363,
+          "raw_a1": -0.0008659999999999999,
+          "shaped_q1_taken": 1.541497,
+          "shaped_q1_mean": 1.542363,
+          "shaped_a1": -0.0008659999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": 0.097616,
+          "shaped_a1_increment": 0.097616,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 2.048806,
+          "raw_q1_mean": 2.067952,
+          "raw_a1": -0.019146,
+          "shaped_q1_taken": 2.048806,
+          "shaped_q1_mean": 2.067952,
+          "shaped_a1": -0.019146,
+          "delta_a": 0,
+          "raw_a1_increment": -0.050185,
+          "shaped_a1_increment": -0.050185,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 1.383448,
+          "raw_q1_mean": 1.3717199999999998,
+          "raw_a1": 0.011727999999999999,
+          "shaped_q1_taken": 1.382998,
+          "shaped_q1_mean": 1.37127,
+          "shaped_a1": 0.011727999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": 0.029741,
+          "shaped_a1_increment": 0.029741,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.057588,
+          "shaped_q1_mean": -0.057588,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.00216,
+          "shaped_a1_increment": -0.0021639999999999997,
+          "delta_a_increment": -0.0000049999999999999996,
+          "legal_count": 15
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-open-2026101812",
+      "sha256": "c470e430ae850fddac29eecf9f5b5e372c26acea0bf62a0027128c52cf85e321",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 4.561898,
+          "raw_q1_mean": 4.563766,
+          "raw_a1": -0.0018679999999999999,
+          "shaped_q1_taken": 4.561898,
+          "shaped_q1_mean": 4.563766,
+          "shaped_a1": -0.0018679999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 4.822537,
+          "raw_q1_mean": 4.807352,
+          "raw_a1": 0.015184999999999999,
+          "shaped_q1_taken": 4.822537,
+          "shaped_q1_mean": 4.807352,
+          "shaped_a1": 0.015184999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": 0.017054,
+          "shaped_a1_increment": 0.017054,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.042656,
+          "raw_q1_mean": 0.987436,
+          "raw_a1": 0.05522,
+          "shaped_q1_taken": 1.042656,
+          "shaped_q1_mean": 0.987436,
+          "shaped_a1": 0.05522,
+          "delta_a": 0,
+          "raw_a1_increment": 0.10278799999999999,
+          "shaped_a1_increment": 0.10278799999999999,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": -0.5092019999999999,
+          "raw_q1_mean": -0.492909,
+          "raw_a1": -0.016293,
+          "shaped_q1_taken": -0.509605,
+          "shaped_q1_mean": -0.493311,
+          "shaped_a1": -0.016293,
+          "delta_a": 0,
+          "raw_a1_increment": -0.019835,
+          "shaped_a1_increment": -0.019835,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.080547,
+          "shaped_q1_mean": -0.080547,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.039472,
+          "shaped_a1_increment": 0.039472,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 892,
+          "raw_q1_taken": -0.508467,
+          "raw_q1_mean": -0.078153,
+          "raw_a1": -0.430315,
+          "shaped_q1_taken": -0.5088699999999999,
+          "shaped_q1_mean": -0.079196,
+          "shaped_a1": -0.429674,
+          "delta_a": 0.000641,
+          "raw_a1_increment": -0.402454,
+          "shaped_a1_increment": -0.40391499999999997,
+          "delta_a_increment": -0.0014609999999999998,
+          "legal_count": 10
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-open-2026101813",
+      "sha256": "caf0fb7f19e075ea0511518f15a0f550ff4d89198ad24b270104fe2790dd46cf",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 4.526146,
+          "raw_q1_mean": 4.524398,
+          "raw_a1": 0.001748,
+          "shaped_q1_taken": 4.526146,
+          "shaped_q1_mean": 4.524398,
+          "shaped_a1": 0.001748,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 10
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 4.769569,
+          "raw_q1_mean": 4.747739999999999,
+          "raw_a1": 0.021828999999999998,
+          "shaped_q1_taken": 4.769569,
+          "shaped_q1_mean": 4.747739999999999,
+          "shaped_a1": 0.021828999999999998,
+          "delta_a": 0,
+          "raw_a1_increment": 0.020082,
+          "shaped_a1_increment": 0.020082,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.485881,
+          "raw_q1_mean": 1.464192,
+          "raw_a1": 0.021688,
+          "shaped_q1_taken": 1.485881,
+          "shaped_q1_mean": 1.464192,
+          "shaped_a1": 0.021688,
+          "delta_a": 0,
+          "raw_a1_increment": 0.016759,
+          "shaped_a1_increment": 0.016759,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 280,
+          "raw_q1_taken": 1.071647,
+          "raw_q1_mean": 1.063984,
+          "raw_a1": 0.007663,
+          "shaped_q1_taken": 1.071647,
+          "shaped_q1_mean": 1.063984,
+          "shaped_a1": 0.007663,
+          "delta_a": 0,
+          "raw_a1_increment": 0.015318,
+          "shaped_a1_increment": 0.015318,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 560,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": 0,
+          "shaped_q1_mean": 0,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.028079,
+          "shaped_a1_increment": -0.028079,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-carry_home-2026101814",
+      "sha256": "8e4d56fca153714165467b8a72819ed8be6a67d2cde46da9138959bc89be762b",
+      "deep_link": 84,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 12.783761,
+          "raw_q1_mean": 12.783750999999999,
+          "raw_a1": 0.000011,
+          "shaped_q1_taken": 13.158285999999999,
+          "shaped_q1_mean": 13.158273999999999,
+          "shaped_a1": 0.000012,
+          "delta_a": 0.000001,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 5
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 12.693527999999999,
+          "raw_q1_mean": 12.693508999999999,
+          "raw_a1": 0.000018999999999999998,
+          "shaped_q1_taken": 12.693045,
+          "shaped_q1_mean": 12.693024999999999,
+          "shaped_a1": 0.000019999999999999998,
+          "delta_a": 0.000001,
+          "raw_a1_increment": 0.000008,
+          "shaped_a1_increment": 0.000008,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 85,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 1.3113569999999999,
+          "raw_a1": -1.3113569999999999,
+          "shaped_q1_taken": -0.43484399999999995,
+          "shaped_q1_mean": 0.906551,
+          "shaped_a1": -1.341395,
+          "delta_a": -0.030038,
+          "raw_a1_increment": -1.310683,
+          "shaped_a1_increment": -1.34072,
+          "delta_a_increment": -0.030038,
+          "legal_count": 5
+        },
+        {
+          "tick": 42,
+          "raw_q1_taken": 15.119057,
+          "raw_q1_mean": 15.131174999999999,
+          "raw_a1": -0.012118,
+          "shaped_q1_taken": 15.116883,
+          "shaped_q1_mean": 15.129000999999999,
+          "shaped_a1": -0.012118,
+          "delta_a": 0,
+          "raw_a1_increment": -0.07999099999999999,
+          "shaped_a1_increment": -0.08033499999999999,
+          "delta_a_increment": -0.00034399999999999996,
+          "legal_count": 5
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-g8-metrics-carry_home-2026101815",
+      "sha256": "8230e966d82671555323a039087968c0df2852c0fc6b10505f6d6753f6d156ff",
+      "deep_link": 90,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 12.942822,
+          "raw_q1_mean": 12.942832,
+          "raw_a1": -0.000009999999999999999,
+          "shaped_q1_taken": 13.309572999999999,
+          "shaped_q1_mean": 13.309583,
+          "shaped_a1": -0.000009999999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 5
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 12.725109,
+          "raw_q1_mean": 12.725117,
+          "raw_a1": -0.000008,
+          "shaped_q1_taken": 12.724665,
+          "shaped_q1_mean": 12.724673,
+          "shaped_a1": -0.000008,
+          "delta_a": 0,
+          "raw_a1_increment": 0.000002,
+          "shaped_a1_increment": 0.000002,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 91,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0.051682,
+          "raw_a1": -0.051682,
+          "shaped_q1_taken": -0.455312,
+          "shaped_q1_mean": -0.402346,
+          "shaped_a1": -0.052967,
+          "delta_a": -0.001285,
+          "raw_a1_increment": -0.051795,
+          "shaped_a1_increment": -0.053079999999999995,
+          "delta_a_increment": -0.001285,
+          "legal_count": 5
+        },
+        {
+          "tick": 45,
+          "raw_q1_taken": 15.860351999999999,
+          "raw_q1_mean": 15.86036,
+          "raw_a1": -0.000009,
+          "shaped_q1_taken": 15.859601,
+          "shaped_q1_mean": 15.85961,
+          "shaped_a1": -0.000009,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000007,
+          "shaped_a1_increment": -0.000007,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r01-g8-metrics-natural_full2400-2026101900",
+      "sha256": "f5ddf493551c06d74d530b0d4c0f12c29fa28f513df9b2300225ab03a784ded2",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 1.799728,
+          "raw_q1_mean": 1.970734,
+          "raw_a1": -0.171006,
+          "shaped_q1_taken": 1.799728,
+          "shaped_q1_mean": 1.970734,
+          "shaped_a1": -0.171006,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 1.87185,
+          "raw_q1_mean": 1.871565,
+          "raw_a1": 0.000285,
+          "shaped_q1_taken": 1.87185,
+          "shaped_q1_mean": 1.871565,
+          "shaped_a1": 0.000285,
+          "delta_a": 0,
+          "raw_a1_increment": 0.171291,
+          "shaped_a1_increment": 0.171291,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.1155979999999999,
+          "raw_q1_mean": 1.185525,
+          "raw_a1": -0.069927,
+          "shaped_q1_taken": 1.1155979999999999,
+          "shaped_q1_mean": 1.185525,
+          "shaped_a1": -0.069927,
+          "delta_a": 0,
+          "raw_a1_increment": -0.08205599999999999,
+          "shaped_a1_increment": -0.08205599999999999,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 601,
+          "raw_q1_taken": 2.036142,
+          "raw_q1_mean": 1.961689,
+          "raw_a1": 0.07445299999999999,
+          "shaped_q1_taken": 2.0404809999999998,
+          "shaped_q1_mean": 1.961693,
+          "shaped_a1": 0.078787,
+          "delta_a": 0.004334,
+          "raw_a1_increment": 0.05798,
+          "shaped_a1_increment": 0.066579,
+          "delta_a_increment": 0.008598,
+          "legal_count": 12
+        },
+        {
+          "tick": 1202,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.08112699999999999,
+          "shaped_q1_mean": -0.08112699999999999,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.019592,
+          "shaped_a1_increment": -0.019592,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 908,
+          "raw_q1_taken": -12.690836,
+          "raw_q1_mean": -12.690836,
+          "raw_a1": 0,
+          "shaped_q1_taken": -16.941243,
+          "shaped_q1_mean": -16.941243,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r01-g8-metrics-natural_full2400-2026101901",
+      "sha256": "e0d55567a6497c2a9cec59d547a0475bf4e40946f8ffd91b6d54868994b819d6",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 2.067066,
+          "raw_q1_mean": 2.0738749999999997,
+          "raw_a1": -0.006808,
+          "shaped_q1_taken": 2.067066,
+          "shaped_q1_mean": 2.0738749999999997,
+          "shaped_a1": -0.006808,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 1.972899,
+          "raw_q1_mean": 1.97492,
+          "raw_a1": -0.002021,
+          "shaped_q1_taken": 1.972899,
+          "shaped_q1_mean": 1.97492,
+          "shaped_a1": -0.002021,
+          "delta_a": 0,
+          "raw_a1_increment": 0.004788,
+          "shaped_a1_increment": 0.004788,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 1.3975339999999998,
+          "raw_q1_mean": 1.430421,
+          "raw_a1": -0.032887,
+          "shaped_q1_taken": 1.3975339999999998,
+          "shaped_q1_mean": 1.430421,
+          "shaped_a1": -0.032887,
+          "delta_a": 0,
+          "raw_a1_increment": -0.030771999999999997,
+          "shaped_a1_increment": -0.030771999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 1.336731,
+          "raw_q1_mean": 1.337548,
+          "raw_a1": -0.0008169999999999999,
+          "shaped_q1_taken": 1.336731,
+          "shaped_q1_mean": 1.337548,
+          "shaped_a1": -0.0008169999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.006598,
+          "shaped_a1_increment": -0.006598,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": 0,
+          "shaped_q1_mean": 0,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.014745,
+          "shaped_a1_increment": -0.014745,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r01-g8-metrics-recovery_threat-2026101902",
+      "sha256": "1b17f12cb73279c2c847240ccdeb06435deca5c7648eef75028159079b326688",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 0.424969,
+          "raw_q1_mean": 0.482759,
+          "raw_a1": -0.057789999999999994,
+          "shaped_q1_taken": 0.42800099999999996,
+          "shaped_q1_mean": 0.48537199999999997,
+          "shaped_a1": -0.057371,
+          "delta_a": 0.000419,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 0.149254,
+          "raw_q1_mean": 0.151222,
+          "raw_a1": -0.0019679999999999997,
+          "shaped_q1_taken": 0.152271,
+          "shaped_q1_mean": 0.154215,
+          "shaped_a1": -0.001944,
+          "delta_a": 0.000024,
+          "raw_a1_increment": 0.055822,
+          "shaped_a1_increment": 0.055427,
+          "delta_a_increment": -0.000395,
+          "legal_count": 3
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.603703,
+          "raw_q1_mean": -0.576851,
+          "raw_a1": -0.026851999999999997,
+          "shaped_q1_taken": -0.603757,
+          "shaped_q1_mean": -0.576905,
+          "shaped_a1": -0.026851999999999997,
+          "delta_a": 0,
+          "raw_a1_increment": -0.013652,
+          "shaped_a1_increment": -0.013652,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.8093929999999999,
+          "raw_q1_mean": -0.750321,
+          "raw_a1": -0.059073,
+          "shaped_q1_taken": -0.809448,
+          "shaped_q1_mean": -0.750375,
+          "shaped_a1": -0.059073,
+          "delta_a": 0,
+          "raw_a1_increment": -0.067079,
+          "shaped_a1_increment": -0.067079,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": -0.0625,
+          "raw_q1_mean": -0.028897,
+          "raw_a1": -0.033603,
+          "shaped_q1_taken": -0.073359,
+          "shaped_q1_mean": -0.039756,
+          "shaped_a1": -0.033603,
+          "delta_a": 0,
+          "raw_a1_increment": -0.383437,
+          "shaped_a1_increment": -0.383437,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 5,
+          "raw_q1_taken": 1.067273,
+          "raw_q1_mean": 0.494233,
+          "raw_a1": 0.573041,
+          "shaped_q1_taken": 1.067219,
+          "shaped_q1_mean": 0.492683,
+          "shaped_a1": 0.5745359999999999,
+          "delta_a": 0.001495,
+          "raw_a1_increment": 0.648998,
+          "shaped_a1_increment": 0.6480319999999999,
+          "delta_a_increment": -0.000966,
+          "legal_count": 8
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r01-g128-metrics-natural_full2400-2026101900",
+      "sha256": "90c3d998731dc4416140b98036ffe30f2436ead089745d63b78e1a9b5cb38ce7",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 0.047230999999999995,
+          "raw_q1_mean": 0.00157,
+          "raw_a1": 0.045661,
+          "shaped_q1_taken": 0.047230999999999995,
+          "shaped_q1_mean": 0.00157,
+          "shaped_a1": 0.045661,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.073526,
+          "raw_q1_mean": -0.076108,
+          "raw_a1": 0.002582,
+          "shaped_q1_taken": -0.073526,
+          "shaped_q1_mean": -0.076108,
+          "shaped_a1": 0.002582,
+          "delta_a": 0,
+          "raw_a1_increment": -0.043079,
+          "shaped_a1_increment": -0.043079,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 0.005195,
+          "raw_q1_mean": 0.002804,
+          "raw_a1": 0.002392,
+          "shaped_q1_taken": 0.005195,
+          "shaped_q1_mean": 0.002804,
+          "shaped_a1": 0.002392,
+          "delta_a": 0,
+          "raw_a1_increment": -0.004162,
+          "shaped_a1_increment": -0.004162,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 723,
+          "raw_q1_taken": 0.280066,
+          "raw_q1_mean": 0.294402,
+          "raw_a1": -0.014334999999999999,
+          "shaped_q1_taken": 0.280066,
+          "shaped_q1_mean": 0.294402,
+          "shaped_a1": -0.014334999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.06206,
+          "shaped_a1_increment": -0.06206,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1446,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.421411,
+          "shaped_q1_mean": -0.421411,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 1253,
+          "raw_q1_taken": 4.629954,
+          "raw_q1_mean": 4.628482,
+          "raw_a1": 0.001473,
+          "shaped_q1_taken": 4.628976,
+          "shaped_q1_mean": 4.627503,
+          "shaped_a1": 0.001473,
+          "delta_a": 0,
+          "raw_a1_increment": 0.00114,
+          "shaped_a1_increment": 0.001084,
+          "delta_a_increment": -0.000056999999999999996,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r01-g128-metrics-natural_full2400-2026101901",
+      "sha256": "b29f399f5502f13d7e29eedb8715fbaa89461f1ba47ae214d09bc58f240e1227",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 0.075504,
+          "raw_q1_mean": 0.063538,
+          "raw_a1": 0.011966,
+          "shaped_q1_taken": 0.075504,
+          "shaped_q1_mean": 0.063538,
+          "shaped_a1": 0.011966,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 0.081939,
+          "raw_q1_mean": 0.074298,
+          "raw_a1": 0.007640999999999999,
+          "shaped_q1_taken": 0.081939,
+          "shaped_q1_mean": 0.074298,
+          "shaped_a1": 0.007640999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.004325,
+          "shaped_a1_increment": -0.004325,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": 0.680829,
+          "raw_q1_mean": 0.68284,
+          "raw_a1": -0.0020109999999999998,
+          "shaped_q1_taken": 0.680829,
+          "shaped_q1_mean": 0.68284,
+          "shaped_a1": -0.0020109999999999998,
+          "delta_a": 0,
+          "raw_a1_increment": -0.001369,
+          "shaped_a1_increment": -0.001369,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 873,
+          "raw_q1_taken": 1.275178,
+          "raw_q1_mean": 1.268811,
+          "raw_a1": 0.006366,
+          "shaped_q1_taken": 1.2706119999999999,
+          "shaped_q1_mean": 1.26531,
+          "shaped_a1": 0.005301999999999999,
+          "delta_a": -0.001064,
+          "raw_a1_increment": 0.064068,
+          "shaped_a1_increment": 0.058605,
+          "delta_a_increment": -0.005463,
+          "legal_count": 9
+        },
+        {
+          "tick": 1746,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.149031,
+          "shaped_q1_mean": -0.149031,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.0019979999999999998,
+          "shaped_a1_increment": 0.0019979999999999998,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1477,
+          "raw_q1_taken": -17.235228,
+          "raw_q1_mean": -17.235228,
+          "raw_a1": 0,
+          "shaped_q1_taken": -25.235974,
+          "shaped_q1_mean": -25.235974,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r01-g128-metrics-recovery_threat-2026101902",
+      "sha256": "a9c233c44968456a017e97d11d0f85947201edb4853c8c76200cd37e662c0799",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": 0.419931,
+          "raw_q1_mean": 0.42442799999999997,
+          "raw_a1": -0.004496,
+          "shaped_q1_taken": 0.422963,
+          "shaped_q1_mean": 0.42728,
+          "shaped_a1": -0.004317,
+          "delta_a": 0.00017999999999999998,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": 0.450216,
+          "raw_q1_mean": 0.450092,
+          "raw_a1": 0.000124,
+          "shaped_q1_taken": 0.45323199999999997,
+          "shaped_q1_mean": 0.45309699999999997,
+          "shaped_a1": 0.000135,
+          "delta_a": 0.000011,
+          "raw_a1_increment": 0.004621,
+          "shaped_a1_increment": 0.004452,
+          "delta_a_increment": -0.000169,
+          "legal_count": 3
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.241422,
+          "raw_q1_mean": -0.23322199999999998,
+          "raw_a1": -0.008199999999999999,
+          "shaped_q1_taken": -0.241476,
+          "shaped_q1_mean": -0.23327599999999998,
+          "shaped_a1": -0.008199999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.021535,
+          "shaped_a1_increment": -0.021535,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.47631399999999996,
+          "raw_q1_mean": -0.503918,
+          "raw_a1": 0.027604999999999998,
+          "shaped_q1_taken": -0.47636799999999996,
+          "shaped_q1_mean": -0.503973,
+          "shaped_a1": 0.027604999999999998,
+          "delta_a": 0,
+          "raw_a1_increment": 0.047133999999999995,
+          "shaped_a1_increment": 0.047133999999999995,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": -0.000024999999999999998,
+          "raw_a1": 0.000024999999999999998,
+          "shaped_q1_taken": -0.010858999999999999,
+          "shaped_q1_mean": -0.010884999999999999,
+          "shaped_a1": 0.000024999999999999998,
+          "delta_a": 0,
+          "raw_a1_increment": 0.002858,
+          "shaped_a1_increment": 0.002858,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 5,
+          "raw_q1_taken": 1.200227,
+          "raw_q1_mean": 0.9691289999999999,
+          "raw_a1": 0.231098,
+          "shaped_q1_taken": 1.200173,
+          "shaped_q1_mean": 0.9681989999999999,
+          "shaped_a1": 0.23197399999999999,
+          "delta_a": 0.0008759999999999999,
+          "raw_a1_increment": 0.218249,
+          "shaped_a1_increment": 0.217948,
+          "delta_a_increment": -0.00030199999999999997,
+          "legal_count": 8
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r13-g128-metrics-natural_full2400-2026101900",
+      "sha256": "ab579dc28d42c05db195a3973a72e12e78084fe84babf766c856cf11814be845",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.17203,
+          "raw_q1_mean": -0.17183099999999998,
+          "raw_a1": -0.00019899999999999999,
+          "shaped_q1_taken": -0.17203,
+          "shaped_q1_mean": -0.17183099999999998,
+          "shaped_a1": -0.00019899999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.160222,
+          "raw_q1_mean": -0.152809,
+          "raw_a1": -0.0074129999999999995,
+          "shaped_q1_taken": -0.160222,
+          "shaped_q1_mean": -0.152809,
+          "shaped_a1": -0.0074129999999999995,
+          "delta_a": 0,
+          "raw_a1_increment": -0.007215,
+          "shaped_a1_increment": -0.007215,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.30736399999999997,
+          "raw_q1_mean": -0.307838,
+          "raw_a1": 0.000474,
+          "shaped_q1_taken": -0.30736399999999997,
+          "shaped_q1_mean": -0.307838,
+          "shaped_a1": 0.000474,
+          "delta_a": 0,
+          "raw_a1_increment": -0.006081,
+          "shaped_a1_increment": -0.006081,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 697,
+          "raw_q1_taken": 1.6762299999999999,
+          "raw_q1_mean": 1.685694,
+          "raw_a1": -0.009464,
+          "shaped_q1_taken": 1.6751429999999998,
+          "shaped_q1_mean": 1.684607,
+          "shaped_a1": -0.009464,
+          "delta_a": 0,
+          "raw_a1_increment": 0.009809,
+          "shaped_a1_increment": 0.009809,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 1394,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.642153,
+          "shaped_q1_mean": -0.642152,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 783,
+          "raw_q1_taken": -24.860651999999998,
+          "raw_q1_mean": -24.860651999999998,
+          "raw_a1": 0,
+          "shaped_q1_taken": -28.861855,
+          "shaped_q1_mean": -28.861855,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 1097,
+          "raw_q1_taken": 7.921861,
+          "raw_q1_mean": 7.921856999999999,
+          "raw_a1": 0.000004,
+          "shaped_q1_taken": 7.919410999999999,
+          "shaped_q1_mean": 7.919408,
+          "shaped_a1": 0.000004,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000013,
+          "shaped_a1_increment": -0.000013,
+          "delta_a_increment": 0,
+          "legal_count": 9
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r13-g128-metrics-natural_full2400-2026101901",
+      "sha256": "e56d6bd6659892e92d6cb27b92710a94445e6252691251c1823cd55c3a7e9153",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.120458,
+          "raw_q1_mean": -0.128296,
+          "raw_a1": 0.007838,
+          "shaped_q1_taken": -0.120458,
+          "shaped_q1_mean": -0.128296,
+          "shaped_a1": 0.007838,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.10681299999999999,
+          "raw_q1_mean": -0.10667399999999999,
+          "raw_a1": -0.00014,
+          "shaped_q1_taken": -0.10681299999999999,
+          "shaped_q1_mean": -0.10667399999999999,
+          "shaped_a1": -0.00014,
+          "delta_a": 0,
+          "raw_a1_increment": -0.007977,
+          "shaped_a1_increment": -0.007977,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.234287,
+          "raw_q1_mean": -0.23416499999999998,
+          "raw_a1": -0.000122,
+          "shaped_q1_taken": -0.234287,
+          "shaped_q1_mean": -0.23416499999999998,
+          "shaped_a1": -0.000122,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000155,
+          "shaped_a1_increment": -0.000155,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 2.8831119999999997,
+          "raw_q1_mean": 2.880706,
+          "raw_a1": 0.0024059999999999997,
+          "shaped_q1_taken": 2.8826099999999997,
+          "shaped_q1_mean": 2.880204,
+          "shaped_a1": 0.0024059999999999997,
+          "delta_a": 0,
+          "raw_a1_increment": 0.053796,
+          "shaped_a1_increment": 0.053796,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": -0.000021,
+          "raw_a1": 0.000021,
+          "shaped_q1_taken": -0.206512,
+          "shaped_q1_mean": -0.206533,
+          "shaped_a1": 0.000021,
+          "delta_a": 0,
+          "raw_a1_increment": 0.000017,
+          "shaped_a1_increment": 0.000017,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 1900,
+          "raw_q1_taken": 4.564913,
+          "raw_q1_mean": 4.5130609999999995,
+          "raw_a1": 0.051851999999999995,
+          "shaped_q1_taken": 4.564219,
+          "shaped_q1_mean": 4.512324,
+          "shaped_a1": 0.051895,
+          "delta_a": 0.000044,
+          "raw_a1_increment": 0.049379,
+          "shaped_a1_increment": 0.049412,
+          "delta_a_increment": 0.000032999999999999996,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r13-g128-metrics-recovery_threat-2026101902",
+      "sha256": "7d40c9ab02855ff17ccf8bb37f5fdaad9f22e8b904c8232564cae93232ae49f8",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.19924999999999998,
+          "raw_q1_mean": -0.19924999999999998,
+          "raw_a1": -0.000001,
+          "shaped_q1_taken": -0.19924999999999998,
+          "shaped_q1_mean": -0.19924999999999998,
+          "shaped_a1": -0.000001,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.183023,
+          "raw_q1_mean": -0.180662,
+          "raw_a1": -0.002362,
+          "shaped_q1_taken": -0.17982599999999999,
+          "shaped_q1_mean": -0.17754299999999998,
+          "shaped_a1": -0.002283,
+          "delta_a": 0.000078,
+          "raw_a1_increment": -0.002361,
+          "shaped_a1_increment": -0.002283,
+          "delta_a_increment": 0.000078,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.427477,
+          "raw_q1_mean": -0.42735,
+          "raw_a1": -0.000127,
+          "shaped_q1_taken": -0.427531,
+          "shaped_q1_mean": -0.427404,
+          "shaped_a1": -0.000127,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000012,
+          "shaped_a1_increment": -0.000012,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.17174299999999998,
+          "raw_q1_mean": -0.172679,
+          "raw_a1": 0.000936,
+          "shaped_q1_taken": -0.171797,
+          "shaped_q1_mean": -0.172733,
+          "shaped_a1": 0.000936,
+          "delta_a": 0,
+          "raw_a1_increment": 0.007411,
+          "shaped_a1_increment": 0.007411,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": -0.000075,
+          "raw_a1": 0.000075,
+          "shaped_q1_taken": -0.010761,
+          "shaped_q1_mean": -0.010836,
+          "shaped_a1": 0.000075,
+          "delta_a": 0,
+          "raw_a1_increment": -0.002449,
+          "shaped_a1_increment": -0.002449,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 155,
+          "raw_q1_taken": -0.13960999999999998,
+          "raw_q1_mean": -0.146067,
+          "raw_a1": 0.006457,
+          "shaped_q1_taken": -0.13966399999999998,
+          "shaped_q1_mean": -0.146121,
+          "shaped_a1": 0.006457,
+          "delta_a": 0,
+          "raw_a1_increment": -0.002869,
+          "shaped_a1_increment": -0.002869,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r16-g128-metrics-natural_full2400-2026101900",
+      "sha256": "f811211c99ec0fb181458612ced7139bd4dd24c76106363eecb4e8d1011c70a3",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.31973999999999997,
+          "raw_q1_mean": -0.312144,
+          "raw_a1": -0.0075959999999999995,
+          "shaped_q1_taken": -0.31973999999999997,
+          "shaped_q1_mean": -0.312144,
+          "shaped_a1": -0.0075959999999999995,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.310554,
+          "raw_q1_mean": -0.314476,
+          "raw_a1": 0.003921,
+          "shaped_q1_taken": -0.310554,
+          "shaped_q1_mean": -0.314476,
+          "shaped_a1": 0.003921,
+          "delta_a": 0,
+          "raw_a1_increment": 0.011517,
+          "shaped_a1_increment": 0.011517,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.304404,
+          "raw_q1_mean": -0.30767,
+          "raw_a1": 0.003266,
+          "shaped_q1_taken": -0.304404,
+          "shaped_q1_mean": -0.30767,
+          "shaped_a1": 0.003266,
+          "delta_a": 0,
+          "raw_a1_increment": 0.013816,
+          "shaped_a1_increment": 0.013816,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": -0.7581169999999999,
+          "raw_q1_mean": -0.744153,
+          "raw_a1": -0.013963999999999999,
+          "shaped_q1_taken": -0.7581169999999999,
+          "shaped_q1_mean": -0.744153,
+          "shaped_a1": -0.013963999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": -0.018279,
+          "shaped_a1_increment": -0.018279,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": 0,
+          "shaped_q1_mean": 0,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": -0.026199,
+          "shaped_a1_increment": -0.026199,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r16-g128-metrics-natural_full2400-2026101901",
+      "sha256": "4e5c3e8645723e4e4319ceb6a13eb99162442bafd7bae90799eb8c93c3b05c27",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.167271,
+          "raw_q1_mean": -0.167369,
+          "raw_a1": 0.000098,
+          "shaped_q1_taken": -0.167271,
+          "shaped_q1_mean": -0.167369,
+          "shaped_a1": 0.000098,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.18980899999999998,
+          "raw_q1_mean": -0.18953299999999998,
+          "raw_a1": -0.000277,
+          "shaped_q1_taken": -0.18980899999999998,
+          "shaped_q1_mean": -0.18953299999999998,
+          "shaped_a1": -0.000277,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000375,
+          "shaped_a1_increment": -0.000375,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.326221,
+          "raw_q1_mean": -0.326169,
+          "raw_a1": -0.000053,
+          "shaped_q1_taken": -0.326221,
+          "shaped_q1_mean": -0.326169,
+          "shaped_a1": -0.000053,
+          "delta_a": 0,
+          "raw_a1_increment": -0.0047,
+          "shaped_a1_increment": -0.0047,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 1.8687859999999998,
+          "raw_q1_mean": 1.9172609999999999,
+          "raw_a1": -0.048475,
+          "shaped_q1_taken": 1.8673929999999999,
+          "shaped_q1_mean": 1.915868,
+          "shaped_a1": -0.048475,
+          "delta_a": 0,
+          "raw_a1_increment": -0.058765,
+          "shaped_a1_increment": -0.058765,
+          "delta_a_increment": 0,
+          "legal_count": 15
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.41568,
+          "shaped_q1_mean": -0.41568,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.003238,
+          "shaped_a1_increment": 0.003238,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r16-g128-metrics-recovery_threat-2026101902",
+      "sha256": "dd4cdbebe606842fd47f75fe4760e61a3004f66c850fdeb1f0c35cee5de75e5c",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.070454,
+          "raw_q1_mean": -0.070454,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.070454,
+          "shaped_q1_mean": -0.070454,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.146266,
+          "raw_q1_mean": -0.146013,
+          "raw_a1": -0.00025299999999999997,
+          "shaped_q1_taken": -0.143069,
+          "shaped_q1_mean": -0.142821,
+          "shaped_a1": -0.000248,
+          "delta_a": 0.0000049999999999999996,
+          "raw_a1_increment": -0.00025299999999999997,
+          "shaped_a1_increment": -0.000248,
+          "delta_a_increment": 0.0000049999999999999996,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.325654,
+          "raw_q1_mean": -0.308919,
+          "raw_a1": -0.016736,
+          "shaped_q1_taken": -0.325708,
+          "shaped_q1_mean": -0.30897199999999997,
+          "shaped_a1": -0.016736,
+          "delta_a": 0,
+          "raw_a1_increment": -0.023781999999999998,
+          "shaped_a1_increment": -0.023781999999999998,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.294637,
+          "raw_q1_mean": -0.294054,
+          "raw_a1": -0.000583,
+          "shaped_q1_taken": -0.29469,
+          "shaped_q1_mean": -0.294108,
+          "shaped_a1": -0.000583,
+          "delta_a": 0,
+          "raw_a1_increment": -0.000052,
+          "shaped_a1_increment": -0.000052,
+          "delta_a_increment": 0,
+          "legal_count": 5
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.010761,
+          "shaped_q1_mean": -0.010761,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.000008,
+          "shaped_a1_increment": 0.000008,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 113,
+          "raw_q1_taken": -0.051004999999999995,
+          "raw_q1_mean": -0.081024,
+          "raw_a1": 0.030018999999999997,
+          "shaped_q1_taken": -0.051059,
+          "shaped_q1_mean": -0.081078,
+          "shaped_a1": 0.030018999999999997,
+          "delta_a": 0,
+          "raw_a1_increment": 0.038923,
+          "shaped_a1_increment": 0.038923,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r17-g128-metrics-natural_full2400-2026101900",
+      "sha256": "3adf5d1cdaa739e704414cd2b55b4cf66653dcea9a2e738581a2454a05ab1d17",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.820759,
+          "raw_q1_mean": -0.827934,
+          "raw_a1": 0.007175,
+          "shaped_q1_taken": -0.820759,
+          "shaped_q1_mean": -0.827934,
+          "shaped_a1": 0.007175,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 8
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.760695,
+          "raw_q1_mean": -0.765957,
+          "raw_a1": 0.005261,
+          "shaped_q1_taken": -0.760695,
+          "shaped_q1_mean": -0.765957,
+          "shaped_a1": 0.005261,
+          "delta_a": 0,
+          "raw_a1_increment": -0.001914,
+          "shaped_a1_increment": -0.001914,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.538606,
+          "raw_q1_mean": -0.540505,
+          "raw_a1": 0.001898,
+          "shaped_q1_taken": -0.538606,
+          "shaped_q1_mean": -0.540505,
+          "shaped_a1": 0.001898,
+          "delta_a": 0,
+          "raw_a1_increment": 0.016693,
+          "shaped_a1_increment": 0.016693,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 623,
+          "raw_q1_taken": -0.494083,
+          "raw_q1_mean": -0.490158,
+          "raw_a1": -0.003925,
+          "shaped_q1_taken": -0.494083,
+          "shaped_q1_mean": -0.490158,
+          "shaped_a1": -0.003925,
+          "delta_a": 0,
+          "raw_a1_increment": -0.0075899999999999995,
+          "shaped_a1_increment": -0.0075899999999999995,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1246,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.41554399999999997,
+          "shaped_q1_mean": -0.41554399999999997,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        },
+        {
+          "tick": 1008,
+          "raw_q1_taken": 3.740735,
+          "raw_q1_mean": 3.5558739999999998,
+          "raw_a1": 0.184861,
+          "shaped_q1_taken": 3.7399299999999998,
+          "shaped_q1_mean": 3.5546659999999997,
+          "shaped_a1": 0.18526299999999998,
+          "delta_a": 0.00040199999999999996,
+          "raw_a1_increment": 0.293697,
+          "shaped_a1_increment": 0.291279,
+          "delta_a_increment": -0.002418,
+          "legal_count": 9
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r17-g128-metrics-natural_full2400-2026101901",
+      "sha256": "311d30d74d37584c7ebe4fdb2c23b54e5791e538d1f03a2597c90b163d8fd64f",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.698936,
+          "raw_q1_mean": -0.70021,
+          "raw_a1": 0.001274,
+          "shaped_q1_taken": -0.698936,
+          "shaped_q1_mean": -0.70021,
+          "shaped_a1": 0.001274,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 6
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.6938679999999999,
+          "raw_q1_mean": -0.693512,
+          "raw_a1": -0.000356,
+          "shaped_q1_taken": -0.6938679999999999,
+          "shaped_q1_mean": -0.693512,
+          "shaped_a1": -0.000356,
+          "delta_a": 0,
+          "raw_a1_increment": -0.00163,
+          "shaped_a1_increment": -0.00163,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.868884,
+          "raw_q1_mean": -0.8446389999999999,
+          "raw_a1": -0.024245,
+          "shaped_q1_taken": -0.868884,
+          "shaped_q1_mean": -0.8446389999999999,
+          "shaped_a1": -0.024245,
+          "delta_a": 0,
+          "raw_a1_increment": -0.036497999999999996,
+          "shaped_a1_increment": -0.036497999999999996,
+          "delta_a_increment": 0,
+          "legal_count": 8
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0.784171,
+          "raw_q1_mean": 0.7841319999999999,
+          "raw_a1": 0.000039,
+          "shaped_q1_taken": 0.78687,
+          "shaped_q1_mean": 0.7868229999999999,
+          "shaped_a1": 0.000046,
+          "delta_a": 0.000008,
+          "raw_a1_increment": -0.00014099999999999998,
+          "shaped_a1_increment": -0.000146,
+          "delta_a_increment": -0.000004,
+          "legal_count": 15
+        },
+        {
+          "tick": 2400,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.5702309999999999,
+          "shaped_q1_mean": -0.5702309999999999,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.00015199999999999998,
+          "shaped_a1_increment": 0.00015199999999999998,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 1123,
+          "raw_q1_taken": 0.23571899999999998,
+          "raw_q1_mean": 0.382697,
+          "raw_a1": -0.146978,
+          "shaped_q1_taken": 0.48556499999999997,
+          "shaped_q1_mean": 0.5976699999999999,
+          "shaped_a1": -0.112105,
+          "delta_a": 0.034873,
+          "raw_a1_increment": -0.16727499999999998,
+          "shaped_a1_increment": -0.13222399999999998,
+          "delta_a_increment": 0.035051,
+          "legal_count": 15
+        },
+        {
+          "tick": 1369,
+          "raw_q1_taken": -27.85579,
+          "raw_q1_mean": -27.85579,
+          "raw_a1": 0,
+          "shaped_q1_taken": -32.10695,
+          "shaped_q1_mean": -32.10695,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 12
+        },
+        {
+          "tick": 1636,
+          "raw_q1_taken": 4.252994999999999,
+          "raw_q1_mean": 4.253259,
+          "raw_a1": -0.000265,
+          "shaped_q1_taken": 4.250827999999999,
+          "shaped_q1_mean": 4.251092,
+          "shaped_a1": -0.00026399999999999997,
+          "delta_a": 0.000001,
+          "raw_a1_increment": -0.00027299999999999997,
+          "shaped_a1_increment": -0.000272,
+          "delta_a_increment": 0.000001,
+          "legal_count": 15
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "id": "je10-r17-g128-metrics-recovery_threat-2026101902",
+      "sha256": "3fd263e6655862bf4e7429cbd29c4795b5384fe6b0732b1dfc21b7c14806d03a",
+      "deep_link": 176,
+      "metrics": "integer/deep-link/terminal and first causal-event ticks equal quantized source",
+      "samples": [
+        {
+          "tick": 1,
+          "raw_q1_taken": -0.20957499999999998,
+          "raw_q1_mean": -0.20957499999999998,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.20957499999999998,
+          "shaped_q1_mean": -0.20957499999999998,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": null,
+          "shaped_a1_increment": null,
+          "delta_a_increment": null,
+          "legal_count": 4
+        },
+        {
+          "tick": 2,
+          "raw_q1_taken": -0.33152,
+          "raw_q1_mean": -0.33152,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.328324,
+          "shaped_q1_mean": -0.328324,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0,
+          "shaped_a1_increment": 0,
+          "delta_a_increment": 0,
+          "legal_count": 6
+        },
+        {
+          "tick": 177,
+          "raw_q1_taken": -0.881535,
+          "raw_q1_mean": -0.880717,
+          "raw_a1": -0.0008179999999999999,
+          "shaped_q1_taken": -0.881589,
+          "shaped_q1_mean": -0.880771,
+          "shaped_a1": -0.0008179999999999999,
+          "delta_a": 0,
+          "raw_a1_increment": 0.0036179999999999997,
+          "shaped_a1_increment": 0.0036179999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 600,
+          "raw_q1_taken": -0.094401,
+          "raw_q1_mean": -0.099258,
+          "raw_a1": 0.004857,
+          "shaped_q1_taken": -0.094455,
+          "shaped_q1_mean": -0.099312,
+          "shaped_a1": 0.004857,
+          "delta_a": 0,
+          "raw_a1_increment": 0.004837,
+          "shaped_a1_increment": 0.004837,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 1200,
+          "raw_q1_taken": 0,
+          "raw_q1_mean": 0,
+          "raw_a1": 0,
+          "shaped_q1_taken": -0.010761,
+          "shaped_q1_mean": -0.010761,
+          "shaped_a1": 0,
+          "delta_a": 0,
+          "raw_a1_increment": 0.00040699999999999997,
+          "shaped_a1_increment": 0.00040699999999999997,
+          "delta_a_increment": 0,
+          "legal_count": 4
+        },
+        {
+          "tick": 113,
+          "raw_q1_taken": -0.296624,
+          "raw_q1_mean": -0.40162499999999995,
+          "raw_a1": 0.105002,
+          "shaped_q1_taken": -0.29667699999999997,
+          "shaped_q1_mean": -0.401679,
+          "shaped_a1": 0.105002,
+          "delta_a": 0,
+          "raw_a1_increment": 0.143618,
+          "shaped_a1_increment": 0.143618,
+          "delta_a_increment": 0,
+          "legal_count": 10
+        }
+      ],
+      "layout": {
+        "direct": true,
+        "overflow": false
+      }
+    },
+    {
+      "mobile": true,
+      "auth": "wrong/correct/refresh/new-tab/forget/version invalidation",
+      "annotations": "persist/export/import",
+      "console_errors": [],
+      "http_errors": [],
+      "excluded_deep_links": "honest unavailability, no fallback"
+    }
+  ]
+}

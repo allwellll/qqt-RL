@@ -12,8 +12,8 @@ assert.deepEqual(failures,[],'RED: public diagnostic manifest includes recording
 const G=require('./review_admission');
 assert.equal(G.SCHEMA,'qqt.review-admission/v1');
 assert.equal(G.catalogGate(catalog),catalog.replays.length);
-assert(catalog.replays.length===7,'replacement publication must retain multiple complete fixed-seed episodes');
-assert.deepEqual(catalog.replays.map(r=>r.seed).sort(),[2026101800,2026101810,2026101811,2026101812,2026101813,2026101814,2026101815]);
+const original=catalog.replays.filter(r=>!r.comparison_model_id);assert(original.length===7,'original qualified seven must survive');
+assert.deepEqual(original.map(r=>r.seed).sort(),[2026101800,2026101810,2026101811,2026101812,2026101813,2026101814,2026101815]);
 assert.equal(catalog.metrics_admission.original_trajectory_recomputed,1);assert.equal(catalog.metrics_admission.best_model_replacement,6);
 const historical=require('../reports/review_catalog_before_gate_20261018.json');
 for(const row of [...historical.replays,...historical.history_replays||[]])assert.throws(()=>G.validate(JSON.parse(fs.readFileSync('web/review-replays/'+row.file))),/diagnostic admission/);

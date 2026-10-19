@@ -13,3 +13,9 @@ d.route={shaped_legal_count:d.metrics.legal_count.slice()};for(const [rk,mk]of [
 M.validate(d);assert.equal(M.atTick(d,2).delta_a,-1);assert.equal(M.atTick(d,0).raw_a1,null);
 for(const mutate of [x=>x.metrics.raw_a1[0]=null,x=>x.metrics.raw_a1_increment[0]=0,x=>x.metrics.shaped_a1[1]=Infinity,x=>x.meta.metrics.future_value=0,x=>x.meta.metrics.checkpoint_sha256='b'.repeat(64),x=>x.meta.metrics.critic_sha256=null,x=>x.metrics.legal_count[1]=0,x=>x.metrics.raw_a1_increment[1]=0,x=>x.rewards[0][1].unknown=1,x=>x.meta.metrics.reward_hashes={},x=>x.route.shaped_advantage_a1[1]=100,x=>x.rewards[0][1].route_shaped_reward=0]){const bad=structuredClone(d);mutate(bad);assert.throws(()=>M.validate(bad),/metrics admission/);}
 console.log('Metrics formula / legal renormalization / terminal / null / provenance RED-GREEN');
+// Quantized Actor evidence is independent from reward/A1 and must preserve
+// exactly the factored legal joint action space, including tiny probabilities.
+d.decisions={schema:'qqt.policy-decisions/v1',scale:1e-6,move_probability:[[400000,600000,0,0,0],[1,999999,0,0,0]],ability_probability:[[1000000,0,0],[1000000,0,0]],move_mask:[3,3],ability_mask:[1,1]};
+M.validate(d);M.decision(d,1).move_probability.forEach((v,i)=>assert(Math.abs(v-[.4,.6,0,0,0][i])<1e-12));assert.equal(M.decision(d,0),null);assert.equal(M.decision(d,3),null);
+for(const mutate of [x=>x.decisions.schema='v0',x=>x.decisions.move_probability.pop(),x=>x.decisions.move_mask[0]=0,x=>x.decisions.move_mask[0]=32,x=>x.decisions.move_probability[0][0]=-1,x=>x.decisions.move_probability[0][2]=1,x=>x.decisions.move_probability[0][0]=400000.1,x=>x.decisions.move_probability[0][0]=0,x=>x.decisions.move_mask[1]=1,x=>x.decisions.ability_mask[1]=3,x=>x.decisions.full_logits=[]]){const bad=structuredClone(d);mutate(bad);assert.throws(()=>M.validate(bad),/metrics admission/);}
+console.log('Actual Actor probability / legal masks / quantization / strict sparse schema GREEN');

@@ -27,6 +27,18 @@
   }
   for(const row of doc.rewards)for(const parts of row.slice(1))for(const [k,v]of Object.entries(parts))if(!m.component_names.includes(k)||!Number.isFinite(v))fail();
   if(doc.meta.reward_status!=='offline_recomputed_sealed_reward'||doc.meta.diagnostic_admission?.status!=='qualified')fail();
+  if(doc.meta.comparison_model_id&&!doc.decisions)fail();
+  if(doc.decisions){
+   const e=doc.decisions,pop=x=>x.toString(2).replace(/0/g,'').length;
+   if(e.schema!=='qqt.policy-decisions/v1'||e.scale!==1e-6||Object.keys(e).some(k=>!['schema','scale','move_probability','ability_probability','move_mask','ability_mask'].includes(k))||['move_probability','ability_probability','move_mask','ability_mask'].some(k=>!Array.isArray(e[k])||e[k].length!==n))fail();
+   for(let i=0;i<n;i++){
+    for(const [prob,mask,size]of [[e.move_probability[i],e.move_mask[i],5],[e.ability_probability[i],e.ability_mask[i],3]]){
+     if(!Number.isInteger(mask)||mask<1||mask>=2**size||!Array.isArray(prob)||prob.length!==size||prob.some((v,j)=>!Number.isSafeInteger(v)||v<0||v>1e6||(!(mask&(1<<j))&&v!==0))||Math.abs(prob.reduce((s,v)=>s+v,0)-1e6)>size)fail();
+    }
+    if(pop(e.move_mask[i])*pop(e.ability_mask[i])!==d.legal_count[i]||!(e.move_mask[i]&(1<<doc.actions[i][0]))||!(e.ability_mask[i]&(1<<doc.actions[i][1])))fail();
+   }
+  }
  }
- return {SCHEMA,FIELDS,atTick,validate};
+ function decision(doc,tick){const d=doc.decisions,i=tick-1;if(!d||i<0||i>=doc.actions.length)return null;return {move_probability:d.move_probability[i].map(v=>v*d.scale),ability_probability:d.ability_probability[i].map(v=>v*d.scale),move_mask:d.move_mask[i],ability_mask:d.ability_mask[i]};}
+ return {SCHEMA,FIELDS,atTick,decision,validate};
 });

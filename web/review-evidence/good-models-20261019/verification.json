@@ -1,0 +1,949 @@
+{
+  "schema": "qqt.good-model-metrics-verification/v1",
+  "date": "2026-10-19",
+  "status": "passed",
+  "models": [
+    {
+      "id": "r01-g8",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "critic_sha256": "0d2ad5345e4a38f63dbba5379c1a582dd47a7b34985d1073aede9b8ae878c278"
+    },
+    {
+      "id": "r01-g128",
+      "checkpoint_sha256": "7f8d835bdb70075ec29121d3ffcc6c12b9f0c183dcb3770142c1fe58d6efd744",
+      "critic_sha256": "c2285c025dbe99fec035fcd83a92be38fc4e26770d1f4ef552a79b38498394d5"
+    },
+    {
+      "id": "r13-g128",
+      "checkpoint_sha256": "e25dc7c7c010548c1238e0a949ebeecba526740e8178e15bdf40df9b4874566a",
+      "critic_sha256": "8c1ac2231f0474d3ec06615cb3957a0570092800519f89fbee0b3d95e1742e58"
+    },
+    {
+      "id": "r16-g128",
+      "checkpoint_sha256": "317de3e25dc13928701b7e59bbbc66df6dbab22f8b1dd70a799475c89aafee28",
+      "critic_sha256": "e41508221fff3b3dd7b79cd59b56bd7b8d2e7996d84efcadca003b0b793e2f35"
+    },
+    {
+      "id": "r17-g128",
+      "checkpoint_sha256": "ed06ecbef3b0814526828b5a973b346fd064faa60a494ef711eb8723e0bdc3f3",
+      "critic_sha256": "9d8e873e13b265dcf5bc128b587e30f488aabb4581fe3f027e2c69fbe7a4ec0f"
+    }
+  ],
+  "episodes": 15,
+  "decision_ticks": 25034,
+  "legal_counterfactuals": 239725,
+  "seed_matrix": [
+    {
+      "seed": 2026101900,
+      "task": "natural_full2400"
+    },
+    {
+      "seed": 2026101901,
+      "task": "natural_full2400"
+    },
+    {
+      "seed": 2026101902,
+      "task": "recovery_threat"
+    }
+  ],
+  "previous_qualified": 7,
+  "all_seeds_retained": true,
+  "selection_rule": "declared five capability references from the same frozen protocol; default retained from existing balanced release, no replay outcome selection; Python Tactical and JS Hunter separate; latest completed reference is not overall best",
+  "rows": [
+    {
+      "id": "je10-r01-g8-metrics-natural_full2400-2026101900",
+      "file": "je10-r01-g8-metrics-natural_full2400-2026101900.json",
+      "seed": 2026101900,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r01-g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r01-g8",
+      "capability_label": "综合发布基线",
+      "summary": {
+        "ticks": 1202,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          -12.285037444671616,
+          2.5390397815499455
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "f5ddf493551c06d74d530b0d4c0f12c29fa28f513df9b2300225ab03a784ded2",
+      "bytes": 371145,
+      "gzip_bytes": 82751,
+      "legal_counterfactuals": 13437,
+      "source_metrics_sha256": "e4242fb0dfbc29503b6f3b07147d2db9f9e2d4d20f41ae142fe03d9791681814",
+      "counterfactual_sha256": "35abb9bccbb8f5df7baf0eed3b4ec50a1c9f0c04cac4a2bcc8998f43430c54e0",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 0,
+      "enemy_origin_pickup_events": 0,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r01-g8-metrics-natural_full2400-2026101901",
+      "file": "je10-r01-g8-metrics-natural_full2400-2026101901.json",
+      "seed": 2026101901,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r01-g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r01-g8",
+      "capability_label": "综合发布基线",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          1.7000000327825546,
+          1.6120871889870614
+        ],
+        "failures": []
+      },
+      "sha256": "e0d55567a6497c2a9cec59d547a0475bf4e40946f8ffd91b6d54868994b819d6",
+      "bytes": 709184,
+      "gzip_bytes": 152432,
+      "legal_counterfactuals": 31211,
+      "source_metrics_sha256": "9b6d48599dcb1e7e4a4c07714607a8b37555978cda6e8de5d5d86ec17d66db87",
+      "counterfactual_sha256": "b2bdc80e3caae718a854af3e3de6c4abb475ec931aa861a88ef60024e8895e3d",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 0,
+      "enemy_origin_pickup_events": 0,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r01-g8-metrics-recovery_threat-2026101902",
+      "file": "je10-r01-g8-metrics-recovery_threat-2026101902.json",
+      "seed": 2026101902,
+      "scene": "native",
+      "task": "recovery_threat",
+      "scene_name": "库存窗口→受威胁恢复诊断",
+      "scene_rules": "固定评估recovery_threat reset；模型空手，敌初始8tick未归因糖泡；之后真实库存取包/敌恢复追逐；1200tick；非自然击杀成功；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r01-g8",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
+      "model_sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r01-g8",
+      "capability_label": "综合发布基线",
+      "summary": {
+        "ticks": 1200,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          -5.315024018520489,
+          -12
+        ],
+        "failures": []
+      },
+      "sha256": "1b17f12cb73279c2c847240ccdeb06435deca5c7648eef75028159079b326688",
+      "bytes": 408984,
+      "gzip_bytes": 78325,
+      "legal_counterfactuals": 5914,
+      "source_metrics_sha256": "6f1778055f965763b0387d92a6aca8fa9e49857da379cd4ea14f0ffb2df3d15f",
+      "counterfactual_sha256": "61bdce84f3ac366656ff3509c0db21bf7ef83368c38f922888624cf81b07b938",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 1,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r01-g128-metrics-natural_full2400-2026101900",
+      "file": "je10-r01-g128-metrics-natural_full2400-2026101900.json",
+      "seed": 2026101900,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r01-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "7f8d835bdb70075ec29121d3ffcc6c12b9f0c183dcb3770142c1fe58d6efd744",
+      "model_sha256": "b53414f1ed6c4c74c107638925a1ec22e68e458083d4ba8fbd3b8b92405e0403",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r01-g128",
+      "capability_label": "完整运包",
+      "summary": {
+        "ticks": 1446,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          13.619267597561702,
+          -35.99999997019768
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "90c3d998731dc4416140b98036ffe30f2436ead089745d63b78e1a9b5cb38ce7",
+      "bytes": 408624,
+      "gzip_bytes": 92491,
+      "legal_counterfactuals": 16598,
+      "source_metrics_sha256": "9ddbf0a93ed047a58abb03221ef210eab28aa1a671f39b399b15a62db762a675",
+      "counterfactual_sha256": "0a0b45ba50e74f2bf2627c24638c613841af8efa3fee72d66c6faeb413a7546a",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 1,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 1,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r01-g128-metrics-natural_full2400-2026101901",
+      "file": "je10-r01-g128-metrics-natural_full2400-2026101901.json",
+      "seed": 2026101901,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r01-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "7f8d835bdb70075ec29121d3ffcc6c12b9f0c183dcb3770142c1fe58d6efd744",
+      "model_sha256": "b53414f1ed6c4c74c107638925a1ec22e68e458083d4ba8fbd3b8b92405e0403",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r01-g128",
+      "capability_label": "完整运包",
+      "summary": {
+        "ticks": 1746,
+        "done": true,
+        "winner": 1,
+        "score": [
+          0,
+          1
+        ],
+        "stored": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "reward": [
+          -12.633814683300443,
+          -29.079526582499966
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "b29f399f5502f13d7e29eedb8715fbaa89461f1ba47ae214d09bc58f240e1227",
+      "bytes": 542129,
+      "gzip_bytes": 127306,
+      "legal_counterfactuals": 21157,
+      "source_metrics_sha256": "f8e1a4fbdee2a7b2e80bc1d5a9f33b0bb45bfc812db3d7cf2d683aec7eed0a4e",
+      "counterfactual_sha256": "f9216f070aaceae6b8eb6ebf7f43745a8216f14f8535614674cb4753f30cb5ef",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 0,
+      "enemy_origin_pickup_events": 0,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r01-g128-metrics-recovery_threat-2026101902",
+      "file": "je10-r01-g128-metrics-recovery_threat-2026101902.json",
+      "seed": 2026101902,
+      "scene": "native",
+      "task": "recovery_threat",
+      "scene_name": "库存窗口→受威胁恢复诊断",
+      "scene_rules": "固定评估recovery_threat reset；模型空手，敌初始8tick未归因糖泡；之后真实库存取包/敌恢复追逐；1200tick；非自然击杀成功；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r01-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "7f8d835bdb70075ec29121d3ffcc6c12b9f0c183dcb3770142c1fe58d6efd744",
+      "model_sha256": "b53414f1ed6c4c74c107638925a1ec22e68e458083d4ba8fbd3b8b92405e0403",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r01-g128",
+      "capability_label": "完整运包",
+      "summary": {
+        "ticks": 1200,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          -7.565024018520489,
+          -12
+        ],
+        "failures": []
+      },
+      "sha256": "a9c233c44968456a017e97d11d0f85947201edb4853c8c76200cd37e662c0799",
+      "bytes": 406891,
+      "gzip_bytes": 76731,
+      "legal_counterfactuals": 6905,
+      "source_metrics_sha256": "12486aed86df709205a31858f51f7c844c3f027ff4203ceb06a2e3bc92c4788e",
+      "counterfactual_sha256": "cdc77a46d98f2e79535bc94a1d70aec75d5a883c10b8cff30048626e5a0d9c80",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 1,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r13-g128-metrics-natural_full2400-2026101900",
+      "file": "je10-r13-g128-metrics-natural_full2400-2026101900.json",
+      "seed": 2026101900,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r13-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "e25dc7c7c010548c1238e0a949ebeecba526740e8178e15bdf40df9b4874566a",
+      "model_sha256": "54000bffa810823327064299c2762c92e4c539737a2188102b43b3a5f459f895",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r13-g128",
+      "capability_label": "干净因果链·完整运包参考",
+      "summary": {
+        "ticks": 1394,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          -22.460095018644097,
+          -64.00000004470348
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "ab579dc28d42c05db195a3973a72e12e78084fe84babf766c856cf11814be845",
+      "bytes": 408825,
+      "gzip_bytes": 87642,
+      "legal_counterfactuals": 15453,
+      "source_metrics_sha256": "ea244b5aa366ed7450aaff5aaa043194a529587300180299cc27a6cb85bfc435",
+      "counterfactual_sha256": "cb59a273a7a178de64da2aa472823ea4e5ddeae24f7ef3bddfb31d8234747871",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 1,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 1,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r13-g128-metrics-natural_full2400-2026101901",
+      "file": "je10-r13-g128-metrics-natural_full2400-2026101901.json",
+      "seed": 2026101901,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r13-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "e25dc7c7c010548c1238e0a949ebeecba526740e8178e15bdf40df9b4874566a",
+      "model_sha256": "54000bffa810823327064299c2762c92e4c539737a2188102b43b3a5f459f895",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r13-g128",
+      "capability_label": "干净因果链·完整运包参考",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          2.396514301798561,
+          -24.000000178813934
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "e56d6bd6659892e92d6cb27b92710a94445e6252691251c1823cd55c3a7e9153",
+      "bytes": 722211,
+      "gzip_bytes": 156608,
+      "legal_counterfactuals": 25771,
+      "source_metrics_sha256": "90aecf808de7c66fc3d4c1ca7d9ceb2cd982c2e3a4bad228bcf4cc3fbca03097",
+      "counterfactual_sha256": "d8ff6d7b13d8460e3ebd3478b20e7a16aca9a8040bf27c5715bf89e5eb16f88a",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 1,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r13-g128-metrics-recovery_threat-2026101902",
+      "file": "je10-r13-g128-metrics-recovery_threat-2026101902.json",
+      "seed": 2026101902,
+      "scene": "native",
+      "task": "recovery_threat",
+      "scene_name": "库存窗口→受威胁恢复诊断",
+      "scene_rules": "固定评估recovery_threat reset；模型空手，敌初始8tick未归因糖泡；之后真实库存取包/敌恢复追逐；1200tick；非自然击杀成功；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r13-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "e25dc7c7c010548c1238e0a949ebeecba526740e8178e15bdf40df9b4874566a",
+      "model_sha256": "54000bffa810823327064299c2762c92e4c539737a2188102b43b3a5f459f895",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r13-g128",
+      "capability_label": "干净因果链·完整运包参考",
+      "summary": {
+        "ticks": 1200,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          0.4350764674891252,
+          -12
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "7d40c9ab02855ff17ccf8bb37f5fdaad9f22e8b904c8232564cae93232ae49f8",
+      "bytes": 396060,
+      "gzip_bytes": 75537,
+      "legal_counterfactuals": 10232,
+      "source_metrics_sha256": "b03a4df518d8625e85f21b4b64af4b12f134622fc71452bec2fd69ab2851959c",
+      "counterfactual_sha256": "99533af742474cde2243e671c6f73ca9715bc7c3eed1d4d97b87d3841c2f5741",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 1,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r16-g128-metrics-natural_full2400-2026101900",
+      "file": "je10-r16-g128-metrics-natural_full2400-2026101900.json",
+      "seed": 2026101900,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r16-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "317de3e25dc13928701b7e59bbbc66df6dbab22f8b1dd70a799475c89aafee28",
+      "model_sha256": "02cc6d5e495f4fc1aa3e512cee47da7606bd6e56ecc59f12563fad26afe5d3be",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r16-g128",
+      "capability_label": "战斗专项·注意自伤",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          0.5,
+          2.600000023841858
+        ],
+        "failures": []
+      },
+      "sha256": "f811211c99ec0fb181458612ced7139bd4dd24c76106363eecb4e8d1011c70a3",
+      "bytes": 588887,
+      "gzip_bytes": 141032,
+      "legal_counterfactuals": 19400,
+      "source_metrics_sha256": "44e18ba1428f54baf1c703d0f1f005a06f0423f03487537417df8bad46e3a030",
+      "counterfactual_sha256": "e380c0301ac752fa15d1519bb960fcc7676aee2555853d2b67d1bee1202d438c",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 0,
+      "enemy_origin_pickup_events": 0,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r16-g128-metrics-natural_full2400-2026101901",
+      "file": "je10-r16-g128-metrics-natural_full2400-2026101901.json",
+      "seed": 2026101901,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r16-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "317de3e25dc13928701b7e59bbbc66df6dbab22f8b1dd70a799475c89aafee28",
+      "model_sha256": "02cc6d5e495f4fc1aa3e512cee47da7606bd6e56ecc59f12563fad26afe5d3be",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r16-g128",
+      "capability_label": "战斗专项·注意自伤",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": null,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "reward": [
+          7.891737494897825,
+          -68
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "4e5c3e8645723e4e4319ceb6a13eb99162442bafd7bae90799eb8c93c3b05c27",
+      "bytes": 718464,
+      "gzip_bytes": 158652,
+      "legal_counterfactuals": 25872,
+      "source_metrics_sha256": "5cc4184a7bbbc70cd2e4ccc8f731bf4fd51d2564887e7c9a709980d87234ae87",
+      "counterfactual_sha256": "9c77449f8d25bb319384a1bc1e9d9b0eaf2410c23a0bbc81d971efce1a82b986",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 0,
+      "enemy_origin_pickup_events": 0,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r16-g128-metrics-recovery_threat-2026101902",
+      "file": "je10-r16-g128-metrics-recovery_threat-2026101902.json",
+      "seed": 2026101902,
+      "scene": "native",
+      "task": "recovery_threat",
+      "scene_name": "库存窗口→受威胁恢复诊断",
+      "scene_rules": "固定评估recovery_threat reset；模型空手，敌初始8tick未归因糖泡；之后真实库存取包/敌恢复追逐；1200tick；非自然击杀成功；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r16-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "317de3e25dc13928701b7e59bbbc66df6dbab22f8b1dd70a799475c89aafee28",
+      "model_sha256": "02cc6d5e495f4fc1aa3e512cee47da7606bd6e56ecc59f12563fad26afe5d3be",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r16-g128",
+      "capability_label": "战斗专项·注意自伤",
+      "summary": {
+        "ticks": 1200,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          0.4350764659611741,
+          -12
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "dd4cdbebe606842fd47f75fe4760e61a3004f66c850fdeb1f0c35cee5de75e5c",
+      "bytes": 390498,
+      "gzip_bytes": 68631,
+      "legal_counterfactuals": 5177,
+      "source_metrics_sha256": "3ab9799dd9fe42733be50234258946803e09500fcc2a088dee81093462c4ac62",
+      "counterfactual_sha256": "bc21a57a219e5024d6e6fd778096ca039d5511f5ee3f7aa557165fb97757e54a",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 1,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r17-g128-metrics-natural_full2400-2026101900",
+      "file": "je10-r17-g128-metrics-natural_full2400-2026101900.json",
+      "seed": 2026101900,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r17-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "ed06ecbef3b0814526828b5a973b346fd064faa60a494ef711eb8723e0bdc3f3",
+      "model_sha256": "f56f3524c253584639e6ac17524634776cde222e9066e5ea9ee9b0935e994d26",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r17-g128",
+      "capability_label": "最新完成·库存恢复参考",
+      "summary": {
+        "ticks": 1246,
+        "done": true,
+        "winner": 0,
+        "score": [
+          1,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          9.420204222793473,
+          -24.000000059604645
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "3adf5d1cdaa739e704414cd2b55b4cf66653dcea9a2e738581a2454a05ab1d17",
+      "bytes": 340400,
+      "gzip_bytes": 76795,
+      "legal_counterfactuals": 14266,
+      "source_metrics_sha256": "bbfb6b87338341bd4b6d58f3a670bad33ed19bcb6ee36b7e286c52d8fa954728",
+      "counterfactual_sha256": "1a83c008b712bff04af96e69538823c6d6ae6cf82f05909fc7e5899fce9729f3",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 1,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 1,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r17-g128-metrics-natural_full2400-2026101901",
+      "file": "je10-r17-g128-metrics-natural_full2400-2026101901.json",
+      "seed": 2026101901,
+      "scene": "native",
+      "task": "natural_full2400",
+      "scene_name": "原生自然完整局",
+      "scene_rules": "生产806原始布局；双方空手；2400 tick；真实Hunter normal；assist-off；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r17-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "ed06ecbef3b0814526828b5a973b346fd064faa60a494ef711eb8723e0bdc3f3",
+      "model_sha256": "f56f3524c253584639e6ac17524634776cde222e9066e5ea9ee9b0935e994d26",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r17-g128",
+      "capability_label": "最新完成·库存恢复参考",
+      "summary": {
+        "ticks": 2400,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          -27.83054572966637,
+          -76.13930417788652
+        ],
+        "failures": [
+          "window_closed_empty",
+          "return_deviation"
+        ]
+      },
+      "sha256": "311d30d74d37584c7ebe4fdb2c23b54e5791e538d1f03a2597c90b163d8fd64f",
+      "bytes": 779955,
+      "gzip_bytes": 158565,
+      "legal_counterfactuals": 23553,
+      "source_metrics_sha256": "6430040810f4f5ec8dba504a731ca67d926a13b7eab3c833d8037f607818f847",
+      "counterfactual_sha256": "12db8780ec2a811a5f8d10b655021a8898a0c1d44796d8d9c82956a11173e4bd",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 2,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 1,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    },
+    {
+      "id": "je10-r17-g128-metrics-recovery_threat-2026101902",
+      "file": "je10-r17-g128-metrics-recovery_threat-2026101902.json",
+      "seed": 2026101902,
+      "scene": "native",
+      "task": "recovery_threat",
+      "scene_name": "库存窗口→受威胁恢复诊断",
+      "scene_rules": "固定评估recovery_threat reset；模型空手，敌初始8tick未归因糖泡；之后真实库存取包/敌恢复追逐；1200tick；非自然击杀成功；双方1HP、初始无无敌；原生糖泡/道具",
+      "model": "JE10 r17-g128",
+      "opponent": "bun.hunter/normal",
+      "checkpoint_sha256": "ed06ecbef3b0814526828b5a973b346fd064faa60a494ef711eb8723e0bdc3f3",
+      "model_sha256": "f56f3524c253584639e6ac17524634776cde222e9066e5ea9ee9b0935e994d26",
+      "map": "806",
+      "map_sha256": "992d8f8e20b2f90283613c7a4e55ace598ca36a2c278ed342e40cb7ac3f30ca9",
+      "batch_id": "good-models-metrics-20261019",
+      "diagnostic": true,
+      "origin": "same_checkpoint_new_seed",
+      "comparison_model_id": "r17-g128",
+      "capability_label": "最新完成·库存恢复参考",
+      "summary": {
+        "ticks": 1200,
+        "done": true,
+        "winner": 0,
+        "score": [
+          0,
+          0
+        ],
+        "stored": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "reward": [
+          0.4350764659611741,
+          -12
+        ],
+        "failures": [
+          "window_closed_empty"
+        ]
+      },
+      "sha256": "3fd263e6655862bf4e7429cbd29c4795b5384fe6b0732b1dfc21b7c14806d03a",
+      "bytes": 388572,
+      "gzip_bytes": 67979,
+      "legal_counterfactuals": 4779,
+      "source_metrics_sha256": "b888ab484b2cb3cdf7dd9da738bbdd1abaa347ba05de3955afa6aff42c2431cd",
+      "counterfactual_sha256": "4612a5e14e4f58fcea2920032b5bc134af20874eac791c24371eba6f574dc85e",
+      "adapter_sha256": "c070240736eed5169e937813ce082f7c429b96b07809baded08717a38f2fc068",
+      "regeneration": "all actions/events/checks/terminal exact",
+      "independent_recalculation": "all ticks exactly equal with independently extracted Critic",
+      "pickup_events": 1,
+      "enemy_origin_pickup_events": 1,
+      "own_recovery_pickup_events": 0,
+      "delivery_events": 0,
+      "self_harm_events": 0
+    }
+  ]
+}

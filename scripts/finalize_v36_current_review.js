@@ -2,7 +2,8 @@
 const fs=require('node:fs'),crypto=require('node:crypto'),assert=require('node:assert/strict'),zlib=require('node:zlib');
 const P=require('../web/review_protocol'),R=require('../web/review_route'),G=require('./generate_v36_multiseed_review');
 const hash=v=>crypto.createHash('sha256').update(typeof v==='string'||Buffer.isBuffer(v)?v:JSON.stringify(v)).digest('hex');
-const PHASE=['NONE','B_STOCK','A_ENEMY_DROP','C_RETURN','D_DELIVERY'];
+const PHASE=['NONE','B_STOCK','A_ENEMY_DROP','C_RETURN','D_DELIVERY','PRESTOCK_HOME','PRESTOCK_ENEMY'];
+const TARGET={B_STOCK:['enemy_cage','enemy_stock'],A_ENEMY_DROP:['loose_bun','enemy_carried_drop'],C_RETURN:['home_cage','held_enemy_bun'],D_DELIVERY:['home_cage','held_enemy_bun'],PRESTOCK_HOME:['route_frontier','home_corridor_preparation'],PRESTOCK_ENEMY:['route_frontier','stock_corridor_preparation']};
 function columns(rows,seed,beforeStates){
   const out={schema:R.SCHEMA,scale:1e-6,targets:[]},ids=new Map();for(const k of R.COLUMNS)out[k]=[];
   for(const [index,row] of rows.entries()){
@@ -14,7 +15,7 @@ function columns(rows,seed,beforeStates){
     }
     if(phase!=='NONE'){
       const key=phase+':'+m.route_target_identity;
-      if(!ids.has(key)){ids.set(key,out.targets.length);out.targets.push({type:phase==='B_STOCK'?'enemy_cage':phase==='A_ENEMY_DROP'?'loose_bun':'home_cage',provenance:phase==='B_STOCK'?'enemy_stock':phase==='A_ENEMY_DROP'?'enemy_carried_drop':'held_enemy_bun',id:'target-'+hash({seed,key})});}target=ids.get(key);
+      if(!ids.has(key)){ids.set(key,out.targets.length);const [type,provenance]=TARGET[phase];out.targets.push({type,provenance,id:'target-'+hash({seed,key})});}target=ids.get(key);
     }
     const values={ticks:row.tick,route_phase:phase,target,distance_before:phase==='NONE'?null:m.route_distance_before===32767?'INF':m.route_distance_before,distance_after:phase==='NONE'?null:m.route_distance_after===32767?'INF':m.route_distance_after,phi_before:m.route_phi_before,phi_after:m.route_phi_after,route_potential_delta:m.route_potential_delta,route_shaped_reward:m.route_shaped_reward,phase_transition:Boolean(m.route_phase_transition),invalidated:Boolean(m.route_invalidated),terminal_correction:Boolean(m.route_terminal_correction),terminal:row.tick===rows.length};
     // Topology gain is a current-ledger statistic, not additional reward. Full

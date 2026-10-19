@@ -236,6 +236,7 @@
     if(d.route!==undefined)value.route=d.route;
     if(d.diagnostic_ticks!==undefined)value.diagnostic_ticks=d.diagnostic_ticks;
     if(d.metrics!==undefined)value.metrics=d.metrics;
+    if(d.decisions!==undefined)value.decisions=d.decisions;
     return value;
   }
   function time(tick, ms=100) {

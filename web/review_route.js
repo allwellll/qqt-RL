@@ -4,9 +4,9 @@
   if(typeof module==='object'&&module.exports)module.exports=api;else root.QQTReviewRoute=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
   const SCHEMA='qqt.route-potential/v1';
-  const PHASES={NONE:'无目标',B_STOCK:'B · 窗口取库存',A_ENEMY_DROP:'A · 真实敌源掉包',OWN_RECOVERY:'己包回收（非敌源）',C_RETURN:'C · 持包返程',D_DELIVERY:'D · 入笼交付'};
-  const TARGETS={enemy_cage:'敌笼库存',loose_bun:'散落包',home_cage:'己方交付笼'};
-  const PROVENANCE={enemy_stock:'敌笼库存',enemy_carried_drop:'敌方携带死亡掉包',own_recovery:'己包回收',held_enemy_bun:'已持敌源包',own_cage:'己方笼'};
+  const PHASES={NONE:'无目标',B_STOCK:'B · 窗口取库存',A_ENEMY_DROP:'A · 真实敌源掉包',OWN_RECOVERY:'己包回收（非敌源）',C_RETURN:'C · 持包返程',D_DELIVERY:'D · 入笼交付',PRESTOCK_HOME:'取库存前开路 · 己笼连通',PRESTOCK_ENEMY:'取库存前开路 · 敌笼连通'};
+  const TARGETS={enemy_cage:'敌笼库存',loose_bun:'散落包',home_cage:'己方交付笼',route_frontier:'走廊开通准备点'};
+  const PROVENANCE={enemy_stock:'敌笼库存',enemy_carried_drop:'敌方携带死亡掉包',own_recovery:'己包回收',held_enemy_bun:'已持敌源包',own_cage:'己方笼',home_corridor_preparation:'库存取包前开通己笼路线',stock_corridor_preparation:'库存取包前开通敌笼路线'};
   const VALUES=['phi_before','phi_after','route_potential_delta','route_shaped_reward','shaped_critic_q1_taken','shaped_critic_q1_policy_mean','shaped_advantage_a1','shaped_advantage_delta'];
   const FLAGS=['phase_transition','invalidated','terminal_correction','terminal'];
   const COLUMNS=['ticks','route_phase','target','distance_before','distance_after','topology_region_before','topology_region_after','topology_gain','topology_evidence','safety_reject_reason','shaped_legal_count',...VALUES,...FLAGS];
@@ -53,6 +53,7 @@
       if(d.topology_gain[i]>0&&evidence===null)fail();
       if(d.route_phase[i]==='A_ENEMY_DROP'&&d.target[i]!==null&&d.targets[d.target[i]].provenance!=='enemy_carried_drop')fail();
       if(d.route_phase[i]==='B_STOCK'&&d.target[i]!==null&&d.targets[d.target[i]].provenance!=='enemy_stock')fail();
+      for(const [phase,provenance]of [['PRESTOCK_HOME','home_corridor_preparation'],['PRESTOCK_ENEMY','stock_corridor_preparation']])if(d.route_phase[i]===phase&&d.target[i]!==null&&(d.targets[d.target[i]].type!=='route_frontier'||d.targets[d.target[i]].provenance!==provenance))fail();
       if(d.topology_gain[i]!==null&&(!Number.isFinite(d.topology_gain[i])||d.topology_gain[i]<0))fail();
       const pb=d.phi_before[i],pa=d.phi_after[i],delta=d.route_potential_delta[i],reward=d.route_shaped_reward[i];
       // Quantization error from both Phi inputs and the result; no independent bonus.
