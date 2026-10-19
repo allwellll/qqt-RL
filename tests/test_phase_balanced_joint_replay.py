@@ -19,12 +19,12 @@ def test_navigation_dominance_does_not_erase_ordinary_or_rare_opening():
     from scripts.phase_balanced_joint_replay import choose
     data=fixture();got=jax.jit(lambda d,k:choose(d,k,32))(data,jax.random.PRNGKey(4))
     ids=np.asarray(got['identity']);assert len(ids)==32
-    assert int(np.asarray(got['opening']).sum())==2
-    assert int((~np.asarray(got['preparation'])).sum())==20
-    assert int((np.asarray(got['preparation'])&~np.asarray(got['opening'])).sum())==10
+    assert int(np.asarray(got['opening']).sum())==1
+    assert int((~np.asarray(got['preparation'])).sum())==16
+    assert int((np.asarray(got['preparation'])&~np.asarray(got['opening'])).sum())==15
     for kind in [1,2,3]:assert np.any((np.asarray(got['kind'])==kind)&~np.asarray(got['preparation']))
     assert int(((np.asarray(got['kind'])==3)&~np.asarray(got['preparation'])).sum())==12
-    for kind in [1,2]:assert int(((np.asarray(got['kind'])==kind)&~np.asarray(got['preparation'])).sum())==4
+    for kind in [1,2]:assert int(((np.asarray(got['kind'])==kind)&~np.asarray(got['preparation'])).sum())==2
     np.testing.assert_array_equal(got['kind'],data['kind'][ids])
 
 
@@ -41,8 +41,8 @@ def test_absent_groups_and_invalid_rows_never_mint_training_labels():
     from scripts.phase_balanced_joint_replay import choose
     d=fixture();d['valid']=jnp.arange(100)>=90
     got=choose(d,jax.random.PRNGKey(6),32)
-    assert bool(got['valid'].all()) and int(got['opening'].sum())==2
-    assert int((~got['preparation']).sum())==30
+    assert bool(got['valid'].all()) and int(got['opening'].sum())==1
+    assert int((~got['preparation']).sum())==31
     d['valid']=jnp.arange(100)==99;got=choose(d,jax.random.PRNGKey(7),32)
     np.testing.assert_array_equal(got['identity'],jnp.full(32,99))
     d['valid']=jnp.zeros(100,bool);got=choose(d,jax.random.PRNGKey(8),32)
@@ -116,17 +116,7 @@ def test_actual_replay_telemetry_matches_each_current_history_half():
 
 def test_selected_collector_advantage_keeps_critic_and_value_target_provenance():
     from scripts.phase_balanced_joint_replay import selected_ppo_diagnostic
-    class OnlySelectedRow:
-        def __init__(self,value):
-            self.value=value
-            self.indices=[]
-
-        def __getitem__(self,index):
-            self.indices.append(index)
-            return self.value
-
-        def __array__(self,*args,**kwargs):
-            raise AssertionError('must select the scalar before copying to host')
+    from test_learner_trace_sampling import OnlySelectedRow
     fields=[OnlySelectedRow(np.float32(v)) for v in [-.7,-.25,1.5]]
     index=(2,8,12);batch=(None,None,None,*fields)
     got=selected_ppo_diagnostic(batch,index)

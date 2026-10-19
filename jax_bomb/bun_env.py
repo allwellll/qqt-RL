@@ -555,8 +555,9 @@ def _fresh(key) -> BunState:
         t=jnp.zeros((), jnp.int32),
         level_id=jnp.asarray(_BUN_INDEX, jnp.int32),
     )
+    from scripts.je10_causal_init import lesson_weights
     lesson = jax.random.choice(
-        k_lesson, len(LESSON_NAMES), p=_CURRICULUM_WEIGHTS).astype(jnp.int8)
+        k_lesson, len(LESSON_NAMES), p=lesson_weights(_CURRICULUM_WEIGHTS)).astype(jnp.int8)
     replay_lessons = jnp.asarray(
         [LESSON_DANGER_ARENA, LESSON_COMBAT, LESSON_COMBAT_MOVING,
          LESSON_FULL_CONTACT], dtype=jnp.int8)
@@ -703,16 +704,9 @@ def _fresh(key) -> BunState:
         pos=spawn_pos,
         hp=jnp.where(combat_hit_lesson, hit_hp, core.hp),
     )
-    carry_lesson = ((lesson == LESSON_CARRY_HOME)
-                    | (lesson == LESSON_CARRY_RETURN))
-    initial_stored = jnp.where(
-        carry_lesson, jnp.zeros((2, 2), jnp.int8),
-        jnp.asarray([[1, 0], [0, 1]], jnp.int8))
-    initial_carried = jnp.where(
-        lesson == LESSON_CARRY_HOME, jnp.asarray([1, 0], jnp.int8),
-        jnp.where(lesson == LESSON_CARRY_RETURN,
-                  jnp.asarray([1, -1], jnp.int8),
-                  jnp.full((2,), -1, jnp.int8)))
+    # No training reset may manufacture learner custody.
+    initial_stored = jnp.asarray([[1, 0], [0, 1]], jnp.int8)
+    initial_carried = jnp.full((2,), -1, jnp.int8)
     fresh = BunState(
         core=core,
         bun_stored=initial_stored,

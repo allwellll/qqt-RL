@@ -101,27 +101,14 @@ def setup_function():
     bun_env.configure_training("full=1", 1)
 
 
-def test_carry_home_reset_is_reachable_without_bombs():
-    bun_env.configure_training("carry_home=1", 1)
-    for seed in range(32):
-        state = bun_env._fresh(jax.random.PRNGKey(seed))
-        assert int(state.lesson) == bun_env.LESSON_CARRY_HOME
-        assert state.bun_carried.tolist() == [1, 0]
-        assert _reachable(state, 0)
-        assert _reachable(state, 1)
-
-
-def test_carry_return_starts_at_enemy_base_and_has_open_home_route():
-    bun_env.configure_training("carry_return=1", 1)
-    for seed in range(32):
-        state = bun_env._fresh(jax.random.PRNGKey(seed))
-        assert int(state.lesson) == bun_env.LESSON_CARRY_RETURN
-        assert state.bun_carried.tolist() == [1, -1]
-        assert int(bun_env._base_team(
-            state.core.pos[0].astype(jnp.int32))) == 1
-        assert _reachable(state, 0, 0)
-        _, ability_mask = bun_env.legal_mask(state)
-        assert not bool(ability_mask[:, 1].any())
+def test_retired_carry_lessons_fall_back_to_empty_handed_full():
+    for course in ['carry_home=1','carry_return=1']:
+        bun_env.configure_training(course, 1)
+        sample=jax.jit(bun_env._fresh)
+        for seed in range(32):
+            state=sample(jax.random.PRNGKey(seed))
+            assert int(state.lesson)==bun_env.LESSON_FULL
+            assert state.bun_carried.tolist()==[-1,-1]
 
 
 def test_route_break_reset_has_target_brick_and_escape_route():
@@ -308,7 +295,7 @@ def test_near_steal_and_combat_resets_are_reachable():
 
 
 def test_objective_lessons_disable_bombs_without_changing_full_rule():
-    for curriculum in ("near_steal=1", "carry_home=1"):
+    for curriculum in ("near_steal=1",):
         bun_env.configure_training(curriculum, 1)
         state = bun_env._fresh(jax.random.PRNGKey(150))
         _, ability_mask = bun_env.legal_mask(state)
@@ -349,9 +336,13 @@ def test_near_steal_requires_event_and_timeout_cannot_win_by_holding():
     assert int(info["winner"]) == -1
 
 
-def test_carry_home_capture_ends_lesson_and_has_positive_reward():
-    bun_env.configure_training("carry_home=1", 1)
+def test_real_stock_pickup_then_capture_has_positive_reward():
+    bun_env.configure_training("full=1", 1)
     state = bun_env._fresh(jax.random.PRNGKey(250))
+    enemy_base=bun_env._BUN_BASES[1].astype(jnp.float32)+1.5
+    state=state._replace(core=state.core._replace(pos=state.core.pos.at[0].set(enemy_base)))
+    state,_,pickup=bun_env.step(state,_idle_actions(),jax.random.PRNGKey(249),auto_reset=False,return_info=True)
+    assert bool(pickup['steal'][0]) and int(state.bun_carried[0])==1
     own_base = bun_env._BUN_BASES[0].astype(jnp.float32) + 1.5
     state = state._replace(core=state.core._replace(
         pos=state.core.pos.at[0].set(own_base)))

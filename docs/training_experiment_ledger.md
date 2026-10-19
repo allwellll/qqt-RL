@@ -405,3 +405,18 @@ JSON与ONNX独立双导出字节一致、packed权重exact，Python FP32/JS/ONNX
 最终线上验收：修复head `195993d` 的Actions `38416916939` test-and-build/deploy均最终success，公网build-info与完整目录匹配。Chromium以worker-wasm实际加载，原生1v1完成16 tick/16推理，Hunter三档300 tick及危险结算通过，无页面错误或写请求。Release五项资产与Pages JSON/ONNX完整回读大小/SHA一致。首次网络超时失败证据保留，技术smoke不计能力成绩。
 
 Release五项资产认证API完整回读、Pages JSON/ONNX公开完整回读大小/SHA一致；首个发布head `abea27f` Actions `38411683710`两job最终success且公网目录匹配。首次Chromium真实加载因单连接约17KB/s触发worker20分钟超时，未推理，失败不作成功。追加有界8并发256KiB分段下载与确定性错误/完整性测试，最终仍要求完整SHA，推理/策略/10Hz语义不变；新head与公网浏览器终态继续核验。
+
+
+## JE10 因果清理接续与用户暂停终态（20261019）
+
+本条覆盖此前持续训练/自动接续政策：用户明确要求安全暂停、总结并合入main。r19正在执行代通过worker原生停止标记完成g58原子checkpoint及STATE后退出；atomic_stop=true、121,634,816 fresh ticks、剩余70代，不标COMPLETE/FAILED。supervisor先阻断，r20未启动，trainer/evaluator/consumer退出、8卡compute contexts0，active marker stale。恢复必须显式用户指令。原dirty树与run证据完整保留。
+
+撤回旧“真实取包后无路／动态封路／预开额外返程通道”根因。真实取包存在可逆入站通路是规则不变量；假不可达来自库存fixture直接置入敌笼组件、无真实入站，death/sugar/recovery各16题有8题初态home INF，不能作为真实返程分母。scene2/3/4/6、旧lesson1/11和scene-ID custody特权及缺少原生拾取证明的return监督已清理，合法2058行及真实库存/drop/contact链保留。r11g18 EXCLUDED_INVALID排除所有能力结论；干净链从r10g128→r12…r19，合法返程DAgger×2。focused及相关测试覆盖16384固定seed空手初始化和真实取包链。
+
+r12/r13清理后的合法返程×2，r14第二不同格返程query、r15 error优先、r16回放暴露遥测、r17实际replay128、r18认证返程移动豁免旧策略移动KL、r19 FIFO4096，均按固定128预算及唯一独立CPU/JS固定评估接续（r19因用户指令暂停）。每点Tactical Python v2及JS Hunter难/中/易各64、八路线各16，g0/4/8/16/32/64/96/128固定seed；没有能力门禁，中间分数不控制停训。原生地图只有806，不能声称多地图泛化。
+
+r12–r18各8点、r19前5点共61个COMPLETE逐shard验证。最近完整r18g128：Hunter0/2/7、Tactical5，八交付0/3/12/16/15/12/3/2；r19最后完整g32：Hunter2/1/7、Tactical6，6/3/11/16/16/12/5/6，自然拾8/交6，但Tactical自伤4。r19g58未评估，不以训练reward推断能力。历史发布r01 attempt04g8保留其当时37点折中身份，不自动宣称今日全局最优。所有点/专项并列最高、动态对手实际占比、归因/路线漏斗及根因证据见[20261019报告](../reports/je10_training_20261019.md)、[长期总结](je10_control_route_training_summary.md)。
+
+独立集成worktree基于最新origin/main，选择已安装因果清理/DAgger/FIFO/训练控制/评估代码和相应测试；不发布未安装快照候选或一次性审计脚本。保留上游多模型Reward/Advantage回放；仅添加只读结果页。run/checkpoint/cache/.hermes/机器信息不入Git；外部bootstrap依赖明确说明。完成测试/隐私扫描后push main，等待同SHA Pages并实测HTTP/内容，交付收据在本地忽略目录保存。
+
+集成验证：347项选定依赖用例与9项证据/曲线用例分批复核，历史假设/fixture包遮蔽修复后的相关重跑通过；npm全量及Review、JS control funnel、桌面/手机61点页面与筛选验证通过。diff及隐私扫描通过；旧文档一处本机目录脱敏。未安装候选及历史边界草稿排除，详见20261019报告验证附录。

@@ -45,7 +45,7 @@ HTML包含完整升级、前后只读核验、停止条件及Round4函数兼容�
 - 延迟素材加载双视口：`browser-loading/checks.json`，初始化/慢素材无错误loss提示，真实loss与清理正常，零写入。
 - Bot双视口：`browser-bot/checks.json`，真实错峰进攻/撤离轨迹及Canvas回归通过，远端写mock。
 - HTML：`scripts/verify_win_records_sql_doc.js` / `html-checks.json` 验证嵌入SQL逐字一致，实际PGlite前检→升级→后检→回退→重升；双视口浅色无外部请求/溢出/pageerror。截图 `browser-local/1440/390-sql-doc.png`、`sql-doc-top.png`。
-- 独立只读审查 `/root/round4_review` 最终无阻塞，独立定向tests与diff check通过；额外PGlite回退/重升实验验证原快照/句柄/IP不变、回退期新增局历史NULL、重升后新局正常；独立检查最长字段截图及HTML字节/hash一致。
+- 独立只读审查 `<INDEPENDENT_REVIEW_WORKTREE>` 最终无阻塞，独立定向tests与diff check通过；额外PGlite回退/重升实验验证原快照/句柄/IP不变、回退期新增局历史NULL、重升后新局正常；独立检查最长字段截图及HTML字节/hash一致。
 - `git diff --check` 通过。所有测试服务与浏览器由脚本finally关闭，不终止其他任务进程。
 
 ## OSS 交付

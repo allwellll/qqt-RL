@@ -15,15 +15,16 @@ def plot(source,output,round_number=None):
         data=data['rounds'][round_number-1]
     points=data['checkpoints'];generations=[p['generation'] for p in points]
     fig,axes=plt.subplots(2,2,figsize=(13,8),layout='constrained')
+    labels={'carry_far':'carry_far (synthetic diagnostic)', 'native_death_stock':'death stock (controlled reset)', 'native_sugar_stock':'sugar stock (controlled reset)', 'recovery_threat':'recovery (controlled reset)'}
     colors=['#0072B2','#D55E00','#009E73','#CC79A7']
     for ax,tasks in zip(axes[0],[['real_drop','carry_far','natural_full2400'],
                                 ['native_death_stock','native_sugar_stock','recovery_threat']]):
         for color,task in zip(colors,tasks):
             ax.plot(generations,[p['routes'][task]['delivery_per_game']['numerator'] for p in points],
-                    marker='o',label=task,color=color)
+                    marker='o',label=labels.get(task,task),color=color)
         ax.set(ylim=(-.5,16.5),ylabel='Delivery episodes / 16',xlabel='Fixed generation')
         ax.legend(fontsize=9)
-    axes[0,0].set_title('Loose pickup / long return / natural full games')
+    axes[0,0].set_title('Real drop / synthetic carrier diagnostic / natural full')
     axes[0,1].set_title('Stock windows and recovery threat')
     ax=axes[1,0]
     for color,tier in zip(colors,['hard','normal','easy']):
@@ -47,7 +48,7 @@ def plot(source,output,round_number=None):
     run_label=data['run'].rsplit('/',1)[-1]
     fig.suptitle(run_label+' — all completed declared checkpoints',fontsize=15)
     fig.text(.5,-.02,'Fixed seeds; greedy assist-off. No selected best seed/checkpoint, smoothing, or training gates. '
-             'Stock geometry/seat confounding and oracle limitations are documented in the report.',ha='center',fontsize=9)
+             'Synthetic carry and controlled stock resets are diagnostic only; no inference of post-pickup unreachability.',ha='center',fontsize=9)
     output=Path(output);output.parent.mkdir(parents=True,exist_ok=True)
     fig.savefig(output,dpi=170,bbox_inches='tight',metadata={'Software':'JE10 completed-evidence analysis'})
     plt.close(fig)

@@ -7,6 +7,8 @@ from scripts.je05_bun_transport import precompute_regions
 NAMES=('combat','vulnerable_steal','carry_route_far','carry_route_mid','carry_route_near',
        'defend_and_steal','escort_under_pressure','route_break_capture','full_bun','drop_chain_return')
 BASE=jnp.array([.45,.06,.04,.04,.035,.07,.05,.055,.10,.10],jnp.float32)
+from scripts.je10_causal_init import scene_weights
+BASE=scene_weights(BASE)
 HORIZONS=jnp.array([300,600,600,600,600,900,900,1200,2400,1200],jnp.int32)
 wall=np.asarray(env._BUN_LEVEL['wall'],bool).reshape(env.H,env.W)
 brick=np.asarray(env._BUN_LEVEL['brick'],bool).reshape(env.H,env.W)
@@ -37,20 +39,17 @@ for scene in range(len(NAMES)):
         if not mask.any():raise ValueError(f'empty legal region bucket {NAMES[scene]} team{team}')
 MEMBERS=jnp.asarray(MEMBERS);CELLS=jnp.asarray(CELLS)
 def curriculum_weights(counts):
-    # Deficiency-driven adjustment keeps combat45%, never pure transport >20%.
+    from scripts.je10_causal_init import scene_weights
     conversion=counts[:,1]/jnp.maximum(1,counts[:,0])
-    w=BASE*jnp.clip(1.5-20*conversion,.5,1.5)
-    task=.55*w[1:]/w[1:].sum()
-    pure=task[1:4].sum();factor=jnp.minimum(1.,.20/jnp.maximum(pure,1e-6))
-    reduced=task.at[1:4].multiply(factor)
-    other=jnp.array([True,False,False,False,True,True,True,True,True])
-    reduced+=jnp.where(other,(.55-reduced.sum())*jnp.where(other,task,0)/jnp.where(other,task,0).sum(),0)
-    return jnp.concatenate([jnp.array([.45]),reduced])
+    w=scene_weights(BASE*jnp.clip(1.5-20*conversion,.5,1.5))
+    task=w.at[0].set(0.)
+    return (task/task.sum()*.55).at[0].set(.45)
 
 def init_batch(key,n,course):
+    from scripts.je10_causal_init import scene_weights
     key,ks,kc,kw=jax.random.split(key,4)
     states=env.init_batch(key,n,jax.nn.one_hot(0,16))
-    scene=jax.random.choice(ks,len(NAMES),(n,),p=course);rows=jnp.arange(n);seat=rows%2
+    scene=jax.random.choice(ks,len(NAMES),(n,),p=scene_weights(course));rows=jnp.arange(n);seat=rows%2
     logits=jnp.where(MEMBERS[scene,seat],0.,-1e9)
     chosen=jax.random.categorical(kc,logits);cell=CELLS[chosen];pos=cell.astype(jnp.float32)+.5
     core=states.core._replace(brick=jnp.where(OPEN_SCENE[scene,None,None],False,states.brick))
@@ -58,9 +57,7 @@ def init_batch(key,n,course):
     core=core._replace(pos=core.pos.at[rows,seat].set(pos))
     full=scene==8
     core=core._replace(pos=jnp.where(full[:,None,None],states.pos,core.pos))
-    carry=((scene>=2)&(scene<=4))|(scene==6)
     origin=1-seat
-    carried=states.bun_carried.at[rows,seat].set(jnp.where(carry,origin,-1).astype(jnp.int8))
     chain=scene==9
     # Enemy legitimately carries its own recovered object. Learner is empty;
     # no scripted kill/drop/pickup and no post-step teleport. Real control is
@@ -68,8 +65,11 @@ def init_batch(key,n,course):
     enemy_logits=jnp.where(MEMBERS[9,origin],0.,-1e9)
     enemy_cell=CELLS[jax.random.categorical(kw,enemy_logits)]
     core=core._replace(pos=core.pos.at[rows,origin].set(jnp.where(chain[:,None],enemy_cell+.5,core.pos[rows,origin])))
-    carried=carried.at[rows,origin].set(jnp.where(chain,origin,carried[rows,origin]).astype(jnp.int8))
-    stored=states.bun_stored.at[rows,origin,origin].set(jnp.where(carry|chain,0,1).astype(states.bun_stored.dtype))
+    carried=states.bun_carried.at[rows,origin].set(
+        jnp.where(chain,origin,states.bun_carried[rows,origin]).astype(jnp.int8))
+    # Learners always start empty-handed; custody is created only by native
+    # stock, loose-drop, or contact-transfer events.
+    stored=states.bun_stored.at[rows,origin,origin].set(jnp.where(chain,0,1).astype(states.bun_stored.dtype))
     window=jax.random.randint(kw,(n,),8,61)
     sugar=(scene==1)&(rows%4<2);dead=(scene==1)&~sugar
     # Explicit legal training start states, never mutate/teleport during play.
@@ -78,7 +78,7 @@ def init_batch(key,n,course):
     core=core._replace(alive=core.alive.at[rows,1-seat].set(~dead),hp=core.hp.at[rows,1-seat].set(jnp.where(dead,0,core.hp[rows,1-seat])))
     # Curriculum nuisance variants: explicit legal item/chain starts, no free
     # capture/kill. Bombs are enemy-owned at least three cells from both spawns.
-    difficulty=(scene==6)|((scene>=2)&(scene<=4)&(rows%4==0))
+    difficulty=jnp.zeros_like(scene,dtype=jnp.bool_)
     valid_cell=~wall & (jnp.where(OPEN_SCENE[scene,None,None],True,~brick))
     yx=jnp.asarray(np.indices((env.H,env.W)).transpose(1,2,0))
     separated=jnp.all(jnp.sum(jnp.abs(yx[None,None]-core.pos[:,:,None,None]),-1)>=3,axis=1)
@@ -96,7 +96,7 @@ def init_batch(key,n,course):
     legal=~core.wall[rows[:,None],neighbor[:,:,0],neighbor[:,:,1]]&~core.brick[rows[:,None],neighbor[:,:,0],neighbor[:,:,1]]
     dist=DISTANCE[OPEN_SCENE[scene].astype(jnp.int32)[:,None],seat[:,None],neighbor[:,:,0],neighbor[:,:,1]]
     candidate=jnp.argmin(jnp.where(legal,dist,32767),-1);adj=neighbor[rows,candidate]
-    hazard=carry&(rows%4==1)&legal.any(-1)
+    hazard=jnp.zeros_like(legal.any(-1))
     field=states.field_item.at[rows,adj[:,0],adj[:,1]].set(jnp.where(hazard,1+rows%2,0).astype(jnp.int8))
     field_owner=states.field_owner.at[rows,adj[:,0],adj[:,1]].set(jnp.where(hazard,1-seat,-1).astype(jnp.int8))
     field_armed=states.field_armed.at[rows,adj[:,0],adj[:,1]].set(hazard)

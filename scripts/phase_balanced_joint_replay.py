@@ -1,8 +1,8 @@
 """Successor candidate: stage allocation inside each current/history half.
 
 No collector, buffer capacity/additions, objective, safety, loss coefficient or
-production hook changes. Opening gets two of 32 slots when alternatives exist;
-ordinary routes retain five eighths of the slots while navigation is present. The old
+production hook changes. Opening gets one of 32 slots when alternatives exist;
+ordinary routes retain half the slots while navigation is present. The old
 uniform sampler is exact when no preparation labels are available.
 """
 import jax
@@ -32,14 +32,14 @@ def choose(data,key,num=32):
 
     def balanced(_):
         has_ordinary=ordinary.any();has_navigation=navigation.any();has_opening=opening.any()
-        opening_slots=jnp.where(has_opening,jnp.where(has_ordinary|has_navigation,max(1,num//16),num),0)
-        ordinary_slots=jnp.where(has_ordinary,jnp.where(has_navigation,num*5//8,num-opening_slots),0)
+        opening_slots=jnp.where(has_opening,jnp.where(has_ordinary|has_navigation,max(1,num//32),num),0)
+        ordinary_slots=jnp.where(has_ordinary,jnp.where(has_navigation,num//2,num-opening_slots),0)
         masks=jnp.stack([ordinary&((data['kind']==1)|(data['kind']==4)),
             ordinary&(data['kind']==2),ordinary&(data['kind']==3)])
         present=masks.any(-1)
-        # Reserve three fifths of ordinary slots for return when both return and
+        # Reserve three quarters of ordinary slots for return when both return and
         # acquisition labels exist; absent groups redistribute within the half.
-        return_slots=jnp.where(present[2],jnp.where(present[:2].any(),ordinary_slots*3//5,ordinary_slots),0)
+        return_slots=jnp.where(present[2],jnp.where(present[:2].any(),ordinary_slots*3//4,ordinary_slots),0)
         other_order=jnp.argsort(~present[:2],stable=True)
         other=other_order[(jnp.arange(num)-return_slots)%jnp.maximum(present[:2].sum(),1)]
         group=jnp.where(jnp.arange(num)<return_slots,2,other)

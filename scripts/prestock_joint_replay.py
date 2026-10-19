@@ -63,7 +63,9 @@ def aggregate(old,batch,key,generation,offset=legacy.OFFSET,joint_offset=95):
 
 def replay_loss(params,replay):
     from jax_bomb import jax_train as train
-    from scripts.prestock_joint_oracle import joint_set_loss
+    from scripts.return_dagger_weight import weighted_joint_loss
     move,ability,_,_=train.net_forward(params,'transformer',replay['obs'],replay['gv'])
-    return joint_set_loss(move/legacy.TEMPERATURE,ability/legacy.TEMPERATURE,
-        replay['legal'],replay['ability_legal'],replay['joint_target'],replay['valid'],legacy.COEFFICIENT)[0]
+    returning=(replay['kind']==3)&~replay['preparation']
+    return weighted_joint_loss(move/legacy.TEMPERATURE,ability/legacy.TEMPERATURE,
+        replay['legal'],replay['ability_legal'],replay['joint_target'],replay['valid'],
+        returning,2.,legacy.COEFFICIENT)[0]

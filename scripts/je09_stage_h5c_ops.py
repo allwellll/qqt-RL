@@ -233,7 +233,9 @@ def ppo(params,adam,batch,key,ema,opt,frozen,minibatch,axis_name='dev',gradient_
         for name,strong,weak in [('g0',.10,.025),('stage1_teacher',.04,.01)]:
             rm,rb,_,_=train.net_forward(frozen[name],'transformer',o[:half],s[:half])
             kl=factor_kl(move[:half],ability[:half],rm,rb,m[:half],b[:half])
-            penalty+=jnp.mean(jnp.where(combat,strong,weak)*(kl[:,0]+kl[:,1]))
+            from scripts.native_return_retention import movement_scale,retained_kl
+            scale=movement_scale(context[ii[:half]],s[:half],m[:half],b[:half])
+            penalty+=retained_kl(kl[:,0],kl[:,1],jnp.where(combat,strong,weak),scale)
             klstats.append(kl.mean(0))
         parent_kl=jnp.float32(0.)
         if 'parent' in frozen:

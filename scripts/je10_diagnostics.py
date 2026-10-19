@@ -5,6 +5,22 @@ from pathlib import Path
 from scripts.population_run_state import atomic_json
 
 
+def sampling_diagnostic_targets():
+    # Retired eventless-custody scenes have intentionally zero exposure.
+    return ('vulnerable_steal','defend_and_steal','route_break_capture')
+
+
+def native_full_event_counts(row):
+    names=('own_window_enter','own_kill','enemy_base_entry','loose_pickup',
+           'inventory_or_native_steal','attributed_custody_start','capture','native_transfer')
+    counts=Counter()
+    for role in row['dagger']['opponent_course'].values():
+        values=role['native_transitions']
+        if len(values)!=len(names):raise ValueError('native-full transition schema mismatch')
+        counts.update(dict(zip(names,values)))
+    return dict(counts)
+
+
 def diagnose(base, evaluation):
     base=Path(base)
     if base.is_absolute():base=base.relative_to(Path(__file__).resolve().parents[1])
@@ -14,7 +30,7 @@ def diagnose(base, evaluation):
     rewards=Counter();transitions=Counter();scenes=Counter();queries=candidates=0.
     for row in rows:
         rewards.update(dict(zip(row['component_names'],row['reward_components'])))
-        transitions.update(row['dagger']['native_transitions'])
+        transitions.update(native_full_event_counts(row))
         scenes.update(dict(zip(row['scene_names'],row['actual_scene_valid_ticks'])))
         queries+=row.get('signal_decomposition',{}).get('oracle_queries',sum(r['query'] for r in row['dagger']['opponent_course'].values()))
         candidates+=row.get('signal_decomposition',{}).get('oracle_candidates',sum(r['eligible'] for r in row['dagger']['opponent_course'].values()))
@@ -25,16 +41,18 @@ def diagnose(base, evaluation):
     routes={}
     for task,r in evaluation['route'].items():
         routes[task]={k:r.get(k,0) for k in ['games','window_ticks','target_ticks','oracle_opportunities','oracle_matches','oracle_opportunity_episodes','first_oracle_match_episodes','progress_ticks','pickup_episodes','return_started','delivery_episodes','recovery_switch_opportunities','recovery_switches','death','self_death']}
-        routes[task].update(oracle_agreement=r.get('oracle_matches',0)/max(1,r.get('oracle_opportunities',0)),progress_per_target_tick=r.get('progress_ticks',0)/max(1,r.get('target_ticks',0)))
+        routes[task].update(acquisition_scope=r.get('acquisition_scope','legacy_fixture_scope_unverified'),
+            synthetic_carrier_diagnostic_only=task in ['carry_near','carry_mid','carry_far'],
+            proves_post_pickup_unreachability=False,oracle_agreement=r.get('oracle_matches',0)/max(1,r.get('oracle_opportunities',0)),progress_per_target_tick=r.get('progress_ticks',0)/max(1,r.get('target_ticks',0)))
     denom=max(1,abs(rewards['combined_total']))
     hypotheses=[]
-    zero_routes=[k for k in ['vulnerable_steal','carry_route_far','carry_route_mid','carry_route_near'] if scenes.get(k,0)==0]
+    zero_routes=[k for k in sampling_diagnostic_targets() if scenes.get(k,0)==0]
     if rows and zero_routes:
-        hypotheses.append(dict(rank=1,hypothesis='Explicit route initialization lessons have zero independent sampling mass; learner-state route exposure can remain concentrated on bridge rather than the weak full-game stage.',evidence=dict(zero_sampled_lessons=zero_routes,natural_full_transitions=dict(transitions)),minimal_next_change='Change only scene mixture, preserving credit/PBRS/DAgger/network: combat .35, bridge .20, full .35, remaining .10 native route lessons. Predeclare new identity, focused sampler TDD and technical smoke; healthy current fixed run continues.'))
+        hypotheses.append(dict(rank=1,hypothesis='Legal empty-handed route lessons have zero observed sampling mass; learner-state route exposure can remain concentrated on bridge rather than the weak full-game stage.',evidence=dict(zero_sampled_lessons=zero_routes,natural_full_transitions=dict(transitions)),minimal_next_change='Change only scene mixture, preserving credit/PBRS/DAgger/network: combat .35, bridge .20, full .35, remaining .10 legal empty-handed scenes1/5/7 only; never restore retired scenes2/3/4/6. Predeclare new identity, focused sampler TDD and technical smoke; healthy current fixed run continues.'))
     if rows:
         hypotheses.append(dict(rank=len(hypotheses)+1,hypothesis='Bounded strict-verifier queries may cover a small fraction of learner route candidates; candidate count alone does not prove useful supervision coverage.',evidence=dict(query_ticks=queries,candidate_ticks=candidates,query_per_candidate=queries/max(1,candidates)),minimal_next_change='Inspect phase-specific first deviations and verifier rejection causes before changing query budget; do not change scene mix and query budget in the same causal follow-up.'))
         hypotheses.append(dict(rank=len(hypotheses)+1,hypothesis='Route shaping may be small or negative relative to task/control rewards; evaluate gross positive and negative terms, not just net.',evidence={k:rewards[k] for k in ['control_entry_reward','control_residual_reward','control_clawback','route_shaped_reward','route_positive','route_negative','settled_kill','transport_capture','combined_total']},minimal_next_change='Use phase/target first-deviation traces and reward-GAE approximation to determine signal resolution before any coefficient change.'))
-    result=dict(generation=generation,diagnostic_only=True,controls_training=False,opportunities_scope='Training native transitions are natural-full counters; JS route fixtures and native full are separate tasks; no cross-simulator pooled rate.',training_generations=len(rows),reward_components=dict(rewards),reward_fraction_of_absolute_combined_total={k:rewards[k]/denom for k in ['control_entry_reward','control_residual_reward','control_clawback','route_shaped_reward','route_positive','route_negative']},actual_scene_ticks=dict(scenes),native_full_transitions=dict(transitions),oracle=dict(candidate_ticks=candidates,query_ticks=queries,query_per_candidate=queries/max(1,candidates)),first_deviation_sample=dict(selection='first16 encountered per generation, capped diagnostic sample; not population failure rate',count=len(failures),phases=dict(Counter(str(r['phase']) for r in failures)),first=failures[0] if failures else None),route_funnel=routes,ranked_root_cause_hypotheses=hypotheses,retention=dict(hunter_js=evaluation['hunter_js'],tactical_python=evaluation['tactical_python']),actual_opponent_exposure=evaluation['actual_training_exposure'],delta_parent=evaluation['delta_parent'],delta_previous=evaluation['delta_previous'],limits=['Only Bun806 native/open geometries available; cross-map generalization unproven.','JS observable reconstruction and zero-value reward GAE are approximate, not checkpointed training reward or counterfactual Q.','Intermediate metrics diagnose and prepare successor proposals; never capability/admission/promotion gates.'])
+    result=dict(retired_scene_ids=[2,3,4,6],retired_scene_zero_exposure_expected=True,post_pickup_unreachability_inference_withdrawn=True,generation=generation,diagnostic_only=True,controls_training=False,opportunities_scope='Training native transitions are natural-full counters; JS route fixtures and native full are separate tasks; no cross-simulator pooled rate.',training_generations=len(rows),reward_components=dict(rewards),reward_fraction_of_absolute_combined_total={k:rewards[k]/denom for k in ['control_entry_reward','control_residual_reward','control_clawback','route_shaped_reward','route_positive','route_negative']},actual_scene_ticks=dict(scenes),native_full_transitions=dict(transitions),oracle=dict(candidate_ticks=candidates,query_ticks=queries,query_per_candidate=queries/max(1,candidates)),first_deviation_sample=dict(selection='first16 encountered per generation, capped diagnostic sample; not population failure rate',count=len(failures),phases=dict(Counter(str(r['phase']) for r in failures)),first=failures[0] if failures else None),route_funnel=routes,ranked_root_cause_hypotheses=hypotheses,retention=dict(hunter_js=evaluation['hunter_js'],tactical_python=evaluation['tactical_python']),actual_opponent_exposure=evaluation['actual_training_exposure'],delta_parent=evaluation['delta_parent'],delta_previous=evaluation['delta_previous'],limits=['Only Bun806 native/open geometries available; cross-map generalization unproven.','JS observable reconstruction and zero-value reward GAE are approximate, not checkpointed training reward or counterfactual Q.','Intermediate metrics diagnose and prepare successor proposals; never capability/admission/promotion gates.'])
     atomic_json(base/'authority_je10'/f'g{generation:06d}'/'DIAGNOSIS.json',result)
     if generation==128:
         atomic_json(base/'FINAL_ROOT_CAUSE_PROPOSAL.json',dict(generation=generation,evidence=result,decision='Prepare the highest-ranked minimum verifiable change; predeclared successor already starts before final evaluation. Retain combat/safety checks as diagnostics, not admission gates.'))

@@ -37,7 +37,8 @@ def curriculum_weights(counts,combat_fraction=.40,bridge_fraction=.35):
     # Keep the bridge visible in every generation while retaining a broad
     # combat/transport mix.  The remaining curriculum mass follows the
     # established scene prior and is independent of short rollout noise.
-    rest=scenes.BASE.at[0].set(0.).at[9].set(0.)
+    from scripts.je10_causal_init import scene_weights
+    rest=scene_weights(scenes.BASE).at[0].set(0.).at[9].set(0.)
     rest=rest/jnp.maximum(rest.sum(),1e-6)*(1.-combat_fraction-bridge_fraction)
     return rest.at[0].set(combat_fraction).at[9].set(bridge_fraction)
 

@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JE10 训练结果 · qqt-RL</title><link rel="stylesheet" href="training.css"><script src="training.js" defer></script></head>
+<body><main><nav><a href="index.html">对战</a> · <a href="review.html">Reward / Advantage 回放</a></nav><h1>JE10 固定评估结果</h1>
+<p id="status" role="status">正在读取冻结结果…</p><p>r19 因用户指令安全暂停；恢复须显式指令。g58 已提交，最后完整评估 g32，剩余 70 代，r20 未启动。</p>
+<p>历史发布综合折中点仍为 r01 attempt04 g8。下表保留 r12–r19 全部 61 个完成固定点；不择优种子，不将专项最高点称为综合冠军。</p>
+<p>Hunter 为真实 JS bot，各档64局；Tactical v2 为 Python bot / CPU JAX 环境64局。八路线各16局，依序死亡库存、糖泡库存、真实掉包、人工近/中/远返程、恢复威胁、自然完整。人工携包只作诊断，库存窗口由 fixture 提供。自然交付和战斗安全尚未稳定保持；仅一张原生806地图。</p>
+<p><strong>更正：</strong>实际走到敌笼取包必有可逆入站通路。旧“真实取包后无路／需要预开返程通道”结论撤回；无事件预携包训练已删除，r11 排除。</p>
+<label>轮次 <select id="round"><option value="all">全部固定点</option></select></label>
+<div class="table-wrap"><table><thead><tr><th>轮次 / 固定点</th><th>Hunter 难/中/易</th><th>Tactical</th><th>八路线交付</th><th>自然拾包</th><th>Tactical 自伤</th></tr></thead><tbody id="results"></tbody></table></div>
+<p>r19g32 自然拾包8/16、交付6/16，Tactical6/64且自伤4；部分路线改善不能证明整体目标完成。</p>
+<p><a href="training-summary.json">冻结网页数据</a> · <a href="https://github.com/allwellll/qqt-RL/blob/main/reports/je10_training_20261019.md">完整报告、分母与证据限制</a> · <a href="https://github.com/allwellll/qqt-RL/blob/main/docs/je10_control_route_training_summary.md">长期总结</a></p>
+</main></body></html>

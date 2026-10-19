@@ -2,10 +2,12 @@
 import argparse
 import hashlib
 import json
+import sys
 from collections import Counter
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 
 
 def ratio(n,d):
@@ -141,7 +143,8 @@ def analyze(base):
         phases={};audit=Counter();rewards=Counter();transitions=Counter();scenes=Counter();league=Counter()
         for row in rows:
             rewards.update(dict(zip(row['component_names'],row['reward_components'])))
-            transitions.update(row['dagger']['native_transitions'])
+            from scripts.je10_diagnostics import native_full_event_counts
+            transitions.update(native_full_event_counts(row))
             scenes.update(dict(zip(row['scene_names'],row['actual_scene_valid_ticks'])))
             audit.update(row['dagger'].get('verifier_audit',{}))
             for role,counts in row['dagger']['opponent_course'].items():

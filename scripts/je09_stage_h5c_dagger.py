@@ -5,7 +5,7 @@ from scripts.je08_bun_potential import shortest, INF
 from scripts.je09_return_expert import action_set, supervised_loss
 
 OFFSET=48
-CAPACITY=2048
+CAPACITY=4096
 ADDITIONS=256
 COEFFICIENT=.05
 TEMPERATURE=1.

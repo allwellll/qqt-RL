@@ -61,9 +61,8 @@ def labels(states,aux,legal,seat,danger):
     enemy_distance=jnp.abs(states.pos[r,seat]-states.pos[r,enemy]).sum(-1)
     allowed=route_allowed(~empty,states.alive[r,enemy],states.trapped[r,enemy],enemy_distance)
     native_window=~states.alive[r,enemy]|(states.trapped[r,enemy]>0)
-    initialized=(states.scene>=2)&(states.scene<=4)
     allow=eligible(states.scene,states.alive[r,seat],aux['terminal'],states.trapped[r,seat],
-        states.bun_carried[r,seat],native_window,d['custody'][r,seat]|initialized,d['age'][r,seat])&allowed
+        states.bun_carried[r,seat],native_window,d['custody'][r,seat],d['age'][r,seat])&allowed
     loose=d['loose'][r,seat].any((-2,-1))&native_window
     stock=states.bun_stored[r,enemy,enemy]>0
     kind=jnp.where(empty,jnp.where(loose,jnp.where(d['loose_origin'][r,seat]==seat,4,1),jnp.where(stock,2,0)),3)

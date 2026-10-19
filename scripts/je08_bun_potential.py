@@ -150,7 +150,8 @@ def refresh(states, next_states, info, routing, drop, goals):
     allgoals = jnp.concatenate([drop_goals, jnp.broadcast_to(goals, (n, 2, h, w))], 1)
 
     def rebuild(_):
-        result = shortest(next_states.wall[:, None], next_states.brick[:, None], allgoals)
+        from scripts.carrier_route_fields import fields
+        result = fields(next_states.wall, next_states.brick, allgoals)
         return jnp.where(dirty[:, None, None, None], result, routing['distance'])
 
     distance = jax.lax.cond(jnp.any(dirty), rebuild, lambda _: routing['distance'], operand=None)

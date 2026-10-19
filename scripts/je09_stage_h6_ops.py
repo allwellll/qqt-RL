@@ -31,11 +31,14 @@ def select_verifier_slots(eligible, fragment, score, slots_per_fragment=1):
 
 
 def curriculum_weights(counts, combat_fraction=.40, bridge_fraction=.25):
-    """Allocate 35% to native full games, preserving bridge and combat mass."""
+    """Allocate native full/bridge mass and exclude synthetic pre-stock scenes."""
     base = _h3._base_curriculum_weights(counts)
     natural = jnp.float32(.35)
     remainder = jnp.maximum(1. - combat_fraction - bridge_fraction, 0.) - natural
-    non_full = base.at[0].set(0.).at[8].set(0.).at[9].set(0.)
+    # Scene 2/3/4/6 used to initialize the learner already carrying the
+    # enemy bun. Keep their names for diagnostic compatibility, but sample
+    # none of them after the causal-init fix.
+    non_full = base.at[0].set(0.).at[2].set(0.).at[3].set(0.).at[4].set(0.).at[6].set(0.).at[8].set(0.).at[9].set(0.)
     non_full = non_full / jnp.maximum(non_full.sum(), 1e-6) * jnp.maximum(remainder, 0.)
     return non_full.at[0].set(combat_fraction).at[8].set(natural).at[9].set(bridge_fraction)
 
@@ -102,13 +105,15 @@ def collect(*args, **kwargs):
     accepted_count = d[..., 5] > 0
     move = actions[..., 0].astype(jnp.int32)
     objective_active = d[..., 7] > 0
-    from scripts.prestock_fragment_queries import joint_mismatch,first_deviations
+    from scripts.prestock_fragment_queries import joint_mismatch
+    from scripts.return_query_diversity import first_deviations
     joint=c[...,95:110].reshape(c.shape[:-1]+(5,3))>0
     fragment = earliest_fragment(c)
     mismatch=joint_mismatch(joint,actions,objective_active&(d[...,5]>0))&(fragment>0)
     done = c[..., 47] > 0
 
-    first = first_deviations(mismatch,fragment,done,c[...,110]>0,c[...,111].astype(jnp.int32),c[...,113]>0)
+    cells=jnp.argmax(obs[...,0,:,:].reshape(obs.shape[:2]+(-1,)),axis=-1)
+    first = first_deviations(mismatch,fragment,done,c[...,110]>0,c[...,111].astype(jnp.int32),c[...,113]>0,cells)
     keep = first
     # The parent aggregation consumes label gate d[..., 5] as its replay-valid
     # bit. Gate it here so only verified first-deviation rows reach Actor loss.
