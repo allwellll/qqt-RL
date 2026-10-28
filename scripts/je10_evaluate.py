@@ -11,7 +11,8 @@ os.environ.update(CUDA_VISIBLE_DEVICES='',JAX_PLATFORMS='cpu',JAX_PLATFORM_NAME=
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from scripts.je10_campaign import NAMESPACE,BASE,ARM,POINTS,read,notify
 from scripts.population_run_state import atomic_json,sha,lock
-OUT=BASE/'authority_je10'
+OUT=BASE/os.environ.get('JE10_EVAL_NAMESPACE','authority_je10')
+EVAL_SEED=int(os.environ.get('JE10_EVAL_SEED','20261001'))
 
 
 def unresolved_training_failure(base):
@@ -49,7 +50,7 @@ def evaluate(g):
         if not target.exists():
             subprocess.run(['node','scripts/je10_web_hunter.js','--model',str(model.relative_to(ROOT)),
                 '--difficulty',tier,'--spawns',str((OUT/'spawns.json').relative_to(ROOT)),
-                '--start',str(start),'--end',str(start+8),'--seed','20261001',
+                '--start',str(start),'--end',str(start+8),'--seed',str(EVAL_SEED),
                 '--checkpoint-sha',policy_hash,'--out',str(target.relative_to(ROOT))],check=True)
         authority.validate_hunter(read(target),policy_hash,tier,start)
         return target
@@ -62,7 +63,8 @@ def evaluate(g):
     route=out/'ROUTE_FUNNEL.json'
     rproc=None
     if not route.exists():
-        rproc=subprocess.Popen(['node','scripts/je10_route_funnel.js',str(model.relative_to(ROOT)),str(route.relative_to(ROOT)),str((BASE/'regions.json').relative_to(ROOT))],
+        route_command=[sys.executable,'scripts/retention_route_eval.py'] if os.environ.get('JE10_ROUTE_PARALLEL')=='1' else ['node','scripts/je10_route_funnel_current.js']
+        rproc=subprocess.Popen(route_command+[str(model.relative_to(ROOT)),str(route.relative_to(ROOT)),str((BASE/'regions.json').relative_to(ROOT))],
             stdout=(out/'route.log').open('a'),stderr=subprocess.STDOUT)
     start=time.monotonic()
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
@@ -109,14 +111,14 @@ def evaluate(g):
     result['delta_previous']=numeric_delta(result,read(OUT/f'g{max(previous):06d}'/'SUMMARY.json')) if previous else None
     atomic_json(out/'SUMMARY.json',result)
     from scripts.je10_diagnostics import diagnose
-    diagnose(BASE,result)
+    diagnose(BASE,result,namespace=OUT.name,report_path=os.environ.get('JE10_DIAGNOSTIC_REPORT','reports/je10_training_20261018.md'))
     files=shards+[target,route,out/'SUMMARY.json',out/'DIAGNOSIS.json']
     atomic_json(out/'COMPLETE.json',dict(passed=True,generation=g,checkpoint_sha256=policy_hash,
         shards={str(p.relative_to(out)):sha(p) for p in files},capability_gate=False))
     notify(f'JE10异步评估g{g}完成：Hunter难/中/易安全击杀'+str([hunter_summary[d].get('safe_win') for d in ['hard','normal','easy']])+'；固定训练继续，详见authority_je10。')
     # Native joint fit under the same CPU authority.
     # Fixed quick-screen COMPLETE is already durable; audit is diagnostic only.
-    if read(BASE/'plan.json').get('prestock_preparation'):
+    if OUT.name=='authority_je10' and read(BASE/'plan.json').get('prestock_preparation'):
         try:
             from scripts.audit_joint_dagger import audit as joint_fifo_audit
             joint_fifo_audit(BASE,g)
@@ -135,7 +137,7 @@ def owner():
     atomic_json(OUT/'OWNER_WAIT.json',dict(reason='global CPU authority serialization',controls_gpu=False))
     fcntl.flock(global_lock.fileno(),fcntl.LOCK_EX)
     manifest=read(ROOT/'data/evaluation/bun_hunter_spawns_v1.json')
-    manifest.update(seed=20261001,source_spawn_seed=manifest['seed'],seed_scope='evaluation RNG fixed20261001; identical frozen64 spawn cells across every checkpoint')
+    manifest.update(seed=EVAL_SEED,source_spawn_seed=manifest['seed'],seed_scope='evaluation RNG fixed20261001; identical frozen64 spawn cells across every checkpoint')
     atomic_json(OUT/'spawns.json',manifest)
     atomic_json(OUT/'PROTOCOL.json',read(BASE/'ROUND_DECLARATION.json')['evaluation'])
     atomic_json(OUT/'OWNER.json',dict(unique=True,global_unique=True,cpu_only=True,controls_gpu=False,namespace=NAMESPACE))

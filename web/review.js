@@ -144,11 +144,16 @@
       $('je10-advantage-status').textContent=m.limitations+' 公式：'+m.definition+'；任务代理奖励：'+m.reward_definition;
       details($('je10-advantage-details'),[['raw A1（近似）',n(v?.raw_a1)],['shaped A1（近似）',n(v?.shaped_a1)],['ΔA = shaped A1 − raw A1（近似）',n(v?.delta_a)],['raw A1 相邻 tick 增量',n(v?.raw_a1_increment)],['shaped A1 相邻 tick 增量',n(v?.shaped_a1_increment)],['ΔA 相邻 tick 增量',n(v?.delta_a_increment)],['raw Q1 执行动作 / 策略均值',n(v?.raw_q1_taken)+' / '+n(v?.raw_q1_mean)],['shaped Q1 执行动作 / 策略均值',n(v?.shaped_q1_taken)+' / '+n(v?.shaped_q1_mean)],['严格训练 raw / shaped A1','未记录：没有历史训练 rollout 与 hidden aux；这里 V=0，不调用未经验证 Critic'],['覆盖率',m.measured_count+'/'+doc.actions.length+' tick；全部合法 move×ability 反事实，按同 checkpoint 策略加权']]);
     }
-    if(diagnostic?.decision){
+    if(diagnostic){
       const box=document.createElement('div'),decision=diagnostic.decision;
       const offline=diagnostic.offline_recomputed_current_reward;
+      if(decision){
       details(box,[['本步状态 SHA-256（前 → 后）',`${diagnostic.state_before_sha256} → ${diagnostic.state_after_sha256}`],['合法联合动作数（含道具）',String(decision.legal_count)],['移动策略概率（上/下/左/右/停）',decision.move_probability.map(v=>(100*v).toFixed(3)+'%').join(' / ')],['技能策略概率（无/泡/道具）',decision.ability_probability.map(v=>(100*v).toFixed(3)+'%').join(' / ')],['当前逻辑近似总 Reward（模型 / 对手）',offline?offline.approx_total_reward.map(number).join(' / '):'未记录'],['训练时 Reward / 严格 A₁','未记录；当前近似重算不代表训练时账本']]);
       if(doc.meta.approximate_a1){const r=diagnostic.route_diagnostic;box.append(text('p',`可观测路线（近似）：${r.phase} / ${JSON.stringify(r.target)}；距离 ${diagnostic.distance??'未记录'} / oracle ${JSON.stringify(diagnostic.oracle)}；连续 Phi ${r.phi_before.toFixed(8)} → ${r.phi_after.toFixed(8)}；奖励分量 ${JSON.stringify(diagnostic.approximate_reward_components)}；原始事件 ${JSON.stringify(diagnostic.events)}。训练 Reward 完整分量未记录；仅展示声明的任务代理/控制/路线分量。`));}
+      }else{
+        const previous=doc.diagnostic_ticks?.[t-2],approx=diagnostic.approximate_reward_gae;
+        details(box,[['本步状态 SHA-256（前 → 后）',`${diagnostic.state_before_sha256||'未记录'} → ${diagnostic.state_after_sha256||diagnostic.state_hash}`],['路线阶段 / 目标',`${diagnostic.phase} / ${JSON.stringify(diagnostic.target)}`],['合法 oracle 移动集合',JSON.stringify(diagnostic.oracle)],['连续距离 / 势能',`${diagnostic.distance??'未记录'} / ${number(diagnostic.phi)}`],['糖泡事件 ID / 原施害者',`${diagnostic.control_event_id??'未记录'} / ${diagnostic.control_owner??'未记录'}`],['可观测奖励分解（近似）',JSON.stringify(diagnostic.approximate_reward_components)],['零值函数 Reward-GAE（近似）',approx==null?'未记录':number(approx)],['近似 GAE 变化',approx==null||previous?.approximate_reward_gae==null?'未记录':number(approx-previous.approximate_reward_gae)],['口径',diagnostic.approximation||'未记录；近似 GAE 不是反事实 Q/A₁']]);
+      }
       if(offline){
         const route=offline.route[0];
         box.append(text('p',`offline_recomputed_current_reward / 近似诊断 · 当前路线 phase=${route.route_phase}，target=${route.route_target_identity}，来源=${route.route_target_provenance}；连续 Phi ${number(route.route_phi_before)} → ${number(route.route_phi_after)}，ΔPhi ${number(route.route_potential_delta)}，PBRS ${number(route.route_shaped_reward)}。`));
@@ -262,7 +267,9 @@
   async function load(id,tick){
     const token=++loadToken;playing=false;$('canvas-loading').hidden=false;$('canvas-loading').textContent='正在验证录像与状态 hash';$('integrity').textContent='验证中';
     const row=[...catalog.replays,...(catalog.history_replays||[])].find(r=>r.id===id);if(!row)throw Error('本录像不在合格诊断清单：缺少完整 Reward / Critic 优势证据；原资产保留供审计，未跳转其他录像。');
-    const response=await fetch(`review-replays/${row.file}`);if(!response.ok)throw Error(`录像 HTTP ${response.status}`);const bytes=new Uint8Array(await response.arrayBuffer());if(bytes.length!==row.bytes||await P.sha256(bytes)!==row.sha256)throw Error('录像文件 hash / 大小不匹配');
+    let bytes=row.localBytes;
+    if(!bytes){const response=await fetch(`review-replays/${row.file}`);if(!response.ok)throw Error(`录像 HTTP ${response.status}`);bytes=new Uint8Array(await response.arrayBuffer());}
+    if(bytes.length!==row.bytes||await P.sha256(bytes)!==row.sha256)throw Error('录像文件 hash / 大小不匹配');
     const next=P.validate(JSON.parse(new TextDecoder().decode(bytes)));const mapResponse=await fetch('assets/maps/levels.json');if(!mapResponse.ok)throw Error('地图 HTTP');const level=(await mapResponse.json()).find(x=>x.qqt_id===806);if(await P.hash(level)!==next.meta.map_sha256)throw Error('地图 hash');
     const versioned=next.meta.simulator_sha256===P.ROUTE_SIM_HASH,simPath=versioned?'review-sim/route-v35.js':'sim.js';
     const sr=await fetch(simPath);if(!sr.ok)throw Error('模拟器 HTTP');const simBytes=await sr.arrayBuffer();if(await P.sha256(simBytes)!==next.meta.simulator_sha256)throw Error('模拟器版本不匹配');
@@ -274,7 +281,7 @@
     Object.defineProperty(next,'asset_sha256',{value:row.sha256});
     doc=next;returnAnalysis=nextAnalysis;returnAudit=nextReturnAudit;player=nextPlayer;preview=new P.Player(doc,level);preview.cache=player.cache;rewardByTick=new Map(doc.rewards.map(r=>[r[0],r]));curveCache=null;renderer=QQTVisual.createRenderer($('game'),level,assets);rows=[];editing=null;$('annotation-form').hidden=true;
     try{const saved=localStorage.getItem(storageKey());if(saved)rows=P.validateAnnotations(JSON.parse(saved),doc);}catch(_){say('已有标注无效或存储不可用');}
-    $('episode-title').textContent=(doc.meta.route?.kind==='fixture'?'合成测试 fixture · ':'')+`模型 P0 · ${doc.meta.model} 对阵 对手 P1`;$('episode-meta').textContent=`${doc.meta.scene_name||'历史抢包对战'} · qqt_id ${doc.meta.map} · ${doc.meta.scene_rules||doc.meta.variant} · 对手 ${doc.meta.opponent} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)} · map ${doc.meta.map_sha256.slice(0,12)}`;$('terminal').textContent=doc.summary.done===false?'片段结束：对局仍在进行，未记录胜负':`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
+    $('episode-title').textContent=(doc.meta.route?.kind==='fixture'?'合成测试 fixture · ':'')+`模型 P0 · ${doc.meta.model||doc.meta.id} 对阵 对手 P1`;$('episode-meta').textContent=`${doc.meta.scene_name||'历史抢包对战'} · qqt_id ${doc.meta.map} · ${doc.meta.scene_rules||doc.meta.variant} · 对手 ${doc.meta.opponent} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)} · map ${doc.meta.map_sha256.slice(0,12)}`;$('terminal').textContent=doc.summary.done===false?'片段结束：对局仍在进行，未记录胜负':`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
     const metrics=Boolean(doc.metrics);
     document.querySelector('.route-explanation').textContent=metrics?'本批raw侧是继承H8任务Reward、shaped侧是JE10总Reward；两侧使用同一个经过总Reward训练的Critic做离线一步反事实近似。路线奖励是人工辅助量，不能当作优势。非历史训练rollout，非独立原始任务Critic。':'原始任务Critic估计任务回报；路线奖励是人工辅助量。塑形Critic只有经过塑形回报训练并验证才展示；路线奖励不能代替优势。';
     const fixedEight=doc.meta.batch_id==='v36-fixed-eight-20261017',je10=doc.meta.batch_id==='je10-best-completed-20261018';
@@ -317,6 +324,13 @@
   $('add-annotation').onclick=()=>form();$('cancel-annotation').onclick=()=>{$('annotation-form').hidden=true;};
   $('annotation-form').onsubmit=e=>{e.preventDefault();const a={id:editing||crypto.randomUUID(),tick:Number($('annotation-tick').value),category:$('annotation-category').value,severity:$('annotation-severity').value,note:$('annotation-note').value};const next=rows.filter(x=>x.id!==a.id).concat(a);try{P.validateAnnotations(P.annotationDocument(doc,next),doc);rows=next;persist();$('annotation-form').hidden=true;}catch(e){say(e.message);}};
   $('export-annotations').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(P.annotationDocument(doc,rows),null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='annotations.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+  $('import-replay').onclick=()=>$('replay-file').click();
+  $('replay-file').onchange=async()=>{try{
+    const file=$('replay-file').files[0];if(!file)return;if(!catalog)throw Error('目录尚未就绪');if(file.size>64*1024*1024)throw Error('录像文件过大');
+    const bytes=new Uint8Array(await file.arrayBuffer()),next=P.validate(JSON.parse(new TextDecoder().decode(bytes))),m=next.meta;
+    const row={id:m.id,seed:m.seed,scene:m.scene||'native',variant:m.variant||'native',scene_name:m.native_fixture?.task||m.scene_name||'原生完整对局',scene_rules:m.native_fixture?'声明的原生 reset fixture':'原生规则',model:m.model||m.id,opponent:m.opponent,checkpoint_sha256:m.checkpoint_sha256,map:m.map||806,map_sha256:m.map_sha256,diagnostic:Boolean(m.diagnostic),summary:next.summary,bytes:bytes.length,sha256:await P.sha256(bytes),localBytes:bytes};
+    catalog.replays=catalog.replays.filter(r=>r.id!==m.id);catalog.replays.unshift(row);sceneFilter.value='';modelFilter.value='';$('filter').value='';list();await load(m.id,0);say('诊断录像已验证并导入本次会话');
+  }catch(e){fail(e);}finally{$('replay-file').value='';}};
   $('import-annotations').onclick=()=>$('annotation-file').click();$('annotation-file').onchange=async()=>{try{const file=$('annotation-file').files[0];if(!file)return;if(file.size>1024*1024)throw Error('标注文件过大');const next=P.validateAnnotations(JSON.parse(await file.text()),doc);rows=next;persist();say('标注导入成功');}catch(e){say(`导入失败：${e.message}`);}finally{$('annotation-file').value='';}};
   window.addEventListener('hashchange',()=>{const p=new URLSearchParams(location.hash.slice(1)),id=p.get('replay'),tick=Number(p.get('tick')||0);if(!Number.isInteger(tick)||tick<0){say('非法深链 tick');return;}if(doc?.meta.id===id)seek(Math.min(tick,doc.actions.length));else load(id,tick).catch(fail);});
   window.addEventListener('resize',()=>{if(doc){timeline();draw();}});

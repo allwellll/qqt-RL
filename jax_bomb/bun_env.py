@@ -408,7 +408,8 @@ def _sample_spawn_bucket(key, native_spawn):
 def spawn_bucket_ids(key, n: int) -> jnp.ndarray:
     """Bucket chosen by init_batch(key, n) per env (audit; same key path)."""
     def one(env_key):
-        k_danger = jax.random.split(env_key, 11)[9]
+        # Match _fresh: contact and ambush keys precede the danger key.
+        k_danger = jax.random.split(env_key, 13)[11]
         return _sample_spawn_bucket(k_danger, jnp.zeros((2, 2)))[1]
     return jax.vmap(one)(jax.random.split(key, n))
 

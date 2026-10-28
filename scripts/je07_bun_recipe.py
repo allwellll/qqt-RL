@@ -15,6 +15,7 @@ from scripts.population_run_state import atomic_json,sha,lock
 from scripts.je03_bun_stage1_20261011 import digest,read,verify_checkpoint,gpu_owners
 from scripts.je03_bun831_20261011 import save_pickle,child_env
 from scripts.je05_bun_recipe import POOL,unrep,alive,Adopted
+from scripts.je06_bun_recipe import SOURCES as PREDECESSOR_SOURCES
 
 BASE=ROOT/'runs/je07_bun_20261013/drop_recovery_carry_assist_pfsp8_v1'
 SMOKE_NAME='production_smoke_v1'
@@ -26,7 +27,7 @@ SOURCES=['jax_bomb/je07_bun_env.py','scripts/je07_bun_curriculum.py','scripts/je
     'scripts/je07_bun_scenes.py','scripts/je07_bun_recipe.py','scripts/je07_bun_worker.py',
     'scripts/je07_bun_supervisor.py','scripts/je07_bun_evaluator.py','scripts/je07_bun_authority.py',
     'scripts/je07_bun_cpu_smoke.py','scripts/je07_web_probe.js',
-    *read(PREDECESSOR/'SOURCE_SEAL.json')['sources'].keys()]
+    *PREDECESSOR_SOURCES]
 
 def plan():
     from scripts.je06_bun_recipe import plan as previous

@@ -15,6 +15,7 @@ from scripts.population_run_state import atomic_json,sha,lock
 from scripts.je03_bun_stage1_20261011 import digest,read,verify_checkpoint
 from scripts.je03_bun831_20261011 import save_pickle,child_env
 from scripts.je05_bun_recipe import POOL,unrep,alive,Adopted
+from scripts.je07_bun_recipe import SOURCES as PREDECESSOR_SOURCES
 
 BASE=ROOT/'runs/je08_bun_20261014/topology_potential_pfsp4_v1'
 SMOKE_NAME='production_smoke_v1'
@@ -31,7 +32,7 @@ SOURCES=['scripts/je08_bun_potential.py','scripts/je08_bun_ops.py',
     'scripts/je08_bun_cpu_smoke.py','scripts/je08_web_diagnostics.js',
     'tests/test_je08_topology.py','tests/test_je08_integration.py','tests/test_je08_boundaries.py',
     'tests/je08_web_diagnostics_test.js',
-    *read(PREDECESSOR/'SOURCE_SEAL.json')['sources'].keys()]
+    *PREDECESSOR_SOURCES]
 
 def gpu_owners():
     rows=subprocess.check_output(['nvidia-smi','--query-gpu=index,uuid','--format=csv,noheader'],text=True)

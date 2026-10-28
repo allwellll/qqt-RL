@@ -4,7 +4,7 @@
 <body>
 <header><a href="index.html" class="brand">QQT <span>/</span> 回放诊断</a><span class="header-label">回放 · 离线 CPU</span><button id="advanced-open" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button><span id="notice" role="status">正在读取录像目录</span></header>
 <section id="advanced-settings" hidden>
-  <div class="auth-tools"><button id="advanced-close">关闭诊断台</button><button id="advanced-forget">忘记本设备授权 / 锁定高阶设置</button></div>
+  <div class="auth-tools"><button id="import-replay">导入诊断录像</button><input id="replay-file" type="file" accept="application/json,.json" hidden><button id="advanced-close">关闭诊断台</button><button id="advanced-forget">忘记本设备授权 / 锁定高阶设置</button></div>
   <main class="workspace">
     <aside class="library"><div class="section-title"><h1>对局录像</h1><span id="count"></span></div><input id="filter" type="search" placeholder="筛选 seed / 失败标签" aria-label="筛选对局"><div id="replay-list"></div><div class="library-foot" id="catalog-meta"></div></aside>
     <section class="center">

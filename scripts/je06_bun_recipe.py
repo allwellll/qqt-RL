@@ -8,6 +8,7 @@ from scripts.population_run_state import atomic_json,sha,lock
 from scripts.je03_bun_stage1_20261011 import digest,read,verify_checkpoint,gpu_owners
 from scripts.je03_bun831_20261011 import save_pickle,child_env
 from scripts.je05_bun_recipe import POOL,unrep,alive,Adopted
+from scripts.je05_bun_recipe import SOURCES as PREDECESSOR_SOURCES
 BASE=ROOT/'runs/je06_bun_20261013/holistic_long256_pfsp8_v1'
 SMOKE_NAME='production_smoke_restart_v3'
 RUN=BASE/SMOKE_NAME if os.environ.get('JE06_PHASE')=='smoke' else BASE
@@ -17,7 +18,7 @@ ARM='bun392_holistic_long256_pfsp8'
 POINTS=[0,8,16,32,64,128,256,512,768,1024,1536,2048,3072,4096]
 SOURCES=['scripts/je06_bun_recipe.py','scripts/je06_bun_worker.py','scripts/je06_bun_authority.py','scripts/je06_bun_evaluator.py',
  'scripts/je06_bun_supervisor.py','scripts/je06_web_tasks.js','scripts/je06_bun_candidate_audit.py','scripts/je06_bun_side_diagnostics.py',
- *read(PREVIOUS/'SOURCE_SEAL.json')['sources'].keys()]
+ *PREDECESSOR_SOURCES]
 
 def plan():
     from scripts.je05_bun_recipe import plan as previous_plan
