@@ -1,12 +1,12 @@
 {
   "scope": "All index blobs and reachable blobs on both merge parents after original main base 7128071",
   "limit_bytes": 10000000,
-  "indexed_files": 1201,
+  "indexed_files": 1207,
   "maximum": {
     "file": "web/review-replays/h8-v36-g32-tactical_v2-2026101786.json",
     "bytes": 7958608
   },
-  "new_history_blobs": 328,
+  "new_history_blobs": 343,
   "new_history_maximum": {
     "file": "reports/main_integration_20261028/closure.json",
     "bytes": 1643639

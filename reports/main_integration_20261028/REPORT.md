@@ -140,4 +140,6 @@ CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu \
 - 隐私边界仍为 git ls-files 与明确选中的待提交文件；不遍历未追踪 run/checkpoint/编排目录。扫描收据 `privacy_sync_main_20261028.json`，覆盖 1,207 个选中/暂存文件，无命中。
 - 文件大小检查使用 10,000,000 字节上限（十进制 10 MB），覆盖整个 index 和两个 merge 父提交自 `7128071` 后的新增可达 blobs。当前最大文件为 `web/review-replays/h8-v36-g32-tactical_v2-2026101786.json`，7,958,608 字节，无超限；收据 `asset_sizes_sync_main_20261028.json`。
 
+merge commit 已完成：`42ae88d7ad5aa673221b501fe976079c121c5e3d`，父提交为 `abe7e54c1124248f00729dbc9bd26f68697c3169` 与 `eedf2b5fa13bb2163a64af7aa80a74bfbaa7540c`。`git merge-base --is-ancestor origin/main HEAD` 返回 0，因此当前 HEAD 包含最新 origin/main，可作为 main 的快进目标；本次实际使用的是用户预先要求的 `--no-ff` merge commit。提交后重新扫描仍为隐私无命中、无未合并 index 条目、无活动测试进程；本地 `node_modules` 与 `web/vendor` 仍是原有未追踪目录。
+
 合并 commit、祖先检查及最终工作区状态在验证结束后记录；本次 merge 使用 `--no-ff`，不会伪装成可快进提交。整个同步不 push，不修改来源目录、runs 或另一个 Review 工作区；所有验证仅用 CPU，未设置终止测试的 timeout，也未杀进程。
