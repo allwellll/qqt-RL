@@ -1,0 +1,13 @@
+{
+  "scope": "git ls-files plus selected integration files; untracked runs/checkpoints/orchestration/AGENTS.md excluded",
+  "files": 1207,
+  "binary_files": 143,
+  "findings_by_category": {},
+  "passed": true,
+  "checks": [
+    "case-insensitive local user identifier",
+    "local absolute references",
+    "RFC1918 IPv4",
+    "literal machine process identities"
+  ]
+}

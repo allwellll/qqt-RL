@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "limit_bytes": 10000000,
+  "indexed_files": 955,
+  "maximum": {
+    "file": "web/review-replays/h8-v36-g32-tactical_v2-2026101786.json",
+    "bytes": 7958608
+  },
+  "oversized": [],
+  "new_branch_blobs": 61,
+  "new_branch_maximum": {
+    "file": "reports/review_simplification_20261025/desktop.png",
+    "bytes": 719090
+  },
+  "history_base": "7128071",
+  "history_checked_through": "172194d705d3d0171f3a78669fb04ff2628498a4",
+  "model_tracked": false,
+  "model_in_new_branch_history": false,
+  "scope": "All indexed files plus reachable blobs added after baseline; old comparison branch excluded."
+}

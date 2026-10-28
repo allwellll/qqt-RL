@@ -1,0 +1,34 @@
+
+> qqt-rl-bun-web@0.1.0 test:review
+> node web/test_review_good_models.js && node web/test_review_admission.js && node web/test_review_metrics.js && node web/test_review_route_targets.js && node web/test_review_je10.js && node web/test_review_protocol.js && node web/test_review_v36_multiseed.js && node web/test_review_v36.js && node web/test_review_v36_advantage_contract.js && node web/test_review_presentation.js && node web/test_review_motion_regression.js && node web/test_review_advantage.js && node web/test_review_route.js && node web/test_review_route_g32.js && node web/test_review_return.js && node web/test_review_keyboard.js && node web/test_review_scenes.js && node web/test_review_dagger.js && node web/test_ui_panels.js && python3 scripts/test_diagnostic_a1.py
+
+Good models GREEN: all paired checkpoints/seeds, original seven, per-tick metrics and decision evidence
+Review admission GREEN: complete real Critic/reward, all seeds, old incomplete recordings rejected
+Metrics identity tamper RED-GREEN
+Metrics formula / legal renormalization / terminal / null / provenance RED-GREEN
+Actual Actor probability / legal masks / quantization / strict sparse schema GREEN
+Route target export GREEN
+Pre-stock corridor frontier phases GREEN
+JE10 model/replay identity, all-action replay, policy-centered approximate A1 contract GREEN
+Diagnostic protocol GREEN: 20 replays, 820 schema RED/GREEN/hash/seek/annotation checks
+v36 fixed eight seeds, no selection, per-action evidence and deterministic replay GREEN
+v36 review replay RED/GREEN contract passed
+v36 A1 evidence and legacy replay deprecation contract passed
+Review presentation GREEN: 20 translations, palette, discontinuities, 717 safe / 185 snapped real transitions, unchanged terminal hash
+Motion regression GREEN: real g32 bomb/movement separation for both players, monotonic coordinates, authoritative state unchanged, discrete boundary snaps
+A1 GREEN: weighted joint fixture, illegal exclusion, terminal, first/gap delta null, sparse columns RED/GREEN, hash, real H8 critic measurements
+Route GREEN: old identities, null/INF/negative/phase/terminal, PBRS recompute, target redaction, isolated shaped critic weighted legal A1, first/gap delta, compact sizes, tamper RED
+Real g32 GREEN: source hashes, 75 exact critic tensors receipt, 1200 production state hashes/route equations, honest null reward/A, diagnostic terminal semantics, both players monotonic float motion 583/12
+Return diagnostic GREEN: real tick177, actual vertical period-two motion, plateau not progress, path direction, role separation, normalized A1, null gaps
+Review keyboard RED/GREEN: exact single step, accelerated repeat, editable controls and unrelated keys
+Scenes GREEN: frozen six episodes, three genuine start/rule configurations on verified map, scene/source hashes, production Sim terminal parity, legal counts/evidence RED, playback DOM order
+DAgger GREEN: real H6/H7/H8 artifact hashes and counters, null preservation, own/enemy separation, sparse schema RED/GREEN, no inference, signal identity hash
+UI panels: first prompt, wrong/correct, refresh, new tab, forget, version invalidation, dialogs passed
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.009s
+
+OK
+
+Review minimal 1440x1000 GREEN: real replay, drag/play/pause, labels, reward/chart linkage, selector, reload, honest unavailable state
+Review minimal 390x844 GREEN: real replay, drag/play/pause, labels, reward/chart linkage, selector, reload, honest unavailable state

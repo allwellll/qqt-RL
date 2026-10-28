@@ -897,3 +897,68 @@ dialog p {
 #model-summary a { color:#8fc8ed; }
 .reward-total strong { flex-wrap:wrap; max-width:100%; }
 .reward-total b { min-width:0; overflow-wrap:anywhere; }
+
+/* The default Review surface is the replay and its rewards. */
+.workspace {
+  grid-template-columns: minmax(0, 1fr) 340px;
+  min-height: 0;
+  max-width: 1440px;
+  margin: auto;
+  padding: 16px 24px 24px;
+  gap: 16px 24px;
+}
+.library {
+  grid-column: 1 / -1;
+  padding: 0;
+  border: 1px solid #36383f;
+  border-radius: 6px;
+}
+.library summary {
+  padding: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+#selected-replay { margin-left: 12px; color: #a8b8bf; font-weight: 400; overflow-wrap: anywhere; }
+.library[open] { padding: 0 12px 12px; }
+.library[open] summary { margin: 0 -12px 12px; border-bottom: 1px solid #36383f; }
+#replay-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px; max-height: 300px; overflow: auto; }
+.replay-row { min-height: 0; margin: 0; padding: 10px; }
+.model-group-heading { grid-column: 1 / -1; position: static; margin: 0; }
+.center { padding: 0; max-width: none; }
+.board {
+  width: min(100%, calc((100vh - 250px) * 900 / 810));
+  max-height: none;
+  min-height: 0;
+}
+#game { width: 100%; height: 100%; }
+.playback-region { padding-top: 10px; border: 0; }
+.playback-region .position { padding: 0; border: 0; background: transparent; }
+#exact-time { font-size: 13px; font-weight: 500; }
+.transport { margin: 8px 0 0; gap: 12px; }
+.transport #play { width: 40px; height: 40px; padding: 11px; }
+#seek { min-height: 32px; cursor: pointer; }
+.inspector {
+  display: block;
+  align-self: start;
+  padding: 20px;
+  border: 1px solid #36383f;
+  border-radius: 6px;
+}
+.reward-total { padding: 0 0 20px; }
+.reward-total > span { color: #b4bdc9; font-size: 13px; }
+#reward-player { float: right; max-width: 125px; }
+.reward-total strong { margin-top: 20px; font-size: 36px; }
+#reward-chart-title { margin: 20px 0 12px; font-size: 13px; }
+#reward-chart { display: block; width: 100%; height: auto; cursor: crosshair; }
+#reward-empty { color: #939ba8; padding: 24px 0; }
+@media (max-width: 850px) {
+  .workspace { display: grid; grid-template-columns: minmax(0, 1fr); padding: 12px; gap: 16px; }
+  .board { width: 100%; max-width: 640px; }
+  .inspector { grid-column: auto; }
+  .library summary { line-height: 1.6; }
+  #selected-replay { display: block; margin-left: 16px; font-size: 11px; }
+  .inspector { padding: 16px; }
+  .reward-total { padding-bottom: 14px; }
+  .reward-total strong { margin-top: 12px; font-size: 30px; }
+  #reward-chart-title { margin-top: 14px; }
+}

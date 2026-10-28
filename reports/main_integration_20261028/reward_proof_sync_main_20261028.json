@@ -1,0 +1,19 @@
+{
+  "command": "CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu <PYTHON> -m pytest -q tests/test_review_reward_source_compatibility.py",
+  "counts": {
+    "tests": 2,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "published_replays_verified": 15,
+  "observed_transitions_verified": 10156,
+  "checks": [
+    "Full source reconstruction and historical SHA equality prove only spawn_bucket_ids changed.",
+    "Tracked Python runtime references restrict spawn_bucket_ids consumers to the standalone spawn audit CLI.",
+    "All three environment spawn_bucket_ids functions replaced by raising sentinels before importing the reward adapter.",
+    "Temporary production-Web state/event traces replay fixed published actions without any Actor, checkpoint, training run input or random policy sampling.",
+    "Original reward adapter verify=True matches every sparse reward row and exact episode reward totals; published assets remain byte-identical."
+  ],
+  "limits": "This proves equivalence for the published Review reward reconstruction and the audit-only patch. It does not claim these rewards equal ITER-PBT historical training rewards or establish a new Actor/Critic proof."
+}

@@ -1,0 +1,1003 @@
+{
+  "schema": "qqt.best-d-actor-parity/v1",
+  "passed": true,
+  "numerical_parity_passed": true,
+  "device": "cpu",
+  "checkpoint_sha256": "ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663",
+  "state_sha256": "eb90f66fa52e53f5988742043cefaed0d8b3a9a471e3993c1f13f173e44bc341",
+  "model_sha256": "ab6fa204a1c867081c71950de3ff472701bd8351c89fc12e385449c346d7266a",
+  "network_sha256": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+  "wasm_graph_sha256": "919b117bb07f8c9b03528b7c8b214b923af2160de7009f007800f528428e5f06",
+  "exporter_sha256": "b0c34f08ed049ddeccdb83c520b4bbd11824c6498d1550cb7129d849fe3f720c",
+  "actor_state_exact": true,
+  "export_tensors_exact": true,
+  "export_tensors_status": "verified",
+  "local_model_hash_status": "verified",
+  "tensor_count": 75,
+  "replicas": null,
+  "paired_critic_tensor_sha256": "f32017d23de19b0e488b17fe65f3e2119439b57efe4a25071baf0dab47544a0e",
+  "critic_scope": "state.pkl paired Critic tensors verified finite; no Critic/A1 inference claimed",
+  "input_encoding": "bun24-trap-timer-v2",
+  "sample_count": 57,
+  "tolerance": 0.002,
+  "max_error": 3.9577484130859375e-05,
+  "greedy_action_mismatches": 0,
+  "rows": [
+    {
+      "id": "d-slot05-u720-open-hard-2026102800",
+      "tick": 0,
+      "errors": {
+        "js": 3.2495668911003417e-06,
+        "wasm": 6.616115570068359e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03599824352593822,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102800",
+      "tick": 1,
+      "errors": {
+        "js": 2.9434376407344587e-06,
+        "wasm": 4.112720489501953e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.0272299966144689,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102800",
+      "tick": 50,
+      "errors": {
+        "js": 1.430511474609375e-06,
+        "wasm": 5.0067901611328125e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.043118122198527176,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102800",
+      "tick": 199,
+      "errors": {
+        "js": 1.6710974216349594e-06,
+        "wasm": 2.078711986541748e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.05054908597528343,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102801",
+      "tick": 0,
+      "errors": {
+        "js": 3.2495668911003417e-06,
+        "wasm": 6.616115570068359e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03599824352593822,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102801",
+      "tick": 1,
+      "errors": {
+        "js": 2.9434376407344587e-06,
+        "wasm": 4.112720489501953e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.0272299966144689,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102801",
+      "tick": 50,
+      "errors": {
+        "js": 1.430511474609375e-06,
+        "wasm": 5.0067901611328125e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.043118122198527176,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102801",
+      "tick": 199,
+      "errors": {
+        "js": 1.6710974216349594e-06,
+        "wasm": 2.078711986541748e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.05054908597528343,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102802",
+      "tick": 0,
+      "errors": {
+        "js": 3.2495668911003417e-06,
+        "wasm": 6.616115570068359e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03599824352593822,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102802",
+      "tick": 1,
+      "errors": {
+        "js": 2.9434376407344587e-06,
+        "wasm": 4.112720489501953e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.0272299966144689,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102802",
+      "tick": 50,
+      "errors": {
+        "js": 1.430511474609375e-06,
+        "wasm": 5.0067901611328125e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.043118122198527176,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102802",
+      "tick": 199,
+      "errors": {
+        "js": 1.6710974216349594e-06,
+        "wasm": 2.078711986541748e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.05054908597528343,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102810",
+      "tick": 0,
+      "errors": {
+        "js": 3.2495668911003417e-06,
+        "wasm": 6.616115570068359e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03599824352593822,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102810",
+      "tick": 1,
+      "errors": {
+        "js": 2.775319932202258e-06,
+        "wasm": 4.291534423828125e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03988368844190315,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102810",
+      "tick": 50,
+      "errors": {
+        "js": 3.956178312058967e-06,
+        "wasm": 7.62939453125e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.04222536087036133,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102810",
+      "tick": 199,
+      "errors": {
+        "js": 1.9813622507136586e-06,
+        "wasm": 5.602836608886719e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.04886753160880519,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102811",
+      "tick": 0,
+      "errors": {
+        "js": 3.2495668911003417e-06,
+        "wasm": 6.616115570068359e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03599824352593822,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102811",
+      "tick": 1,
+      "errors": {
+        "js": 2.775319932202258e-06,
+        "wasm": 4.291534423828125e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03988368844190315,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102811",
+      "tick": 50,
+      "errors": {
+        "js": 3.956178312058967e-06,
+        "wasm": 7.62939453125e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.04222536087036133,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102811",
+      "tick": 199,
+      "errors": {
+        "js": 2.592099258791336e-06,
+        "wasm": 4.291534423828125e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.10753975005484051,
+      "training_bf16_action": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102812",
+      "tick": 0,
+      "errors": {
+        "js": 3.2495668911003417e-06,
+        "wasm": 6.616115570068359e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03599824352593822,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102812",
+      "tick": 1,
+      "errors": {
+        "js": 2.775319932202258e-06,
+        "wasm": 4.291534423828125e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03988368844190315,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102812",
+      "tick": 50,
+      "errors": {
+        "js": 1.6687886610355918e-06,
+        "wasm": 2.86102294921875e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.08223501150374635,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102812",
+      "tick": 199,
+      "errors": {
+        "js": 1.5614112836292993e-06,
+        "wasm": 3.0994415283203125e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.05606685899887262,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102820",
+      "tick": 0,
+      "errors": {
+        "js": 3.2495668911003417e-06,
+        "wasm": 6.616115570068359e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03599824352593822,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102820",
+      "tick": 1,
+      "errors": {
+        "js": 2.775319932202258e-06,
+        "wasm": 4.291534423828125e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03988368844190315,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102820",
+      "tick": 50,
+      "errors": {
+        "js": 2.696580018834993e-06,
+        "wasm": 6.198883056640625e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.07126505619915946,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102820",
+      "tick": 199,
+      "errors": {
+        "js": 1.913684149368322e-06,
+        "wasm": 2.86102294921875e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.029767147280703732,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102821",
+      "tick": 0,
+      "errors": {
+        "js": 3.2495668911003417e-06,
+        "wasm": 6.616115570068359e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03599824352593822,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102821",
+      "tick": 1,
+      "errors": {
+        "js": 2.775319932202258e-06,
+        "wasm": 4.291534423828125e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03988368844190315,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102821",
+      "tick": 50,
+      "errors": {
+        "js": 3.337860107421875e-06,
+        "wasm": 2.86102294921875e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.019048489209248953,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102821",
+      "tick": 199,
+      "errors": {
+        "js": 2.474414261044444e-06,
+        "wasm": 2.5033950805664062e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.036582664141435295,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102822",
+      "tick": 0,
+      "errors": {
+        "js": 3.2495668911003417e-06,
+        "wasm": 6.616115570068359e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03599824352593822,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102822",
+      "tick": 1,
+      "errors": {
+        "js": 2.775319932202258e-06,
+        "wasm": 4.291534423828125e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.03988368844190315,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102822",
+      "tick": 50,
+      "errors": {
+        "js": 1.430511474609375e-06,
+        "wasm": 4.76837158203125e-06
+      },
+      "action": [
+        1,
+        0
+      ],
+      "training_bf16_max_error": 0.04184014689458104,
+      "training_bf16_action": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102822",
+      "tick": 199,
+      "errors": {
+        "js": 1.7318906451180283e-06,
+        "wasm": 7.3909759521484375e-06
+      },
+      "action": [
+        3,
+        0
+      ],
+      "training_bf16_max_error": 0.19960364792565555,
+      "training_bf16_action": [
+        3,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102830",
+      "tick": 0,
+      "errors": {
+        "js": 3.814697265625e-06,
+        "wasm": 1.9371509552001953e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.025951545402051357,
+      "training_bf16_action": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102830",
+      "tick": 1,
+      "errors": {
+        "js": 2.2069824751891343e-06,
+        "wasm": 7.62939453125e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.06097698211669922,
+      "training_bf16_action": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102830",
+      "tick": 50,
+      "errors": {
+        "js": 1.6952509189760434e-06,
+        "wasm": 5.245208740234375e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.040563920980475676,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102830",
+      "tick": 199,
+      "errors": {
+        "js": 1.2731293929646448e-06,
+        "wasm": 4.172325134277344e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.03945203778545986,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102831",
+      "tick": 0,
+      "errors": {
+        "js": 2.86102294921875e-06,
+        "wasm": 1.0728836059570312e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.04250299930539958,
+      "training_bf16_action": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102831",
+      "tick": 1,
+      "errors": {
+        "js": 1.5658151051312075e-06,
+        "wasm": 5.245208740234375e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.06397533416748047,
+      "training_bf16_action": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102831",
+      "tick": 50,
+      "errors": {
+        "js": 1.9073486328125e-06,
+        "wasm": 4.291534423828125e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.03499158965876614,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102831",
+      "tick": 199,
+      "errors": {
+        "js": 8.649820659734075e-07,
+        "wasm": 3.814697265625e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.039683200048580614,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102832",
+      "tick": 0,
+      "errors": {
+        "js": 2.86102294921875e-06,
+        "wasm": 1.0728836059570312e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.04250299930539958,
+      "training_bf16_action": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102832",
+      "tick": 1,
+      "errors": {
+        "js": 1.5658151051312075e-06,
+        "wasm": 5.245208740234375e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.06397533416748047,
+      "training_bf16_action": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102832",
+      "tick": 50,
+      "errors": {
+        "js": 1.9073486328125e-06,
+        "wasm": 4.291534423828125e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.03499158965876614,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102832",
+      "tick": 199,
+      "errors": {
+        "js": 1.8413982981746457e-06,
+        "wasm": 3.814697265625e-06
+      },
+      "action": [
+        3,
+        0
+      ],
+      "training_bf16_max_error": 0.03962490418617415,
+      "training_bf16_action": [
+        3,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102840",
+      "tick": 0,
+      "errors": {
+        "js": 6.5815649534783915e-06,
+        "wasm": 7.62939453125e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.025076866149902344,
+      "training_bf16_action": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102840",
+      "tick": 1,
+      "errors": {
+        "js": 6.326860018113223e-06,
+        "wasm": 6.67572021484375e-06
+      },
+      "action": [
+        0,
+        0
+      ],
+      "training_bf16_max_error": 0.10623814627683359,
+      "training_bf16_action": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102840",
+      "tick": 50,
+      "errors": {
+        "js": 1.475622531099674e-05,
+        "wasm": 2.288818359375e-05
+      },
+      "action": [
+        3,
+        0
+      ],
+      "training_bf16_max_error": 0.0923151712643735,
+      "training_bf16_action": [
+        3,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102841",
+      "tick": 0,
+      "errors": {
+        "js": 4.680583993721399e-06,
+        "wasm": 7.152557373046875e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.06753730213777587,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102841",
+      "tick": 1,
+      "errors": {
+        "js": 5.704862888311624e-06,
+        "wasm": 1.0311603546142578e-05
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.10215144056170367,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102841",
+      "tick": 50,
+      "errors": {
+        "js": 4.021760261707641e-06,
+        "wasm": 9.5367431640625e-06
+      },
+      "action": [
+        3,
+        0
+      ],
+      "training_bf16_max_error": 0.19251809035030742,
+      "training_bf16_action": [
+        3,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102842",
+      "tick": 0,
+      "errors": {
+        "js": 4.76837158203125e-06,
+        "wasm": 9.059906005859375e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.06735841345402882,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102842",
+      "tick": 1,
+      "errors": {
+        "js": 3.736377237384403e-06,
+        "wasm": 7.3909759521484375e-06
+      },
+      "action": [
+        2,
+        0
+      ],
+      "training_bf16_max_error": 0.1897675206606304,
+      "training_bf16_action": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102842",
+      "tick": 50,
+      "errors": {
+        "js": 3.9577484130859375e-05,
+        "wasm": 1.52587890625e-05
+      },
+      "action": [
+        3,
+        0
+      ],
+      "training_bf16_max_error": 0.6683850288391113,
+      "training_bf16_action": [
+        3,
+        0
+      ]
+    }
+  ],
+  "reference_precision": "JAX float32 reference of the native browser export; same network definitions, explicit backbone dtype substitution only",
+  "training_bf16": {
+    "max_error": 0.6683850288391113,
+    "greedy_action_mismatches": 3,
+    "scope": "Unmodified training net_forward on the identical observations; bf16 is not fp32 browser inference; mismatches retained, never claimed equal."
+  },
+  "scope": "Predeclared ticks 0/1/50/199 on every retained episode where present; exact export tensors only checked when local model is present; see export_tensors_status. Finite sample parity is not proof for all states."
+}

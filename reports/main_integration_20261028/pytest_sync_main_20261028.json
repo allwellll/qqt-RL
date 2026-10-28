@@ -1,0 +1,19 @@
+{
+  "command": "CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu JAXBOMB_RULE=bun OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 <PYTHON> -m pytest -q <CLOSURE_TEST_FILE>",
+  "files": 139,
+  "counts": {
+    "tests": 684,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 13
+  },
+  "failed": [],
+  "environment": {
+    "jax": "0.11.2",
+    "jaxlib": "0.11.2",
+    "workers": 8,
+    "cpus_per_process": 4,
+    "timeout": null
+  },
+  "results_sha256": "41e9ab9b34b53ed021f931c6b02fad6c2db8f378b3e51342c82070f719be546b"
+}

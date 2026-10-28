@@ -1,0 +1,117 @@
+{
+  "merge_parent": "eedf2b5fa13bb2163a64af7aa80a74bfbaa7540c",
+  "replay_count": 15,
+  "all_replay_bytes_unchanged_from_parent": true,
+  "unique_sources_checked": 64,
+  "mismatch_counts": {
+    "reward_hashes": 15
+  },
+  "mismatches": [
+    {
+      "replay": "d-slot05-u720-open-hard-2026102800",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-open-hard-2026102801",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-open-hard-2026102802",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-open-normal-2026102810",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-open-normal-2026102811",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-open-normal-2026102812",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-open-easy-2026102820",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-open-easy-2026102821",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-open-easy-2026102822",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-native-normal-2026102830",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-native-normal-2026102831",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-native-normal-2026102832",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-carry_home-normal-2026102840",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-carry_home-normal-2026102841",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    },
+    {
+      "replay": "d-slot05-u720-carry_home-normal-2026102842",
+      "field": "reward_hashes",
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29"
+    }
+  ],
+  "all_other_hashes_match": true
+}

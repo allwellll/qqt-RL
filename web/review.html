@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>低质量对局 · Replay Review</title><link rel="stylesheet" href="review.css"><link rel="icon" href="assets/point.png"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>录像 · Replay Review</title><link rel="stylesheet" href="review.css"><link rel="icon" href="assets/point.png"></head>
 <body>
 <header><a href="index.html" class="brand">QQT <span>/</span> 回放诊断</a><span class="header-label">回放 · 离线 CPU</span><button id="advanced-open" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button><span id="notice" role="status">正在读取录像目录</span></header>
 <section id="advanced-settings" hidden>
   <div class="auth-tools"><button id="import-replay">导入诊断录像</button><input id="replay-file" type="file" accept="application/json,.json" hidden><button id="advanced-close">关闭诊断台</button><button id="advanced-forget">忘记本设备授权 / 锁定高阶设置</button></div>
   <main class="workspace">
-    <aside class="library"><div class="section-title"><h1>对局录像</h1><span id="count"></span></div><input id="filter" type="search" placeholder="筛选 seed / 失败标签" aria-label="筛选对局"><div id="replay-list"></div><div class="library-foot" id="catalog-meta"></div></aside>
+    <details class="library"><summary>选择录像 <span id="selected-replay">正在加载</span></summary><div class="section-title"><h1>对局录像</h1><span id="count"></span></div><input id="filter" type="search" placeholder="筛选 seed / 失败标签" aria-label="筛选对局"><div id="replay-list"></div><div class="library-foot" id="catalog-meta"></div></details>
     <section class="center">
       <div class="episode-head"><div><h2 id="episode-title">正在加载</h2><p id="episode-meta"></p></div><span class="badge" id="terminal"></span></div>
       <div class="seat-legend" aria-label="双方身份"><span class="model-seat">模型 P0 · 毛毛</span><span class="opponent-seat">对手 P1 · 蓝色毛毛</span></div>
@@ -40,5 +40,5 @@
   </main>
 </section>
 <dialog id="password-dialog" aria-labelledby="password-title"><button type="button" data-dialog-close class="dialog-close" aria-label="关闭密码框">×</button><h2 id="password-title">高阶设置</h2><form id="password-form"><label>设置密码<input id="settings-password" type="password" autocomplete="off" required></label><p id="password-status" role="status">验证成功后记住本设备。</p><button type="submit">解锁</button></form></dialog>
-<script src="device_auth.js"></script><script src="ui_panels.js"></script><script src="sim.js"></script><script src="tactical_arena.js"></script><script src="review_dagger.js"></script><script src="review_metrics.js"></script><script src="review_advantage.js"></script><script src="review_route.js"></script><script src="review_protocol.js"></script><script src="review_return.js"></script><script src="review_presentation.js"></script><script src="review_keyboard.js"></script><script src="visual_renderer.js"></script><script src="review.js"></script>
+<script src="device_auth.js"></script><script src="ui_panels.js"></script><script src="sim.js"></script><script src="tactical_arena.js"></script><script src="review_dagger.js"></script><script src="review_metrics.js"></script><script src="review_advantage.js"></script><script src="review_route.js"></script><script src="review_protocol.js"></script><script src="review_evaluation.js"></script><script src="review_return.js"></script><script src="review_presentation.js"></script><script src="review_keyboard.js"></script><script src="visual_renderer.js"></script><script src="review.js"></script>
 </body></html>

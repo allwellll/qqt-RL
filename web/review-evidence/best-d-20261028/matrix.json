@@ -1,0 +1,113 @@
+{
+  "schema": "qqt.best-d-matrix/v1",
+  "model_id": "d-slot05-u720",
+  "checkpoint": "runs/iter_pbt_v1/formal/slot05_c000005/u000720/policy.pt",
+  "checkpoint_sha256": "ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663",
+  "selection": "All declared seeds retained without outcome selection; matrix written before inference.",
+  "policy": "greedy",
+  "assist": false,
+  "episodes": [
+    {
+      "seed": 2026102800,
+      "scene": "open",
+      "difficulty": "hard",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102801,
+      "scene": "open",
+      "difficulty": "hard",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102802,
+      "scene": "open",
+      "difficulty": "hard",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102810,
+      "scene": "open",
+      "difficulty": "normal",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102811,
+      "scene": "open",
+      "difficulty": "normal",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102812,
+      "scene": "open",
+      "difficulty": "normal",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102820,
+      "scene": "open",
+      "difficulty": "easy",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102821,
+      "scene": "open",
+      "difficulty": "easy",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102822,
+      "scene": "open",
+      "difficulty": "easy",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102830,
+      "scene": "native",
+      "difficulty": "normal",
+      "max_ticks": 2400
+    },
+    {
+      "seed": 2026102831,
+      "scene": "native",
+      "difficulty": "normal",
+      "max_ticks": 2400
+    },
+    {
+      "seed": 2026102832,
+      "scene": "native",
+      "difficulty": "normal",
+      "max_ticks": 2400
+    },
+    {
+      "seed": 2026102840,
+      "scene": "carry_home",
+      "difficulty": "normal",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102841,
+      "scene": "carry_home",
+      "difficulty": "normal",
+      "max_ticks": 300
+    },
+    {
+      "seed": 2026102842,
+      "scene": "carry_home",
+      "difficulty": "normal",
+      "max_ticks": 300
+    }
+  ],
+  "clear_duel_setup": {
+    "position": [
+      5.5,
+      5.5,
+      5.5,
+      9.5
+    ],
+    "hp": 1,
+    "clear_bricks": true,
+    "capture_termination": false,
+    "native_rules": false
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "qqt.best-d-source-receipt/v1",
+  "checkpoint": "runs/iter_pbt_v1/formal/slot05_c000005/u000720",
+  "policy_sha256": "ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663",
+  "state_sha256": "eb90f66fa52e53f5988742043cefaed0d8b3a9a471e3993c1f13f173e44bc341",
+  "update": 720,
+  "receipt_sha256": "10f87427e8cd6bdf199f58a40e9874bfacdd3db8e89606859b9fe9e1364c19b0",
+  "holdout_summary_sha256": "e8eee4912f00e5fc21ea8e692dd3d4c54ed42426eb89c50545537973b5bcd82d",
+  "historical_holdout": {
+    "hunter_js": {
+      "hard": {
+        "safe_win": 18,
+        "death_episode": 0,
+        "final_dead": 0,
+        "kill_then_death": 0,
+        "games": 64,
+        "self_episodes": 0,
+        "trade_episodes": 0,
+        "by_bot_episodes": 0,
+        "bombs_per_game": 2.421875
+      },
+      "normal": {
+        "safe_win": 27,
+        "death_episode": 0,
+        "final_dead": 0,
+        "kill_then_death": 0,
+        "games": 64,
+        "self_episodes": 0,
+        "trade_episodes": 0,
+        "by_bot_episodes": 0,
+        "bombs_per_game": 3.109375
+      },
+      "easy": {
+        "safe_win": 32,
+        "death_episode": 2,
+        "final_dead": 2,
+        "kill_then_death": 0,
+        "games": 64,
+        "self_episodes": 0,
+        "trade_episodes": 2,
+        "by_bot_episodes": 0,
+        "bombs_per_game": 3.765625
+      }
+    },
+    "natural_jax": {
+      "categorical": {
+        "games": 304,
+        "capture_episodes": 304,
+        "death_episodes": 3
+      },
+      "greedy": {
+        "games": 304,
+        "capture_episodes": 302,
+        "death_episodes": 1
+      }
+    },
+    "split": "holdout",
+    "seed": 20261001
+  },
+  "selection_note": "Orchestrator selected u720; BEST.json u760 is not used because its argmax delivery is 277/304. u720 historical holdout categorical/greedy delivery is 304/302 of 304. Historical JAX results are references, not this CPU Web batch.",
+  "execution": "This task only reads source checkpoint and holdout; all new computation is CPU.",
+  "model_sha256": "ab6fa204a1c867081c71950de3ff472701bd8351c89fc12e385449c346d7266a",
+  "model_bytes": 40294477,
+  "model_location": "<EXTERNAL_MODEL>",
+  "model_storage": "Optional private input; default ignored path .hermes/best-d-private/model.json; not loaded by the Review runtime or tracked in this branch."
+}

@@ -1,0 +1,21 @@
+{
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "JAX_PLATFORMS": "cpu",
+    "JAX_PLATFORM_NAME": "cpu"
+  },
+  "results": [
+    {
+      "command": "CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu npm test",
+      "exit_code": 0,
+      "seconds": 112.81,
+      "output_sha256": "3865a780f81734bb690bf1be276e6296b2768ee2fd06ed243bbb354035f48317"
+    },
+    {
+      "command": "CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu npm run test:review",
+      "exit_code": 0,
+      "seconds": 51.81,
+      "output_sha256": "b6cbf5af96a2ecffc174592cc8e87d16f74772622c6b24a28a5d68b59fae904e"
+    }
+  ]
+}

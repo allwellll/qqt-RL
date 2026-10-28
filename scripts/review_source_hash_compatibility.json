@@ -1,0 +1,23 @@
+{
+  "schema": "qqt.review-source-hash-compatibility/v1",
+  "entries": [
+    {
+      "file": "jax_bomb/bun_env.py",
+      "published_sha256": "51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8",
+      "current_sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29",
+      "published_commit": "eedf2b5fa13bb2163a64af7aa80a74bfbaa7540c",
+      "change_commit": "1ad44788b17cb6edd76bf33abde1d90769b12628",
+      "batch_id": "best-d-20261028",
+      "hash_fields": [
+        "reward_hashes",
+        "source_hashes"
+      ],
+      "function": "spawn_bucket_ids",
+      "reason": "Audit-only RNG labels now match _fresh split(key, 13)[11]. Environment initialization, transitions and reward computation are byte-identical outside this audit function. Published replay hashes remain unchanged.",
+      "old_function": "def spawn_bucket_ids(key, n: int) -> jnp.ndarray:\n    \"\"\"Bucket chosen by init_batch(key, n) per env (audit; same key path).\"\"\"\n    def one(env_key):\n        k_danger = jax.random.split(env_key, 11)[9]\n        return _sample_spawn_bucket(k_danger, jnp.zeros((2, 2)))[1]\n    return jax.vmap(one)(jax.random.split(key, n))\n",
+      "new_function": "def spawn_bucket_ids(key, n: int) -> jnp.ndarray:\n    \"\"\"Bucket chosen by init_batch(key, n) per env (audit; same key path).\"\"\"\n    def one(env_key):\n        # Match _fresh: contact and ambush keys precede the danger key.\n        k_danger = jax.random.split(env_key, 13)[11]\n        return _sample_spawn_bucket(k_danger, jnp.zeros((2, 2)))[1]\n    return jax.vmap(one)(jax.random.split(key, n))\n",
+      "proof": "tests/test_review_reward_source_compatibility.py",
+      "scope": "Test-time source compatibility only; historical source identity is retained, not asserted to equal the current file."
+    }
+  ]
+}

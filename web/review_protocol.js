@@ -174,6 +174,14 @@
       sim.pos[0]=9.5;sim.pos[1]=4.5+(meta.seed%3);sim.bunCarried[0]=1;sim.bunStored[1][1]=0;
       sim.bunSpawnPos[0]=[sim.pos[0],sim.pos[1]];
     }
+    if(meta.evaluation_setup==='best_d_clear_duel_v1'){
+      if(scene!=='open'||meta.max_ticks!==300)throw Error('clear duel setup');
+      sim.brick.fill(0);sim.brickLinger.fill(0);
+      sim.initialHp=1;sim.hp=[1,1];sim.invuln=[0,0];
+      sim.pos.set([5.5,5.5,5.5,9.5]);
+      sim.bunSpawnPos=[[5.5,5.5],[5.5,9.5]];
+      sim.bunInitial=[Infinity,Infinity];sim._gen++;
+    }
     sim.maxSteps=meta.truncated?Math.max(meta.max_ticks+1,2400):meta.max_ticks;
     return sim;
   }

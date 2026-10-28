@@ -93,3 +93,51 @@ pytest 运行覆盖现存 164 个 `tests/test_*.py`，包含 main 原有回归�
 统计收据：`integration_stats_20261028.json`。与 main `7128071` 的最终差异为 **258 files changed, 85498 insertions(+), 27 deletions(-)**。
 
 交付时只保留既有未追踪依赖 node_modules、web/vendor。本任务测试进程均已结束；不 push，完成后停下等待指令。
+
+## 同步 main eedf2b5
+
+本次续接编排方已启动的 `git merge --no-ff --no-commit origin/main`。合并父提交是整合分支 `abe7e54c1124248f00729dbc9bd26f68697c3169` 与 main `eedf2b5fa13bb2163a64af7aa80a74bfbaa7540c`；引入 D slot05 u720 的 15 份 v2 Review 评估录像及页面更新。此前整合数据为当时快照；本节与 `*_sync_main_20261028.json` 收据记录本次同步结果。
+
+### Review 冲突复核
+
+`web/review.js` 的手工解决正确：加载行从 `recordings()`（原诊断与 `evaluation.replays`）加历史列表查找，保留 main 的“合格诊断或评估清单”错误文案；本地导入先取 `row.localBytes`，无本地字节时才 fetch，随后统一校验大小、SHA、协议、地图、模拟器和状态。main 的评估模型验证仍保留，页面默认模型仍为 r01 g8，默认首录像未改变。本分支的导入按钮、导入后清空过滤器和无 decision 诊断显示仍保留。
+
+### 已发布源 hash 的诚实兼容方案
+
+采用显式白名单，原录像、目录中的录像 SHA、reward_hashes、source_hashes 和复算脚本均不修改。
+
+| 文件 | 已发布 SHA-256 | 当前 SHA-256 |
+|---|---|---|
+| jax_bomb/bun_env.py | 51c22bc1d33e0dc6b1b92a91ef5e0a4f02759c1228ab0e8f1e927ccecffa7ef8 | c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29 |
+
+该变化来自已记录提交 `1ad44788b17cb6edd76bf33abde1d90769b12628`，仅修正 `spawn_bucket_ids` 审计函数的 `split(env_key, 11)[9]` 为现行初始化使用的 `split(env_key, 13)[11]`。环境初始化、转移、奖励代码均保持原样；不能把“兼容”声称为“当前源文件等于历史源文件”。
+
+白名单为 `scripts/review_source_hash_compatibility.json`，记录文件、精确旧/新 SHA、来源与修复 commit、完整旧/新函数、原因及证明测试。校验器 `scripts/review_source_hash_compatibility.js` 只在 `best-d-20261028` 批次的 reward_hashes/source_hashes 校验中接受这个精确差异。还要求用旧函数替换当前函数后，整个文件 SHA 精确还原发布值，因而函数外任何改动均会被拒绝。校验发生时明确打印 `EXPLICIT SOURCE COMPATIBILITY`；未新增通用跳过开关，其他文件、其他批次、未知旧/新 SHA 及额外奖励改动均报错。JS 回归包含以上拒绝路径，并检查即使误更新白名单新 SHA，函数外改动仍会被拒绝。
+
+### 奖励路径证明
+
+`tests/test_review_reward_source_compatibility.py` 两项测试均通过：
+
+1. 通过历史 commit 对照和完整文件逆向还原，证明差异仅限上述审计函数；所有追踪的 Python runtime 模块中，唯一引用该审计 API 的调用方是独立 `scripts/audit_spawn_buckets.py`，奖励复算链没有引用。
+2. 在导入奖励适配器前，把 bun_env、je05_bun_env、je07_bun_env 的 `spawn_bucket_ids` 都替换为调用即抛错的 sentinel。用生产 Web 模拟器、固定已发布动作在系统临时目录重建状态/事件流，再运行原 `recompute_best_d_rewards.run(..., verify=True)`。15 份录像共 10,156 次转移的逐 tick 稀疏奖励及每局总奖励全部精确一致。发布录像保持字节一致，临时轨迹未入库，没有调用 Actor、读取 checkpoint 或训练 runs，也没有重新生成发布录像。
+
+详细收据：`reward_proof_sync_main_20261028.json`、`published_hashes_sync_main_20261028.json`。15 份录像共引用 64 个不同源文件，唯一差异为 reward_hashes 中的 bun_env（15 次）；source_hashes 以及其余源 hash 全部精确匹配。这只证明 Review 离线复算兼容，不新增历史训练 reward、Actor 导出 tensor 或 Critic 证据。
+
+### 本次验证
+
+```sh
+CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu npm test
+CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu npm run test:review
+CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu JAXBOMB_RULE=bun \
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+  <PYTHON> -m pytest -q --tb=short <CLOSURE_TEST_FILE>
+CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu \
+  <PYTHON> -m pytest -q tests/test_review_reward_source_compatibility.py
+```
+
+- 完整 `npm test`：退出 0，112.81 秒；单独 `npm run test:review`：退出 0，51.81 秒。两者都执行显式白名单拒绝测试与 D 全 15 录像校验。可选本地模型不在工作区，模型文件 hash/exact tensor 的缺项仍明确输出 SKIP，没有冒充新增验证。命令与日志摘要见 `web_sync_main_20261028.json`。
+- 奖励路径证明：2 通过、0 失败；闭包 139 个 Python 测试文件、684 项测试，671 通过、13 跳过、0 失败、0 错误，使用独立 CPU 进程、8 并发、每进程四核、无 timeout。收据见 `pytest_sync_main_20261028.json`。
+- 隐私边界仍为 git ls-files 与明确选中的待提交文件；不遍历未追踪 run/checkpoint/编排目录。扫描收据 `privacy_sync_main_20261028.json`，覆盖 1,207 个选中/暂存文件，无命中。
+- 文件大小检查使用 10,000,000 字节上限（十进制 10 MB），覆盖整个 index 和两个 merge 父提交自 `7128071` 后的新增可达 blobs。当前最大文件为 `web/review-replays/h8-v36-g32-tactical_v2-2026101786.json`，7,958,608 字节，无超限；收据 `asset_sizes_sync_main_20261028.json`。
+
+合并 commit、祖先检查及最终工作区状态在验证结束后记录；本次 merge 使用 `--no-ff`，不会伪装成可快进提交。整个同步不 push，不修改来源目录、runs 或另一个 Review 工作区；所有验证仅用 CPU，未设置终止测试的 timeout，也未杀进程。

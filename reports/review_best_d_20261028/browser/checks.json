@@ -1,0 +1,328 @@
+{
+  "passed": true,
+  "browser": "149.0.7827.55",
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "default_preserved": true,
+      "model_selector": true,
+      "checked": [
+        {
+          "id": "d-slot05-u720-open-normal-2026102810",
+          "sha256": "af06d9560b927370747c5e091810a74ecd10f4b153e99143e37524de6cada4a1",
+          "tick": 41,
+          "reward": "0.500",
+          "probe": {
+            "frame": {
+              "tick": 41,
+              "characters": [
+                "maomao",
+                "maomao"
+              ],
+              "palettes": [
+                null,
+                "blue"
+              ],
+              "labels": [
+                "模型 P0",
+                "对手 P1"
+              ],
+              "advantages": [
+                {
+                  "taken_q": null,
+                  "mean_q": null,
+                  "advantage": null,
+                  "delta": null
+                },
+                null
+              ]
+            },
+            "cursor": [
+              [
+                76.53333333333333,
+                0
+              ],
+              [
+                76.53333333333333,
+                220
+              ]
+            ],
+            "curves": 3,
+            "curvePoints": 301
+          },
+          "playback_pause": true,
+          "layout": {
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "d-slot05-u720-native-normal-2026102830",
+          "sha256": "7897945f1d5af970b04d92c0918f6cb5821e4bdcd0e08c0c9a42b87b25c832d6",
+          "tick": 139,
+          "reward": "0.500",
+          "probe": {
+            "frame": {
+              "tick": 139,
+              "characters": [
+                "maomao",
+                "maomao"
+              ],
+              "palettes": [
+                null,
+                "blue"
+              ],
+              "labels": [
+                "模型 P0",
+                "对手 P1"
+              ],
+              "advantages": [
+                {
+                  "taken_q": null,
+                  "mean_q": null,
+                  "advantage": null,
+                  "delta": null
+                },
+                null
+              ]
+            },
+            "cursor": [
+              [
+                32.43333333333333,
+                0
+              ],
+              [
+                32.43333333333333,
+                220
+              ]
+            ],
+            "curves": 4,
+            "curvePoints": 2401
+          },
+          "playback_pause": true,
+          "layout": {
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "d-slot05-u720-carry_home-normal-2026102840",
+          "sha256": "9ef183b77501cc115bacb5dafb8e69705651c1b180020d8fdb81f7e089c1ca86",
+          "tick": 1,
+          "reward": "0.374",
+          "probe": {
+            "frame": {
+              "tick": 1,
+              "characters": [
+                "maomao",
+                "maomao"
+              ],
+              "palettes": [
+                null,
+                "blue"
+              ],
+              "labels": [
+                "模型 P0",
+                "对手 P1"
+              ],
+              "advantages": [
+                {
+                  "taken_q": null,
+                  "mean_q": null,
+                  "advantage": null,
+                  "delta": null
+                },
+                null
+              ]
+            },
+            "cursor": [
+              [
+                6.588235294117647,
+                0
+              ],
+              [
+                6.588235294117647,
+                220
+              ]
+            ],
+            "curves": 5,
+            "curvePoints": 86
+          },
+          "playback_pause": true,
+          "layout": {
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        }
+      ],
+      "errors": [],
+      "blocked": [],
+      "http": [],
+      "model_asset_requests": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "default_preserved": true,
+      "model_selector": true,
+      "checked": [
+        {
+          "id": "d-slot05-u720-open-normal-2026102810",
+          "sha256": "af06d9560b927370747c5e091810a74ecd10f4b153e99143e37524de6cada4a1",
+          "tick": 41,
+          "reward": "0.500",
+          "probe": {
+            "frame": {
+              "tick": 41,
+              "characters": [
+                "maomao",
+                "maomao"
+              ],
+              "palettes": [
+                null,
+                "blue"
+              ],
+              "labels": [
+                "模型 P0",
+                "对手 P1"
+              ],
+              "advantages": [
+                {
+                  "taken_q": null,
+                  "mean_q": null,
+                  "advantage": null,
+                  "delta": null
+                },
+                null
+              ]
+            },
+            "cursor": [
+              [
+                76.53333333333333,
+                0
+              ],
+              [
+                76.53333333333333,
+                220
+              ]
+            ],
+            "curves": 3,
+            "curvePoints": 301
+          },
+          "playback_pause": true,
+          "layout": {
+            "width": 390,
+            "scrollWidth": 390
+          }
+        },
+        {
+          "id": "d-slot05-u720-native-normal-2026102830",
+          "sha256": "7897945f1d5af970b04d92c0918f6cb5821e4bdcd0e08c0c9a42b87b25c832d6",
+          "tick": 139,
+          "reward": "0.500",
+          "probe": {
+            "frame": {
+              "tick": 139,
+              "characters": [
+                "maomao",
+                "maomao"
+              ],
+              "palettes": [
+                null,
+                "blue"
+              ],
+              "labels": [
+                "模型 P0",
+                "对手 P1"
+              ],
+              "advantages": [
+                {
+                  "taken_q": null,
+                  "mean_q": null,
+                  "advantage": null,
+                  "delta": null
+                },
+                null
+              ]
+            },
+            "cursor": [
+              [
+                32.43333333333333,
+                0
+              ],
+              [
+                32.43333333333333,
+                220
+              ]
+            ],
+            "curves": 4,
+            "curvePoints": 2401
+          },
+          "playback_pause": true,
+          "layout": {
+            "width": 390,
+            "scrollWidth": 390
+          }
+        },
+        {
+          "id": "d-slot05-u720-carry_home-normal-2026102840",
+          "sha256": "9ef183b77501cc115bacb5dafb8e69705651c1b180020d8fdb81f7e089c1ca86",
+          "tick": 1,
+          "reward": "0.374",
+          "probe": {
+            "frame": {
+              "tick": 1,
+              "characters": [
+                "maomao",
+                "maomao"
+              ],
+              "palettes": [
+                null,
+                "blue"
+              ],
+              "labels": [
+                "模型 P0",
+                "对手 P1"
+              ],
+              "advantages": [
+                {
+                  "taken_q": null,
+                  "mean_q": null,
+                  "advantage": null,
+                  "delta": null
+                },
+                null
+              ]
+            },
+            "cursor": [
+              [
+                6.588235294117647,
+                0
+              ],
+              [
+                6.588235294117647,
+                220
+              ]
+            ],
+            "curves": 5,
+            "curvePoints": 86
+          },
+          "playback_pause": true,
+          "layout": {
+            "width": 390,
+            "scrollWidth": 390
+          }
+        }
+      ],
+      "errors": [],
+      "blocked": [],
+      "http": [],
+      "model_asset_requests": []
+    }
+  ]
+}
