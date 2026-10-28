@@ -6,6 +6,9 @@
   if(auth.authorized())$('advanced-open').click();
   const labels={enemy_drop_unpicked:'掉包后未拾',window_closed_empty:'窗口未切换',return_deviation:'返程偏航',cage_no_delivery:'到笼未交付',self_bomb:'自炸',stagnation:'停滞',approx_phi_discontinuity:'近似势能跨步不连续',match_loss:'对局失利',no_delivery:'未交付',bomb:'放泡',use_item:'使用道具',death:'死亡',revive:'复活',control:'进入糖泡',control_end:'解除控制',drop:'掉包',native_transfer:'接触转移',pickup:'拾取',stock_theft:'偷包',delivery:'交付',phase:'阶段切换'};
   let catalog,doc,player,preview,renderer,playing=false,accumulator=0,last=performance.now(),rows=[],editing=null,loadToken=0;
+  const recordings=()=>[...catalog.replays,...catalog.evaluation?.replays||[]];
+  const reviewModels=()=>[...catalog.model_comparison?.models||[],...catalog.evaluation?.models||[]];
+  const displayTime=(tick,meta=doc?.meta)=>meta?.batch_id==='best-d-20261028'?`${Math.floor(tick/600)}分${((tick%600)/10).toFixed(1)}秒`:P.time(tick);
   let lastDraw=0,frameStart=performance.now(),frameCount=0,actualFPS=0,rewardByTick=new Map(),curveCache=null;
   let daggerCatalog,daggerLoadToken=0;
   const daggerCache=new Map();
@@ -16,7 +19,7 @@
   const number=n=>n===0?'0':Math.abs(n)<.001?Number(n.toPrecision(5)).toString():n.toFixed(3);
   const historyControl=text('label','','history-control'),historyToggle=document.createElement('input');historyToggle.type='checkbox';historyToggle.id='show-history';historyControl.append(historyToggle,document.createTextNode('历史 H7 / H8 录像'));$('filter').after(historyControl);historyToggle.onchange=list;
   const sceneFilter=document.createElement('select');sceneFilter.id='scene-filter';sceneFilter.setAttribute('aria-label','场景筛选');sceneFilter.add(new Option('全部场景',''));historyControl.before(sceneFilter);sceneFilter.onchange=list;
-  const modelFilter=document.createElement('select');modelFilter.id='model-filter';modelFilter.setAttribute('aria-label','模型与能力标签');modelFilter.add(new Option('全部模型 / 能力标签',''));sceneFilter.before(modelFilter);modelFilter.onchange=()=>{const available=catalog.replays.filter(r=>r.comparison_model_id===modelFilter.value);if(sceneFilter.value&&available.length&&!available.some(r=>r.scene===sceneFilter.value))sceneFilter.value='';list();const row=available.find(r=>!sceneFilter.value||r.scene===sceneFilter.value);if(row&&doc?.meta.comparison_model_id!==modelFilter.value)load(row.id,0).catch(fail);};
+  const modelFilter=document.createElement('select');modelFilter.id='model-filter';modelFilter.setAttribute('aria-label','模型与能力标签');modelFilter.add(new Option('全部模型 / 能力标签',''));sceneFilter.before(modelFilter);modelFilter.onchange=()=>{const available=recordings().filter(r=>(r.comparison_model_id||r.model_id)===modelFilter.value);if(sceneFilter.value&&available.length&&!available.some(r=>r.scene===sceneFilter.value))sceneFilter.value='';list();const row=available.find(r=>!sceneFilter.value||r.scene===sceneFilter.value);if(row&&(doc?.meta.comparison_model_id||doc?.meta.model_id)!==modelFilter.value)load(row.id,0).catch(fail);};
   const modelSummary=document.createElement('section');modelSummary.id='model-summary';modelSummary.hidden=true;$('state-details').before(modelSummary);
   const decisionPanel=document.createElement('section');decisionPanel.id='policy-decision';decisionPanel.innerHTML='<h3>模型实际策略 · 合法联合动作</h3><div id="policy-decision-details"></div>';$('state-details').after(decisionPanel);
   const advantagePanel=document.createElement('section');
@@ -38,6 +41,15 @@
   new MutationObserver(()=>{if(doc&&!$('advanced-settings').hidden){timeline();draw();}}).observe($('advanced-settings'),{attributes:true,attributeFilter:['hidden']});
   currentDagger.innerHTML='<h3>当前 tick · DAgger</h3><p id="dagger-current-status"></p><div id="dagger-current"></div>';
   $('teacher').previousElementSibling.before(currentDagger);
+  // Keep diagnostic bindings and calculations intact, outside the viewing layout.
+  const diagnostics=document.createElement('div');diagnostics.id='diagnostic-details';diagnostics.hidden=true;
+  $('advanced-settings').append(diagnostics);
+  for(const e of [...document.querySelector('.center').children])if(!e.matches('.board, .playback-region'))diagnostics.append(e);
+  for(const e of [...document.querySelector('.inspector').children])if(!e.matches('.reward-total, #reward-chart'))diagnostics.append(e);
+  for(const selector of ['.locator-row','#replay-start','#step-back','#step-next','#speed','.reward-total strong > span','#reward-total','#catalog-meta'])diagnostics.append(document.querySelector(selector));
+  $('reward-delta').textContent='未记录';
+  const chartTitle=text('h2','奖励走势 · 累计');chartTitle.id='reward-chart-title';$('reward-chart').before(chartTitle);
+  const rewardEmpty=text('p','无数据 · 奖励未记录');rewardEmpty.id='reward-empty';rewardEmpty.hidden=true;$('reward-chart').after(rewardEmpty);
   function metricList(target,values){
     const dl=document.createElement('dl');dl.className='dagger-metrics';
     for(const [key,v]of values){const row=text('div',''),name=text('dt',D.FIELDS[key]||'未翻译');name.append(text('small',key));
@@ -91,21 +103,18 @@
   function seek(tick){if(!player)return;playing=false;accumulator=0;renderer.reset();player.seek(tick);preparePreview();const info=player.info;if(info)renderer.addExplosion(info,tick*100);update();hashPosition();draw();}
   function list(){
     const filter=$('filter').value.toLowerCase();$('replay-list').replaceChildren();
-    const visible=[...catalog.replays,...(historyToggle.checked?catalog.history_replays||[]:[])];
+    const visible=[...recordings(),...(historyToggle.checked?catalog.history_replays||[]:[])];
     let group=null;
     for(const r of visible){
-      const model=catalog.model_comparison?.models.find(m=>m.checkpoint_sha256===r.checkpoint_sha256);
+      const model=reviewModels().find(m=>m.checkpoint_sha256===r.checkpoint_sha256);
       if(modelFilter.value&&model?.id!==modelFilter.value)continue;
       if(sceneFilter.value&&r.scene!==sceneFilter.value)continue;
       const failures=Array.isArray(r.summary?.failures)?r.summary.failures:[];
       if(!`${r.id} ${r.scene_name||''} ${failures.map(k=>labels[k]||k).join(' ')} ${r.diagnostic_audit?'返程振荡 停滞':''}`.toLowerCase().includes(filter))continue;
       if(model&&group!==model.id){group=model.id;$('replay-list').append(text('h3',`${model.id} · ${model.label}`,'model-group-heading'));}
       const b=text('button','',`replay-row${doc?.meta.id===r.id?' active':''}`);b.dataset.replay=r.id;
-      b.append(text('strong',`${r.model} · ${r.scene_name||(r.variant==='open'?'清砖图':'原始图')}`),text('small',`seed ${r.seed} · ${P.time(r.summary.ticks)} · ${r.summary.done===false?'片段未终局':r.summary.winner===null?'平局':r.summary.winner===0?'模型胜':'对手胜'}`));
-      if(r.diagnostic)b.append(text('strong',r.task==='recovery_threat'?'预置未归因控制窗口 · 真实空手取包 / 恢复诊断':r.scene==='carry_home'?'预置持包诊断，不代表自然完整对局成功':'训练指标离线诊断 · 完整自然对局','diagnostic-warning'));
-      if(r.diagnostic_audit)b.append(text('span','返程振荡 / 停滞失败已审计','tag'));
-      if(r.scene)b.append(text('small',`▦ ${r.map||806} · ${r.scene_rules} · map ${r.map_sha256.slice(0,8)}`,'scene-summary'));
-      const tags=text('div','','tags');if(r.scene)tags.append(text('span',({native:'▦ 原生',open:'□ 开放',carry_home:'↩ 返程'})[r.scene]||r.scene,'badge'));for(const k of failures)tags.append(text('span',labels[k]||k,'tag'));b.append(tags);b.onclick=()=>load(r.id,0).catch(fail);$('replay-list').append(b);
+      b.append(text('strong',`${r.model} · ${r.scene_name||(r.variant==='open'?'清砖图':'原始图')}`),text('small',`seed ${r.seed} · ${displayTime(r.summary.ticks,r)}`));
+      b.onclick=()=>{document.querySelector('.library').open=false;load(r.id,0).catch(fail);};$('replay-list').append(b);
     }
   }
   function details(target,values){const dl=document.createElement('dl');for(const [key,value] of values){const div=document.createElement('div');div.append(text('dt',key),text('dd',value));dl.append(div);}target.replaceChildren(dl);}
@@ -113,11 +122,11 @@
   function rewardValues(){const all={};for(const row of doc.rewards){if(row[0]>player.sim.t)break;for(const [key,v] of Object.entries(row[Number($('reward-player').value)+1]))all[key]=(all[key]||0)+v;}return all;}
   function update(){
     if(!player)return;const s=player.sim,t=s.t;
-    $('exact-time').textContent=`tick ${t} · ${P.time(t)}`;$('play-state').textContent=playing?'播放中':'已暂停';$('position-panel').classList.toggle('playing',playing);
+    $('exact-time').textContent=doc.meta.review_reward?`第 ${t} 帧 · ${displayTime(t)}`:`tick ${t} · ${P.time(t)}`;$('play-state').textContent=playing?'播放中':'已暂停';$('position-panel').classList.toggle('playing',playing);
     $('locator').value=P.locator(doc,t);$('seek').value=t;$('playhead').style.left=`${t/doc.actions.length*100}%`;
     $('play').title=playing?'暂停':'播放';$('play').setAttribute('aria-label',playing?'暂停':'播放');$('play-icon').src=`assets/review-icons/${playing?'pause':'play'}.svg`;
     const delta=currentReward(t),total=rewardValues(),rewardMeasured=doc.meta.reward_status!=='unrecorded';$('reward-delta').textContent=rewardMeasured?number(sum(delta)):'未记录';$('reward-total').textContent=rewardMeasured?number(sum(total)):'未记录';
-    $('reward-chart').hidden=!rewardMeasured;$('curve-component').disabled=!rewardMeasured;$('curve-mode').disabled=!rewardMeasured;
+    $('reward-chart').hidden=!rewardMeasured;rewardEmpty.hidden=rewardMeasured;rewardEmpty.textContent='无数据 · 奖励未记录';$('curve-component').disabled=!rewardMeasured;$('curve-mode').disabled=!rewardMeasured;
     $('components').replaceChildren();for(const k of componentNames()){const translated=V.reward(k),e=text('div','',`component${translated.known?'':' untranslated'}`),v=delta[k]||0,name=text('span',translated.name);e.title=translated.help;e.dataset.component=k;if($('english-rewards').checked)name.append(text('small',k));e.append(name,text('span',`${number(v)} / ${number(total[k]||0)}`,v<0?'negative':'positive'));$('components').append(e);}
     const a=t?doc.actions[t-1]:null;
     const dec=M.decision(doc,t);decisionPanel.hidden=!doc.decisions;
@@ -261,9 +270,10 @@
   function draw(){if(renderer&&player){const nextAction=doc.actions[player.sim.t],intents=nextAction?[nextAction[0],nextAction[2]]:[4,4];const motion=V.motion(player.sim,preview.sim,playing?accumulator/100:0,playing&&$('smooth').checked,doc.events,intents);motion.intents=intents;motion.labelScale=Math.max(1,Math.min(1.5,500/$('game').getBoundingClientRect().width));if($('advantage-overlay').checked){const r=R.atTick(doc,player.sim.t);motion.playerAdvantages=[$('advantage-mode').value==='shaped'?{advantage:r.shaped_advantage_a1,delta:r.shaped_advantage_delta,kind:'shaped'}:A.atTick(doc,player.sim.t),null];}if($('route-overlay').checked)motion.playerRoutes=[R.overlay(doc,player.sim.t),null];renderer.render(player.sim,player.sim.t*100+motion.fraction*100,motion);$('refresh-status').textContent=`实际 ${actualFPS} FPS · 模拟 10 tick/s · α ${motion.fraction.toFixed(3)} · 目标 ${$('frame-rate').value} FPS`;}}
   async function load(id,tick){
     const token=++loadToken;playing=false;$('canvas-loading').hidden=false;$('canvas-loading').textContent='正在验证录像与状态 hash';$('integrity').textContent='验证中';
-    const row=[...catalog.replays,...(catalog.history_replays||[])].find(r=>r.id===id);if(!row)throw Error('本录像不在合格诊断清单：缺少完整 Reward / Critic 优势证据；原资产保留供审计，未跳转其他录像。');
+    const row=[...recordings(),...(catalog.history_replays||[])].find(r=>r.id===id);if(!row)throw Error('本录像不在合格诊断或评估清单：原资产保留供审计，未跳转其他录像。');
     const response=await fetch(`review-replays/${row.file}`);if(!response.ok)throw Error(`录像 HTTP ${response.status}`);const bytes=new Uint8Array(await response.arrayBuffer());if(bytes.length!==row.bytes||await P.sha256(bytes)!==row.sha256)throw Error('录像文件 hash / 大小不匹配');
     const next=P.validate(JSON.parse(new TextDecoder().decode(bytes)));const mapResponse=await fetch('assets/maps/levels.json');if(!mapResponse.ok)throw Error('地图 HTTP');const level=(await mapResponse.json()).find(x=>x.qqt_id===806);if(await P.hash(level)!==next.meta.map_sha256)throw Error('地图 hash');
+    if(row.model_id)QQTReviewEvaluation.validate(next,catalog.evaluation?.models.find(m=>m.id===row.model_id));
     const versioned=next.meta.simulator_sha256===P.ROUTE_SIM_HASH,simPath=versioned?'review-sim/route-v35.js':'sim.js';
     const sr=await fetch(simPath);if(!sr.ok)throw Error('模拟器 HTTP');const simBytes=await sr.arrayBuffer();if(await P.sha256(simBytes)!==next.meta.simulator_sha256)throw Error('模拟器版本不匹配');
     if(versioned){const current=window.QQT;try{await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=simPath;script.onload=resolve;script.onerror=()=>reject(Error('模拟器加载失败'));document.head.append(script);});P.registerSimulator(P.ROUTE_SIM_HASH,window.QQT);}finally{window.QQT=current;}}
@@ -273,20 +283,24 @@
     const nextAnalysis=F.analyze(next,level,P);if(nextReturnAudit&&JSON.stringify(nextReturnAudit.intervals)!==JSON.stringify(nextAnalysis.intervals))throw Error('返程失败区间重算不一致');if(token!==loadToken)return;
     Object.defineProperty(next,'asset_sha256',{value:row.sha256});
     doc=next;returnAnalysis=nextAnalysis;returnAudit=nextReturnAudit;player=nextPlayer;preview=new P.Player(doc,level);preview.cache=player.cache;rewardByTick=new Map(doc.rewards.map(r=>[r[0],r]));curveCache=null;renderer=QQTVisual.createRenderer($('game'),level,assets);rows=[];editing=null;$('annotation-form').hidden=true;
+    $('selected-replay').textContent=`${row.model} · ${row.scene_name||row.scene||'对局'} · seed ${row.seed}`;
     try{const saved=localStorage.getItem(storageKey());if(saved)rows=P.validateAnnotations(JSON.parse(saved),doc);}catch(_){say('已有标注无效或存储不可用');}
     $('episode-title').textContent=(doc.meta.route?.kind==='fixture'?'合成测试 fixture · ':'')+`模型 P0 · ${doc.meta.model} 对阵 对手 P1`;$('episode-meta').textContent=`${doc.meta.scene_name||'历史抢包对战'} · qqt_id ${doc.meta.map} · ${doc.meta.scene_rules||doc.meta.variant} · 对手 ${doc.meta.opponent} · seed ${doc.meta.seed} · checkpoint ${doc.meta.checkpoint_sha256.slice(0,12)} · map ${doc.meta.map_sha256.slice(0,12)}`;$('terminal').textContent=doc.summary.done===false?'片段结束：对局仍在进行，未记录胜负':`终局：${doc.summary.winner===null?'平局':doc.summary.winner===0?'模型胜':'对手胜'}`;
     const metrics=Boolean(doc.metrics);
     document.querySelector('.route-explanation').textContent=metrics?'本批raw侧是继承H8任务Reward、shaped侧是JE10总Reward；两侧使用同一个经过总Reward训练的Critic做离线一步反事实近似。路线奖励是人工辅助量，不能当作优势。非历史训练rollout，非独立原始任务Critic。':'原始任务Critic估计任务回报；路线奖励是人工辅助量。塑形Critic只有经过塑形回报训练并验证才展示；路线奖励不能代替优势。';
     const fixedEight=doc.meta.batch_id==='v36-fixed-eight-20261017',je10=doc.meta.batch_id==='je10-best-completed-20261018';
-    $('route-experiment').hidden=!doc.meta.diagnostic||fixedEight||je10||metrics;
+    if(doc.meta.review_reward)$('terminal').textContent=`终局：${({win:'模型胜',loss:'模型负',draw:'平局'})[doc.summary.outcome]}${doc.meta.scene==='open'?'（安全击杀／死亡口径）':''}`;
+    $('route-experiment').hidden=!doc.meta.diagnostic||fixedEight||je10||metrics||Boolean(doc.meta.review_reward);
     const reference=catalog.model_comparison?.models.find(m=>m.checkpoint_sha256===doc.meta.checkpoint_sha256);modelSummary.hidden=!reference;if(reference){modelSummary.replaceChildren(text('h3',`${reference.id} · ${reference.label}`),text('p',`source run: ${reference.source_run} · g${reference.generation} · Actor ${reference.checkpoint_sha256.slice(0,12)} · Critic ${reference.critic.critic_sha256.slice(0,12)}`),text('p','固定同协议评估参考，非本页小样本胜率；默认综合发布基线仍为r01 g8。Python Tactical与JS Hunter分别报告。'));details(modelSummary.appendChild(document.createElement('div')),[['Python Tactical 安全击杀 / 自伤',`${reference.tactical.safe_win}/64 · 自伤 ${reference.tactical.self_episodes}/64`],['JS Hunter 难 / 中 / 易',Object.values(reference.hunter).map(v=>`${v.safe_win}/64（自伤${v.self_episodes}）`).join(' / ')],...Object.entries(reference.route).map(([k,v])=>[({native_death_stock:'死亡库存窗口',native_sugar_stock:'糖泡库存窗口',real_drop:'真实掉包',carry_near:'预置近程返程',carry_mid:'预置中程返程',carry_far:'预置远程返程',recovery_threat:'受威胁恢复',natural_full2400:'自然完整局'})[k],`拾包 ${v.pickup_episodes}/16 · 交付 ${v.delivery_episodes}/16 · 死亡 ${v.death} · 自伤 ${v.self_death}`])]);}
     if(reference){const evidence=text('p','');for(const [label,file]of [['固定评估 / Actor / Critic / Reward 配套凭证',catalog.model_comparison.selection_file],['全部预声明录像、复算与尺寸','review-evidence/good-models-20261019/verification.json']]){const link=text('a',label);link.href=file;link.target='_blank';link.rel='noopener';evidence.append(link,document.createElement('br'));}modelSummary.append(evidence);}
     let warning=$('episode-warning');if(!warning){warning=text('p','','diagnostic-warning');warning.id='episode-warning';document.querySelector('.episode-head').after(warning);}warning.hidden=!doc.meta.diagnostic;warning.textContent=metrics?`训练指标诊断载体 · ${({'original_trajectory_recomputed':'原录像同轨迹离线复算','same_checkpoint_new_seed':'同checkpoint新seed重跑','best_model_replacement':'当前综合发布最佳模型替代重跑'})[doc.meta.metrics.origin]} · ${doc.meta.scene_rules} · 全部预声明seed保留；非历史训练rollout。完整同版本Reward账本在Web真实事件上复算；同checkpoint真实Critic离线一步近似（不是V=0）。raw侧与shaped侧共享total-reward Critic，非两个独立训练Critic。终局若仍有危险，未结算奖励保留为账本事实。`:je10?`固定四场全部保留、不择优 · ${doc.meta.scene_rules} · 真实对手 ${doc.meta.opponent} · 已完成训练 checkpoint 的异步评估诊断，非历史训练 rollout。raw/shaped A1 为零后续值、策略加权反事实一步近似；严格训练 Reward / A1 未记录。`:fixedEight?`固定八局全部保留 · ${doc.meta.scene_rules} · 真实对手 ${doc.meta.opponent} · offline_recomputed_current_reward / 近似诊断，非 training-time reward；严格 A₁ 未计算`:doc.meta.diagnostic?'诊断场景，不代表自然完整对局成功 · 预置掉包 / assist-off / 固定向上对手':'';
-    document.querySelector('.reward-total > span').textContent=fixedEight?'近似奖励增量 / 累计':'奖励增量 / 累计';
+    document.querySelector('.reward-total > span').textContent=fixedEight?'即时奖励 · 近似':metrics||doc.meta.review_reward?'即时奖励 · 离线复算':'即时奖励';
+    document.querySelector('.reward-total > span').title=doc.meta.review_reward?doc.meta.review_reward.scope+' '+doc.meta.review_reward.limitations:'';
+    if(doc.meta.review_reward)warning.textContent=doc.meta.review_reward.scope+' '+doc.meta.review_reward.limitations;
     document.querySelector('.component-head > span').textContent=fixedEight?'当前逻辑近似奖励分量 · 本 tick / 累计':'奖励分量 · 本 tick / 累计';
     const rewardTrackLabel=[...document.querySelectorAll('.track-label strong')].find(e=>e.textContent==='Reward 轨'||e.textContent==='近似 Reward 轨');
     if(rewardTrackLabel)rewardTrackLabel.textContent=fixedEight?'近似 Reward 轨':'Reward 轨';
-    $('seek').max=doc.actions.length;$('duration').textContent=P.time(doc.actions.length);$('integrity').style.color='#82d2b6';
+    $('seek').max=doc.actions.length;$('duration').textContent=displayTime(doc.actions.length);$('integrity').style.color='#82d2b6';
     curveOptions();daggerEpisode();
     if(daggerCatalog){const related=daggerCatalog.runs.find(r=>r.checkpoint_sha256===doc.meta.checkpoint_sha256);if(related)$('dagger-run').value=related.id;await daggerSummary($('dagger-run').value);}
     if(token!==loadToken)return;
@@ -299,7 +313,7 @@
     document.querySelector('.timeline-layout').hidden=false;
     $('canvas-loading').hidden=true;list();timeline();annotations();seek(Math.min(doc.actions.length,Math.max(0,Number.isInteger(tick)?tick:0)));$('integrity').textContent='hash 已验证';say('录像与间隔状态 hash 校验通过');
   }
-  function fail(e){playing=false;document.querySelector('.timeline-layout').hidden=true;player=null;preview=null;renderer=null;doc=null;$('locator').value='';$('exact-time').textContent='无法定位：录像不可用';for(const id of ['state-details','advantage-details','shaped-details','je10-advantage-details','route-details','policy-decision-details','model-summary','components','provenance','current-events'])$(id).replaceChildren();$('reward-delta').textContent='未记录';$('reward-total').textContent='未记录';$('episode-title').textContent='录像不可用';$('game').getContext('2d').clearRect(0,0,$('game').width,$('game').height);for(const id of ['play','step-back','step-next','seek','replay-start','copy-position','copy-link','add-annotation','export-annotations','import-annotations'])$(id).disabled=true;say(e.message);$('canvas-loading').hidden=false;$('canvas-loading').textContent=e.message;$('integrity').textContent='验证失败';}
+  function fail(e){playing=false;$('reward-chart').hidden=true;rewardEmpty.hidden=false;rewardEmpty.textContent='无数据 · 录像不可用';$('selected-replay').textContent='录像不可用';document.querySelector('.timeline-layout').hidden=true;player=null;preview=null;renderer=null;doc=null;$('locator').value='';$('exact-time').textContent='无法定位：录像不可用';for(const id of ['state-details','advantage-details','shaped-details','je10-advantage-details','route-details','policy-decision-details','model-summary','components','provenance','current-events'])$(id).replaceChildren();$('reward-delta').textContent='未记录';$('reward-total').textContent='未记录';$('episode-title').textContent='录像不可用';$('game').getContext('2d').clearRect(0,0,$('game').width,$('game').height);for(const id of ['play','step-back','step-next','seek','replay-start','copy-position','copy-link','add-annotation','export-annotations','import-annotations'])$(id).disabled=true;say(e.message);$('canvas-loading').hidden=false;$('canvas-loading').textContent=e.message;$('integrity').textContent='验证失败';}
   const keyboardStep=ReviewKeyboard.bindReviewKeyboard({onStep:(direction,amount)=>{
     if(player)seek(ReviewKeyboard.steppedTick(player.sim.t,direction,amount,doc.actions.length));
   }});
@@ -336,6 +350,6 @@
   try{const r=await fetch('review-catalog.json',{cache:'no-store'});if(!r.ok)throw Error(`目录 HTTP ${r.status}`);catalog=await r.json();if(catalog.schema!=='qqt.diagnostic-catalog/v1')throw Error('目录 schema');
     const dr=await fetch('review-dagger/catalog.json');if(!dr.ok)throw Error('DAgger 目录 HTTP');daggerCatalog=await dr.json();if(daggerCatalog.schema!=='qqt.dagger-catalog/v1')throw Error('DAgger 目录 schema');
     for(const row of daggerCatalog.runs)$('dagger-run').add(new Option(row.title+' · '+row.scope,row.id));
-    for(const s of catalog.scenes||[])sceneFilter.add(new Option(s.name,s.id));for(const m of catalog.model_comparison?.models||[])modelFilter.add(new Option(`${m.id} · ${m.label}`,m.id));
-    $('count').textContent=catalog.replays.length;$('catalog-meta').textContent=`${catalog.replays.length} 局 · ${catalog.model}\n${catalog.scenes?.length||1} 种场景 · ${catalog.screened_episodes} 个固定 seed\n${catalog.raw_bytes} bytes / gzip ${catalog.gzip_bytes} bytes`;if(catalog.metrics_admission){const gate=text('p',`准入：${catalog.replays.length}局完整Reward/真实Critic指标；${catalog.metrics_admission.excluded_count}条旧缺测入口已由真实对局替代。`);const link=text('a','两个原始tick根因及不可变证据');link.href=catalog.metrics_admission.audit_file;link.target='_blank';link.rel='noopener';gate.append(document.createElement('br'),link);$('catalog-meta').after(gate);const audit=text('details','');audit.id='route-target-audit-summary';audit.append(text('summary','两个指定旧tick为何异常'),text('p','carry_home tick107：把己半场误标为入笼，且旧phase4误用掉包距离通道，Phi/路线奖励恒0。原生交付时仍有fuse23活泡，账本的24分需危险结束后结算，Web立即终局没有该结算tick。'),text('p','open tick436：模型空手、敌未受控，无激活路线目标；NONE分支却导出默认己笼距离4→4。新版NONE距离为空，不再误显示返程。原文件SHA及前后30tick数据保留，未手工改历史奖励。'));gate.after(audit);}list();const p=new URLSearchParams(location.hash.slice(1));await load(p.get('replay')||catalog.replays[0].id,Number(p.get('tick')||0));}catch(e){fail(e);}
+    for(const s of catalog.scenes||[])sceneFilter.add(new Option(s.name,s.id));for(const m of reviewModels())modelFilter.add(new Option(`${m.id} · ${m.label}`,m.id));
+    $('count').textContent=recordings().length;$('catalog-meta').textContent=`${catalog.replays.length} 局完整诊断 + ${catalog.evaluation?.replays.length||0} 局评估 · ${catalog.model}\n${catalog.scenes?.length||1} 种场景 · 评估全部seed保留\n原诊断 ${catalog.raw_bytes} bytes / gzip ${catalog.gzip_bytes} bytes`;if(catalog.metrics_admission){const gate=text('p',`准入：${catalog.replays.length}局完整Reward/真实Critic指标；${catalog.metrics_admission.excluded_count}条旧缺测入口已由真实对局替代。`);const link=text('a','两个原始tick根因及不可变证据');link.href=catalog.metrics_admission.audit_file;link.target='_blank';link.rel='noopener';gate.append(document.createElement('br'),link);$('catalog-meta').after(gate);const audit=text('details','');audit.id='route-target-audit-summary';audit.append(text('summary','两个指定旧tick为何异常'),text('p','carry_home tick107：把己半场误标为入笼，且旧phase4误用掉包距离通道，Phi/路线奖励恒0。原生交付时仍有fuse23活泡，账本的24分需危险结束后结算，Web立即终局没有该结算tick。'),text('p','open tick436：模型空手、敌未受控，无激活路线目标；NONE分支却导出默认己笼距离4→4。新版NONE距离为空，不再误显示返程。原文件SHA及前后30tick数据保留，未手工改历史奖励。'));gate.after(audit);}list();const p=new URLSearchParams(location.hash.slice(1));await load(p.get('replay')||catalog.replays[0].id,Number(p.get('tick')||0));}catch(e){fail(e);}
 })();

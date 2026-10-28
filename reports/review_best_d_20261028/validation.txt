@@ -1,0 +1,206 @@
+v2 rerun: all listed commands exited 0. SKIP is limited to the explicitly named optional checks.
+
+## v2-npm-test.txt
+
+> qqt-rl-bun-web@0.1.0 test
+> npm run build:runtime && node web/test_model_worker.js && node web/test_settlement_card.js && node web/test_bot_glue.js && node web/test_field_items.js && node web/test_settlement_actions.js && node web/test_ui_panels.js && node web/test_bun06.js && node web/test_sim_two_player_regression.js && node web/test_half_tile_explosion.js && node web/test_bun_rule_bot.js && node web/test_bun_rule_bot_v2.js && node web/test_bun_rule_bot_selfplay_parity.js && node web/test_bun_hunter_bot.js && node web/test_bun_coop_hunter_bot.js && node web/test_bot_direct_threat.js && node web/test_bot_staggered_attack.js && node web/test_staggered_attack_oracle.js && node web/test_native_restoration.js && node web/test_wall_exit.js && node web/test_spawn_protection.js && node web/test_airdrop_death.js && node web/test_death_overlay.js && node web/test_eval_web_hunter.js && node web/test_tactical_arena.js && node web/test_controls.js && node web/test_model_catalog.js && node web/test_model_loader.js && node web/test_replay.js && node web/test_bot_contract.js && node web/test_visual_parity.js && node web/test_mlp4_parity.js && node web/test_web_feel.js && node web/test_http.js && npm run test:leaderboard && npm run test:review
+
+
+> qqt-rl-bun-web@0.1.0 build:runtime
+> node scripts/assemble_web_runtime.js
+
+Assembled pinned ONNX Runtime Web 1.23.2 (single-thread WASM)
+Versioned native Bun encoding, both seats and legacy compatibility passed
+Worker request lifecycle, verified ONNX catalog/download, unchanged 10Hz contract passed
+Round4 card: first registration, returning declaration-only, result/profile retry, immutable intent, next-match edits, empty retention and stale refresh passed
+Bot glue seed 20261007: own/enemy eat, bypass, bomb/retreat, multi-tick safety, difficulties and snapshot passed
+Field item regression seed 20261007: opponent, swept frames, owner/team, protection, overlap, corner and snapshot passed
+Settlement actions: explicit approval, close/reopen, concurrency, retry fingerprint, upgrade guard and persisted drafts passed
+UI panels: first prompt, wrong/correct, refresh, new tab, forget, version invalidation, dialogs passed
+抢包子06 地图、碰撞、炸砖和规则状态测试通过
+1v1 默认路径逐 tick 回归金样一致（12 例）
+half-tile explosion aggregation, symmetry, corner, protection and replay checks passed
+Bun 规则战术机器人 JS fixtures/链爆/性能测试通过
+Bun规则战术机器人 v2 FSM/目标路由跨语言 fixtures 通过
+Bun规则战术机器人自博弈战斗态跨语言 parity 通过 (176 例)
+猎手 Bot：躲泡/进攻/偷包搬运/难度注册/组队救援 回归通过
+Cooperative hunter: safe unlinked reserves, replenishment, cancellation, late triple chain, resource growth and escort passed
+Direct threat: timed off-ray attack, physical hit/reroute/full-body follow-up, blockers/status/half/chain guards, team duties, insurance and deterministic Sim passed
+Staggered attack all: actual separated explosions, late extension, retreat, hazard/team vetoes and deterministic trace passed
+Staggered oracle: half-contact, invulnerability and delayed death passed
+Native syrup, pop sound, Maomao assets, banana sliding and wall passage: passed
+{"exits":25088,"mapExits":2646,"wallTypes":[-8009,-8010,8005,8006,8009,8010,8012],"reproduction":[{"move":0,"localCases":6272,"stuck":0,"sideways":0,"mapCases":784,"mapStuck":0,"mapSideways":0},{"move":1,"localCases":6272,"stuck":0,"sideways":0,"mapCases":588,"mapStuck":0,"mapSideways":0},{"move":2,"localCases":6272,"stuck":0,"sideways":0,"mapCases":637,"mapStuck":0,"mapSideways":0},{"move":3,"localCases":6272,"stuck":0,"sideways":0,"mapCases":637,"mapStuck":0,"mapSideways":0}]}
+Wall exits: four directions, all local wall layouts, 806 wall types and blocked targets passed
+native spawn/respawn protection, harm scope, expiry and replay checks passed
+Native bird flight, landing, full inventory death drops and quantity conservation: passed
+death overlay visibility, respawn recovery and replay compatibility passed
+authoritative spawn marker identity, replay and immediate respawn removal passed
+网页猎手评估器：难度/出生/seed/元数据/归因 检查通过
+网页 Tactical v2 训练竞技场行为回归通过 {
+  active: { moved: 225, placed: 7, escapedThreat: false },
+  threatened: { moved: 75, placed: 4, escapedThreat: true }
+}
+网页方向键移动控制测试通过
+R typing/repeat/modifier protection, shared async restart and error recovery passed
+网页模型目录与观战模式契约通过
+网页模型流式下载进度契约通过
+网页离线对局回放紧凑格式与时间轴契约通过
+Bot contract/registry cross-language fixtures passed
+visual parity assets and animation contract: ok
+网页 MLP4Model 数值/argmax parity 通过（5 例，最大误差 2.78e-15）
+网页手感回归（连续逐帧移动 / 原版像素物理 / 人类raw渲染 / 复活压暗）通过
+Bun-only HTTP smoke 通过
+
+> qqt-rl-bun-web@0.1.0 test:leaderboard
+> node web/test_leaderboard.js && node scripts/test_leaderboard_edge.js && node scripts/test_leaderboard_sql.js && node scripts/test_match_ranking_sql.js && node scripts/test_upgrade_profile_ip_sql.js && node scripts/test_profile_update_round4_sql.js && node web/test_upgrade_profile.js && node web/test_settlement_profile_round4.js && node web/test_loss_settlement.js && node web/test_settlement_restart.js && node web/test_settlement_lifecycle.js && npm run test:win-records
+
+排行榜身份、校验、幂等、离线重试、payload与纯文本渲染回归通过
+Edge origin restriction, accepted source IP, server masking, invalid IP and metadata failure, progress and top-level exception tests passed
+本地PGlite SQL迁移、权限/RLS、校验、幂等、限流、升级与排序通过；不是Supabase远端E2E
+Incremental old-schema rank RPC: cohorts, outcomes, ties, percentile, peer deduplication, retry and private-core ACL passed
+Incremental SQL: upgrade win/loss/draw, profile auth/XSS/empty preservation, stale queue, raw inet and public masking/ACL passed [
+  { result: 'win', level: 2 },
+  { result: 'loss', level: 2 },
+  { result: 'draw', level: 2 }
+]
+Round4 SQL: executable/reentrant bundle, upgrade/non-upgrade, identity/match forgery, immutable legacy nickname, empty retention, old/late receipts, idempotency, XSS, RLS/ACL and raw IP privacy passed
+Round4 every-match profile receipt plus successful item-release reuse/mute passed
+Round4 boundaries: server-confirmed identity, old RPC compatibility, earliest registration, old receipt-only retry and legacy queue migration passed
+Loss settlement: exact message, hidden/disabled profile, zero profile RPCs, reload/result idempotency and win/draw DOM reset passed
+Settlement all: wording, success-only restart, X restart, failure/pending protection and duplicate/stale actions passed
+Settlement lifecycle: loading, cleanup, closed/invalid, restored loss and win/draw passed
+
+> qqt-rl-bun-web@0.1.0 test:win-records
+> node web/test_win_records.js && node scripts/test_win_records_edge.js && node scripts/test_win_records_sql.js
+
+Win-record all: editable defaults, private markers, global rank/ellipsis, text rendering and stale reads passed
+Win-record Edge: exact match source binding, masking, missing-RPC fallback and rejected metadata passed
+Win-record SQL: per-match snapshots, legacy nulls, empty retention, identity/ownership, global rank/top20/extra, ties, idempotency, reentry, XSS, RLS and IP privacy passed
+
+> qqt-rl-bun-web@0.1.0 test:review
+> node web/test_review_good_models.js && node web/test_review_admission.js && node web/test_review_metrics.js && node web/test_review_route_targets.js && node web/test_review_je10.js && node web/test_review_protocol.js && node web/test_review_v36_multiseed.js && node web/test_review_v36.js && node web/test_review_v36_advantage_contract.js && node web/test_review_presentation.js && node web/test_review_motion_regression.js && node web/test_review_advantage.js && node web/test_review_route.js && node web/test_review_route_g32.js && node web/test_review_return.js && node web/test_review_keyboard.js && node web/test_review_scenes.js && node web/test_review_dagger.js && node web/test_ui_panels.js && python3 scripts/test_diagnostic_a1.py && node web/test_review_best_d.js
+
+Good models GREEN: all paired checkpoints/seeds, original seven, per-tick metrics and decision evidence
+Review admission GREEN: complete real Critic/reward, all seeds, old incomplete recordings rejected
+Metrics identity tamper RED-GREEN
+Metrics formula / legal renormalization / terminal / null / provenance RED-GREEN
+Actual Actor probability / legal masks / quantization / strict sparse schema GREEN
+Route target export GREEN
+Pre-stock corridor frontier phases GREEN
+JE10 model/replay identity, all-action replay, policy-centered approximate A1 contract GREEN
+Diagnostic protocol GREEN: 20 replays, 820 schema RED/GREEN/hash/seek/annotation checks
+v36 fixed eight seeds, no selection, per-action evidence and deterministic replay GREEN
+v36 review replay RED/GREEN contract passed
+v36 A1 evidence and legacy replay deprecation contract passed
+Review presentation GREEN: 20 translations, palette, discontinuities, 717 safe / 185 snapped real transitions, unchanged terminal hash
+Motion regression GREEN: real g32 bomb/movement separation for both players, monotonic coordinates, authoritative state unchanged, discrete boundary snaps
+A1 GREEN: weighted joint fixture, illegal exclusion, terminal, first/gap delta null, sparse columns RED/GREEN, hash, real H8 critic measurements
+Route GREEN: old identities, null/INF/negative/phase/terminal, PBRS recompute, target redaction, isolated shaped critic weighted legal A1, first/gap delta, compact sizes, tamper RED
+Real g32 GREEN: source hashes, 75 exact critic tensors receipt, 1200 production state hashes/route equations, honest null reward/A, diagnostic terminal semantics, both players monotonic float motion 583/12
+Return diagnostic GREEN: real tick177, actual vertical period-two motion, plateau not progress, path direction, role separation, normalized A1, null gaps
+Review keyboard RED/GREEN: exact single step, accelerated repeat, editable controls and unrelated keys
+Scenes GREEN: frozen six episodes, three genuine start/rule configurations on verified map, scene/source hashes, production Sim terminal parity, legal counts/evidence RED, playback DOM order
+DAgger GREEN: real H6/H7/H8 artifact hashes and counters, null preservation, own/enemy separation, sparse schema RED/GREEN, no inference, signal identity hash
+UI panels: first prompt, wrong/correct, refresh, new tab, forget, version invalidation, dialogs passed
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.009s
+
+OK
+Local <EXTERNAL_MODEL> SHA-256 matches source-receipt model_sha256.
+SKIP: npm Review suite checks local model hash only; checkpoint-to-export exact tensor comparison requires scripts/verify_best_d_actor.py.
+D Review GREEN: source-receipt model identity, all 15 predeclared seeds, honest reward scope, no false A1, tamper rejection, playback/hash/seek, defaults and prior admission retained; historical Actor proof checked separately from current optional local checks
+
+## v2-review-test-absent.txt
+
+> qqt-rl-bun-web@0.1.0 test:review
+> node web/test_review_good_models.js && node web/test_review_admission.js && node web/test_review_metrics.js && node web/test_review_route_targets.js && node web/test_review_je10.js && node web/test_review_protocol.js && node web/test_review_v36_multiseed.js && node web/test_review_v36.js && node web/test_review_v36_advantage_contract.js && node web/test_review_presentation.js && node web/test_review_motion_regression.js && node web/test_review_advantage.js && node web/test_review_route.js && node web/test_review_route_g32.js && node web/test_review_return.js && node web/test_review_keyboard.js && node web/test_review_scenes.js && node web/test_review_dagger.js && node web/test_ui_panels.js && python3 scripts/test_diagnostic_a1.py && node web/test_review_best_d.js
+
+Good models GREEN: all paired checkpoints/seeds, original seven, per-tick metrics and decision evidence
+Review admission GREEN: complete real Critic/reward, all seeds, old incomplete recordings rejected
+Metrics identity tamper RED-GREEN
+Metrics formula / legal renormalization / terminal / null / provenance RED-GREEN
+Actual Actor probability / legal masks / quantization / strict sparse schema GREEN
+Route target export GREEN
+Pre-stock corridor frontier phases GREEN
+JE10 model/replay identity, all-action replay, policy-centered approximate A1 contract GREEN
+Diagnostic protocol GREEN: 20 replays, 820 schema RED/GREEN/hash/seek/annotation checks
+v36 fixed eight seeds, no selection, per-action evidence and deterministic replay GREEN
+v36 review replay RED/GREEN contract passed
+v36 A1 evidence and legacy replay deprecation contract passed
+Review presentation GREEN: 20 translations, palette, discontinuities, 717 safe / 185 snapped real transitions, unchanged terminal hash
+Motion regression GREEN: real g32 bomb/movement separation for both players, monotonic coordinates, authoritative state unchanged, discrete boundary snaps
+A1 GREEN: weighted joint fixture, illegal exclusion, terminal, first/gap delta null, sparse columns RED/GREEN, hash, real H8 critic measurements
+Route GREEN: old identities, null/INF/negative/phase/terminal, PBRS recompute, target redaction, isolated shaped critic weighted legal A1, first/gap delta, compact sizes, tamper RED
+Real g32 GREEN: source hashes, 75 exact critic tensors receipt, 1200 production state hashes/route equations, honest null reward/A, diagnostic terminal semantics, both players monotonic float motion 583/12
+Return diagnostic GREEN: real tick177, actual vertical period-two motion, plateau not progress, path direction, role separation, normalized A1, null gaps
+Review keyboard RED/GREEN: exact single step, accelerated repeat, editable controls and unrelated keys
+Scenes GREEN: frozen six episodes, three genuine start/rule configurations on verified map, scene/source hashes, production Sim terminal parity, legal counts/evidence RED, playback DOM order
+DAgger GREEN: real H6/H7/H8 artifact hashes and counters, null preservation, own/enemy separation, sparse schema RED/GREEN, no inference, signal identity hash
+UI panels: first prompt, wrong/correct, refresh, new tab, forget, version invalidation, dialogs passed
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.009s
+
+OK
+SKIP: local <EXTERNAL_MODEL> absent; model-file hash and exact export tensor checks not performed. Source-receipt model_sha256 remains checked.
+D Review GREEN: source-receipt model identity, all 15 predeclared seeds, honest reward scope, no false A1, tamper rejection, playback/hash/seek, defaults and prior admission retained; historical Actor proof checked separately from current optional local checks
+
+## v2-minimal-browser.txt
+
+Review minimal 1440x1000 GREEN: real replay, drag/play/pause, labels, reward/chart linkage, selector, reload, honest unavailable state
+Review minimal 390x844 GREEN: real replay, drag/play/pause, labels, reward/chart linkage, selector, reload, honest unavailable state
+
+## v2-d-browser.txt
+
+D real Chromium desktop GREEN: selector / three scenes / reward / chart / playback / missing A1 / appearance
+D real Chromium mobile GREEN: selector / three scenes / reward / chart / playback / missing A1 / appearance
+
+## v2-actor-present.txt
+
+Exact checkpoint/export tensors verified against hashed local <EXTERNAL_MODEL>.
+CHECKPOINT / STATE / JAX / JS / WASM numerical checks GREEN 57 3.9577484130859375e-05 ; local export tensors verified
+
+## v2-actor-absent.txt
+
+SKIP: local <EXTERNAL_MODEL> absent; model-file hash and exact checkpoint/export tensor comparison not performed.
+CHECKPOINT / STATE / JAX / JS / WASM numerical checks GREEN 57 3.9577484130859375e-05 ; local export tensors SKIP
+
+## v2-generator-present.txt
+
+Local <EXTERNAL_MODEL> SHA-256 matches source-receipt model_sha256.
+Local export / ONNX companion tensors exact.
+Generation source identities checked; local export tensors verified against companion.
+
+## v2-generator-absent.txt
+
+SKIP: local <EXTERNAL_MODEL> absent; model-file hash and exact export tensor checks not performed. Source-receipt model_sha256 remains checked.
+Generation source identities checked; local export tensors SKIP.
+
+## v2-assembly.txt
+
+Local <EXTERNAL_MODEL> SHA-256 matches source-receipt model_sha256.
+Local D assets assembled and replay-verified 15 [{"key":"open/hard","seeds":[2026102800,2026102801,2026102802],"games":3,"win":0,"loss":0,"draw":3,"death":0,"delivery":0},{"key":"open/normal","seeds":[2026102810,2026102811,2026102812],"games":3,"win":3,"loss":0,"draw":0,"death":0,"delivery":0},{"key":"open/easy","seeds":[2026102820,2026102821,2026102822],"games":3,"win":3,"loss":0,"draw":0,"death":0,"delivery":0},{"key":"native/normal","seeds":[2026102830,2026102831,2026102832],"games":3,"win":0,"loss":3,"draw":0,"death":0,"delivery":0},{"key":"carry_home/normal","seeds":[2026102840,2026102841,2026102842],"games":3,"win":3,"loss":0,"draw":0,"death":0,"delivery":3}]
+
+## v2-assembly-absent.txt
+
+SKIP: local <EXTERNAL_MODEL> absent; model-file hash and exact export tensor checks not performed. Source-receipt model_sha256 remains checked.
+Local D assets assembled and replay-verified 15 [{"key":"open/hard","seeds":[2026102800,2026102801,2026102802],"games":3,"win":0,"loss":0,"draw":3,"death":0,"delivery":0},{"key":"open/normal","seeds":[2026102810,2026102811,2026102812],"games":3,"win":3,"loss":0,"draw":0,"death":0,"delivery":0},{"key":"open/easy","seeds":[2026102820,2026102821,2026102822],"games":3,"win":3,"loss":0,"draw":0,"death":0,"delivery":0},{"key":"native/normal","seeds":[2026102830,2026102831,2026102832],"games":3,"win":0,"loss":3,"draw":0,"death":0,"delivery":0},{"key":"carry_home/normal","seeds":[2026102840,2026102841,2026102842],"games":3,"win":3,"loss":0,"draw":0,"death":0,"delivery":3}]
+
+## Original reward rerun retained (trajectories/reward code unchanged)
+
+VERIFIED d-slot05-u720-carry_home-normal-2026102840 85 [0.7571342624432873, 0.0]
+VERIFIED d-slot05-u720-carry_home-normal-2026102841 91 [0.8075415971688926, 0.0]
+VERIFIED d-slot05-u720-carry_home-normal-2026102842 80 [0.7030751523052459, 0.0]
+VERIFIED d-slot05-u720-native-normal-2026102830 2400 [2.30000002682209, 8.499999970197678]
+VERIFIED d-slot05-u720-native-normal-2026102831 2400 [0.7000000029802322, 7.700000047683716]
+VERIFIED d-slot05-u720-native-normal-2026102832 2400 [0.5, 2.8000000566244125]
+VERIFIED d-slot05-u720-open-easy-2026102820 300 [16.891313539605108, -12.499999821186066]
+VERIFIED d-slot05-u720-open-easy-2026102821 300 [16.893829552942407, -12.499999821186066]
+VERIFIED d-slot05-u720-open-easy-2026102822 300 [17.498827180845183, -12.499999821186066]
+VERIFIED d-slot05-u720-open-hard-2026102800 300 [0.0, 0.0]
+VERIFIED d-slot05-u720-open-hard-2026102801 300 [0.0, 0.0]
+VERIFIED d-slot05-u720-open-hard-2026102802 300 [0.0, 0.0]
+VERIFIED d-slot05-u720-open-normal-2026102810 300 [17.475378812310737, -12.500529647280928]
+VERIFIED d-slot05-u720-open-normal-2026102811 300 [16.87041524041888, -12.507782223912727]
+VERIFIED d-slot05-u720-open-normal-2026102812 300 [16.8777903598002, -12.500993937684143]

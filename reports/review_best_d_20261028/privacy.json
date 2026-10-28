@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "scope": "git ls-files -z union staged ACMR files; ignored runs/checkpoints/task orchestration excluded",
+  "files": 955,
+  "staged_files": 62,
+  "checks": [
+    "private_identity",
+    "private_absolute_path",
+    "private_ipv4",
+    "literal_machine_pid"
+  ],
+  "findings": [],
+  "reviewed_false_positives": [
+    {
+      "file": "reports/je09_bun_20261017/route_pbrs_training_20261017.md",
+      "kind": "private_absolute_path",
+      "line": 9,
+      "reason": "historical funnel column heading"
+    }
+  ],
+  "player_id_note": "pid 0/1 in game code are player indices, not machine process IDs",
+  "local_agents_ignored": true,
+  "local_agents_tracked": false
+}

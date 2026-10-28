@@ -1,0 +1,751 @@
+{
+  "schema": "qqt.best-d-review-verification/v1",
+  "passed": true,
+  "all_seeds_retained": true,
+  "episodes": 15,
+  "checkpoint_sha256": "ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663",
+  "model_sha256": "ab6fa204a1c867081c71950de3ff472701bd8351c89fc12e385449c346d7266a",
+  "matrix_sha256": "de54e924741c500670eb781f6450fff3863ed25b560b32055fb158722acd9191",
+  "actor_parity_sha256": "d54e8e2aaebe062a61732c44d09be61828a9b6e755b8bcc5ede10f1b41bb927e",
+  "outcome_definition": "native/carry_home: production bun winner; open: any learner death is loss, otherwise exclusive opponent kill is win, otherwise draw; simulator bun winner remains separate.",
+  "groups": [
+    {
+      "key": "open/hard",
+      "seeds": [
+        2026102800,
+        2026102801,
+        2026102802
+      ],
+      "games": 3,
+      "win": 0,
+      "loss": 0,
+      "draw": 3,
+      "death": 0,
+      "delivery": 0
+    },
+    {
+      "key": "open/normal",
+      "seeds": [
+        2026102810,
+        2026102811,
+        2026102812
+      ],
+      "games": 3,
+      "win": 3,
+      "loss": 0,
+      "draw": 0,
+      "death": 0,
+      "delivery": 0
+    },
+    {
+      "key": "open/easy",
+      "seeds": [
+        2026102820,
+        2026102821,
+        2026102822
+      ],
+      "games": 3,
+      "win": 3,
+      "loss": 0,
+      "draw": 0,
+      "death": 0,
+      "delivery": 0
+    },
+    {
+      "key": "native/normal",
+      "seeds": [
+        2026102830,
+        2026102831,
+        2026102832
+      ],
+      "games": 3,
+      "win": 0,
+      "loss": 3,
+      "draw": 0,
+      "death": 0,
+      "delivery": 0
+    },
+    {
+      "key": "carry_home/normal",
+      "seeds": [
+        2026102840,
+        2026102841,
+        2026102842
+      ],
+      "games": 3,
+      "win": 3,
+      "loss": 0,
+      "draw": 0,
+      "death": 0,
+      "delivery": 3
+    }
+  ],
+  "rows": [
+    {
+      "id": "d-slot05-u720-open-hard-2026102800",
+      "seed": 2026102800,
+      "scene": "open",
+      "opponent": "bun.hunter/hard",
+      "sha256": "c7ddb1410df8c3252dfa099b5b9176c050445e1b57f2a21278fdfa2184348ed4",
+      "bytes": 13736,
+      "ticks": 300,
+      "done": true,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        0,
+        0
+      ],
+      "failures": [],
+      "outcome": "draw",
+      "death": [
+        0,
+        0
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102801",
+      "seed": 2026102801,
+      "scene": "open",
+      "opponent": "bun.hunter/hard",
+      "sha256": "7f192b194ff401181b63d595b66db7ebae7201c4b852e17470dfb913c3800c17",
+      "bytes": 13736,
+      "ticks": 300,
+      "done": true,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        0,
+        0
+      ],
+      "failures": [],
+      "outcome": "draw",
+      "death": [
+        0,
+        0
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-hard-2026102802",
+      "seed": 2026102802,
+      "scene": "open",
+      "opponent": "bun.hunter/hard",
+      "sha256": "a4a70f05899a9a29b42cfad2758f44b1d32b0a46174a21d64f5f88ef9ce1f71a",
+      "bytes": 13736,
+      "ticks": 300,
+      "done": true,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        0,
+        0
+      ],
+      "failures": [],
+      "outcome": "draw",
+      "death": [
+        0,
+        0
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102810",
+      "seed": 2026102810,
+      "scene": "open",
+      "opponent": "bun.hunter/normal",
+      "sha256": "af06d9560b927370747c5e091810a74ecd10f4b153e99143e37524de6cada4a1",
+      "bytes": 33050,
+      "ticks": 300,
+      "done": true,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        17.475378812310737,
+        -12.500529647280928
+      ],
+      "failures": [
+        "window_closed_empty"
+      ],
+      "outcome": "win",
+      "death": [
+        0,
+        1
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102811",
+      "seed": 2026102811,
+      "scene": "open",
+      "opponent": "bun.hunter/normal",
+      "sha256": "040c77c607db896c3bc447e3c8ef0bf5ae18bd0872bd198917c31b353c5dcc3a",
+      "bytes": 32978,
+      "ticks": 300,
+      "done": true,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        16.87041524041888,
+        -12.507782223912727
+      ],
+      "failures": [
+        "window_closed_empty"
+      ],
+      "outcome": "win",
+      "death": [
+        0,
+        1
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-normal-2026102812",
+      "seed": 2026102812,
+      "scene": "open",
+      "opponent": "bun.hunter/normal",
+      "sha256": "b1cf89c496a6ecc27eea801ca3fe630d0a43696eb91b5e92fc6f3a3c5ca3cbf7",
+      "bytes": 32594,
+      "ticks": 300,
+      "done": true,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        16.8777903598002,
+        -12.500993937684143
+      ],
+      "failures": [
+        "window_closed_empty"
+      ],
+      "outcome": "win",
+      "death": [
+        0,
+        1
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102820",
+      "seed": 2026102820,
+      "scene": "open",
+      "opponent": "bun.hunter/easy",
+      "sha256": "bf1fa4535b26c10b2630bf4a7457285d2542d25428392cd2a192cbf5fdc90464",
+      "bytes": 21450,
+      "ticks": 300,
+      "done": true,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        16.891313539605108,
+        -12.499999821186066
+      ],
+      "failures": [
+        "window_closed_empty"
+      ],
+      "outcome": "win",
+      "death": [
+        0,
+        1
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102821",
+      "seed": 2026102821,
+      "scene": "open",
+      "opponent": "bun.hunter/easy",
+      "sha256": "810f7f641020d53ffcba05e050e57e76bebdc0e7b942dd95a8788599f60ae645",
+      "bytes": 21258,
+      "ticks": 300,
+      "done": true,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        16.893829552942407,
+        -12.499999821186066
+      ],
+      "failures": [
+        "window_closed_empty"
+      ],
+      "outcome": "win",
+      "death": [
+        0,
+        1
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-open-easy-2026102822",
+      "seed": 2026102822,
+      "scene": "open",
+      "opponent": "bun.hunter/easy",
+      "sha256": "14931e5d482784ebc39edd2d626c4c71a4f611a9d7860de38373dab88c55c17f",
+      "bytes": 21072,
+      "ticks": 300,
+      "done": true,
+      "winner": null,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        17.498827180845183,
+        -12.499999821186066
+      ],
+      "failures": [
+        "window_closed_empty"
+      ],
+      "outcome": "win",
+      "death": [
+        0,
+        1
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102830",
+      "seed": 2026102830,
+      "scene": "native",
+      "opponent": "bun.hunter/normal",
+      "sha256": "7897945f1d5af970b04d92c0918f6cb5821e4bdcd0e08c0c9a42b87b25c832d6",
+      "bytes": 40436,
+      "ticks": 2400,
+      "done": true,
+      "winner": 1,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        2.30000002682209,
+        8.499999970197678
+      ],
+      "failures": [
+        "match_loss",
+        "no_delivery"
+      ],
+      "outcome": "loss",
+      "death": [
+        0,
+        0
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102831",
+      "seed": 2026102831,
+      "scene": "native",
+      "opponent": "bun.hunter/normal",
+      "sha256": "8adecf68e25687cff1e51058bdabe1b0f846cd2747e7541a610d85b5b9ebebef",
+      "bytes": 38221,
+      "ticks": 2400,
+      "done": true,
+      "winner": 1,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        0.7000000029802322,
+        7.700000047683716
+      ],
+      "failures": [
+        "match_loss",
+        "no_delivery"
+      ],
+      "outcome": "loss",
+      "death": [
+        0,
+        0
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-native-normal-2026102832",
+      "seed": 2026102832,
+      "scene": "native",
+      "opponent": "bun.hunter/normal",
+      "sha256": "e8204cb23e79e13f310888e6d1194c4b211f156864841c538637b87c2db5085e",
+      "bytes": 36965,
+      "ticks": 2400,
+      "done": true,
+      "winner": 1,
+      "score": [
+        0,
+        0
+      ],
+      "stored": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "reward": [
+        0.5,
+        2.8000000566244125
+      ],
+      "failures": [
+        "match_loss",
+        "no_delivery"
+      ],
+      "outcome": "loss",
+      "death": [
+        0,
+        0
+      ],
+      "delivery": [
+        0,
+        0
+      ],
+      "safe_kill": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102840",
+      "seed": 2026102840,
+      "scene": "carry_home",
+      "opponent": "bun.hunter/normal",
+      "sha256": "9ef183b77501cc115bacb5dafb8e69705651c1b180020d8fdb81f7e089c1ca86",
+      "bytes": 16677,
+      "ticks": 85,
+      "done": true,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "reward": [
+        0.7571342624432873,
+        0
+      ],
+      "failures": [],
+      "outcome": "win",
+      "death": [
+        0,
+        0
+      ],
+      "delivery": [
+        1,
+        0
+      ],
+      "safe_kill": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102841",
+      "seed": 2026102841,
+      "scene": "carry_home",
+      "opponent": "bun.hunter/normal",
+      "sha256": "89ab651a1b9caf4e3740b9803932dd817be3ef3901a9e679a0acd885b7b570d3",
+      "bytes": 17078,
+      "ticks": 91,
+      "done": true,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "reward": [
+        0.8075415971688926,
+        0
+      ],
+      "failures": [],
+      "outcome": "win",
+      "death": [
+        0,
+        0
+      ],
+      "delivery": [
+        1,
+        0
+      ],
+      "safe_kill": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "d-slot05-u720-carry_home-normal-2026102842",
+      "seed": 2026102842,
+      "scene": "carry_home",
+      "opponent": "bun.hunter/normal",
+      "sha256": "cf623c1db11283d2c42bad7fc0f7e84da35cc584af309a99b0c9411745ff4d1f",
+      "bytes": 16328,
+      "ticks": 80,
+      "done": true,
+      "winner": 0,
+      "score": [
+        1,
+        0
+      ],
+      "stored": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "reward": [
+        0.7030751523052459,
+        0
+      ],
+      "failures": [],
+      "outcome": "win",
+      "death": [
+        0,
+        0
+      ],
+      "delivery": [
+        1,
+        0
+      ],
+      "safe_kill": [
+        0,
+        0
+      ]
+    }
+  ]
+}

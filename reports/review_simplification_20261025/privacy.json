@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "scope": "git ls-files -z plus this change and its evidence; ignored local runs/checkpoints excluded",
+  "tracked_files": 899,
+  "pending_new_files": 8,
+  "checks": [
+    "private_identity",
+    "private_absolute_path",
+    "private_ipv4",
+    "literal_machine_pid"
+  ],
+  "findings": [],
+  "local_agents_ignored": true,
+  "local_agents_tracked": false
+}

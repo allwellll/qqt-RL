@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "limit_bytes": 10000000,
+  "indexed_files": 955,
+  "maximum": {
+    "file": "web/review-replays/h8-v36-g32-tactical_v2-2026101786.json",
+    "bytes": 7958608
+  },
+  "oversized": [],
+  "new_branch_blobs": 0,
+  "new_branch_maximum": null,
+  "history_base": "7128071",
+  "history_checked_through": "71280717e43fac1c23f7b9221c7a2ab7d5ceb3ae",
+  "model_tracked": false,
+  "model_in_new_branch_history": false,
+  "scope": "All indexed files plus reachable blobs added after baseline; old comparison branch excluded."
+}

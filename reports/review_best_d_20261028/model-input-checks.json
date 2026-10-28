@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "scope": "Checks that optional-model verification reports only work actually performed; historical actor proof remains distinct.",
+  "present": {
+    "model_sha256": "ab6fa204a1c867081c71950de3ff472701bd8351c89fc12e385449c346d7266a",
+    "local_model_hash_status": "verified",
+    "export_tensors_status": "verified",
+    "export_tensors_exact": true
+  },
+  "absent": {
+    "local_model_hash_status": "SKIP",
+    "export_tensors_status": "SKIP",
+    "export_tensors_exact": null,
+    "full_actor_verification_passed": false,
+    "numerical_parity_passed": true
+  },
+  "wrong_local_hash": "rejected",
+  "storage": "<EXTERNAL_MODEL> or ignored .hermes/best-d-private/model.json"
+}

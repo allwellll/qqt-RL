@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "old_branch": "agent/review-best-d-20261028",
+  "old_head": "7977dc856787cae888c10a6f20bde31184ac2f56",
+  "new_branch": "agent/review-best-d-20261028-v2",
+  "base": "71280717e43fac1c23f7b9221c7a2ab7d5ceb3ae",
+  "retained_episodes": 15,
+  "unchanged_fields": [
+    "actions",
+    "rewards",
+    "events",
+    "checks",
+    "summary",
+    "advantages"
+  ],
+  "metadata_note": "source_hashes and derived replay identities/file hashes refreshed for optional local model scripts; original trajectories retained.",
+  "old_branch_preserved": true,
+  "old_model_bytes": 40294477,
+  "new_model_storage": "<EXTERNAL_MODEL> or ignored .hermes/best-d-private/model.json"
+}
