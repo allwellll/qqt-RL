@@ -38,4 +38,6 @@
 
 ## 边界
 
-未改来源目录、任何runs或Review worktree；未占GPU、未终止他人进程。大模型仅放Release，不入Git。
+未改来源checkpoint目录、任何runs或Review worktree；未占GPU、未终止进程。大模型仅放Release，不入Git。
+
+验证环境说明：本worktree预置的 `web/vendor` 是共享vendor缓存链接；`npm test` 的 `build:runtime` 经该链接重写了5个运行时资产（3个ORT文件、2个许可证文件）。已逐字节确认它们与锁定的onnxruntime-web 1.23.2及仓库许可证副本一致；共享缓存目标没有Git追踪的vendor文件。没有改动其Git追踪源码。这项共享缓存写入应与来源checkpoint/runs只读边界分别记录。
