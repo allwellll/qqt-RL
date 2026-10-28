@@ -3898,7 +3898,7 @@ GPU独占复测从legacy seed51 u162续接；未重跑prefix。单个seed终态�
 
 ## ITER-PBT-V1 — 2026-10-28 用户授权的持续种群优化
 
-ITER-PBT-V1 D 网页发布（2026-10-28，准备时间 2026-10-28T15:27:36.079332+00:00）：用户已授权发布Release及push main；默认可对战模型由 `bun392-je10-v38-r01-g8` 改为 `bun392-pbt-slot05-u720`（Bun392 PBT u720（D）），旧9条模型原样保留，Review历史默认不变。tag `web-bun392-pbt-slot05-u720-20261028`；JSON SHA256 `ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088`，ONNX SHA256 `2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7`；来源policy SHA256 `ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663`。JS Hunter保留快筛困难/普通/简单safe_win 18/27/32、死亡0/0/2（各64局，seed20261001）；JAX采样/argmax交付304/302（各304局）。这是重复自适应快筛，不作为显著性或综合晋升结论；fp32网页与bf16训练有动作差异。发布状态、最终发布时间与线上验收见 `reports/publish_best_d_web_model_20261028.md`。
+ITER-PBT-V1 D 网页发布（2026-10-28，发布时间 2026-10-28T15:31:02Z）：用户已授权发布Release及push main；默认可对战模型由 `bun392-je10-v38-r01-g8` 改为 `bun392-pbt-slot05-u720`（Bun392 PBT u720（D）），旧9条模型原样保留，Review历史默认不变。tag `web-bun392-pbt-slot05-u720-20261028`；JSON SHA256 `ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088`，ONNX SHA256 `2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7`；来源policy SHA256 `ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663`。JS Hunter保留快筛困难/普通/简单safe_win 18/27/32、死亡0/0/2（各64局，seed20261001）；JAX采样/argmax交付304/302（各304局）。这是重复自适应快筛，不作为显著性或综合晋升结论；fp32网页与bf16训练有动作差异。发布状态、最终发布时间与线上验收见 `reports/publish_best_d_web_model_20261028.md`。
 
 - 合同：`runs/iter_pbt_v1/PROTOCOL.json`、`protocols/amendment01_async_selection.json`、`protocols/amendment02_dtype_recovery.json`；详细报告 `reports/iter_pbt_experiment_20261028.md`。
 - 用户取消未启动配对补seed，不再按因果消融设计；已运行候选保留u320。旧R2/O5/储备暂停，不push/发布。

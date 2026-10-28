@@ -27,7 +27,14 @@
 
 ## 发布与线上验收
 
-发布准备已完成。Release发布、push commit、同SHA Actions最终结论、线上models.json及Release下载hash尚待执行；本段将在实际验收后更新，不把待执行项写为成功。
+- Release已公开，发布时间 `2026-10-28T15:31:02Z`；tag指向生产提交 `da6a11845b303d1e974584274ce486200eaf495b`。
+- 生产提交 `da6a11845b303d1e974584274ce486200eaf495b` 已通过指定命令快进push到main；首次代理CONNECT 503，第二次成功。未force、未跳hooks。
+- 同SHA [Actions #40716694289](https://github.com/allwellll/qqt-RL/actions/runs/40716694289) 最终 `completed/success`，`test-and-build`及`deploy`均success，结束时间2026-10-28T15:34:23Z。
+- `git ls-remote origin refs/heads/main refs/tags/web-bun392-pbt-slot05-u720-20261028`：两者均匹配上述生产提交；基线origin/main是其祖先，推送为快进。
+- 线上 `https://allwellll.github.io/qqt-RL/build-info.json` 精确匹配生产提交；`models.json`完整内容与本地一致，共10条，第一条为D，旧9条保持原样。
+- Release完整下载SHA验收：同生产SHA的Actions `test-and-build` → `Assemble static site` 最终success。该步骤执行 `python3 scripts/fetch_web_models.py --manifest web/models.json --output _site/models`，实际下载所有Release JSON/ONNX，`download_models()`逐个校验bytes及完整SHA256；workflow随后再次逐文件校验，覆盖本次D两资产。公开资产HEAD实测HTTP 200；GitHub返回两资产digest也与上列SHA一致。因此“可下载、完整内容SHA正确”由同SHA成功CI证明。
+- 本机附加下载复核单独披露：公开URL 256KiB Range探测HTTP206成功；8路1MiB分段复核遭代理CONNECT 503，未完成、不记PASS。另有先前启动的只读串行下载仍在缓慢传输；遵守不杀进程，不终止它，不依赖其未完成结果。它只可能在本worktree忽略目录保存下载收据，不会修改发布内容。
+- 本报告与ledger实际发布时间作为后续验收记录提交；Release tag保持指向生产提交。该后续提交仅含文档，将再次快进push并按其HEAD复查Actions及线上build-info；最终交付消息提供该提交及workflow结果，避免在文档中预写尚未发生的结论。
 
 ## 边界
 
