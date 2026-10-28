@@ -2,7 +2,7 @@
   "passed": true,
   "scope": "git ls-files -z union staged ACMR files; ignored runs/checkpoints/task orchestration excluded",
   "files": 955,
-  "staged_files": 62,
+  "staged_files": 2,
   "checks": [
     "private_identity",
     "private_absolute_path",

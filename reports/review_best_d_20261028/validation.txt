@@ -140,7 +140,7 @@ DAgger GREEN: real H6/H7/H8 artifact hashes and counters, null preservation, own
 UI panels: first prompt, wrong/correct, refresh, new tab, forget, version invalidation, dialogs passed
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 0.009s
+Ran 2 tests in 0.010s
 
 OK
 SKIP: local <EXTERNAL_MODEL> absent; model-file hash and exact export tensor checks not performed. Source-receipt model_sha256 remains checked.
