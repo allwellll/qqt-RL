@@ -50,7 +50,7 @@ pytest 运行覆盖现存 164 个 `tests/test_*.py`，包含 main 原有回归�
 
 修复内容包括 pytest helper 搜索路径、缺失的 JE08 原生状态 fixture、JAX tracing 前显式导入 safety、已退休携包 reset 的旧断言、通过真实 native steal 构建 critic context、ONNX 测试改用已声明的 WASM 单线程推理，Stage C 使用临时 declaration、默认 authority 命名空间的 recipe 断言，counterfactual batch=1 的既有配置断言，以及补齐 prestock 梯度 fixture 的 kind/preparation 字段（保留真实 actor 更新与零 critic 梯度断言）。需要真实 run/checkpoint、或被范围审查排除的支线文件的测试在缺资产时明确 skip，未伪造外部训练证据。
 
-**执行边界偏差**：最初批次 runner 设置了 900 秒 timeout，Python subprocess 超时逻辑自动结束了一批由本任务启动的 pytest 子进程。这不符合“不杀任何进程”的字面约束。未执行手动 kill，未影响来源训练进程；后续正式 runner 无 timeout，所有新启动验证均等待自然结束。初始环境 JAX 0.5.3 的中间失败、选集收紧后已移出文件的收集错误和这次超时不作为最终结果，也未被隐藏为成功。
+**执行边界偏差**：最初批次 runner 设置了 900 秒 timeout，Python subprocess 超时逻辑自动结束了两批由本任务启动的 pytest 子进程（初始 batch 2 和 batch 8，各约 900 秒）。这不符合“不杀任何进程”的字面约束。未执行手动 kill，未影响来源训练进程；后续正式 runner 无 timeout，所有新启动验证均等待自然结束。初始环境 JAX 0.5.3 的中间失败、选集收紧后已移出文件的收集错误和这次超时不作为最终结果，也未被隐藏为成功。
 
 ## 尚存风险
 
@@ -63,7 +63,7 @@ pytest 运行覆盖现存 164 个 `tests/test_*.py`，包含 main 原有回归�
 
 ## 最终结果、隐私与提交
 
-正式 pytest 共 **829 项：816 通过、13 跳过、0 失败、0 错误**，164 个测试文件均有最终结果。四个修复前失败文件在修改后整文件复跑通过，`pytest_final.json` 的 `corrected_reruns` 保留前后计数及修复原因。13 个 skip 为 10 项缺少未纳入的 run/bank/checkpoint 证据，另 3 项涉及被排除的 expert 支线入口（其中两项同时需要 run 资产）；逐项原因见该 JSON，未计入通过。
+正式 pytest 共 **829 项：816 通过、13 跳过、0 失败、0 错误**，164 个测试文件均有最终结果。四个修复前失败文件在修改后整文件复跑通过，`pytest_final.json` 的 `corrected_reruns` 保留前后计数及修复原因。13 个 skip 为 11 项缺少未纳入的 run/bank/checkpoint 证据，另 2 项涉及被排除的 expert 支线入口（其中一项同时需要 run 资产）；逐项原因见该 JSON，未计入通过。
 
 完整 `npm test` 退出码 0，展开执行 68 条命令（包含 runtime 构建和 Python 诊断回归，不将 68 当作断言数量）；额外闭包 JS 测试 13/13 脚本退出码 0。`web_tests_20261028.json` 保存命令、脚本收据及日志摘要 SHA。`environment_20261028.json` 记录 Python/Node/依赖版本，JAX backend 与所有设备 platform 均为 cpu。
 
@@ -74,10 +74,9 @@ pytest 运行覆盖现存 164 个 `tests/test_*.py`，包含 main 原有回归�
 - `1ad44788b17cb6edd76bf33abde1d90769b12628` — Integrate main training runtime and evaluation dependencies
 - `4f26c54a032e3e4d2863b4f53ba6be097dbf882a` — Exclude unused capacity sweep entrypoints from integration
 - `8d6a29c57c458bd33e160d404c96d39007cc339d` — Add CPU regressions and portable mainline test fixtures
-
 - `1bb4aaae7e492dccd2f8ef33d889011fdedc064b` — Align critic context regression with native custody reset
 
-文档、实验账本、报告资产与整合审计将独立提交；其 SHA 见本报告后续收据记录。最终收据提交自身 SHA 不写入自身内容，使用 `git log -1 --format=%H -- reports/main_integration_20261028/REPORT.md` 查询。
+文档、实验账本、报告资产与整合审计提交为 `ec4d98495e33eb2d7a15d81d2f9f8cd2b9fac1a8` — Document mainline experiments and integration validation。本次最终收据更新该提交的 SHA、diff 统计和扫描收据。最终收据提交自身 SHA 不写入自身内容，使用 `git log -1 --format=%H -- reports/main_integration_20261028/REPORT.md` 查询。
 
 与 main 起点的最终差异按目录统计如下（A 为新增，M 为修改，无最终删除）：
 
@@ -91,6 +90,6 @@ pytest 运行覆盖现存 164 个 `tests/test_*.py`，包含 main 原有回归�
 | tests | 71 | 4 | 75 |
 | web | 1 | 2 | 3 |
 
-统计收据：`integration_stats_20261028.json`。与 main `7128071` 的最终差异为 **258 files changed, 85491 insertions(+), 27 deletions(-)**。
+统计收据：`integration_stats_20261028.json`。与 main `7128071` 的最终差异为 **258 files changed, 85498 insertions(+), 27 deletions(-)**。
 
 交付时只保留既有未追踪依赖 node_modules、web/vendor。本任务测试进程均已结束；不 push，完成后停下等待指令。

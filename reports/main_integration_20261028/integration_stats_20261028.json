@@ -17,6 +17,10 @@
     {
       "sha": "1bb4aaae7e492dccd2f8ef33d889011fdedc064b",
       "subject": "Align critic context regression with native custody reset"
+    },
+    {
+      "sha": "ec4d98495e33eb2d7a15d81d2f9f8cd2b9fac1a8",
+      "subject": "Document mainline experiments and integration validation"
     }
   ],
   "diff_counts_by_directory": {
@@ -46,7 +50,7 @@
       "M": 2
     }
   },
-  "shortstat": "258 files changed, 85491 insertions(+), 27 deletions(-)",
+  "shortstat": "258 files changed, 85498 insertions(+), 27 deletions(-)",
   "closure_count": 474,
   "report_assets_considered": 44
 }
