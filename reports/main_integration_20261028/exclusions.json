@@ -1,0 +1,1307 @@
+[
+  {
+    "path": "reports/je03_admission_20261010/baseline_reference_v1.log",
+    "bytes": 2158,
+    "reason": "not Markdown/JSON/small image or requested timeline HTML"
+  },
+  {
+    "path": "reports/je03_admission_20261010/prefix_fallback_v1.log",
+    "bytes": 0,
+    "reason": "not Markdown/JSON/small image or requested timeline HTML"
+  },
+  {
+    "path": "reports/je09_bun_20261017/route_pbrs_replay_g32/actor.onnx",
+    "bytes": 30242279,
+    "reason": "replay directory excluded regardless of individual file size"
+  },
+  {
+    "path": "reports/je09_bun_20261017/route_pbrs_replay_g32/actor_model.json",
+    "bytes": 40296726,
+    "reason": "replay directory excluded regardless of individual file size"
+  },
+  {
+    "path": "reports/je09_bun_20261017/route_pbrs_replay_g32/actor_policy.pt",
+    "bytes": 30221463,
+    "reason": "replay directory excluded regardless of individual file size"
+  },
+  {
+    "path": "reports/je09_bun_20261017/route_pbrs_replay_g32/critic_params.npz",
+    "bytes": 223732680,
+    "reason": "replay directory excluded regardless of individual file size"
+  },
+  {
+    "path": "reports/je09_bun_20261017/route_pbrs_replay_g32/recalculation_proof.json",
+    "bytes": 321,
+    "reason": "replay directory excluded regardless of individual file size"
+  },
+  {
+    "path": "reports/je09_bun_20261017/route_pbrs_replay_g32/training_config.json",
+    "bytes": 21819,
+    "reason": "replay directory excluded regardless of individual file size"
+  },
+  {
+    "path": "reports/je09_bun_20261017/route_pbrs_replay_g32/trajectory.json",
+    "bytes": 3586259,
+    "reason": "replay directory excluded regardless of individual file size"
+  },
+  {
+    "path": "scripts/audit_continuous_route_metric.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/audit_frozen_return_replay.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/audit_prestock_snapshot.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/audit_stock_gates.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/audit_stock_windows.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/authorized_campaign_watchdog.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/authorized_experiment_campaign.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/bank_ratio_finalize.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/bank_ratio_funnel_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/bank_ratio_slot_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/bank_ratio_slots.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_checkpoint_eval.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_collector_probe.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_d_summary.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_eval_merge.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_eval_monitor.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_eval_resources.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_evidence_acceptance.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_followup_audits.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_funnel_bootstrap.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_funnel_eval.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_gpu_analysis.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_gpu_batch_sweep_finalize.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_js_matrix.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_js_merge.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_js_parallel.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_native_eval.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_remaining_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_reward_wiring.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_scale_summary.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/campaign_v2_endpoints.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_item_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_item_micro.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_item_monitor.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_item_phase_audit.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_item_phase_audit.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_item_phase_safety.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_item_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_item_route.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_mix_hunter_audit.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_mix_hunter_decisions.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_mix_js_compare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/combat_mix_legacy_native_probe.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_direction_trace_audit.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_goal_guard_collector.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_goal_guard_real_check.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_item_chain_teacher.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_item_opportunity_telemetry.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_js_bank.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_metric_backfill.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_native_bank_preload.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_native_chain.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_native_mechanism.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_native_teacher.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_phase_update_metrics.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_public_motion_audit.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_public_motion_audit_v2.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r10_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r10_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r12_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r14_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r14_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r14_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r14_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r14_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r15_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r16_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r16_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r16_diagnostics.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r16_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r16_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r16_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r16_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r17_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r17_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r17_diagnostics.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r17_handoff.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r17_monitor.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r17_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r17_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r17_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r17_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r18_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r18_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r18_diagnostics.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r18_item_audit.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r18_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r18_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r18_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r18_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r2_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r2_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r2_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r2_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r2_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r2_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r3_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r3_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r3_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r3_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r3_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r3_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r4_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r4_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r4_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r5_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r5_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r5_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r5_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r5_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r5_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r6_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r6_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r7_diagnostic.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r7_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r8_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r8_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r8_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r8_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r8_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r8_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r9_bank.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r9_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r9_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r9_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r9_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_r9_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_retention_loop.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_retention_schedule.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_route_goal_eligibility.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_route_projection_audit.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_run.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_saved_replay_audit.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_supervision_scale.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_train.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/dagger_rl_trajectory_precision.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/expert_reward_ablation_resume.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/expert_validation_diagnostics.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/expert_validation_horizon.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/expert_validation_js_eval.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/expert_validation_js_parity.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/expert_validation_parity.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/expert_validation_summarize.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/gpu_efficiency_analysis.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/gpu_efficiency_observe.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/gpu_efficiency_parity.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/gpu_efficiency_performance_probe.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/iter_pbt_backend_policy_probe.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/optimizer_input_snapshot.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/optimizer_snapshot_recipe.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/passive_evaluation_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/ppo_scale_item_metrics_v5.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/ppo_scale_natural_audit_v5.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/ppo_scale_natural_audit_v5.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_continuous_prepare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_continuous_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_core_exposure.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_core_priority.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_core_priority_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_core_replay.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_custody_dagger.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_custody_dagger_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_evaluate.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_exposure_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_phase_fresh_audit.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_phase_probe.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_phase_probe_states.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_phase_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_ppo_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_results.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_return_ppo.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/retention_stage_allocation.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/return_detour_replay.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/rules_v2_critic.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/rules_v2_critic_parent_check.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/rules_v2_critic_probes.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/rules_v2_critic_watch.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/rules_v2_migration.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/rules_v2_native_acceptance.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/rules_v2_runtime.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "scripts/rules_v2_validate.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "jax_bomb/je05_core_env_v2.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "jax_bomb/je07_bun_env_v2.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "jax_bomb/je07_native_items.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/combat_item_phase_safety_test.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/dagger_rl_js_bank_test.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/dagger_rl_native_chain_test.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/dagger_rl_trajectory_precision_test.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/ppo_scale_item_metrics_v5_test.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_authorized_campaign.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_bank_slot_controller.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_campaign_checkpoint_eval.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_campaign_eval_parallel.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_campaign_gpu_analysis.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_campaign_remaining_cpu.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_campaign_side_parity_round3.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_combat_mix_js_compare.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_collector_live.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_eval_inputs.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_eval_seed.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_goal_guard_collector.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_item_chain_teacher.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_item_opportunity_telemetry.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_metric_backfill.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_native_teacher.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_phase_update_metrics.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r16_authorization.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r17_authorization.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r17_dynamic_binding.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r2.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r3_confirmation.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r4_eviction.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r5_consumer_namespace.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r5_contract.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r6_contract.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r8_contract.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_r9_step_scale.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_retention_schedule.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_route_goal_eligibility.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_saved_replay_audit.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_schedule.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_dagger_rl_supervision_scale.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_expert_reward_ablation_resume.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_expert_validation_diagnostics.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_expert_validation_summarize.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_gpu_efficiency_probe.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_optimizer_input_snapshot.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_optimizer_snapshot_collector_integration.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_passive_evaluation_report.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_core_exposure.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_core_priority.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_core_priority_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_core_replay.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_custody_dagger.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_custody_dagger_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_exposure_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_gpu_pause.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_phase_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_ppo_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_results.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_return_ppo.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_screen.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_retention_stage_allocation.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_return_detour_replay.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_rules_v2_critic.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "tests/test_rules_v2_critic_probes.py",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "web/retention_phase_inference_worker.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "web/retention_phase_model_loader.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "web/test_retention_phase_worker.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "web/test_review_je10_fixture.js",
+    "reason": "outside mainline runtime/import closure"
+  },
+  {
+    "path": "runs/**; **/*.pkl; **/*.pt; **/checkpoints/**",
+    "reason": "all run payloads, recordings and checkpoints intentionally excluded; source runs read only for metadata"
+  },
+  {
+    "path": "scripts/carrier_mechanism_acceptance.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/carrier_mechanism_cpu.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/carrier_mechanism_plot.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/carrier_mechanism_report.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/carrier_phase_hysteresis.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/carrier_phase_recipe.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/combat_item_bank.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/combat_item_report.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/combat_item_run.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/combat_item_train.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/combat_item_wiring.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_greedy_source.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_item_observation.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_movement_probe.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_opponent_mix.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r10_bank.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r10_report.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r10_run.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r10_train.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r12_bank.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r12_report.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r12_run.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r12_train.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r15_bank.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r15_cpu.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r15_report.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r15_run.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r15_train.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r4_bank.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r6_bank.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r6_report.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r6_run.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_r6_train.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_release_qualification.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_source_replay.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/dagger_rl_update_mechanism.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/expert_reward_ablation_cpu.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/expert_reward_ablation_run.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/expert_reward_ablation_train.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/native_core_fixtures.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_campaign_side_parity_round2.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_campaign_side_parity_round4.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_campaign_side_parity_round5.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_carrier_mechanism.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_carrier_phase_hysteresis.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_carrier_phase_recipe.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_combat_item_bank_alignment.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_combat_item_experiment.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_dagger_rl_greedy_source.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_dagger_rl_item_observation.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_dagger_rl_movement_probe.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_dagger_rl_opponent_mix.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_dagger_rl_r10_contract.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_dagger_rl_r15_setup.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_dagger_rl_release_qualification.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_dagger_rl_source_replay.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "tests/test_dagger_rl_update_mechanism.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/campaign_gpu_batch_sweep.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  },
+  {
+    "path": "scripts/campaign_gpu_followup.py",
+    "reason": "excluded after import-closure review: side experiment entrypoint or rules-v2/side-only test"
+  }
+]

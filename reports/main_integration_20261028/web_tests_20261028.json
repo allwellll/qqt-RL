@@ -1,0 +1,157 @@
+{
+  "npm_test": {
+    "command": "CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu npm test",
+    "exit_code": 0,
+    "expanded_commands": [
+      "node scripts/assemble_web_runtime.js",
+      "node web/test_model_worker.js",
+      "node web/test_settlement_card.js",
+      "node web/test_bot_glue.js",
+      "node web/test_field_items.js",
+      "node web/test_settlement_actions.js",
+      "node web/test_ui_panels.js",
+      "node web/test_bun06.js",
+      "node web/test_sim_two_player_regression.js",
+      "node web/test_half_tile_explosion.js",
+      "node web/test_bun_rule_bot.js",
+      "node web/test_bun_rule_bot_v2.js",
+      "node web/test_bun_rule_bot_selfplay_parity.js",
+      "node web/test_bun_hunter_bot.js",
+      "node web/test_bun_coop_hunter_bot.js",
+      "node web/test_bot_direct_threat.js",
+      "node web/test_bot_staggered_attack.js",
+      "node web/test_staggered_attack_oracle.js",
+      "node web/test_native_restoration.js",
+      "node web/test_wall_exit.js",
+      "node web/test_spawn_protection.js",
+      "node web/test_airdrop_death.js",
+      "node web/test_death_overlay.js",
+      "node web/test_eval_web_hunter.js",
+      "node web/test_tactical_arena.js",
+      "node web/test_controls.js",
+      "node web/test_model_catalog.js",
+      "node web/test_model_loader.js",
+      "node web/test_replay.js",
+      "node web/test_bot_contract.js",
+      "node web/test_visual_parity.js",
+      "node web/test_mlp4_parity.js",
+      "node web/test_web_feel.js",
+      "node web/test_http.js",
+      "node web/test_leaderboard.js",
+      "node scripts/test_leaderboard_edge.js",
+      "node scripts/test_leaderboard_sql.js",
+      "node scripts/test_match_ranking_sql.js",
+      "node scripts/test_upgrade_profile_ip_sql.js",
+      "node scripts/test_profile_update_round4_sql.js",
+      "node web/test_upgrade_profile.js",
+      "node web/test_settlement_profile_round4.js",
+      "node web/test_loss_settlement.js",
+      "node web/test_settlement_restart.js",
+      "node web/test_settlement_lifecycle.js",
+      "node web/test_win_records.js",
+      "node scripts/test_win_records_edge.js",
+      "node scripts/test_win_records_sql.js",
+      "node web/test_review_good_models.js",
+      "node web/test_review_admission.js",
+      "node web/test_review_metrics.js",
+      "node web/test_review_route_targets.js",
+      "node web/test_review_je10.js",
+      "node web/test_review_protocol.js",
+      "node web/test_review_v36_multiseed.js",
+      "node web/test_review_v36.js",
+      "node web/test_review_v36_advantage_contract.js",
+      "node web/test_review_presentation.js",
+      "node web/test_review_motion_regression.js",
+      "node web/test_review_advantage.js",
+      "node web/test_review_route.js",
+      "node web/test_review_route_g32.js",
+      "node web/test_review_return.js",
+      "node web/test_review_keyboard.js",
+      "node web/test_review_scenes.js",
+      "node web/test_review_dagger.js",
+      "node web/test_ui_panels.js",
+      "python3 scripts/test_diagnostic_a1.py"
+    ],
+    "output_sha256": "e91e3777776a37e291276e5bde0b07c8692a87a15b20f26305f4526e89e256f2"
+  },
+  "closure_js_tests": [
+    {
+      "path": "tests/dagger_rl_item_metrics_test.js",
+      "exit_code": 0,
+      "seconds": 0.17,
+      "output": "native fallback-cell ownership tests passed; mechanism fixtures only, no training\n"
+    },
+    {
+      "path": "tests/expert_validation_js_eval.test.js",
+      "exit_code": 0,
+      "seconds": 0.06,
+      "output": "expert validation JS adapters compile for categorical and greedy modes\n"
+    },
+    {
+      "path": "tests/je08_web_diagnostics_test.js",
+      "exit_code": 0,
+      "seconds": 0.06,
+      "output": "JE08 web topology/drop/pickup diagnostic tests passed\n"
+    },
+    {
+      "path": "tests/je09_web_bridge_test.js",
+      "exit_code": 0,
+      "seconds": 0.07,
+      "output": "JE09 continuous native drop/pickup/switch/fixed-denominator tests passed\n"
+    },
+    {
+      "path": "tests/je09_web_stage_a_test.js",
+      "exit_code": 0,
+      "seconds": 0.13,
+      "output": "stageA randomized spawn/orientation native causal drop test passed\n"
+    },
+    {
+      "path": "tests/je09_web_stage_b_test.js",
+      "exit_code": 0,
+      "seconds": 0.13,
+      "output": "Stage B real-drop setup and finite-window strict crossing passed\n"
+    },
+    {
+      "path": "tests/je09_web_stage_c_test.js",
+      "exit_code": 0,
+      "seconds": 0.08,
+      "output": "Stage C independent seed manifest, true drop init and return-path stats passed\n"
+    },
+    {
+      "path": "tests/je10_control_funnel_test.js",
+      "exit_code": 0,
+      "seconds": 0.03,
+      "output": "JE10 passive control funnel ownership, survival, active/timeout and ambiguity passed\n"
+    },
+    {
+      "path": "tests/ppo_scale_item_metrics_test.js",
+      "exit_code": 0,
+      "seconds": 0.15,
+      "output": "PPO scale item v3: whole placement accounting, censor, no-physics-change passed\n"
+    },
+    {
+      "path": "tests/ppo_scale_item_metrics_v4_test.js",
+      "exit_code": 0,
+      "seconds": 0.16,
+      "output": "PPO scale item v4: preparation, real pickup, delivery latch, overlap, terminal, parity passed\n"
+    },
+    {
+      "path": "tests/stock_acquisition_funnel_test.js",
+      "exit_code": 0,
+      "seconds": 0.04,
+      "output": "stock acquisition qualification: 7 cases passed\n"
+    },
+    {
+      "path": "tests/test_bun_onnx_authority.js",
+      "exit_code": 0,
+      "seconds": 0.06,
+      "output": "TAP version 13\n# Subtest: authority rejects battle models and observation adapters\nok 1 - authority rejects battle models and observation adapters\n  ---\n  duration_ms: 4.648442\n  ...\n# Subtest: async authority retains the real web episode implementation\nok 2 - async authority retains the real web episode implementation\n  ---\n  duration_ms: 3.287469\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 17.39989\n"
+    },
+    {
+      "path": "tests/test_je03_native_bun_probe.js",
+      "exit_code": 0,
+      "seconds": 0.07,
+      "output": "TAP version 13\n# Subtest: native CLI does not require a replaced spawn manifest\nok 1 - native CLI does not require a replaced spawn manifest\n  ---\n  duration_ms: 1.828304\n  ...\n# Subtest: native probe preserves bricks/items/traps and exposes its separate scope\nok 2 - native probe preserves bricks/items/traps and exposes its separate scope\n  ---\n  duration_ms: 3.881777\n  ...\n# Subtest: rescue stress state has an explicit live friendly player\nok 3 - rescue stress state has an explicit live friendly player\n  ---\n  duration_ms: 0.880449\n  ...\n# Subtest: observable alias audit is exact and does not mutate the original state\nok 4 - observable alias audit is exact and does not mutate the original state\n  ---\n  duration_ms: 2.9591\n  ...\n# Subtest: friendly harm requires a new trap with actual hero damage source\nok 5 - friendly harm requires a new trap with actual hero damage source\n  ---\n  duration_ms: 0.170364\n  ...\n1..5\n# tests 5\n# suites 0\n# pass 5\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 18.861611\n"
+    }
+  ]
+}

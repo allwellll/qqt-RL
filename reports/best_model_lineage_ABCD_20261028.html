@@ -1,0 +1,193 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QQ堂RL当前最佳模型训练路径 A→B→C→D（2026-10-28）</title>
+<style>body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;max-width:1000px;margin:24px auto;padding:0 16px;color:#222;line-height:1.6}
+h1{font-size:22px}h2{font-size:18px;border-left:4px solid #337ab7;padding-left:8px;margin-top:32px}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0}th,td{border:1px solid #ddd;padding:5px 7px;text-align:center}th{background:#f4f6f9}
+td.l{text-align:left}.card{border:1px solid #e3e3e3;border-radius:6px;padding:12px 16px;margin:12px 0;background:#fcfcfd}
+.tag{display:inline-block;background:#337ab7;color:#fff;border-radius:3px;padding:0 6px;font-size:12px;margin-right:6px}
+.warn{background:#fff8e6;border-left:4px solid #f0ad4e;padding:8px 12px}.flow{font-size:15px;background:#f4f6f9;padding:10px;border-radius:6px}
+.hi{background:#e8f1fb;font-weight:600}small{color:#666}</style></head><body>
+<h1>QQ堂RL当前最佳模型训练路径 it831→Bun392 g0→JE03→…→A→B→C→D</h1>
+<small>生成于2026-10-28。数据来源：项目 runs/ 下评估原始文件现场汇总，未择峰。</small>
+
+<h2>结论</h2>
+<ul>
+<li>当前最佳：<b>D = ITER-PBT slot05 u720</b>（BEST.json 登记为 u760，但 u760 argmax 运包掉到 277/304，建议以 u720 为准）。</li>
+<li>清砖对拼（网页JS猎手，困难/普通/简单×64局）存活击杀从 A 的 <b>0/0/0</b> 提升到 D 的 <b>25/41/39</b>；同口径网页现役模型为 0/3/4、3/2/8。</li>
+<li>运包没有退化：JAX 整局 304 局交付 304/302（采样/argmax），与 B 的 304/303 持平。</li>
+<li>提升主要发生在 C→D：40% 清砖对拼课程 + 一次性连泡威胁奖励 + 长时间连续续训。</li>
+<li>限制：对拼课程场景与网页对拼评估场景高度重合（同地图806清砖、同一张出生点表），完整带砖对局里的对拼提升尚未测量。</li>
+</ul>
+
+<h2>路径总览</h2>
+<div class="flow">it831 → Bun392 g0 → JE03 S1 → S2 g3072 → JE05 g1536 → JE07 → JE08 → JE09 v8 → JE10 r01…r19 g32（路线/运包专项，详见下节）→ <b>A</b> R1 u064（纯PPO加batch）→ <b>B</b> env2048 u160（大batch吞吐）→ <b>C</b> COMBAT-MIX u320（混合对手+25%课程）→ <b>D</b> PBT slot05 u720（40%课程+对拼奖励+连续训练）</div>
+
+<h2>源头：Bun392 g0 的来源（10-11）</h2>
+<p>Bun392 g0 没有经过训练。它是把旧“对战模式”旗舰模型 it831 的权重，一次性迁移到 Bun 运包模式的网络结构上得到的。</p>
+<h3>来源模型 it831</h3>
+<table><tr><th>项</th><th>内容</th></tr>
+<tr><td>文件</td><td class="l">qqt-gpu-sim 项目 ckpt/params_it00000831_ema.pkl（2026-09-24，sha256 前缀 609bc3a7），qqt-gpu-sim 已废弃，仅作只读历史对照</td></tr>
+<tr><td>网络</td><td class="l">ViT：embed 392 / depth 4 / heads 4 / patch 3，约 750 万参数，HL-Gauss 128 桶价值头。“392”即 embed 维度</td></tr>
+<tr><td>训练史</td><td class="l">it349（29.3 亿步）→ aggr419（39.4 亿步）→ it831（104.3 亿步，24 卡），累计约 173 亿步</td></tr>
+<tr><td>对手</td><td class="l">静止木桩 15% / A* 猎人 15% / FleeBot 10% / 自对弈快照 60%</td></tr>
+<tr><td>环境</td><td class="l">只用开阔地图；1–5 血、道具/速度域随机化；没有运包任务</td></tr>
+<tr><td>奖励</td><td class="l">胜 +10 / 负 −5 / 换血险胜 +5，动态静止惩罚</td></tr></table>
+<p><small>训练史来源：qqt-gpu-sim/README.md。</small></p>
+<h3>迁移方法（scripts/je03_bun831_20261011.py 的 migrate 函数）</h3>
+<table><tr><th>部分</th><th>处理</th></tr>
+<tr><td>Transformer 主干、位置编码、Critic</td><td class="l">原样拷贝 it831 EMA 权重</td></tr>
+<tr><td>输入 token 投影</td><td class="l">旧模式 14 通道（126 行）→ Bun 模式 24 通道（216 行）：前 126 行沿用 it831，新增 90 行（包、笼、库存等 Bun 特有通道）随机初始化</td></tr>
+<tr><td>全局状态输入</td><td class="l">前 11 维沿用，Bun 新增的 13 维随机初始化</td></tr>
+<tr><td>输出头</td><td class="l">前 2 列沿用旧权重，其余新初始化（对应 Bun 模式的第 3 个技能动作）；每列具体对应哪个动作未核对</td></tr>
+<tr><td>梯度更新</td><td>无，结果直接存为 inputs/bun392_gen0.pkl</td></tr></table>
+<h3>g0 的水平与两次使用</h3>
+<ul>
+<li>旧口径评估：网页猎手三档合计存活胜 19/192（困/普/简 0/4/15），Tactical 22/64；持包回家 1/16，整局交付 0/16。会打，基本不会运包。</li>
+<li>第一次使用 JE03-BUN831-NATIVE-TRACKS（10-11）：bun392_base / bun392_recipe 两臂从 g0 训，另设 bun192_base 臂（qqt-RL 的 Bun it4000）作容量对照。运包很快学会（g128 carry/steal 16/16），但对战能力塌掉：Hunter 存活胜在 g32 掉到 1/192，g512 死亡 142/192。被 retention_v2 替换。</li>
+<li>第二次使用 JE03 retention_v2（即下文主线 S1）：仍从同一个 g0 起步，teacher 臂加 g0 actor KL 0.08 和 45% 战斗回放，以保住 it831 的对战底子。后续主线都从这里接下去。</li>
+</ul>
+<div class="flow">it831（旧对战模式，约 173 亿步）→ 权重迁移 → Bun392 g0 → JE03 S1 → … → D</div>
+
+<h2>前序路径：JE03 → JE10 r19 g32（10-11～10-19）</h2>
+<div class="flow">Bun392 g0 → JE03 S1 g2048 → S2 dynamic g3072 <small>(网页selfplay3072)</small> → JE05 g1536 <small>(网页transport1536)</small> → JE07 g256 → JE08 g2048 → JE09 v5→v7→v8 g8 → JE10 r01→…→r10 → r12（去人工持包）→…→r18 → <b>r19 g32</b> → A</div>
+<p>数据来自各run的 plan.json / INITIALIZATION.json / PARENT_LINEAGE.json（父点链）和 authority 评估文件，按父点哈希串起，只列主线。</p>
+<div class="warn">口径说明：下表“清砖对拼存活胜”取当时 authority 评估的 safe_win（806清砖、1血、300 tick、seed 20261001），评估脚本和出生点版本早于A–D报告，<b>不能和后面A–D表直接比较</b>（例如 selfplay3072 在这里是 0/4/23，在新口径下是 0/3/4）。任务交付为当时的固定16局诊断。</div>
+<h3>JE03–JE09：主线各节点</h3><table><tr><th>阶段</th><th>日期</th><th>父点→产出</th><th>本阶段改动</th><th>清砖对拼存活胜（困/普/简，各64）</th><th>持包回家交付</th><th>整局任务交付</th></tr><tr><td>JE03 S1</td><td>10-11</td><td class="l">Bun392 g0 → teacher g2048</td><td>保持型奖励retention_v2；课程危险场45%/伏击20%/接触10%/对战10%/整局10%/持包回家3%/近偷2%；对手rule .35+冻结旧模型.65，无在线自对弈</td><td>0/4/15 → 2/4/10</td><td>1/16 → 14/16</td><td>0/16</td></tr><tr class="hi"><td>JE03 S2</td><td>10-12</td><td class="l">S1 g2048 → dynamic g3072（网页selfplay3072）</td><td>动态自对弈：对手 rule .35/弱 .20/旧 .33/recent .06/history .06；奖励不变；lr .0002→7.5e-5、clip .2→.1</td><td>0/4/23</td><td>14/16</td><td>0/16</td></tr><tr class="hi"><td>JE05</td><td>10-13</td><td class="l">S2 g3072 → g1536（网页transport1536）</td><td>combat_transport_v1：全局战斗/安全+有界路线/回收+合格偷包.75/区域高水位+交付24；课程对战.45、纯运包≤.20；PFSP联赛（rule .3/g0 .2/S1老师 .2/联赛 .3，含current与ring）</td><td>3/1/32</td><td>15/16</td><td>0/16</td></tr><tr><td>JE06→JE07</td><td>10-13</td><td class="l">JE05 g1536 → JE07 g256</td><td>JE06长程256步只作中转（JE07父点是JE06 g0）；JE07加归因拾取奖励8、掉包回收与持包辅助</td><td>2/10/26</td><td>12/16</td><td>0/16</td></tr><tr><td>JE08</td><td>10-14</td><td class="l">JE07 g256 → g1120 → H200 8卡续训 g2048</td><td>带符号拓扑持包势函数 .0625（与运包共享上限4）+ 掉包靠近 .05，JE07战斗/安全不变</td><td>2/5/28</td><td>16/16</td><td>0/16</td></tr><tr><td>JE09 v1–v5（Stage A）</td><td>10-15</td><td class="l">JE08 g2048 → v5 g8</td><td>真实掉包桥接：原生拾取8/交付24一次性+里程碑；v5唯一改动：路线资格从“全局无泡”改为“当前格和下一格无原生危险”</td><td>3/0/26</td><td>16/16</td><td>0/16</td></tr><tr><td>JE09 v7（Stage B）</td><td>10-15</td><td class="l">v5 g8 → v7 g8</td><td>拾取后120 tick窗口内里程碑奖励×4（.5→2）</td><td>2/2/25</td><td>16/16</td><td>0/16</td></tr><tr><td>JE09 v8（Stage C）</td><td>10-15</td><td class="l">v7 g8 → v8 g8</td><td>在真实回收状态上加“等价安全最短返程动作集”监督（DAgger雏形）</td><td>2/3/29</td><td>16/16</td><td>0/16</td></tr></table>
+<p>JE03–JE09 的特点：持包回家（已在手里的包）从 1/16 很快到 14–16/16，但<b>整局里从零开始取包并交付一直是 0/16</b>；对拼存活胜在简单档波动较大，困难档始终 0–3。</p>
+<h3>JE09 Stage A/B/C：掉包回收专项（各16局，独立holdout数值接近）</h3><table><tr><th>模型</th><th>Stage A 掉包拾取</th><th>Stage A 交付</th><th>Stage B 拾取</th><th>Stage B 交付</th></tr><tr><td>JE08 g2048（v5父点基线）</td><td>6/16</td><td>4/16</td><td>—</td><td>—</td></tr><tr><td>v5 g8</td><td>15/16</td><td>11/16</td><td>未测</td><td>未测</td></tr><tr><td>v7 g8</td><td>15/16</td><td>8/16</td><td>16/16</td><td>9/16</td></tr><tr><td>v8 g8</td><td>16/16</td><td>12/16</td><td>16/16</td><td>15/16</td></tr></table>
+<p>Stage A 解决“去捡掉落的包”（6→15/16），Stage C 的返程动作集监督把 Stage B 交付从 9 提到 15/16。v8 g8 是 JE10 的父点。</p>
+<h3>JE10 r01–r19：路线控制（10-18～10-19）</h3>
+<p>每轮从上一轮末点续训（多数128代，r19在g32暂停）。一直保留的设置：首控因果信用 + 连续PBRS .5 + 学习者状态DAgger .2；每轮只改一个因素。</p>
+<table><tr><th>轮次</th><th>改动</th><th>代数</th><th>清砖对拼存活胜 起→止</th><th>真实掉包交付/16</th><th>远距持包交付/16</th><th>原生死亡库存交付/16</th><th>自然整局2400 交付/16</th></tr><tr><td>r01</td><td class="l">首控因果信用 + 连续PBRS .5 + 学习者状态集合DAgger .2，覆盖全部路线课和完整持包期</td><td>g0→g128</td><td>2/2/28→1/5/15</td><td>0→11</td><td>8→11</td><td>0→3</td><td>2→8</td></tr><tr><td>r02</td><td class="l">修正场景混合比例</td><td>g0→g128</td><td>1/5/15→4/1/11</td><td>11→11</td><td>11→13</td><td>3→3</td><td>8→5</td></tr><tr><td>r03</td><td class="l">严格路线oracle（原生步进进度集）</td><td>g0→g128</td><td>4/1/11→2/5/9</td><td>11→9</td><td>13→13</td><td>3→5</td><td>5→4</td></tr><tr><td>r04</td><td class="l">PBRS与oracle共用连续拓扑场</td><td>g0→g128</td><td>2/5/9→1/2/5</td><td>9→13</td><td>13→9</td><td>5→6</td><td>4→4</td></tr><tr><td>r05</td><td class="l">PBRS回收/回家目标链与老师对齐</td><td>g0→g128</td><td>1/2/5→2/4/10</td><td>13→10</td><td>9→13</td><td>6→6</td><td>4→7</td></tr><tr><td>r06</td><td class="l">笼前走廊目标：PBRS阶段5/6+原生安全联合DAgger</td><td>g0→g128</td><td>2/4/10→1/3/11</td><td>10→5</td><td>13→7</td><td>6→1</td><td>7→1</td></tr><tr><td>r07</td><td class="l">DAgger回放配额：返程12/掉包4/库存4/导航10/开局2</td><td>g0→g128</td><td>1/3/11→0/1/6</td><td>5→7</td><td>7→9</td><td>1→0</td><td>1→2</td></tr><tr><td>r08</td><td class="l">回放配额改为12/2/2/15/1</td><td>g0→g128</td><td>0/1/6→1/4/7</td><td>7→8</td><td>9→9</td><td>0→2</td><td>2→3</td></tr><tr><td>r09</td><td class="l">回家场：原生砖块对持包者视为阻断</td><td>g0→g128</td><td>1/4/7→0/3/9</td><td>8→5</td><td>9→10</td><td>2→3</td><td>3→1</td></tr><tr><td>r10</td><td class="l">同配方续训</td><td>g0→g128</td><td>0/3/9→3/1/12</td><td>5→10</td><td>10→11</td><td>3→1</td><td>1→0</td></tr><tr><td>r11</td><td class="l">返程DAgger权重×2（.2→.4）；g4即排除</td><td colspan="6">账本记为排除，未产出曲线</td></tr><tr><td>r12</td><td class="l">删除无事件人工持包场景2/3/4/6，持包须由原生拾取/转移产生（干净因果起点）</td><td>g0→g128</td><td>3/1/12→1/0/10</td><td>10→13</td><td>11→5</td><td>1→1</td><td>0→2</td></tr><tr><td>r13</td><td class="l">同配方续训</td><td>g0→g128</td><td>1/0/10→0/2/7</td><td>13→4</td><td>5→10</td><td>1→1</td><td>2→5</td></tr><tr><td>r14</td><td class="l">返程查询配额：首个+间隔≥8 tick的另一格</td><td>g0→g128</td><td>0/2/7→0/3/9</td><td>4→6</td><td>10→11</td><td>1→1</td><td>5→0</td></tr><tr><td>r15</td><td class="l">返程回放按 1−当前Actor合法目标概率 加权</td><td>g0→g128</td><td>0/3/9→0/2/6</td><td>6→7</td><td>11→6</td><td>1→1</td><td>0→0</td></tr><tr><td>r16</td><td class="l">同配方续训（只加来源记录）</td><td>g0→g128</td><td>0/2/6→3/1/2</td><td>7→5</td><td>6→11</td><td>1→1</td><td>0→2</td></tr><tr><td>r17</td><td class="l">回放每卡当前/历史各32→64</td><td>g0→g128</td><td>3/1/2→0/2/7</td><td>5→6</td><td>11→5</td><td>1→3</td><td>2→3</td></tr><tr><td>r18</td><td class="l">认证安全返程行上去掉旧g0/S1移动KL</td><td>g0→g128</td><td>0/2/7→0/2/7</td><td>6→12</td><td>5→12</td><td>3→0</td><td>3→2</td></tr><tr class="hi"><td>r19</td><td class="l">FIFO容量2048→4096（历史8→16代）</td><td>g0→g32</td><td>0/2/7→2/1/7</td><td>12→11</td><td>12→12</td><td>0→6</td><td>2→6</td></tr></table>
+<p>要点：r01 一轮就把真实掉包交付从 0 拉到 11/16、自然整局从 2 到 8/16，后面 r02–r11 主要在这个水平上下波动。r12 删掉人工“直接持包”场景后自然整局掉到 0–2/16，之后 r13–r19 在干净因果设定下慢慢恢复到 6/16（r19 g32）。r19 g32 因为“干净、无人工持包污染”被选为之后所有实验的共同父点。</p>
+<h3>支线（未进入主线）</h3><table><tr><th>支线</th><th>日期</th><th>父点</th><th>做了什么</th><th>结果</th></tr>
+<tr><td>JE04</td><td>10-12</td><td>S2 g3072</td><td class="l">retention_v3 + PFSP8</td><td class="l">g768 对拼0/9/24；JE05没有以它为父点</td></tr>
+<tr><td>JE09 v9–v36</td><td>10-15～10-17</td><td>v8 g8 起逐轮串接</td><td class="l">距离集监督、长返程覆盖、原生模式门控、战斗老师、道具事件奖励、整局DAgger片段、弱信使课程、路线PBRS等</td><td class="l">对拼最高 v34 9/12/22，但JE10 r01仍选 v8 g8 作父点，这条线没有进入主线</td></tr>
+<tr><td>RETENTION R1–R4</td><td>10-19～10-21</td><td>r19 g32</td><td class="l">返程核心库保持、历史曝光、认证返程PPO行、层内误差采样</td><td class="l">均为“A0或无改进”，不晋升（共同父自然交付19/64、18/64）</td></tr>
+<tr><td>CAUSAL-CARRIER</td><td>10-23</td><td>r19 g32</td><td class="l">PPO-only / DAgger-only / joint 对照</td><td class="l">真实持包holdout直接交付85.94%→95.31%；自然交付五seed均值13.2/11.4/15.2 对父17/64，CI跨零</td></tr>
+<tr><td>COMBAT-ITEM</td><td>10-23～10-24</td><td>r19 g32</td><td class="l">12 run道具结算筛选</td><td class="l">香蕉奖励差为0，自然持包greedy零释放，不晋升</td></tr>
+<tr><td>DAgger-RL R1–R18</td><td>10-24～10-25</td><td>每轮都回到 r19 g32</td><td class="l">父点锚、reservoir、来源平衡、对手、DAgger规模、低LR、香蕉释放资格、道具观测ch7、持包mask、保持计划、goal-kind、道具链</td><td class="l">各轮自然holdout交付都没超过父点（如R4父21/64对处理9–18；R12父18对7–14；R14父13对1–14），全部不晋升；R18只跑了smoke就转去PPO-SCALE</td></tr></table>
+
+<h2>各阶段方法</h2>
+<table><tr><th>阶段</th><th>起止</th><th>新增环境步</th><th>方法</th><th>对手</th><th>奖励</th></tr>
+<tr><td>前置</td><td>JE09/JE10 r12→r19 g32</td><td>—</td><td class="l">路线势函数PBRS、oracle首步标签DAgger+历史FIFO、原生取包/交付信用修正</td><td>rule3</td><td class="l">legacy（运包约77%）</td></tr>
+<tr><td>A</td><td>r19 g32→R1 u064</td><td>约100万</td><td class="l">纯PPO，DAgger=0，16env/卡×8卡，minibatch512，lr7.5e-5；25%局从真实取包状态（Bank）开局</td><td>固定rule3</td><td class="l">legacy</td></tr>
+<tr><td>B</td><td>u064→u160</td><td>约4200万</td><td class="l">单卡env2048、minibatch8192，约2万步/秒（原约2700/秒），每更新32优化步</td><td>固定rule3</td><td class="l">legacy</td></tr>
+<tr><td>C</td><td>u160→u320</td><td>约4200万</td><td class="l">混合对手池；25%环境改为806清砖、1血、真实空手出生的对拼课程</td><td class="l">rule3 .20/猎手普通 .25/猎手困难 .20/current .15/ring .10/父点 .10</td><td class="l">legacy</td></tr>
+<tr class="hi"><td>D</td><td>u320→u720</td><td>约1.05亿</td><td class="l">PBT种群（8卡8条线），slot05一路未被替换；课程提到40%；lr6e-5、熵0.004；每80更新存点续训</td><td class="l">rule3 .30/猎手普通 .35/猎手困难 .10/current .05/ring .10/父点 .10（实际约63%为普通档）</td><td class="l">legacy + 一次性连泡威胁奖励×0.1</td></tr></table>
+
+<div class="card"><span class="tag">D</span><b>一次性连泡威胁奖励</b>：新泡与自己未爆旧泡在无遮挡直线连锁、新威胁敌人当前格、放置位置可逃生，同时满足才记待结算；同一旧泡/同一敌格只计一次，每局最多5次；场上泡全部爆完、确认未死亡/被困才发放，否则作废。实际 u640→u720 段结算2.38万笔、合计2376，占总奖励约0.2%，量级很小。</div>
+<div class="card"><span class="tag">D</span><b>对拼课程</b>：固定40%环境每次重开都进入806清砖、双方1血、真实出生点空手开局，不传送、不预置携包；占训练tick 40%，因局短占重开局数64%。</div>
+
+<h2>指标逐阶段</h2>
+<p><small>清砖对拼=网页JS猎手 map806清砖、1血、300tick，seed 20261001，三档各64局，存活击杀次数（困难/普通/简单），括号为三档合计被杀+自炸+同归；网页整局=生产JS 2400tick带砖、对手普通猎手、64局采样；JAX整局=原生JAX、对手rule3、304局、采样/argmax。</small></p>
+<table><tr><th>模型</th><th>清砖对拼击杀</th><th>每局放泡</th><th>网页整局 击杀/交付</th><th>JAX整局 交付</th><th>JAX整局 存活击杀/死亡局</th></tr>
+<tr><td>网页 selfplay3072</td><td>0/3/4（1）</td><td>7.9/10.2/11.4</td><td>33 / 0</td><td>—</td><td>—</td></tr>
+<tr><td>网页 transport1536</td><td>3/2/8（3）</td><td>7.9/9.0/10.8</td><td>60 / 3</td><td>—</td><td>—</td></tr>
+<tr><td>A R1 u064</td><td>0/0/0（2）</td><td>8.0/7.8/9.3</td><td>38 / 31</td><td>—</td><td>—</td></tr>
+<tr><td>B env2048 u160</td><td>0/1/10（1）</td><td>6.7/6.4/7.5</td><td>75 / 24</td><td>304/303</td><td>310/6</td></tr>
+<tr><td>C 对照 control u320</td><td>2/1/3（5）</td><td>5.0/5.3/6.3</td><td>47 / 24</td><td>304/302</td><td>306/4</td></tr>
+<tr><td>C 课程组 u320</td><td>3/7/9（0）</td><td>5.1/4.6/5.5</td><td>60 / 30</td><td>304/297</td><td>301/5</td></tr>
+<tr><td>D u520</td><td>16/17/18（1）</td><td>3.5/4.3/4.8</td><td>未测</td><td>304/301</td><td>302/3</td></tr>
+<tr class="hi"><td>D u720（当前最佳）</td><td>25/41/39（2）</td><td>2.4/3.1/3.8</td><td>未测</td><td>304/302</td><td>306/3</td></tr>
+<tr><td>D u760</td><td>24/25/27（3）</td><td>3.6/3.4/4.0</td><td>未测</td><td>303/277</td><td>304/9</td></tr>
+<tr><td>D u800</td><td>25/17/15（3）</td><td>4.4/5.2/5.6</td><td>未测</td><td>303/302</td><td>301/3</td></tr>
+<tr><td>D u840</td><td>22/29/29（4）</td><td>3.7/3.8/4.4</td><td>未测</td><td>未测</td><td>未测</td></tr></table>
+
+<h3>清砖对拼三档合计存活击杀</h3>
+<svg viewBox="0 0 760 202" width="100%" role="img" aria-label="三档合计击杀对比">
+<text x="170" y="21" font-size="12" text-anchor="end">网页selfplay3072</text><rect x="180" y="5" width="33.3" height="24" fill="#999"/><text x="218.3" y="21" font-size="12">7</text>
+<text x="170" y="53" font-size="12" text-anchor="end">网页transport1536</text><rect x="180" y="37" width="61.9" height="24" fill="#999"/><text x="246.9" y="53" font-size="12">13</text>
+<text x="170" y="85" font-size="12" text-anchor="end">A R1 u064</text><rect x="180" y="69" width="1.0" height="24" fill="#8faadc"/><text x="185.0" y="85" font-size="12">0</text>
+<text x="170" y="117" font-size="12" text-anchor="end">B env2048 u160</text><rect x="180" y="101" width="52.4" height="24" fill="#8faadc"/><text x="237.4" y="117" font-size="12">11</text>
+<text x="170" y="149" font-size="12" text-anchor="end">C 课程组 u320</text><rect x="180" y="133" width="90.5" height="24" fill="#8faadc"/><text x="275.5" y="149" font-size="12">19</text>
+<text x="170" y="181" font-size="12" text-anchor="end">D slot05 u720</text><rect x="180" y="165" width="500.0" height="24" fill="#337ab7"/><text x="685.0" y="181" font-size="12">105</text>
+</svg>
+<h3>D阶段（slot05）每40更新保留集曲线</h3>
+<svg viewBox="0 0 760 300" width="100%" role="img" aria-label="D阶段保留集击杀曲线">
+<line x1="50" x2="740" y1="260.0" y2="260.0" stroke="#eee"/><text x="42" y="264.0" font-size="11" text-anchor="end">0</text>
+<line x1="50" x2="740" y1="206.66666666666669" y2="206.66666666666669" stroke="#eee"/><text x="42" y="210.66666666666669" font-size="11" text-anchor="end">10</text>
+<line x1="50" x2="740" y1="153.33333333333334" y2="153.33333333333334" stroke="#eee"/><text x="42" y="157.33333333333334" font-size="11" text-anchor="end">20</text>
+<line x1="50" x2="740" y1="100.0" y2="100.0" stroke="#eee"/><text x="42" y="104.0" font-size="11" text-anchor="end">30</text>
+<line x1="50" x2="740" y1="46.666666666666686" y2="46.666666666666686" stroke="#eee"/><text x="42" y="50.666666666666686" font-size="11" text-anchor="end">40</text>
+<text x="50.0" y="276" font-size="10" text-anchor="middle">u320</text>
+<text x="103.07692307692308" y="276" font-size="10" text-anchor="middle">u360</text>
+<text x="156.15384615384616" y="276" font-size="10" text-anchor="middle">u400</text>
+<text x="209.23076923076923" y="276" font-size="10" text-anchor="middle">u440</text>
+<text x="262.3076923076923" y="276" font-size="10" text-anchor="middle">u480</text>
+<text x="315.3846153846154" y="276" font-size="10" text-anchor="middle">u520</text>
+<text x="368.46153846153845" y="276" font-size="10" text-anchor="middle">u560</text>
+<text x="421.53846153846155" y="276" font-size="10" text-anchor="middle">u600</text>
+<text x="474.61538461538464" y="276" font-size="10" text-anchor="middle">u640</text>
+<text x="527.6923076923076" y="276" font-size="10" text-anchor="middle">u680</text>
+<text x="580.7692307692308" y="276" font-size="10" text-anchor="middle">u720</text>
+<text x="633.8461538461538" y="276" font-size="10" text-anchor="middle">u760</text>
+<text x="686.9230769230769" y="276" font-size="10" text-anchor="middle">u800</text>
+<text x="740.0" y="276" font-size="10" text-anchor="middle">u840</text>
+<polyline fill="none" stroke="#d9534f" stroke-width="2" points="50.0,244.0 103.1,244.0 156.2,238.7 209.2,222.7 262.3,206.7 315.4,174.7 368.5,142.7 421.5,212.0 474.6,169.3 527.7,206.7 580.8,126.7 633.8,132.0 686.9,126.7 740.0,142.7"/>
+<circle cx="50.0" cy="244.0" r="3" fill="#d9534f"><title>u320 困难 3</title></circle>
+<circle cx="103.1" cy="244.0" r="3" fill="#d9534f"><title>u360 困难 3</title></circle>
+<circle cx="156.2" cy="238.7" r="3" fill="#d9534f"><title>u400 困难 4</title></circle>
+<circle cx="209.2" cy="222.7" r="3" fill="#d9534f"><title>u440 困难 7</title></circle>
+<circle cx="262.3" cy="206.7" r="3" fill="#d9534f"><title>u480 困难 10</title></circle>
+<circle cx="315.4" cy="174.7" r="3" fill="#d9534f"><title>u520 困难 16</title></circle>
+<circle cx="368.5" cy="142.7" r="3" fill="#d9534f"><title>u560 困难 22</title></circle>
+<circle cx="421.5" cy="212.0" r="3" fill="#d9534f"><title>u600 困难 9</title></circle>
+<circle cx="474.6" cy="169.3" r="3" fill="#d9534f"><title>u640 困难 17</title></circle>
+<circle cx="527.7" cy="206.7" r="3" fill="#d9534f"><title>u680 困难 10</title></circle>
+<circle cx="580.8" cy="126.7" r="3" fill="#d9534f"><title>u720 困难 25</title></circle>
+<circle cx="633.8" cy="132.0" r="3" fill="#d9534f"><title>u760 困难 24</title></circle>
+<circle cx="686.9" cy="126.7" r="3" fill="#d9534f"><title>u800 困难 25</title></circle>
+<circle cx="740.0" cy="142.7" r="3" fill="#d9534f"><title>u840 困难 22</title></circle>
+<rect x="60" y="8" width="12" height="4" fill="#d9534f"/><text x="76" y="14" font-size="11">困难</text>
+<polyline fill="none" stroke="#f0ad4e" stroke-width="2" points="50.0,222.7 103.1,196.0 156.2,206.7 209.2,233.3 262.3,196.0 315.4,169.3 368.5,121.3 421.5,206.7 474.6,148.0 527.7,126.7 580.8,41.3 633.8,126.7 686.9,169.3 740.0,105.3"/>
+<circle cx="50.0" cy="222.7" r="3" fill="#f0ad4e"><title>u320 普通 7</title></circle>
+<circle cx="103.1" cy="196.0" r="3" fill="#f0ad4e"><title>u360 普通 12</title></circle>
+<circle cx="156.2" cy="206.7" r="3" fill="#f0ad4e"><title>u400 普通 10</title></circle>
+<circle cx="209.2" cy="233.3" r="3" fill="#f0ad4e"><title>u440 普通 5</title></circle>
+<circle cx="262.3" cy="196.0" r="3" fill="#f0ad4e"><title>u480 普通 12</title></circle>
+<circle cx="315.4" cy="169.3" r="3" fill="#f0ad4e"><title>u520 普通 17</title></circle>
+<circle cx="368.5" cy="121.3" r="3" fill="#f0ad4e"><title>u560 普通 26</title></circle>
+<circle cx="421.5" cy="206.7" r="3" fill="#f0ad4e"><title>u600 普通 10</title></circle>
+<circle cx="474.6" cy="148.0" r="3" fill="#f0ad4e"><title>u640 普通 21</title></circle>
+<circle cx="527.7" cy="126.7" r="3" fill="#f0ad4e"><title>u680 普通 25</title></circle>
+<circle cx="580.8" cy="41.3" r="3" fill="#f0ad4e"><title>u720 普通 41</title></circle>
+<circle cx="633.8" cy="126.7" r="3" fill="#f0ad4e"><title>u760 普通 25</title></circle>
+<circle cx="686.9" cy="169.3" r="3" fill="#f0ad4e"><title>u800 普通 17</title></circle>
+<circle cx="740.0" cy="105.3" r="3" fill="#f0ad4e"><title>u840 普通 29</title></circle>
+<rect x="140" y="8" width="12" height="4" fill="#f0ad4e"/><text x="156" y="14" font-size="11">普通</text>
+<polyline fill="none" stroke="#5cb85c" stroke-width="2" points="50.0,212.0 103.1,233.3 156.2,249.3 209.2,212.0 262.3,238.7 315.4,164.0 368.5,105.3 421.5,228.0 474.6,100.0 527.7,126.7 580.8,52.0 633.8,116.0 686.9,180.0 740.0,105.3"/>
+<circle cx="50.0" cy="212.0" r="3" fill="#5cb85c"><title>u320 简单 9</title></circle>
+<circle cx="103.1" cy="233.3" r="3" fill="#5cb85c"><title>u360 简单 5</title></circle>
+<circle cx="156.2" cy="249.3" r="3" fill="#5cb85c"><title>u400 简单 2</title></circle>
+<circle cx="209.2" cy="212.0" r="3" fill="#5cb85c"><title>u440 简单 9</title></circle>
+<circle cx="262.3" cy="238.7" r="3" fill="#5cb85c"><title>u480 简单 4</title></circle>
+<circle cx="315.4" cy="164.0" r="3" fill="#5cb85c"><title>u520 简单 18</title></circle>
+<circle cx="368.5" cy="105.3" r="3" fill="#5cb85c"><title>u560 简单 29</title></circle>
+<circle cx="421.5" cy="228.0" r="3" fill="#5cb85c"><title>u600 简单 6</title></circle>
+<circle cx="474.6" cy="100.0" r="3" fill="#5cb85c"><title>u640 简单 30</title></circle>
+<circle cx="527.7" cy="126.7" r="3" fill="#5cb85c"><title>u680 简单 25</title></circle>
+<circle cx="580.8" cy="52.0" r="3" fill="#5cb85c"><title>u720 简单 39</title></circle>
+<circle cx="633.8" cy="116.0" r="3" fill="#5cb85c"><title>u760 简单 27</title></circle>
+<circle cx="686.9" cy="180.0" r="3" fill="#5cb85c"><title>u800 简单 15</title></circle>
+<circle cx="740.0" cy="105.3" r="3" fill="#5cb85c"><title>u840 简单 29</title></circle>
+<rect x="220" y="8" width="12" height="4" fill="#5cb85c"/><text x="236" y="14" font-size="11">简单</text>
+<line x1="580.7692307692308" x2="580.7692307692308" y1="20" y2="260" stroke="#337ab7" stroke-dasharray="4"/><text x="584.7692307692308" y="30" font-size="11" fill="#337ab7">D=u720</text></svg>
+<p><small>曲线有明显波动（如u600、u680回落），64局样本误差约±6；u720为该线目前最高点，存在挑选偏差。</small></p>
+
+<h2>各手段贡献判断（相关性，未做消融）</h2>
+<table><tr><th>手段</th><th>对拼</th><th>运包</th><th>判断</th></tr>
+<tr><td class="l">前置路线专项+Bank</td><td>无</td><td>主要来源</td><td class="l">A 已在网页整局交付31/64，远高于网页现役 0/64、3/64</td></tr>
+<tr><td class="l">大batch（A→B）</td><td>几乎无</td><td>JAX饱和、网页31→24（误差内）</td><td class="l">提供吞吐，是后续长训前提；单独继续加batch会越训越被动</td></tr>
+<tr><td class="l">混合对手（C）</td><td>与control差别不显著</td><td>持平</td><td class="l">三seed方差大</td></tr>
+<tr><td class="l">25%课程（C）</td><td>小幅（3/7/9）</td><td>持平</td><td class="l">seed间不稳定</td></tr>
+<tr><td class="l">40%课程+连泡奖励+长训（D）</td><td>主要来源</td><td>JAX持平</td><td class="l">奖励占比仅0.2%，更可能是课程比例和训练量起主作用；二者贡献未拆分</td></tr></table>
+
+<h2>局限与待补</h2>
+<div class="warn"><ul>
+<li>训练课程与网页清砖对拼评估同地图、同出生点表（55对去重全部重合），D 的对拼提升部分来自“在考场场景训练”。</li>
+<li>JAX整局对 rule3 已饱和（每局约1次击杀即结束），无法区分对拼强弱；D 各点尚未跑网页整局（带砖2400tick）。</li>
+<li>保留集被多次用于确认候选，存在挑选偏差；需新seed、新出生点表、每档256局复核后才能说“超过网页版”。</li>
+<li>待补：u520/u720/u760 网页整局64局；新出生点表清砖对拼；带砖对拼。未发布任何模型。</li>
+</ul></div>
+</body></html>

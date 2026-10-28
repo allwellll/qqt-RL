@@ -1,0 +1,24 @@
+{
+  "python": "3.12.3",
+  "packages": {
+    "jax": "0.11.2",
+    "jaxlib": "0.11.2",
+    "optax": "0.2.8",
+    "numpy": "2.5.4",
+    "pytest": "9.1.1",
+    "torch": "2.14.1+cpu",
+    "onnx": "1.23.2",
+    "matplotlib": "3.11.2"
+  },
+  "node": "v18.20.8",
+  "npm": "10.8.2",
+  "jax_backend": "cpu",
+  "device_platforms": [
+    "cpu"
+  ],
+  "visibility": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "JAX_PLATFORMS": "cpu",
+    "JAX_PLATFORM_NAME": "cpu"
+  }
+}

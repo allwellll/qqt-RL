@@ -1,0 +1,52 @@
+{
+  "base": "7128071",
+  "branch": "integrate/main-training-path-20261028",
+  "commits": [
+    {
+      "sha": "1ad44788b17cb6edd76bf33abde1d90769b12628",
+      "subject": "Integrate main training runtime and evaluation dependencies"
+    },
+    {
+      "sha": "4f26c54a032e3e4d2863b4f53ba6be097dbf882a",
+      "subject": "Exclude unused capacity sweep entrypoints from integration"
+    },
+    {
+      "sha": "8d6a29c57c458bd33e160d404c96d39007cc339d",
+      "subject": "Add CPU regressions and portable mainline test fixtures"
+    },
+    {
+      "sha": "1bb4aaae7e492dccd2f8ef33d889011fdedc064b",
+      "subject": "Align critic context regression with native custody reset"
+    }
+  ],
+  "diff_counts_by_directory": {
+    "docs": {
+      "M": 1
+    },
+    "jax_bomb": {
+      "M": 1
+    },
+    "pyproject.toml": {
+      "M": 1
+    },
+    "reports": {
+      "A": 33,
+      "M": 2
+    },
+    "scripts": {
+      "A": 137,
+      "M": 5
+    },
+    "tests": {
+      "A": 71,
+      "M": 4
+    },
+    "web": {
+      "A": 1,
+      "M": 2
+    }
+  },
+  "shortstat": "258 files changed, 85491 insertions(+), 27 deletions(-)",
+  "closure_count": 474,
+  "report_assets_considered": 44
+}

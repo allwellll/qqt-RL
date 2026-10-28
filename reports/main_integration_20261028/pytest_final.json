@@ -1,0 +1,2150 @@
+{
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "JAX_PLATFORMS": "cpu",
+    "JAX_PLATFORM_NAME": "cpu",
+    "JAXBOMB_RULE": "bun",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "versions": {
+    "jax": "0.11.2",
+    "jaxlib": "0.11.2",
+    "optax": "0.2.8",
+    "numpy": "2.5.4",
+    "pytest": "9.1.1",
+    "torch": "2.14.1+cpu",
+    "onnx": "1.23.2",
+    "matplotlib": "3.11.2"
+  },
+  "command": "<PYTHON> -m pytest -q --tb=short <TEST_FILE> (one fresh CPU process per file)",
+  "files": [
+    {
+      "file": "tests/test_actor_aux_graft.py",
+      "exit_code": 0,
+      "seconds": 12.16,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_attack_trace.py",
+      "exit_code": 0,
+      "seconds": 0.49,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_aux_heads.py",
+      "exit_code": 0,
+      "seconds": 12.25,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bank_ratio_wiring.py",
+      "exit_code": 0,
+      "seconds": 2.58,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "details": [
+        {
+          "name": "test_default_fresh_bitwise_and_provenance_probability",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/carrier_mechanism_20261023/v1/BANK_FROZEN.json"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_benchmark_v2.py",
+      "exit_code": 0,
+      "seconds": 2.92,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bot_contract.py",
+      "exit_code": 0,
+      "seconds": 1.02,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_critic.py",
+      "exit_code": 0,
+      "seconds": 44.33,
+      "counts": {
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_curriculum.py",
+      "exit_code": 0,
+      "seconds": 137.65,
+      "counts": {
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_expert.py",
+      "exit_code": 0,
+      "seconds": 61.41,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_release.py",
+      "exit_code": 0,
+      "seconds": 0.67,
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_retention_update_restore.py",
+      "exit_code": 0,
+      "seconds": 10.75,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_reward_shaping.py",
+      "exit_code": 0,
+      "seconds": 365.58,
+      "counts": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_rule_bot.py",
+      "exit_code": 0,
+      "seconds": 0.82,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_rule_bot_safe_teacher.py",
+      "exit_code": 0,
+      "seconds": 32.27,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_rule_bot_selfplay_parity.py",
+      "exit_code": 0,
+      "seconds": 0.57,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_safety.py",
+      "exit_code": 0,
+      "seconds": 148.94,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_safety_relax_equivalence.py",
+      "exit_code": 0,
+      "seconds": 1602.74,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_spawn_buckets.py",
+      "exit_code": 0,
+      "seconds": 406.54,
+      "counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": [],
+      "rerun_reason": "Audit key path aligned with _fresh; 12 tests pass"
+    },
+    {
+      "file": "tests/test_bun_supervision.py",
+      "exit_code": 0,
+      "seconds": 179.23,
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_tactical_family.py",
+      "exit_code": 0,
+      "seconds": 0.49,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_bun_tactical_labels.py",
+      "exit_code": 0,
+      "seconds": 0.4,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_campaign_canonical_collector.py",
+      "exit_code": 0,
+      "seconds": 1.12,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_campaign_reward_v2.py",
+      "exit_code": 0,
+      "seconds": 1.5,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_campaign_scale_train.py",
+      "exit_code": 0,
+      "seconds": 0.33,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_carrier_route_collector_integration.py",
+      "exit_code": 0,
+      "seconds": 281.18,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_carrier_route_fields.py",
+      "exit_code": 0,
+      "seconds": 2.85,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_carrier_route_recipe.py",
+      "exit_code": 0,
+      "seconds": 2.59,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_carrier_route_relay.py",
+      "exit_code": 0,
+      "seconds": 0.35,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_combat_mix_collector.py",
+      "exit_code": 0,
+      "seconds": 36.31,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "details": [
+        {
+          "name": "test_real_learner_action_logprob_value_and_rng_are_identical_when_replacing_opponent_only",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/combat_mix_v1/PROTOCOL.json"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_combat_mix_exposure_summary.py",
+      "exit_code": 0,
+      "seconds": 0.44,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_combat_mix_legacy.py",
+      "exit_code": 0,
+      "seconds": 2.44,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "details": [
+        {
+          "name": "test_legacy_real_collector_one_tick_shapes_and_finite",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/combat_mix_v1/PROTOCOL.json, runs/je10_bun_20261018/control_route_v38_r10/inputs/frozen.pkl"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_combat_mix_legacy_batched.py",
+      "exit_code": 0,
+      "seconds": 2.86,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "details": [
+        {
+          "name": "test_real_original_full_batch_and_adapter_have_exact_next_step",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/combat_mix_v1/protocols/legacy_mix_s2026103051.json"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_combat_mix_legacy_pool_restore.py",
+      "exit_code": 0,
+      "seconds": 2.79,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_combat_mix_opponents.py",
+      "exit_code": 0,
+      "seconds": 1.37,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_combat_mix_owner.py",
+      "exit_code": 0,
+      "seconds": 0.36,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 2
+      },
+      "details": [
+        {
+          "name": "test_latest_authorization_removes_only_unstarted_pair_completion_runs",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/combat_mix_v1/PROTOCOL.json, runs/combat_mix_v1/USER_PBT_QUEUE_OVERRIDE.json"
+        },
+        {
+          "name": "test_aux_watchdog_process_names_match_every_lease_and_module",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/combat_mix_v1/AUX_WATCHDOG.py"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_combat_mix_shaping.py",
+      "exit_code": 0,
+      "seconds": 2.28,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_combat_mix_technical_queue.py",
+      "exit_code": 0,
+      "seconds": 0.43,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_continuous_metric_recipe.py",
+      "exit_code": 0,
+      "seconds": 94.74,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_continuous_route_metric.py",
+      "exit_code": 0,
+      "seconds": 18.4,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_control_route_analysis.py",
+      "exit_code": 0,
+      "seconds": 0.34,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_counterfactual_batch_equivalence.py",
+      "exit_code": 0,
+      "seconds": 1229.38,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_counterfactual_batching.py",
+      "exit_code": 0,
+      "seconds": 0.41,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_cx_train_trap_routes.py",
+      "exit_code": 0,
+      "seconds": 44.15,
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_dagger_rl_anchor.py",
+      "exit_code": 0,
+      "seconds": 3.09,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_dagger_rl_items.py",
+      "exit_code": 0,
+      "seconds": 4.34,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "details": [
+        {
+          "name": "test_no_future_random_or_synthetic_custody_and_no_glue_teacher",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/carrier_mechanism_20261023/v1/BANK_FROZEN.json"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_dagger_rl_memory.py",
+      "exit_code": 0,
+      "seconds": 0.46,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_dagger_rl_reservoir.py",
+      "exit_code": 0,
+      "seconds": 0.47,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_dagger_rl_respawn.py",
+      "exit_code": 0,
+      "seconds": 2.06,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "details": [
+        {
+          "name": "test_reject_slide_that_enters_known_imminent_respawn_threat",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/dagger_rl_20261024/r1/audit_student_opportunities.pkl"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_eval_four_bot_matrix.py",
+      "exit_code": 0,
+      "seconds": 13.86,
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_eval_transformer_checkpoint_sweep.py",
+      "exit_code": 0,
+      "seconds": 3.05,
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_expert_reward_ablation.py",
+      "exit_code": 0,
+      "seconds": 2.49,
+      "counts": {
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 2
+      },
+      "details": [
+        {
+          "name": "test_persistent_owners_retain_their_exclusive_lock_handles",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: scripts/expert_reward_ablation_run.py, scripts/expert_reward_ablation_cpu.py"
+        },
+        {
+          "name": "test_predecessor_handoff_accepts_user_ended_early_without_full_budget_claim",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/ppo_scale_20261025/r2_longrun/USER_ENDED_EARLY.json, scripts/expert_reward_ablation_run.py"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_expert_reward_alignment_fullmatch.py",
+      "exit_code": 0,
+      "seconds": 2.15,
+      "counts": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "details": [
+        {
+          "name": "test_d_reward_protocol_and_frozen_coefficients_are_not_rewritten",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/expert_reward_20261025/D_ablation_v1/PROTOCOL.json"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_export_bun_web_model.py",
+      "exit_code": 0,
+      "seconds": 0.91,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_fetch_web_models.py",
+      "exit_code": 0,
+      "seconds": 0.35,
+      "counts": {
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_frontier_native_witness.py",
+      "exit_code": 0,
+      "seconds": 28.04,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_gae.py",
+      "exit_code": 0,
+      "seconds": 1.55,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_host_batch.py",
+      "exit_code": 0,
+      "seconds": 1.23,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_iter_pbt_eval_scheduling.py",
+      "exit_code": 0,
+      "seconds": 0.85,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_iter_pbt_native_gpu.py",
+      "exit_code": 0,
+      "seconds": 0.39,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_iter_pbt_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.44,
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_jax_bots.py",
+      "exit_code": 0,
+      "seconds": 262.3,
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_jax_bun.py",
+      "exit_code": 0,
+      "seconds": 97.09,
+      "counts": {
+        "tests": 16,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_jax_cache.py",
+      "exit_code": 0,
+      "seconds": 0.34,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je03_bun831_20261011.py",
+      "exit_code": 0,
+      "seconds": 0.45,
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je03_bun_selfplay_20261012.py",
+      "exit_code": 0,
+      "seconds": 2.35,
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je03_bun_selfplay_authority_recovery_20261012.py",
+      "exit_code": 0,
+      "seconds": 0.46,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je03_bun_stage1_20261011.py",
+      "exit_code": 0,
+      "seconds": 1.05,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je08_boundaries.py",
+      "exit_code": 0,
+      "seconds": 39.26,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je08_integration.py",
+      "exit_code": 0,
+      "seconds": 68.84,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je08_topology.py",
+      "exit_code": 0,
+      "seconds": 2.11,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_bridge.py",
+      "exit_code": 0,
+      "seconds": 41.49,
+      "counts": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_chase_expert.py",
+      "exit_code": 0,
+      "seconds": 5.87,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_drop_expert.py",
+      "exit_code": 0,
+      "seconds": 69.28,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_fixture_reward.py",
+      "exit_code": 0,
+      "seconds": 37.96,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_return_expert.py",
+      "exit_code": 0,
+      "seconds": 5.47,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_route_pbrs.py",
+      "exit_code": 0,
+      "seconds": 18.77,
+      "counts": {
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_stage_b.py",
+      "exit_code": 0,
+      "seconds": 3.97,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_stage_e.py",
+      "exit_code": 0,
+      "seconds": 7.97,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_stage_h.py",
+      "exit_code": 0,
+      "seconds": 18.25,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_stage_h2.py",
+      "exit_code": 0,
+      "seconds": 12.3,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_stage_h3.py",
+      "exit_code": 0,
+      "seconds": 16.3,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_stage_h5.py",
+      "exit_code": 0,
+      "seconds": 16.33,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_stage_h5_course.py",
+      "exit_code": 0,
+      "seconds": 36.29,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_stage_h6.py",
+      "exit_code": 0,
+      "seconds": 3.64,
+      "counts": {
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je09_stage_h8.py",
+      "exit_code": 0,
+      "seconds": 2.43,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_causal_diagnostics.py",
+      "exit_code": 0,
+      "seconds": 0.37,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_continuity_declaration.py",
+      "exit_code": 0,
+      "seconds": 0.32,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_control_credit.py",
+      "exit_code": 0,
+      "seconds": 3.13,
+      "counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_custody.py",
+      "exit_code": 0,
+      "seconds": 18.57,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_evaluator_recovery.py",
+      "exit_code": 0,
+      "seconds": 0.35,
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_evidence.py",
+      "exit_code": 0,
+      "seconds": 0.32,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_native_credit_wiring.py",
+      "exit_code": 0,
+      "seconds": 1.52,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_no_prestock_carry.py",
+      "exit_code": 0,
+      "seconds": 93.57,
+      "counts": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_relay_contract.py",
+      "exit_code": 0,
+      "seconds": 0.34,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_route_oracle.py",
+      "exit_code": 0,
+      "seconds": 7.2,
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_successor_recipe.py",
+      "exit_code": 0,
+      "seconds": 2.2,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_je10_worker_contract.py",
+      "exit_code": 0,
+      "seconds": 0.49,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_joint_audit_evaluator_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.13,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": [],
+      "rerun_reason": "Recipe assertion recognizes the additive authority namespace guard"
+    },
+    {
+      "file": "tests/test_joint_dagger_audit.py",
+      "exit_code": 0,
+      "seconds": 0.4,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_learner_trace_sampling.py",
+      "exit_code": 0,
+      "seconds": 0.41,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_native_certificate_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.53,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_native_return_retention.py",
+      "exit_code": 0,
+      "seconds": 4.4,
+      "counts": {
+        "tests": 24,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_native_return_retention_collector_integration.py",
+      "exit_code": 0,
+      "seconds": 234.1,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_native_return_retention_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.47,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_native_route_certificate.py",
+      "exit_code": 0,
+      "seconds": 9.27,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_navigation_replay_collector_integration.py",
+      "exit_code": 0,
+      "seconds": 234.84,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_navigation_replay_recipe.py",
+      "exit_code": 0,
+      "seconds": 10.64,
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_navigation_replay_relay.py",
+      "exit_code": 0,
+      "seconds": 0.35,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_passive_evaluation_metrics.py",
+      "exit_code": 0,
+      "seconds": 3.36,
+      "counts": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_phase_balanced_joint_replay.py",
+      "exit_code": 0,
+      "seconds": 20.11,
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_phase_balanced_replay_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.36,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_phase_replay_collector_integration.py",
+      "exit_code": 0,
+      "seconds": 218.07,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_phase_replay_relay.py",
+      "exit_code": 0,
+      "seconds": 0.52,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_ppo_advantage_diagnostic_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.35,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_ppo_advantage_diagnostics.py",
+      "exit_code": 0,
+      "seconds": 1.57,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_ppo_scale_longrun.py",
+      "exit_code": 0,
+      "seconds": 4.32,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 2
+      },
+      "details": [
+        {
+          "name": "test_protocol_is_ppo_only_and_equal_environment_budget",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/ppo_scale_20261025/r1_longrun/PROTOCOL.json"
+        },
+        {
+          "name": "test_r18_formal_queue_is_stopped_and_smoke_only",
+          "status": "skipped",
+          "message": "External experiment artifacts are not bundled: runs/dagger_rl_20261025/r18_item_chain/PPO_SCALE_HANDOFF.json"
+        }
+      ]
+    },
+    {
+      "file": "tests/test_ppo_scale_longrun_continue.py",
+      "exit_code": 0,
+      "seconds": 2.82,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_ppo_telemetry_continuation.py",
+      "exit_code": 0,
+      "seconds": 0.36,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prepare_per_arm_init.py",
+      "exit_code": 0,
+      "seconds": 0.39,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_actor_gradient.py",
+      "exit_code": 0,
+      "seconds": 10.52,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": [],
+      "rerun_reason": "Replay fixture includes current collector kind/preparation fields; real actor move/ability gradients and zero critic gradient retained"
+    },
+    {
+      "file": "tests/test_prestock_collector_integration.py",
+      "exit_code": 0,
+      "seconds": 286.75,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_fragment_queries.py",
+      "exit_code": 0,
+      "seconds": 2.92,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_joint_oracle.py",
+      "exit_code": 0,
+      "seconds": 21.96,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_joint_payload.py",
+      "exit_code": 0,
+      "seconds": 4.06,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_joint_replay.py",
+      "exit_code": 0,
+      "seconds": 8.73,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_native_teacher.py",
+      "exit_code": 0,
+      "seconds": 139.6,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.52,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_relay.py",
+      "exit_code": 0,
+      "seconds": 0.33,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_route_preparation.py",
+      "exit_code": 0,
+      "seconds": 37.9,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_selection.py",
+      "exit_code": 0,
+      "seconds": 7.23,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_training_state.py",
+      "exit_code": 0,
+      "seconds": 24.16,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_prestock_verified_labels.py",
+      "exit_code": 0,
+      "seconds": 163.53,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_replay_batch_collector_integration.py",
+      "exit_code": 0,
+      "seconds": 280.5,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_replay_batch_recipe.py",
+      "exit_code": 0,
+      "seconds": 20.56,
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_replay_exposure.py",
+      "exit_code": 0,
+      "seconds": 0.46,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_replay_exposure_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.4,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_replay_horizon_collector_integration.py",
+      "exit_code": 0,
+      "seconds": 288.68,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_replay_horizon_recipe.py",
+      "exit_code": 0,
+      "seconds": 6.77,
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_replay_seed_leakage.py",
+      "exit_code": 0,
+      "seconds": 0.82,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_retention_phase_conditioning.py",
+      "exit_code": 0,
+      "seconds": 47.86,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_retention_phase_export.py",
+      "exit_code": 0,
+      "seconds": 14.25,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_retention_route_eval.py",
+      "exit_code": 0,
+      "seconds": 0.35,
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_return_dagger_recipe.py",
+      "exit_code": 0,
+      "seconds": 3.27,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_return_dagger_weight.py",
+      "exit_code": 0,
+      "seconds": 4.21,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_return_error_collector_integration.py",
+      "exit_code": 0,
+      "seconds": 316.93,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_return_error_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.4,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_return_error_replay.py",
+      "exit_code": 0,
+      "seconds": 15.13,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_return_query_audit.py",
+      "exit_code": 0,
+      "seconds": 1.13,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_return_query_collector_integration.py",
+      "exit_code": 0,
+      "seconds": 310.06,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_return_query_diversity.py",
+      "exit_code": 0,
+      "seconds": 1.93,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_return_query_recipe.py",
+      "exit_code": 0,
+      "seconds": 0.37,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_route_frontier.py",
+      "exit_code": 0,
+      "seconds": 8.25,
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_route_objective_consistency.py",
+      "exit_code": 0,
+      "seconds": 65.15,
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_route_objective_recipe.py",
+      "exit_code": 0,
+      "seconds": 180.84,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_score_eval_screen.py",
+      "exit_code": 0,
+      "seconds": 0.45,
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_seed_namespace.py",
+      "exit_code": 0,
+      "seconds": 0.29,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_stock_window_semantics.py",
+      "exit_code": 0,
+      "seconds": 105.83,
+      "counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_summarize_bun_stages.py",
+      "exit_code": 0,
+      "seconds": 0.34,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_supervisor_finalizer.py",
+      "exit_code": 0,
+      "seconds": 0.68,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_tactical_spawn_manifest.py",
+      "exit_code": 0,
+      "seconds": 1.58,
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_terminal_checkpoint_restore.py",
+      "exit_code": 0,
+      "seconds": 0.57,
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_training_modules.py",
+      "exit_code": 0,
+      "seconds": 0.19,
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": [],
+      "rerun_reason": "Match the production batch=1 counterfactual equivalence guarantee rather than the retired batch=4 default"
+    },
+    {
+      "file": "tests/test_training_tooling_regressions.py",
+      "exit_code": 0,
+      "seconds": 2.74,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    },
+    {
+      "file": "tests/test_worker_protocol.py",
+      "exit_code": 0,
+      "seconds": 2.17,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "details": []
+    }
+  ],
+  "corrected_reruns": [
+    {
+      "file": "tests/test_training_modules.py",
+      "first_exit_code": 1,
+      "first_counts": {
+        "tests": 5,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "resolution": "Match the production batch=1 counterfactual equivalence guarantee rather than the retired batch=4 default",
+      "final_counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "tests/test_prestock_actor_gradient.py",
+      "first_exit_code": 1,
+      "first_counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "resolution": "Replay fixture includes current collector kind/preparation fields; real actor move/ability gradients and zero critic gradient retained",
+      "final_counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "tests/test_bun_spawn_buckets.py",
+      "first_exit_code": 1,
+      "first_counts": {
+        "tests": 12,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "resolution": "Audit key path aligned with _fresh; 12 tests pass",
+      "final_counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "tests/test_joint_audit_evaluator_recipe.py",
+      "first_exit_code": 1,
+      "first_counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "resolution": "Recipe assertion recognizes the additive authority namespace guard",
+      "final_counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "totals": {
+    "tests": 829,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 13,
+    "passed": 816
+  },
+  "file_count": 164,
+  "nonzero_files": [],
+  "scope": "Every existing tests/test_*.py file, including main regressions and selected closure tests, one fresh CPU process per file; corrected failed files rerun after fixes."
+}

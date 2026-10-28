@@ -1,0 +1,682 @@
+{
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "JAX_PLATFORMS": "cpu",
+    "JAX_PLATFORM_NAME": "cpu",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "command": "<PYTHON> -m pytest -q --tb=short <BATCH_TEST_FILES>",
+  "batches": [
+    {
+      "batch": 0,
+      "files": [
+        "tests/test_actor_aux_graft.py",
+        "tests/test_attack_trace.py",
+        "tests/test_aux_heads.py",
+        "tests/test_bank_ratio_wiring.py",
+        "tests/test_benchmark_v2.py",
+        "tests/test_bot_contract.py"
+      ],
+      "exit_code": 1,
+      "seconds": 11.98,
+      "counts": {
+        "tests": 23,
+        "failures": 4,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_aux_heads::test_aux_heads_present_only_when_requested",
+        "tests.test_aux_heads::test_aux_forward_shapes",
+        "tests.test_aux_heads::test_aux_bce_gradient_flows_into_backbone",
+        "tests.test_bank_ratio_wiring::test_default_fresh_bitwise_and_provenance_probability"
+      ]
+    },
+    {
+      "batch": 1,
+      "files": [
+        "tests/test_bun_critic.py",
+        "tests/test_bun_curriculum.py",
+        "tests/test_bun_expert.py",
+        "tests/test_bun_release.py",
+        "tests/test_bun_retention_update_restore.py",
+        "tests/test_bun_reward_shaping.py"
+      ],
+      "exit_code": 1,
+      "seconds": 643.39,
+      "counts": {
+        "tests": 58,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_bun_critic::test_context_explicitly_encodes_actor_opponent_phase_and_bucket"
+      ]
+    },
+    {
+      "batch": 2,
+      "files": [
+        "tests/test_bun_rule_bot.py",
+        "tests/test_bun_rule_bot_safe_teacher.py",
+        "tests/test_bun_rule_bot_selfplay_parity.py",
+        "tests/test_bun_safety.py",
+        "tests/test_bun_safety_relax_equivalence.py",
+        "tests/test_bun_spawn_buckets.py"
+      ],
+      "exit_code": 124,
+      "seconds": 900.45,
+      "counts": {},
+      "failed": []
+    },
+    {
+      "batch": 3,
+      "files": [
+        "tests/test_bun_supervision.py",
+        "tests/test_bun_tactical_family.py",
+        "tests/test_bun_tactical_labels.py",
+        "tests/test_campaign_canonical_collector.py",
+        "tests/test_campaign_reward_v2.py",
+        "tests/test_campaign_scale_train.py"
+      ],
+      "exit_code": 0,
+      "seconds": 164.63,
+      "counts": {
+        "tests": 24,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    },
+    {
+      "batch": 4,
+      "files": [
+        "tests/test_campaign_side_parity_round2.py",
+        "tests/test_campaign_side_parity_round4.py",
+        "tests/test_campaign_side_parity_round5.py",
+        "tests/test_carrier_mechanism.py",
+        "tests/test_carrier_phase_hysteresis.py",
+        "tests/test_carrier_phase_recipe.py"
+      ],
+      "exit_code": 1,
+      "seconds": 228.92,
+      "counts": {
+        "tests": 45,
+        "failures": 20,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_campaign_side_parity_round2::test_each_speed_pickup_matches_production_js",
+        "tests.test_campaign_side_parity_round2::test_native_trap_requires_all_current_contact_cells",
+        "tests.test_campaign_side_parity_round2::test_native_slow_glue_tick_count_matches_js_phase_order",
+        "tests.test_campaign_side_parity_round2::test_native_trap_death_clears_invulnerability",
+        "tests.test_campaign_side_parity_round4::test_forced_slide_direct_path_partial_stop_and_no_push[case1]",
+        "tests.test_campaign_side_parity_round4::test_forced_slide_direct_path_partial_stop_and_no_push[case2]",
+        "tests.test_campaign_side_parity_round4::test_forced_slide_direct_path_partial_stop_and_no_push[case4]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[occupied_blast-1]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[occupied_blast-2]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[contact_blast-1]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[contact_blast-2]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[release_blast-1]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[release_blast-2]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[release_pickup-1]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[release_pickup-2]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[expiring_fuse-1]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[expiring_fuse-2]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[shared_bomb-1]",
+        "tests.test_campaign_side_parity_round5::test_native_field_phase_and_consumption[shared_bomb-2]",
+        "tests.test_carrier_phase_recipe::test_predeclared_phase_followup_keeps_scene_mix_native_certificate_and_no_gate"
+      ]
+    },
+    {
+      "batch": 5,
+      "files": [
+        "tests/test_carrier_route_collector_integration.py",
+        "tests/test_carrier_route_fields.py",
+        "tests/test_carrier_route_recipe.py",
+        "tests/test_carrier_route_relay.py",
+        "tests/test_combat_item_bank_alignment.py",
+        "tests/test_combat_item_experiment.py"
+      ],
+      "exit_code": 1,
+      "seconds": 38.97,
+      "counts": {
+        "tests": 25,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_carrier_route_collector_integration::test_real_collector_ppo_reset_restore_with_physical_carrier_fields"
+      ]
+    },
+    {
+      "batch": 6,
+      "files": [
+        "tests/test_combat_mix_collector.py",
+        "tests/test_combat_mix_exposure_summary.py",
+        "tests/test_combat_mix_legacy.py",
+        "tests/test_combat_mix_legacy_batched.py",
+        "tests/test_combat_mix_legacy_pool_restore.py",
+        "tests/test_combat_mix_opponents.py"
+      ],
+      "exit_code": 0,
+      "seconds": 29.86,
+      "counts": {
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "failed": []
+    },
+    {
+      "batch": 7,
+      "files": [
+        "tests/test_combat_mix_owner.py",
+        "tests/test_combat_mix_shaping.py",
+        "tests/test_combat_mix_technical_queue.py",
+        "tests/test_continuous_metric_recipe.py",
+        "tests/test_continuous_route_metric.py",
+        "tests/test_control_route_analysis.py"
+      ],
+      "exit_code": 0,
+      "seconds": 116.42,
+      "counts": {
+        "tests": 32,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 2
+      },
+      "failed": []
+    },
+    {
+      "batch": 8,
+      "files": [
+        "tests/test_counterfactual_batch_equivalence.py",
+        "tests/test_counterfactual_batching.py",
+        "tests/test_cx_train_trap_routes.py",
+        "tests/test_dagger_rl_anchor.py",
+        "tests/test_dagger_rl_greedy_source.py",
+        "tests/test_dagger_rl_item_observation.py"
+      ],
+      "exit_code": 124,
+      "seconds": 900.51,
+      "counts": {},
+      "failed": []
+    },
+    {
+      "batch": 9,
+      "files": [
+        "tests/test_dagger_rl_items.py",
+        "tests/test_dagger_rl_memory.py",
+        "tests/test_dagger_rl_movement_probe.py",
+        "tests/test_dagger_rl_opponent_mix.py",
+        "tests/test_dagger_rl_r10_contract.py",
+        "tests/test_dagger_rl_r15_setup.py"
+      ],
+      "exit_code": 0,
+      "seconds": 5.63,
+      "counts": {
+        "tests": 19,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 2
+      },
+      "failed": []
+    },
+    {
+      "batch": 10,
+      "files": [
+        "tests/test_dagger_rl_release_qualification.py",
+        "tests/test_dagger_rl_reservoir.py",
+        "tests/test_dagger_rl_respawn.py",
+        "tests/test_dagger_rl_source_replay.py",
+        "tests/test_dagger_rl_update_mechanism.py",
+        "tests/test_eval_four_bot_matrix.py"
+      ],
+      "exit_code": 0,
+      "seconds": 13.04,
+      "counts": {
+        "tests": 29,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      "failed": []
+    },
+    {
+      "batch": 11,
+      "files": [
+        "tests/test_eval_transformer_checkpoint_sweep.py",
+        "tests/test_expert_reward_ablation.py",
+        "tests/test_expert_reward_alignment_fullmatch.py",
+        "tests/test_export_bun_web_model.py",
+        "tests/test_fetch_web_models.py",
+        "tests/test_frontier_native_witness.py"
+      ],
+      "exit_code": 1,
+      "seconds": 33.72,
+      "counts": {
+        "tests": 52,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 1
+      },
+      "failed": [
+        "tests.test_eval_transformer_checkpoint_sweep::test_summary_paired_deltas_and_spawn_consistency",
+        "tests.test_expert_reward_ablation::test_predecessor_handoff_accepts_user_ended_early_without_full_budget_claim"
+      ]
+    },
+    {
+      "batch": 12,
+      "files": [
+        "tests/test_gae.py",
+        "tests/test_host_batch.py",
+        "tests/test_iter_pbt_eval_scheduling.py",
+        "tests/test_iter_pbt_native_gpu.py",
+        "tests/test_iter_pbt_recipe.py",
+        "tests/test_jax_bots.py"
+      ],
+      "exit_code": 1,
+      "seconds": 88.78,
+      "counts": {
+        "tests": 31,
+        "failures": 4,
+        "errors": 0,
+        "skipped": 2
+      },
+      "failed": [
+        "tests.test_jax_bots::test_dodge_tiers_never_bomb[dodge]",
+        "tests.test_jax_bots::test_attacking_tiers_kill_idle_without_suiciding[bomber_easy]",
+        "tests.test_jax_bots::test_attacking_tiers_kill_idle_without_suiciding[hunter]",
+        "tests.test_jax_bots::test_attacking_tiers_kill_idle_without_suiciding[hunter_hard]"
+      ]
+    },
+    {
+      "batch": 13,
+      "files": [
+        "tests/test_jax_bun.py",
+        "tests/test_jax_cache.py",
+        "tests/test_je03_bun831_20261011.py",
+        "tests/test_je03_bun_selfplay_20261012.py",
+        "tests/test_je03_bun_selfplay_authority_recovery_20261012.py",
+        "tests/test_je03_bun_stage1_20261011.py"
+      ],
+      "exit_code": 1,
+      "seconds": 86.68,
+      "counts": {
+        "tests": 47,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_jax_bun::test_curriculum_resets_and_milestones_are_one_shot"
+      ]
+    },
+    {
+      "batch": 14,
+      "files": [
+        "tests/test_je08_boundaries.py",
+        "tests/test_je08_integration.py",
+        "tests/test_je08_topology.py",
+        "tests/test_je09_bridge.py",
+        "tests/test_je09_chase_expert.py",
+        "tests/test_je09_drop_expert.py"
+      ],
+      "exit_code": 0,
+      "seconds": 165.59,
+      "counts": {
+        "tests": 35,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    },
+    {
+      "batch": 15,
+      "files": [
+        "tests/test_je09_fixture_reward.py",
+        "tests/test_je09_return_expert.py",
+        "tests/test_je09_route_pbrs.py",
+        "tests/test_je09_stage_b.py",
+        "tests/test_je09_stage_e.py",
+        "tests/test_je09_stage_h.py"
+      ],
+      "exit_code": 0,
+      "seconds": 83.08,
+      "counts": {
+        "tests": 31,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    },
+    {
+      "batch": 16,
+      "files": [
+        "tests/test_je09_stage_h2.py",
+        "tests/test_je09_stage_h3.py",
+        "tests/test_je09_stage_h5.py",
+        "tests/test_je09_stage_h5_course.py",
+        "tests/test_je09_stage_h6.py",
+        "tests/test_je09_stage_h8.py"
+      ],
+      "exit_code": 0,
+      "seconds": 51.24,
+      "counts": {
+        "tests": 29,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    },
+    {
+      "batch": 17,
+      "files": [
+        "tests/test_je10_causal_diagnostics.py",
+        "tests/test_je10_continuity_declaration.py",
+        "tests/test_je10_control_credit.py",
+        "tests/test_je10_custody.py",
+        "tests/test_je10_evaluator_recovery.py",
+        "tests/test_je10_evidence.py"
+      ],
+      "exit_code": 0,
+      "seconds": 14.34,
+      "counts": {
+        "tests": 29,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    },
+    {
+      "batch": 18,
+      "files": [
+        "tests/test_je10_native_credit_wiring.py",
+        "tests/test_je10_no_prestock_carry.py",
+        "tests/test_je10_relay_contract.py",
+        "tests/test_je10_route_oracle.py",
+        "tests/test_je10_successor_recipe.py",
+        "tests/test_je10_worker_contract.py"
+      ],
+      "exit_code": 0,
+      "seconds": 84.28,
+      "counts": {
+        "tests": 35,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    },
+    {
+      "batch": 19,
+      "files": [
+        "tests/test_joint_audit_evaluator_recipe.py",
+        "tests/test_joint_dagger_audit.py",
+        "tests/test_learner_trace_sampling.py",
+        "tests/test_native_certificate_recipe.py",
+        "tests/test_native_return_retention.py",
+        "tests/test_native_return_retention_collector_integration.py"
+      ],
+      "exit_code": 1,
+      "seconds": 773.99,
+      "counts": {
+        "tests": 36,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_joint_audit_evaluator_recipe::test_candidate_audit_runs_only_after_fixed_complete_and_cannot_fail_gpu_or_fixed_eval"
+      ]
+    },
+    {
+      "batch": 20,
+      "files": [
+        "tests/test_native_return_retention_recipe.py",
+        "tests/test_native_route_certificate.py",
+        "tests/test_navigation_replay_collector_integration.py",
+        "tests/test_navigation_replay_recipe.py",
+        "tests/test_navigation_replay_relay.py",
+        "tests/test_passive_evaluation_metrics.py"
+      ],
+      "exit_code": 0,
+      "seconds": 437.63,
+      "counts": {
+        "tests": 36,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    },
+    {
+      "batch": 21,
+      "files": [
+        "tests/test_phase_balanced_joint_replay.py",
+        "tests/test_phase_balanced_replay_recipe.py",
+        "tests/test_phase_replay_collector_integration.py",
+        "tests/test_phase_replay_relay.py",
+        "tests/test_ppo_advantage_diagnostic_recipe.py",
+        "tests/test_ppo_advantage_diagnostics.py"
+      ],
+      "exit_code": 0,
+      "seconds": 444.12,
+      "counts": {
+        "tests": 27,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    },
+    {
+      "batch": 22,
+      "files": [
+        "tests/test_ppo_scale_longrun.py",
+        "tests/test_ppo_scale_longrun_continue.py",
+        "tests/test_ppo_telemetry_continuation.py",
+        "tests/test_prepare_per_arm_init.py",
+        "tests/test_prestock_actor_gradient.py",
+        "tests/test_prestock_collector_integration.py"
+      ],
+      "exit_code": 1,
+      "seconds": 418.85,
+      "counts": {
+        "tests": 16,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 2
+      },
+      "failed": [
+        "tests.test_prestock_actor_gradient::test_joint_replay_updates_real_actor_move_and_ability_while_critic_stays_zero"
+      ]
+    },
+    {
+      "batch": 23,
+      "files": [
+        "tests/test_prestock_fragment_queries.py",
+        "tests/test_prestock_joint_oracle.py",
+        "tests/test_prestock_joint_payload.py",
+        "tests/test_prestock_joint_replay.py",
+        "tests/test_prestock_native_teacher.py",
+        "tests/test_prestock_recipe.py"
+      ],
+      "exit_code": 0,
+      "seconds": 171.9,
+      "counts": {
+        "tests": 22,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    },
+    {
+      "batch": 24,
+      "files": [
+        "tests/test_prestock_relay.py",
+        "tests/test_prestock_route_preparation.py",
+        "tests/test_prestock_selection.py",
+        "tests/test_prestock_training_state.py",
+        "tests/test_prestock_verified_labels.py",
+        "tests/test_replay_batch_collector_integration.py"
+      ],
+      "exit_code": 1,
+      "seconds": 202.68,
+      "counts": {
+        "tests": 19,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_prestock_verified_labels::test_ordinary_fragment_labels_preserve_legacy_all_legal_ability_semantics",
+        "tests.test_replay_batch_collector_integration::test_real_collector_ppo_and_restore_with_128_native_replay_slots"
+      ]
+    },
+    {
+      "batch": 25,
+      "files": [
+        "tests/test_replay_batch_recipe.py",
+        "tests/test_replay_exposure.py",
+        "tests/test_replay_exposure_recipe.py",
+        "tests/test_replay_horizon_collector_integration.py",
+        "tests/test_replay_horizon_recipe.py",
+        "tests/test_replay_seed_leakage.py"
+      ],
+      "exit_code": 1,
+      "seconds": 46.78,
+      "counts": {
+        "tests": 29,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_replay_horizon_collector_integration::test_real_collector_4096_fifo_and_unchanged_128_loss_slots"
+      ]
+    },
+    {
+      "batch": 26,
+      "files": [
+        "tests/test_retention_phase_conditioning.py",
+        "tests/test_retention_phase_export.py",
+        "tests/test_retention_route_eval.py",
+        "tests/test_return_dagger_recipe.py",
+        "tests/test_return_dagger_weight.py",
+        "tests/test_return_error_collector_integration.py"
+      ],
+      "exit_code": 1,
+      "seconds": 73.62,
+      "counts": {
+        "tests": 24,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_return_error_collector_integration::test_real_collector_and_ppo_restore_with_current_fit_return_sampling"
+      ]
+    },
+    {
+      "batch": 27,
+      "files": [
+        "tests/test_return_error_recipe.py",
+        "tests/test_return_error_replay.py",
+        "tests/test_return_query_audit.py",
+        "tests/test_return_query_collector_integration.py",
+        "tests/test_return_query_diversity.py",
+        "tests/test_return_query_recipe.py"
+      ],
+      "exit_code": 1,
+      "seconds": 33.07,
+      "counts": {
+        "tests": 31,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_return_query_collector_integration::test_candidate_real_collector_preserves_finite_update_and_restore"
+      ]
+    },
+    {
+      "batch": 28,
+      "files": [
+        "tests/test_route_frontier.py",
+        "tests/test_route_objective_consistency.py",
+        "tests/test_route_objective_recipe.py",
+        "tests/test_score_eval_screen.py",
+        "tests/test_seed_namespace.py",
+        "tests/test_stock_window_semantics.py"
+      ],
+      "exit_code": 1,
+      "seconds": 220.35,
+      "counts": {
+        "tests": 40,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_route_objective_recipe::test_prepared_native_pbrs_reward_has_aligned_target_and_original_reset_schema",
+        "tests.test_route_objective_recipe::test_prepared_own_carrier_preserves_native_threat_gate_and_terminal_reward",
+        "tests.test_stock_window_semantics::test_native_free_stock_pickup_is_a_game_action_without_stage_bonus"
+      ]
+    },
+    {
+      "batch": 29,
+      "files": [
+        "tests/test_summarize_bun_stages.py",
+        "tests/test_supervisor_finalizer.py",
+        "tests/test_tactical_spawn_manifest.py",
+        "tests/test_terminal_checkpoint_restore.py",
+        "tests/test_training_modules.py",
+        "tests/test_training_tooling_regressions.py"
+      ],
+      "exit_code": 1,
+      "seconds": 3.32,
+      "counts": {
+        "tests": 22,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": [
+        "tests.test_training_modules::test_prepare_enables_repaired_v7_seed_namespace"
+      ]
+    },
+    {
+      "batch": 30,
+      "files": [
+        "tests/test_worker_protocol.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.33,
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed": []
+    }
+  ],
+  "status": "Superseded exploratory baseline; not final acceptance",
+  "notes": [
+    "Older JAX 0.5.3 runtime and conservative pre-review test list.",
+    "900-second subprocess timeouts automatically ended task-owned children; boundary deviation disclosed in REPORT.md.",
+    "Some excluded side-only files were moved after initial selection; later collection errors do not represent final closure."
+  ]
+}

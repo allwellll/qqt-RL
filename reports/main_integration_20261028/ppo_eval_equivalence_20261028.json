@@ -1,0 +1,8 @@
+{
+  "check": "AST equality after the original three literal substitutions; original per-module globals preserved for continuation rebinding",
+  "equivalent": true,
+  "expanded_source_sha256": "733553a609057485c307ceb6195fcd80d19d908068531cb1d742c7aecb1b605c",
+  "integrated_source_sha256": "22fc05329c98aef1b32fed75f701b93abfee0c3c7fc261daafdd8aec48b0005a",
+  "namespace_regression": "tests/test_ppo_scale_longrun.py::test_cpu_evaluation_uses_rebound_continuation_paths",
+  "namespace_regression_passed": true
+}
