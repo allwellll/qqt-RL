@@ -17,8 +17,15 @@ assert.throws(() => catalog.validateManifest({ schema: 'qqt.web-models/v1', mode
 assert.strictEqual(catalog.modelUrl(rows[0]), 'models/safe-high-c16.json');
 const production = require('./models.json');
 const latest=production.models[0];
-assert.strictEqual(latest.id,'bun392-je10-v38-r01-g8');
-assert.strictEqual(latest.source_sha256,'d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc');
+assert.strictEqual(latest.id,'bun392-pbt-slot05-u720');
+assert.strictEqual(latest.source_sha256,'ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663');
+assert.strictEqual(latest.display_name,'Bun392 PBT u720（D）');
+assert.strictEqual(latest.cycle,720);
+assert.strictEqual(latest.onnx.meta.bun_state_encoding,'bun24-trap-timer-v2');
+for (const asset of [latest,latest.onnx]) {
+  assert(asset.file.includes(asset.sha256));
+  assert(asset.url.endsWith('/'+asset.file));
+}
 const bridge = production.models.find(row=>row.id==='bun392-je09-stage-c-g8');
 assert.strictEqual(bridge.id, 'bun392-je09-stage-c-g8');
 assert.strictEqual(bridge.display_name, 'Bun392 JE09运包桥接g8');

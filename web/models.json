@@ -2,6 +2,77 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-pbt-slot05-u720",
+      "display_name": "Bun392 PBT u720（D）",
+      "file": "bun392-pbt-slot05-u720-ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088.json",
+      "bytes": 40294669,
+      "sha256": "ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-pbt-slot05-u720-20261028/bun392-pbt-slot05-u720-ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088.json",
+      "candidate": "iter_pbt_v1_slot05_c000005_u000720_raw",
+      "cycle": 720,
+      "source_sha256": "ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663",
+      "strategy": "raw",
+      "score": 0.4010416666666667,
+      "description": "保留集快筛（seed 20261001）：网页 JS Hunter 困难/普通/简单各64局，safe_win 18/27/32，死亡0/0/2；JAX 采样/argmax各304局，交付304/302。重复自适应快筛，不代表显著性检验或综合晋升。网页使用fp32，与训练bf16存在数值及动作差异。",
+      "score_protocol": "Holdout quick screen; seed 20261001; JS Hunter hard/normal/easy 64 episodes each. score=pooled JS safe_win/192=77/192; not the PBT selection score. JAX categorical/argmax delivery reported separately, 304 episodes each. Repeated adaptive holdout; not significance or admission.",
+      "onnx": {
+        "file": "bun392-pbt-slot05-u720-2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7.onnx",
+        "sha256": "2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7",
+        "bytes": 30242279,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-pbt-slot05-u720-20261028/bun392-pbt-slot05-u720-2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7.onnx",
+        "meta": {
+          "name": "Bun392 PBT u720（D）",
+          "display_name": "Bun392 PBT u720（D）",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20,
+          "value_max": 20,
+          "obs_shape": [
+            24,
+            13,
+            15
+          ],
+          "n_players": 2,
+          "source": "runs/iter_pbt_v1/formal/slot05_c000005/u000720/policy.pt",
+          "generated_at": "2026-10-28T00:00:00Z",
+          "arch": "transformer",
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "checkpoint_sha256": "ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663",
+          "bun_state_encoding": "bun24-trap-timer-v2",
+          "strategy": "raw",
+          "committed_sha256": "10f87427e8cd6bdf199f58a40e9874bfacdd3db8e89606859b9fe9e1364c19b0",
+          "state_dim": 24,
+          "attention_heads": 4,
+          "update": 720,
+          "onnx_sha256": "2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7"
+        },
+        "reference_zero": {
+          "move": [
+            0.12356508847124037,
+            -0.005594233244800118,
+            7.135233217727707,
+            5.895276860416011,
+            -1.5305890661626327
+          ],
+          "bomb": [
+            2.714812280925896,
+            0.8931601153562685,
+            -2.097180328343166
+          ],
+          "value": 2.4131738567792578
+        }
+      }
+    },
+    {
       "id": "bun392-je10-v38-r01-g8",
       "display_name": "Bun392 JE10 v38 r01 g8",
       "file": "bun392-je10-v38-r01-g8-19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45.json",

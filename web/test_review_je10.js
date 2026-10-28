@@ -4,10 +4,10 @@
 const assert=require('node:assert/strict'),fs=require('fs'),crypto=require('crypto');
 const P=require('./review_protocol');
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
-const catalog=require('../reports/review_catalog_before_gate_20261018.json'),model=require('./models.json').models[0];
+const catalog=require('../reports/review_catalog_before_gate_20261018.json'),model=require('./models.json').models.find(row=>row.id==='bun392-je10-v38-r01-g8');
 const tasks=['real_drop','native_death_stock','native_sugar_stock','natural_full2400'];
 async function main(){
-  assert.equal(model.id,'bun392-je10-v38-r01-g8','RED: selected JE10 must lead model selector');
+  assert.equal(model.id,'bun392-je10-v38-r01-g8','historical JE10 must stay selectable');
   assert.equal(catalog.replays[0].batch_id,'je10-best-completed-20261018');
   for(const [i,task] of tasks.entries()){
     const row=catalog.replays[i],bytes=fs.readFileSync('web/review-replays/'+row.file),d=JSON.parse(bytes);
