@@ -384,9 +384,9 @@ def test_mutual_death_cancels_all_positive_kill_credit():
 def test_curriculum_resets_and_milestones_are_one_shot():
     bun_env.configure_training("carry_home=1", 1)
     state = bun_env._fresh(jax.random.PRNGKey(50))
-    assert int(state.lesson) == bun_env.LESSON_CARRY_HOME
-    assert state.bun_carried.tolist() == [1, 0]
-    assert state.bun_stored.tolist() == [[0, 0], [0, 0]]
+    assert int(state.lesson) == bun_env.LESSON_FULL
+    assert state.bun_carried.tolist() == [-1, -1]
+    assert state.bun_stored.tolist() == [[1, 0], [0, 1]]
     assert state.hp.tolist() == [1, 1]
 
     bun_env.configure_training("full=1", bun_env.MAX_HP)

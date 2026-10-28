@@ -7,7 +7,7 @@ import jax.numpy as jnp
 import numpy as np
 import pytest
 
-from jax_bomb import bun_env
+from jax_bomb import bun_env, bun_safety
 from jax_bomb import bun_jax_bots as B
 from jax_bomb import levels
 
