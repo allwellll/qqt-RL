@@ -42,7 +42,14 @@ def test_independent_critic_parameter_tree_has_no_actor_parameters():
 
 def test_context_explicitly_encodes_actor_opponent_phase_and_bucket():
     bun_env.prepare()
-    state = generator.scenario_state("carry_return", 20260926)
+    state = generator.scenario_state("full", 20260926)
+    # Retired carry resets start empty handed; obtain custody through a native pickup.
+    enemy_base = bun_env._BUN_BASES[1].astype(jnp.float32) + 1.5
+    state = state._replace(core=state.core._replace(pos=state.core.pos.at[0].set(enemy_base)))
+    state, _, info = bun_env.step(
+        state, jnp.asarray([[4, 0], [4, 0]]), jax.random.PRNGKey(20260927),
+        auto_reset=False, return_info=True)
+    assert bool(info['steal'][0]) and int(state.bun_carried[0]) == 1
     context = generator.context_vector(state, actor_id=1, opponent_id=0, bucket_id=11)
     assert context.shape == (44,)
     assert context[:2].tolist() == [0.0, 1.0]
