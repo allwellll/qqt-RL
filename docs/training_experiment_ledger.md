@@ -3923,3 +3923,7 @@ ITER-PBT-V1 09:20原生GPU评估迁移（2026-10-28，执行中）：amendment11
 ITER-PBT-V1 共卡迁移上线回填（2026-10-28）：完整CPU/GPU首8局同点交付8/死亡0/终局8一致，5局放泡不等；同obs/state/mask/keys探针及bf16 logit差异，8/8首次动作分岔由同Gumbel精确重建，按用户“可解释差异”通过，严格BLOCKED原件保留，不称逐轨迹等价。GPU owner已启动304/64整批评估；CPU已完成分片保留，新摘要显式后端。训练未停；GPU0暖吞吐下降>5%实测触发8→4并发，评估协作让GPU，收据与京ME告警保存。37测试PASS。`native_gpu/REPORT.json`持续记录每点完整耗时和lag；尚未达到lag≤2，不先称追齐。协议amendment11、PARITY_GATE及当日报告可复算。
 
 ITER-PBT-V1 GPU评估正式首点回填（2026-10-28）：slot05_c000023_u002160已完成JS192+原生GPU64，双marker/SUMMARY SHA验收，原生64交付/1死亡、选择29，不称能力改善；slot05 lag0，整体滞后未全达≤2。原生冷启动528.4秒（两冷scan合计450.6秒、9暖scan约30.3秒）；不以暖scan冒称整点提速，GPU冷点未快于此前CPU约7分钟估计。共卡并发保护现4，显存约0.7–1.1GiB；每卡前后暖吞吐在native_gpu/ACCEPTANCE.json，8slot训练继续，holdout异步。
+
+## A3 u800 stock-window-v1 网页发布 — 20261030
+
+用户明确选择发布方案1；来源 `runs/bomb_threat_v1/formal/bt_slot01_c000015/u000800`，policy SHA256 `8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6`。仅对战页切换stock-window-v1，目录新增A3u800为首条，旧10条保留、Review不变。hard256 argmax42/207/7，P0胜负差+35、P1为0；normal256为68/180/8。推广门槛未通过，按用户明确选择发布，P1/零泡/振荡/困砖限制明示。生产commit090e40c，tag `web-bun392-a3-u800-stockwindow-20261030`；完整哈希、验证、排行榜混排影响和最终部署证据见 `reports/publish_best_a3u800_web_model_20261029.md`。训练未停，A3SR等发布完成后继续。
