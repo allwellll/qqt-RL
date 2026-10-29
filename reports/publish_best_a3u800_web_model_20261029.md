@@ -35,3 +35,5 @@ JSON仅补齐发布元数据，flat/tensors与候选权重一致；75个张量�
 本机补充完整下载已通过：从 Pages 同源下载两资产，逐段严格验证HTTP206 Content-Range、拼接完整bytes，再核验完整SHA256，JSON40,294,692 bytes、ONNX30,242,279 bytes与本地/Release一致。先前独立串行下载仍可继续，不依赖其未完成结果。线上Chromium已完整下载ONNX，正在初始化WASM，实际线上动作验收仍待完成。
 
 线上Chromium实际对战验收PASS：真实Pages `index.html`、models.json与stock-window-v1规则加载，u800以P1执行24tick，worker-wasm、greedy=true、nativeItems/nativeTrap=true、24次动作finite、console/pageerror均0。网络代理环境下原始加载可完成ONNX下载但runtime请求停顿；最终复核对model/ORT runtime使用已从Pages完整下载并逐字节SHA核对的网络缓存，其余入口/代码/目录仍实时线上，不冒称冷网络性能。runtime WASM SHA256 `45eaee27761ad883742a8d4b8fce1538d60ce43b51adf1726fafccc59b8c1a15`，与锁定发布runtime逐字节一致。数据库写入全拦截。推理耗时以本地缓存浏览器约18–22ms为范围参考，不代表用户网络下载性能。
+
+补充最终冷网络验收：先前未使用缓存的线上浏览器在代理下随后自行完成ONNX及WASM下载，同一真实Pages对战页24次P1推理全部finite，greedy=true、worker-wasm、console/pageerror0，推理17.9–21.8ms。该次没有模型或runtime拦截缓存，数据库写入仍全部屏蔽；与前述缓存复核分开记录。冷加载耗时受本机代理影响，不当作通用性能结论。
