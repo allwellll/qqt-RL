@@ -16,7 +16,13 @@ assert.throws(() => catalog.validateManifest({ schema: 'bad', models: [] }), /sc
 assert.throws(() => catalog.validateManifest({ schema: 'qqt.web-models/v1', models: [{ ...manifest.models[0], file: '../x' }] }), /file/);
 assert.strictEqual(catalog.modelUrl(rows[0]), 'models/safe-high-c16.json');
 const production = require('./models.json');
-const latest=production.models[0];
+const current=production.models[0];
+assert.strictEqual(current.id,'bun392-a3-u800');
+assert.strictEqual(current.source_sha256,'8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6');
+assert.strictEqual(current.onnx.meta.rule_version,'stock-window-v1');
+assert(current.description.includes('P1') && current.description.includes('零泡') && current.description.includes('振荡'));
+assert.strictEqual(current.score,42/256);
+const latest=production.models.find(row=>row.id==='bun392-pbt-slot05-u720');
 assert.strictEqual(latest.id,'bun392-pbt-slot05-u720');
 assert.strictEqual(latest.source_sha256,'ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663');
 assert.strictEqual(latest.display_name,'Bun392 PBT u720（D）');

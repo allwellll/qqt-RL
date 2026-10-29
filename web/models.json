@@ -2,6 +2,78 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-a3-u800",
+      "display_name": "Bun392 A3 u800（fresh256 argmax：hard 42/207/7，normal 68/180/8 胜/平/负）",
+      "file": "bun392-a3-u800-455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928.json",
+      "sha256": "455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928",
+      "bytes": 40294692,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3-u800-stockwindow-20261030/bun392-a3-u800-455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928.json",
+      "candidate": "bomb_threat_v1_slot01_c000015_u000800_raw",
+      "cycle": 800,
+      "source_sha256": "8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6",
+      "strategy": "raw",
+      "description": "对战采用 stock-window-v1：仅敌方死亡或原生糖浆窗口可取库存包。网页真人坐P0，模型坐P1。fresh256 hard argmax：42胜207平7负，P0胜-负+35、P1胜-负0；normal 68胜180平8负、胜-负+60（各256局）。已知短板：P1偏弱、存在零泡局、左右振荡、持包常被砖困住。网页fp32与训练bf16有数值差异；不与旧目录score混用。",
+      "score_protocol": "fresh256 independent fixed natural games; stock-window-v1; JS Hunter hard/normal; argmax; 256 games per tier, balanced P0/P1. hard W/D/L=42/207/7; P0 W-L=35; P1 W-L=0; normal W-L=60. score=hard wins/256, a protocol-specific display only; never comparable with historical scores.",
+      "onnx": {
+        "file": "bun392-a3-u800-d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d.onnx",
+        "sha256": "d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d",
+        "bytes": 30242279,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3-u800-stockwindow-20261030/bun392-a3-u800-d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d.onnx",
+        "meta": {
+          "name": "Bun392 A3 u800",
+          "display_name": "Bun392 A3 u800",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20,
+          "value_max": 20,
+          "obs_shape": [
+            24,
+            13,
+            15
+          ],
+          "n_players": 2,
+          "source": "runs/bomb_threat_v1/formal/bt_slot01_c000015/u000800/policy.pt",
+          "generated_at": "2026-10-29T23:30:00Z",
+          "arch": "transformer",
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "checkpoint_sha256": "8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6",
+          "committed_sha256": "aaf9a1de7cd918079874d78c3c13c3e334ef2b937cec293d34d70caaf159900d",
+          "strategy": "raw",
+          "state_dim": 24,
+          "attention_heads": 4,
+          "update": 800,
+          "bun_state_encoding": "bun24-trap-timer-v2",
+          "rule_version": "stock-window-v1",
+          "onnx_sha256": "d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d"
+        },
+        "reference_zero": {
+          "move": [
+            4.807938354370284,
+            2.2318491802243465,
+            6.168451251028626,
+            2.4367603467985814,
+            4.488399263637238
+          ],
+          "bomb": [
+            2.104828811862163,
+            1.6476495412675045,
+            -1.608080463888201
+          ],
+          "value": 2.6036760751525705
+        }
+      },
+      "score": 0.1640625
+    },
+    {
       "id": "bun392-pbt-slot05-u720",
       "display_name": "Bun392 PBT u720（D）",
       "file": "bun392-pbt-slot05-u720-ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088.json",
