@@ -3927,3 +3927,14 @@ ITER-PBT-V1 GPU评估正式首点回填（2026-10-28）：slot05_c000023_u002160
 ## A3 u800 stock-window-v1 网页发布 — 20261030
 
 用户明确选择发布方案1；来源 `runs/bomb_threat_v1/formal/bt_slot01_c000015/u000800`，policy SHA256 `8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6`。仅对战页切换stock-window-v1，目录新增A3u800为首条，旧10条保留、Review不变。hard256 argmax42/207/7，P0胜负差+35、P1为0；normal256为68/180/8。推广门槛未通过，按用户明确选择发布，P1/零泡/振荡/困砖限制明示。生产commit090e40c，tag `web-bun392-a3-u800-stockwindow-20261030`；完整哈希、验证、排行榜混排影响和最终部署证据见 `reports/publish_best_a3u800_web_model_20261029.md`。训练未停，A3SR等发布完成后继续。
+
+
+## WEB-A3SR-U1280-PUBLISH-20261030（用户明确发布授权）
+
+固定候选 `runs/bomb_threat_v1/formal/bt_slot05_c000028/u001280`，policy SHA `a552a3094182db7d49d498d8ebe37cdae34fc8ba058396661b7e58c2e812699a`。fresh256 192/192分片完整，P1 hard/normal/easy胜负差+13/+26/+52合计+91，u800为0/+6/+11合计+17；按批准口径准入，不宣称所有击杀/安全指标均更优。每档256局、双座位各128，64出生几何重复，生产JS Hunter argmax，teacher off。保留左右振荡、持包被砖困和零泡短板。
+
+新增目录首模型，旧11条完整保留；stock-window-v1/argmax/排行榜和旧录像不变。JSON SHA `736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed`，ONNX SHA `f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1`。75张量精确、8组Python/JS/ONNX/Chromium masked argmax一致；npm全量/Review测试PASS，隐私0 findings，181个旧Review/规则/训练文件逐字节不变。
+
+生产commit `bec569eabbb9ec1d61b16603c4d3b4d8b862d4d8`，Release/tag `web-bun392-a3sr-u1280-20261030-r1`，同SHA Actions #40997063896 completed/success。代理导致原tag push失败且Release自动建旧tag；旧tag/历史未改写，另建r1，官方Git Data API传输精确本地Git对象、祖先校验force=false快进main。线上完整两资产SHA通过；真实线上P1整局2400tick/2400有限动作通过，使用已核验Pages模型字节缓存、runtime线上加载，console/pageerror0；未缓存冷加载曾超时，不冒称冷网络性能通过。最终纯文档head的Actions/build-info另见完成收据。
+
+新自包含Review `20261030-a3sr-u1280-review.html` 共21入口/18独立完整局；按预声明index选取，含成功/失败/P1零泡/旧砖困同seed，逐局9字段与fresh记录一致。HTML SHA `747a9f846463c57ec8e36041da4f25d2dd7dc7321268355f2666de8423f24895`，OSS HTTP200完整回读一致，本地/远端浏览器全部播放与终局验证PASS，奖励明确未记录。完整逐局清单 `reports/publish_a3sr_u1280_web_model_20261030.md`；公开链接由 `runs/bomb_threat_v1/replay_a3sr_u1280/RECEIPT.json` 交付。发布收据 `runs/bomb_threat_v1/publish_a3sr_u1280_20261030/`。唯一训练owner和既有worker继续，未发worker信号、不恢复旧队列。
