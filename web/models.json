@@ -2,8 +2,80 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-a3sr-slot00-u2400",
+      "display_name": "Bun392 A3SR slot00 u2400\uff08P1\u4e09\u6863\u80dc\u8d1f\u5dee +130\uff09",
+      "file": "bun392-a3sr-slot00-u2400-887079d10fc7b99647c847e40a39fb6a8240ddbccdad797722b326362a201732.json",
+      "sha256": "887079d10fc7b99647c847e40a39fb6a8240ddbccdad797722b326362a201732",
+      "bytes": 40294794,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-slot00-u2400-20261030/bun392-a3sr-slot00-u2400-887079d10fc7b99647c847e40a39fb6a8240ddbccdad797722b326362a201732.json",
+      "cycle": 2400,
+      "candidate": "bt_slot00_c000034_u002400_raw",
+      "source_sha256": "419a8a10d4554b189a8025592e6222be46900e0ce984e19780f8001f2b885ad4",
+      "strategy": "raw",
+      "score": 0.20703125,
+      "description": "\u7f51\u9875\u771f\u4eba\u5750P0\u3001\u6a21\u578b\u5750P1\uff1b\u751f\u4ea7JS\u730e\u624bbun.hunter\uff0cstock-window-v1\uff0cargmax\uff0c\u8001\u5e08\u5173\u95ed\u3002\u9884\u58f0\u660e\u540cseed\u914d\u5bf9\u6bcf\u6863256\u5c40\uff08P0/P1\u5404128\uff09\uff1ahard P1 +21\uff08u1280 +17\uff09\uff1bnormal P1 +42\uff08u1280 +25\uff09\uff1beasy P1 +67\uff08u1280 +51\uff09\uff1bP1\u5408\u8ba1+130 vs u1280 +93\uff0cP0\u5408\u8ba1+133 vs +135\u3002\u901a\u8fc7\u6bcf\u6863/P0/\u81ea\u4f24\u62a4\u680f\u3002\u5df2\u77e5\u77ed\u677f\uff1a\u96f6\u6ce1\u5c40\u3001\u632f\u8361\u3001\u6301\u5305\u53d7\u7816\u963b\uff1b\u4e0d\u5ba3\u79f0\u5168\u90e8\u6218\u6597\u6307\u6807\u6216\u771f\u4eba\u6cdb\u5316\u63d0\u5347\u3002\u8bad\u7ec3bf16\u4e0e\u7f51\u9875fp32\u5b58\u5728\u6570\u503c\u5dee\u5f02\u3002",
+      "score_protocol": "production JS bun.hunter; stock-window-v1; argmax; teacher off; 256 paired games/tier, P0/P1 128 each; seeds hard2026193000 normal2026194000 easy2026195000; score=hard wins/256; 64 geometries reused; no significance claim",
+      "onnx": {
+        "file": "bun392-a3sr-slot00-u2400-c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f.onnx",
+        "sha256": "c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f",
+        "bytes": 30242279,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-slot00-u2400-20261030/bun392-a3sr-slot00-u2400-c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f.onnx",
+        "meta": {
+          "name": "Bun392 A3SR slot00 u2400",
+          "display_name": "Bun392 A3SR slot00 u2400",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20.0,
+          "value_max": 20.0,
+          "obs_shape": [
+            24,
+            13,
+            15
+          ],
+          "n_players": 2,
+          "source": "runs/bomb_threat_v1/formal/bt_slot00_c000034/u002400/policy.pt",
+          "generated_at": "2026-10-30T00:00:00Z",
+          "arch": "transformer",
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "bun_state_encoding": "bun24-trap-timer-v2",
+          "onnx_sha256": "c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f",
+          "checkpoint_sha256": "419a8a10d4554b189a8025592e6222be46900e0ce984e19780f8001f2b885ad4",
+          "committed_sha256": "822b32a67774fce56e7fc7cde52370a8a871cb090d7ab7cf3bf7ce61f9e901ef",
+          "strategy": "raw",
+          "state_dim": 24,
+          "attention_heads": 4,
+          "update": 2400,
+          "rule_version": "stock-window-v1"
+        },
+        "reference_zero": {
+          "move": [
+            4.167517891656404,
+            5.517636637473553,
+            3.7390828201694255,
+            5.382221885538142,
+            5.064909881248094
+          ],
+          "bomb": [
+            3.7809306753168475,
+            1.2157607928746808,
+            -3.244211764368619
+          ],
+          "value": 2.359735379265811
+        }
+      }
+    },
+    {
       "id": "bun392-a3sr-u1280",
-      "display_name": "Bun392 A3SR u1280（fresh256 P1：hard +13 / normal +26 / easy +52）",
+      "display_name": "Bun392 A3SR u1280\uff08fresh256 P1\uff1ahard +13 / normal +26 / easy +52\uff09",
       "file": "bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json",
       "sha256": "736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed",
       "bytes": 40294780,
@@ -13,7 +85,7 @@
       "source_sha256": "a552a3094182db7d49d498d8ebe37cdae34fc8ba058396661b7e58c2e812699a",
       "strategy": "raw",
       "score": 0.20703125,
-      "description": "网页真人坐P0，模型坐P1；stock-window-v1，保持argmax。fresh256 P1胜-负：hard +13、normal +26、easy +52，合计+91；u800同seed对照0/+6/+11，合计+17。两座位合计胜/平/负（每档256局）：hard 53/196/7；normal 68/185/3；easy 111/141/4。对手为猎手（bun.hunter），不是协作猎手。已知短板：仍有零泡局、左右振荡、持包被砖困；部分击杀/安全指标未全面不差，不宣称普遍提升。网页fp32与训练bf16存在数值/动作差异。",
+      "description": "\u7f51\u9875\u771f\u4eba\u5750P0\uff0c\u6a21\u578b\u5750P1\uff1bstock-window-v1\uff0c\u4fdd\u6301argmax\u3002fresh256 P1\u80dc-\u8d1f\uff1ahard +13\u3001normal +26\u3001easy +52\uff0c\u5408\u8ba1+91\uff1bu800\u540cseed\u5bf9\u71670/+6/+11\uff0c\u5408\u8ba1+17\u3002\u4e24\u5ea7\u4f4d\u5408\u8ba1\u80dc/\u5e73/\u8d1f\uff08\u6bcf\u6863256\u5c40\uff09\uff1ahard 53/196/7\uff1bnormal 68/185/3\uff1beasy 111/141/4\u3002\u5bf9\u624b\u4e3a\u730e\u624b\uff08bun.hunter\uff09\uff0c\u4e0d\u662f\u534f\u4f5c\u730e\u624b\u3002\u5df2\u77e5\u77ed\u677f\uff1a\u4ecd\u6709\u96f6\u6ce1\u5c40\u3001\u5de6\u53f3\u632f\u8361\u3001\u6301\u5305\u88ab\u7816\u56f0\uff1b\u90e8\u5206\u51fb\u6740/\u5b89\u5168\u6307\u6807\u672a\u5168\u9762\u4e0d\u5dee\uff0c\u4e0d\u5ba3\u79f0\u666e\u904d\u63d0\u5347\u3002\u7f51\u9875fp32\u4e0e\u8bad\u7ec3bf16\u5b58\u5728\u6570\u503c/\u52a8\u4f5c\u5dee\u5f02\u3002",
       "score_protocol": "production JS bun.hunter; stock-window-v1; argmax; teacher off; fixed paired 256 games per tier, P0/P1 128 each; hard/normal/easy seeds2026142900/2026143900/2026144900; score=hard wins/256, not comparable with historical scores",
       "onnx": {
         "file": "bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx",
@@ -75,7 +147,7 @@
     },
     {
       "id": "bun392-a3-u800",
-      "display_name": "Bun392 A3 u800（fresh256 argmax：hard 42/207/7，normal 68/180/8 胜/平/负）",
+      "display_name": "Bun392 A3 u800\uff08fresh256 argmax\uff1ahard 42/207/7\uff0cnormal 68/180/8 \u80dc/\u5e73/\u8d1f\uff09",
       "file": "bun392-a3-u800-455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928.json",
       "sha256": "455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928",
       "bytes": 40294692,
@@ -84,7 +156,7 @@
       "cycle": 800,
       "source_sha256": "8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6",
       "strategy": "raw",
-      "description": "对战采用 stock-window-v1：仅敌方死亡或原生糖浆窗口可取库存包。网页真人坐P0，模型坐P1。fresh256 hard argmax：42胜207平7负，P0胜-负+35、P1胜-负0；normal 68胜180平8负、胜-负+60（各256局）。已知短板：P1偏弱、存在零泡局、左右振荡、持包常被砖困住。网页fp32与训练bf16有数值差异；不与旧目录score混用。",
+      "description": "\u5bf9\u6218\u91c7\u7528 stock-window-v1\uff1a\u4ec5\u654c\u65b9\u6b7b\u4ea1\u6216\u539f\u751f\u7cd6\u6d46\u7a97\u53e3\u53ef\u53d6\u5e93\u5b58\u5305\u3002\u7f51\u9875\u771f\u4eba\u5750P0\uff0c\u6a21\u578b\u5750P1\u3002fresh256 hard argmax\uff1a42\u80dc207\u5e737\u8d1f\uff0cP0\u80dc-\u8d1f+35\u3001P1\u80dc-\u8d1f0\uff1bnormal 68\u80dc180\u5e738\u8d1f\u3001\u80dc-\u8d1f+60\uff08\u5404256\u5c40\uff09\u3002\u5df2\u77e5\u77ed\u677f\uff1aP1\u504f\u5f31\u3001\u5b58\u5728\u96f6\u6ce1\u5c40\u3001\u5de6\u53f3\u632f\u8361\u3001\u6301\u5305\u5e38\u88ab\u7816\u56f0\u4f4f\u3002\u7f51\u9875fp32\u4e0e\u8bad\u7ec3bf16\u6709\u6570\u503c\u5dee\u5f02\uff1b\u4e0d\u4e0e\u65e7\u76ee\u5f55score\u6df7\u7528\u3002",
       "score_protocol": "fresh256 independent fixed natural games; stock-window-v1; JS Hunter hard/normal; argmax; 256 games per tier, balanced P0/P1. hard W/D/L=42/207/7; P0 W-L=35; P1 W-L=0; normal W-L=60. score=hard wins/256, a protocol-specific display only; never comparable with historical scores.",
       "onnx": {
         "file": "bun392-a3-u800-d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d.onnx",
@@ -147,7 +219,7 @@
     },
     {
       "id": "bun392-pbt-slot05-u720",
-      "display_name": "Bun392 PBT u720（D）",
+      "display_name": "Bun392 PBT u720\uff08D\uff09",
       "file": "bun392-pbt-slot05-u720-ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088.json",
       "bytes": 40294669,
       "sha256": "ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088",
@@ -157,7 +229,7 @@
       "source_sha256": "ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663",
       "strategy": "raw",
       "score": 0.4010416666666667,
-      "description": "保留集快筛（seed 20261001）：网页 JS Hunter 困难/普通/简单各64局，safe_win 18/27/32，死亡0/0/2；JAX 采样/argmax各304局，交付304/302。重复自适应快筛，不代表显著性检验或综合晋升。网页使用fp32，与训练bf16存在数值及动作差异。",
+      "description": "\u4fdd\u7559\u96c6\u5feb\u7b5b\uff08seed 20261001\uff09\uff1a\u7f51\u9875 JS Hunter \u56f0\u96be/\u666e\u901a/\u7b80\u5355\u540464\u5c40\uff0csafe_win 18/27/32\uff0c\u6b7b\u4ea10/0/2\uff1bJAX \u91c7\u6837/argmax\u5404304\u5c40\uff0c\u4ea4\u4ed8304/302\u3002\u91cd\u590d\u81ea\u9002\u5e94\u5feb\u7b5b\uff0c\u4e0d\u4ee3\u8868\u663e\u8457\u6027\u68c0\u9a8c\u6216\u7efc\u5408\u664b\u5347\u3002\u7f51\u9875\u4f7f\u7528fp32\uff0c\u4e0e\u8bad\u7ec3bf16\u5b58\u5728\u6570\u503c\u53ca\u52a8\u4f5c\u5dee\u5f02\u3002",
       "score_protocol": "Holdout quick screen; seed 20261001; JS Hunter hard/normal/easy 64 episodes each. score=pooled JS safe_win/192=77/192; not the PBT selection score. JAX categorical/argmax delivery reported separately, 304 episodes each. Repeated adaptive holdout; not significance or admission.",
       "onnx": {
         "file": "bun392-pbt-slot05-u720-2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7.onnx",
@@ -165,8 +237,8 @@
         "bytes": 30242279,
         "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-pbt-slot05-u720-20261028/bun392-pbt-slot05-u720-2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7.onnx",
         "meta": {
-          "name": "Bun392 PBT u720（D）",
-          "display_name": "Bun392 PBT u720（D）",
+          "name": "Bun392 PBT u720\uff08D\uff09",
+          "display_name": "Bun392 PBT u720\uff08D\uff09",
           "rule": "bun",
           "qqt_map_id": 806,
           "move_actions": 5,
@@ -228,7 +300,7 @@
       "source_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
       "strategy": "raw",
       "score": 0.2641064787299655,
-      "description": "已完成固定协议的平衡选择：natural full交付6/16、七类路线62/112、Tactical12/64；Hunter hard0/64，困难战斗仍薄弱。诊断不代表综合晋升。",
+      "description": "\u5df2\u5b8c\u6210\u56fa\u5b9a\u534f\u8bae\u7684\u5e73\u8861\u9009\u62e9\uff1anatural full\u4ea4\u4ed86/16\u3001\u4e03\u7c7b\u8def\u7ebf62/112\u3001Tactical12/64\uff1bHunter hard0/64\uff0c\u56f0\u96be\u6218\u6597\u4ecd\u8584\u5f31\u3002\u8bca\u65ad\u4e0d\u4ee3\u8868\u7efc\u5408\u664b\u5347\u3002",
       "score_protocol": "zero observed self harm first; maximize geometric mean of natural delivery/16, seven route delivery/112, Tactical safe kills/64, pooled Hunter safe kills/192; ties lexical round then generation. Exploratory selection, not significance or admission.",
       "onnx": {
         "file": "bun392-je10-v38-r01-g8-b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16.onnx",
@@ -289,8 +361,8 @@
       "bytes": 40294827,
       "candidate": "je09_stage_c_return_set_pfsp8_g8_raw",
       "cycle": 8,
-      "description": "受控真实掉包后的返程已改善；fixed32长距离首拾及full自然链仍未解决。Stage D未综合晋升。",
-      "display_name": "Bun392 JE09运包桥接g8",
+      "description": "\u53d7\u63a7\u771f\u5b9e\u6389\u5305\u540e\u7684\u8fd4\u7a0b\u5df2\u6539\u5584\uff1bfixed32\u957f\u8ddd\u79bb\u9996\u62fe\u53cafull\u81ea\u7136\u94fe\u4ecd\u672a\u89e3\u51b3\u3002Stage D\u672a\u7efc\u5408\u664b\u5347\u3002",
+      "display_name": "Bun392 JE09\u8fd0\u5305\u6865\u63a5g8",
       "file": "bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
       "id": "bun392-je09-stage-c-g8",
       "onnx": {
@@ -312,13 +384,13 @@
           "checkpoint_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
           "committed_sha256": "c37b32d5727140c727918a908fb007d8d523eeb369f2ef27088151f02bed2bbf",
           "depth": 4,
-          "display_name": "Bun392 JE09运包桥接g8",
+          "display_name": "Bun392 JE09\u8fd0\u5305\u6865\u63a5g8",
           "embed": 392,
           "generated_at": "2026-10-15T00:00:00Z",
           "generation": 8,
           "move_actions": 5,
           "n_players": 2,
-          "name": "Bun392 JE09运包桥接g8",
+          "name": "Bun392 JE09\u8fd0\u5305\u6865\u63a5g8",
           "obs_shape": [
             24,
             13,
@@ -359,7 +431,7 @@
     },
     {
       "id": "bun392-transport1536",
-      "display_name": "Bun392战斗运输1536",
+      "display_name": "Bun392\u6218\u6597\u8fd0\u8f931536",
       "file": "bun392-transport1536-raw-2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0.json",
       "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-transport1536-v1/bun392-transport1536-raw-2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0.json",
       "sha256": "2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0",
@@ -389,13 +461,13 @@
           "checkpoint_sha256": "16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719",
           "committed_sha256": "34cede065d72d2c3674eaec42cf8f3e57292a2fc0bc40fb47a10c2d2c1b67e44",
           "depth": 4,
-          "display_name": "Bun392战斗运输1536",
+          "display_name": "Bun392\u6218\u6597\u8fd0\u8f931536",
           "embed": 392,
           "generated_at": "2026-10-13T00:00:00Z",
           "generation": 1536,
           "move_actions": 5,
           "n_players": 2,
-          "name": "Bun392战斗运输1536",
+          "name": "Bun392\u6218\u6597\u8fd0\u8f931536",
           "obs_shape": [
             24,
             13,
@@ -430,7 +502,7 @@
     },
     {
       "id": "bun392-selfplay3072",
-      "display_name": "Bun392动态自对弈3072",
+      "display_name": "Bun392\u52a8\u6001\u81ea\u5bf9\u5f083072",
       "file": "bun392-selfplay3072-raw-c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a.json",
       "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-selfplay3072-v1/bun392-selfplay3072-raw-c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a.json",
       "sha256": "c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a",
@@ -459,13 +531,13 @@
           "checkpoint_sha256": "dc3919a5e7a2f415f951e23f20069d14c3c1df332acf5dfa7b1bb21314ca4f70",
           "committed_sha256": "a6b4149329b42f203e58d05d607866dd357c1d3d657a9c40474e42aedf658c8b",
           "depth": 4,
-          "display_name": "Bun392动态自对弈3072",
+          "display_name": "Bun392\u52a8\u6001\u81ea\u5bf9\u5f083072",
           "embed": 392,
           "generated_at": "2026-10-12T00:00:00Z",
           "generation": 3072,
           "move_actions": 5,
           "n_players": 2,
-          "name": "Bun392动态自对弈3072",
+          "name": "Bun392\u52a8\u6001\u81ea\u5bf9\u5f083072",
           "obs_shape": [
             24,
             13,
@@ -500,7 +572,7 @@
     },
     {
       "id": "bun-tf-it4000",
-      "display_name": "Bun Transformer · 自对弈 it4000（vs Tactical v2 击杀 0.418）",
+      "display_name": "Bun Transformer \u00b7 \u81ea\u5bf9\u5f08 it4000\uff08vs Tactical v2 \u51fb\u6740 0.418\uff09",
       "file": "bun-tf-it4000-830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084.json",
       "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/bun-tf-it4000-830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084.json",
       "sha256": "830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084",
@@ -512,7 +584,7 @@
     },
     {
       "id": "bun-kill-mlp4",
-      "display_name": "Bun 击杀 · MLP4（vs jax-bot 自对弈验收）",
+      "display_name": "Bun \u51fb\u6740 \u00b7 MLP4\uff08vs jax-bot \u81ea\u5bf9\u5f08\u9a8c\u6536\uff09",
       "file": "bun-kill-mlp4-1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70.json",
       "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/bun-kill-mlp4-1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70.json",
       "sha256": "1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70",
@@ -524,7 +596,7 @@
     },
     {
       "id": "safe-high-c16",
-      "display_name": "Safe High · 周期16（综合最佳）",
+      "display_name": "Safe High \u00b7 \u5468\u671f16\uff08\u7efc\u5408\u6700\u4f73\uff09",
       "file": "safe-high-c16.json",
       "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/safe-high-c16.json",
       "sha256": "cabd0dad115cd888dec4f715d999f862296ef4ce3dc1e6bfad7c0aea70d37aa1",
@@ -536,7 +608,7 @@
     },
     {
       "id": "safe-medium-c16",
-      "display_name": "Safe Medium · 周期16（安全均衡）",
+      "display_name": "Safe Medium \u00b7 \u5468\u671f16\uff08\u5b89\u5168\u5747\u8861\uff09",
       "file": "safe-medium-c16.json",
       "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/safe-medium-c16.json",
       "sha256": "9908caa24d39fab7d34ab0047754c22a78ae2be267142290fbaad41a09bfe3f8",
@@ -548,7 +620,7 @@
     },
     {
       "id": "safe-high-c24",
-      "display_name": "Safe High · 周期24（低自爆）",
+      "display_name": "Safe High \u00b7 \u5468\u671f24\uff08\u4f4e\u81ea\u7206\uff09",
       "file": "safe-high-c24.json",
       "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/safe-high-c24.json",
       "sha256": "9ba571c45791aa01dc03ddc8b1a5ae7916be1f5f24e30dec86bdc0c4f8700b5b",
