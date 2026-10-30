@@ -2,6 +2,78 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-r1-slot03-u2760",
+      "display_name": "Bun392 R1 slot03 u2760\uff08P1\u4e09\u6863+178\uff09",
+      "file": "bun392-r1-slot03-u2760-cbd1069b6456b14ce577156a006715c89a5a1742d84871a7e00137e1c75a5b40.json",
+      "sha256": "cbd1069b6456b14ce577156a006715c89a5a1742d84871a7e00137e1c75a5b40",
+      "bytes": 40294802,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-r1-slot03-u2760-20261030/bun392-r1-slot03-u2760-cbd1069b6456b14ce577156a006715c89a5a1742d84871a7e00137e1c75a5b40.json",
+      "cycle": 2760,
+      "candidate": "bt_slot03_c000036_u002760_raw",
+      "source_sha256": "b2237ce4045d0e1659a638979c34b7636d962ed585a63dba509518afc562802d",
+      "strategy": "raw",
+      "score": 0.39453125,
+      "description": "\u7f51\u9875\u771f\u4ebaP0\u3001\u6a21\u578bP1\uff1b\u751f\u4ea7JS Hunter\u3001stock-window-v1\u3001argmax\u3001\u8001\u5e08\u5173\u95ed\u3002hard P1 +43\uff08\u7f51\u9875\u539f\u6a21\u578b+21\uff09\uff1bnormal P1 +59\uff08\u7f51\u9875\u539f\u6a21\u578b+42\uff09\uff1beasy P1 +76\uff08\u7f51\u9875\u539f\u6a21\u578b+67\uff09\uff1bP1\u5408\u8ba1+178 vs\u539f\u6a21\u578b+130\uff1bP0\u5408\u8ba1+198 vs +133\u3002\u9010\u6863/P0/\u81ea\u4f24\u62a4\u680f\u901a\u8fc7\uff1b\u56fa\u5b9a\u5019\u9009\u4e09\u6863\u5404256\u5c40\u3001\u6bcf\u5e2d128\u300264\u51e0\u4f55\u590d\u7528\uff0c\u4e0d\u5ba3\u79f0\u7edf\u8ba1\u663e\u8457\u6216\u771f\u4eba\u6cdb\u5316\u3002R1\u539f\u751f\u9053\u5177\u8bad\u7ec3\u89c4\u5219\u4e0eJS\u90e8\u7f72\u80fd\u529b\u5206\u5f00\uff1b\u8bad\u7ec3bf16\u4e0e\u90e8\u7f72fp32\u5b58\u5728\u5dee\u5f02\uff1b\u4ecd\u53ef\u80fd\u6709\u96f6\u6ce1\u3001\u632f\u8361\u3001\u6301\u5305\u505c\u6ede\u3002",
+      "score_protocol": "production JS bun.hunter; stock-window-v1; argmax; teacher off; paired256 per tier P0/P1 128 each; hard2026193000 normal2026194000 easy2026195000; hard wins/256;64 geometries reused",
+      "onnx": {
+        "file": "bun392-r1-slot03-u2760-d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1.onnx",
+        "sha256": "d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1",
+        "bytes": 30242279,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-r1-slot03-u2760-20261030/bun392-r1-slot03-u2760-d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1.onnx",
+        "meta": {
+          "name": "Bun392 R1 slot03 u2760",
+          "display_name": "Bun392 R1 slot03 u2760",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20.0,
+          "value_max": 20.0,
+          "obs_shape": [
+            24,
+            13,
+            15
+          ],
+          "n_players": 2,
+          "source": "runs/bomb_threat_v1/formal/bt_slot03_c000036/u002760/policy.pt",
+          "generated_at": "2026-10-30T10:13:27.383253+00:00",
+          "arch": "transformer",
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "bun_state_encoding": "bun24-trap-timer-v2",
+          "onnx_sha256": "d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1",
+          "checkpoint_sha256": "b2237ce4045d0e1659a638979c34b7636d962ed585a63dba509518afc562802d",
+          "committed_sha256": "4fc9a4542e741106979404df0114154c47e43bf342eb78c8414f4f98243269af",
+          "strategy": "raw",
+          "state_dim": 24,
+          "attention_heads": 4,
+          "update": 2760,
+          "rule_version": "stock-window-v1"
+        },
+        "reference_zero": {
+          "move": [
+            2.5400995790011036,
+            5.362762339649366,
+            3.580854945833994,
+            3.730910752604657,
+            3.0988142102664145
+          ],
+          "bomb": [
+            2.946734407324023,
+            2.233002704881689,
+            -3.196222530005783
+          ],
+          "value": 2.245158418542477
+        }
+      }
+    },
+    {
       "id": "bun392-a3sr-slot00-u2400",
       "display_name": "Bun392 A3SR slot00 u2400\uff08P1\u4e09\u6863\u80dc\u8d1f\u5dee +130\uff09",
       "file": "bun392-a3sr-slot00-u2400-887079d10fc7b99647c847e40a39fb6a8240ddbccdad797722b326362a201732.json",
