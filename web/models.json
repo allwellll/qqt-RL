@@ -7,7 +7,7 @@
       "file": "bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json",
       "sha256": "736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed",
       "bytes": 40294780,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-u1280-20261030/bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-u1280-20261030-r1/bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json",
       "candidate": "bomb_threat_v1_slot05_c000028_u001280_raw",
       "cycle": 1280,
       "source_sha256": "a552a3094182db7d49d498d8ebe37cdae34fc8ba058396661b7e58c2e812699a",
@@ -19,7 +19,7 @@
         "file": "bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx",
         "sha256": "f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1",
         "bytes": 30242279,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-u1280-20261030/bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-u1280-20261030-r1/bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx",
         "meta": {
           "name": "Bun392 A3SR u1280",
           "display_name": "Bun392 A3SR u1280",
