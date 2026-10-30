@@ -2,6 +2,78 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-a3sr-u1280",
+      "display_name": "Bun392 A3SR u1280（fresh256 P1：hard +13 / normal +26 / easy +52）",
+      "file": "bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json",
+      "sha256": "736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed",
+      "bytes": 40294780,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-u1280-20261030/bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json",
+      "candidate": "bomb_threat_v1_slot05_c000028_u001280_raw",
+      "cycle": 1280,
+      "source_sha256": "a552a3094182db7d49d498d8ebe37cdae34fc8ba058396661b7e58c2e812699a",
+      "strategy": "raw",
+      "score": 0.20703125,
+      "description": "网页真人坐P0，模型坐P1；stock-window-v1，保持argmax。fresh256 P1胜-负：hard +13、normal +26、easy +52，合计+91；u800同seed对照0/+6/+11，合计+17。两座位合计胜/平/负（每档256局）：hard 53/196/7；normal 68/185/3；easy 111/141/4。对手为猎手（bun.hunter），不是协作猎手。已知短板：仍有零泡局、左右振荡、持包被砖困；部分击杀/安全指标未全面不差，不宣称普遍提升。网页fp32与训练bf16存在数值/动作差异。",
+      "score_protocol": "production JS bun.hunter; stock-window-v1; argmax; teacher off; fixed paired 256 games per tier, P0/P1 128 each; hard/normal/easy seeds2026142900/2026143900/2026144900; score=hard wins/256, not comparable with historical scores",
+      "onnx": {
+        "file": "bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx",
+        "sha256": "f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1",
+        "bytes": 30242279,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-u1280-20261030/bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx",
+        "meta": {
+          "name": "Bun392 A3SR u1280",
+          "display_name": "Bun392 A3SR u1280",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20.0,
+          "value_max": 20.0,
+          "obs_shape": [
+            24,
+            13,
+            15
+          ],
+          "n_players": 2,
+          "source": "runs/bomb_threat_v1/formal/bt_slot05_c000028/u001280/policy.pt",
+          "generated_at": "2026-10-30T00:00:00Z",
+          "arch": "transformer",
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "bun_state_encoding": "bun24-trap-timer-v2",
+          "onnx_sha256": "f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1",
+          "checkpoint_sha256": "a552a3094182db7d49d498d8ebe37cdae34fc8ba058396661b7e58c2e812699a",
+          "committed_sha256": "7e33f66cabced65d9bfd1f1dca4ac490d9de1bf5f15427ab61d4f204b3c19a29",
+          "strategy": "raw",
+          "state_dim": 24,
+          "attention_heads": 4,
+          "update": 1280,
+          "rule_version": "stock-window-v1"
+        },
+        "reference_zero": {
+          "move": [
+            3.343099798923804,
+            5.039219972816565,
+            4.166749560097255,
+            6.860066850269856,
+            3.7888234629887143
+          ],
+          "bomb": [
+            4.9453099754231875,
+            -0.3020019862424406,
+            -1.5757055397004402
+          ],
+          "value": 2.5326301851937965
+        }
+      }
+    },
+    {
       "id": "bun392-a3-u800",
       "display_name": "Bun392 A3 u800（fresh256 argmax：hard 42/207/7，normal 68/180/8 胜/平/负）",
       "file": "bun392-a3-u800-455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928.json",
