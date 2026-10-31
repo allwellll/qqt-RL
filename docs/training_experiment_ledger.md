@@ -3900,6 +3900,9 @@ GPU独占复测从legacy seed51 u162续接；未重跑prefix。单个seed终态�
 
 ITER-PBT-V1 D 网页发布（2026-10-28，发布时间 2026-10-28T15:31:02Z）：用户已授权发布Release及push main；默认可对战模型由 `bun392-je10-v38-r01-g8` 改为 `bun392-pbt-slot05-u720`（Bun392 PBT u720（D）），旧9条模型原样保留，Review历史默认不变。tag `web-bun392-pbt-slot05-u720-20261028`；JSON SHA256 `ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088`，ONNX SHA256 `2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7`；来源policy SHA256 `ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663`。JS Hunter保留快筛困难/普通/简单safe_win 18/27/32、死亡0/0/2（各64局，seed20261001）；JAX采样/argmax交付304/302（各304局）。这是重复自适应快筛，不作为显著性或综合晋升结论；fp32网页与bf16训练有动作差异。发布状态、最终发布时间与线上验收见 `reports/publish_best_d_web_model_20261028.md`。
 
+<!-- Integration: additional experiment ledger entries; main text retained above. -->
+2026-10-28 原生评估恢复任务：**COMPLETED**（用户解除owner重启限制后执行）。根因共卡并发8→4→2→1→0无恢复，停评11:19–21:31；已修下限1、300秒冷却及受影响卡3新暖更新≥95%后每次恢复1路。GPU2正式6lane专卡，训练owner显式跳过，正式多lane采用旧锁和在途包装进程，临时drain经STOP自然退出；控制器经WATCHDOG重启采用，无训练/在途评估worker信号。slot02改为“用户授权让出评估卡”，原技术失败归档、独立收据阻止复起；u4560双SHA/日志末u4590，历史30更新未保存（非约28），本次修复0损失，不自行恢复。现场37个JS-only点中32有效补齐验收、5明确中点保持排除；原20 skipped为19补齐/1排除。冻结核验34点全部SHA/逐局集合PASS，原积压0，持续训练新请求另列回执。GPU3在c53 u4560、GPU6在c53 u3600完整原子chunk后借用，均自动归还，无更新丢失；最终仅GPU2专评、7训练slot接续。42项RED→GREEN相关回归通过，所有冻结训练源码SHA未变，前后暖吞吐比0.990–1.004（观测、排除冷保存）。slot01 c24 u1120 dev146，holdout141：JS safe_win28/22/29、死亡0/4/4（各64），JAX categorical302/304、greedy304/304、死亡5/1；D holdout136（18/27/32，304/302），现BEST c6 u760 holdout145，故原BEST规则不晋升，BEST未变；不称整体改善，不改网页。amendment12、逐目录/旧失败/借卡/完整验收见 `reports/iter_pbt_native_eval_recovery_20261028.md` 与 `runs/iter_pbt_v1/NATIVE_EVAL_RECOVERY_DONE.json`。本任务写终态后停止，连续训练/正式评估继续。
+
 - 合同：`runs/iter_pbt_v1/PROTOCOL.json`、`protocols/amendment01_async_selection.json`、`protocols/amendment02_dtype_recovery.json`；详细报告 `reports/iter_pbt_experiment_20261028.md`。
 - 用户取消未启动配对补seed，不再按因果消融设计；已运行候选保留u320。旧R2/O5/储备暂停，不push/发布。
 - 8独立slot；env2048/rollout128/mb8192/epochs1，DAgger=KL=0。共同可用起点为COMBAT完成u320全state，初始来源、双SHA、原生update与谱系见每slot协议；新dev排序未齐前明确临时初始化，不宣称最佳。slot种子2026110100–2026110107只标识训练随机流，不要求配对。
@@ -3926,7 +3929,334 @@ ITER-PBT-V1 GPU评估正式首点回填（2026-10-28）：slot05_c000023_u002160
 
 ## A3 u800 stock-window-v1 网页发布 — 20261030
 
+<!-- Integration: additional experiment ledger entries; main text retained above. -->
+## BOMB-THREAT-V1 · 20261029 · 库存窗口修复与事件威胁引导（整合配方）
+
 用户明确选择发布方案1；来源 `runs/bomb_threat_v1/formal/bt_slot01_c000015/u000800`，policy SHA256 `8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6`。仅对战页切换stock-window-v1，目录新增A3u800为首条，旧10条保留、Review不变。hard256 argmax42/207/7，P0胜负差+35、P1为0；normal256为68/180/8。推广门槛未通过，按用户明确选择发布，P1/零泡/振荡/困砖限制明示。生产commit090e40c，tag `web-bun392-a3-u800-stockwindow-20261030`；完整哈希、验证、排行榜混排影响和最终部署证据见 `reports/publish_best_a3u800_web_model_20261029.md`。训练未停，A3SR等发布完成后继续。
+
+<!-- Integration: additional experiment ledger entries; main text retained above. -->
+用户授权 `.hermes/TASK_bomb_threat_and_stock_bug_20261029.md`；执行协议 `runs/bomb_threat_v1/PROTOCOL.json`。这次同时改变库存规则及新增引导，属于整合配方，不能解释为单变量因果实验。旧 ITER-PBT、历史 checkpoint/录像保留，旧 O5/R2 队列不恢复；不发布。
+
+JS 引擎 `_bunUpdate` 与 JAX `can_steal` 缺少库存窗口条件，RED 在自由存活时实际取包。新规则仅敌死亡/原生糖浆开放库存，慢慢胶与历史信用不开放；真实掉包、转移、持包交付不受此资格限制。JAX 新 worker 显式启用 `require_stock_window=True`，旧 worker/规则默认路径保持可复现；JS 旧源按精确 SHA 固定到 `web/review-sim/stock-legacy-20261028.js`，Review 显式白名单兼容，不放宽 hash 校验。
+
+新增整局引导总 cap=0.20；首次安全新增敌覆盖/逃格减少0.02、首次时间连泡0.01、真实己方炸砖开放且到当前合法目标的精确步行最短路缩短0.04。实际炸砖来源跨余威/砖消失延期保存，按格去重；待结算信用遇自伤/受控/终局撤销且不退去重记录；不按请求、库存、tick 付费。原连泡支付被替换，既有控制4及击杀残余0.25不改。
+
+7个训练槽/GPU 0/1/3/4/5/6/7；GPU2专评。**原“其余从各槽 latest 续接”的起点声明已被硬决策撤销**。合法分配为 GPU0/1/3/4/7 从 `scale_env_batch_pilot_v1/formal/env2048_mb8192_s2026103051/u000160`，GPU5/6 从 `iter_pbt_v1/formal/slot01_c000024/u001120`；旧 latest 派生谱系不纳入评估、晋升或复制。完整保留参数/Adam/RNG计数，新规则重建自然/已认证取包对局并清历史环境/奖励余额。env2048×128，minibatch8192，epochs1，DAgger/KL0，既定 LR/entropy/对手/课程以各 run 封存协议为准，原连泡系数不再生效。每chunk80更新=20,971,520真实环境步/2560优化步，保存第1/2/40/80更新；唯一持久owner连续接续直到用户暂停。先技术smoke与新进程精确恢复，不以能力门禁停健康训练。
+
+每保存checkpoint异步 production JS `natural_full2400` greedy/categorical各64局，清砖Hunter快筛保留；额外不重叠seed与出生点保留集。必须分别报告请求/实际落地/拒绝、零泡、胜平负、因果击杀、死亡/交付、笼内击杀及分母；训练原生威胁回报与JS未知回报严格分开。旧/新规则表分节，未测字段标缺失。选择纳入带砖argmax与采样且异常红标不自动晋升。实现/测试/首更新结果原位补齐：`reports/bomb_threat_stock_bug_20261029.md`。
+
+追加任务：`scripts/build_model_metrics_table.py` 同时生成HTML与 `reports/model_metrics_table.md`，独立批次触发并覆盖授权OSS资产；不得阻塞训练。
+
+20261029 fix1 回填：按 `.hermes/STEER_20261029_0120.md` 执行。评估专用适配器仅关闭 game0 诊断 Review 导出，正式 Review 校验不放宽、旧录像不改；修正 new-rule Sim sidecar、排除校验回放重复计局、按 ControlFunnel 保留糖泡因果归因。每分片核验8个独立 seed、席位、完整终局、tick、原生控制账本击杀一致；旧0/9局 sidecar 不复用，原始证据归档。同 seed 重算与旧 primary 重叠24分片的 results 逐字一致（192局），证明这些实际轨迹没有被旧 game0 后处理失败污染；不据此宣称回放正确。三模型新规则复测优先，完成前冻结所有晋升/复制；数据与数字见 `reports/bomb_threat_v1_fix1_20261029.md` 和各 `NATURAL_COMPLETE.json`。
+
+调度异常透明登记：latest 派生的 slot01 c0/c1、slot03 c0/c1、slot07 c0/c1 全保留并排除；合法替代使用新协议编号。fix1 中完成分支缩进错误另外导致 slot04/05/06 c2 重复父点初始化，该错误已修正并用真实 owner 单轮调度回归覆盖；三条重复产物单列 `EXCLUDED_EVALUATION.json`，不计新增独立训练样本，不晋升/复制。其在途 chunk 原子结束后通过 `CONTINUATION_SOURCE_OVERRIDE.json` 恢复事故前 slot04 u320、slot05/06 u1280 的完整状态；按累计进度选择而非成绩择峰。持久 incident 收据在实验目录，后继不重跑既有有效 chunk。
+
+指标表 fix1：固定生成文件名 `20261028-model-metrics-table.html`；三节分别保留带砖整局、JS清砖/JAX辅助、全部原子 checkpoint 与训练超参。缺失不记0，greedy/categorical、规则、集合和 seed 不混色；每批触发部署，失败持久重试。本机部署路径仅在 ignored 包装中；INNER HTTP200+逐字节 SHA 验收已成功。cap维持批准的0.20，训练原生净总奖励30%与击杀+交付分母分开核验，缺失不能通过晋升闸门；不从JS重构精确训练奖励。
+
+
+### BOMB-THREAT-V1-GATE-AMEND-20261029-0240
+
+用户/编排授权`.hermes/DECISION_gate_amend_20261029_0240.md`已消费；冻结修订`runs/bomb_threat_v1/protocols/GATE_AMEND_20261029_0240.json`。奖励、系数、起点和seed不变。BEST保持绝对行为/终局奖励上限且平局严格低于parent；PBT改相对parent（零泡≤parent、泡≥80%、平局/直接自伤不增、笼内比例+10pp以内、新塑形≤净总奖励30%），两者独立，不用晋升门槛阻止健康PPO。按同规则/split/seed/出生及Sim hash匹配parent。新增胜负差及平局双方因果击杀差，从SHA校验原始64局分片被动重算，保留不可变NATURAL验收文件，派生GATE_METRICS与分集合PBT_SELECTION排序。当前仅选择判定，没有执行exploit复制/BEST晋升。
+
+已登记并由唯一CPU owner实际启动旧网页transport1536与selfplay3072的新规则holdout64×双动作补测（有砖完整局、正常生产JS Hunter、老师关闭，原发布checkpoint及ONNX权重hash匹配，本地JSON为重导出，非raw release逐字节主张）。CPU两路144–159/160–175，各4分片；保留在途评估、不重跑完成点。GPU2另启独立JAX rule3辅助64×双动作队列，seat0/原生随机出生/有砖，不冒充JS/冻结出生，不消费旧O5/R2或legacy队列。训练owner只重载接管，不给worker信号；两连续同slot同集合点“泡上升且击杀/胜局未升”写持久请求，在原子chunk边界阻止下一塑形chunk并报告，不擅改系数。
+
+测试先RED后GREEN；详细新旧门槛、父点/候选数值、缺失奖励历史/直接自伤口径/前缀奖励分母限制见`reports/bomb_threat_v1_fix1_20261029.md`新修订节。每批评估自动刷新HTML/md并上传校验；训练继续按固定80更新chunk接续，双层闸门不作为健康训练停训条件。
+
+
+02:40修订补测回填：旧网页transport1536/selfplay3072的同新规则holdout双动作256完整局已全部原始SHA验收（`OLD_WEB_REFERENCES_ACCEPTANCE.json` PASS）。argmax依次2/57/5与1/53/10，parent为5/56/3；categorical依次4/54/6与4/35/25，parent13/45/6。不据64局描述宣称显著或最优。两网页目标按同局表格展示，逐局平局击杀差也已被动回算。JSON参考空checkpoint导致一次CPU后处理owner退出，RED定位→GREEN修复、复用128局完成证据，收据`GATE_REFERENCE_RECOVERY.json`，训练未受影响。当前SUMMARY双闸门已同步，原SUMMARY/COMPLETE归档，新COMPLETE摘要SHA更新；NATURAL验收SHA不变。Focused20项通过；完整相关测试状态以最终日志为准。详情及限制见当天fix1报告新节。
+
+
+修订终态：`runs/bomb_threat_v1/GATE_AMEND_DONE.json` COMPLETED；相关49项+focused20项（去重53个独立Python用例）GREEN、JS库存14案例及adapter通过。旧三NATURAL SHA、当前训练源码封存SHA、完整state/policy原子SHA均验收；训练/CPU/native owner各1、训练worker7，未向训练worker发信号。GPU2首批parent JAX rule3辅助128局完成，双模式各64胜/64交付局/0死亡局，无人工截断，747.34秒、134scan；该单席位native出生/弱rule3探针饱和，不代表生产JS Hunter改善，不参与闸门。GPU2已接下一辅助点。并发前后warm吞吐观测比例99.08%–100.04%，见GATE_AMEND_THROUGHPUT；当前相对选择列表为空，无PBT复制/BEST变更。冻结健康训练持续接续，表格异步刷新。
+
+
+### BOMB-THREAT-V1-CATCHUP-20261029-0445
+
+消费用户04:45调度纠偏：不改奖励/权重/seed/起点。CPU有砖完整JS normal Hunter自然局评估由单路扩为12路，每路4核/4分片，共48核，CPU-only；主机有效配额约88核，并非可见192核。训练、预热、GPU2辅助和发布使用不重叠核段。原始双64局、地图/出生/动作RNG及规则hash不变；优先各slot最新40倍数点，再按80更新间隔回补，非40边界点仅技术保留，无效谱系请求移到excluded_requests，已完成原始证据不重跑。自然局先出GATE，清砖快筛随后，报表/OSS独立发布。执行与验收：`runs/bomb_threat_v1/CPU_EVAL_STATUS.json`、`CPU_CATCHUP_TARGETS.json`、`CPU_CATCHUP_ACCEPTANCE.json`；首批7个slot最新点目标2小时，不把已领取冒称完成。
+
+下一chunk改320更新（83,886,080真实环境步、10,240 Adam步），每40保存/评估；旧在途80chunk与封存源码保持不变。新增long_train调度入口，在上一chunk运行时用独立prewarm namespace完成2次真实技术更新+新进程完整next-step/Adam/env/aux/RNG/ring恢复；技术步数不计formal。正式chunk只从上一最终原子checkpoint恢复，不从较早预热点续训，新规则对局状态完整保留而不重复初始化。已恢复同规则next-step parity，与原先每chunk重建局的行为区别已披露。验收`CHUNK320_ACCEPTANCE.json`。预热首次仍需冷编译；不能用存在进程代替非零更新/功率证据。原配方DAGGER/KL=0、lr7.5e-5、entropy0.005、env2048、rollout128、global minibatch8192、epochs1不改。
+
+新增每2小时持久轮报`reports/bomb_threat_v1_round1_20261029.md`及后续编号；单独publisher触发不阻塞GPU或评估领取。逐slot双动作、双闸门及少放泡趋势预警，明确当前无相对合格候选、无PBT复制。三项奖励/探索/复制细则只作待批前瞻建议，不执行；威胁+炸砖仍受总奖励30%及终局奖励约束。dev通过也不得晋升BEST，必须同checkpoint在holdout seed2026132900双64完整局并过绝对闸门；相对合格候选会登记独立holdout请求。GPU2队列也改最新40优先，rule3弱对手/seat0/native出生限制不变。
+
+Focused RED/GREEN覆盖排序、12核段、边界/holdout区分、chunk节奏、预热fingerprint与真实非零/恢复、真实owner接续与dev禁止BEST；结果及真实首更新以本次验收日志为准。训练owner只重启接管在途worker，worker未收停止信号。旧O5/R2/储备暂停，不commit/push/修改网页默认。
+
+04:45纠偏实证回填：首批7slot最新40目标双64共896完整局在14.4分钟内完成并全SHA验收（`CPU_CATCHUP_ACCEPTANCE.json` PASS），不代表全积压已清。七路prewarm完成（621–663秒冷启动）；正式320chunk slot00/01/03/04首原子点u721/u721/u721/u801已验finite、Actor/Critic非零、完整源恢复、真实步数和state/policy SHA；其他旧80chunk不打断。相关Python28项、JS库存14案例和adapter GREEN。新dev仍无相对候选，无PBT复制/BEST晋升。
+
+资源审计修正初始48逻辑核描述：主机SMT配对c与c+96，初版CPU0–15评估与训练96–111同物理核，slot06/07实测周期约+10%；已保留12worker，改36独立物理核（16–31及48–67分成12×3）、新worker3分片；native与publisher68–71，旧在途进度安全重绑，不重跑、不向训练发信号。`SMT_RESOURCE_RECOVERY.json`记录核段与恢复，吞吐复测另记。回补排序frontier包含在途/已完成请求、防旧slot饥饿；publisher水位按处理开始时间防并发漏GATE。完整报告`reports/bomb_threat_v1_round1_20261029.md`验收补记，每2小时后继自动触发；奖励/权重/seed/起点不改。
+
+### BOMB-THREAT-V1-PBT-NATIVE-COPY-20261029-0700
+
+执行编排方07:00批复，原决定及旧暂停/预热失败证据保留在`runs/bomb_threat_v1/PBT_COPY_DECISION_20261029_0700.json`、`shaping_pause_requests/`、`prewarm_pbt/slot03_c000011/`和`prewarm_pbt/slot04_c000010/`。slot03/04不从旧暂停点续训；固定donor为`runs/bomb_threat_v1/formal/bt_slot00_c000003/u000360`，state SHA256 `66a30cf00d93ee6ef6758d17f6a95e2e177d63b2a57859e549705e9143cbd63f`，policy SHA256 `ca03a2d8867884fc11ebf4eb51f3ee3838257fa879b2b71091fda05691006ee1`。该父点dev相对门槛PASS（21/41/2、因果击杀27、28.5泡/局、零泡5/64），同checkpoint holdout相对PASS（17/46/1、击杀31、31.3泡/局、零泡11/64），不等于绝对BEST门槛。
+
+正式新命名空间：slot03 `bt_slot03_c000012`/seed2026112903，slot04 `bt_slot04_c000011`/seed2026112904。两路各320更新，u360→680，83,886,080新增真实环境步、10,240 Adam步；每更新1卡×2048env×128tick=262,144步，global minibatch8192、epoch1、32 Adam步。保留各目标slot原lr7.5e-5、entropy .005、Bank .25、clear-scene .25、DAgger/KL=0及对手权重[.2,.25,.2,.15,.1,.1]；只关闭新增threat/topology/chain三项塑形，实际reward variant明确为`bomb-threat-v1-native-only-zero-stock-shaping`，不是改写旧run奖励。
+
+接管次序：先在donor原combat_mix.kind下做fresh-process NEXT_STEP、完整Adam/env/aux/RNG/ring摘要校验，再保持Actor/Critic/Adam/物理环境/ring/cursor原样复制，子RNG按不同slot seed派生；只清零新塑形pending/gross/brick_pending，保留原生奖励账本和事件去重历史；最后按各目标slot既定配方重映射combat_mix.kind。`PBT_HANDOFF.json`明确区分重映射前nonreward aux exact与重映射后摘要，不能笼统声称最终aux逐位不变。谱系及完整摘要同时写入LAUNCH。旧O5/R2和储备暂停未解除，slot05/06不复制、不追加专项资源。
+
+两处技术阻塞已修：旧worker在source parity前误改对手kind；owner暂停覆盖未被worker边界检查消费，导致正式零更新即再次暂停。原失败与u360原子暂停保留；新预热分别smoke+fresh restore PASS；只重载唯一训练owner，未向训练worker发信号，原在途训练完整接管。worker现从持久SLOTS、授权决定和三项零权重共同核验覆盖，仍服从全局用户暂停。正式首更新两路均u361/finite，Actor/Critic ΔL2分别0.820213/1.204008及0.805760/1.143725；每路+262,144真实步，三项新塑形实付0。首原子state SHA分别`2b99ad20c4055518a4aba4356127806f57eeb1c9f8dac141e7df5bf225302ca9`、`5b1cb8c20cfdf8914fbccc2bb1f157391324006426606a61e34906d0fe16c1b3`，policy SHA分别`cf84a7ec6f4d024ef6b9eb5b61166b2844a9c8559c9c5dc19c90e8ba1b72bd13`、`d4122993d72683df87fa03a707b1f8ce1449d1185a44020b9ecbdcf04607cdd3`。验收`PBT_COPY_ACCEPTANCE_20261029_0700.json`含连续GPU3/4利用率81%–87%、功率约283–292W及完整SHA；暖态约1.97–2.00万环境步/秒，首周期约68秒含技术准备。30分钟目标未达，延迟不隐瞒。
+
+07:00提案批复同步登记：仅审计信号漏斗，威胁/拓扑系数翻倍暂缓，熵下限/探索损失驳回。7个冻结40更新原生窗口的请求/落泡/拒绝、接受信号与实付已实际核验，`signal_audit_round3/RESULT.json`及逐行快照可复算；新塑形占净总奖励约0.49%–0.57%，不能由此独断少放泡根因。历史缺少pending按原因作废/余额及事件ID链接，另以8个真实保存环境×256tick×3来源的有界CPU被动轨迹审计补账，协议`signal_trace_round3/MANIFEST.json`；无优化、无老师接管、无新reset/伪携包，已终局冻结，未完局及期末pending明确删失。不把诊断步计正式训练。
+
+后续PBT授权限安全原子边界、相对合格且同点完成holdout，每轮最多2条，slot05/06不复制；本轮两次额度由slot03/04占满。两条新分支与持续带塑形线存在复制时点、训练年龄/谱系和目标slot原配方差异，不能宣称严格单变量因果对照。生产JS最新40点优先、每40保存/请求不变，CPU/GPU2辅助独立；当前不晋升BEST、不push、不改网页默认或models.json。轮报按当前真实谱系选评估祖先，避免将旧slot03/04 u1080/u1120误挂到从u360重启的新分支上。完整红色趋势、笼内击杀异常、argmax/采样差异及审计结果在`reports/bomb_threat_v1_round3_20261029.md`回填。
+
+07:00批复执行验收补记：`runs/bomb_threat_v1/PBT_COPY_EXECUTION_20261029_0700.json`状态为`IMPLEMENTED_FORMAL_TRAINING_RUNNING`，不是训练预算终态。验收时slot03/04分别u547/u545，自donor新增49,020,928/48,496,640真实环境步；最近周期约13.07/13.21秒、20,051/19,840步/秒，finite且Actor/Critic继续非零更新，新增三项塑形实付0。最新原子点u520的state/policy SHA再次验收。唯一训练owner、CPU评估owner、native辅助owner各1，7个训练worker；`--publish-once`只是被动发布子进程，不算重复评估owner。下一chunk预热验收已就绪，训练未为本次报告停机。
+
+实际回归：相关Python64项无失败，JS2个测试文件通过（包含14个席位×库存状态案例），后续报告谱系focused另1项通过；验收及原始日志SHA见`PBT_COPY_TEST_ACCEPTANCE_20261029.json`。全suite启动后追加的队列/报告修正由focused覆盖，不能将较早全suite当作后加代码的回归证据。两路冻结协议各24个训练源码SHA仍完全匹配，见`PBT_COPY_FROZEN_CODE_ACCEPTANCE_20261029.json`。连续30.54秒采样中两路实际各推进2更新，GPU与周期数据见`PBT_COPY_CONTINUOUS_GPU_20261029.json`，没有用显存占用代替计算。
+
+批准的信号审计已完成预声明有界采样：3来源×8真实保存环境×最多256tick，共4,939有效转移；donor/旧slot03/旧slot04分别1,430/1,844/1,665，有终局4/2/3、删失4/6/5。每源首步CPU被动observer与原transition/原metrics摘要相同；独立复算全部checkpoint/源码/12段trace SHA、阶段分母、概率/熵与逐tick余额，`signal_trace_round3/VERIFICATION.json` PASS，3源余额残差分别0/0/5.59e-9。实付分别0.17/0.46/0.23，cap裁剪0.15/0.07/0.19，坏事件作废0.01/0/0，期末pending0.05/0/0.01明确删失。COMBAT合法机会843/1,166/755，条件平均P(放泡)0.05627/0.04939/0.05366、ability熵0.03871/0.04371/0.03026。原生窗口空手覆盖0/72/145tick，持包合法放泡机会本样本均0，不能泛化规则或声称所有阶段覆盖充分。这不是完整自然局能力评估、不是CPU/GPU轨迹一致性证明，也不证明熵塌缩；历史逐信号ID到终局的因果链仍缺失。复算命令：`PYTHONPATH=. .venv/bin/python runs/bomb_threat_v1/signal_trace_round3/verify_trace.py`。
+
+固定首评u400完整生产JS normal Hunter各模式64局：slot03 dev argmax23/39/2、26击杀、14死亡、35.42泡/局、零泡5，holdout20/42/2、27.91泡/局、零泡9，两集合相对通过而绝对门槛未过；slot04 dev16/45/3、19击杀、15死亡、25.53泡/局、零泡7，相对未过。后续固定u480两路dev分别7/56/1与11/53/0、17.55与21.14泡/局、零泡9与8，均未过相对门槛。保留回落，不凭首点宣布关闭塑形有因果提升，不追加第三次复制、不晋升BEST。
+
+`reports/bomb_threat_v1_round3_20261029.md`已完整落盘，SHA256 `054885dad43cde8e4def021eba82aa0aca8bb6d735185e8614f4db38fef7cc2e`，逐slot当前谱系/双模式/双闸门、少泡/slot05/笼内击杀红色预警、批准/驳回提案、审计实数及缺失均已列明。`round_reports/round3.json`与`ROUND_REPORT_STATUS.json`持久登记，下一轮仍按两小时间隔触发；京ME投递退出码0。30分钟恢复目标未达及两处技术根因已写入报告/incident，没有隐瞒。健康训练由原唯一owner按冻结预算继续，CPU/JS最新点优先异步补评；旧O5/R2/储备暂停及禁止push/网页默认变更保持。
+
+### BOMB-THREAT-GATE-AMEND2-20261029 / CKPT-RETENTION-20261029
+
+用户09:00修订2已消费，决定文件`.hermes/DECISION_gate_amend2_20261029_0900.md`；只改判定、被动报告和评估优先级，不改奖励/权重/起点/seed/冻结worker ABI。相对门槛仅argmax、同split父：零泡≤父+3、放泡≥父80%、draw≤父+5pp、自伤≤父+2、笼内击杀比例≤父+10pp、合并新塑形/净奖励≤30%；排序胜减负、因果击杀、-死亡，不要求holdout。绝对基础门槛按holdout双模式64、胜减负≥父+8且高于两旧网页对照、零泡≤父一半、泡≥20、draw≤父、kills≥父、deaths≤父+5及共同限制；仍需fresh每档256复核，当前不晋升BEST/不发布。INCOMPLETE与FAIL分开，缺项和已观测失败逐项列；原判定另列并归档。
+
+首轮完整分片SHA重算277点，后续持续新点自动重算（不把动态总数冻成262）；快照`GATE_AMEND2_RECOMPUTE_SNAPSHOT.json`。dev前三为slot03 c12 u400、slot07 c3 u320、slot00 c3 u360；取并集补slot00 c8 u960，缺失holdout已实际CPU启动并完成，不重跑已有holdout。slot00 u960 holdout argmax 64局16/46/2、胜减负14、kills25、deaths17、26.765625泡/局、零泡14；相对PASS，绝对FAIL（零泡>父一半、kills<父），不以dev峰值宣称最佳。本轮slot03/04已用完2次复制额度，不追加复制；slot05/06不复制。详见`reports/bomb_threat_v1_gate_amend2_20261029.md`。
+
+清理按用户`TASK_ckpt_retention_20261029.md`明确授权，仅两目录中精确`state.pkl`；先持久dry-run再unlink，不删除其他实验。保留活跃最新原子state、在途prewarm/后继未首次非零原子提交的源、在写/打开文件；iter旧完整状态全部移除。独立30秒周期维护器持续处理。初次维护全目录复扫慢，独立重载维护器优化为批16路径复核且保留全部安全检查；初段删除用干预前清单与路径缺失重建收据，不伪造逐文件时间。7个训练worker未发信号、owner重载接管原进程，旧O5/R2不恢复。验收快照删除2954个完整状态/1,628,301,069,410逻辑字节；训练持续新增，最终以`runs/iter_pbt_v1/RETENTION_ACCEPTANCE.json`为准。2933个初始policy逐SHA/大小复验未变、缺失0；iter state数0。历史state/Adam/env/RNG/Critic不再可恢复，SHA只引用COMMITTED历史记录；policy保持实际SHA验证。CPU完整参数与Actor-only在2个真实观察上move/ability logits逐位相同，不扩张成整局或CPU/GPU parity。报告`reports/ckpt_retention_20261029.md`。
+
+相关回归`runs/bomb_threat_v1/GATE_AMEND2_RETENTION_GREEN.log`：74 passed；最初空协议恢复测试桩KeyError已修正，初始失败日志保留。Owner缺旧源恢复用新namespace、保留最新完整Adam/env/aux/RNG/ring、仅原chunk剩余预算；不改封存训练源码，不越过暂停/技术失败闸门。policy-only评估不伪造Critic。
+
+信号审计：历史7×40更新原生聚合窗口、已有3×8状态×256tick有界trace均保留；不能当完整自然局。新增冻结`runs/bomb_threat_v1/signal_audit_fullgames_20261029_attempt02/MANIFEST.json`，固定donor u360、slot00 u960，各greedy/categorical 8局（总32），自然出生layout0、seat0、JAX rule3、seed2026142900、2400tick+最多160结算尾、无老师/训练/GPU。首尝试CPU启动无轨迹，留收据后仅重载诊断，amendment只将params/mode/JIT复用与阶段可观测化，科学条件不变。合并实付为原生真实值，按类型的支付仅比例影子账本归因，不能称原生独立支付channel；反制/自伤细分或未知实际放置顺序原因仍按证据缺失披露。最终见`reports/bomb_threat_v1_signal_audit_20261029.md`，系数不调，无新增熵损失。
+
+
+### BOMB-THREAT-ITER2-20261029 / INIT-DECISION-1000
+
+amend2已COMPLETED_TRAINING_CONTINUES；32/32自然局、907.0秒、逐trace SHA与账本独立复算PASS，三类支付仅比例影子分摊。u960 holdout16/46/2、kills25、零泡14，不晋升BEST。u360/u960完整state按授权保留策略删除，不是事故；现有8,756份state相邻COMMITTED元数据无同SHA登记副本。10:00决定明确改为u960 Actor-only +新Critic/Adam/env/RNG，原历史收据保留。
+
+共同Actor `runs/bomb_threat_v1/formal/bt_slot00_c000008/u000960/policy.pt`，SHA `77a06184ab5e704f021cf750f9c834e2b2e0374549abcc4347fea27b4ef31a4c`；holdout+14/零泡14未触发+5/17的换父门槛。新Critic复制同构policy网络/value head到独立树（非历史Critic），Adam独立零矩、env/RNG按2026112900+slot新建，ring重新4份Actor、fixed按原父policy构建。三arm共同20×262144=5,242,880预热tick，仅Critic更新，Actor参数与其Adam counter冻结；用A1基础奖励分布。预热训练EV≥.3或最后5次value loss极差≤均值5%且拟合绝对漂移≤均值1%/更新；20次未过明确BLOCKED，不静默加预算。Actor lr按u0=0、u1=目标/40、u40=目标。预热与技术点不评估/晋升。
+
+实验ID `BT-ITER2-A1-slot04-s2026112904`：cur.10、opponent权重[.05,.35,.30,.15,.10,.05]；`BT-ITER2-A2-slot07-s2026112907`：A1+熵.005在320正式更新内线性到.0015；`BT-ITER2-A3-slot01-s2026112901`：A1+威胁/拓扑/连锁.10/.20/.05、cap.60，实际支付占净奖励<30%且低于终局/击杀/交付项[2,9,61]，每40更新复核。A3在预热结束清零新塑形账本再切系数，不伪称同奖励续训。终局奖励、网络、评估seed/闸门不变。共同2048env×128tick=262144样本，minibatch8192、1epoch、32Adam步/更新、lr7.5e-5、DAgger/KL0；首两轮640正式更新=167,772,160tick/arm，320chunk，40保存/argmax+采样+额外τ.5列。
+
+原唯一owner接管slot01/04/07，实际写入旧worker可消费的`shaping_pause_requests/slotXX_ITER2_SWITCH.json`；slot04撤销旧零塑形暂停豁免，旧worker在40更新原子边界自然退出，不发训练信号。slot00/03/05/06不变，不新建训练owner。smoke两次真实PPO更新后独立进程restore，首8实际状态Actor logits逐位对照u960；同完整Adam/env/aux/RNG/ring下一步token核验。初始化与恢复实现均在独立worker，不改旧封存worker/奖励源码。源ABI及协议hash见`runs/bomb_threat_v1/iter2/TRAINING_PROTOCOL.json`和每run协议/INIT/SMOKE/RESTORE。24项focused回归通过，RED及初版float误差/作用域回归失败日志保留并修复；不得将toy测试替代GPU真实首更新。
+
+D1/D2/D3独立CPU诊断已实际启动，4核上限、CUDA为空；D1四模型×5温度×64带砖自然局，dev2026122900、交替席位、独立actor/opponent RNG，τ0/1同协议已有结果逐SHA复用。D2两Actor缺历史logit，额外被动argmax重放并核对原逐局结果，不改动作；ability none/bomb/item与movement头独立，rank2例按固定首seed/phase选择。slot06“最新”冻结为`bt_slot06_c000012/u002880`，policy SHA `99f6884afd74a40f0f82e881b118c5ee8b2203ed1071116149917274a8533b63`。D3当前冻结slot06，JAX hunter tier3（旧脚本又称rule3），同seed/出生对但不同PRNG/env/opponent实现，不可单因素声称对手强弱。协议`D123_MANIFEST.json`、heads口径amendment01、起点amendment02及prelaunch技术amendment03均保留。GPU/真实首更新仍以实际收据为准，不把launch算训练。
+
+
+ITER2-1000 正式启动验收（本次续做）：三arm20步Critic预热与独立恢复全部PASS，正式u3均finite/Actor+Critic非零；验收快照A1/A2/A3为u61/u72/u5，约1.99–2.07万环境tick/s。完整state/policy与两头参数变化证据`runs/bomb_threat_v1/iter2/FIRST_FORMAL_ACCEPTANCE.json`；三次GPU采样78%–100%、278–692W，首更京ME已送达。原slot01/04/07于u2000/u880/u1920原子结束后切换，训练信号0，唯一owner继续其他四路。640的PPO预算含两次同配置smoke，20步预热另列，不重复加步数。
+
+验收实现细化`runs/bomb_threat_v1/iter2/amendment04_passive_analysis_and_authorized_rollback.json`：200更新分桶与640同期dev三项严格低于才恢复原配方已接真实owner，数据不足PENDING继续健康320chunk；回退最新Actor+新Critic预热，独立worker，未触发/未冒称GPU验证。额外τ.5独立表格行不进闸门；真实ramp LR/熵单列。32项相关回归通过，CPU报告/终态旧state阻塞文案修复6项通过。D1 u960 τ.5与argmax同为25/39/0，但死亡23比13，尚不能宣称更强；D1全矩阵/D2/D3继续异步，未改网页、BEST、旧O5/R2暂停。详报`reports/bomb_threat_v1_iter2_execution_20261029.md`。
+
+### ITER2-STEER1120：被动诊断、分级告警与A3边界观察（20261029）
+
+授权 `.hermes/STEER_20261029_1120.md`，口径先登记 `runs/bomb_threat_v1/iter2/amendment05_steer1120_diagnostics_a3.json`。不改冻结奖励/学习率/采样/解码/闸门，训练worker信号0，旧collector/worker及旧协议保持可复现。历史loss[3]已查源码为优化minibatch总熵；8项末位是ability-head梯度范数，撤回此前“熵未记录/末位Critic梯度”的说法。新collector诊断为masked live tick总熵、bomb=1概率、ability argmax=1比例，stop_gradient、不增加RNG、PPO batch不变。仅新320-update chunk协议在parity PASS后启用版本化diagnostics worker；已启动chunk不改ABI。
+
+受控实测使用生产u960 Actor、seed2026112920、CPU 2env×2tick、一个真实on-policy PPO更新/2 Adam步，原/新动作、env/aux/RNG、batch、loss、params/Adam逐位一致。Actor/Critic ΔL2两侧均0.2286113001/0.1932516744；范围仅该受控同输入，不冒称CPU/GPU逐位等价或相邻随机update相等。证据 `STEER1120_UPDATE_PARITY.json`；激活 `DIAGNOSTICS_ACTIVATION.json`；RED/GREEN与源码SHA同目录保留。唯一owner安全重载接管已有7worker，看门狗不直接启动GPUworker，旧队列不恢复。
+
+DATA_GAP与ANOMALY分计，只有真实异常标红；历史/当前分计。停更仅检查真实worker最新update，撤回旧活跃run历史窗口停更误报。settled_kill是奖励而非击杀事件，历史击杀率明确未记录，不再冒充计数。A3继续u640；另u200/240/280/320连续3点同时负≥6、胜减负<对照−5才在下一chunk终态按已有fallback恢复原配方。同期对照slot00/03/06取训练时间最近前置≤600秒的已评dev点，等槽权重；缺项PENDING，不借holdout调参。逐点负、自伤、平局击杀差及实付比例、JS原子写盘至双模式成绩P50/最大、pending右删失和当前吞吐见 `reports/bomb_threat_v1_iter2_round4_20261029.md`，持久执行收据 `STEER1120_EXECUTION.json`。不push/发布，不改models.json/BEST。
+
+
+STEER1120 GPU部署验收：A3在原c13/u320完整原子终态后自然进入`bt_slot01_c000014`，u321/322真实更新后fresh-process RESTORE通过（Adam、env/aux/RNG、ring、next-step均exact）。u322 state SHA `d430d1bcb193c55bd886e34092dd889e0dd17a850dfca7e74d129d74130085ee`、policy SHA `3bb3c0c1d85d8682e397b885c1f82e3b1325d0e8b75a2c95300e7602fc58818e`已实际重算匹配。正式续训u323：262144步、Actor/Critic ΔL2 0.857276/1.248560，masked live entropy0.789520、bomb概率0.0361495、ability argmax=bomb比例0.0335539，分母258241；首更冷编译3622env/s单列。u330热态20358env/s、finite/两网络真实非零；8卡连续三次实测在`STEER1120_GPU_ACCEPTANCE.json`。A1/A2当前c14不原位换ABI，u640自然边界后新协议消费已冻结activation；旧控制run未采集的bomb概率继续DATA_GAP，不倒填或伪造。
+
+focused及相关回归42项通过，RED/GREEN与受控更新原始收据保留。唯一owner按真实run/worker.lock接管，训练worker未收信号；被动报告安全重载单独留收据，不重复训练、不恢复旧队列。低吞吐61条历史窗口与当前含冷编译的窗口单列；slot03/c15首更69.08s（collector63.29s）后u1322/1323热态恢复约1.98万env/s，未改配方。当前最新7路均≥15000env/s。A3 u200/240/280负4/2/2，新增早退CONTINUE；u320异步，不将其冒称已齐，原u640规则保留。u160原始JS字段self_deaths=0、deaths=26、delivery=10、draw_own_causal_kills=10，与指令“自伤10”有口径分歧，报告明确只计直接ownBombDefeat，不外推其他自伤。JS延迟仅同policy SHA、greedy64+categorical64完整marker：最近验收ITER2 24点，P50 599.87s、最大743.75s；历史大积压与pending右删失分列，不混JAX辅助/单模式。执行/部署/延迟由唯一owner持久刷新，详见`STEER1120_EXECUTION.json`及round4报告。
+
+
+### ITER2-STEER1320：A2固定熵完整续训、A3放泡击杀观察、D4（20261029）
+
+授权`.hermes/STEER_20261029_1320.md`；先登记`runs/bomb_threat_v1/iter2/amendment06_steer1320_boundary_and_D4.json`与可消费`STEER1320_AUTHORIZATION.json`。slot07当前`bt_slot07_c000015`固定u640–960，下一自然320终态u960切独立namespace：只停熵退火、固定0.005，课程.10与opponent [.05,.35,.30,.15,.10,.05]及其他A1配方、原seed/网络/奖励/评估不变；必须保留最新完整Actor/Critic/Adam/env/aux/RNG/ring/counter，不走旧通用Actor-only回退、不重预热。先2次smoke，再独立restore，正式续训。停止依据是近期argmax平局56、零泡17.5、击杀减半且采样差未缩小，按编排决定，不将观察夸为已隔离的唯一因果。版本化worker`bomb_threat_iter2_fixed_entropy_train`，旧活跃worker/协议不改。
+
+A3 u640操作决定继续；新增u680起连续3个40节奏dev点泡/局>对照+5且击杀≤对照才按既定完整chunk回退。同期沿已登记口径：slot00/03/06各取A3训练时刻最近前置≤600秒已评点、槽等权；缺数据PENDING不补0。泡≥29且击杀<对照、平局击杀差负单独观察不自行停。报告/实际owner接线及回退收据保留，不改相对/绝对闸门或终局奖励。
+
+D4冻结本次读取时slot04最新完整dev greedy u680/u720/u760，3×64=192 checkpoint×局观测，共用64seed/席位（不是192独立seed），teacher off/生产JS带砖整局。逐marker/原始outcome及natural分片SHA、64seed、首terminal/击杀事件计数核验；未重跑诊断。144平局，其中28个有己方击杀、65次因果击杀；28局全局交付0、26局取包0，全部末库存[[1,0],[0,1]]、库存总差0；击杀tick四桶6/13/25/21，中位1568。24局首杀余≥600tick，仅2局全部击杀在最后300tick。原生规则超时比笼库存总数、同数平局，不按击杀破平；即时集齐敌包才胜。可证据支持主要断点为击杀未转化取包/交付；不能将剩余时间当作可完成返程的反事实证明，不能编未记录的交付时序。详见`runs/bomb_threat_v1/iter2/D4/COMPLETE.json`和`reports/bomb_threat_v1_iter2_round5_20261029.md`。下一配方由编排决定，训练不停，不push/publish、不改网页/models.json/BEST。
+
+
+### ITER2 ROUND1 14:00决定执行（20261029）
+
+消费 `.hermes/DECISION_iter2_round1_20261029_1400.md`，持久授权 `runs/bomb_threat_v1/iter2/DECISION_ROUND1.json`。A2/slot07 只继续至 `bt_slot07_c000016` 的 u1280 原子边界；届时禁止续 A2，改从 slot01 最新原子 Actor 建 A3 第二 seed（2026112907），Critic/Adam/env/aux/RNG/ring 重新初始化并做20次Critic预热。A3b仍是提案。A1/slot04 固定 u960 dev greedy 64局为8/54/2、胜减负+6、32击杀、20死亡、15.40625泡/局、零泡15、window pickup11/delivery4；policy SHA匹配，满足“泡/局<20 或零泡≥15”，故当前c16/u1280原子边界转A3第三seed（2026112904）。截至本记录，slot01 A3、slot04 A1、slot07 A2 都在c16中有限且Actor/Critic更新非零；具体update与逐步吞吐见 `reports/bomb_threat_v1_iter2_round1_20261029.md` 和 `ROUND1_EXECUTION_STATUS.json`。不在chunk中途切换。
+
+A3 u680/u720 holdout各64局、greedy及categorical双模式已排为最高优先，CPU evaluator活动消费，结果未齐不择点评估、不晋升。owner此前因ITER2报告聚合遇CPU评估marker原子替换的未捕获`FileNotFoundError`退出；修复读取竞态后经watchdog只重载owner，前后7个训练worker集合未变，信号0。GPU4 restore核验真实检查的是fresh-process next-step/Adam/env/aux/RNG/ring一致性，不做批量rollout/PPO；RESTORE不含可复算env/s，单个probe后utilization=0%不等于训练空闲。先前6503 env/s的精确来源未在该run的restore收据中找到，不用于训练吞吐比较；当前smoke及正式更新约20.2k env/s。新collector已记录bomb概率总和/argmax计数，历史缺失不回填。
+
+Focused回归覆盖round1边界、A1 gate SHA/阈值、A3 PBT初始化谱系、holdout优先级及report/eval原子替换竞态。D4仍按round5既有结论引用；奖励、终局项、规则、评估seed/闸门、网页默认、BEST及models.json均未改，不push/publish。完整执行状态 `runs/bomb_threat_v1/iter2/ROUND1_EXECUTION_STATUS.json`。
+
+
+A3 holdout优先结果回填：slot01 c15 u680、u720均为production JS自然整局各64局/模式，holdout seed 2026132900，marker与各自原子policy SHA匹配。u680 greedy 14/50/0（胜减负+14、击杀29、死亡17、34.328泡/局、零泡13），categorical 21/40/3（+18、击杀26、死亡28、42泡/局、零泡3）；u720 greedy 12/47/5（+7、击杀32、死亡33、35.906泡/局、零泡10），categorical 18/39/7（+11、击杀33、死亡38、45.578泡/局、零泡2）。u720自然双模式marker已齐，CPU额外quick-screen后处理仍pending；这些holdout只作报告、不用于调参或BEST。文件与marker SHA见`runs/bomb_threat_v1/iter2/ROUND1_EXECUTION_STATUS.json`。
+
+
+Holdout gate recap: bt_slot01_c000015_u000680_holdout 相对=PASS，绝对=FAIL，失败项=['ZERO_BOMBS_GT_HALF_PARENT', 'KILLS_LT_PARENT']，缺项=[]; bt_slot01_c000015_u000720_holdout 相对=PASS，绝对=FAIL，失败项=['WIN_MINUS_LOSS_LT_PARENT_PLUS_8', 'ZERO_BOMBS_GT_HALF_PARENT', 'DEATHS_GT_PARENT_PLUS_5']，缺项=[]。绝对闸门均FAIL，所以无晋升。
+
+ITER2 ROUND1原子边界接续现场刷新（2026-10-29 14:41）：`runs/bomb_threat_v1/iter2/ROUND1_BOUNDARY_PROGRESS.json`记录最新COMMITTED SHA、live update/finite/Actor-Critic ΔL2、GPU样本和活跃owner/worker计数；slot01 A3 u1118、slot04 A1 u1198、slot07固定熵A2 u1178，三者均在u1280边界前继续健康更新。slot04 u960 gate=`A3_SWITCH_REQUIRED`；唯一owner已加载14:00决策边界分支，切换尚未发生。u1280自然chunk终态时slot07转A3第二seed、slot04转A3第三seed，取届时slot01最新原子Actor，依DECISION重新初始化Critic/Adam/env/aux/RNG/ring并预热20次；不向在途worker发信号。两项A3 holdout u680/u720（production JS、greedy和categorical各64局）均已完成、policy SHA匹配，相对PASS但绝对FAIL，不晋升；D4 COMPLETE，A3三点回退规则当前未触发。
+
+ITER2 round1 slot04 实际边界切换（2026-10-29 15:00）：A1 `bt_slot04_c000016/u001280` finite 原子保存后，由唯一owner创建并启动 A3 第三seed `bt_slot04_c000017`，seed 2026112904。`ROUND1_LAST_HANDOFF.json` 的谱系源为 slot01 A3 `u001200` Actor，记录 policy/state SHA；Critic、Adam、env、aux、RNG与combat ring依决定重置并预热20步。丢失正式更新0、worker信号0。当前GPU4 smoke已启动，fresh restore与正式首更仍待实际回执；状态 `runs/bomb_threat_v1/iter2/ROUND1_SLOT04_HANDOFF_PROGRESS.json`。
+
+ITER2 round1 slot07 A2停止与A3第二seed handoff（2026-10-29 15:10）：`bt_slot07_c000016/u001280` 原子结束，A2未再续chunk；唯一owner创建A3第二seed `bt_slot07_c000017`/2026112907。沿用slot01 A3 `u001200` Actor，PBT谱系policy SHA `9445f58a...08b34`，新初始化Critic/Adam/env/aux/RNG/ring并预热20步。slot07 warmup gate PASS、EV0.985、Actor冻结精确；smoke和fresh restore继续进行。slot04第三seed已完成warmup（EV0.975）、smoke两次finite更新且restore parity PASS，已进入正式worker。技术smoke步不计作能力评估；无正式worker信号。状态收据 `runs/bomb_threat_v1/iter2/ROUND1_SLOT07_HANDOFF_PROGRESS.json` 与 `ROUND1_SLOT04_HANDOFF_PROGRESS.json`。
+
+ITER2 round1 A3双seed正式更新验收（2026-10-29T15:28:01+08:00）：slot07 A2和slot04 A1在c16/u1280原子边界退出，丢更新0、worker信号0；新A3第二/第三seed分别为`bt_slot07_c000017`/2026112907与`bt_slot04_c000017`/2026112904。Actor来源slot01 `u001200`（policy SHA `9445f58a0750ed57fca0163c654c2211dcc0559b8bf620b68d64ca47ada08b34`）；重置Critic/Adam/env/aux/RNG/ring、20步预热（Actor精确冻结）、smoke和fresh restore全部PASS。正式u3 finite、262144环境步/32优化步，Actor/Critic ΔL2分别0.072747/1.056168与0.072310/1.151360；冷启动周期单列。现场slot07 u40约19290env/s、slot04 u65约20297env/s，两网非零更新。最新原子点slot07 u40、slot04 u40的实际state/policy SHA已匹配；旧c16/u1280 state.pkl已被保留策略清理，旧state SHA仅引用COMMITTED，不声称重算。最高优先holdout u680/u720双模式各64局均COMPLETE，相对PASS/绝对FAIL、不晋升。接受收据`runs/bomb_threat_v1/iter2/ROUND1_A3_SEED_ACCEPTANCE.json`；唯一owner继续训练，A3b未启动。
+
+### ITER2 ROUND2 / STEER1530只读奖励审计（20261029）
+
+已消费`.hermes/STEER_20261029_1530.md`，round1 slot07接受收据先完成。A3b搁置、不执行；A4拟在slot07下一自然chunk边界完整续接Actor/Critic/Adam等，仅增加交付+.10/cap.30，但只读准入发现科学前提冲突：当前A3实际已有去重transport_capture +24、窗口首次库存steal +.75，系数1真正进入collector/GAE/PPO。冻结slot01最近三个保存点u1240/u1280/u1320，各40更新、10,485,760tick；真实交付13,981/13,727/13,770，交付支付334,752/329,352/330,528，均约77.1%净总奖励；首次条件库存支付9,144.75/8,905.50/8,942.25。支付时刻与窗口事件可能错位，除系数只叫支付单位，不当raw计数。旧日志缺全部击杀窗口/窗口内取包/同次交付ID，control entry/residual不冒充完整漏斗；含Bank混合，分母明确，缺数据写null。state历史按既有授权已清理，无法复原原采样轨迹；无重跑冒充。冻结manifest/快照/hash/结果在`runs/bomb_threat_v1/iter2/round7_audit/`，4项focused通过；报告`reports/bomb_threat_v1_iter2_round7_20261029.md`。状态`AUDIT_COMPLETE_BLOCKED_REWARD_PREMISE`，已询问是否保留原奖励额外叠加+.10；未改奖励、未建A4、未改变任何训练owner/worker，slot07继续A3、训练不停。执行收据`runs/bomb_threat_v1/iter2/STEER1530_EXECUTION.json`。
+
+
+### BT-ZERO-BOMB-1420（20261029，被动零放泡审计）
+
+协议 `.hermes/STEER_zero_bomb_20261029_1420.md`；奖励/训练seed不变，parent/A3u720固定dev32/36/42/44、holdout26/30/36/38各一局，另A2u800 dev34/46，共18完整生产JS Review。全部原outcome parity/hash及浏览器通过，最终相关101项Python回归通过。闸门单方0/对手>0、双方0单列，relative≤parent+3、absolute≤7；初次全量重判627点，所有自然marker/raw记录保留。parent dev/A3u720/A2u800单方零泡3/6/14（均64局，按seat），不同于P0固定索引参考。Hunter两格困局无安全放泡逃生，但可炸砖忽略后连通，不声称永久无路；A2两局拒因149死+1糖浆、60死。详见`reports/bomb_threat_v1_iter2_round1_20261029.md`零放泡审计、`runs/bomb_threat_v1/iter2/zero_bomb_audit/COMPLETE.json`、`REGATE_ACCEPTANCE.json`。训练不停止、不改sim、不晋升/发布。
+
+
+### BT-SEAT-ASYM-1700（20261029，训练不停的座位审计）
+
+执行`.hermes/STEER_seat_asym_20261029_1700.md`，不改奖励/采样/闸门。6类对手learner P0/P1=100%/0%，有效历史及当前7chunk实际tick、非terminal tick、reset分母和日志前缀SHA见`runs/bomb_threat_v1/iter2/seat_asym_audit/EXPOSURE.json`，无效祖先已排除。P1 current/ring/fixed推理不作为PPO样本；rule3记录标签实际分派tier3=hunter需明示。固定A3u720四fixture×双seat：JAX/JS各自交换身份obs/state/logits全0差；跨引擎输入容差<2.4e-7，真实fp32导出logits<2.5e-6；原生JAX bf16与JS fp32精度差分列，不误称P1bug。两引擎各10项方向probe通过。644点评估双模式补by_seat、字段加和核验，原raw/marker不改；新增4项focused及相关109项GREEN。A3 holdout P0 11/20/1 vs P1 1/27/4，单方零泡0/32 vs6/32；P1放泡/击杀反较高，不能凭座位关联断定唯一原因。50/50独立版完整座位绑定方案待批准，尚未实施；A4原+24/+.75/PBRS与拟+.10cap.30叠加/替换歧义待澄清。详见`reports/bomb_threat_v1_iter2_round1_20261029.md`座位不对称节和持久`STEER_SEAT_ASYM_EXECUTION.json`；7路finite非零更新持续，旧暂停/BEST/网页不动。
+
+### BT-A3S-SEAT5050-V1（20261029 17:20，批准实现及chunk边界切换）
+
+授权`.hermes/DECISION_seat5050_20261029_1720.md`，冻结`runs/bomb_threat_v1/a3s/PROTOCOL.json`及`amendment01_details.json`。slot04/07各2026112904/07，slot01保留P0 A3；每seed固定640×262144=167772160正式真实步，20Critic warmup额外5242880步，1update smoke计入正式预算，每40原子保存/异步评估。仅改learner seat，seed-fixed2048env严格1024/1024；完整绑定输入/mask/action/reward/GAE/credit/custody/窗口/老师，Bank真实P0不relabel，条件P0 .5/P1 0维持名义总体.25（仍含旧arena override）。A3×5/cap.6、网络、opponent权重、课程、LR/entropy/batch均不改。切换取slot01最新原子Actor、新Critic/Adam/env/aux/RNG/ring，20预热和40LR ramp。默认seat0直接复用旧collector，TDD及真实Bank/更新parity为启动门槛。640按dev/holdout各64两模式分seat；同期A3对照按训练时间冻结最新原子点、不择峰，greedy P1胜-负+5/P0退步≤3/总单方0不增。run/源SHA/真实首更新接受收据自动写`a3s/FIRST_FORMAL_ACCEPTANCE.json`，未运行阶段不标完成。日志展示rule3/jax_hunter更名hunter_tier3a/b，不改原调度；A1未实际降低独立弱对手比例。详见round1 A3S节。
+
+
+### BT-B-FRESH256-SLOT01-U800-V1（20261029 17:35）
+
+授权`.hermes/STEER_fresh256_20261029_1735.md`已消费；候选Actor SHA `8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6`。协议及执行前阈值解释`runs/bomb_threat_v1/fresh256_slot01_u800/{PROTOCOL,amendment01}.json`。hard/normal/easy新seed各256、P0/P1各128、生产JS带砖自然2400原生终局；候选双模式，父/transport1536/selfplay3072同seed仅greedy，共3840局。greedy判定、categorical只报告，不读结果选seed；各档B累计计数阈值按64→256同比例扩展，比例阈值不变。现有候选真实训练前缀塑形占比沿用，不用JS近似回算替代。出生池复用holdout64而新seed，覆盖限制明确。唯一CPU owner模块`scripts.bomb_threat_fresh256`，4 worker、核68–71，逐8局原子SHA验收/恢复不重跑完成局；不阻GPU，不改奖励/闸门/BEST/网页。启动验收以实际完成分片为准，不以进程存在冒充完成。结果`RESULTS.json`及`reports/bomb_threat_v1_fresh256_20261029.md`持续更新。新增3项Python回归与JS默认/三档绑定测试通过。
+
+A3S已由119项GREEN+真实32取包Bank/40完整状态及default逐位CPU parity放行；唯一owner原子边界消费，slot04新c19从slot01 c18 u1840 Actor开始20预热；slot07待自身完整边界；收据`runs/bomb_threat_v1/a3s/SLOT04_HANDOFF.json`。未声称尚未完成的GPU正式更新。
+
+
+A3S slot04首个真实u1已完整原子保存：Actor L2 `0.033066137844872064`、Critic L2 `1.0973373821330488`、finite；state SHA `560520afc910f4fb78976a867c980a7e657342fa7ec08e5790395c6daa9f2ba0`，policy SHA `bba56bf1c1b2fe0a52e47a3e6340ad6ff64c99378fc7bcd4235de89228bb5195`；seat ticks `[131072,131072]`，Bank P1 tick/reset=0。证据`runs/bomb_threat_v1/a3s/FIRST_REAL_U1.json`；first cycle含新图编译196.55秒，不把该值当warm吞吐。完整smoke摘要/fresh恢复及u2验收继续，未把u1当全部完成。slot07已在完整u640切换新c19，Actor来源slot01 c18 u1920（SHA `99bff287caa8318f80e20c26d75503e8e43cd96866fef31e27173ba53bfb2e69`），0更新丢弃。
+
+
+追加验收：A3S slot04 smoke已通过，fresh进程`RESTORE.json`证明next-step、Adam、完整env/aux/RNG及ring逐位一致，已由唯一owner启动正式worker；slot07预热20次亦通过，Actor冻结，仍在1次smoke。fresh256已累计128局真实终局分片，新增32项focused全绿（独立于原119项），三档Hunter实际绑定及默认normal生成源码逐位等价测试通过。四核评估前后其他5路训练20update中位吞吐比0.9981–1.0029，未发现超过5%下降；证据`runs/bomb_threat_v1/fresh256_slot01_u800/FIRST_ACCEPTANCE.json`。CPU唯一有界owner及watchdog可接管，遇BLOCKED不盲重跑，完成局保留，终态自动通知；不恢复旧队列。
+
+
+A3S slot04恢复后u2真实非零，稳定u6约20,006 env/s（13.103s/cycle），实际评估异步；`runs/bomb_threat_v1/notifications/A3S_SLOT04_FIRST_FORMAL.json`为owner已消费正式验收。slot07技术阶段继续；fresh256单独CPU不更改训练配方或默认模型。
+
+
+### A3S两路正式验收（20261029）
+
+- slot04 `bt_slot04_c000019`：20次Critic预热、1update smoke、fresh next-step/Adam/env/aux/RNG/ring逐位恢复通过；恢复后u2 finite，Actor L2 0.045833779、Critic 1.218737028；state SHA `106fc92900b7f76229e4f3cb9213750cbcf1a58ea0df57e9767558563ff4445b`，policy SHA `e5d89d35b29bd7e317636a4cf4e6b8bfae610175da7c86aea1538266225dac86`。两seat每update各131072，P1 Bank tick/reset=0，旧chunk丢弃0update。
+- slot07 `bt_slot07_c000019`：20次Critic预热、1update smoke、fresh next-step/Adam/env/aux/RNG/ring逐位恢复通过；恢复后u2 finite，Actor L2 0.053247931、Critic 1.279500340；state SHA `341f9ac558fc9b96ec9bd142ba5b311e9c34b12d6ff22cb1296e16766c11512a`，policy SHA `080550bda3b2381f751996ba42a97266cc6509c35387cd09f64c29effe29aa34`。两seat每update各131072，P1 Bank tick/reset=0，旧chunk丢弃0update。
+
+唯一owner消费后的验收`runs/bomb_threat_v1/a3s/FIRST_FORMAL_ACCEPTANCE.json`，自动逐slot京ME通知已存在。两seed各固定640正式update，u1 smoke计入预算；每40保存评估，slot01原P0 A3保留，05/06不动。fresh256仍CPU异步，B未完成不标PASS，不晋升BEST/网页；无push/publish。
+
+
+17:35任务现场续接收据：`runs/bomb_threat_v1/fresh256_slot01_u800/LATEST_EXECUTION_RECEIPT.json`。A3S两路均已恢复后正式finite/nonzero，现场slot04 u42约20,035 env/s、slot07 u12约19,983 env/s；两条原A3完整u640退出，丢弃0更新，训练owner始终唯一。fresh256当前256/3840完整局已验收，B=INCOMPLETE（仅已完成hard/candidate/greedy256，其他条件继续），不得把首条件完成等同B通过；CPU owner/watchdog唯一且已接管。两路首次正式通知均有持久收据。
+
+
+### BT-FRESH256-GATEFIX-1945（20261029，判定/报告修复，训练不停）
+
+消费`.hermes/STEER_gatefix_20261029_1945.md`。根因：`gate()`缺参照提前return清空已知失败，`publish()`未采齐矩阵再强制INCOMPLETE；改为逐条件完整256局依赖、FAIL与缺数据分列，采集完整标记独立。hard原始候选42/207/7 vs父11/242/3，胜减负差27<32、单方零泡40>28，B=FAIL；hard参照后来补齐仍同结论，normal/easy继续唯一CPU owner采集，未占训练卡。协议/阈值/seed/JS/model冻结，判定Python单独source amendment，旧完成分片hash不变；RED三失败→相关Python50 GREEN、JS三文件通过。state清理造成初始验收空列表使owner反复重启，另补RED/GREEN，改验当前chunk保留原子点；仅supervisor重载，worker信号0。现场A3S slot04 c20 u474约20251env/s、slot07 c20 u440约20220env/s，两网finite非零，固定640严格分seat/dev/holdout门槛不改。PBT选择无自动执行路径，额外复制授权0，持久hold保护00/03对照等编排。击杀/百泡按真实放置分母已接每轮报告；历史u320–400/u360–440三连低70%只通知，最近三点未触发、不改配方回退。收据`runs/bomb_threat_v1/fresh256_slot01_u800/gatefix_1945/EXECUTION_RECEIPT.json`，报告`reports/bomb_threat_v1_gatefix_20261029.md`、主fresh报告及第8轮fresh观察。未晋升/发布/改网页，旧暂停保持。
+
+
+### BT-A3S-EXT1280-2040（20261029）
+
+执行`.hermes/DECISION_a3s_640_20261029_2040.md`。保留u640FAIL/PENDING及固定同期对照，slot04/07原seed/full state续额外640至累计1280，非择峰。c21 smoke u641、fresh next-step/Adam/env/aux/RNG/ring及正式u642有限两网非零验证，GPU4/7已恢复约20.3k env/s。u1280严格seat门槛不改，FAIL停止A3S、按原P0 A3初始化约定接续。slot01新评估P0逐点前8均值监控，2点触发只威胁×5→2.5、下完整chunk执行，其他不改；暂不PBT复制。CPU真实state32env×128tick审计实际泡141，即时威胁并集22/141、无即时证据119/141，明确非无用泡或全局比例；trace/hash完备。hard候选P0/P1 W-L35/0、单方0/40；父4/4、单方23/27（各seat128）。GPU2唯一真实native256回补继续。39项相关GREEN。报告`reports/bomb_threat_v1_iter2_round9_20261029.md`、收据`runs/bomb_threat_v1/a3s/extension1280/EXECUTION_RECEIPT.json`。未发布/改网页/恢复旧队列。
+
+
+### BT-BEST-REPLAY-U800-2100（20261029）
+
+固定A3 slot01 c15/u800，policy SHA `8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6`。CPU-only生产JS stock-window-v1/hard Hunter/greedy/teacher off/2400完整tick，fresh顺序index0–7（P0/P1各4），补充最早P1零泡index1/5为重复聚焦：10入口8独立局。8局原outcome全字段MATCH，10入口标准Review全局hash/终局及播放/seek浏览器PASS；OSS同对象内部路由HTTP200逐字节一致，外网直连本机超时单列，不伪称外网浏览器PASS。HTML SHA `12a1d56f9ecc7b0876680e7c0eb81414b28215f8c683ea354edbf629806880c6`；奖励未记录。报告`reports/bomb_threat_best_replay_20261029.md`，回执`runs/bomb_threat_v1/replay_best_u800/RECEIPT.json`。仅上传自包含录像HTML，不上传模型，不改网页/BEST，健康GPU训练不停。
+
+
+### BT-BEST-REPLAY-ADD-WINS-2105（20261029）
+
+按追加冻结协议保留原10入口及URL，补P0胜index14/24/28、P1胜183/189、P0负60、P1负35。17入口/15独立局；新增7局与原hard fresh256 outcome全部MATCH；全部17入口本地/OSS内部对象浏览器Review/播放/终局PASS、console零错误。HTTP200逐字节一致，新HTML SHA `9b93d9fc32fbbb1cb0b8154cd82d631e41808e604234c64184a50c304c653e0e`。回执`runs/bomb_threat_v1/replay_best_u800/RECEIPT.json`、选局`ADD_WINS_PROTOCOL.json`/`ADD_WINS_SELECTION.json`、报告`reports/bomb_threat_best_replay_20261029.md`。GPU2/5实际原owner健康，GPU5真实更新递增、GPU2真实扫描，保留瞬时利用率波动证据；未重启、未打断训练，未改网页/BEST/权重。
+
+
+### BT-A3S-AMENDMENT03-SLOT04-GUARD-2140（20261029）
+
+消费`.hermes/STEER_slot04_collapse_20261029_2140.md`，CPU只读对比slot04/07 c20/c21每40更新熵/KL/clip/放泡概率/seat/奖励分项；原始输入SHA及32完整窗口见`runs/bomb_threat_v1/a3s/amendment03/DIAGNOSIS.json`。威胁/拓扑/连锁仅合并实付，原生胜负及自伤/被炸训练死亡未独立记录，不猜分项。两路fullstate u640→641/642 fresh恢复均exact，seat严格50/50；未发现slot04全局熵塌缩或aggregate安全负项增加，不能证明单一原因。护栏从u880连续3个dev argmax64点P0 W-L≤0且两seat单方zero≥12，缺点不跳接；触发仅下完整320 chunk转P0 A3、保留当前完整state/seed，在途P1自然结束后全P0，迁移技术smoke/restore按原owner流程，slot07固定1280判据不动。当前u880(+3,11)/u920(+4,6)均不满足，未早停/改配方。35项GREEN；唯一supervisor重载加载，训练worker信号0，旧队列不恢复。报告`reports/bomb_threat_v1_iter2_round10_20261029.md`，持久协议/护栏/回执同amendment03目录。未push/发布/删除。
+
+
+### BT-U800-LOW-BOMB-DIAG-2120（20261029）
+
+CPU4worker：固定u800/hard fresh256/productionJS stock-window-v1/greedy/teacher off，按index低泡≤5排除双方0：P0不足16实取15、P1=16；同seat≥16高泡各16，共63全局MATCH/147398tick。每tick BFS/去砖/动态泡对照、区域/动作/放泡概率rank与合法威胁机会、拒绝原因，初始每200tick快照；不把INF叫无路、不把logit叫Q。冻结描述分类31低泡：砖隔开9、少接敌1、argmax中等概率0、压制1、其他20；非唯一因果。P0威胁机会P(bomb)0.879% vs13.472%，P1 2.775% vs9.345%，不能归因权重或单纯argmax。观察器笼中心/同格先放时序修正，原动作复算，无模型重跑；6tests和逐tick独立复算PASS。追加4类别代表到原OSS URL，21入口/16独立局，全浏览器Review/播放/终局PASS与HTTP200字节一致，外网直连限制披露。协议/原始/SHA/回执`runs/bomb_threat_v1/low_bomb_diag_u800/`，报告`reports/bomb_threat_v1_low_bomb_diag_20261029.md`。训练/奖励不改，不push/发布。
+
+## P0振荡/持包停滞审计（20261029）
+- 协议/证据：`runs/bomb_threat_v1/p0_jitter_u800/PROTOCOL.json`；15局P0低泡+16局P0高泡，原Review完整轨迹，CPU被动重算，训练与奖励不改。
+- 结果/复算：`runs/bomb_threat_v1/p0_jitter_u800/RESULTS.json`、`RECOMPUTED.json`（31局、70598 tick，独立坐标/动作/50tick窗口复算 PASS）；几何修正 `GEOMETRY_CORRECTION01.json`（crate为可走过拾取物，未重录/未forward）。
+- 结论：低泡原始振荡31450/36000 tick，高泡21050/34598；低泡持包停滞2850 tick（2局），高泡3100（4局，分类重叠可跨类）；低泡LR直接反转15870次，高泡12222。index14/78持包2232/2095 tick至超时，动态/静态图被砖阻隔，去砖连通；不称永久无路。训练φ未记录，报告仅给JS几何proxy；Sim无角色身体互阻。
+- 录像：原OSS对象追加25入口/16独立，中文时间轴可seek；`runs/bomb_threat_v1/p0_jitter_u800/RECEIPT.json`。
+- 并行观察：A3S 1280 P1砖隔开9局已登记为非门禁观察请求，不新增GPU/不声称执行。
+
+## P0振荡/持包停滞后续定位与H0/H2/H4诊断（20261029）
+- 协议：`runs/bomb_threat_v1/jitter_followup_u800/PROTOCOL.json`；冻结u800，H0/H2/H4共192局，dev seed2026122900–2026122963，每臂P0/P1各32，hard Hunter生产JS带砖完整2400tick，老师关闭。不训练、不改奖励/网页/BEST；ability逐tick，固定移动保持1/2/4tick。
+- 可逆性：6局原Review从出生复核，取包前300tick路径；取包时均可连回窗口起点，但六局出生即未连己笼、之前未访问己笼；无推箱位移。index42格56敌泡982tick阻挡，另路仍连通。逐格/时刻/owner见`PATH_OBSTRUCTIONS.json`。
+- 振荡定位：无上步动作/朝向/速度向量输入，有global5/8速度成长；8局JAX categorical原生自然探针已结束，非历史混合collector；逐组反转与危险分母、对照结论以RESULTS/报告及最终RECEIPT为准。
+- 执行中：CPU-only有界任务，192局待最终汇总；原训练owner保持唯一，slot04/07原计划1280原子终态等待dev/holdout，其他健康训练继续。
+
+## A3SR 与 slot04 PBT — 20261030
+
+A3SR reset-only 新arm：640正式update，seed2026112905，起点为接管时slot01 A3最新Actor，20update Critic预热；尚未启动，当前让位用户优先发布。CPU100k reset与5项测试完成，JS安全审计待完成。slot04另按编排23:50授权在c23完整u320边界复制slot07c23最新完整state，独立RNG、不预热；持久闸门 `runs/bomb_threat_v1/iter2/pbt2350/AMENDMENT.json`，现有唯一owner已加载并接管7worker。详情与限制见 `reports/bomb_threat_v1_a3sr_20261030.md`。
+
+
+A3SR恢复（20261030）：u800 stock-window-v1已发布并同SHA线上验收后解除暂停。独立A3SR冻结`runs/bomb_threat_v1/iter2/a3sr/PROTOCOL.json`、来源分母修订`AMENDMENT01.json`；8项A3SR+3项PBT测试通过。NumPy/JAX各100k reset分开验收；JAX随机50131、回退0，去砖率均值.1506869。生产JS hard双方前200tick1000局：原生503/随机497，自炸事件均0，非完整局能力。50%只指eligible空手fresh resets，Bank不改、不伪携包，实际collector暴露单列。slot05旧u6720已原子护栏停止；现有唯一owner接新arm，640更新固定预算+20Critic预热，2update smoke≥18k和fresh恢复后正式。报告`reports/bomb_threat_v1_a3sr_20261030.md`。后续代码未commit/push，旧训练持续。
+
+A3SR当前实际run `bt_slot05_c000025`，父Actor `bt_slot01_c000024/u003680`，policy SHA `cbe140bcabdf743a2321537013f54c1b02e87c037b39380bb01ec5a3a12ee2ce`；初始化Actor logits位等，20Critic预热进行中。固定终态对照两路A3S c22/u1280，dev/holdout逐seat/窗口取包/同链交付；9个P1原砖隔开自然seed已冻结，终态异步CPU执行。`EVALUATION_MANIFEST.json`、`BRICK_OBSERVATION_MANIFEST.json`及被动观察器/判定器单测另存，训练protocol和奖励未改。
+
+
+### WEB-U800-STOCKWINDOW-PUBLISH-20261030
+
+用户明确选择方案1，独立integration工作区仅对战页改加载`sim-stock-window-v1.js`，旧sim/Review/training路径不变；u800设默认，greedy保持，目录保留全部旧10条模型。发布生产commit `090e40c2f36c6da7124e3f14a71f71bd3b3432de`，最终纯文档head `4f5bf548e31c82a6ca97a9a638ede1a2350bc428`；tag `web-bun392-a3-u800-stockwindow-20261030`。Actions #40912638400 success，线上build-info同head、manifest和新sim SHA相同。75张量导出一致，Python最大误差6.411e-6、WASM7.365e-6；实际线上Chromium无缓存默认P1推理24tick finite、greedy、nativeItems/nativeTrap=true、console/pageerror0，数据库写入屏蔽。规则16seed3840非库存帧相同；npm/test:review通过，旧Review相关145文件hash不变。隐私0、diff/大小通过。新旧排行榜无version字段，静态提示成绩混排；P1弱及fresh256科学门槛FAIL如实披露，用户选择发布不等于证明推广门槛PASS。完整证据`runs/bomb_threat_v1/PUBLISH_U800_STOCKWINDOW_DONE_20261030.json`及`reports/publish_best_a3u800_web_model_20261029.md`。已京ME通知，训练未中断；A3SR发布暂停后已恢复。
+
+A3SR实测（20261030）：20预热PASS，Actor逐位冻结、EV0.94138856；u1/u2 smoke finite、Actor/Critic非零，u2=18,907.62env/s。193合法fresh reset随机95/native98/回退0，完整暴露分母及原子SHA见`runs/bomb_threat_v1/iter2/a3sr/SMOKE_ACCEPTANCE.json`。state u2 SHA `521ff006378aeae26ac0353bee99c87cf15750b7fe6c7d7c4bff6672eed9a28f`；39相关GREEN。冷启动延迟已如实记录并随两更新通过标RESOLVED，fresh恢复独立进行，不能冒充正式首恢复后验收。slot04 PBT u283首更新已验finite/nonzero，稳态约20.4k；复制slot07c23u280最新原子state及独立RNG，不预热。两项均现有唯一owner，0训练worker信号。
+
+A3SR fresh进程next-step/Adam/envauxRNG/ring全部exact；首恢复后u3 finite，Actor/Critic L2=.0731988274/1.4679046902，正式786432步+预热5242880步分列。u3含进程冷启动，稳态仍引用u2的18907.62env/s。验收`FIRST_FORMAL_ACCEPTANCE.json`；唯一owner/watchdog接续固定640、终态异步自然分seat评估/9局观察与通知，未伪称640完成。总收据`runs/bomb_threat_v1/PUBLISH_AND_A3SR_RESUME_RECEIPT_20261030.json`。
+
+GPU2/A3SR现场复核（20261030）：唯一原生owner实际计算，完成936→941，保留A3S/PBT/u800/父点24点逐局与原始SHA全部验收；fresh256的15条件3840局/960文件哈希与seed/seat/terminal全齐，能力FAIL不重跑。GPU2样本0/76/79%，明确任务切换空隙，不冒称持续>70%。A3SR `bt_slot05_c000025` 正式u34、8912896步，finite、两网非零，19589.50env/s；固定640预算继续。验收`runs/bomb_threat_v1/NATIVE_AND_A3SR_ACCEPTANCE_20261030.json`，报告`reports/bomb_threat_v1_a3sr_20261030.md`；训练worker信号0，owner重复0，未改协议或发布。
+
+## STEER monitor 0200 — 20261030
+
+按`.hermes/STEER_monitor_20261030_0200.md`落实两个指定holdout置顶：slot03 c25 u4800、slot07 c24 u480；原CPU JS argmax/categorical各64局，GPU2独立辅助每模式256局。持久指令`runs/bomb_threat_v1/MONITOR_20261030_0200.json`由报告刷新消费，避免刷新覆盖人工排序；17项focused回归GREEN。两目标原生已完成，JS异步收齐中。slot06 u6960/u7000/u7040/u7080原始分片复算：击杀6/5/10/13、单方零泡13/6/7/1，仅2/4触发，未达REGRESSION判据；不回滚。配置/常数LR/熵系数不变，source next-step/Adam/envauxRNG/ring exact，对手类型ticks配比相同，但不能排除ring策略与状态访问漂移。保留u4760/u4840及u440/u520邻点；本轮不复制PBT、不改配方、不晋升、不发布。A3SR固定640预算持续。报告`reports/bomb_threat_v1_round13_20261030.md`，原始hash/门禁/训练现场`runs/bomb_threat_v1/MONITOR_0200_ACCEPTANCE.json`；最终结果待齐后回填。
+
+STEER0200终态（20261030）：两个指定holdout已按相同生产JS各argmax64/categorical64完成、逐片哈希复核；新arm额外τ0.5辅助64亦完成。slot03 c25 u4800 argmax13/49/2、击杀24、死亡24、泡25.90625/局、单方零泡12，A PASS/B FAIL（零泡、击杀、死亡）；slot07 c24 u480 argmax21/43/0、击杀41、死亡22、泡31.234375/局、零泡7，A PASS/B FAIL（死亡>父+5）。两目标GPU2辅助也完成；B均FAIL不立fresh256、不晋升。slot06仅2/4触发，THRESHOLD_NOT_MET；不复制PBT/回滚/改配方/发布。`runs/bomb_threat_v1/MONITOR_0200_ACCEPTANCE.json`与消费收据均COMPLETED，round13已原子收尾，京ME终态通知完成。7路训练按原owner继续。
+
+## A3SR-ROUND14-20261030
+
+授权 `.hermes/STEER_a3sr_fresh256_20261030_0405.md`，消费及冻结 `runs/bomb_threat_v1/iter2/a3sr/round14/AUTHORIZATION.json`。u640正式A/B均PASS：holdout argmax26/38/0、击杀45、死亡4、泡45.015625/局、单方零泡3、笼内/自伤0；categorical27/35/2；窗口取包26、同链交付10。23击杀局59.304泡/局，41非击杀局37泡/局；45/2881为聚合击杀事件比率1.562%，非逐泡命中率，原分片命中ID缺失。全64逐局泡量及SHA见 `HOLDOUT_AUDIT.json`。
+
+独立fresh `runs/bomb_threat_v1/fresh256_a3sr_u640/PROTOCOL.json`：hard新seed2026153900–4155、normal2026154900–5155、easy2026155900–6155；候选argmax/categorical各256、P0/P1各128，父及两个固定网页参照argmax匹配各256，总3840局CPU异步；沿用holdout64出生几何池循环，不冒称新地图。GPU2优先辅助768局已完整结束，greedy183/73/0、categorical183/73/0、tau.5 189/67/0，仅JAX辅助，不替代生产JS B闸门；邻点u600 holdout请求固定64/模式。
+
+GPU5从 `bt_slot05_c000026/u000640` 完整state/Adam/env/aux/RNG/ring延长至1280，新增640更新/167772160步；配方不变（lr7.5e-5、熵.005、env2048×128、mb8192、Bank.25、A3SR reset）。现有唯一owner领取新 `bt_slot05_c000027`（先640→960，再自动接960→1280），原donor parity exact、smoke u641/u642非零、fresh恢复exact；首正式u643 finite，Actor/Critic L2=.8112094524/1.4822445191，新增真实262144步；u643含冷启动，不能作稳态吞吐。验收 `round14/SLOT05_FIRST_FORMAL.json`。
+
+slot07精确复制尚BLOCKED：旧清理器在GPU5真实更新后释放source并删除u640 state，pin加入太迟；policy/COMMITTED/评估保留。已停旧清理器、修持久pin与替换线最新state保护、9项回归后重启；当前u641/u642及slot07末状态保护，不以u642冒充u640。`round14/DONOR_RETENTION_INCIDENT.json`记录实际删除和所需SHA，等待同SHA副本或明确来源修订，slot07原线和其余训练继续。slot00退化仅报告、不改配方。历史watchdog148源于旧被动A3S验收IndexError，当前修复已在场；本轮owner-only reload由watchdog收养7worker、未向worker发信号，slot01前2更新是smoke后fresh恢复而非崩溃。报告 `reports/bomb_threat_v1_round14_20261030.md` 持久CPU看门狗异步回填；无晋升/发布/push。
+
+## A3SR-ROUND15-P1ZERO-SLOT07-20261030
+
+授权及更正：`.hermes/STEER_fresh_p1zero_slot07_20261030_0610.md`、`.hermes/STEER_fix_20261030_0615.md`。替换依据改为现行slot07 c27 u1400–1520 dev胜负差+9/+8/+14/+15、单方零泡17–20（主要P0）、泡15–21/局；撤回旧chunk u1800–1920及8.5泡的误引。新授权不再要求已删除的u640完整state，但仍要求slot05当前链完整donor dev胜负差≥25、单方零泡≤4，先pin。已预先保护u1080–1280 cadence及被替换slot07当前chunk末state，不能把已删除state的u1000/u1040作为可恢复donor。u1080=25/35/4、+21、零泡5；u1120=26/37/1、+25、零泡6；u1160=20/42/2、+18、零泡2，均不准入。剩余候选由唯一训练owner实际消费，自动逐点验收；准确冻结donor、SHA和正式首更新以`runs/bomb_threat_v1/iter2/a3sr/round15/{AUTHORIZATION,DONOR_ADMISSION,SLOT07_HANDOFF,SLOT07_FIRST_FORMAL}.json`为准，不预称完成。
+
+调度仅slot07：等待当前chunk完整原子提交，保留旧末state；完整复制Actor/Critic/Adam/env/aux/ring及计数，先donor next-step exact，再独立target seed2026112907 rekey；collector seed仍2026112905以保留A3SR重置语义，无Critic预热或奖励账本重置。新slot07保持现有320更新chunk（83,886,080新增真实环境步），届时等待明确延长；`BUDGET_AMENDMENT01.json`记录未指定长度的保守解释。slot05原1280上限不改，其他slot不动。仅owner重载，7个既有worker收养验证通过，训练worker信号0；29项相关回归GREEN。round14封存源码与训练ABI未改。
+
+诊断冻结`round15/diagnostic/MANIFEST.json`，候选u640 policy SHA `7c5c2d535218b38e5c61e263c23556f787e3a2784c3486b76b25862938fe015c`。生产JS hard固定fresh45局P1+10局P0、holdout normal3局P1，CPU2路：58/58完整局被动重放与原始终局/泡/请求/击杀/死亡/seed/seat全部匹配。P1整局未动0/45、死亡0/45、早期原生受控/死亡0/45；12/45出生附近局部徘徊、37/45初始砖隔开、33/45在敌首泡前已有≥5次反向切换。首100合法放泡3680tick，masked放泡概率均值0.007271；4局各有一次请求未落泡，不能把全部零泡都归为从不请求。P0初始砖隔开6/10、无局部徘徊；holdout3局P1中局部徘徊2局。完整逐局几何id、敌首泡/己死亡tick、首100动作分布、原始TRACE及SHA均可复算。出生几何仅64个循环4次且奇偶绑定seat；holdout对手normal、fresh hard，存在混杂，不能独立证明几何或座位因果，更不能直接称JAX/JS座位bug。
+
+GPU2原生fresh768局逐事件与初态位置/seat复算通过：argmax P1 raw零泡10/128=单方3+结构7；categorical及tau.5各raw4=单方0+结构4，P0三模式均0。JS hard P1单方45/128、P0单方10/128（P0结构16另列）。两端Hunter实现/PRNG不同，只是辅助对照，不代替生产闸门。报告`reports/bomb_threat_v1_round15_20261030.md`；fresh3840局由原持久CPU owner继续采集，能力FAIL不提前结束采集、不晋升/发布。round15持久被动监控会回填报告、状态、阻塞/首更新/终态通知，不增加训练owner或恢复旧队列。
+
+round15准入补充：u1200 dev32/28/4、胜负差+28、单方零泡1，完整state已在生成前pin，state SHA `b90c86e74f452487c8b782dfb8db169b3fccdd8c51f80a4ae366c02c79afb3f8`，policy SHA `1c6653ef74b17d126c0c5b323d312ec6304c3f7a4288ced98af0eabdba106e41`。接管前取最新已完整评估且合格的donor，接管后锁定来源，不能把暂定u1200冒称最终起点。诊断两路CPU墙钟591.76秒；fresh55局全部平局，P1中20/45整局仅访问2–4格。4次放泡请求未落泡均为几何23的tick4双方同格、P0先落泡而P1被新泡挡住，属于明确放置顺序事件，不概括成全部零泡原因，未证实JAX该事件不同。
+
+round15实际接管完成：u1240 dev25/38/1、+24、零泡6；u1280 dev25/37/2、+23、零泡1，均未准入，因此最终donor为u1200。slot05 c28固定u1280原子终态验收通过，state SHA `5389f5594dc470caf63e44648d1321ab8e89834f458fc32c3724000531ed1599`，GPU5释放、不延长。slot07旧c28在u1920完整结束，state SHA `466570f6862dad2495e05136f0511622f383802ca98e70a508bd9412c6289a59`预先pin且保留，0更新丢失、0worker信号。唯一owner接新`bt_slot07_c000029`，target seed2026112907，u1200→1520固定320更新。真实source next-step/Adam/envaux/ring exact先通过，再独立RNG rekey。u1201/u1202 smoke finite两网非零，u1202约18,764env/s；新原子state SHA `9071f2889ec8a6846cbba7a34bcc36dceb03a7e6f0727f00e8f46ec07fd4fcc3`。fresh进程恢复next-step/Adam/envauxRNG/ring全部exact；恢复后首正式u1203 finite，Actor/Critic L2=.9781814834/1.4719341932，累计320602112环境步（含donor历史），该步冷启动76.26秒；u1204稳态18,936env/s。`round15/SLOT07_FIRST_FORMAL.json`及`FINAL_ACCEPTANCE.json`为真实验收，不以launch代替训练。新run健康继续，u1520原子终态通知已由同owner消费；fresh原队列继续，不晋升、不发布。
+
+
+## ROUND16-GPU5-HOLDOUT-20261030（08:15授权）
+
+- 指令 `.hermes/STEER_gpu5_holdout_20261030_0815.md`；冻结授权 `runs/bomb_threat_v1/iter2/a3sr/round16/AUTHORIZATION.json`，唯一原owner消费，其他worker不发信号。GPU5从 `formal/bt_slot05_c000028/u001280` 完整Actor/Critic/Adam/env/aux/RNG/ring续训至1600，新run `bt_slot05_c000029`，固定320更新、83,886,080新增环境步；A3SR奖励/网络/对手/解码/seed不变。seed/collector=2026112905，无RNG重置、无Critic预热，保留u1200 donor pin。
+- batch=2048env×128tick=262144；minibatch8192、epoch1、LR7.5e-5、entropy.005、DAgger/KL=0。源state `5389f5594dc470caf63e44648d1321ab8e89834f458fc32c3724000531ed1599`、policy `a552a3094182db7d49d498d8ebe37cdae34fc8ba058396661b7e58c2e812699a`。smoke约19078env/s，fresh进程next-step/Adam/env/aux/RNG/ring exact；正式u1283 finite、Actor/Critic L2 0.7581161491/1.4892776601；u1287约19401env/s。验收 `round16/SAFE_RESUME_ACCEPTANCE.json`，32项focused/相关回归通过。
+- slot07 c29 u1280和slot05 c28 u1200各128局生产JS holdout（argmax/categorical各64），固定holdout seed2026132900、teacher off；GPU2仅JAX辅助，等原fresh256完整COMPLETE后开放暂存请求。每个B条款PASS/FAIL/MISSING分列；B PASS才冻结新seed256每档复核（不晋升、不发布）。slot07 u1280完整state在本次pin前已删除，policy保留，不能用于完整PBT；明确记录不伪恢复。
+- slot04 c29 u2120/u2160原始64局argmax复算：胜负差9/18、击杀12/19、泡14.9375/17.84375；slot03最近4点冻结均值9.25/23.75/20.76171875，u2160胜负差未低于均值，条件PBT不触发，slot04继续原线；本轮复制0条。slot00只观察不动。slot07 u1400/1440专门观察，不自行停训或调权重。
+- `scripts/bomb_threat_round16_report.py`为CPU被动报告/依赖监控，无训练启动路径；连续GPU10秒采样。报告 `reports/bomb_threat_v1_round16_20261030.md` 含各slot最近4点总计/P0/P1与原始分片SHA，异步状态持续回填；结果不使用JAX冒充JS，不干扰发布，未commit/push。
+
+- ROUND16 holdout补充：两个点生产JS各argmax/categorical64完整局已复算；slot07 c29 u1280 B=FAIL，仅KILLS_LT_PARENT（26<30），无缺数，塑形占比0.0190537963；slot05 c28 u1200 B=PASS，无失败/缺数，塑形占比0.0190940375。原始SHA及逐条阈值 `round16/HOLDOUT_B_AUDIT.json`。必需两模式先于非门禁tau0.5诊断独立封存，额外诊断继续，未重复对局。slot05后继fresh256每档协议 `round16/fresh/bt_slot05_c000028_u001200_holdout/PROTOCOL.json`，seed hard2026167900、normal2026168900、easy2026169900，三档候选双模式+固定父/旧模型argmax共3840局；只在旧fresh完成后用空出的112–115 CPU核，拒绝以额外GPU占用冒充训练，不晋升不发布。相关测试合计56通过（34训练/调度/保留回归+22评估/闸门回归）。
+
+
+## A3SR-U640-U1280-VS-U800-FRESH256-20261030（08:40追加）
+
+指令 `.hermes/TASK_fresh256_a3sr_20261030_0840.md`，协议 `runs/bomb_threat_v1/fresh256_a3sr_vs_u800_20261030/PROTOCOL.json`；amendment01固定候选2为slot05 c29的完整source c28/u1280（不是后续latest，不择峰）。候选1为slot05 c26/u640固定预算末点。u800已有768局argmax直接复用，无重跑；两个A3SR点新增1536局（2模型×3档×256），hard/normal/easy seed分别2026142900/2026143900/2026144900，与u800完全同清单；每档P0/P1各128、带砖2400tick、stock-window-v1、生产JS Hunter、teacher off。四路CPU worker116–119，GPU不可见，独立评估owner，不重复训练owner；已验收分片SHA复用，只补未完成局。当前GPU5按round16续训，其他训练不动。报告 `reports/bomb_threat_v1_fresh256_a3sr_20261030.md` 按档/座位列WDL、击杀、泡、单方/结构零泡、自伤与P1 vsu800。窗口/取包/同链交付用原生因果账本；窗口专属返程起点和逐cargo死亡/掉包/超时原因旧数据未记录，明确unknown，不能把同局死亡/首偏航当失败根因。原u640 fresh使用不同seed，不冒充本次配对证据。未改奖励/闸门/BEST/网页、不发布。
+
+
+## A3SR-PROMOTION-20261030（编排推广决定）
+
+指令 `.hermes/DECISION_promote_a3sr_20261030.md`，覆盖旧A3SR推广FAIL及同期逐项配对准入，旧B/fresh审计保留历史不改写。共同donor为授权消费时slot05最新完整原子 `bt_slot05_c000029/u001320`，state SHA `0929afc682410bfcb31f694fc77de29454b52f087fc8eb296309b219145299d6`，policy SHA `2db0dcde03476bd3b550af97c2f199a90ea28119d7fd4fc5a6d396bdcb03244e`；先pin后核验，非按分数选择。slot00/03/04/07各等当前完整chunk提交退出后复制Actor/Critic/Adam/env/aux/ring/计数器，donor next-step parity后按各slot seed 2026112900/03/04/07重key RNG，无Critic预热；每新chunk320更新，smoke→fresh恢复→正式。slot05完整自续、RNG不重置，取消旧固定末点停止；slot01/06保持不变。唯一原owner消费 `promotion_20261030/AUTHORIZATION.json`，不建新训练owner，worker无信号。
+
+配方完全继承A3SR：2048×128、minibatch8192、epoch1、LR7.5e-5、entropy.005、DAgger/KL0、原对手/奖励/出生/解码均不改。滚动holdout门禁解释写amendment01：同谱系最近4个40倍数完整点对之前4点，按P0/P1分别算均值；胜负差下降严格>6、单方零泡/自伤上升严格>3、交付下降严格>50%才阻断下一完整chunk，不以小波动或缺评估卡住健康训练。缺8点标MISSING并异步排最近8点holdout，绝不拿同期control作准入。触发时安全保存并通知等待明确回退来源，不擅调奖励。网页候选只看同u800 seed fresh256：P1三档W-L总和>u800且每档≥u800−5；仅报告，不自动改BEST或发布。
+
+推广首更新验收、smoke/restore、起点SHA及谱系在 `runs/bomb_threat_v1/iter2/a3sr/promotion_20261030/first_updates/`；全部四路首更新通过后京ME通知。08:40的u640/u1280-vsu800固定评估与08:15后继fresh继续并行。
+
+
+推广调度验收补充（20261030）：slot07 c30已从共同donor u1320完整接管，正式u1323 finite，Actor/Critic L2=0.9213615886/1.4415499294；其余三槽等待各自完整chunk，不抢断。修正被动holdout窗口按最近40倍数锚定，避免1401–1439等区间遗漏第8个点；保留原门槛与所有逐局数据。10项focused回归通过，worker源码SHA保持不变；仅owner重载，7个训练worker全部收养、信号0。`promotion_20261030/OWNER_GATE_REFRESH.json`为加载验收，完成通知与TASK_CONSUMED现在由真实首正式更新自动回填。
+
+
+推广门禁边界纠正（20261030 amendment02）：原决定的“6以上/3以上/一半以上”包含等号，先前amendment01的严格大于解释有误，保留历史并由 `promotion_20261030/AMENDMENT02_INCLUSIVE_DECISION_BOUNDARIES.json` 覆盖。现在W−L下降≥6、单方零泡/自伤增加≥3、交付下降≥50%阻断下一完整chunk；更小波动和缺评估不阻断。精确等号RED已复现（旧实现误PASS），最小修复后10项GREEN。训练奖励、权重、源码ABI、seed和在途worker不变。
+
+A3SR四槽正式推广验收完成（20261030）：`promotion_20261030/FINAL_ACCEPTANCE.json`=PASS，四路独立RNG摘要不同；donor u1320 state/policy SHA均一致。
+- slot0: `bt_slot00_c000031`首正式u1323 finite，Actor/Critic L2=0.7667934361/1.3841782226，smoke/fresh恢复通过，源next-step和完整Actor/Critic/Adam/env/aux/ring一致。
+- slot3: `bt_slot03_c000032`首正式u1323 finite，Actor/Critic L2=0.9004373037/1.4481896667，smoke/fresh恢复通过，源next-step和完整Actor/Critic/Adam/env/aux/ring一致。
+- slot4: `bt_slot04_c000031`首正式u1323 finite，Actor/Critic L2=0.9018799900/1.5163206946，smoke/fresh恢复通过，源next-step和完整Actor/Critic/Adam/env/aux/ring一致。
+- slot7: `bt_slot07_c000030`首正式u1323 finite，Actor/Critic L2=0.9213615886/1.4415499294，smoke/fresh恢复通过，源next-step和完整Actor/Critic/Adam/env/aux/ring一致。
+- 原槽00/03/04/07均在原完整chunk结束后切换，worker信号0、更新丢失0；新增Critic预热0。共同source state SHA `0929afc682410bfcb31f694fc77de29454b52f087fc8eb296309b219145299d6`。53项相关回归通过；slot05原线继续、slot01/06保持原配方，fresh两组CPU矩阵继续。四槽首更新和总完成京ME已发送，网页/BEST/发布未改。
 
 
 ## WEB-A3SR-U1280-PUBLISH-20261030（用户明确发布授权）
@@ -3938,3 +4268,305 @@ ITER-PBT-V1 GPU评估正式首点回填（2026-10-28）：slot05_c000023_u002160
 生产commit `bec569eabbb9ec1d61b16603c4d3b4d8b862d4d8`，Release/tag `web-bun392-a3sr-u1280-20261030-r1`，同SHA Actions #40997063896 completed/success。代理导致原tag push失败且Release自动建旧tag；旧tag/历史未改写，另建r1，官方Git Data API传输精确本地Git对象、祖先校验force=false快进main。线上完整两资产SHA通过；真实线上P1整局2400tick/2400有限动作通过，使用已核验Pages模型字节缓存、runtime线上加载，console/pageerror0；未缓存冷加载曾超时，不冒称冷网络性能通过。最终纯文档head的Actions/build-info另见完成收据。
 
 新自包含Review `20261030-a3sr-u1280-review.html` 共21入口/18独立完整局；按预声明index选取，含成功/失败/P1零泡/旧砖困同seed，逐局9字段与fresh记录一致。HTML SHA `747a9f846463c57ec8e36041da4f25d2dd7dc7321268355f2666de8423f24895`，OSS HTTP200完整回读一致，本地/远端浏览器全部播放与终局验证PASS，奖励明确未记录。完整逐局清单 `reports/publish_a3sr_u1280_web_model_20261030.md`；公开链接由 `runs/bomb_threat_v1/replay_a3sr_u1280/RECEIPT.json` 交付。发布收据 `runs/bomb_threat_v1/publish_a3sr_u1280_20261030/`。唯一训练owner和既有worker继续，未发worker信号、不恢复旧队列。
+
+
+## A3SR-LINEAGE-WATCH-20261030-1230（发布后JS下滑观察）
+
+指令 `.hermes/STEER_post_publish_20261030_1230.md`，冻结协议 `runs/bomb_threat_v1/iter2/a3sr/lineage_watch_20261030/PROTOCOL.json`。slot05原JS greedy holdout逐点复算：u1960–2080 P1 W−L=10/8/13/8，u2120–2240=9/4/4/1；rolling P1下降5.25、单方零泡增加2.5，初始PASS，低于≥6/≥3阻断线。native JAX Hunter成绩接近饱和，仅辅助，不用于此判断。
+
+u2280/u2320额外128完整自然局/点，P0/P1各64，共用预声明新seed2026173000–2026173127，原holdout64几何重复两次；生产JS Hunter hard、stock-window-v1、greedy、2400tick、teacher off。若原rolling BLOCK，或两个完整额外确认点的P1 W−L均值≤+2，锁存slot05停止请求，只在正在运行的完整320更新chunk原子边界禁止下一chunk，其他槽继续；不自动回退，不改奖励/LR/熵/对手/解码/网页/BEST。
+
+固定四新线slot00/03/04/07的u2400，不择峰；每点三档各256局/P0P1各128，共3072新增局。与已发布u1280复用hard/normal/easy seed2026142900/2026143900/2026144900及原出生清单，u1280完整768局直接复用，不重跑；64几何四次复用及seat奇偶绑定如实披露。JS专用CPU116–119四路，与训练独立；GPU2原native队列异步追随，不占训练卡。
+
+现存及未来指定点已在保留器实际消费的STATE_RETENTION_PINS.json中pin。初审u2080/2120/2160/2200的state.pkl在本授权前已按旧清理规则删除，4482条COMMITTED元数据审计无同SHA完整副本；不能用policy恢复原Critic/Adam/env/RNG。u2240及新u2280完整state保留，缺失与清理时间收据 `RETENTION_INITIAL_AUDIT.json`、`RETENTION_REPLICA_AUDIT.json`，不伪称保留全部历史state或可回退u2080。26项相关回归通过，RED/GREEN日志保留；唯一原训练owner仅重载调度，7个在途worker仍为重载前原进程、38个worker ABI输入未改，worker信号0。CPU观察owner有独立锁和原owner自动接管/重启入口，已启动u2280真实四路JS完整评估，不以launch冒称完成。逐点P0/P1 WDL、因果击杀、泡、单方/结构零泡、自伤/笼内击杀、相对原始路径及SHA持续写 `reports/bomb_threat_v1_a3sr_lineage_watch_20261030.md`；固定3328新增局未齐时明确RUNNING。
+
+
+## A3SR-ATTACK-R1-20261030
+
+协议 `runs/bomb_threat_v1/iter2/r1_attack_20261030/PROTOCOL.json` 及 `AMENDMENT01.json`。共同slot05 u2320完整原子源，独立seed2026183000/3003/3004/3007。slot07仅P1 Bank；00/03另加批准R1奖励包；04另固定45%自对弈；05/01/06不改。每arm640更新×262144步=167772160，保存/评估40更新。正在TDD与真实P1轨迹Bank采集，未宣称正式启动。旧A3SR实际5倍/CAP.6与新R1显式系数/CAP.3差异必须保留解释。详见 `reports/bomb_threat_v1_r1_attack_20261030.md`。
+
+R1技术进展：CPU前置全PASS，100k reset两座位12440/12435；首GPU run `bt_slot04_c000034`在PPO更新前因pool kind int8/int32失败，原日志/源码及排除收据保留；fix01只统一dtype，16项测试过，新`bt_slot04_c000035`在GPU4 smoke，尚未宣称正式更新。原slot04 u2280完整state已被既有retention清理，COMMITTED/policy仍在；共同source u2320完整pin核验不受影响。
+
+R1新版道具修订：`A3SR-ATTACK-R1-ITEMS-V2`，协议 `runs/bomb_threat_v1/iter2/r1_attack_20261030/items_v2/AMENDMENT03.json`。用户/编排方明确授权网页nativeItems=true死亡重置及类型/数量回收，速度1.1/7、超级+5；旧对照05/01/06不动。共同源仍slot05 u2320（state `f7719155dc6a181ddd6938813944de196689acea63239ebb97644bb3dec0db79`，policy `a79beabb101481a165ab7c1a807ae8e2433a4b5a79061067fa3796b22ba2333f`），Actor/Critic/Adam/ring精确，env/aux自然边界重建，Bank按新规则重新真实采集，不把匿名队列伪转类型队列。每arm固定新增640×262144步，同seed2026183000/3003/3004/3007、同batch/LR/对手既定分臂。独立道具high-water各W=.08、总.24，不占进攻CAP.30；死亡不回退，30tick自伤/终局/失控void，Bank已有属性不补发。定向道具JS逐tick7项、进度与接线11项已通过，完整恢复与100k新reset/新Bank等门槛以items_v2收据为准。旧`c000035`smoke仅1次真实更新，u2321原子SHA核验，next-step mesh错误后排除、未formal。新run正式证据尚待GPU smoke/fresh restore，不宣称能力提升。详见当日报告。
+
+R1道具v2前置实测补全：256自然来源局，P0/P1真实窗口取包25/16，41条完整prefix env/aux exact、零排除；其中30条历史high-water高于当前属性，已从完整前缀重建，不把死亡掉档当新进度。新规则100k reset12440/12435（24.875%）；双座位真实速度档位在第30tick各付.011428571306169033，learner投影exact、opponent不变；16条P1 Bank的路线干预194tick有2次实际入P1库存（不冒充自主能力）。24项修复/调度/进度测试、10项JS道具逐tick/恢复/同物理状态编码器测试通过，测试组重叠。新版GPU首尝试c36/c34在0更新时因安装顺序继承CPU backend退出，封存原源码后fix02；新namespace slot00 c35、03 c36、04 c37、07 c35已完成安全边界领取并进入GPU smoke编译，尚待非零/恢复/正式证据。旧05/01/06未修改。前置及门槛SHA见`items_v2/READY_FOR_BOUNDARY.json`。
+
+
+### A3SR-R1-ITEMS-V2正式验收 / STEER1440纠偏（20261030）
+四臂slot00 c35/03 c36/04 c37/07 c35两次smoke、fresh完整nextstep/Adam/env/aux/RNG/ring PASS，正式u2323每臂262144真实步/32优化步且finite、Actor/Critic非零；首更数值、state/policy hash及8卡三次样本见 `runs/bomb_threat_v1/iter2/r1_attack_20261030/items_v2/FORMAL_FIRST_UPDATES_ACCEPTANCE.json`。热态约1.67–1.75万env/s，不把冷编译算稳态。slot05/01/06不动。
+
+14:40奖励包纠偏：slot03 formal早于闸门约61.6秒，已保留竞态收据，按首640正式chunk终点u2960后完整state切独立版本；旧威胁/连接/拓扑.10/.05/.20、CAP.60原样，新项共享独立正预算.10，含道具highwater，死亡不回退、pending作废不返还预算。当前旧配方阶段不得混作修正后数据；后继新增640更新，完整env/aux/RNG/Adam保留，在途局沿旧reward结算到自然边界后换新账。启动/READY依赖CPU实际接线与focused测试PASS，后续smoke/fresh restore仍必须实过；未完成不标完成。不同cap/seed/前段历史使其不构成严格配对单变量结论。详见 `items_v2/conservation_v3/AMENDMENT05.json`、当日报告。8项focused通过；监控缺paid分项的旧历史标DATA_GAP。
+
+### A3SR-SLOT00-U2400-CONFIRM-1440（20261030）
+旧slot00 c34/u2400（policy419a8a10d4554b189a8025592e6222be46900e0ce984e19780f8001f2b885ad4）三档fresh P1 +29/+50/+66、合计145，满足>91及逐档u1280−5；已启动全新hard2026193000–3255、normal2026194000–4255，候选/u1280各256×2，共1024完整生产JS greedy局，teacher关闭，P0/P1各128，CPU-only四路，复用冻结几何不称256新地图。冻结协议、逐局SHA、启动/进度在 `runs/bomb_threat_v1/iter2/a3sr/lineage_watch_20261030/candidate_slot00_u2400_1440/`。只复核，不改网页/BEST，不发布。
+
+STEER1440最终CPU门槛：18项focused PASS；双座位31tick实际道具支付各.011428571306169033、learner投影/对手不变与旧中局nextstep环境奖励exact，耗时988.20秒；`items_v2/conservation_v3/WIRING.json`、`READY.json`和`SEAL_FINAL_VERIFIED.json`保存实数及SHA。唯一owner已接管7worker，slot03修正版在u2960完整终点后自动full-state接续独立640预算，GPU smoke/恢复尚待该边界，不冒称已通过。四臂当前正式更新、最新原子state/policy hash及异步请求见 `EXECUTION_ACCEPTANCE.json`。
+
+
+## 20261030 15:30 最好模型发布与分批清理
+
+用户授权发布/删除；训练不停。三档同新seed发布选择协议 `runs/bomb_threat_v1/publish_best_20261030/SELECTION_PROTOCOL.json`，补easy512局，hard/normal1024局原样复用；P1/P0/自伤护栏不改。清理先逐文件清单（4034候选、170.5GB），lsof后小批量试删已PASS，七路finite更新继续；全量与最终发布结果见 `reports/publish_best_selection_cleanup_20261030.md` 及同namespace收据。保留全部policy/COMMITTED/评估记录和必需恢复state。
+
+
+### 20261030 用户立即停止准备重启（覆盖发布优先）
+
+已执行 `.hermes/STEER_stop_now_20261030.md`；七路原子保存后停训，owner/eval/watchdog/retention和本任务本地服务退出，训练worker信号0，未知进程信号0，8卡显存0/compute app0，京ME已通知可以重启。slot00/01/03/04/05/06/07最后update分别2702/7607/2705/2710/3200/10780/2703。slot06旧暂停路径缺NEXT_STEP探针，完整state/hash通过，恢复前必须补技术验证；其余对应探针保留。发布推迟，slot03 hard验收224/256，原始outcome/partial及清理完成收据保留，未新增commit/tag/Release/main更新。详见 `reports/reboot_stop_20261030.md` 和 `runs/bomb_threat_v1/REBOOT_RESUME_MANIFEST_20261030.json`。恢复须用户明确授权，旧R2/O5/储备暂停不解除。
+
+
+### 20261030 重启后7路恢复验收及发布继续
+
+执行 `.hermes/TASK_resume_after_reboot_20261030.md`。7路原子hash匹配，停止闸门移入历史、唯一原owner逐路恢复。新smoke/独立恢复/首正式finite非零更新全部PASS，吞吐16819–20496 env/s量级；各slot实数见 `reports/reboot_resume_20261030.md` 和恢复acceptance。slot06新探针仅证重启后跨进程一致，旧source被清理后以新namespace完整状态续原剩余预算。slot05按用户明确7路授权，仅覆盖旧u3200前评分latch，未来门禁保留。eval/GPU2/watchdog/retention恢复，第一条京ME已发送，slot03 u2400配对从实际224局续接，发布/录像异步继续且不再触发旧停机链。旧R2/O5/储备不恢复。
+
+
+### 20261030 PREVIEW-SLOT00-U2400-20261030（已启动）
+
+CPU两核独立预览；指定artifact为旧A3SR c34/u2400，任务R1别名已澄清，不使用新R1 c35权重。固定18条入口/15个独立seed席位出生组合，含同seed u1280完整局对照；不参与发布选择，不改训练。协议/哈希/选局见 `runs/bomb_threat_v1/replay_r1_slot00_u2400_preview/MANIFEST.json`，执行状态见该目录 `PROGRESS.json`，报告 `reports/preview_slot00_u2400_20261030.md`。
+
+
+## 20261030 配对slot00 u2400独立预览
+
+指定配对导出为旧A3SR c34/u2400（任务称R1，新R1实际c35），未替换权重。18条固定选局、u1280同seed对照，CPU两核，生产JS stock-window-v1/argmax/困难Hunter/老师关闭。完整动作hash、终局与已有outcome一致，外网/内网字节hash及浏览器播放通过。缺测威胁/连锁/训练奖励标未记录。来源、分母、18局摘要见 `reports/preview_slot00_u2400_20261030.md` 和 `runs/bomb_threat_v1/replay_r1_slot00_u2400_preview/RECEIPT.json`。不以筛选展示集宣称总体提升，不改训练或发布选择。
+
+
+### 20261030 最好模型发布终态
+
+bun392-a3sr-slot00-u2400，policy `419a8a10d4554b189a8025592e6222be46900e0ce984e19780f8001f2b885ad4`；三模型2304局固定配对选择，通过P1/P0/自伤护栏。生产提交 `f9e457d711f8cb62b01b5bbf00a8135168f3d8a5`，tag `web-bun392-a3sr-slot00-u2400-20261030`，Pages/完整资产hash/线上P1完整局/新Review录像OSS回读播放全部PASS；旧模型/录像和stock-window-v1/argmax保留。只提交模型目录和目录断言。详见 `reports/publish_best_a3sr-slot00-u2400_20261030.md`。用户已在重启后明确恢复训练，发布完成后健康训练继续，不再安装旧停止闸门。
+
+
+### 20261030 18:05 R1同配置自动续训及固定三候选复核
+
+授权与实际消费：`runs/bomb_threat_v1/iter2/r1_attack_20261030/continuation_1805/AUTHORIZATION.json` / `TASK_CONSUMED.json`。slot00 c36、slot04 c38、slot07 c36从各自u2960完整state续640至3600；之后同配方640自动接续，持久停止优先，RNG/Adam/env/aux/奖励账本/ring不重置，8项focused测试PASS。slot03修订臂c37已smoke/新进程恢复，正式推进；未向任何训练worker发信号。原因/限制/首更新验收见 `reports/r1_continue_20261030.md`。追加固定候选与网页c34 u2400三档配对复核冻结 `runs/bomb_threat_v1/r1_fresh_publish_1805_20261030/PROTOCOL.json`，2304新局+768同协议baseline复用，CPU异步，结果未齐不宣称胜出。
+
+
+### 20261030 R1续训首正式验收及追加复核实际执行
+
+`continuation_1805/RESUME_ACCEPTANCE.json` PASS：slot00 c36、slot04 c38、slot07 c36均通过smoke2和fresh进程恢复，正式首u2963 finite且Actor/Critic非零，完整state/policy哈希实算通过；四路含slot03热态约15593–18261环境步/秒，每更新262144环境步/32优化步，连续3组GPU功率/util样本、唯一owner/worker验收及京ME SENT。
+
+三候选复核 `runs/bomb_threat_v1/r1_fresh_publish_1805_20261030` 已CPU四路实际执行；与当前网页A3SR c34 u2400同新seed三档。`PASSIVE_FULLGAME_PARITY.json`：8完整局新被动指标适配器与原生产fresh适配器逐局字段和主结果完全相等；额外技术8局不计入选择。旧完整Review重算R1指标终态hash全等，新增指标表头自包含页真实浏览器全入口播放/终局核验PASS（`technical_replay_metrics/ACCEPTANCE.json`），未改旧HTML。后继由唯一训练owner监督独立CPU pipeline，接受条件和终态行为见 `SUCCESSOR_ACCEPTANCE.json`；未齐结果不宣称胜出或已发布。来源版本映射 `MODEL_PROVENANCE.json`，slot03 u2760明确为旧items-v2 c36，不冒称新版保留旧系数c37。
+# BUN-NATIVE-V2-ANTIFARM-20261030
+
+2026-10-30 用户授权：独立 bun-native-v2 取消库存死亡/糖浆窗口，R1训练与复核/发布不受干扰，网页规则仍v1、切换前另问。合同 `runs/bun_native_v2_20261030/PROTOCOL.json`、`AMENDMENT01.json`，任务消费 `TASK_CONSUMED.json`。固定网页 c34 u2400 policy `419a8a10d4554b189a8025592e6222be46900e0ce984e19780f8001f2b885ad4`；生产JS×v1/v2×4对手、P0/P1各128，2048完整局，argmax、老师关闭。诊断CPU144–151八路，R1 fresh128–131保持。2完整局被动outcome exact，正式采集中；不得提前写结果。R2-a/b/c将从冻结fresh赢家或slot07最新原子点分叉，640更新/chunk，DAgger/KL=0，三路新seed、单独v2榜；待诊断、JAX/JS逐tick技术与恢复验收后启动。详情 `reports/bun_native_v2_antifarm_20261030.md`。
+
+### BUN-NATIVE-V2-ANTIFARM 诊断终态与技术验收
+
+2048完整生产JS局完成，256×8局分片、512文件SHA通过，无重跑/人工截断。P1 v1→v2：hard38/85/5→48/29/51、normal45/82/1→58/43/27、easy69/58/1→76/39/13、coop_hard38/88/2→61/20/47（胜/平/负，每格128局）。敌终局交付负局hard3→22、normal1→11、easy1→1、coop1→14；位置信息与实际终局送达核验，己源回收不算主动交付。结果/分母/原始SHA `runs/bun_native_v2_20261030/DIAGNOSTIC_COMPLETE.json`，报告 `reports/bun_native_v2_antifarm_20261030.md`。不据标签推断策略意图，规则改变状态暴露。12项Python测试与JS双席位规则用例通过；parity/event_v3 六完整局2310tick，P0/P1库存/掉包/接包/交付全覆盖、事件exact，位置容差3e-4，只覆盖Sim.step/固定清砖轨迹。
+
+R1 frozen fresh选slot03 c36 u2760（P1三档+178 vs网页+130），Actor在但fullstate此前清理删除。u2720已pin，独立旧配方限定40更新重建，必须原Actorhash及NEXT_STEP/Adam/envauxRNG/ring全exact，不达标则阻塞并通知，不擅换父或重置Adam。新R2正式尚未启动；R1训练与原发布继续。原始删除/恢复边界 `DONOR_STATE_INCIDENT.json`。
+
+
+### 20261030 最好模型发布终态
+
+bun392-r1-slot03-u2760，policy `b2237ce4045d0e1659a638979c34b7636d962ed585a63dba509518afc562802d`；固定候选配对选择，通过P1/P0/自伤护栏（局数与来源见完整选择JSON）。生产提交 `e01381404741f39843b08276f250e6546ca4456e`，tag `web-bun392-r1-slot03-u2760-20261030`，Pages/完整资产hash/线上P1完整局/新Review录像OSS回读播放全部PASS；旧模型/录像和stock-window-v1/argmax保留。只提交模型目录和目录断言。详见 `reports/publish_best_bun392-r1-slot03-u2760_20261030.md`。用户已在重启后明确恢复训练，发布完成后健康训练继续，不再安装旧停止闸门。
+
+## BUN-NATIVE-V2-R2 三路注册
+
+共同父 `runs/bun_native_v2_20261030/donor_restore_v1/formal/restore_slot03_u2760/u002721`，policy `74985972139c1b8ed4c1af3206782bdcc9edce8542ab9aa1235d67312898e782`，state `00806e35466e703c2f2f24028bea4f8e13d72449cd6f14f92d9d813bc542a31e`，选择 `steer_explicit_u2721_fork`。a/b seed2026207001，c seed2026207002；b/c新增0.3击杀塑形/敌取包−0.05，终局不折扣。原Adam/Actor/Critic/ring保留，自然对局重建与真实Bank恢复、独立RNG；167772160真实环境步/chunk，640更新，40更新原子存盘，DAgger/KL=0，R1各路继续。GPU0/4/7与R1共卡，CPU160–171独立核段；逐run配置/来源/hash见 `runs/bun_native_v2_20261030/protocols/`。
+
+### 20261030 R2 20:50编排修订：明确u2721起点与P1零泡门禁
+
+`runs/bun_native_v2_20261030/AMENDMENT04_R2_P1_ZERO_BOMB_AND_EXPLICIT_DONOR.json`执行用户追加文件：共同父改为已原子保存的重建分支u2721，非声称已恢复原fresh胜者u2760。u2721 state/policy SHA、Adam/env/aux/RNG/ring与已存token重算通过；独立进程RESTORE实际在u2722通过，二者清楚区分。三路GPU0/4/7 smoke已启动，尚不称正式更新；640更新/chunk，batch/奖励/对手未改。P1全部零泡局必须<=同协议同席位实际父+3，原单方零泡护栏也保留；每40点新增敌源终局交付负局、己笼3格存活驻留。6项编排测试通过，含+3边界与全部零泡/单方零泡区分、终局事件归因。旧u2760限定重建在途worker保持运行，仅其CPU移到已空闲184–187避免与R2-a重叠；其终态收据独立，不能覆盖R2锁定父。R1网页已依原授权发布为slot03u2760，stock-window-v1不改；新v2不发布。
+
+R2资源修订（不改科学配置）：a在途smoke仍于GPU0自然结束；后续独立恢复/正式阶段由同owner在GPU3接管完整原子state，避免与旧在途父恢复形成GPU0三路驻留。b/c保持GPU4/7。无worker信号，seed/奖励/batch/学习率/预算不变，恢复摘要验收不变。见 `runs/bun_native_v2_20261030/RESOURCE_AMENDMENT_PHASE_BOUNDARY.json`。
+
+## BUN-NATIVE-V2-CUSTODY-REV2 准入与旧版安全终态 — 20261030
+
+用户修订2采用分级包归属；后续明确 `Φ′−Φ` 严格原始守恒，κ=1；拦截双计击杀/控制归零，己源回收零，独立首次终局+20/0/−20。旧b/c分别u2735/u2780安全停、原子SHA/token见 `runs/bun_native_v2_20261030/CUSTODY_SAFE_STOP_ACCEPTANCE.json`；新版仍从共同父u2721重开、沿既定b/c seeds，不消费旧版更新。a原配方在u2724短暂停后完整恢复，R1未改。六条真实JS/JAX轨迹测试为开训硬门禁，当前测试中，尚未声称新版正式更新。协议 `runs/bun_native_v2_20261030/AMENDMENT05_CUSTODY_GRADED_CONSERVATIVE.json`，详细证据持续更新 `reports/bun_native_v2_antifarm_20261030.md`。未折扣守恒不代表折扣回报守恒；控制entry4也是重复防守信用，按“拦截价值仅由Φ”在新版同门控归零。网页保持v1，不发布v2。
+
+## BUN-NATIVE-V2-CUSTODY-REV2 — 20261030
+
+用户修订2及严格守恒选择：分级归属 Φ′−Φ，κ=1；防守型击杀/控制重复信用0、己源回收0，独立终局+20/0/−20。旧b/c安全保存后封存；a及R1不变。共同父仍u2721，完整state/Adam父与原b/c seeds保留，迁移重建自然env/RNG，每臂640更新=167772160新增真实环境步，env2048×128、minibatch8192、epoch1、LR7.5e−5、entropy.005、DAgger/KL0。逐臂协议与source SHA见 `runs/bun_native_v2_20261030/CUSTODY_V2_REGISTRATION.json`；六条同JS/JAX事件轨迹验收 `runs/bun_native_v2_20261030/custody_v2_tests/ACCEPTANCE.json`。这是用户要求的联合防刷奖励修订，不能归因于单一系数；严格原始归属闭环守恒不代表折扣PPO目标不变。CPU评估异步，持久唯一owner接续640chunk；网页规则不切换。
+
+## R3-ITEMS-ROUTE-CHAIN-20261030
+
+用户任务已消费。先768完整CPU生产JS局：指定历史slot00 c34 u2400与冻结时最新R2-a，3类对手、每席位每档64局、greedy、老师关闭。旧网页称谓已更正，不择点；独立seed/来源/SHA/分母见 `runs/r3_items_route_20261030/BASELINE_PROTOCOL.json`。随后独立R3两seed2026208001/2026208002、640更新/chunk，父固定为custodyv2 b首原子点u2722；实现、事件防hack、零输入扩展、恢复与资源验收通过前不启动。R1/R2不修改，CPU176–183，GPU优先2且既有线吞吐下降不得>15%；旧O5/储备继续暂停，无发布。
+
+CUSTODY-REV2正式首更新b/c均u2724已PASS，各262144新增步；独立恢复及原子hash见 `runs/bun_native_v2_20261030/CUSTODY_FORMAL_RESUME_ACCEPTANCE.json`。R3父u2722已固定并保留完整state与policy。
+
+R1-STOP2255：slot04 c39完整u4240后退休，完整state保留；owner消费闸门已验收（4测试），slot03 c38失败有意封存，signed净额<0被正数断言误拦。八点门禁审计见 `reports/r1_continue_20261030.md` 22:55节及 `runs/bomb_threat_v1/iter2/r1_attack_20261030/stop2255/TASK_RECEIPT.json`。R2/R3不停，无发布。
+
+R3正式注册：两路seed2026208001/2026208002，GPU2并行、CPU176–179/180–183；共同父修订b首原子u2722，每路640更新=167772160新增真实步，smoke2更新计入预算，独立restore后首正式u2725。env2048×128、mb8192、epoch1、LR7.5e−5、entropy.005、DAgger/KL0与R2-b相同。新增25平面/37维可见输入，Actor/Critic/Adam旧行保留、新行零；自然对局/真实Bank重建和RNG重键，旧R1/R2不变。奖励包、30tick终局账本尾段、来源和hash见 `runs/r3_items_route_20261030/R3_REGISTRATION.json` 及 amendment02；非单一子项消融，不以短点效果门禁停健康训练。
+
+## CUSTODY-PERFORMANCE-V1（20261030，计算等价）
+
+R2-b/c旧 dirty.any() 导致全2048环境×4图BFS；新版本分离笼/对象缓存并压缩dirty环境64行分块精确重算。不直接复用旧weighted route_distance（会改变硬障碍几何）。实际GPU2固定原生32tick×2048环境，Φ/完整cache/pq与归属逐位一致，2项focused测试；微基准加速7.67倍仅该样本，共卡有混杂，非整训练加速结论。next atomic保存a u3031、b u2762、c u2769后同run热切换；a原配方恢复，b/c新计算路径独立恢复；完整state/Adam/env/aux/RNG/ring保留，零更新丢失、无重复smoke、预算/奖励不改。旧协议保留，performance01元数据独立；暖态至少5点对照a的70%门槛由持久monitor验收。收据 `runs/bun_native_v2_20261030/custody_performance_v1/`，报告 `reports/custody_performance_20261030.md`。R3准备与R1不停，无发布。
+
+## CUSTODY-PERFORMANCE-02 与 R3 接续（20261031）
+
+原奖励/网络/对手/batch/LR不变。第一版原子切换b u2762、c u2769完整恢复PASS，但整更新约3.5k env/s、a的27%，70%目标未达。第二版8松弛合并收敛检查5项focused PASS，64真实拓扑距离逐位一致/微核4.20倍，2048×32tick完整Phi/cache/p/q逐位一致；仅候选，未部署。实际启动32tick固定学生collector两实现显式编译/执行及完整输出SHA比较，预算2实现×4次，零optimizer更新。详见 `reports/custody_performance_20261031.md` 与 `runs/bun_native_v2_20261030/custody_performance_v2/`。R3-a首正式u2725验收后从相同原子完整state恢复；b正在首次smoke，不能宣称已正式。资源参考恢复同共卡上下文，全部>=85%，保留原误报暂停收据，不放宽阈值。
+
+CUSTODY-PERFORMANCE-02 collector实测（20261031）：2048×32tick，全输出SHA逐位一致；显式编译275.82/296.37秒分列，三次暖态中位49.14→14.66秒，3.35倍。共卡波动明显，不能代替正式128tick更新验收；持久交接已转WAITING_R3_EXISTING_QUALIFICATION，未抢断R3首正式在途更新。
+
+CUSTODY-PERFORMANCE-02实际接续（20261031）：完整collector输出SHA一致、暖态中位3.35倍后，b/c在u2800/u2808，R3-a/b在u2749/u2725合作完整原子切换；R2-a u3166原配方恢复，R1不停。四路独立restore各fresh-process/next-step/Adam/env-aux-RNG/ring PASS，零丢更新，无重复smoke。`custody_performance_v2/ATOMIC_SWITCH_READY.json`记录全部state/policy SHA，正式新更新与暖态另验，不以launch判完成。R3-b首次正式u2725已通过，替代上文“smoke中”的旧快照。R3共GPU2若>=3暖态中位周期>60秒自动整更新错峰，等待计入cycle/env/s，后控制窗口独立统计；协议`R3_PERFORMANCE_AMENDMENT.json`、3项指标验收测试PASS，运行表`SIX_LINE_THROUGHPUT.json`。不改奖励/科学预算，不恢复旧队列，无发布。
+
+CUSTODY-PERFORMANCE-02首新原子验收PASS：R2-b/c u2801/u2809，R3-a/b u2750/u2726，finite与Actor/Critic非零、state/policy SHA及next-step token齐全。R3各3暖态中位135.36/117.62秒（1936.65/2228.73 env/s），已自动写整更新错峰控制`runs/r3_items_route_20261030/controls/GPU_STAGGER.json`；等实际消费并分列后控制吞吐，不把控制文件等同已生效、不把3.35倍32tick诊断等同正式训练。指标验证新增4测试PASS。详情`reports/custody_performance_20261031.md`。
+
+CUSTODY-PERFORMANCE-02完成本次切换验收（20261031）：R2_b 3745 env/s (70.0s), R2_c 3824 env/s (68.6s), R3_a 4524 env/s (58.0s), R3_b 4664 env/s (56.2s), R1_slot4 4003 env/s (65.5s), R1_slot7 4412 env/s (59.4s)；R3均为控制后点且含等待。四路完整恢复/首新原子SHA/next-step PASS；R2目标70%未达（b/c 25.1%/25.7%），3.35倍诊断不得外推整训练。收据`runs/bun_native_v2_20261030/custody_performance_v2/HOT_SWITCH_FINAL_RECEIPT_20261031.json`；12项不同focused测试通过，健康训练持续，原奖励/预算/队列不改，无发布。
+
+## R1-PLATEAU-NOPUBLISH-0105（20261031）
+
+消费 `.hermes/STEER_r1_plateau_nopublish_20261031_0105.md`，冻结协议与持续状态位于 `runs/bomb_threat_v1/iter2/r1_attack_20261030/plateau_0105_20261031/`。不做PBT，不再优化custody微核；任何新push/tag推送/Release/网页默认或解码修改须重新经编排方取得用户确认。五个本地tag逐项授权与commit、历史u1280运输事故及本次远端不可核验边界见 `reports/r1_plateau_nopublish_20261031.md`，没有把旧终端标题当授权。
+
+被动监控实际运行：1 observer+1 watchdog，CPU174–175、CPU-only、30秒刷新、独占锁、重启停止优先；9 focused测试PASS。最近八点原始holdout greedy每点64完整局复算SHA/seed/席位/终局通过，固定seed重复暴露不计作512独立样本。slot00 u4240=64.25泡/K55，u4280=59.671875泡/K56，未触发连续两点>60泡且K<50告警。最初历史分叉误扫RED与真实祖先链修复GREEN均保留。真实owner已消费slot04 c39 u4240完整结束后退休闸门，不中断在途更新。
+
+独占诊断状态 `WAITING_SLOT04_U4240_RETIREMENT`，不称采集完成：退休SHA验收、GPU4仅R2-b后，排冷采5点并与同期a和GPU7共卡c比较；b/a≥60%报告共卡瓶颈等待调度，<40%请求完整128tick分段profile，40–60%不确定。现无可附加Φ trace，低于40%分支如触发会明确技术阻塞，不伪造profile。微核/奖励/网络/batch/seed未改，未新删文件；常驻retention仅删state.pkl。报告与CPU观察均不阻断训练。
+
+## R1-SLOT07-STALL-0515（20261031）
+
+执行 `.hermes/STEER_r1_slot07_stall_20261031_0515.md`，收据目录 `runs/bomb_threat_v1/iter2/r1_attack_20261030/slot07_stall_0515_20261031/`，报告 `reports/r1_slot07_stall_20261031.md`。slot07 c37 u4240完整state/policy SHA实算PASS且pin；后继c38配方/seed/LR与冻结协议source SHA未改。真正停摆原因是owner只派发空卡，既有R2-c占卡令已获准共卡的R1无法进入smoke；stop2255旧block_all_other_dispatch字段无读者，实际仅当前slot continue。收据改写明确this_slot_only，slot04 u4240退休保留，slot00/05不受跨slot阻断。
+
+新增owner安全共卡准入仅允许GPU7上当前登记R2-c模块/run/工作区严格匹配且无其他compute app；仅重启controller，既有watchdog/worker.lock接管、不信号训练worker。c38实际进入smoke，起点SOURCE_HANDOFF证明next-step/Adam/envauxRNG/ring exact；首正式验收另附，不能把smoke当正式。18项focused测试PASS，CPU-only监控不抢卡。
+
+slot07 c38 smoke u4241/u4242 PASS，u4242 state/policy SHA复核；fresh restore exact。formal首更新u4243 finite、Actor/Critic L2非零、262144环境步/32优化步、cycle129.917秒（2017.78 env/s）；按固定40点保存节奏u4243不单独落完整checkpoint，最新原子仍u4242、下一u4280。恢复与通知收据见 `slot07_stall_0515_20261031/SLOT07_RESUME_ACCEPTANCE.json`，不把首formal冷启动当暖态比较。
+
+指定五点原始64局holdout greedy复算PASS。slot05 u6040/u6080和slot00 u5160均raw零泡6=单方2+结构4；slot07 u4240为raw2/单方2，slot04 u4240为raw3/单方3，不统一写6。全部分母64、敌放泡机会分母60，自伤0、笼内0–1，未PBT。R2恢复前5点b/a1.010642、c/a1.107494，此时两卡均无R1，非b独占/c共卡目标比较；c在04:00、b在04:13随R1结束出现70秒到18–24秒下降，同配置/模块/微核。旧过早比较保留并标SUPERSEDED；新比较必须等slot07正式LAUNCH后完整更新5点，同时输出b/a、c/a，不改科学配置，无删除/发布。
+
+最终五暖态点已齐，排除R1正式u4243/u4244冷更新：R2-a u3912–3916中位13047.74 env/s（20.0911秒），b独占u3222–3226为14157.63（18.5161秒），c共R1-slot07 u3277–3281为3864.80（67.8286秒）；b/a108.51%、c/a29.62%，`plateau_0105_20261031/POST_RETIREMENT_COMPARISON.json`状态CO_TENANCY_BOTTLENECK_OBSERVED，实际GPU app验证与unix点齐全。五点各自墙钟长度不同、状态暴露不配对，证据支持资源竞争不声称唯一物理根因。不执行<40%的profile分支，不搬卡或改微核，等待编排方调度决定；健康训练继续。
+
+## R1-FRESH-TAU-0735 / V2-FRESH256-SELECTION（20261031）
+
+R1冻结slot05 c45/u6640 vs A3SR c28/u1280，Hunter三档各256×三条件共2304局；候选greedy/对照greedy/候选tau.5。前120局复用后CPU调度amendment01扩12路，训练护栏15%；高优先V2复核到来后在分片完成边界暂让CPU，已完成分片保留，报告仍待齐。slot07 u4080–4360八点死亡均值11.625，未超过20。9项focused测试PASS，无PBT、网页或训练更改。
+
+V2新固定矩阵 `runs/v2_fresh_selection_20261031/PROTOCOL.json`：R3-a u3040/u3240，R3-b u2960/u3200，R2-c原c0/u3361，对照网页slot03 c36/u2760；Hunter hard/normal/easy与协作Hunter hard各256局，每条件双席各128，共6144完整生产JS局；新seed2026314000/5000/6000，64几何复用，argmax、老师关。协作hard单列，不加入三档主排序；不把合作名字当有队友。首批96局已验模型/原子policy/ONNX/seed/席位/完整终局SHA；独立CPU12路，GPU训练持续。用户07:40新增条件发布授权：达标后模型+规则一起bun-native-v2、旧v1保留、排行榜ruleset_version隔离，不force或删tag。Supabase管理连接缺失，增量SQL本地PGlite保存/隔离/幂等/权限验收PASS，远端迁移未执行，发布不得绕过该阻塞。
+
+V2发布准备阶段：六模型固定hard首局已由原JS trace转完整Review，线上逐入口播放/终局/hash验证PASS（全P0、非择结果）；R3 25平面/37维与实际评估encoder双席320tick逐位一致，Chromium WASM真实P1三状态最大误差3.10e−6、30次P95 21ms。分榜SQL/客户端旧队列和规则隔离测试PASS；远端contract2仍404，迁移待管理端执行，未发布。旧D回放15局经显式可逆源区块兼容重新PASS。完整边界和未完成项见 `reports/v2_web_release_readiness_20261031.md`。
+
+V2 发布实现修订4：胜出录像补充逐tick核验后的受控、死亡、真实取包/持包结束与持包静止时间线，报告 `reports/v2_winner_replay_observations_20261031.md`；披露固定及筛选入口，不将静止原因/动作概率称作Q或因果结论。只改报告链，冻结6144局/规则/选型不变；源码封存见 `runs/v2_fresh_selection_20261031/PUBLICATION_IMPLEMENTATION_REVISION04.json`。
+
+## OWNSIDE-SPAWN-V1 / V2-FRESH-RESELECT（20261031）
+
+消费 `.hermes/TASK_spawn_side_fix_20261031.md`：旧v2错侧评估/录像不再用于选型，发布已冻结。新目录 `runs/v2_ownside_selection_20261031/`，同六个冻结Actor、相同引擎/选型护栏、独立新seed，6144局真实生产JS。P0列≤6、P1列≥8、列7排除；优先各队原生四点，16组合分块平衡重复；不称256独立地图。JAX256初始化覆盖16lesson、32随机去砖、双人复活与Bank位置保持测试PASS；JS256真实死亡复活PASS；R1不变。R2/R3在现有640chunk完整原子终态后由原唯一owner接 ownside 后继；Actor/Critic/Adam/ring保留，首迁移重建env/aux/RNG，Bank当前位置保留、只修其复活家点。详细影响分层和限制见 `reports/spawn_side_fix_20261031.md`。
+
+R3-SP-RAMP已排在本侧修复和完整新矩阵之后，读取 `.hermes/TASK_r3_selfplay_ramp_20261031.md`；未满足hard及coop hard双席启动条件前不改原R3比例。后继注册 `R3_SELFPLAY_RAMP_QUEUED.json`；55%自对弈的640更新及监控/回退将独立冻结，70%须满足后续条件。
+
+20261031本侧录像验收：`runs/v2_ownside_selection_20261031/replay/RECEIPT.json`，六固定hard P0首局逐tick/终局hash一致；本地/线上浏览器6/6、console0、数据库写入屏蔽，可见双方出生/笼锚；页面SHA `115d7777e119187aa83bcfca0569f8b1ff29ffc06ba0dcf62548e34a33f56c16`。链接与影响分母见 `reports/spawn_side_fix_20261031.md`。新矩阵完成前不选型，不恢复旧失效发布链。
+
+R3-SP-RAMP-20261031冻结待准入：`runs/r3_selfplay_ramp_20261031/PROTOCOL.json` 与 `AMENDMENT01_MEASUREMENT_BOUNDARIES.json`，640更新、每40原子保存和独立双bot holdout；current/ring/fixed55%、bot45%；固定池u2400/slot03u2760/选定R3父，静态均分、非PFSP。首次无更新20 batch同预算自然自对弈监控基线，明确不算有效训练。P0不低于P1采用等样本WL解释；被动化只阻止加比例，bot回落>6局则仅新arm安全停、原R3 30%保留。完整本侧6144和全部父门槛前绝不启动GPU。
+
+R3-SP-RAMP-20261031技术验收：17项focused PASS；18真实状态/6类对手/双席/3 fixed组动作与原奖励链逐位一致，collector ABI保持env/opponent3/seat2并仅sum env一次。未知fixed终局单列，最终源码复验进行中。监控解释、640更新预算、bot回退、未启动状态见 `reports/r3_selfplay_ramp_20261031.md`。最终CPU复验和本侧6144局完成前不启动。
+
+R3-SP测试数量更正：最终独立两文件本轮为9项、13.29秒PASS，见 `runs/r3_selfplay_ramp_20261031/FOCUSED_GREEN.log`；前述17为连同出生侧8项的合计，不是17项独立SP测试。fixed未知终局分列的真实CPU复验仍运行，旧SHA收据不作新版本验收。
+
+R3-SP最终技术准备PASS：9专项测试12.62秒；18真实状态被动动作/奖励逐位复验258.93秒、当前源码SHA匹配。`TECHNICAL_ACCEPTANCE.json`、`OWNER_RELOAD_ACCEPTANCE.json`保存唯一等待owner与无SP GPUworker实证；每40更新监控曲线持久化。完整新本侧矩阵与双R3正式迁移验收未齐前仍不启动。
+
+本侧R3双路u3365正式接续验收PASS：a/b完整原chunku3362之后各2次计入预算smoke、独立完整restore，u3365真实262144步/Actor-Critic非零/finite/state-policy SHA；a/b冷周期309.44/248.86秒，非稳态。`runs/v2_ownside_selection_20261031/R3_BOTH_OWNSIDE_FORMAL_ACCEPTANCE.json`，原30%自对弈保持。R2继续等完整旧chunk终点，不截断。
+
+R3-SP-55-20261031正式注册：`runs/r3_selfplay_ramp_20261031/REGISTRATION.json`，父点`runs/r3_items_route_20261030/formal/r3_a_c000000/u003040`，policy SHA `80ae9005b1563b1ba7a1cbc07ed9044ea051f466fd47b509b2759e7c174f36d2`；seed2026323001，640×262144真实on-policy步，另20个无更新train rollout作同机会监控基线；奖励/网络/batch/LR不变，本侧env/RNG显式重建；55% current25/ring20/fixed10，bot45%。原R3不变。
+
+R3-SP-55资源修复：`runs/r3_selfplay_ramp_20261031/RESOURCE_RELOCATION.json`，GPU2→6，未完成无更新基线6 rollout丢弃、正式更新丢失0；u3040 state/policy/hash及next-step已验，跨卡完整恢复进行中；原R3/R2/R1无信号。focused10项PASS。
+
+V2发布终态：bun392-v2-r3-a-u3040-u3040，policy `80ae9005b1563b1ba7a1cbc07ed9044ea051f466fd47b509b2759e7c174f36d2`，commit `a30c1e960154d139e7932239ec47263d241dc6de`，bun-native-v2、分榜contract2、冷加载及完整P1真人模式核验PASS；见 `reports/publish_best_bun_native_v2_20261031.md`。
+
+R3-SP-55资源阻塞（GPU6迁卡实测）：`runs/r3_selfplay_ramp_20261031/GPU6_REFERENCE_SLOWDOWN.json`，参照周期13.3s→50.67/51.64/51.12s，已再次设置只停SP原子闸门；SP正式更新0，640预算未完成。跨卡完整恢复PASS不等于训练吞吐准入PASS；原R3/R2/R1继续。详见 `reports/r3_selfplay_ramp_20261031.md`。
+
+R3-SP-DEDICATED-CAPACITY-20261031：`runs/r3_sp_capacity_20261031/PROTOCOL.json`冻结R2三线当前最新完整点与R3-a u3040，同本侧hard/协作hard各128局（各席64）、生产JS greedy、老师关。P1两条件WL合计缺口主排序；仅授权最弱1线在当前完整640更新chunk末暂停，若两线均落后>20且释放整卡需要才最多2线；保留完整state/hash，不改奖励/超参/seed/预算。CPU184–187四worker；BT03/04只记建议不操作。
+
+R3-SP-DEDICATED-CAPACITY调度补充：`runs/r3_sp_capacity_20261031/CPU_SCHEDULING_AMENDMENT01.json`保持四路比较和全部科学协议不变，仅CPU184–187→188–191，避开原R3异步评估；`CPU_PLACEMENT_ACCEPTANCE.json`记录实际迁核。`ACK_OWNER_RELOAD_ACCEPTANCE.json`核验唯一R2 owner接管原三worker，训练worker未发信号。
+
+R3-SP-DEDICATED-CAPACITY比较终态：768新完整局+256同协议父局复用，hard/协作hard各席各64、固定seed2026317200，逐文件SHA及模型/seed/席位全集复算PASS（`runs/r3_sp_capacity_20261031/COMPARISON_ACCEPTANCE.json`）。P1 WL：父+49/+44=+93，R2-a+32/+46=+78（差15），b+33/+46=+79（差14），c+31/+36=+67（差26）；自伤均0。仅c为最弱，R2唯一owner已消费其u4001完整chunk末暂停请求，尚未实际暂停；不截断当前chunk。c与受保护BT07共GPU7，a/b未达允许第二条暂停的>20门槛，整卡交接BLOCKED，不改阈值、不动BT07、不迁其他R2；R3-sp仍0正式更新，无新卡号/首正式SHA/交卡后吞吐。16项focused测试PASS；BT03/04只写结论未改状态。详见`reports/r3_sp_dedicated_capacity_20261031.md`。
+
+R2A-YIELD-R3B-VERIFY-20261031：授权`.hermes/STEER_r2a_yield_r3b_verify_20261031_1345.md`明确覆盖旧>20二线暂停门槛，资源让卡R2-a原完整chunk终点u5281暂停，c原u4001暂停保留；现R2唯一owner已消费双请求，GPU3只给原R3-sp owner，u3040完整恢复/smoke/fresh restore/640更新不变。`runs/r2a_yield_r3b_verify_20261031/HANDOFF_DECISION.json`不改历史能力排序；BT04按既有stop2255控制器正式退休、u4240完整state核SHA并pin，BT03保持BLOCK。R2-b c3 smoke自行完成u4642/u4643（400s→18s），当前restore采栈backend_compile_and_load，未人工重启。新seed2026334500起128局/条件、hard和协作hard、P0/P1各64、生产JS greedy、老师关，parent u3040/R3-a u3600/R3-b u3600共768局，CPU188–191四worker；按指令等GPU2评估owner空闲后执行，无GPU占用；持包蕉/胶次数与每局值、全阶段胶、平局因果击杀差分列。18项focused测试PASS。报告`reports/r2a_yield_r3b_verify_20261031.md`。
+
+R2A-YIELD执行进展：R2-a已在u5281完整原子保存并暂停（state `a6ca522a3b44355f837a762ef291e543dd56f161cc54d6d0a48e23a58b33f6a6`，policy `fe819280f52311458268fd055b45a9f5af992734a8e3786224d367f29d376732`），完整字段和next-step token验收，后继封锁。交卡时发现此前新增schema验收在owner反序列化JAX数组导致控制器CUDA上下文；已改独立CPU-only子进程、只重载控制器并核原worker身份不变，驱动核验owner不再占GPU。GPU3独占SP的u3040 fresh跨卡恢复已启动，尚非正式更新；incident/重载收据见`runs/r2a_yield_r3b_verify_20261031/`。修复后18项focused测试再次PASS。
+
+R3-b复核准入补充：`runs/r2a_yield_r3b_verify_20261031/EVAL_ADMISSION.json`实栈捕获GPU2原生owner两任务间自然空闲（catchup_order，位于Engine.evaluate之外），据此放行本任务CPU-only JS四路复核；不是等全部pending清空，也不占GPU2/停原owner。`SCHEDULING_AMENDMENT01.json`仅明确调度口径，不改任何科学协议；三模型CPU导出及policy SHA均已验收。
+
+R3-sp GPU3独占尝试终态：u3040跨卡完整restore全部exact PASS，smoke阶段无更新监控基线期间发生原参照吞吐护栏；BT05同run基线19305.05 env/s→17565.43，约−9.01%，三个不重叠5更新窗口>5%。按原合同只停SP，u3040原子安全保存、state/policy SHA及next-step token核验、worker退出，正式更新0；未完成640预算，无首正式SHA，不能把GPU计算或restore当训练完成。`runs/r2a_yield_r3b_verify_20261031/HANDOFF_BLOCKED.json`。GPU3空闲原因为原门槛阻塞，不盲重试/占卡；时间相关不等于SP造成全部下降。R2-a/c暂停安排保留，原训练与CPU768局新seed复核继续。
+
+## R3-SP-GUARD03-20261031（16:00授权修订）
+
+授权 `.hermes/STEER_sp_guard_amend_gpu3_20261031_1600.md`；冻结收据 `runs/r3_selfplay_ramp_20261031/GUARD_AMENDMENT03.json`。BT slot00/01/05/06/07允许下降15%，R3-a/b与R2-b/c仍5%，均三个不重叠5更新窗口；新attempt `gpu3_guard1600`，旧暂停/收据保留。GPU3独占，u3040完整state/Adam/env/aux/RNG/ring恢复→smoke→fresh restore→原640更新（167772160步），seed2026323001及配方不变。R2-a暂停、BT03 BLOCK、BT04退休不变。23项focused测试PASS；首正式更新与只读持包自踩胶审计待实证。
+
+R3-SP-GUARD03自踩胶只读审计完成：`runs/r3_selfplay_ramp_20261031/audit/guard1600/OWN_GLUE_AUDIT.json`（SHA `b7d3d9e4f803d5e1122cc4a58f783797b483257b47725982d01d9f8bb61b69c9`）；R3-a u3600/hunter hard/P0有接触15局15/0/0、死亡4，无接触49局44/3/2、死亡9；合计64局66次接触。整局事后观察分组，不能作因果，奖励不变。2项分组测试PASS，完整表与限制见 `reports/r3_sp_guard_amend_20261031.md`。
+
+## R3-SP优先级与固定历史评估补充（20261031 16:10）
+
+用户将R3-sp列为当前最高优先，smoke/fresh restore后立即正式训练。新只读评估合同 `runs/r3_selfplay_ramp_20261031/FIXED_HISTORY_EVALUATION_V1.json`：u2760/u3040固定强点，生产JS bun-native-v2、本侧holdout同seed，greedy，每对手128整局各席64；报告胜率/score换算Elo与因果击杀/局，不冒充拟合联赛Elo。仅CPU140–141两worker，父基线/首正式/每80/终点，原bot门槛不变。u4000无新高后完整chunk让卡给第二seed的条件任务已登记 `SECOND_SEED_CONDITIONAL_1610.json`；现a/b共GPU2，未提前暂停或虚称独占卡已释放。
+
+R3-SP护栏统计纠错（非门槛放宽）：`runs/r3_selfplay_ramp_20261031/AMENDMENT04_REFERENCE_WALLTIME.json`。R3-b共享GPU29/60秒交替，原u3827窗口实际6316.51 env/s，u3839窗口6382.34（+1.04%），而单步速率中位数显示−11.29%。改为同5更新总步/总cycle墙钟，并匹配原基线奇偶周期，保留原pre-SP update锚；3个不重叠5更新窗口及BT15%/R2-R3 5%不变。仅重载owner/watchdog，存活smoke worker不受信号；旧估计器误计窗归档后版本化重置。
+
+R3-SP第二seed条件编排已接入唯一SP owner（不是仅计划）：u3840/3920/4000完整本侧holdout齐全后才判定，按用户128局/席的greedy+categorical合计检查两席历史高点，同时原始模式分列；不完全数据不触发。符合则较弱线完整640边界让出worker槽，另一原R3保留，seed2026323002同u3040父与配方640更新，新自然env/RNG，第二namespace单独锁/恢复/监控。实际两原R3共GPU2，第二seed只接一个worker槽、仍共卡，不虚称整卡；BT15%/R2-R3 5%护栏继续。34项focused测试PASS。收据 `runs/r3_selfplay_ramp_20261031/STEER1610_EXECUTION.json`。
+
+R3-SP-GUARD03 GPU3首正式u3043已验收：state SHA `9c72c960084989ab0aa4b47ef66e4f951df73ee900b730202ad9ebc9b5350665`，policy SHA `8cbbc12055090596b749428ba54dab3c1acd5adea44d551833e4f0a60e1261db`，finite、Actor/Critic非零，262144真实步；u3040与u3042完整fresh restore均PASS。参照比例和原始快照见 `runs/r3_selfplay_ramp_20261031/GUARD1600_FIRST_FORMAL_ACCEPTANCE.json`；固定640预算由唯一owner继续，未宣称预算完成。
+
+## R3-OWNSIDE-RECHECK-1620-20261031（20261031）
+用户16:20补测已消费，纯CPU独立owner；u3040、R3-a u3760、R3-b u3600原子policy固定；fresh三档各256局argmax，复用u3040既有768局。holdout seed2026317200按用户逐模式每席128，共512局；原合同每模式每席64的共同前缀单列，不合并模式冒充分母。复用SP父既有128局argmax（同policy/ONNX SHA），其余1920局新增。12worker CPU72–83，不使用GPU；协议 `runs/r3_ownside_recheck_1620_20261031/PROTOCOL.json`。3项focused测试通过。原发布护栏仅用于报告建议，未经编排确认不发布、无训练控制副作用。
+
+R3-OWNSIDE-RECHECK-1620调度补充：12→20 worker（实测CPU61.74/88核配额），保留原协议与所有在途对局；随后发现逻辑核72–87与受保护R2-c/R3-a/b的168–183核互为SMT sibling，已仅迁移本任务CPU JS到112–113、146–163（仅与CPU评估共享物理核心）。`SCHEDULING_AMENDMENT01.json`、`SCHEDULING_AMENDMENT02_SMT.json`与`SMT_RELOCATION_ACCEPTANCE.json`保留原始吞吐与迁核实证；训练worker均未发信号。u3040完整holdout512局通过：greedy P0=108/10/10、P1=105/19/4，categorical P0=94/1/33、P1=110/1/17，每模式每席128局；`HOLDOUT_COMPLETE.json`含原始SHA。
+
+R3-SP-GUARD03后续SAFE_PAUSED_NOT_BUDGET_COMPLETE：u3127原子哈希/next-step token与worker退出核验PASS，87新增更新/22806528步，剩553；R2-b连续三窗<0.95触发，仅SP暂停、GPU3空闲，未向训练worker发信号。恢复闸门保留，不伪称640完成；`runs/r3_selfplay_ramp_20261031/GUARD1600_BOUNDARY_STOP_ACCEPTANCE.json`。
+
+R3-OWNSIDE-RECHECK-1620-20261031终态COMPLETE：2816完整局，复用896、新增1920；建议r3_b_u3600，不发布。报告 `reports/r3_ownside_recheck_1620_20261031.md`；结果SHA `93a1c5e579f90049ae0aad4270effecb839cd22a0afed6cf623c55e41d5bd7db`。
+
+R3-OWNSIDE-RECHECK-1620最终独立验收：352分片/2816完整局（新增1920、复用896），22组128局WDL/胜负差/击杀/自伤与RESULTS一致，40项focused测试PASS。b3600三档P1=+339/P0=+338，较u3040(+320/+345)为+19/−7，护栏全过；a3760为+334/+346，也通过。按冻结规则建议b；b的P1改善配对bootstrap95% CI [−6,+44]，不称稳定显著领先，不发布。报告 `reports/r3_ownside_recheck_1620_20261031.md`；状态、消费与最终验收均COMPLETE。原SP另按资源护栏安全停u3127，原训练继续，剩余553更新未完成。
+
+R3-SP第二seed2026323002条件接续：`runs/r3_selfplay_ramp_20261031/SECOND_SEED_HANDOFF.json`；同u3040干净父/Actor-Critic-Adam-ring，独立seed自然重建env/RNG，640更新，另一原R3对照保留。让出原R3 worker槽，GPU2仍与剩余原R3共卡，不称独占。完整smoke/fresh restore和首正式另验。
+
+### R3-SP-RECLAIM-GPU23-1820（20261031）
+
+18:20授权已消费；R3-a/b冻结u4002，CPU异步补u4000 holdout；SP1 GPU3从完整u3127续553更新、SP2 GPU2共同u3040独立seed2026323002新增640更新，终点均u3680，不变55%自对弈/45%bot及原奖励超参。主SP新CPU172–175、SP2 CPU176–183，避免BT物理核竞争。完整合同覆盖、旧u3120 bot -8风险、不可变参照基线、无训练信号与恢复证据见 `reports/r3_block_reclaim_gpu23_20261031.md`、`runs/r3_selfplay_ramp_20261031/RECLAIM_1820_AUTHORIZATION.json`、`AMENDMENT05_RECLAIM_ACTIVE_REFERENCES.json`。CATCHUP审计双ABI兼容修复，43项focused测试PASS；首正式新更新验收待补，不把进程存在当有效训练。每40更新新增固定历史完整指标，旧分片只重算。网页不换、不push、不发布。
+
+R3-SP-RECLAIM-GPU23-1820最终启动验收PASS（20261031）：主seed2026323001 GPU3从u3127续，首正式u3128 state `fb0adbed8ca77d888ba0c9857be4ead80d81e38963dd5ee0a1a5949f30298405`/policy `ece3fc07437b2f0739d3289722874b49543a4bd26350b93b8b321090eb1dbb7c`；第二seed2026323002 GPU2共同u3040，首正式u3043 state `b97b955a9bf5663e0c92c2587d416da5cf89652dcfa6fff898d02a6c56ae3259`/policy `f6ca40f3e64f6f3cebf7f06d7ee1e884a0b024eae0130da4c1a808500a9f3762`。两路完整恢复、next-step token、finite、Actor/Critic非零、262144真实步/32 Adam步及5更新暖态全部验收；每namespace唯一owner/watchdog/worker。快照update 3179/3066，暖态env/s 16688.42/17695.93，固定终点均u3680，预算未冒称完成。主CPU160–163,172–175；seed02 CPU176–183。R3-a/b u4002冻结与u4000双模式全局CPU补评均已完成/SHA复验，不恢复。CATCHUP兼容实际两套收据ABI；历史失败保留，slot03缺证据记unavailable。53项focused测试PASS；协议与原始证据 `runs/r3_selfplay_ramp_20261031/RECLAIM_GPU23_ACCEPTANCE.json`、当日报告 `reports/r3_block_reclaim_gpu23_20261031.md`。无训练信号、不push/发布、不改网页，旧O5/长训暂停不变。
+
+18:20验收补注：R2-c按早已登记的capacity pause完成u4001后退出（非本次训练信号），末快照不再作为活跃参照。BT7共享竞争消失，4.1118倍不作SP性能收益或等条件无干扰证明；详见 `runs/r3_selfplay_ramp_20261031/RECLAIM_REFERENCE_COVERAGE.json`。
+
+
+## NEW-MODEL-REPLAYS-20261031-2045
+- 授权：`.hermes/TASK_new_replays_20261031_2045.md`；合同 `runs/new_model_replays_20261031/PROTOCOL.json`；只用CPU，不控制训练、不push或改网页。
+- 模型：R3-a/b冻结u4002；SP seed2026323001 u3316、seed2026323002 u3400（冻结瞬间最新完整原子点）；网页u3040。state/policy/COMMITTED SHA实读验收，模型identity见MODELS.json。
+- 规则与局目：bun-native-v2/own-side-native-v1，生产JS Hunter hard、argmax、老师关闭、2400tick；每模型hard冻结前8局（P0/P1各4），再从同一256seed上限依序补每席首负/首平；缺例披露，独立局数去重，不能估计胜率。
+- 已执行：五模型40固定局Review动作/hash/终局逐局一致，本地及OSS外网40入口实际播放/终局seek通过，console=0、数据库写屏蔽；首批预览京ME发送returncode0。补集已全部完成：60入口/53独立局，所有补例缺失情况见最终回执；本地和外网逐入口实播/终局seek通过，HTTP回读SHA一致。
+- 指标：真实进攻交付、因果击杀、实际放泡、触发射线真连锁、实际蕉/胶释放及拾取；头顶泡/威/速，中文事件时间轴。奖励未记录；道具接触不冒充净收益。
+- cmp3040：验现有2816局完整回执及RESULTS SHA，不重跑。b3600点估计P1=339 vs320、P0=338 vs345，自伤0，配对改善CI[-6,44]；不替换或发布。
+- SP：被动增加仅阻止升70%；主seed实际原子停u3316来自u3160 bot保留集闸（hard P1−8，coop hard P0−10，64局/席）。不把旧点护栏当最新3316已证实退化；监控平局/被动与父点各自分母见SP_ROLLBACK_EVIDENCE.json。
+- 报告 `reports/new_model_replays_20261031.md`；当前终态以主 `RECEIPT.json` 为准，预览回执在preview/下。
+
+
+## SLOT01-COPY07-GPU3-20261031-2110
+
+录像完整交付后才消费21:10指令；当前slot01 c59等待完整u15040，禁止旧配方后继，随后只复制slot07最新完整multiple40 state/Actor/Critic/Adam/env/aux/RNG/ring并独立seed2026312111，配方完全不改。GPU3由现有R2唯一owner从R2-a u5281接c4 smoke/恢复/正式，参照BT15%、R2 5%三窗口。5项接线单测PASS；实际状态与原子SHA见 `runs/slot01_copy07_gpu3_20261031/`，报告 `reports/slot01_copy07_gpu3_20261031.md`；未完成不记完成。slot07 u5440/5480相对PASS、u5520相对FAIL；三个绝对B闸均FAIL，原始分片重算未重跑。无奖励/超参/闸门/网页变化，不push不发布。
+
+### R3-RESUME-PUBLISH-2110-20261031
+
+授权 `.hermes/STEER_2110_publish_a4002_fill_gpu.md`；消费 `runs/r3_resume_publish_2110_20261031/TASK_CONSUMED.json`。SP两seed从u3316/u3409完整state继续至原u3680，分别剩364/271更新（55%固定，不升70%）；历史bot回退证据保留，本次授权仅覆盖恢复前既有闸门。R3-a/b从u4002各续640更新，待专用卡安全边界交接。发布目标R3-a u4002，policy SHA f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30；规则bun-native-v2不变。独立发布namespace，健康训练不为发布等待。
+
+R3-A4002-RELEASE-2110结果：2816完整JS局（2304三档选型+512协作hard压力，新增256/复用2560）。P1三档338对320、P0 353对345、自伤0，既定护栏通过；压力P1死亡64对23、因果击杀41对47必须披露，不称全面combat增强。`selection/RESULTS.json`、`RESULTS_PRIMARY.json`位于`runs/r3_resume_publish_2110_20261031/`。SP恢复u3317/u3410真实非零更新已验，原子点和暖态见持久EXECUTION_STATUS。
+
+## R4-COMBAT-20261031 / KILL-EVAL-V1
+
+用户新任务已消费，排在STEER_2110之后，现有训练不发信号。共同父R3-a ownside u4002，policy `f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30`。K1只改课程.1→.3；K3相对K1只改55%自对弈，相对共同父为课程+对手组合，不能宣称所有arm单变量。K2正击杀奖与严格完整取包循环≤0存在结算歧义，已提交两种具体结算选项，未擅改custody。每arm首预算640更新=167772160真实步；独卡、40更新原子保存、80 dev、400 holdout/录像。
+
+地图来自只读旧目录原版206图（普通竞技181、比武25），canonical SHA排序，train144/dev31/holdout31，逐图清单 `runs/r4_combat_20261031/MAP_SPLIT.json`，数据 `jax_bomb/maps/kill_maps.json`。kill-arena选择允许的单命120秒版本，无笼/包/送达、nativeItems/nativeTrap；64完整局逐tick JS/JAX一致之前不正式训练K4。holdout每图每席4局，每对手248局、三对手744局/模型；父u4002与此前网页u3040先做基线。JS奖励近似回算、原生JAX训练回报严格分列。冻结合同 `runs/r4_combat_20261031/protocols/r4_combat_v1.json`。
+
+R4 amendment01：编排22:05 K2答复与22:15糖浆复活更正均已消费。初版单命选择已被覆盖且从未开训；当前唯一击杀场版本为原版糖浆、多命复活、1200tick。下一tick找距敌曼哈顿≥3且不在任何存泡射线的原生出生点，无安全点则等待重试；10tick无敌、复活15tick及出生2格内不计击杀塑形。保留原版死亡掉落并重置初始属性。K2受害者持我方包时额外击杀/forced均0，pending同样取消；其余允许，806权重为kill-arena的1/3（1/3与.2/3），custody不改。forced仅在20tick内同批真实击杀兑现，逐生命去重。只在1200tick终局截断GAE。合同 `runs/r4_combat_20261031/protocols/r4_combat_v1_amendment01_sugar_respawn.json`，不得再使用single-life合同训练。
+
+
+R4 amendment02（22:25）：`protocols/r4_combat_v1_amendment02_carrier_conservative.json` 覆盖 amendment01 的持我方包无额外奖与custody不变条款。K2 Φ改为敌持包−.40～−1.20、散包−.10、home0，严格原始势差，持包者被杀即时+.30～+1.10；敌送达−20不变。封路+.10为同批击杀势差预付款，击杀扣除、20tick未兑现/非同批死亡/终局扣回，每敌生命一次，整个取包→击杀→夺回循环净值0；不得另叠固定持包击杀奖。现有R2/R3/control不变。先补父u4002拦截/杀持包者/敌送达与循环基线，完整collector/optimizer/恢复闸未过前不报正式K2更新。
+
+R4 K2 22:25验收：amendment02 SHA `45542a17e7c7cdf1b02a7242482b0b018d12c135c172b708af3393e7b8af6c59`；8pytest+JS PASS；原生组合奖励8fixture/7246tick、20循环PASS，Φ累计最大绝对残差1.1175870895385742e-07，完整循环组合奖励≤0，双席送达±20与终态尾段PASS。父u4002新增缺失被动字段256完整Hunter hard/greedy局（每席128），逐局joint-actions SHA与原数据exact：路径3格内P0=2945/3789(77.72%)、P1=7576/8170(92.73%)；持久Funnel杀持包者12/24、11/22；敌送达8/128、6/128；完整取杀夺回9/128、7/128。瞬时Sim flag=0是糖浆延迟归因覆盖问题，未冒充真实0击杀，已用同tick/包来源核证重算且保留原始记录。最终指标 `runs/r4_combat_20261031/carrier_diagnostic_v2/FINAL_METRICS.json`；K2实际collector封路同批证书与优化器接线未验收，R4正式更新0，原健康训练不变。
+
+V2发布终态：bun392-v2-r3-a-u4002-u4002，policy `f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30`，commit `6fff35a249089b555207dc2a72ccd0227408fdee`，bun-native-v2、分榜contract2、冷加载及完整P1真人模式核验PASS；见 `reports/publish_best_bun_native_v2_20261031.md`。
+
+### R4-K1/K3 独立放行与拦截对手任务消费（20261031）
+
+用户授权K1/K3不等待K2/击杀场；冻结 amendment03_independent_activation。共同父 R3-a ownside u4002，policy SHA f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30。K1 seed2026331001，K3 seed2026331003；每臂640更新/167772160新on-policy步，env2048×128、mb8192、epoch1、lr7.5e-5、entropy.005、DAgger/KL0、真实Bank.25、席位50/50。K1课程.3且真实lesson7/12，Bank候选概率.25/.7保持总量；K3在K1上selfplay.55、按原条件比例分配bot/current/ring/fixed。Actor/Critic/Adam/ring原样继承，课程分叉自然局边界新env/aux/RNG。唯一 `scripts.r4_combat_owner` 只领真实空卡，GPU0/5留给已登记R3边界交接；SP2 u3595已有安全暂停收据，非预算完成。技术smoke真实更新计入预算，随后新进程全state恢复，再正式余量；CPU评估异步。新拦截bot训练注入须独立parity后前瞻版本，不回改首run奖励/池；K2加深Φ不混入K1/K3。协议及启动/更新/终态见 `runs/r4_combat_20261031/`。
+
+### R4 独立训练与拦截压力验收补录（20261031）
+
+K1/K3实时证据：`runs/r4_combat_20261031/K1_K3_LIVE_ACCEPTANCE.json`；实际两臂seed2026331001/2026331003，各640新更新/167772160步，完整Adam继承，不追加暖启动。`r4_combat_v1_amendment03_independent_activation.json`冻结仅课程与对手分量，奖励不变。CPU异步 `candidate_evaluation/PROTOCOL.json` 和 `interceptor/PRESSURE_PROTOCOL.json`；运包压力首64真实负结果不选峰、不宣称增强；新bot未过JAX parity不入池。新增watchdog仅重启owner、接管存活worker，不直接重复启动训练。K2结算新增10 PASS，实际GAE/optimizer门禁仍待；击杀场attempt04 0/64，attempt05独立adapter修复与原始轨迹复用，不能提前启K4。
+
+
+### R4-INTERCEPTOR-CARRY-DIAG-V1 / TIMING-V2-SMOKE（20261031）
+23:15指令消费。u3040/greedy/生产JS/bun-native-v2/老师关、本侧固定seed2026336000起64局，两席交替；被动重放逐局动作SHA与结果exact。17631持包tick，bot可行动15523中15496 INTERCEPT（99.83%），无RAID/STEAL/RECOVER抢占；放泡307提案仅逃生否决2/robust额外0。route259颗、timed46颗，观察爆炸时距carrier中位6.53/2.84格；定时到达33例ETA中位误差+13tick，另13删失。64局interceptor运包57/61=93.44%，hard53/62=85.48%；bot自身自伤均0，放泡43.67/46.11每局。诊断证据 `runs/r4_combat_20261031/interceptor/diagnostic_v1/SUMMARY.json`，64PASS/SHA见COMPLETE。仅冻结两项实验修复：fuse可行目标/取消无时序放泡，以及best路线优先于近距离attackSeeds；测试候选隔离，不改冻结v1或训练池。协议 `interceptor/timing_v2_smoke/PROTOCOL.json`，同64冒烟运行，阈值<75%且bot自伤≤hard；未达不得继续JAX或入池，不追加挑参。K1/K3正式训练与CPU原压力矩阵不受影响。报告 `reports/r4_combat_20261031.md`。
+
+
+R4-INTERCEPTOR-TIMING-V2终态（20261031）：64完整生产JS局/8分片，121.04秒；同冻结seed和出生清单，greedy/老师关。候选43/66=65.15%，hard53/62=85.48%，旧v1为57/61=93.44%；P0候选25/34、P1 18/32。bot native ownBombDefeat死亡均0；实际放泡48.0156/46.1094/43.6719每局。smoke<75%与bot自身原生死亡不增门槛PASS；非致死自控未独立归因，JS/JAX完整bot/action parity缺失，未入训练池。2项机制组合不作单项归因；20000次完整局配对bootstrap候选-hard区间[−32.29,−8.57]pp，样本属于诊断dev不称独立确认。两项修复在测试子类隔离，旧web/Hunter SHA不变。4条node验收PASS。原压力矩阵1088独立局已全COMPLETE并复算，K1/K3仍真实更新，未发训练信号。证据 `runs/r4_combat_20261031/interceptor/STEER_2315_DONE.json`、`timing_v2_smoke/GATE.json`；报告 `reports/r4_combat_20261031.md`。
+
+### MAIN-SYNC-20261031（实际执行 2026-11-01）
+
+在独立 `integrate/main-sync-20261031` 工作树，以 main `6fff35a249089b555207dc2a72ccd0227408fdee` 为基线整合实验代码与文档。保留 main 的 RNG 审计修复、JE06/07/08 静态依赖、分片 evaluator、Python 解释器选择与 Review；未覆盖网页默认模型/规则/对手。R3-a u4002 已发布身份不变。R3-sp 暂停、吞吐护栏和恢复的历史条目均保留，不把回退点当新最佳；R4 K1/K3 640 更新预算仍在执行、K2/arena/interceptor 仍按各自闸门，代码合入不是实验放行。
+
+整理期间读到 K1 u4298、K3 u4341 的真实新记录：每更新262144步，finite=true，Actor/Critic更新非零；cycle分别16.3458/15.1490秒（约16037/17304 env/s）。这是时点读数，不代表整段平均或预算完成；没有向训练/评估发信号。
+
+本次保留旧 Review 的所有 replay/checkpoint/hash；为更新后的 evaluator 保存精确历史 source archive，兼容条目只接受整文件SHA及可逆差异。根级 AGENTS 忽略，runs/checkpoint/导出模型不入库；地图206张只压缩JSON空白。同步/排除、测试、隐私、commit与同SHA Pages验收见 `reports/main_sync_20261031.md`。
+
+MAIN-SYNC最终提交前验收：45项关键集成测试与31项显式版本化native定向测试全部PASS；72个Node测试文件、npm和Review通过。327文件历史审计为274通过/34失败/19项180秒超时，缺外部协议、历史patch/ABI不符与技术超时逐项分列，不声称全绿。8个默认运行/模型/对手文件SHA保持不变；历史run不入库的边界未因本次合入放宽。最终隐私、快进与同head Pages证据见同步报告及其本地回执。

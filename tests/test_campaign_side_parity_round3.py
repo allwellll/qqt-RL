@@ -141,7 +141,7 @@ s.step([[4,0],[4,0]]);console.log(JSON.stringify([s.crate[cell],s.crateType[cell
 
 
 def test_default_off_test_hooks_preserve_production_snapshots():
-    actual=subprocess.run(['node','runs/campaign_side_parity/round3/compare_event_parity.js','--validate-disabled'],cwd=ROOT,text=True,capture_output=True,check=True)
+    actual=subprocess.run(['node','tests/fixtures/native_event_parity.js','--validate-disabled'],cwd=ROOT,text=True,capture_output=True,check=True)
     assert json.loads(actual.stdout)['ticks']==2700
 
 

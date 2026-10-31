@@ -44,7 +44,7 @@ def natural(cp):
         folder=out/'natural_shards'/f'{start:03d}';folder.mkdir(parents=True,exist_ok=True);target=folder/'RESULT.json'
         if not target.exists():
             env=dict(os.environ,JE10_ROUTE_TASK='natural_full2400',JE10_ROUTE_GAMES='64',JE10_ROUTE_START=str(start),JE10_ROUTE_END=str(start+8))
-            subprocess.run(['node','scripts/je10_route_funnel.js',str(model.relative_to(R)),str(target.relative_to(R)),str(regions.relative_to(R))],env=env,check=True,stdout=(folder/'run.log').open('a'),stderr=subprocess.STDOUT)
+            subprocess.run(['node','scripts/je10_route_funnel_current.js',str(model.relative_to(R)),str(target.relative_to(R)),str(regions.relative_to(R))],env=env,check=True,stdout=(folder/'run.log').open('a'),stderr=subprocess.STDOUT)
         for pattern in ['REVIEW_FIXED_*.json','fixed-*.trace.json']:
             for source in folder.glob(pattern):shutil.copyfile(source,out/source.name)
         return read(target)

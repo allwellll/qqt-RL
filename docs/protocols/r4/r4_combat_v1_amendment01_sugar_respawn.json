@@ -1,0 +1,56 @@
+{
+  "id": "R4-COMBAT-AMENDMENT01-SUGAR-RESPAWN",
+  "status": "FROZEN",
+  "supersedes": [
+    "r4_combat_v1.kill_arena.single_life",
+    "r4_combat_v1.K2.awaiting_decision",
+    "answer_K2.immediate_death_mode"
+  ],
+  "authority": {
+    ".hermes/ANSWER_K2_killarena_lives_20261031.md": "b8acbfab8111aaa6a83c5a328a23215b002645dabaabdaca184d644db86e5a54",
+    ".hermes/STEER_2215_killarena_revert.md": "168e6cc80e78988da62a7192c1aeedea11865f9081c273de5f6f9b411a40719a"
+  },
+  "ruleset": "kill-arena-sugar-respawn-v1",
+  "horizon": 1200,
+  "tick_hz": 10,
+  "respawn": {
+    "next_tick_after_death": true,
+    "distance_metric": "Manhattan cells >=3 from enemy",
+    "outside_all_live_bomb_rays": true,
+    "invulnerable_ticks": 10,
+    "kill_credit_suppressed_through_age_ticks": 15,
+    "spawn_radius_no_shaping": 2,
+    "no_safe_spawn": "remain dead and retry next tick; never unsafe fallback",
+    "stats": "native death drops followed by reset to original map initial attributes"
+  },
+  "modes": [
+    "bun-native-v2",
+    "kill-arena"
+  ],
+  "k2": {
+    "victim_carrying_learner_origin_bun": "no additional kill or forced payment; reject pending credit too",
+    "other_victims": "eligible even carrying own-origin bun",
+    "native_custody_potential_unchanged": true,
+    "kill_arena_kill": 1.0,
+    "kill_arena_forced": 0.2,
+    "bun_kill": 0.3333333333333333,
+    "bun_forced": 0.06666666666666667,
+    "forced_window_ticks": 20,
+    "forced_payment": "accrue provisionally and reverse at20ticks without same-source kill; delay realized credit to factual kill",
+    "per_life_once": true,
+    "no_tick_rewards": true
+  },
+  "terminal": {
+    "death_done": false,
+    "game_done": "t>=1200",
+    "winner": "sign factual causal kill difference",
+    "zero_sum_terminal": 1.0
+  },
+  "normalization": "per-mode advantage mean/std using only on-policy train minibatch; report mean absolute normalized advantage per mode; GAE .995/.95 unchanged",
+  "parity": {
+    "deterministic": "64 complete games, items disabled or fixed known items; float tolerance3e-4, all discrete fields exact",
+    "random_items": "separate distribution comparisons with independent RNG; not bitwise parity"
+  },
+  "pretraining_gate": "report map split and64-game deterministic parity before any R4 formal launch",
+  "unix": 1793455577.689202
+}

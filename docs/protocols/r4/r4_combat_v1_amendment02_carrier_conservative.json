@@ -1,0 +1,47 @@
+{
+  "id": "R4-COMBAT-AMENDMENT02-CARRIER-CONSERVATIVE",
+  "status": "FROZEN",
+  "authority": {
+    ".hermes/STEER_2225_carrier_kill.md": "b78ae612d2bacbf468a5e60049ffe00dc8ef8c4e8931ef2264440259b3ae3b94"
+  },
+  "supersedes": [
+    "amendment01.k2.victim_carrying_learner_origin_bun",
+    "amendment01.k2.native_custody_potential_unchanged"
+  ],
+  "scope": "K2 only; never changes live R2/R3/control",
+  "phi": {
+    "home": 0.0,
+    "enemy_carry": "-.40-.80*clip(progress_home,0,1)",
+    "loose": -0.1,
+    "otherwise": -1.2
+  },
+  "difference": "strict raw Phi_after-Phi_before, gamma not inserted; existing first-terminal suppression unchanged",
+  "kill_carrier": "+.30 to +1.10 custody difference, no independent fixed kill award",
+  "opponent_delivery": -20.0,
+  "forced": {
+    "value": 0.1,
+    "window_ticks": 20,
+    "per_enemy_life_once": true,
+    "source": "factual installed own bomb or real chain removes all safe cells; exact causal source_batch",
+    "cash": "advance from future same-batch custody gain; deduct advance on factual kill; otherwise clawback at timeout/loss/death/terminal",
+    "clarification": "An additional retained +.1 outside the potential would violate zero-cycle net. Advance preserves immediate signal and exactly zero undiscounted full-cycle sum."
+  },
+  "monitor": {
+    "baseline": "R3-a u4002",
+    "required": [
+      "enemy-carrier path<=3 interception ticks / actionable carrier ticks",
+      "enemy carriers killed / exposed carrier lives",
+      "enemy deliveries / full games",
+      "own stock pickup -> carrier kill -> own recovery completed cycles / game"
+    ],
+    "guard": "cycles above parent and own deliveries not above parent => pause K2 at safe atomic boundary; report mode/seat/sample count"
+  },
+  "activation_gate": [
+    "unit conservative loop and source/life/clawback tests",
+    "full production parent carrier diagnostic",
+    "collector provenance and optimizer wiring acceptance",
+    "complete state restore including advance ledger"
+  ],
+  "implementation": "scripts/r4_k2_carrier_reward.py",
+  "unix": 1793456161.6866055
+}

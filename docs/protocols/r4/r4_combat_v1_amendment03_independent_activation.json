@@ -1,0 +1,39 @@
+{
+  "status": "FROZEN",
+  "authorization": "current user: K1/K3 need not wait for K2/kill arena",
+  "K1": {
+    "curriculum_fraction": 0.3,
+    "lessons": [
+      7,
+      12
+    ],
+    "lesson_assignment": "fixed per environment reset key, half each",
+    "empty_hand_clear_brick": true,
+    "bank_conditional_probability": 0.35714285714285715,
+    "reward": "R3 unchanged"
+  },
+  "K3": {
+    "base": "K1",
+    "selfplay_fraction": 0.55,
+    "weights": [
+      0.03214285714285715,
+      0.225,
+      0.1928571428571429,
+      0.275,
+      0.18333333333333335,
+      0.09166666666666667
+    ],
+    "method": "retain bot and current/ring/fixed conditional proportions"
+  },
+  "interceptor": {
+    "status": "separate upcoming version after JS/JAX parity",
+    "no_retroactive_pool_or_carrier_reward_change": true
+  },
+  "initialization": "parent Actor/Critic/Adam/ring exact; fresh actual natural/Bank episodes and independent RNG",
+  "budget_updates": 640,
+  "budget_new_environment_steps": 167772160,
+  "save_every": 40,
+  "eval_every": 80,
+  "source_checkpoint": "runs/r3_items_route_20261030/formal/r3_a_ownside_c000001/u004002",
+  "source_policy_sha256": "f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30"
+}

@@ -1,0 +1,125 @@
+{
+  "id": "R4-COMBAT-20261031",
+  "status": "REGISTERED_PREPARATION",
+  "authorization": [
+    ".hermes/TASK_r4_combat_20261031.md",
+    ".hermes/TASK_r4_combat_maps_20261031.md"
+  ],
+  "authorization_sha256": {
+    ".hermes/TASK_r4_combat_20261031.md": "7b4743a5335a7b331537157a821f4ce113f30da76a3b363811d8ed868602b6c0",
+    ".hermes/TASK_r4_combat_maps_20261031.md": "a6bb5272ec1b8eea5ea10d72db81a9194410f97c1b70fe7e1f0806fa98a27686"
+  },
+  "parent": {
+    "checkpoint": "runs/r3_items_route_20261030/formal/r3_a_ownside_c000001/u004002",
+    "policy_sha256": "f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30",
+    "model_json": "runs/r3_items_route_20261030/evaluation_ownside_v1/r3_a_ownside_c000001_fresh/model/model.json",
+    "model_sha256": "8fc67e182efbeea0c5d4ebfabcdbf1b55ca5cea9995a1270a355b6db7560e8b1",
+    "onnx_path": "runs/r3_items_route_20261030/evaluation_ownside_v1/r3_a_ownside_c000001_fresh/model/model.onnx",
+    "onnx_sha256": "f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656",
+    "update": 4002,
+    "r3": true
+  },
+  "mode": "bun-native-v2 ownside, R3 inputs; kill arena separately versioned",
+  "priority_after": "R3-RESUME-PUBLISH-2110-20261031 GPU handoff queue; never preempt live trainers",
+  "arms": {
+    "K1": {
+      "curriculum_fraction": 0.3,
+      "only_change": "curriculum .1 to .3; clear-brick combat_kill/kill_rush lessons; reward unchanged"
+    },
+    "K2": {
+      "forced": 0.5,
+      "kill": 1.5,
+      "status": "AWAITING_ANTIFARM_SETTLEMENT_DECISION",
+      "only_change": "kill reward package"
+    },
+    "K3": {
+      "base": "K1",
+      "selfplay_fraction": 0.55,
+      "bot_minimum": 0.3,
+      "comparison": "K3 vs K1 isolates opponent mix; vs R3 control has curriculum+mix bundle"
+    },
+    "K4": {
+      "mode_fraction": {
+        "bun_native_v2": 0.6,
+        "kill_arena": 0.4
+      },
+      "kill_opponents": {
+        "bot": 0.5,
+        "selfplay": 0.5
+      },
+      "status": "AWAITING_64_GAME_PARITY_AND_K2_SETTLEMENT",
+      "curriculum_first_200_clear_fraction": 0.3
+    }
+  },
+  "budget": {
+    "updates_per_arm": 640,
+    "steps_per_update": 262144,
+    "environment_steps_per_arm": 167772160,
+    "save_every": 40,
+    "eval_every": 80,
+    "holdout_and_replay_every": 400,
+    "smoke_updates_counted": true
+  },
+  "common": {
+    "envs_per_device": 2048,
+    "rollout_ticks": 128,
+    "minibatch": 8192,
+    "epochs": 1,
+    "lr": 7.5e-05,
+    "entropy": 0.005,
+    "dagger": 0,
+    "combat_KL": 0,
+    "learner_seat_fraction": 0.5,
+    "bank_probability": 0.25
+  },
+  "maps": {
+    "path": "jax_bomb/maps/kill_maps.json",
+    "sha256": "c7a14d3bd498ac03fc6416a7eee84741d0f3532a6a866ddc55917b20e9749209",
+    "splits": {
+      "train": 144,
+      "dev": 31,
+      "holdout": 31
+    }
+  },
+  "kill_arena": {
+    "rule_version": "kill-arena-v1-single-life",
+    "choice": 1,
+    "why": "explicitly permitted single-life variant; native trap timeout/contact death remains; no respawn randomization needed",
+    "max_ticks": 1200,
+    "package": false,
+    "cages": false,
+    "random_spawn": "two distinct native map spawn points, no team-side restriction",
+    "nativeItems": true,
+    "nativeTrap": true,
+    "reward": {
+      "kill": 1,
+      "death": -1,
+      "self_death": -1.5,
+      "terminal_win": 2,
+      "terminal_loss": -2,
+      "forced": "same K2 definition; not active before settlement decision"
+    }
+  },
+  "evaluation": {
+    "id": "KILL-EVAL-V1",
+    "holdout_maps": 31,
+    "games_per_map_per_seat": 4,
+    "opponents": [
+      "hunter_hard",
+      "hunter_normal",
+      "fixed_r3_a_u4002"
+    ],
+    "games_per_opponent": 248,
+    "total_games_per_model": 744,
+    "teacher": false,
+    "selection": "P0/P1 separately; natural v2 guards; no holdout tuning"
+  },
+  "limitations": [
+    "JS Hunter full-game reward reconstruction is approximate and cannot be reported as native JAX training return",
+    "existing complete natural episodes can be reused only for recorded metrics; missing opportunity/reward trace requires new passive instrumented games",
+    "original maps source parser is a reference; no claims of complete original client mode semantics",
+    "formal kill-arena training prohibited until64 full same-action tick comparisons pass",
+    "new deployment input for K4 requires zero-extension parent greedy equality and new ONNX ABI acceptance"
+  ],
+  "unix": 1793455354.1808932
+}

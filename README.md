@@ -2,11 +2,17 @@
 
 纯 Bun（抢包子）强化学习仓库，覆盖 JAX 环境仿真、PPO/GAE 训练、独立 Critic/Target Critic、模型评估与浏览器真人测试。
 
-当前代码基线来自 `qqt-gpu-sim` 的 safe-aggression r6 冻结 runtime，并合入 cycle 9 后的 seed namespace/runner 修复。旧仓库中正在运行的 360-cycle 四卡任务继续使用旧路径；新实验与后续调试才使用本仓库。
+早期 safe-aggression r6 与 cycle 9 的 runner 保留用于历史复现；现行 R1–R4 主线、网页规则和实验边界见本页现行索引。历史训练命令不表示旧队列获准恢复。
 
 训练实验的权威索引见[实验总账](docs/training_experiment_ledger.md)；CX-01 至 CX-30 可检索的负结果、诊断和复现限制见[CX 实验经验](docs/cx_experiment_lessons.md)。本轮 CX-01 至 CX-29 的精炼复现经验与 trap16 长训门控见[CX-01 至 CX-29 经验索引](docs/cx01_29_reproduction_lessons_20261003.md)，详细实验实现、逐轮报告和审计工具保留在 `agent/cx-eval-bot-8gpu-opt` 分支。CX-35 至 CX-45 的主动击杀阶段结论见[主动击杀研究结论](docs/active_kill_experiment_conclusions_20261004.md)，详细实验代码和逐局证据保留在 `agent/cx-active-kill-v2-20261003` 分支。
 
 JE10 v38 的击杀信用、搬包路线方法、逐轮固定评估与当前能力边界见[长期训练总结](docs/je10_control_route_training_summary.md)及[20261019 固定评估报告](reports/je10_training_20261019.md)。r19 已在 g58 按用户指令安全暂停；[线上结果页](https://allwellll.github.io/qqt-RL/training.html)保留全部 61 个完成固定点。
+
+## 现行主线（2026-11-01）
+
+R1 道具/进攻 → R2 原生自由搬包与守恒归属势差 → R3 事件奖励/可见观测与本侧出生 → R4 对拼课程/对手组合。当前网页 catalog 首项为 R3-a u4002，规则 `bun-native-v2`；旧规则和 Review 保留。R4 K1/K3 正式训练，K2、击杀场和拦截 bot 的未完成闸门明确标为实验中，不能因代码入库视为放行。
+
+入口、评估分母、奖励防刷与发布边界见[现行指南](docs/r1_r4_training_guide_20261101.md)及[文档索引](docs/README.md)。历史 run、模型与完整 checkpoint 不随代码入库，旧队列的暂停状态保留。
 
 ## 快速开始
 
@@ -41,7 +47,7 @@ bash scripts/smoke_train_cpu.sh
 
 CPU smoke 必须显式设置 `QQT_ALLOW_CPU=1`，脚本已自动处理。正式训练不设置该变量，若没有加速设备会直接失败，避免误用 CPU 长训。
 
-## 准备 1..360 Cycle 训练
+## 历史 1..360 Cycle 训练
 
 训练 bootstrap 不进入 Git。将以下文件放到任意外部目录，例如 `/path/to/bootstrap`：
 
