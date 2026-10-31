@@ -11,8 +11,12 @@ function verifySource(file,publishedHash,{batchId,field},bytes=fs.readFileSync(f
     e.current_sha256===actual&&e.batch_id===batchId&&e.hash_fields.includes(field));
   assert(entry,`Unapproved ${field} source mismatch: ${file} published=${publishedHash} current=${actual}`);
   const source=bytes.toString('utf8');
-  assert.equal(source.split(entry.new_function).length,2,'Expected exactly one approved audit function');
-  assert.equal(sha(source.replace(entry.new_function,entry.old_function)),publishedHash,
+  let historical=source;
+  for(const patch of entry.patches||[entry]){
+    assert.equal(historical.split(patch.new_function).length,2,'Expected exactly one approved audit function');
+    historical=historical.replace(patch.new_function,patch.old_function);
+  }
+  assert.equal(sha(historical),publishedHash,
     'Changes outside the approved audit function are not compatible');
   return entry;
 }

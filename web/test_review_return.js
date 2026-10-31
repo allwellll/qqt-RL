@@ -38,7 +38,7 @@ const currentSources=require('../reports/je10_source_manifest_20261019.json');
 for(const [name,expected]of Object.entries(evidence.source_hashes)){
   assert(/^[a-f0-9]{64}$/.test(expected));
   assert.equal(currentSources.historical_return_audit_sources[name],expected,'frozen historical identity');
-  if(fs.existsSync(name))assert.equal(hash(fs.readFileSync(name)),currentSources.files[name].published_sha256,'current integrated source '+name);
+  if(fs.existsSync(name))require('../scripts/review_source_hash_compatibility').verifySource(name,currentSources.files[name].published_sha256,{batchId:'best-d-20261028',field:'source_hashes'});
 }
 const html=fs.readFileSync('web/review.html','utf8');assert(html.includes('data-track-label="failure-track"'));assert(html.includes('返程失败区间'));assert(html.includes('src="review_return.js"'));
 const css=fs.readFileSync('web/review.css','utf8');

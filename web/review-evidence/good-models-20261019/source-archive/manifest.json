@@ -1,0 +1,8 @@
+{
+  "scripts/eval_web_hunter.js": {
+    "path": "web/review-evidence/good-models-20261019/source-archive/eval_web_hunter-d617fc549f5ab75a767fc708bf7c78375a452591683473aeef36c0f8efbcea86.js",
+    "sha256": "d617fc549f5ab75a767fc708bf7c78375a452591683473aeef36c0f8efbcea86",
+    "source_commit": "6fff35a249089b555207dc2a72ccd0227408fdee",
+    "scope": "Frozen receipt source; not current runtime equivalence"
+  }
+}

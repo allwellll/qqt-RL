@@ -9,6 +9,8 @@
   const ANNOTATIONS = 'qqt.replay-annotations/v1';
   const ROUTE_SIM_HASH='9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3';
   const VERSION_FILES={[ROUTE_SIM_HASH]:'review-sim/route-v35.js','2767cb4e2993383addc72d792fef8947f3ff86e1dcad4f73c8e1c04752a13f45':'sim-stock-window-v1.js','f6e346f3022640556efc2a988eb3b9b8e90abd5776af6ca1b4b1b0ee2acd6abc':'sim-bun-native-v2.js'};
+  const STOCK_LEGACY_HASH='7d2047b7db2025608b38afec0f8283625b6f98a3d09ac49693f2a0a44d1d485b';
+  VERSION_FILES[STOCK_LEGACY_HASH]='review-sim/stock-legacy-20261028.js';
   const versions=new Map();
   function registerSimulator(hash,api){if(!VERSION_FILES[hash])throw Error('unknown simulator');versions.set(hash,api);}
   function simulator(meta){
