@@ -17,11 +17,11 @@ assert.throws(() => catalog.validateManifest({ schema: 'qqt.web-models/v1', mode
 assert.strictEqual(catalog.modelUrl(rows[0]), 'models/safe-high-c16.json');
 const production = require('./models.json');
 const current=production.models[0];
-assert.strictEqual(current.id,"bun392-r1-slot03-u2760");
-assert.strictEqual(current.source_sha256,"b2237ce4045d0e1659a638979c34b7636d962ed585a63dba509518afc562802d");
-assert.strictEqual(current.onnx.meta.rule_version,'stock-window-v1');
+assert.strictEqual(current.id,"bun392-v2-r3-a-u3040-u3040");
+assert.strictEqual(current.source_sha256,"80ae9005b1563b1ba7a1cbc07ed9044ea051f466fd47b509b2759e7c174f36d2");
+assert.strictEqual(current.onnx.meta.rule_version,'bun-native-v2');
 assert(current.description.includes('P1') && current.description.includes('零泡') && current.description.includes('振荡'));
-assert.strictEqual(current.score,0.39453125);
+assert.strictEqual(current.score,0.83203125);
 const latest=production.models.find(row=>row.id==='bun392-pbt-slot05-u720');
 assert.strictEqual(latest.id,'bun392-pbt-slot05-u720');
 assert.strictEqual(latest.source_sha256,'ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663');

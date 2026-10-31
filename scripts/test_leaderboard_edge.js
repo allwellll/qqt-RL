@@ -32,6 +32,13 @@ const assert = require('assert');
   ipFailed = true;
   const ipFailure = await handler(request(undefined, {'x-forwarded-for':'1.2.3.4'}));
   assert.equal(ipFailure.status,200); assert.equal((await ipFailure.json()).network_metadata_recorded,false); ipFailed = false;
+  progress.match_rank = { rank: 1, total: 1, percentile: 0, ruleset_version: 'bun-native-v2' };
+  const versioned = new Request('https://edge', { method: 'POST', headers: { origin: 'https://allwellll.github.io' },
+    body: JSON.stringify({ p_payload: { player_id: 'test-id', client_match_id: 'test-match-v2', nickname: 'ok', ruleset_version: 'bun-native-v2' } }) });
+  const v2response = await (await handler(versioned)).json();
+  assert.equal(v2response.match_rank.ruleset_version, 'bun-native-v2', 'existing Edge preserves nested rule identity');
+  assert(calls.some(call => call.name === 'qqt_submit_result' && call.payload.p_payload.ruleset_version === 'bun-native-v2'));
+  delete progress.match_rank;
   rejected = true; assert.equal((await handler(request())).status, 422); rejected = false;
   fail = true; const failure = await handler(request()); assert.equal(failure.status, 500);
   assert.equal(failure.headers.get('vary'), 'Origin'); assert(!JSON.stringify(await failure.json()).includes('sensitive'));

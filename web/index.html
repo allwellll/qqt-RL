@@ -35,7 +35,7 @@
       <aside>
         <div class="aside-toolbar"><button id="announcement-open" type="button"><span aria-hidden="true">★</span> 公告</button></div>
         <section class="leaderboard" aria-labelledby="leaderboard-heading">
-          <h2 id="leaderboard-heading">胜局排行榜 · Top 20</h2>
+          <h2 id="leaderboard-heading">胜局排行榜 · Top 20</h2><label>规则分榜 <select id="leaderboard-ruleset"><option value="bun-native-v2">bun-native-v2</option><option value="stock-window-v1">旧 v1 成绩</option></select></label>
           <div class="leaderboard-table-wrap">
             <table class="leaderboard-table" aria-label="胜局排行榜">
               <caption>胜利用时由短到长</caption>
@@ -73,6 +73,9 @@
         <button id="pending-submit" type="button">查看未完成的结算</button>
         <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效</label>
         <h2>对手</h2>
+        <label>对局规则
+          <select id="ruleset-select" aria-label="对局规则"><option value="bun-native-v2" selected>bun-native-v2 · 自由取包</option><option value="stock-window-v1">stock-window-v1 · 旧库存窗口</option></select>
+        </label>
         <label>地图
           <select id="map-select">
             <option value="training806">训练地图 806（真实抢包子）</option>
@@ -157,6 +160,10 @@
   <script src="device_auth.js"></script>
   <script src="ui_panels.js"></script>
   <script src="sim-stock-window-v1.js"></script>
+  <script src="ruleset_v1_capture.js"></script>
+  <script src="sim-bun-native-v2.js"></script>
+  <script src="r3_model_inputs.js"></script>
+  <script src="ruleset_selector.js"></script>
   <script src="controls.js"></script>
   <script src="model_catalog.js"></script>
   <script src="model_loader.js"></script>

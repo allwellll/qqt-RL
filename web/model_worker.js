@@ -39,6 +39,7 @@
       model.parityMaxError=initialized.parityMaxError;model.greedy=true;model.inferEvery=1;
       model.forward=(obs,state)=>client.request('infer',{obs:Float32Array.from(obs),state:Float32Array.from(state)});
       model.forward2=async(o0,s0,o1,s1)=>[await model.forward(o0,s0),await model.forward(o1,s1)];
+      if(typeof QQTR3Inputs!=='undefined')QQTR3Inputs.attach(model);
       model.close=()=>client.close();model.inferenceTimes=client.times;
       return model;
     } catch(error){client.close();throw error;}

@@ -155,7 +155,7 @@
       : arch === 'cnn' ? new QQT.CNNModel(document)
       : arch === 'mlp4' ? new QQT.MLP4Model(document) : new QQT.MLPModel(document);
     model.greedy = true;
-    return model;
+    return QQTR3Inputs.attach(model);
   }
 
   function createRegistry() {
@@ -167,7 +167,7 @@
         reset(context) {},
         async act(observation, playerId, rng) {
           const raw = await Promise.resolve(loadedModel.act(sim, playerId, modelRng));
-          return QQTBots.validateAction({ move: Number(raw[0]), ability: Number(raw[1]) });
+          return QQTBots.validateAction({ move: Number(raw[0]), ability: raw[2] ? 2 : Number(raw[1]) });
         },
         close() {},
       }) : null,
@@ -200,6 +200,7 @@
     }
   }
 
+  let requestedRuleset = QQTRulesets.current;
   async function reset(preserveCard = false) {
     if (leaderboard.state().submitting || leaderboard.state().profileSubmitting) return;
     sessionRevision++;
@@ -212,6 +213,8 @@
     replayPlaying = false;
     replayToggle.textContent = '播放';
     if (level !== selectedLevel()) await useMap(selectedLevel());
+    // Switch rules only when rebuilding the whole match, after any map load.
+    QQTRulesets.select(requestedRuleset);
     sim = new QQT.Sim(Date.now() >>> 0);
     const wantModel = isModelChoice(opponentSelect.value);
     if (wantModel && loadedModelId !== opponentSelect.value.slice(MODEL_PREFIX.length)) opponentSelect.value = 'bun.coop_hunter@hard';
@@ -226,6 +229,7 @@
       bananaSlideSpeedPx: native ? 480 : undefined });
     const [opponent, difficulty] = opponentSelect.value.split('@');
     leaderboardMatch = native ? leaderboard.begin({ seed: sim.seed, opponent,
+      ruleset_version: QQTRulesets.current,
       difficulty: difficulty || (isModelChoice(opponent) ? 'model' : 'fixed'),
       mode: teamMode.value, map_id: mapSelect.value }) : null;
     resetBot();
@@ -538,6 +542,16 @@
     resetReplay(); replayPlaying = true; replayToggle.textContent = '暂停';
   });
   replaySeek.addEventListener('input', () => { if (replayDocument) seekReplay(Number(replaySeek.value)); });
+  document.getElementById('ruleset-select').addEventListener('change', async event => {
+    if (leaderboard.state().submitting || leaderboard.state().profileSubmitting) {
+      event.target.value = QQTRulesets.current;
+      return;
+    }
+    requestedRuleset = event.target.value;
+    await requestRestart();
+    event.target.value = QQTRulesets.current;
+    requestedRuleset = QQTRulesets.current;
+  });
   async function onStrategyChange() {
     const value = opponentSelect.value;
     if (!teamCapable(value)) teamMode.value = '1v1';

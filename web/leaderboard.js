@@ -34,6 +34,7 @@
   function createClient({ config, storage, crypto, fetch, onChange = () => {}, now = Date.now, settlementReady = true }) {
     let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null, profileRequest = null, refreshRevision = 0, combinedRequest = null, identityRequest = null, identityRevision = 0;
     let profileKnown = false;
+    let boardRuleset = config.rulesetVersion || 'stock-window-v1';
     try { data = JSON.parse(storage.getItem(KEY)); } catch (_) { persistent = false; }
     if (!data || !/^[0-9a-f-]{36}$/.test(data.player_id || '') || !/^[0-9a-f]{64}$/.test(data.secret || '')) {
       const playerId = uuid(crypto);
@@ -140,8 +141,9 @@
       const revision = ++refreshRevision;
       try {
         const records = config.leaderboardRpc === 'qqt_my_win_leaderboard';
-        const response = await rpc(records ? 'qqt_my_win_leaderboard' : 'qqt_leaderboard', records
-          ? { p_player_id: data.player_id, p_player_secret: data.secret } : {});
+        const response = await rpc(records && config.rulesetVersion ? 'qqt_my_win_leaderboard_ruleset' : records ? 'qqt_my_win_leaderboard' : 'qqt_leaderboard', records
+          ? { p_player_id: data.player_id, p_player_secret: data.secret, ...(config.rulesetVersion ? {p_ruleset_version:boardRuleset}: {}) } : {});
+        if(config.rulesetVersion && (response.ruleset_contract_version!==2 || response.ruleset_version!==boardRuleset))throw Error('规则分榜服务待升级');
         const responseRows = records ? winRows(response) : response;
         if (!Array.isArray(responseRows)) throw new Error('排行榜响应格式错误');
         if (revision !== refreshRevision) return false;
@@ -198,7 +200,7 @@
       })().finally(() => { pendingRequest = null; emit(); });
       return pendingRequest;
     }
-    function begin(metadata) { return { ...metadata, client_match_id: uuid(crypto), started: now() }; }
+    function begin(metadata) { return { ...(config.rulesetVersion ? {ruleset_version:config.rulesetVersion}:{}), ...metadata, client_match_id: uuid(crypto), started: now() }; }
     function finish(match, { result, gameDurationMs, autoSubmit = true }) {
       if (!match || completed.has(match.client_match_id)) return Promise.resolve(false);
       completed.add(match.client_match_id);
@@ -216,7 +218,7 @@
       data.queue.push({ approved: autoSubmit, player_id: data.player_id, client_match_id, nickname: data.nickname,
         victory_message: data.victory_message, result, game_duration_ms: gameDurationMs,
         wall_duration_ms: wall, client_total_ms: data.total_ms, opponent, difficulty,
-        seed, mode, map_id, client_version, completed_at: new Date(now()).toISOString() });
+        seed, mode, map_id, client_version, ...(match.ruleset_version?{ruleset_version:match.ruleset_version}:{}), completed_at: new Date(now()).toISOString() });
       save(); emit(autoSubmit ? '提交中…' : ''); return autoSubmit ? drain() : Promise.resolve(true);
     }
     function submitProfile(nick, message) {
@@ -313,7 +315,7 @@
       settlement = { ...card, closed: false }; emit(); return true;
     }
     function profileActive() { return !!profileRequest || !!(settlement && settlement.result !== 'loss' && settlement.submitted && !settlement.profileSkipped && !settlement.profileSaved); }
-    return { state, begin, finish, refresh, syncProfile, retry: drain, setDraft, submitCard, openPending, submitProfile, submitSettlement, profileActive,
+    return { setBoardRuleset(version){if(!['bun-native-v2','stock-window-v1'].includes(version))throw Error('ruleset');boardRuleset=version;rows=[];refreshRevision++;emit();return refresh();}, state, begin, finish, refresh, syncProfile, retry: drain, setDraft, submitCard, openPending, submitProfile, submitSettlement, profileActive,
       setSettlementReady(ready) { if (settlementReady !== !!ready) { settlementReady = !!ready; emit(); } },
       markProfileDirty() { if (settlement) settlement.profileSaved = false; emit(); },
       closeSettlement() { if (pendingRequest || profileRequest || combinedRequest) return false; if (settlement) settlement.closed = true; emit(); return true; },
@@ -357,7 +359,7 @@
       rank.rank >= 1 && rank.total >= rank.rank && Number.isFinite(rank.percentile) &&
       rank.percentile >= 0 && rank.percentile <= 100 && rank.comparison === 'player-best-v1' &&
       ['result', 'mode', 'map_id', 'difficulty', 'opponent'].every(key => rank[key] === match[key]) &&
-      rank.duration_ms === match.game_duration_ms;
+      rank.duration_ms === match.game_duration_ms && (!match.ruleset_version || rank.ruleset_version === match.ruleset_version);
   }
   function settlementText(value) {
     if (!value) return null;
@@ -486,6 +488,7 @@
     el('settlement-close').addEventListener('click', () => runSettlementAction(() => client.closeSettlement()));
     el('pending-submit').addEventListener('click', () => client.openPending());
     renderSettlement(document, client.state());
+    const board=document.getElementById('leaderboard-ruleset');if(board)board.addEventListener('change',()=>client.setBoardRuleset(board.value));
     client.refresh();
     void client.syncProfile();
     return client;

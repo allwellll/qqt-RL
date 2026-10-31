@@ -8,18 +8,26 @@
   const SCHEMA = 'qqt.diagnostic-replay/v1';
   const ANNOTATIONS = 'qqt.replay-annotations/v1';
   const ROUTE_SIM_HASH='9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3';
+  const VERSION_FILES={[ROUTE_SIM_HASH]:'review-sim/route-v35.js','2767cb4e2993383addc72d792fef8947f3ff86e1dcad4f73c8e1c04752a13f45':'sim-stock-window-v1.js','f6e346f3022640556efc2a988eb3b9b8e90abd5776af6ca1b4b1b0ee2acd6abc':'sim-bun-native-v2.js'};
   const versions=new Map();
-  function registerSimulator(hash,api){if(hash!==ROUTE_SIM_HASH)throw Error('unknown simulator');versions.set(hash,api);}
+  function registerSimulator(hash,api){if(!VERSION_FILES[hash])throw Error('unknown simulator');versions.set(hash,api);}
   function simulator(meta){
-    if(meta.simulator_sha256!==ROUTE_SIM_HASH)return Q;
-    if(!versions.has(ROUTE_SIM_HASH)&&typeof module==='object'&&module.exports)registerSimulator(ROUTE_SIM_HASH,require('./review-sim/route-v35'));
-    if(!versions.has(ROUTE_SIM_HASH))throw Error('versioned simulator not loaded');
-    return versions.get(ROUTE_SIM_HASH);
+    const hash=meta.simulator_sha256,file=VERSION_FILES[hash];if(!file)return Q;
+    if(!versions.has(hash)&&typeof module==='object'&&module.exports)registerSimulator(hash,require('./'+file));
+    if(!versions.has(hash))throw Error('versioned simulator not loaded');return versions.get(hash);
   }
   function replaySetup(meta,level){
+    if(meta.frozen_birth){
+      const b=meta.frozen_birth;
+      if(b.schema!=='qqt.frozen-birth/v1'||b.cells?.length!==2||b.cells.some(a=>a.length!==2||a.some((x,i)=>!Number.isInteger(x)||x<0||x>=(i?15:13))))throw Error('frozen birth');
+      const sim=new (simulator(meta).Sim)(meta.seed);sim.reset(level,{nativeTrap:true,nativeItems:true});sim.maxSteps=meta.max_ticks;
+      for(let p=0;p<2;p++){sim.pos[2*p]=b.cells[p][0]+.5;sim.pos[2*p+1]=b.cells[p][1]+.5;}
+      sim.bunSpawnPos=b.cells.map(a=>a.map(x=>x+.5));sim._gen++;return sim;
+    }
+
     if(meta.native_fixture){
       validateFixture(meta.native_fixture);
-      const sim=new Q.Sim(meta.seed);
+      const sim=new (simulator(meta).Sim)(meta.seed);
       sim.reset(level,{nativeTrap:true,nativeItems:true});
       sim.restoreReplay(meta.native_fixture.frame);
       sim.initialHp=meta.native_fixture.initial_hp;

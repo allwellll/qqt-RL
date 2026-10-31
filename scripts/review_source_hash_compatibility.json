@@ -18,6 +18,21 @@
       "new_function": "def spawn_bucket_ids(key, n: int) -> jnp.ndarray:\n    \"\"\"Bucket chosen by init_batch(key, n) per env (audit; same key path).\"\"\"\n    def one(env_key):\n        # Match _fresh: contact and ambush keys precede the danger key.\n        k_danger = jax.random.split(env_key, 13)[11]\n        return _sample_spawn_bucket(k_danger, jnp.zeros((2, 2)))[1]\n    return jax.vmap(one)(jax.random.split(key, n))\n",
       "proof": "tests/test_review_reward_source_compatibility.py",
       "scope": "Test-time source compatibility only; historical source identity is retained, not asserted to equal the current file."
+    },
+    {
+      "file": "web/review_protocol.js",
+      "published_sha256": "99c373aacc8e3bb5252a315de6ce2cb6c29189ab8df4c089ae74cb614b1e05a5",
+      "current_sha256": "fbea768e96d712b7ff1ae7783740a7c4b3281085b4305814f410be96c21d1d41",
+      "batch_id": "best-d-20261028",
+      "hash_fields": [
+        "source_hashes"
+      ],
+      "function": "versioned replay simulator dispatch and optional frozen birth",
+      "reason": "Adds explicit v1/v2 simulator dispatch and optional frozen birth. Historical D replay has neither new ruleset hash nor frozen_birth; all original D actions/checks/terminal replayed unchanged.",
+      "old_function": "  const ROUTE_SIM_HASH='9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3';\n  const versions=new Map();\n  function registerSimulator(hash,api){if(hash!==ROUTE_SIM_HASH)throw Error('unknown simulator');versions.set(hash,api);}\n  function simulator(meta){\n    if(meta.simulator_sha256!==ROUTE_SIM_HASH)return Q;\n    if(!versions.has(ROUTE_SIM_HASH)&&typeof module==='object'&&module.exports)registerSimulator(ROUTE_SIM_HASH,require('./review-sim/route-v35'));\n    if(!versions.has(ROUTE_SIM_HASH))throw Error('versioned simulator not loaded');\n    return versions.get(ROUTE_SIM_HASH);\n  }\n  function replaySetup(meta,level){\n    if(meta.native_fixture){\n      validateFixture(meta.native_fixture);\n      const sim=new Q.Sim(meta.seed);\n      sim.reset(level,{nativeTrap:true,nativeItems:true});\n      sim.restoreReplay(meta.native_fixture.frame);",
+      "new_function": "  const ROUTE_SIM_HASH='9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3';\n  const VERSION_FILES={[ROUTE_SIM_HASH]:'review-sim/route-v35.js','2767cb4e2993383addc72d792fef8947f3ff86e1dcad4f73c8e1c04752a13f45':'sim-stock-window-v1.js','f6e346f3022640556efc2a988eb3b9b8e90abd5776af6ca1b4b1b0ee2acd6abc':'sim-bun-native-v2.js'};\n  const versions=new Map();\n  function registerSimulator(hash,api){if(!VERSION_FILES[hash])throw Error('unknown simulator');versions.set(hash,api);}\n  function simulator(meta){\n    const hash=meta.simulator_sha256,file=VERSION_FILES[hash];if(!file)return Q;\n    if(!versions.has(hash)&&typeof module==='object'&&module.exports)registerSimulator(hash,require('./'+file));\n    if(!versions.has(hash))throw Error('versioned simulator not loaded');return versions.get(hash);\n  }\n  function replaySetup(meta,level){\n    if(meta.frozen_birth){\n      const b=meta.frozen_birth;\n      if(b.schema!=='qqt.frozen-birth/v1'||b.cells?.length!==2||b.cells.some(a=>a.length!==2||a.some((x,i)=>!Number.isInteger(x)||x<0||x>=(i?15:13))))throw Error('frozen birth');\n      const sim=new (simulator(meta).Sim)(meta.seed);sim.reset(level,{nativeTrap:true,nativeItems:true});sim.maxSteps=meta.max_ticks;\n      for(let p=0;p<2;p++){sim.pos[2*p]=b.cells[p][0]+.5;sim.pos[2*p+1]=b.cells[p][1]+.5;}\n      sim.bunSpawnPos=b.cells.map(a=>a.map(x=>x+.5));sim._gen++;return sim;\n    }\n\n    if(meta.native_fixture){\n      validateFixture(meta.native_fixture);\n      const sim=new (simulator(meta).Sim)(meta.seed);\n      sim.reset(level,{nativeTrap:true,nativeItems:true});\n      sim.restoreReplay(meta.native_fixture.frame);",
+      "proof": "web/test_review_best_d.js; web/test_review_protocol.js",
+      "scope": "Only exact reversible source block; published replay identities stay unchanged."
     }
   ]
 }

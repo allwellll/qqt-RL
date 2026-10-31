@@ -32,7 +32,7 @@ async function initialize(row) {
       runtime.env.wasm.wasmPaths=new URL('vendor/ort/',self.location.href).href;
       session=await runtime.InferenceSession.create(onnx,{executionProviders:['wasm'],graphOptimizationLevel:'all',logSeverityLevel:3});
       const obs=new Float32Array(meta.obs_shape.reduce((a,b)=>a*b,1));
-      const state=new Float32Array(meta.global_dim || 24);
+      const state=new Float32Array(meta.state_dim || meta.global_dim || 24);
       const expected=row.onnx.reference_zero || reference.forward(obs,state),actual=await infer(obs,state);
       const error=Math.max(...['move','bomb'].flatMap(k=>Array.from(actual[k],(v,i)=>Math.abs(v-expected[k][i]))),Math.abs(actual.value-expected.value));
       if(!Number.isFinite(error)||error>1e-3)throw Error('WASM/JS numerical parity failed');
