@@ -2,6 +2,78 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-v2-r3-a-u4002-u4002",
+      "display_name": "Bun392 v2 r3_a_u4002\uff08P1\u4e09\u6863+338\uff09",
+      "file": "bun392-v2-r3-a-u4002-u4002-763ae64a325215de60fa4af403f4e03aeb27ad888bd859d54a097144e816c0a7.json",
+      "sha256": "763ae64a325215de60fa4af403f4e03aeb27ad888bd859d54a097144e816c0a7",
+      "bytes": 40340774,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r3-a-u4002-u4002-20261031/bun392-v2-r3-a-u4002-u4002-763ae64a325215de60fa4af403f4e03aeb27ad888bd859d54a097144e816c0a7.json",
+      "cycle": 4002,
+      "candidate": "r3_a_ownside_c000001_u004002",
+      "strategy": "raw",
+      "score": 0.859375,
+      "source_sha256": "f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30",
+      "rule_version": "bun-native-v2",
+      "description": "\u7f51\u9875\u771f\u4ebaP0\u3001\u6a21\u578bP1\u3002bun-native-v2\u81ea\u7531\u53d6\u5305\uff0c\u751f\u4ea7JS Hunter\u3001argmax\u3001\u8001\u5e08\u5173\u95ed\u3002\u56fa\u5b9a\u4e09\u6863\u6bcf\u6863256\u5c40\uff08\u5404\u5e2d128\uff09\uff0cP1\u4e09\u6863\u80dc\u8d1f\u5dee{'hunter_hard': 99, 'hunter_normal': 116, 'hunter_easy': 123}\uff0c\u5408\u8ba1+338\uff08\u7f51\u9875\u65e7Actor\u5728v2\u4e0b+320\uff09\uff1bP0\u5408\u8ba1+353\uff08\u57fa\u7ebf+345\uff09\uff1b\u81ea\u4f240\u3002\u9010\u6863/P0/\u81ea\u4f24\u62a4\u680f\u5168\u90e8\u901a\u8fc7\u3002\u534f\u4f5cHunter hard\u5355\u5217\u538b\u529b\u6d4b\u8bd5\uff0c\u4e0d\u6df7\u6392\u540d\u300216\u51fa\u751f\u51e0\u4f55\u91cd\u590d\uff1b\u4e0d\u5ba3\u79f0\u7edf\u8ba1\u663e\u8457\u6216\u771f\u4eba\u6cdb\u5316\u3002\u65e7v1\u53ef\u9009\u3001\u65e7\u5f55\u50cf\u6309\u539f\u89c4\u5219\u56de\u653e\uff0c\u6210\u7ee9\u5206\u699c\u4e0d\u6df7\u6392\u3002R3\u5982\u6709\u4f7f\u752825\u5e73\u9762/37\u7ef4\u53ef\u89c1\u8f93\u5165\uff1b\u771f\u4ebaP0 frameStep\u4e0e\u8bc4\u4f30Sim.step\u8303\u56f4\u5206\u5f00\uff0c\u4e0d\u5ba3\u79f0\u9010\u4f4d\u7b49\u4ef7\u3002\u4ecd\u53ef\u80fd\u6709\u96f6\u6ce1\u3001\u632f\u8361\u4e0e\u6301\u5305\u505c\u6ede\u3002",
+      "score_protocol": "production JS Hunter three tiers; bun-native-v2; argmax; teacher off; paired256/tier, P0/P1 128 each; fresh2026318000/2026319000/2026320000; 16 own-side native geometries reused; coop_hard separate",
+      "onnx": {
+        "file": "bun392-v2-r3-a-u4002-u4002-f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656.onnx",
+        "sha256": "f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656",
+        "bytes": 30276775,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r3-a-u4002-u4002-20261031/bun392-v2-r3-a-u4002-u4002-f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656.onnx",
+        "meta": {
+          "name": "bun392-v2-r3-a-u4002-u4002",
+          "display_name": "bun392-v2-r3-a-u4002-u4002",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "arch": "transformer",
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20,
+          "value_max": 20,
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "checkpoint_sha256": "f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30",
+          "onnx_sha256": "f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656",
+          "source": "runs/r3_items_route_20261030/formal/r3_a_ownside_c000001/u004002/policy.pt",
+          "committed_sha256": "068d14e4658ef3e68cd79236c262da007f1ab66dc293e396bc9ead2f19d82708",
+          "strategy": "raw",
+          "attention_heads": 4,
+          "update": 4002,
+          "rule_version": "bun-native-v2"
+        },
+        "reference_zero": {
+          "move": [
+            2.028625392160973,
+            3.6367900995094966,
+            3.928364959608603,
+            3.076754789571838,
+            2.720594257592865
+          ],
+          "bomb": [
+            1.3570715420062902,
+            -1.3720023258923266,
+            3.513920282262249
+          ],
+          "value": 1.6218202038325769
+        }
+      }
+    },
+    {
       "id": "bun392-v2-r3-a-u3040-u3040",
       "display_name": "Bun392 v2 r3_a_u3040\uff08P1\u4e09\u6863+320\uff09",
       "file": "bun392-v2-r3-a-u3040-u3040-2a45af6ab8231d71e5104626ef58d08b0590385b1d0b9238fc73bf3b178590eb.json",
