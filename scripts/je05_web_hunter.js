@@ -4,7 +4,7 @@ const path=require('path');
 const Module=require('module');
 const crypto=require('crypto');
 const assert=require('node:assert/strict');
-const QQT=require('../web/sim.js');
+const QQT=require(process.env.QQT_STOCK_RULE==='stock-window-v1'?'../web/sim-stock-window-v1.js':'../web/sim.js');
 const root=path.resolve(__dirname,'..');
 const authorityFile=path.join(__dirname,'eval_web_hunter.js');
 const residualFile=path.join(__dirname,'eval_web_hunter_residual.js');

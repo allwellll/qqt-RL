@@ -18,8 +18,9 @@ function replaceRange(source, start, end, replacement) {
   return source.slice(0, i) + replacement + source.slice(j + end.length);
 }
 
-function build(mode) {
+function build(mode, difficulty = 'normal') {
   if (!['categorical', 'greedy'].includes(mode)) throw new Error('explicit action-selection mode required');
+  if (!['easy', 'normal', 'hard'].includes(difficulty)) throw new Error('explicit Hunter difficulty required');
   let source = fs.readFileSync(routeFile, 'utf8');
   source = replaceOnce(source, "require('./dagger_rl_metrics')", "require('./ppo_scale_item_metrics_v4')");
   source = replaceRange(source,
@@ -46,7 +47,7 @@ function build(mode) {
   source = replaceOnce(source, "policy:'greedy'", `policy:'${mode}'`);
   source = replaceOnce(source,
     'const rng=Q.mulberry32(seed^0x515154),hunter=authority.createHunter(\'normal\');',
-    'const actorRng=Q.mulberry32(seed^0x515154),opponentRng=Q.mulberry32(seed^0x7a11c0de),hunter=authority.createHunter(\'normal\');');
+    `const actorRng=Q.mulberry32(seed^0x515154),opponentRng=Q.mulberry32(seed^0x7a11c0de),hunter=authority.createHunter('${difficulty}');`);
   source = replaceOnce(source,
     'const stageCounts={},firstByPhase={},itemMetrics=new ItemMetrics(s,team);',
     'const stageCounts={},firstByPhase={},actionStats={},itemMetrics=new ItemMetrics(s,team);');

@@ -6,8 +6,8 @@ def test_real_collector_ppo_and_restore_with_128_native_replay_slots(monkeypatch
     import jax.numpy as jnp
     from jax_bomb import jax_train as train
     from scripts import prestock_joint_replay as joint,je09_stage_h5c_dagger as legacy
-    from tests.test_prestock_collector_integration import test_real_collector_shared_potential_joint_labels_reset_and_replay
-    from tests.test_replay_batch_recipe import candidate_namespace
+    from test_prestock_collector_integration import test_real_collector_shared_potential_joint_labels_reset_and_replay
+    from test_replay_batch_recipe import candidate_namespace
     candidate=candidate_namespace()
     # Restore the actual Actor scoring function; only the batch size is changed.
     from scripts.return_error_replay import target_mass

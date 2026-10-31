@@ -1,4 +1,3 @@
-from tests.external_artifacts import requires_artifacts
 """Focused real-state checks; no synthetic learner custody."""
 import os
 os.environ.setdefault('JAXBOMB_RULE','bun')
@@ -28,7 +27,6 @@ def test_pool_partition_is_disjoint_and_source_parent_is_not_modified():
     assert np.array_equal(np.sort(np.concatenate(groups)),np.arange(2048))
 
 
-@requires_artifacts('runs/combat_mix_v1/PROTOCOL.json')
 def test_real_learner_action_logprob_value_and_rng_are_identical_when_replacing_opponent_only():
     import json,pickle
     from pathlib import Path

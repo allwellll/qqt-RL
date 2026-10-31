@@ -1,11 +1,9 @@
-from tests.external_artifacts import requires_artifacts
 """Queue and process identity checks without starting any GPU jobs."""
 import ast
 from pathlib import Path
 import json
 
 
-@requires_artifacts('runs/combat_mix_v1/PROTOCOL.json', 'runs/combat_mix_v1/USER_PBT_QUEUE_OVERRIDE.json')
 def test_latest_authorization_removes_only_unstarted_pair_completion_runs():
     p=json.loads(Path('runs/combat_mix_v1/PROTOCOL.json').read_text())
     assert len(p['arms'])==5
@@ -19,7 +17,6 @@ def test_latest_authorization_removes_only_unstarted_pair_completion_runs():
         assert Path('runs/combat_mix_v1/protocols',name+'.json').exists()
 
 
-@requires_artifacts('runs/combat_mix_v1/AUX_WATCHDOG.py')
 def test_aux_watchdog_process_names_match_every_lease_and_module():
     path=Path('runs/combat_mix_v1/AUX_WATCHDOG.py')
     tree=ast.parse(path.read_text());values={}

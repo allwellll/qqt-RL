@@ -1,4 +1,3 @@
-from tests.external_artifacts import requires_artifacts
 import json
 from pathlib import Path
 
@@ -33,7 +32,6 @@ def test_manifest_scope_covers_each_paired_source_and_both_action_modes():
     assert fullmatch.OUT.name == "fullmatch_reward_alignment_v2"
 
 
-@requires_artifacts('runs/expert_reward_20261025/D_ablation_v1/PROTOCOL.json')
 def test_d_reward_protocol_and_frozen_coefficients_are_not_rewritten():
     root = Path(__file__).resolve().parents[1]
     protocol = json.loads(

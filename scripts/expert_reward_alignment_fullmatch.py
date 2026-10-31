@@ -216,6 +216,17 @@ def _passive_snapshot(st, after, info, actions, policy, mm, bm,
 def source_model_rows() -> dict:
     rows = {}
     for name, spec in MODELS.items():
+        if "policy" in spec:
+            from scripts.checkpoint_policy_artifact import verify_policy,load_actor
+            marker=verify_policy(R/spec["checkpoint"]);actor=load_actor(R/spec["checkpoint"])
+            if not all(np.isfinite(np.asarray(leaf)).all() for leaf in jax.tree.leaves(actor)
+                       if np.asarray(leaf).dtype.kind in "fc"):
+                raise ValueError(f"nonfinite Actor: {name}")
+            rows[name]=dict(policy=spec["policy"],checkpoint=spec["checkpoint"],
+                policy_sha256=marker["policy_sha256"],state_sha256=marker["state_sha256"],
+                state_hash_source="historical COMMITTED.json; payload not reverified",critic_evaluation=False,
+                run_seed=spec["run_seed"],update=marker["update"])
+            continue
         state_path = R / spec["state"]
         checkpoint = R / spec["checkpoint"]
         committed = json.loads((checkpoint / "COMMITTED.json").read_text())
@@ -639,12 +650,19 @@ def run_batch(params, model_name, mode, episode_indices, scan, names):
             split='diagnostic_dev', natural=True, teacher=False,
             initial_wall_brick_sha256=map_fingerprints[i],
             trace=trace.relative_to(R).as_posix(), trace_sha256=sha(trace),
-            telemetry_column=i, state_sha256=sha(R/MODELS[model_name]['state']),
+            telemetry_column=i, state_sha256=(json.loads((R/MODELS[model_name]['checkpoint']/'COMMITTED.json').read_text())['state_sha256']
+                if 'policy' in MODELS[model_name] else sha(R/MODELS[model_name]['state'])),
+            state_hash_source=('historical COMMITTED.json; state payload not reverified' if 'policy' in MODELS[model_name] else 'state payload SHA256'),
             policy_sha256=sha(R/MODELS[model_name]['checkpoint']/'policy.pt'))
     return results
 
 
 def load_params(spec):
+    if 'policy' in spec:
+        # Native full-game actions use Actor logits only. No retained Critic is
+        # invented: the Actor's unused value-head outputs are never reported.
+        from scripts.checkpoint_policy_artifact import load_actor
+        return load_actor(R / spec['checkpoint'])
     with (R / spec["state"]).open("rb") as stream:
         return pickle.load(stream)["params"]
 

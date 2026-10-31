@@ -5,6 +5,7 @@ from scripts.population_run_state import atomic_json,lock,sha
 from scripts.combat_mix_owner import resources,worker_reserved_devices,read
 from scripts.iter_pbt_recipe import explore,replacements
 from scripts.iter_pbt_eval_scheduling import fresh_cohort
+from scripts.iter_pbt_native_gpu_policy import dedicated_gpus
 ROOT=Path(__file__).resolve().parents[1];BASE=ROOT/'runs/iter_pbt_v1'
 CPU={0:'32-39',1:'40-47',2:'48-55',3:'72-79',4:'80-87',5:'88-95',6:'96-103',7:'104-111'}
 
@@ -145,11 +146,13 @@ def main():
     atomic_json(BASE/'formal'/name/'TECHNICAL_FAILURE.json',dict(exit_code=rc,unix=time.time()))
     notify(name+'_FAILED',f'ITER-PBT技术阻塞：{name} exit={rc}；已保存日志及最近原子状态，其他slot继续。')
   samples=resources();reserved=worker_reserved_devices();available=[]
+  eval_reserved=dedicated_gpus(read(BASE/'native_gpu/CONFIG.json',{}))
   if time.time()-last_sample>=10:
    with (BASE/'GPU_SAMPLES.jsonl').open('a') as f:f.write(json.dumps(dict(unix=time.time(),gpus=samples))+'\n')
    last_sample=time.time()
   for s in samples:
    g=s['gpu'];busy=s['occupied'] or g in reserved
+   if g in eval_reserved:idle.pop(g,None);continue
    if busy:idle.pop(g,None)
    else:
     idle.setdefault(g,time.time());available.append(g)
@@ -167,7 +170,9 @@ def main():
    if not (old_out/'COMPLETE.json').exists() and not technical_failure(old_name):
     if g in available:available.remove(g)
   for g in range(8):
+   if g in eval_reserved:continue
    previous=state.get(str(g));name=previous['run'] if previous else None
+   if previous and (BASE/'formal'/name/'USER_AUTHORIZED_EVAL_RESERVATION.json').exists():continue
    if previous and name not in live and (BASE/'formal'/name/'TECHNICAL_FAILURE.json').exists():
     log=(BASE/'logs'/f'{name}.log').read_text(errors='replace')
     if 'carry input and carry output must have equal types' in log and 'int8[2048]' in log:
@@ -185,6 +190,11 @@ def main():
      previous['accepted']=True;atomic_json(BASE/'SLOTS.json',state)
      notify(name+'_COMPLETE',f'ITER-PBT chunk完成：{name}，新增20971520环境步/2560 Adam步，双SHA验收；立即接续下一chunk。',checkpoint=done)
     if name in live:continue
+    # User-authorized version switch only after this complete atomic chunk.
+    # The separate versioned owner adopts the COMMITTED full state; no signal
+    # is ever sent to a training worker for this handoff.
+    switch=read(BASE/'BOMB_THREAT_HANDOFF.json',{})
+    if done and g in switch.get('armed_slots',[]):continue
     if (out/'TECHNICAL_FAILURE.json').exists():continue
     if done:
      source=done;chunk=previous['chunk']+1;recipe=pr['arms'][name];decision=dict(kind='continue_without_waiting_for_async_scores')
@@ -232,12 +242,13 @@ def main():
    atomic_json(out/'LAUNCH.json',dict(stage=stage,gpu=g,protocol=str(path.relative_to(ROOT)),unix=time.time()))
   progress={};work={}
   for g,entry in state.items():
-   progress[g]=dict(run=entry['run'],launch=read(BASE/'formal'/entry['run']/'LAUNCH.json'),progress=read(BASE/'formal'/entry['run']/'PROGRESS.json'))
+   reservation=read(BASE/'formal'/entry['run']/'USER_AUTHORIZED_EVAL_RESERVATION.json',{})
+   progress[g]=dict(run=entry['run'],launch=read(BASE/'formal'/entry['run']/'LAUNCH.json'),progress=read(BASE/'formal'/entry['run']/'PROGRESS.json'),allocation_status='USER_AUTHORIZED_EVAL_CARD_RELEASE' if reservation else 'TRAINING',reservation=reservation)
    executed=[]
    for trace in (BASE/'formal').glob(f'slot{int(g):02d}_c*/updates.jsonl'):
     executed.extend(json.loads(line) for line in trace.read_text().splitlines() if line.strip())
    work[g]=dict(actual_recorded_updates=len(executed),actual_environment_steps=sum(r['actual_environment_steps_this_update'] for r in executed),actual_optimizer_steps=sum(r['actual_optimizer_steps_this_update'] for r in executed),counter_scope='new slot work only; donor history excluded; all recorded executions including a potential replay are retained')
   atomic_json(BASE/'WORK_TOTALS.json',work)
-  atomic_json(BASE/'STATUS.json',dict(status='PAUSED' if paused else 'RUNNING',slots=state,progress=progress,work_totals=work,active=list(live),gpu_samples=samples,updated_unix=time.time(),CPU_evaluation_independent=True))
+  atomic_json(BASE/'STATUS.json',dict(status='PAUSED' if paused else 'RUNNING',slots=state,progress=progress,work_totals=work,active=list(live),gpu_samples=samples,dedicated_evaluation_gpus=sorted(eval_reserved),updated_unix=time.time(),CPU_evaluation_independent=True))
   time.sleep(5)
 if __name__=='__main__':main()

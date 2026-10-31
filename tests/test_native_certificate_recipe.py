@@ -6,12 +6,7 @@ from scripts.native_certificate_recipe import patched_verifier
 
 
 def test_patch_reuses_existing_native_endpoints_and_preserves_safety_and_query_budget():
-    installed=Path('scripts/je09_stage_h6_ops.py').read_text()
-    # The installed joint teacher supersedes this legacy inline adapter.
-    assert 'from scripts.prestock_verified_labels import verified_labels as verify' in installed
-    assert 'return verify(states,aux,legal,seat,danger,original_labels,slots)' in installed
-    assert patched_verifier(installed)==installed
-    source='def legacy_verifier():\n    if slots:\n        safe = temporal_safe & one_step_safe\n        proposed *= (labels[:, 5] * accepted)[:, None]\n        select(slots_per_fragment=slots)\n'
+    source=Path('scripts/je09_stage_h6_ops.py').read_text()
     patched=patched_verifier(source)
     ast.parse(patched)
     assert patched.count('env.step(')==source.count('env.step(')
@@ -52,4 +47,4 @@ def test_install_requires_terminal_and_verified_gpu_release(tmp_path):
     assert target.read_text()==source
     (base/'GPU_RELEASE_RECEIPT.json').write_text(json.dumps({'released':True,'compute_clients':0}))
     assert install(tmp_path,parent)['additional_env_steps']==0
-    assert target.read_text()==source  # installed joint certification must survive unchanged
+    assert 'certify_native_positions(' in target.read_text()

@@ -21,8 +21,7 @@ def test_patch_pairs_stock_drop_home_pbrs_and_oracle_without_new_env_steps():
         wall=jnp.array(wall)[None],brick=jnp.zeros((1,13,15),bool))
     route=dict(distance=jnp.broadcast_to(d[:,None],(1,4,13,15)),stock_distance=jnp.broadcast_to(d[:,None],(1,2,13,15)))
     old=pbrs.continuous_distance(states,route,jnp.full((1,2),3))
-    # The installed field is already fixed; reinstallation must preserve it.
-    assert abs(float(old[0,0]-old[0,1]))<.0001
+    assert float(old[0,0]-old[0,1])>.63
     adapted={};exec(compile(patched_pbrs(Path('scripts/je09_route_pbrs.py').read_text()),'<prepared PBRS>','exec'),adapted)
     oracle={};exec(compile(patched_oracle(Path('scripts/je10_route_oracle.py').read_text()),'<prepared oracle>','exec'),oracle)
     for phase in [1,2,3,4]:

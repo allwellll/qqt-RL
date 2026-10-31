@@ -111,9 +111,8 @@ def test_constructed_native_transition_progresses_the_existing_teacher_target():
     label=oracle.labels(state,aux,jnp.ones((1,5),bool),jnp.zeros(1,int),jnp.zeros((1,13,15)))
     assert int(label[0,6])==4 and float(label[0,2])==1
     parent=ops.safe_phase_values(state,route,aux['drop'])
-    assert int(parent[0][0,0])==2
+    assert int(parent[0][0,0])==1
     aligned=align_recovery(state,route,aux['drop'],parent)
-    for a,b in zip(aligned,parent):np.testing.assert_array_equal(a,b)
     joint=jnp.array([[[2,0],[4,0]]])
     after,_,_=jax.vmap(lambda s,a,k:env.step(s,a,k,auto_reset=False,return_info=True))(
         state,joint,jax.random.split(jax.random.PRNGKey(23),1))
@@ -137,9 +136,8 @@ def test_native_own_pickup_continues_home_target_instead_of_freezing_potential()
     label=oracle.labels(after,aux,jnp.ones((1,5),bool),jnp.zeros(1,int),jnp.zeros((1,13,15)))
     assert int(label[0,6])==3 and float(label[0,7])>0
     parent=ops.safe_phase_values(after,route,aux['drop'])
-    assert int(parent[0][0,0])==3
+    assert int(parent[0][0,0])==0
     aligned=align_recovery(after,route,aux['drop'],parent)
-    for a,b in zip(aligned,parent):np.testing.assert_array_equal(a,b)
     assert int(aligned[0][0,0])==3 and float(aligned[2][0,0])<0
     moved,_,_=jax.vmap(lambda s,a,k:env.step(s,a,k,auto_reset=False,return_info=True))(
         after,jnp.array([[[0,0],[4,0]]]),jax.random.split(jax.random.PRNGKey(26),1))

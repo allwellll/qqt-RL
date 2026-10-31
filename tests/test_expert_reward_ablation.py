@@ -1,4 +1,3 @@
-from tests.external_artifacts import requires_artifacts
 import numpy as np
 from types import SimpleNamespace
 import jax
@@ -136,7 +135,6 @@ def test_prepared_component_schema_matches_collector_appends_exact_item_metric_n
     assert len(set(names)) == len(names)
 
 
-@requires_artifacts('scripts/expert_reward_ablation_run.py', 'scripts/expert_reward_ablation_cpu.py')
 def test_persistent_owners_retain_their_exclusive_lock_handles():
     from pathlib import Path
 
@@ -147,7 +145,6 @@ def test_persistent_owners_retain_their_exclusive_lock_handles():
     assert "owner_lock = lock(B / \"cpu_evaluator.lock\")" in cpu_owner
 
 
-@requires_artifacts('runs/ppo_scale_20261025/r2_longrun/USER_ENDED_EARLY.json', 'scripts/expert_reward_ablation_run.py')
 def test_predecessor_handoff_accepts_user_ended_early_without_full_budget_claim():
     from pathlib import Path
     from scripts.expert_reward_handoff import validate_user_ended_early

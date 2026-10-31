@@ -19,6 +19,7 @@ def main():
     atomic_json(BASE/'eval'/n/'FAILED.json',dict(exit_code=rc,unix=time.time()));notify(n+'_EVAL_FAILED',f'ITER-PBT异步评估失败：{n}，训练继续，日志已保留。')
   used=[v[2] for v in children.values()]
   requests={p.stem:read(p) for p in (BASE/'eval_requests').glob('*.json')}
+  recovery=set(read(BASE/'NATIVE_EVAL_RECOVERY_QUEUE.json',{}).get('names',[]))
   keep=pending_latest(list(requests.values()))
   # Confirm only the strongest scored dev plus the explicitly requested point;
   # old in-flight confirmations finish, but unstarted historical ones cannot
@@ -30,6 +31,9 @@ def main():
     if selection.get('eligible'):confirmations.append((selection['score'],n))
   best_pending=max(confirmations,default=(None,None))[1]
   keep={n for n in keep if not requests[n].get('dev_name') or n==best_pending or requests[n].get('priority')=='best_candidate'}
+  # User-authorized recovery completes existing JS work without re-running it.
+  # Explicitly excluded midpoint/technical checkpoints never enter this list.
+  keep |= recovery
 
   found=live_workers('scripts.iter_pbt_eval')
   # Adopt all live jobs before allocating any cores to new requests.
@@ -73,7 +77,7 @@ def main():
     if cores is None:raise RuntimeError('unexpected recovered evaluator affinity')
     stream=(BASE/'logs'/f'EVAL_{n}.adopt.log').open('ab',buffering=0)
     children[n]=(Adopted(pid,out),stream,cores);used.append(cores);continue
-   if (out/'SKIPPED_SUPERSEDED.json').exists():continue
+   if (out/'SKIPPED_SUPERSEDED.json').exists() and n not in recovery:continue
    if len(children)>=len(slots):continue
    cores=next(s for s in slots if s not in used);used.append(cores)
    stream=(BASE/'logs'/f'EVAL_{n}.log').open('ab',buffering=0)
@@ -81,6 +85,7 @@ def main():
    p=subprocess.Popen(['taskset','-c',cores,sys.executable,'-m','scripts.iter_pbt_eval',str(q.relative_to(ROOT))],cwd=ROOT,env=env,stdin=subprocess.DEVNULL,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
    children[n]=(p,stream,cores)
   atomic_json(BASE/'EVAL_LAG.json',lag_report(list(requests.values()),{p.parent.name for p in (BASE/'eval').glob('*/SELECTION.json')}))
-  atomic_json(BASE/'EVAL_STATUS.json',dict(js_concurrency_limit=28,js_per_job=4,native_backend='isolated_shared_GPU',native_concurrency_limit=8,active={n:dict(cpu_affinity=v[2]) for n,v in children.items()},cpu_only_JS=True,updated_unix=time.time()))
+  native_config=read(BASE/'native_gpu/CONFIG.json',{})
+  atomic_json(BASE/'EVAL_STATUS.json',dict(js_concurrency_limit=28,js_per_job=4,native_backend='isolated_dedicated_GPU' if native_config.get('dedicated_gpus') else 'isolated_shared_GPU',native_concurrency_limit=native_config.get('max_concurrent',1),dedicated_native_gpus=native_config.get('dedicated_gpus',[]),active={n:dict(cpu_affinity=v[2]) for n,v in children.items()},cpu_only_JS=True,updated_unix=time.time()))
   time.sleep(5)
 if __name__=='__main__':main()

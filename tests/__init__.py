@@ -1,1 +1,1 @@
-"""Repository test fixtures shared by focused integration checks."""
+"""Repository regression tests and shared local fixtures."""

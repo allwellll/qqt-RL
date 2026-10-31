@@ -1,4 +1,3 @@
-from tests.external_artifacts import requires_artifacts
 import jax
 import jax.numpy as j
 import numpy as np
@@ -31,7 +30,6 @@ def test_legacy_adapter_calls_historical_collector_and_does_not_rewrite_rule_dis
     assert 'bun_carried=' not in source
 
 
-@requires_artifacts('runs/combat_mix_v1/PROTOCOL.json', 'runs/je10_bun_20261018/control_route_v38_r10/inputs/frozen.pkl')
 def test_legacy_real_collector_one_tick_shapes_and_finite():
     import pickle,json
     from pathlib import Path

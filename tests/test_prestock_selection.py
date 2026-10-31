@@ -6,7 +6,7 @@ import numpy as np
 
 def fixture():
     from scripts.prestock_route_preparation import plan,selection_state
-    from tests.test_prestock_route_preparation import corridor
+    from test_prestock_route_preparation import corridor
     hard,brick,home,stock=corridor();pos=jnp.array([[2.5,4.5]])
     proposed=plan(pos,hard,brick,home,stock,jnp.array([True]))
     return hard,brick,home,stock,pos,proposed,selection_state(1,5,7)

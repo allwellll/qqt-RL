@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {PhaseSafety}=require('../scripts/combat_item_phase_safety');
+const s={alive:[true,true],trapped:[0,0],bunCarried:[-1,-1]};
+const x=new PhaseSafety(0);
+x.before(s);x.after({...s,trapped:[10,0]}, {died:[false,false],causalDamageSource:[[true,false],[false,false]]},false);
+assert.equal(x.rows.combat.self_trap_entries,1);
+x.before({...s,alive:[true,false]});x.after(s,{died:[false,false]},true);
+x.before({...s,bunCarried:[1,-1]});x.after(s,{died:[true,false]},false);
+assert.equal(x.rows.window.ticks,1);
+assert.equal(x.rows.carry.deaths,1);
+assert.equal(x.pre_first_acquisition_deaths,0);
+assert.equal(x.rows.combat.deaths,0);
+const y=new PhaseSafety(0);y.before(s);y.after(s,{died:[true,false]},false);
+assert.equal(y.pre_first_acquisition_deaths,1);
+assert.equal(y.rows.combat.deaths,1);
+assert.equal(s.bunCarried[0],-1);
+console.log('phase safety passive event tests passed');

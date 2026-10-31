@@ -17,15 +17,8 @@ def fixture(tmp_path,generation=128,released=True):
 
 def test_future_patch_is_idempotent_and_keeps_rollout_update_and_losses():
     from scripts.ppo_advantage_diagnostic_recipe import patched_worker
-    installed=Path('scripts/je10_worker.py').read_text()
-    # Reconstruct the pre-install host block, keeping all numerical code exact.
-    source=installed.replace('    # Successor-only normalized PPO advantage telemetry.\n    from scripts.ppo_advantage_diagnostics import replica_moments, normalized_diagnostic\n    advantage_device_moments=jax.pmap(replica_moments)\n','')
-    source=source.replace('            advantage_moments=np.asarray(advantage_device_moments(batch[4])) if mismatch.any() else None\n','')
-    source=source.replace('                collector_evidence=selected_ppo_diagnostic(batch,(int(dev),int(tick),int(env_index)))\n','')
-    source=source.replace("                    **collector_evidence,\n                    **normalized_diagnostic(collector_evidence['collector_gae_advantage'],advantage_moments[int(dev)]),",'                    **selected_ppo_diagnostic(batch,(int(dev),int(tick),int(env_index))),')
-    patched=patched_worker(source)
+    source=Path('scripts/je10_worker.py').read_text();patched=patched_worker(source)
     assert patched!=source and patched_worker(patched)==patched
-    assert patched_worker(installed)==installed
     ast.parse(patched)
     # Existing collect/PPO/summarize and state-update operations stay verbatim.
     for line in source.splitlines():

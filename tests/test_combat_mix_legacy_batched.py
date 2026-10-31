@@ -1,4 +1,3 @@
-from tests.external_artifacts import requires_artifacts
 import jax
 import jax.numpy as j
 import numpy as np
@@ -22,7 +21,6 @@ def test_direct_collector_preserves_original_batch_seats_rng_and_payload(monkeyp
     assert int(diag['executed_league_member_live_ticks'][7])==8
 
 
-@requires_artifacts('runs/combat_mix_v1/protocols/legacy_mix_s2026103051.json')
 def test_real_original_full_batch_and_adapter_have_exact_next_step():
     import pickle,json
     from pathlib import Path

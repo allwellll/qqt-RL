@@ -4,7 +4,6 @@ import os
 from pathlib import Path
 import pickle
 import subprocess
-import sys
 
 import jax
 import jax.numpy as jnp
@@ -94,10 +93,9 @@ def test_raw24_onnx_js_reference_and_torch_conditioning(tmp_path):
     actual = run_node("""
 const p=JSON.parse(require('fs').readFileSync(0,'utf8'));
 const Q=require('./web/sim.js');require('./web/retention_phase_conditioning.js');
-const ort=require('onnxruntime-web');
-ort.env.wasm.numThreads=1;
+const ort=require('./runs/je03_original_nonbun_20261011/baseline_v1/deps/node_modules/onnxruntime-node');
 (async()=>{const model=new Q.TransformerModel(p.model);
-const session=await ort.InferenceSession.create(p.onnx,{executionProviders:['wasm']});
+const session=await ort.InferenceSession.create(p.onnx,{executionProviders:['cpu'],intraOpNumThreads:1});
 const result=[];
 for(let i=0;i<p.obs.length;i++){
 const obs=Float32Array.from(p.obs[i]),state=Float32Array.from(p.state[i]);
@@ -134,7 +132,7 @@ out=split_forward(pair,'transformer',o,s,net_forward)
 assert all(np.array_equal(x,y) for x,y in zip(before,out))
 print('passed')
 """
-    result = subprocess.run([sys.executable, '-c', code], cwd=ROOT,
+    result = subprocess.run([str(ROOT/'.venv/bin/python'), '-c', code], cwd=ROOT,
                             capture_output=True, text=True, env=dict(os.environ,
                                 CUDA_VISIBLE_DEVICES='', JAX_PLATFORMS='cpu', JAXBOMB_RULE='bun'))
     assert result.returncode == 0, result.stderr

@@ -1,0 +1,21 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const Q=require('../web/sim-kill-arena'),catalog=JSON.parse(fs.readFileSync('jax_bomb/maps/kill_maps.json'));
+const level=catalog.maps[0].map,s=new Q.Sim(2026331000);
+s.resetArena(level,{itemsDisabled:true});
+assert.equal(s.isBun,false);assert.equal(s.bunBases.length,0);assert.equal(s.maxSteps,1200);
+assert.deepEqual(s.bunCarried,[-1,-1]);assert(s.nativeTrap&&s.nativeItems);
+const p=0,q=1;s.pos.set([6.5,6.5,10.5,10.5]);
+s.wall.fill(0);s.brick.fill(0);s.pushable.fill(0);s.invuln=[0,0];s.spawnProtection=[0,0];
+s.arenaLifeAge=[40,40];s.arenaLifeSpawn=[[1,1],[1,13]];s.arenaTrapSources[0]=2;s.trapped[0]=1;
+let result=s.step([[4,0,0],[4,0,0]]);
+assert(!s.alive[0]);assert(!s.done);assert.equal(s.arenaKills[1],1);assert.equal(s.arenaEvents.at(-1).reward_eligible,true);
+result=s.step([[4,0,0],[4,0,0]]);
+assert(s.alive[0]);assert(s.invuln[0]>0);assert.equal(s.arenaEvents.at(-1).type,'respawn');
+assert.equal(s.trapped[0],0);assert.equal(s.bombsCap[0],level.initial_stats.bombs);
+// Trapping is not death, no immediate-death mode survived the override.
+s.invuln=[0,0];s.spawnProtection=[0,0];s.pos.set([6.5,6.5,10.5,10.5]);
+s.fuse[6*15+6]=1;s.owner[6*15+6]=1;s.bombBlast[6*15+6]=2;
+s.step([[4,0,0],[4,0,0]]);assert(s.trapped[0]>0);assert(s.alive[0]);assert(!s.done);
+s.t=1199;s.step([[4,0,0],[4,0,0]]);assert(s.done);assert.equal(s.winner,1);
+console.log('R4 kill-arena native sugar/next-tick respawn/horizon tests PASS');

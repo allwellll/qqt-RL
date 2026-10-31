@@ -1,4 +1,3 @@
-from tests.external_artifacts import requires_artifacts
 import inspect
 import numpy as np
 import pytest
@@ -20,7 +19,6 @@ def legacy(keys,bs,ba):
     return T.E.select_tree(use,jax.tree.map(lambda a:a[choice],bs),st),dict(T.E.select_tree(use,jax.tree.map(lambda a:a[choice],ba),ax),tactics=T.events.state(len(keys)))
 
 
-@requires_artifacts('runs/carrier_mechanism_20261023/v1/BANK_FROZEN.json')
 def test_default_fresh_bitwise_and_provenance_probability(monkeypatch):
     T.configure()
     from scripts.carrier_mechanism_analysis import bank,merged

@@ -5,13 +5,14 @@ from concurrent.futures import ThreadPoolExecutor,as_completed
 from scripts.iter_pbt_eval_resources import stage_token
 from scripts.population_run_state import atomic_json,lock,sha
 ROOT=Path(__file__).resolve().parents[1];BASE=ROOT/'runs/iter_pbt_v1'
-os.environ.update(CUDA_VISIBLE_DEVICES='',JAX_PLATFORMS='cpu',JAX_PLATFORM_NAME='cpu',JAXBOMB_RULE='bun',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
+os.environ.update(CUDA_VISIBLE_DEVICES='',JAX_PLATFORMS='cpu',JAX_PLATFORM_NAME='cpu',JAXBOMB_RULE='bun',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',QQT_STOCK_RULE='legacy_stock')
 
 def main():
  request=json.loads(Path(sys.argv[1]).read_text());name=request['name'];out=BASE/'eval'/name
  out.mkdir(parents=True,exist_ok=True);guard=lock(out/'worker.lock')
  cp=ROOT/request['checkpoint'];marker=json.loads((cp/'COMMITTED.json').read_text())
- assert sha(cp/'state.pkl')==marker['state_sha256'] and sha(cp/'policy.pt')==marker['policy_sha256']
+ from scripts.checkpoint_policy_artifact import verify_policy
+ verify_policy(cp)
  if (out/'COMPLETE.json').exists():
   assert json.loads((out/'COMPLETE.json').read_text())['summary_sha256']==sha(out/'SUMMARY.json');return
  split=request.get('split','dev');seed=20261101 if split=='dev' else 20261001

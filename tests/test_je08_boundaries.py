@@ -5,7 +5,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 from scripts import je08_bun_potential as p,je08_bun_ops as ops,je07_bun_scenes as scenes
-from tests.native_bun_fixtures import fixture
+from tests.je07_native_fixture import fixture
 from tests.test_je08_topology import event,started
 
 

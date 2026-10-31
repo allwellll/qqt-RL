@@ -1,4 +1,4 @@
-"""Proposal-only RED cases from fixed production Review one-step states."""
+"""Native route certificates, including the installed continuous route field."""
 import numpy as np
 import jax.numpy as jnp
 from scripts.native_route_certificate import certify_set, certify_native_positions
@@ -61,7 +61,7 @@ def test_fixed_review_g8_conflict_reproduces_in_jax_native_steering():
     from pathlib import Path
     import jax
     from jax_bomb import je05_core_env as core
-    from scripts.je10_route_oracle import continuous_distance
+    from scripts.je10_route_oracle import action_set,continuous_distance
     level=next(x for x in json.loads(Path('web/assets/maps/levels.json').read_text()) if x['qqt_id']==806)
     blocked=np.asarray(level['wall'],bool).reshape(13,15)
     distance=np.full((13,15),32767,np.int32);distance[5,9]=0;queue=deque([(5,9)])
@@ -75,12 +75,14 @@ def test_fixed_review_g8_conflict_reproduces_in_jax_native_steering():
     pos=jnp.array([[6.28,5.11]]);blocked=jnp.asarray(blocked)[None];distance=jnp.asarray(distance)[None]
     endpoints=jax.jit(jax.vmap(lambda move:core._steer(pos[0],move,True,blocked[0],1.3)))(jnp.arange(5))[None]
     legal=jnp.ones((1,5),bool);safe=jnp.ones((1,5),bool)
+    current,_=action_set(pos,distance,legal,jnp.zeros((1,13,15)),blocked,jnp.zeros((1,13,15)))
+    # The installed continuous field already removed the old south/west tie.
+    # Keep the real native-step regression, without asserting the retired field.
+    np.testing.assert_allclose(current,[[0,0,1,0,0]])
     before=continuous_distance(pos,distance,blocked)
     after=continuous_distance(endpoints[0],jnp.repeat(distance,5,0),jnp.repeat(blocked,5,0))
-    # The shared field has since changed. Verify the native certificate against
-    # its current gains; the historical .18-step conflict remains in evidence.
-    gains=before[0]-after
+    assert float(before[0]-after[1])<0, 'south still reverses native progress'
+    assert float(before[0]-after[2])>0, 'west still makes native progress'
     target,valid=certify_native_positions(pos,endpoints,distance,blocked,legal,safe,jnp.array([False]))
     np.testing.assert_allclose(target,[[0,0,1,0,0]])
     assert bool(valid[0])
-    assert float(gains[2])>0 and float(gains[2])>=float(gains.max())-1e-5

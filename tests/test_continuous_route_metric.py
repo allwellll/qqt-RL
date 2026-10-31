@@ -16,14 +16,18 @@ def fixed_geometry():
     return hard,cpu_shortest(hard,np.zeros_like(hard),goal)
 
 
-def test_fixed_review_boundary_limit_is_continuous_in_current_oracle_and_metric():
+def test_fixed_review_boundary_limit_is_continuous_instead_of_old_point64_jump():
     from scripts import continuous_route_metric as metric
-    from scripts.je10_route_oracle import continuous_distance as oracle_distance
     hard,distance=fixed_geometry()
     pos=jnp.array([[5.99999,9.82],[6.00001,9.82]])
     maps=jnp.broadcast_to(distance,(2,13,15));blocked=jnp.broadcast_to(hard,(2,13,15))
+    # Freeze the historical cell-minimum formula here. The production oracle
+    # now delegates to the repaired metric and cannot serve as the RED fixture.
+    cells=jnp.floor(pos).astype(jnp.int32)[:,None]+jnp.array([[-1,0],[1,0],[0,-1],[0,1],[0,0]])
+    rr=jnp.arange(2)[:,None];local=jnp.abs(pos[:,None]-(cells+.5)).sum(-1)
+    previous=jnp.min(jnp.where(~blocked[rr,cells[...,0],cells[...,1]],maps[rr,cells[...,0],cells[...,1]]+local,32767),-1)
+    assert float(previous[0]-previous[1])>.63  # preserve the observed RED evidence
     value=jax.jit(metric.continuous_distance)(pos,maps,blocked)
-    np.testing.assert_array_equal(value,oracle_distance(pos,maps,blocked))
     assert abs(float(value[0]-value[1]))<.0001
 
 

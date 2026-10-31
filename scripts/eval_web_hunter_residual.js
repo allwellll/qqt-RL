@@ -66,7 +66,7 @@ function runShard(options) {
       ticks: sim.t, residual, residual_deaths: record.counts.deaths - primary.deaths });
   }
   const root = path.resolve(__dirname, '..');
-  const files = ['web/sim.js', 'web/bun_hunter_bot.js', 'web/bot_contract.js',
+  const files = [process.env.QQT_STOCK_RULE==='stock-window-v1'?'web/sim-stock-window-v1.js':'web/sim.js', 'web/bun_hunter_bot.js', 'web/bot_contract.js',
     'web/assets/maps/levels.json', 'scripts/eval_web_hunter.js', 'scripts/eval_web_hunter_residual.js'];
   return { schema: 'web_hunter_residual_shard_v1', seed: options.seed, game_range: [options.start, options.end],
     primary_steps: 300, residual_limit: 64, new_bombs_during_residual: false,

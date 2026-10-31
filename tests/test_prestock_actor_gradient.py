@@ -17,8 +17,7 @@ def test_joint_replay_updates_real_actor_move_and_ability_while_critic_stays_zer
     monkeypatch.setattr(train,'net_forward',lambda p,a,o,s=None:split_forward(p,a,o,s,original))
     replay=dict(obs=jax.random.normal(jax.random.PRNGKey(8),(2,24,13,15)),gv=jnp.ones((2,24)),
         legal=jnp.ones((2,5),bool),ability_legal=jnp.ones((2,3),bool),
-        joint_target=jnp.zeros((2,5,3),bool).at[:,2,1].set(True),valid=jnp.ones(2,bool),
-        kind=jnp.full(2,3,jnp.int32),preparation=jnp.zeros(2,bool))
+        joint_target=jnp.zeros((2,5,3),bool).at[:,2,1].set(True),valid=jnp.ones(2,bool))
     value,grad=jax.jit(jax.value_and_grad(replay_loss))(params,replay)
     assert np.isfinite(float(value)) and float(value)>0
     assert all(np.isfinite(x).all() for x in jax.tree.leaves(grad))

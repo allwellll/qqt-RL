@@ -10,8 +10,7 @@ def test_candidate_audit_runs_only_after_fixed_complete_and_cannot_fail_gpu_or_f
     before={f:Path(f).read_text() for f in files};after=patched_sources(before)
     source=after['scripts/je10_evaluate.py'];ast.parse(source)
     assert source.index("atomic_json(out/'COMPLETE.json'")<source.index('joint_fifo_audit(BASE,g)')
-    # Supplemental namespaces must not launch the default authority's audit.
-    assert "if OUT.name=='authority_je10' and read(BASE/'plan.json').get('prestock_preparation'):" in source
+    assert "if read(BASE/'plan.json').get('prestock_preparation'):" in source
     assert "except Exception as error:" in source
     assert "out/'DAGGER_JOINT_AUDIT_FAILURE.json'" in source
     assert patched_sources(after)==after

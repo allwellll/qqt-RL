@@ -861,7 +861,7 @@ def _set_cell_value(grid, cell, value, condition):
 
 
 def step(state: BunState, actions: jnp.ndarray, key, auto_reset: bool = True,
-         return_info: bool = False):
+         return_info: bool = False, require_stock_window: bool = False):
     key_base, key_drop, key_kind, key_reset = jax.random.split(key, 4)
     pre_move_mask, _ = legal_mask(state)
     requested_dirs = actions[:, 0]
@@ -1312,7 +1312,8 @@ def step(state: BunState, actions: jnp.ndarray, key, auto_reset: bool = True,
 
         enemy = 1 - player
         can_steal = (core.alive[player] & (trapped[player]==0) & ~respawn_now[player] & (bun_carried[player] < 0)
-                     & ~deposit & (base_team == enemy) & (bun_stored[enemy, enemy] > 0))
+                     & ~deposit & (base_team == enemy) & (bun_stored[enemy, enemy] > 0)
+                     & (~jnp.asarray(require_stock_window) | ~core.alive[enemy] | (trapped[enemy] > 0)))
         bun_stored = bun_stored.at[enemy, enemy].set(
             jnp.where(can_steal, bun_stored[enemy, enemy] - 1,
                       bun_stored[enemy, enemy]))

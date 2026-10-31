@@ -5,7 +5,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 from scripts import je08_bun_ops as ops,je07_bun_ops as previous,je08_bun_recipe as recipe
-from tests.native_bun_fixtures import fixture
+from tests.je07_native_fixture import fixture
 
 
 def test_plan_predecessor_shape_assistance_and_namespace():

@@ -9,7 +9,7 @@ def test_real_collector_4096_fifo_and_unchanged_128_loss_slots(monkeypatch):
     from scripts import prestock_joint_replay as joint,je09_stage_h5c_dagger as legacy
     from scripts.return_error_replay import aggregate as selected_aggregate
     from scripts.replay_horizon_recipe import patched
-    from tests.test_prestock_collector_integration import test_real_collector_shared_potential_joint_labels_reset_and_replay
+    from test_prestock_collector_integration import test_real_collector_shared_potential_joint_labels_reset_and_replay
     namespace={};exec(compile(patched(Path('scripts/je09_stage_h5c_dagger.py').read_text()),'isolated-horizon-default','exec'),namespace)
     monkeypatch.setattr(legacy,'CAPACITY',namespace['CAPACITY'])
     monkeypatch.setattr(legacy,'ADDITIONS',namespace['ADDITIONS'])

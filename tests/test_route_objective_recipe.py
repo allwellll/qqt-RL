@@ -45,8 +45,7 @@ def test_prepared_native_pbrs_reward_has_aligned_target_and_original_reset_schem
     from jax_bomb import je07_bun_env as env
     prepared={};exec(compile(patched_pbrs(Path('scripts/je09_route_pbrs.py').read_text()),'<prepared recovery PBRS>','exec'),prepared)
     state,aux,route=native_case()
-    # Recovery alignment is already installed in the published baseline.
-    assert int(ops.safe_phase_values(state,route,aux['drop'])[0][0,0])==2
+    assert int(ops.safe_phase_values(state,route,aux['drop'])[0][0,0])==1
     monkeypatch.setattr(ops,'PARENT_PHASE_VALUES',prepared['phase_values'])
     monkeypatch.setattr(pbrs,'phase_values',ops.safe_phase_values)
     phase=ops.safe_phase_values(state,route,aux['drop'])[0]

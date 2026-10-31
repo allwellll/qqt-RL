@@ -5,14 +5,18 @@ from scripts.population_run_state import atomic_json,lock,sha
 ROOT=Path(__file__).resolve().parents[1];BASE=ROOT/'runs/iter_pbt_v1'
 
 def main():
- p=argparse.ArgumentParser(__doc__);p.add_argument('request');p.add_argument('--gpu',type=int,default=0);p.add_argument('--backend',choices=('gpu','cpu'),default='gpu');p.add_argument('--probe-games',type=int);p.add_argument('--probe-output');args=p.parse_args()
+ p=argparse.ArgumentParser(__doc__);p.add_argument('request');p.add_argument('--gpu',type=int,default=0);p.add_argument('--lane',type=int);p.add_argument('--backend',choices=('gpu','cpu'),default='gpu');p.add_argument('--probe-games',type=int);p.add_argument('--probe-output');args=p.parse_args()
  request=json.loads(Path(args.request).read_text());name=request['name'];split=request.get('split','dev');seed=20261101 if split=='dev' else 20261001
  output=ROOT/args.probe_output if args.probe_output else BASE/'eval'/name/'native'
  output.mkdir(parents=True,exist_ok=True);guard=lock(output/'native_worker.lock')
- gpu_guard=lock(BASE/f'NATIVE_GPU{args.gpu}.lock') if args.backend=='gpu' else None
+ from scripts.iter_pbt_native_gpu_policy import gpu_lock_name
+ if args.lane is not None and args.lane<0:raise ValueError('negative native lane')
+ gpu_guard=lock(BASE/gpu_lock_name(args.gpu,args.lane)) if args.backend=='gpu' else None
  if (output/'NATIVE_COMPLETE.json').exists():
   marker=json.loads((output/'NATIVE_COMPLETE.json').read_text());assert sha(output/'NATIVE_SUMMARY.json')==marker['summary_sha256'];return
- cp=ROOT/request['checkpoint'];marker=json.loads((cp/'COMMITTED.json').read_text());assert sha(cp/'state.pkl')==marker['state_sha256'];assert sha(cp/'policy.pt')==marker['policy_sha256']
+ cp=ROOT/request['checkpoint']
+ from scripts.checkpoint_policy_artifact import verify_policy
+ marker=verify_policy(cp)
  settings=dict(CUDA_VISIBLE_DEVICES=str(args.gpu) if args.backend=='gpu' else '',JAX_PLATFORMS='cuda' if args.backend=='gpu' else 'cpu',JAX_PLATFORM_NAME='cuda' if args.backend=='gpu' else 'cpu',XLA_PYTHON_CLIENT_PREALLOCATE='false',XLA_PYTHON_CLIENT_MEM_FRACTION='0.03',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',JAXBOMB_RULE='bun',XLA_FLAGS='--xla_gpu_autotune_level=0 --xla_gpu_deterministic_ops=true',JAX_COMPILATION_CACHE_DIR=str(BASE/'native_gpu/cache'),FULLMATCH_OUTPUT=str(output),FULLMATCH_GAMES_PER_MODE=str(args.probe_games or (64 if split=='dev' else 304)),FULLMATCH_SEED_START=str(seed))
  os.environ.update(settings)
  import jax
@@ -23,9 +27,9 @@ def main():
  from scripts import expert_reward_alignment_fullmatch as F
  os.environ.update(settings)
  assert ('gpu' if jax.default_backend()=='gpu' else 'cpu')==args.backend
- F.MODELS={'candidate':dict(state=str((cp/'state.pkl').relative_to(ROOT)),checkpoint=str(cp.relative_to(ROOT)),run_seed=0)}
+ F.MODELS={'candidate':dict(policy=str((cp/'policy.pt').relative_to(ROOT)),checkpoint=str(cp.relative_to(ROOT)),run_seed=0)}
  F.T.configure();F.provenance.install_provenance();scan,names=F.make_scan();params=F.load_params(F.MODELS['candidate'])
- atomic_json(output/'GPU_MANIFEST.json',dict(checkpoint=request['checkpoint'],policy_sha256=marker['policy_sha256'],state_sha256=marker['state_sha256'],backend=args.backend,gpu=args.gpu if args.backend=='gpu' else None,seed=seed,natural=True,teacher=False,opponent='fixed JAX rule3; not JS Hunter',source_sha256={f:sha(ROOT/f) for f in ['scripts/iter_pbt_native_eval.py','scripts/expert_reward_alignment_fullmatch.py']},memory_fraction=.03,preallocate=False,matmul_precision='highest',probe=bool(args.probe_games),unix=time.time()))
+ atomic_json(output/'GPU_MANIFEST.json',dict(checkpoint=request['checkpoint'],policy_sha256=marker['policy_sha256'],state_sha256=marker['state_sha256'],backend=args.backend,critic_evaluation=False,state_hash_source='historical COMMITTED.json; state not rehashed',gpu=args.gpu if args.backend=='gpu' else None,seed=seed,natural=True,teacher=False,opponent='fixed JAX rule3; not JS Hunter',source_sha256={f:sha(ROOT/f) for f in ['scripts/iter_pbt_native_eval.py','scripts/expert_reward_alignment_fullmatch.py']},memory_fraction=.03,preallocate=False,matmul_precision='highest',probe=bool(args.probe_games),unix=time.time()))
  # A single fixed-state diagnostic isolates backend policy arithmetic from
  # the later closed-loop rollout. It never supplies actions to a game.
  import numpy as np

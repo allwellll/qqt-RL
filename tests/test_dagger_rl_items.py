@@ -1,4 +1,3 @@
-from tests.external_artifacts import requires_artifacts
 import jax
 import jax.numpy as j
 import numpy as np
@@ -20,7 +19,6 @@ def test_set_mass_has_nonzero_ability_gradient_and_zero_outside_gate():
     np.testing.assert_array_equal(jax.grad(f)(j.zeros(3),j.zeros_like(mask)),j.zeros(3))
 
 
-@requires_artifacts('runs/carrier_mechanism_20261023/v1/BANK_FROZEN.json')
 def test_no_future_random_or_synthetic_custody_and_no_glue_teacher():
     from scripts import combat_item_engine as T,carrier_mechanism_engine as E
     from scripts.carrier_mechanism_analysis import bank,merged

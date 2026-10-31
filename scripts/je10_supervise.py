@@ -25,7 +25,7 @@ def choose_recipe(plan,summaries,proposal=None):
         if current.get('safe_win',0)<prior.get('safe_win',0):retention.append('JS Hunter '+name)
     if latest.get('tactical_python',{}).get('safe_win',0)<baseline.get('tactical_python',{}).get('safe_win',0):retention.append('Python Tactical v2')
     if proposal is not None:
-        assert proposal['recipe'] in ['native_one_step_certificate','continuous_route_metric','route_objective_consistency','prestock_preparation','phase_balanced_replay','navigation_replay','carrier_route_fields','return_dagger_weight']
+        assert proposal['recipe'] in ['native_one_step_certificate','carrier_phase_hysteresis','continuous_route_metric','route_objective_consistency','prestock_preparation','phase_balanced_replay','navigation_replay','carrier_route_fields','return_dagger_weight']
         recipe=dict(combat_fraction=combat,bridge_fraction=bridge,natural_full_fraction=.35,
             route_mass=round(1-combat-bridge-.35,8),reason=proposal['reason'],
             changed_factor=proposal['changed_factor'],
@@ -34,6 +34,8 @@ def choose_recipe(plan,summaries,proposal=None):
             proposal=proposal)
         if proposal['recipe']=='native_one_step_certificate' or plan.get('oracle_certificate'):
             recipe['native_one_step_certificate']=True
+        if proposal['recipe']=='carrier_phase_hysteresis' or plan.get('carrier_phase'):
+            recipe['carrier_phase_hysteresis']=True
         if proposal['recipe']=='continuous_route_metric' or plan.get('continuous_metric'):
             recipe['continuous_route_metric']=True
         if proposal['recipe']=='route_objective_consistency' or plan.get('route_objective_alignment'):
@@ -76,6 +78,7 @@ def choose_recipe(plan,summaries,proposal=None):
         retention_diagnostics=retention,blocks_training=False,
         changed_factor='scene mixture only',evidence_generations=[r.get('generation') for r in summaries])
     if plan.get('oracle_certificate'):recipe['native_one_step_certificate']=True
+    if plan.get('carrier_phase'):recipe['carrier_phase_hysteresis']=True
     if plan.get('continuous_metric'):recipe['continuous_route_metric']=True
     if plan.get('route_objective_alignment'):recipe['route_objective_consistency']=True
     if plan.get('prestock_preparation'):recipe['prestock_preparation']=True
@@ -242,13 +245,15 @@ def supervise(args):
         decision=json.loads(Path(args.decision).read_text())
         install_successor_host_trace_fix(ROOT/args.parent)
         install_successor_exposure_trace(ROOT/args.parent)
-        certificate=None;continuous=None;objective=None;prestock=None;phase_replay=None;navigation=None;carrier_fields=None;normalized=None;return_weight=None;query_diversity=None;error_replay=None;replay_exposure=None;replay_batch=None;native_retention=None;horizon=None
+        certificate=None;phase=None;continuous=None;objective=None;prestock=None;phase_replay=None;navigation=None;carrier_fields=None;normalized=None;return_weight=None;query_diversity=None;error_replay=None;replay_exposure=None;replay_batch=None;native_retention=None;horizon=None
         for name,expected in decision.get('proposal',{}).get('sources',{}).items():
             assert sha(ROOT/name)==expected,'prepared successor recipe source changed'
         if decision.get('native_one_step_certificate'):
             from scripts.native_certificate_recipe import install
             certificate=install(ROOT,ROOT/args.parent)
-        assert not decision.get('carrier_phase_hysteresis'),'uninstalled recipe excluded from release'
+        if decision.get('carrier_phase_hysteresis'):
+            from scripts.carrier_phase_recipe import install as install_phase
+            phase=install_phase(ROOT,ROOT/args.parent)
         if decision.get('continuous_route_metric'):
             from scripts.continuous_metric_recipe import install as install_continuous
             continuous=install_continuous(ROOT,ROOT/args.parent)
@@ -300,6 +305,7 @@ def supervise(args):
         plan=c.read(base/'plan.json');plan.update(combat_fraction=decision['combat_fraction'],bridge_fraction=decision['bridge_fraction'])
         plan['campaign']['change']+='; successor: '+decision['changed_factor']
         if certificate:plan['oracle_certificate']=certificate
+        if phase:plan['carrier_phase']=phase
         if continuous:plan['continuous_metric']=continuous
         if objective:plan['route_objective_alignment']=objective
         if prestock:
@@ -345,6 +351,7 @@ def supervise(args):
         declaration['dagger']['retention']='Executed reset mixture above; unchanged retention coefficients; reference is new parent Actor.'
         declaration['parent_selection']['reason']=('User-authorized rollback to r10 g128; r11 excluded for synthetic learner custody; preserve raw Actor/Critic and full pool, rebuild all learner state.' if plan.get('clean_causal_init') and args.round==12 else 'Predeclared sequential continuation from preceding final raw Actor/Critic and complete pool; published origin and full curves recorded in ledger.')
         if certificate:declaration['oracle_certificate']=certificate
+        if phase:declaration['carrier_phase']=phase
         if continuous:declaration['continuous_metric']=continuous
         if objective:declaration['route_objective_alignment']=objective
         if prestock:
@@ -380,6 +387,7 @@ def supervise(args):
         atomic_json(base/'ADMINISTRATIVE_SEAL.json',dict(sources=administrative,numerical_recipe=False))
         helpers=['scripts/learner_trace_sampling.py']
         if certificate:helpers+=['scripts/native_route_certificate.py']
+        if phase:helpers+=['scripts/carrier_phase_hysteresis.py','scripts/carrier_phase_recipe.py']
         if continuous:helpers+=['scripts/continuous_route_metric.py','scripts/continuous_metric_recipe.py']
         if objective:helpers+=['scripts/route_objective_consistency.py','scripts/route_objective_recipe.py']
         if prestock:helpers+=['scripts/prestock_recipe.py','scripts/prestock_training_state.py',

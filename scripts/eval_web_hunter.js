@@ -9,7 +9,8 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const QQT = require('../web/sim.js');
+const SIM_FILE=process.env.QQT_STOCK_RULE==='stock-window-v1'?'web/sim-stock-window-v1.js':'web/sim.js';
+const QQT = require('../'+SIM_FILE);
 const HunterApi = require('../web/bun_hunter_bot.js');
 const QQTBots = require('../web/bot_contract.js');
 
@@ -17,7 +18,7 @@ const ROOT = path.resolve(__dirname, '..');
 const SCHEMA = 'web_hunter_eval_shard_v1';
 const BOT_ID = 'bun.hunter';
 const DIFFICULTIES = Object.keys(HunterApi.DIFFICULTIES);
-const SOURCE_FILES = ['web/sim.js', 'web/bun_hunter_bot.js', 'web/bot_contract.js',
+const SOURCE_FILES = [SIM_FILE, 'web/bun_hunter_bot.js', 'web/bot_contract.js',
   'web/assets/maps/levels.json', 'scripts/eval_web_hunter.js'];
 
 function sha256(bytes) { return crypto.createHash('sha256').update(bytes).digest('hex'); }
@@ -241,7 +242,7 @@ function runShard(options) {
     spawn_manifest_sha256: manifest.spawn_sha256,
     bot: { id: BOT_ID, version: hunter.spec.version, display_name: hunter.spec.display_name,
       config: hunter.config, resolved_config: hunter.resolved },
-    model: { runtime: 'web/sim.js TransformerModel', greedy: true, model_json_sha256: modelSha,
+    model: { runtime: SIM_FILE+' TransformerModel', greedy: true, model_json_sha256: modelSha,
       source: meta.source, embed: meta.embed, depth: meta.depth, patch: meta.patch },
     checkpoint_sha256: checkpointSha || null,
     protocol: { map: 806, destructible_bricks_cleared: true, hp: 1, capture_terminates: false,

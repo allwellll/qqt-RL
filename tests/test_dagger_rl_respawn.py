@@ -1,4 +1,3 @@
-from tests.external_artifacts import requires_artifacts
 """Real student snapshot: known imminent native respawn invalidates slide plan."""
 import pickle
 from pathlib import Path
@@ -6,7 +5,6 @@ import jax
 from scripts import combat_item_engine as T,dagger_rl_oracle as O
 
 
-@requires_artifacts('runs/dagger_rl_20261024/r1/audit_student_opportunities.pkl')
 def test_reject_slide_that_enters_known_imminent_respawn_threat():
  T.configure()
  p=Path('runs/dagger_rl_20261024/r1/audit_student_opportunities.pkl')

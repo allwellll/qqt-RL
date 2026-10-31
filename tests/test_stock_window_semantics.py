@@ -6,7 +6,7 @@ import pytest
 
 
 def fixture(seat=0):
-    from tests.test_route_objective_consistency import native_case
+    from test_route_objective_consistency import native_case
     from scripts import je10_ops as ops
     s,aux,route=native_case()
     # No real loose target: inventory is the only empty-hand objective.

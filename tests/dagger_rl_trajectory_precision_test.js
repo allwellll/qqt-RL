@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {selectedTicks,pack}=require('../scripts/dagger_rl_trajectory_precision');
+assert.deepEqual([...selectedTicks(40,null)],[0,16,32,39]);
+assert.deepEqual([...selectedTicks(20,0)],[0,1,2,3,4,5,6,7,8,16,19]);
+assert.deepEqual([...selectedTicks(5,4)],[0,1,2,3,4]);
+const row=pack({obs:new Float32Array(4680),state:new Float32Array(24),move:[1,2,3,4,5],bomb:[6,7,8]},[true,false,true,false,true],[true,true,false]);
+assert.equal(row.length,4720);assert.deepEqual([...row.slice(4704,4712)],[1,0,1,0,1,1,1,0]);
+assert.deepEqual([...row.slice(4712)],[1,2,3,4,5,6,7,8]);
+assert.throws(()=>pack({obs:[],state:[],move:[],bomb:[]},[],[]),/shape/);
+console.log('trajectory selection, mask positions, full binary row and wrong shapes PASS');

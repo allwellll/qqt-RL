@@ -15,7 +15,9 @@ def buffer(capacity=legacy.CAPACITY,additions=legacy.ADDITIONS,obs_shape=(24,13,
     result=_LEGACY_BUFFER(capacity,additions,obs_shape,global_size)
     result.update(ability_legal=jnp.zeros((capacity,3),bool),joint_target=jnp.zeros((capacity,5,3),bool))
     result.update(preparation=jnp.zeros(capacity,bool),revision=jnp.zeros(capacity,jnp.int32),
-        objective=jnp.zeros(capacity,jnp.int32),opening=jnp.zeros(capacity,bool))
+        objective=jnp.zeros(capacity,jnp.int32),opening=jnp.zeros(capacity,bool),
+        actual_custody=jnp.zeros(capacity,bool),custody_age=jnp.full(capacity,120,jnp.int32),
+        return_window=jnp.zeros(capacity,bool))
     return result
 
 
@@ -34,6 +36,12 @@ def aggregate(old,batch,key,generation,offset=legacy.OFFSET,joint_offset=95):
     metadata=ctx[:,joint_offset+15:joint_offset+19] if ctx.shape[-1]>=joint_offset+19 else jnp.zeros((ctx.shape[0],4))
     new.update(preparation=metadata[ids,0]>0,revision=metadata[ids,1].astype(jnp.int32),
         objective=metadata[ids,2].astype(jnp.int32),opening=metadata[ids,3]>0)
+    actual_custody=labels[ids,10]>0
+    custody_age=(ctx[:,joint_offset+19].astype(jnp.int32) if ctx.shape[-1]>=joint_offset+20
+                 else jnp.full(ctx.shape[0],120,jnp.int32))[ids]
+    return_window=(valid[ids]&(labels[ids,6]==3)&~new['preparation']&actual_custody
+                   &(custody_age>=0)&(custody_age<120))
+    new.update(actual_custody=actual_custody,custody_age=custody_age,return_window=return_window)
     # Keep parity with the existing per-generation aggregation keys and split.
     # Tests compare every legacy FIFO field, replay field and statistic exactly.
     def choose(data,random_key,num):
@@ -58,6 +66,7 @@ def aggregate(old,batch,key,generation,offset=legacy.OFFSET,joint_offset=95):
         path_a_enemy=((labels[:,6]==1)&valid).sum(),path_a_own_recovery=((labels[:,6]==4)&valid).sum(),
         path_b=((labels[:,6]==2)&valid).sum(),returning=((labels[:,6]==3)&valid).sum(),
         cage_contact=((labels[:,9]>0)&(labels[:,7]>0)).sum(),actual_custody=(labels[:,10]>0).sum(),
+        return_window_rows=return_window.sum(),
         noneligible_label=((~(labels[:,7]>0))&valid).sum())
 
 

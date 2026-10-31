@@ -200,6 +200,8 @@ def collect(params,states,aux,key,pool,frozen,course,pfsp,num_steps,coefficient=
             context=jnp.concatenate([context,trace,provenance],-1)
         assert context.shape[-1]==95,'prestock requires the declared return/chase/trace layout'
         context=jnp.concatenate([context,route_labels[:, 12:]],-1)
+        custody_age=aux['dagger']['age'][rows,seat].astype(jnp.float32)
+        context=jnp.concatenate([context,custody_age[:,None]],-1)
         data=(obs[idx],gv[idx],acts[idx],lps[idx],vals[idx],rewards[rows,seat],done,(mm[idx],bm[idx]),context)
         return (next_states,newaux,key,kinds,counts,poolcounts,component),data
     (states,aux,key,_,counts,poolcounts,component),data=jax.lax.scan(body,(states,aux,key,kinds,counts,poolcounts,component),None,length=num_steps)

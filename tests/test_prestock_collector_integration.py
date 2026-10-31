@@ -18,7 +18,7 @@ def test_real_collector_shared_potential_joint_labels_reset_and_replay():
     from scripts import je09_stage_h5c_dagger as dagger
     from jax_bomb import jax_train as train,je07_bun_env as env
     from scripts.je03_bun_stage1_20261011 import split_forward
-    from tests.test_prestock_training_state import native
+    from test_prestock_training_state import native
     root=Path(__file__).resolve().parents[1]
     files=['scripts/je09_stage_h5c_ops.py','scripts/je09_stage_h6_ops.py','scripts/je09_route_pbrs.py','scripts/je10_ops.py','scripts/je10_worker.py']
     sources=patched_sources({f:(root/f).read_text() for f in files})

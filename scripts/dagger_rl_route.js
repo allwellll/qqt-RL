@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('fs'),path=require('path'),crypto=require('crypto');
-const Q=require('../web/sim.js'),P=require('../web/review_protocol.js');
+const Q=require(process.env.QQT_STOCK_RULE==='stock-window-v1'?'../web/sim-stock-window-v1.js':'../web/sim.js'),P=require('../web/review_protocol.js');
 const authority=require('./eval_web_hunter.js'),inference=require('./je05_web_hunter.js');
 const topology=require('./je08_web_diagnostics.js'),residual=require('./eval_web_hunter_residual.js');
 const {ControlFunnel}=require('./je10_control_funnel');
