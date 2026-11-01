@@ -17,11 +17,14 @@ assert.throws(() => catalog.validateManifest({ schema: 'qqt.web-models/v1', mode
 assert.strictEqual(catalog.modelUrl(rows[0]), 'models/safe-high-c16.json');
 const production = require('./models.json');
 const current=production.models[0];
-assert.strictEqual(current.id,"bun392-v2-r3-a-u4002-u4002");
-assert.strictEqual(current.source_sha256,"f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30");
+assert.strictEqual(current.id,"bun392-v2-r4-k1-u5282");
+assert.strictEqual(current.source_sha256,"694b1d8b2ebb7e76debf965fc41d594f8fdbc013fa00c73f45e7a7f0eee6859f");
 assert.strictEqual(current.onnx.meta.rule_version,'bun-native-v2');
 assert(current.description.includes('P1') && current.description.includes('零泡') && current.description.includes('振荡'));
-assert.strictEqual(current.score,0.859375);
+assert.strictEqual(current.score,0.87890625);
+assert.strictEqual(current.onnx.meta.ability_actions,3);
+assert(current.description.includes('旧槽1') && current.description.includes('holdout'));
+assert(production.models.some(r=>r.source_sha256==='f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30'));
 const latest=production.models.find(row=>row.id==='bun392-pbt-slot05-u720');
 assert.strictEqual(latest.id,'bun392-pbt-slot05-u720');
 assert.strictEqual(latest.source_sha256,'ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663');

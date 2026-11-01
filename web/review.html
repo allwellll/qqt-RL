@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>录像 · Replay Review</title><link rel="stylesheet" href="review.css"><link rel="icon" href="assets/point.png"></head>
 <body>
-<header><a href="index.html" class="brand">QQT <span>/</span> 回放诊断</a><span class="header-label">回放 · 离线 CPU</span><button id="advanced-open" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button><span id="notice" role="status">正在读取录像目录</span></header>
+<header><a href="index.html" class="brand">QQT <span>/</span> 回放诊断</a><span class="header-label">回放 · 离线 CPU</span><a id="latest-model-review" href="https://jdh-nlp.s3.cn-north-1.jcloudcs.com/agent_model/k1-u5282-20261101/review.html" target="_blank" rel="noopener">K1 u5282 · 新模型固定8局</a><button id="advanced-open" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button><span id="notice" role="status">正在读取录像目录</span></header>
 <section id="advanced-settings" hidden>
   <div class="auth-tools"><button id="import-replay">导入诊断录像</button><input id="replay-file" type="file" accept="application/json,.json" hidden><button id="advanced-close">关闭诊断台</button><button id="advanced-forget">忘记本设备授权 / 锁定高阶设置</button></div>
   <main class="workspace">

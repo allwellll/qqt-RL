@@ -2,6 +2,78 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-v2-r4-k1-u5282",
+      "display_name": "Bun392 v2 R4 K1 u5282\uff08P1\u4e09\u6863+359\uff09",
+      "file": "bun392-v2-r4-k1-u5282-88241ba1cd7a14756d6be51a29d564a071df578c18489a750b4cafdf42daeec2.json",
+      "sha256": "88241ba1cd7a14756d6be51a29d564a071df578c18489a750b4cafdf42daeec2",
+      "bytes": 40340752,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r4-k1-u5282-20261101/bun392-v2-r4-k1-u5282-88241ba1cd7a14756d6be51a29d564a071df578c18489a750b4cafdf42daeec2.json",
+      "cycle": 5282,
+      "candidate": "r4_k1_c000001_u005282",
+      "strategy": "raw",
+      "score": 0.87890625,
+      "source_sha256": "694b1d8b2ebb7e76debf965fc41d594f8fdbc013fa00c73f45e7a7f0eee6859f",
+      "rule_version": "bun-native-v2",
+      "description": "\u7f51\u9875\u771f\u4ebaP0\u3001\u6a21\u578bP1\uff0cbun-native-v2\u89c4\u5219\u4e0d\u53d8\u3002K1 r4_k1_c000001/u005282\uff0c\u751f\u4ea7JS Hunter/argmax/\u8001\u5e08\u5173\u95ed\uff1b\u672c\u4fa7\u51fa\u751f\uff0c\u4e09\u6863\u5404256\u5c40\uff08\u6bcf\u5e2d128\uff09\u3002P1 hard114/9/5\u3001normal125/2/1\u3001easy126/2/0\uff0c\u4e09\u6863\u80dc\u8d1f\u5dee\u5408\u8ba1+359\uff08\u65e7u4002 +338\uff09\uff1bP0\u5408\u8ba1+349\uff08\u65e7+353\uff09\u3002P1\u56e0\u679c\u51fb\u674078/84/119\uff0c\u65e760/63/101\uff1b\u81ea\u4f24\u57470\u3002hard holdout P1 111/9/8\uff0c\u80dc\u8d1f\u5dee+103\uff0c\u65e7113/10/5\u4e3a+108\uff0c\u4fdd\u7559\u8fd9\u9879\u5c0f\u5e45\u56de\u9000\u3002hard P1\u653e\u6ce13777/128\u5c40\uff0c\u65e74806/128\u5c40\uff1b\u4e0d\u80fd\u5ba3\u79f0\u6301\u7eed\u8fde\u6ce1\u5df2\u8bc1\u5b9e\u66f4\u5f3a\u3002\u65e73\u6280\u80fdnone/bomb/use_item\uff0cuse_item\u4ecd\u53ea\u7528\u65e7\u69fd1\uff0c\u4e0d\u652f\u6301\u4e94\u69fd\u72ec\u7acb\u9009\u62e9\uff1b\u4e94\u69fd\u63a5\u53e3\u53caC/G\u6a21\u578b\u672a\u53d1\u5e03\u3002\u65e7u4002\u4fdd\u7559\u53ef\u9009\uff0c\u4ecd\u53ef\u80fd\u6709\u96f6\u6ce1\u3001\u632f\u8361\u4e0e\u6301\u5305\u505c\u6ede\u3002\u90e8\u7f72fp32\u5bfc\u51faparity\u5355\u5217\uff0c\u4e0d\u5ba3\u79f0\u8bad\u7ec3bf16\u6216\u771f\u4ebaframeStep\u9010\u4f4d\u4e00\u81f4\uff1b\u56fa\u5b9a8\u5c40\u5f55\u50cf\u4e0d\u4f5c\u80dc\u7387\u4f30\u8ba1\u3002",
+      "score_protocol": "production JS Hunter; argmax; teacher off; own-side fresh hard/normal/easy 256 each, P0/P1 128 each; seeds2026318000/2026319000/2026320000; independent holdout hard separately reported",
+      "onnx": {
+        "file": "bun392-v2-r4-k1-u5282-2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6.onnx",
+        "sha256": "2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6",
+        "bytes": 30276775,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r4-k1-u5282-20261101/bun392-v2-r4-k1-u5282-2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6.onnx",
+        "meta": {
+          "name": "bun392-v2-r4-k1-u5282",
+          "display_name": "bun392-v2-r4-k1-u5282",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "arch": "transformer",
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20,
+          "value_max": 20,
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "checkpoint_sha256": "694b1d8b2ebb7e76debf965fc41d594f8fdbc013fa00c73f45e7a7f0eee6859f",
+          "onnx_sha256": "2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6",
+          "source": "runs/r4_combat_20261031/formal/r4_k1_c000001/u005282/policy.pt",
+          "committed_sha256": "c46e7f8b8808e8971d7af1e541bc21012df40c3008b19b1cb3a27dfe2d67f699",
+          "strategy": "raw",
+          "attention_heads": 4,
+          "update": 5282,
+          "rule_version": "bun-native-v2"
+        },
+        "reference_zero": {
+          "move": [
+            2.2292682305875133,
+            2.6913134455751293,
+            3.57375502342765,
+            2.850053245308364,
+            3.238729217915158
+          ],
+          "bomb": [
+            2.8156316960155254,
+            -0.08553510025208322,
+            -3.0527544833094487
+          ],
+          "value": 2.2953588331301558
+        }
+      }
+    },
+    {
       "id": "bun392-v2-r3-a-u4002-u4002",
       "display_name": "Bun392 v2 r3_a_u4002\uff08P1\u4e09\u6863+338\uff09",
       "file": "bun392-v2-r3-a-u4002-u4002-763ae64a325215de60fa4af403f4e03aeb27ad888bd859d54a097144e816c0a7.json",
