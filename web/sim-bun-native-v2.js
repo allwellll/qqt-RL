@@ -2214,7 +2214,10 @@
           if (blocked[cy0 * W + c]) { nx = x; break; }
         }
       }
-      return [ny, nx];
+      // Probes, legal masks and slide-stop detection must see the same
+      // bounded displacement that step commits (also matches JAX _move_player).
+      return [Math.min(Math.max(ny, CFG.radius), H - CFG.radius),
+        Math.min(Math.max(nx, CFG.radius), W - CFG.radius)];
     }
 
     // ---- 本地人类原版像素移动（移植 kuuhaku1314/qqtang battleengine/movement.go） ----
@@ -4346,6 +4349,7 @@
 
   const QQT = {
     RULE_VERSION: 'bun-native-v2',
+    PHYSICS_REVISION: 'banana-boundary-clamp-v1',
     H, W, N, N_PLAYERS, N_MOVES, N_BOMB,
     MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_IDLE,
     ITEM_NONE, ITEM_BANANA, ITEM_SLOW_GLUE, ITEM_SLOT_COUNT,

@@ -101,6 +101,7 @@
   let sessionRevision = 0;
   let replayCatalog = [];
   let replayDocument = null;
+  let legacyReplayApi = null;
   let replayIndex = 0;
   let replayPlaying = false;
   let replayAccumulator = 0;
@@ -249,7 +250,7 @@
     leaderboardMatch = null;
     leaderboard.setSettlementReady(false);
     leaderboard.clearSettlement();
-    sim = new QQT.Sim(replayDocument.meta.seed);
+    sim = new legacyReplayApi.Sim(replayDocument.meta.seed);
     sim.reset(level);
     replayIndex = 0;
     replayAccumulator = 0;
@@ -393,6 +394,14 @@
     const response = await fetch(`replays/${row.file}`, { cache: 'no-store' });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     replayDocument = QQTReplay.validateReplay(await response.json());
+    // Preserve the previously deployed pixel/tick behavior of this deprecated
+    // action format; it predates diagnostic SHA-based simulator dispatch.
+    if (!legacyReplayApi) {
+      const path='review-sim/stock-legacy-20261028.js', r=await fetch(path);
+      const bytes=await r.arrayBuffer(), digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');
+      if(digest!=='7d2047b7db2025608b38afec0f8283625b6f98a3d09ac49693f2a0a44d1d485b')throw Error('历史模拟器 SHA 不一致');
+      const current=window.QQT;try{await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=path;script.onload=resolve;script.onerror=()=>reject(Error('历史模拟器加载失败'));document.head.append(script);});legacyReplayApi=window.QQT;}finally{window.QQT=current;}
+    }
     await useMap(arenaLevel);   // 离线录像在空场竞技场上生成，回放必须用同一张图
     resetReplay();
     replayPlaying = true;

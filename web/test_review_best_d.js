@@ -27,7 +27,8 @@ const {verifySource}=require('../scripts/review_source_hash_compatibility');
     assert.equal(sha(bytes),row.sha256);assert.equal(bytes.length,row.bytes);P.validate(doc);E.validate(doc,model);assert.throws(()=>Gate.validate(doc),/diagnostic admission/);
     assert.equal(doc.meta.matrix_sha256,sha(fs.readFileSync('web/review-evidence/best-d-20261028/matrix.json')));
     for(const field of ['reward_hashes','source_hashes'])for(const [file,hash]of Object.entries(doc.meta[field])){
-      const approved=verifySource(file,hash,{batchId:doc.meta.batch_id,field});
+      const bytes=file==='web/sim.js'?fs.readFileSync('web/'+P.simulatorFile(hash)):undefined;
+      const approved=verifySource(file,hash,{batchId:doc.meta.batch_id,field},bytes);
       if(approved&&i===0)console.log(`EXPLICIT SOURCE COMPATIBILITY (${field}): ${file} ${hash} -> ${approved.current_sha256}; ${approved.reason}`);
     }
     assert.equal(doc.meta.onnx_sha256,actor.wasm_graph_sha256);

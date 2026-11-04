@@ -8,9 +8,11 @@
   const SCHEMA = 'qqt.diagnostic-replay/v1';
   const ANNOTATIONS = 'qqt.replay-annotations/v1';
   const ROUTE_SIM_HASH='9aa8385489affdfdb61c1deff61cee3d8401e744cf80f2b474feb931103884e3';
-  const VERSION_FILES={[ROUTE_SIM_HASH]:'review-sim/route-v35.js','2767cb4e2993383addc72d792fef8947f3ff86e1dcad4f73c8e1c04752a13f45':'sim-stock-window-v1.js','f6e346f3022640556efc2a988eb3b9b8e90abd5776af6ca1b4b1b0ee2acd6abc':'sim-bun-native-v2.js'};
+  const VERSION_FILES={[ROUTE_SIM_HASH]:'review-sim/route-v35.js','2767cb4e2993383addc72d792fef8947f3ff86e1dcad4f73c8e1c04752a13f45':'sim-stock-window-v1.js','f6e346f3022640556efc2a988eb3b9b8e90abd5776af6ca1b4b1b0ee2acd6abc':'review-sim/bun-native-v2-20261104.js'};
   const STOCK_LEGACY_HASH='7d2047b7db2025608b38afec0f8283625b6f98a3d09ac49693f2a0a44d1d485b';
   VERSION_FILES[STOCK_LEGACY_HASH]='review-sim/stock-legacy-20261028.js';
+  VERSION_FILES['593b50e8278b5e544132f86dc4011c4dc06d0de1166c8ff8e751d9ac4f553154']='sim-bun-native-v2.js';
+  VERSION_FILES['674ff0f6cde9123a158ee888b18be5e372d5929709e2d3025b4e8d5823737fda']='sim.js';
   const versions=new Map();
   function registerSimulator(hash,api){if(!VERSION_FILES[hash])throw Error('unknown simulator');versions.set(hash,api);}
   function simulator(meta){
@@ -156,7 +158,7 @@
     return d;
   }
   function setup(meta, level) {
-    const sim = new Q.Sim(meta.seed);
+    const sim = new (simulator(meta).Sim)(meta.seed);
     const scene = meta.scene || meta.variant || 'native';
     sim.reset(level, {nativeTrap:true,nativeItems:true});
     if (scene === 'open' || meta.variant === 'open') sim.brick.fill(0);
@@ -176,7 +178,7 @@
       if(!T)throw Error('tactical arena support unavailable');
       level=T.buildTacticalArena(level);
     }
-    const sim=new Q.Sim(meta.seed),scene=meta.scene||meta.variant||'native';
+    const sim=new (simulator(meta).Sim)(meta.seed),scene=meta.scene||meta.variant||'native';
     sim.reset(level,meta.native_rules===false?{}:{nativeTrap:true,nativeItems:true});
     if(scene==='open'||meta.variant==='open')sim.brick.fill(0);
     if(scene==='carry_home'){
@@ -280,5 +282,5 @@
     if (!sim.alive[1-p] || sim.trapped[1-p]>0) return '运输窗口';
     return '战斗';
   }
-  return {SCHEMA,ANNOTATIONS,ROUTE_SIM_HASH,registerSimulator,simulator,replaySetup,validate,identity,hash,sha256,stringify,setup,unpack,state,Player,time,locator,annotationDocument,validateAnnotations,phase};
+  return {SCHEMA,ANNOTATIONS,ROUTE_SIM_HASH,simulatorFile: hash => VERSION_FILES[hash] || 'sim.js',registerSimulator,simulator,replaySetup,validate,identity,hash,sha256,stringify,setup,unpack,state,Player,time,locator,annotationDocument,validateAnnotations,phase};
 });

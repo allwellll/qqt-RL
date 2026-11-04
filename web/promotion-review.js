@@ -20,7 +20,8 @@
   window.promotionReview={player,manifest,verified:true};draw();
  }
  try{
-  manifest=await(await fetch('promotion-review.json')).json();const bytes=await(await fetch('sim-bun-native-v2.js')).arrayBuffer();if(await digest(bytes)!==manifest.rule_sha256)throw Error('线上规则 SHA 不一致');
+  manifest=await(await fetch('promotion-review.json')).json();const bytes=await(await fetch(P.simulatorFile(manifest.rule_sha256))).arrayBuffer();if(await digest(bytes)!==manifest.rule_sha256)throw Error('线上规则 SHA 不一致');
+  const current=window.QQT;try{await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=P.simulatorFile(manifest.rule_sha256);script.onload=resolve;script.onerror=()=>reject(Error('录像规则加载失败'));document.head.append(script);});P.registerSimulator(manifest.rule_sha256,window.QQT);}finally{window.QQT=current;}
   $('title').textContent=manifest.display_name+' · 固定8局完整 Review';manifest.replays.forEach((r,i)=>$('recording').add(new Option(`seed ${r.seed} · 模型 P${r.seat}`,i)));
   $('recording').onchange=()=>load(+$('recording').value).catch(fail);
   $('play').onclick=()=>{if(player.sim.t===player.document.actions.length)player.seek(0);playing=!playing;last=performance.now();accumulator=0;$('play').textContent=playing?'暂停':'播放';draw();};

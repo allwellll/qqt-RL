@@ -9,7 +9,7 @@ function validate(d){
 }
 function unpack(row){return [S.engineAction(row[0],row[1]),S.engineAction(row[2],row[3])];}
 function setup(meta,level){
- const s=new Q.Sim(meta.seed);s.reset(level,{nativeTrap:true,nativeItems:true});s.maxSteps=meta.max_ticks;
+ const s=new (P.simulator(meta).Sim)(meta.seed);s.reset(level,{nativeTrap:true,nativeItems:true});s.maxSteps=meta.max_ticks;
  if(meta.frozen_birth){const cells=meta.frozen_birth.cells;for(let p=0;p<2;p++){s.pos[2*p]=cells[p][0]+.5;s.pos[2*p+1]=cells[p][1]+.5;}s.bunSpawnPos=cells.map(x=>x.map(v=>v+.5));s._gen++;}
  return s;
 }

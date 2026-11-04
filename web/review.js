@@ -281,7 +281,7 @@
     if(bytes.length!==row.bytes||await P.sha256(bytes)!==row.sha256)throw Error('录像文件 hash / 大小不匹配');
     const next=P.validate(JSON.parse(new TextDecoder().decode(bytes)));const mapResponse=await fetch('assets/maps/levels.json');if(!mapResponse.ok)throw Error('地图 HTTP');const level=(await mapResponse.json()).find(x=>x.qqt_id===806);if(await P.hash(level)!==next.meta.map_sha256)throw Error('地图 hash');
     if(row.model_id)QQTReviewEvaluation.validate(next,catalog.evaluation?.models.find(m=>m.id===row.model_id));
-    const versioned=next.meta.simulator_sha256===P.ROUTE_SIM_HASH||next.meta.simulator_sha256==='f6e346f3022640556efc2a988eb3b9b8e90abd5776af6ca1b4b1b0ee2acd6abc'||next.meta.simulator_sha256==='2767cb4e2993383addc72d792fef8947f3ff86e1dcad4f73c8e1c04752a13f45',simPath=next.meta.simulator_sha256==='f6e346f3022640556efc2a988eb3b9b8e90abd5776af6ca1b4b1b0ee2acd6abc'?'sim-bun-native-v2.js':next.meta.simulator_sha256===P.ROUTE_SIM_HASH?'review-sim/route-v35.js':versioned?'sim-stock-window-v1.js':'sim.js';
+    const simPath=P.simulatorFile(next.meta.simulator_sha256),versioned=true;
     const sr=await fetch(simPath);if(!sr.ok)throw Error('模拟器 HTTP');const simBytes=await sr.arrayBuffer();if(await P.sha256(simBytes)!==next.meta.simulator_sha256)throw Error('模拟器版本不匹配');
     if(versioned){const current=window.QQT;try{await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=simPath;script.onload=resolve;script.onerror=()=>reject(Error('模拟器加载失败'));document.head.append(script);});P.registerSimulator(next.meta.simulator_sha256,window.QQT);}finally{window.QQT=current;}}
     const nextPlayer=new P.Player(next,level);await nextPlayer.verify();const assets=await QQTVisual.loadAssets(level);if(token!==loadToken)return;

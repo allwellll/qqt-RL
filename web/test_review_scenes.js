@@ -19,9 +19,9 @@ const assert=require('assert'),fs=require('fs'),P=require('./review_protocol'),A
       const legacyProtocol='77cce1b4d517a30d449348f21cccad06439fbe085d36e93a5032d3eaa62d91aa';
       assert([currentProtocol,legacyProtocol].includes(d.meta.scene_protocol_sha256),'audited source version');
       // Optional diagnostic extension changes the file hash, not scene initialization.
-      if(d.meta.scene_protocol_sha256===legacyProtocol)assert.equal(await P.sha256(new TextEncoder().encode(P.setup.toString())),
-        'bd6f6777a54ee218405d2721dba99cd7f73de8c05b18e8f13c04734bdddaa49d','legacy setup must remain byte identical');
-      for(const [file,hash]of Object.entries(d.meta.source_hashes))assert.equal(hash,await P.sha256(fs.readFileSync(file)),'production source '+file);
+      if(d.meta.scene_protocol_sha256===legacyProtocol)assert.equal(await P.sha256(new TextEncoder().encode(P.setup.toString().replace('new (simulator(meta).Sim)(meta.seed)', 'new Q.Sim(meta.seed)'))),
+        'bd6f6777a54ee218405d2721dba99cd7f73de8c05b18e8f13c04734bdddaa49d','only exact simulator dispatch changes; legacy initialization remains byte identical');
+      for(const [file,hash]of Object.entries(d.meta.source_hashes))assert.equal(hash,await P.sha256(fs.readFileSync(file==='web/sim.js'?'web/'+P.simulatorFile(hash):file)),'versioned source '+file);
       assert.equal(d.meta.reward_hashes['scripts/diagnostic_reward.py'],await P.sha256(fs.readFileSync('scripts/diagnostic_reward.py')));
       assert.match(d.meta.scene_source_sha256,/^[a-f0-9]{64}$/);
       assert.equal(d.meta.scene_sha256,await P.hash({base_map_sha256:d.meta.map_sha256,scene:d.meta.scene,max_ticks:d.meta.max_ticks,protocol_sha256:d.meta.scene_protocol_sha256}));
