@@ -150,12 +150,14 @@
   }
 
   function instantiateModel(document) {
+    if(document.meta?.ability_actions>3 && document.meta.schema_version!=='five-item-slots-v1')throw Error('Unknown model action schema');
     const arch = document.meta && document.meta.arch;
     const model = arch === 'transformer' ? new QQT.TransformerModel(document)
       : arch === 'cnn' ? new QQT.CNNModel(document)
       : arch === 'mlp4' ? new QQT.MLP4Model(document) : new QQT.MLPModel(document);
     model.greedy = true;
-    return QQTR3Inputs.attach(model);
+    return document.meta?.schema_version==='five-item-slots-v1'
+      ? QQTFiveSlotsModel.attach(model,document.meta) : QQTR3Inputs.attach(model);
   }
 
   function createRegistry() {
@@ -167,7 +169,8 @@
         reset(context) {},
         async act(observation, playerId, rng) {
           const raw = await Promise.resolve(loadedModel.act(sim, playerId, modelRng));
-          return QQTBots.validateAction({ move: Number(raw[0]), ability: raw[2] ? 2 : Number(raw[1]) });
+          return QQTBots.validateAction({ move: Number(raw[0]), ability: raw[2] ? 2 : Number(raw[1]),
+            ...(raw[2] && raw[6] >= 0 ? {itemSlot: Number(raw[6])} : {}) });
         },
         close() {},
       }) : null,

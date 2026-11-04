@@ -1,0 +1,1418 @@
+{
+  "selection": {
+    "status": "PASS",
+    "winner": "risk9809",
+    "optional": "risk9969",
+    "previous": "online",
+    "primary_seat": 1,
+    "reason": "P1 three-tier W-L +23 matches online +23, independent hard16 16/0/0 versus online13/2/1, same-chain delivery15 versus11 and carrying deaths0 versus3; heavy-v6 DEV31/0/1,30/35 deliveries,carry deaths4. Retain all tradeoffs; not a universal best.",
+    "tradeoffs": [
+      "P1 holdout causal kills5 versus online9; fewer bombs27.625 versus32.5 per game",
+      "P0 holdout12/1/3 versus online14/0/2; carrying deaths2 versus1",
+      "u10849 holdout P1 also16/0/0, deliveries16,causal kills9, but three-tier W-L21 versus23 and carrying deaths1 versus0; not rejected by total-death veto",
+      "u8922 holdout P1 also16/0/0; heavy-v6 DEV27/1/4 versus u9809 31/0/1; similar carry deaths4, deliveries27 versus30",
+      "u9969 remains user-approved option; independent P1 holdout14/1/1,causal kills12,carrying deaths2"
+    ],
+    "limits": [
+      "8 seeds/tier screening and16 independent hard holdout seeds per model; both seats correlated; single map",
+      "stock-window historical scores never pooled",
+      "GPU heavy-v6/JAX training and JS Hunter evidence separate",
+      "ownBombDefeat0 is not proof of zero indirect self-harm"
+    ],
+    "protocol_sha256": "e3fd278dcab16798383d2def936b6eed68d18565cc0bdeb96dbf535b74800a77",
+    "holdout_protocol_sha256": "b5030923bba506dbd9050ee6cc936be6ea6a7c2d2a5317d1c565afb5f22dac41",
+    "results_sha256": "1e7b2ba20fef836785e15cc718da751bedc8d8484b1b51f944fde6e8b1df541e",
+    "all_544_saved_games_replayed": true
+  },
+  "results": {
+    "screen": {
+      "bomb03": {
+        "P1": {
+          "games": 24,
+          "win": 14,
+          "draw": 6,
+          "loss": 4,
+          "win_minus_loss": 10,
+          "bombs": 1118,
+          "causal_kills": 13,
+          "deliveries": 14,
+          "deaths": 8,
+          "self_deaths": 0,
+          "carrying_deaths": 0,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 46.583333333333336
+        },
+        "P0": {
+          "games": 24,
+          "win": 21,
+          "draw": 0,
+          "loss": 3,
+          "win_minus_loss": 18,
+          "bombs": 1028,
+          "causal_kills": 39,
+          "deliveries": 29,
+          "deaths": 5,
+          "self_deaths": 0,
+          "carrying_deaths": 0,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 42.833333333333336
+        },
+        "by_tier": {
+          "easy": {
+            "P1": {
+              "games": 8,
+              "win": 6,
+              "draw": 2,
+              "loss": 0,
+              "win_minus_loss": 6,
+              "bombs": 415,
+              "causal_kills": 9,
+              "deliveries": 6,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 51.875
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 241,
+              "causal_kills": 11,
+              "deliveries": 8,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 30.125
+            }
+          },
+          "hard": {
+            "P1": {
+              "games": 8,
+              "win": 3,
+              "draw": 2,
+              "loss": 3,
+              "win_minus_loss": 0,
+              "bombs": 340,
+              "causal_kills": 1,
+              "deliveries": 3,
+              "deaths": 6,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 42.5
+            },
+            "P0": {
+              "games": 8,
+              "win": 5,
+              "draw": 0,
+              "loss": 3,
+              "win_minus_loss": 2,
+              "bombs": 400,
+              "causal_kills": 15,
+              "deliveries": 11,
+              "deaths": 3,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 50.0
+            }
+          },
+          "normal": {
+            "P1": {
+              "games": 8,
+              "win": 5,
+              "draw": 2,
+              "loss": 1,
+              "win_minus_loss": 4,
+              "bombs": 363,
+              "causal_kills": 3,
+              "deliveries": 5,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 45.375
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 387,
+              "causal_kills": 13,
+              "deliveries": 10,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 48.375
+            }
+          }
+        }
+      },
+      "bomb07": {
+        "P1": {
+          "games": 24,
+          "win": 20,
+          "draw": 1,
+          "loss": 3,
+          "win_minus_loss": 17,
+          "bombs": 692,
+          "causal_kills": 24,
+          "deliveries": 24,
+          "deaths": 4,
+          "self_deaths": 0,
+          "carrying_deaths": 0,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 28.833333333333332
+        },
+        "P0": {
+          "games": 24,
+          "win": 19,
+          "draw": 3,
+          "loss": 2,
+          "win_minus_loss": 17,
+          "bombs": 565,
+          "causal_kills": 17,
+          "deliveries": 22,
+          "deaths": 10,
+          "self_deaths": 0,
+          "carrying_deaths": 0,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 23.541666666666668
+        },
+        "by_tier": {
+          "easy": {
+            "P1": {
+              "games": 8,
+              "win": 7,
+              "draw": 0,
+              "loss": 1,
+              "win_minus_loss": 6,
+              "bombs": 168,
+              "causal_kills": 11,
+              "deliveries": 9,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 21.0
+            },
+            "P0": {
+              "games": 8,
+              "win": 7,
+              "draw": 1,
+              "loss": 0,
+              "win_minus_loss": 7,
+              "bombs": 193,
+              "causal_kills": 9,
+              "deliveries": 8,
+              "deaths": 5,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 24.125
+            }
+          },
+          "hard": {
+            "P1": {
+              "games": 8,
+              "win": 7,
+              "draw": 1,
+              "loss": 0,
+              "win_minus_loss": 7,
+              "bombs": 269,
+              "causal_kills": 7,
+              "deliveries": 9,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 33.625
+            },
+            "P0": {
+              "games": 8,
+              "win": 6,
+              "draw": 1,
+              "loss": 1,
+              "win_minus_loss": 5,
+              "bombs": 157,
+              "causal_kills": 5,
+              "deliveries": 8,
+              "deaths": 3,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 19.625
+            }
+          },
+          "normal": {
+            "P1": {
+              "games": 8,
+              "win": 6,
+              "draw": 0,
+              "loss": 2,
+              "win_minus_loss": 4,
+              "bombs": 255,
+              "causal_kills": 6,
+              "deliveries": 6,
+              "deaths": 3,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 31.875
+            },
+            "P0": {
+              "games": 8,
+              "win": 6,
+              "draw": 1,
+              "loss": 1,
+              "win_minus_loss": 5,
+              "bombs": 215,
+              "causal_kills": 3,
+              "deliveries": 6,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 26.875
+            }
+          }
+        }
+      },
+      "bomb_best": {
+        "P1": {
+          "games": 24,
+          "win": 13,
+          "draw": 8,
+          "loss": 3,
+          "win_minus_loss": 10,
+          "bombs": 916,
+          "causal_kills": 10,
+          "deliveries": 12,
+          "deaths": 1,
+          "self_deaths": 0,
+          "carrying_deaths": 0,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 38.166666666666664
+        },
+        "P0": {
+          "games": 24,
+          "win": 19,
+          "draw": 3,
+          "loss": 2,
+          "win_minus_loss": 17,
+          "bombs": 765,
+          "causal_kills": 14,
+          "deliveries": 22,
+          "deaths": 4,
+          "self_deaths": 0,
+          "carrying_deaths": 0,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 31.875
+        },
+        "by_tier": {
+          "easy": {
+            "P1": {
+              "games": 8,
+              "win": 3,
+              "draw": 4,
+              "loss": 1,
+              "win_minus_loss": 2,
+              "bombs": 282,
+              "causal_kills": 2,
+              "deliveries": 3,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 35.25
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 195,
+              "causal_kills": 4,
+              "deliveries": 8,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 24.375
+            }
+          },
+          "hard": {
+            "P1": {
+              "games": 8,
+              "win": 4,
+              "draw": 2,
+              "loss": 2,
+              "win_minus_loss": 2,
+              "bombs": 298,
+              "causal_kills": 4,
+              "deliveries": 4,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 37.25
+            },
+            "P0": {
+              "games": 8,
+              "win": 6,
+              "draw": 1,
+              "loss": 1,
+              "win_minus_loss": 5,
+              "bombs": 220,
+              "causal_kills": 4,
+              "deliveries": 7,
+              "deaths": 3,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 27.5
+            }
+          },
+          "normal": {
+            "P1": {
+              "games": 8,
+              "win": 6,
+              "draw": 2,
+              "loss": 0,
+              "win_minus_loss": 6,
+              "bombs": 336,
+              "causal_kills": 4,
+              "deliveries": 5,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 42.0
+            },
+            "P0": {
+              "games": 8,
+              "win": 5,
+              "draw": 2,
+              "loss": 1,
+              "win_minus_loss": 4,
+              "bombs": 350,
+              "causal_kills": 6,
+              "deliveries": 7,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 43.75
+            }
+          }
+        }
+      },
+      "online": {
+        "P1": {
+          "games": 24,
+          "win": 23,
+          "draw": 1,
+          "loss": 0,
+          "win_minus_loss": 23,
+          "bombs": 631,
+          "causal_kills": 15,
+          "deliveries": 24,
+          "deaths": 1,
+          "self_deaths": 0,
+          "carrying_deaths": 1,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 26.291666666666668
+        },
+        "P0": {
+          "games": 24,
+          "win": 22,
+          "draw": 2,
+          "loss": 0,
+          "win_minus_loss": 22,
+          "bombs": 566,
+          "causal_kills": 11,
+          "deliveries": 22,
+          "deaths": 1,
+          "self_deaths": 0,
+          "carrying_deaths": 0,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 23.583333333333332
+        },
+        "by_tier": {
+          "easy": {
+            "P1": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 207,
+              "causal_kills": 7,
+              "deliveries": 8,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 25.875
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 189,
+              "causal_kills": 5,
+              "deliveries": 8,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 23.625
+            }
+          },
+          "hard": {
+            "P1": {
+              "games": 8,
+              "win": 7,
+              "draw": 1,
+              "loss": 0,
+              "win_minus_loss": 7,
+              "bombs": 244,
+              "causal_kills": 2,
+              "deliveries": 8,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 30.5
+            },
+            "P0": {
+              "games": 8,
+              "win": 7,
+              "draw": 1,
+              "loss": 0,
+              "win_minus_loss": 7,
+              "bombs": 221,
+              "causal_kills": 3,
+              "deliveries": 7,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 27.625
+            }
+          },
+          "normal": {
+            "P1": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 180,
+              "causal_kills": 6,
+              "deliveries": 8,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 22.5
+            },
+            "P0": {
+              "games": 8,
+              "win": 7,
+              "draw": 1,
+              "loss": 0,
+              "win_minus_loss": 7,
+              "bombs": 156,
+              "causal_kills": 3,
+              "deliveries": 7,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 19.5
+            }
+          }
+        }
+      },
+      "risk10849": {
+        "P1": {
+          "games": 24,
+          "win": 22,
+          "draw": 1,
+          "loss": 1,
+          "win_minus_loss": 21,
+          "bombs": 853,
+          "causal_kills": 16,
+          "deliveries": 20,
+          "deaths": 8,
+          "self_deaths": 0,
+          "carrying_deaths": 1,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 35.541666666666664
+        },
+        "P0": {
+          "games": 24,
+          "win": 21,
+          "draw": 0,
+          "loss": 3,
+          "win_minus_loss": 18,
+          "bombs": 741,
+          "causal_kills": 10,
+          "deliveries": 21,
+          "deaths": 17,
+          "self_deaths": 0,
+          "carrying_deaths": 2,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 30.875
+        },
+        "by_tier": {
+          "easy": {
+            "P1": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 245,
+              "causal_kills": 6,
+              "deliveries": 7,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 30.625
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 203,
+              "causal_kills": 5,
+              "deliveries": 8,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 25.375
+            }
+          },
+          "hard": {
+            "P1": {
+              "games": 8,
+              "win": 7,
+              "draw": 0,
+              "loss": 1,
+              "win_minus_loss": 6,
+              "bombs": 318,
+              "causal_kills": 5,
+              "deliveries": 6,
+              "deaths": 3,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 39.75
+            },
+            "P0": {
+              "games": 8,
+              "win": 6,
+              "draw": 0,
+              "loss": 2,
+              "win_minus_loss": 4,
+              "bombs": 324,
+              "causal_kills": 1,
+              "deliveries": 6,
+              "deaths": 9,
+              "self_deaths": 0,
+              "carrying_deaths": 2,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 40.5
+            }
+          },
+          "normal": {
+            "P1": {
+              "games": 8,
+              "win": 7,
+              "draw": 1,
+              "loss": 0,
+              "win_minus_loss": 7,
+              "bombs": 290,
+              "causal_kills": 5,
+              "deliveries": 7,
+              "deaths": 5,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 36.25
+            },
+            "P0": {
+              "games": 8,
+              "win": 7,
+              "draw": 0,
+              "loss": 1,
+              "win_minus_loss": 6,
+              "bombs": 214,
+              "causal_kills": 4,
+              "deliveries": 7,
+              "deaths": 6,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 26.75
+            }
+          }
+        }
+      },
+      "risk8922": {
+        "P1": {
+          "games": 24,
+          "win": 24,
+          "draw": 0,
+          "loss": 0,
+          "win_minus_loss": 24,
+          "bombs": 643,
+          "causal_kills": 12,
+          "deliveries": 24,
+          "deaths": 4,
+          "self_deaths": 0,
+          "carrying_deaths": 2,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 26.791666666666668
+        },
+        "P0": {
+          "games": 24,
+          "win": 21,
+          "draw": 3,
+          "loss": 0,
+          "win_minus_loss": 21,
+          "bombs": 438,
+          "causal_kills": 11,
+          "deliveries": 19,
+          "deaths": 5,
+          "self_deaths": 0,
+          "carrying_deaths": 2,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 18.25
+        },
+        "by_tier": {
+          "easy": {
+            "P1": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 170,
+              "causal_kills": 5,
+              "deliveries": 8,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 21.25
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 126,
+              "causal_kills": 5,
+              "deliveries": 8,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 15.75
+            }
+          },
+          "hard": {
+            "P1": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 263,
+              "causal_kills": 2,
+              "deliveries": 8,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 2,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 32.875
+            },
+            "P0": {
+              "games": 8,
+              "win": 5,
+              "draw": 3,
+              "loss": 0,
+              "win_minus_loss": 5,
+              "bombs": 159,
+              "causal_kills": 2,
+              "deliveries": 4,
+              "deaths": 3,
+              "self_deaths": 0,
+              "carrying_deaths": 2,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 19.875
+            }
+          },
+          "normal": {
+            "P1": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 210,
+              "causal_kills": 5,
+              "deliveries": 8,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 26.25
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 153,
+              "causal_kills": 4,
+              "deliveries": 7,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 19.125
+            }
+          }
+        }
+      },
+      "risk9809": {
+        "P1": {
+          "games": 24,
+          "win": 23,
+          "draw": 1,
+          "loss": 0,
+          "win_minus_loss": 23,
+          "bombs": 575,
+          "causal_kills": 16,
+          "deliveries": 23,
+          "deaths": 2,
+          "self_deaths": 0,
+          "carrying_deaths": 2,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 23.958333333333332
+        },
+        "P0": {
+          "games": 24,
+          "win": 21,
+          "draw": 1,
+          "loss": 2,
+          "win_minus_loss": 19,
+          "bombs": 508,
+          "causal_kills": 11,
+          "deliveries": 21,
+          "deaths": 4,
+          "self_deaths": 0,
+          "carrying_deaths": 2,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 21.166666666666668
+        },
+        "by_tier": {
+          "easy": {
+            "P1": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 172,
+              "causal_kills": 6,
+              "deliveries": 8,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 21.5
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 170,
+              "causal_kills": 4,
+              "deliveries": 8,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 21.25
+            }
+          },
+          "hard": {
+            "P1": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 181,
+              "causal_kills": 4,
+              "deliveries": 8,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 22.625
+            },
+            "P0": {
+              "games": 8,
+              "win": 5,
+              "draw": 1,
+              "loss": 2,
+              "win_minus_loss": 3,
+              "bombs": 158,
+              "causal_kills": 2,
+              "deliveries": 5,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 19.75
+            }
+          },
+          "normal": {
+            "P1": {
+              "games": 8,
+              "win": 7,
+              "draw": 1,
+              "loss": 0,
+              "win_minus_loss": 7,
+              "bombs": 222,
+              "causal_kills": 6,
+              "deliveries": 7,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 2,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 27.75
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 180,
+              "causal_kills": 5,
+              "deliveries": 8,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 22.5
+            }
+          }
+        }
+      },
+      "risk9969": {
+        "P1": {
+          "games": 24,
+          "win": 22,
+          "draw": 1,
+          "loss": 1,
+          "win_minus_loss": 21,
+          "bombs": 666,
+          "causal_kills": 17,
+          "deliveries": 22,
+          "deaths": 1,
+          "self_deaths": 0,
+          "carrying_deaths": 1,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 27.75
+        },
+        "P0": {
+          "games": 24,
+          "win": 22,
+          "draw": 1,
+          "loss": 1,
+          "win_minus_loss": 21,
+          "bombs": 568,
+          "causal_kills": 11,
+          "deliveries": 22,
+          "deaths": 12,
+          "self_deaths": 0,
+          "carrying_deaths": 0,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 23.666666666666668
+        },
+        "by_tier": {
+          "easy": {
+            "P1": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 179,
+              "causal_kills": 8,
+              "deliveries": 8,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 22.375
+            },
+            "P0": {
+              "games": 8,
+              "win": 7,
+              "draw": 1,
+              "loss": 0,
+              "win_minus_loss": 7,
+              "bombs": 223,
+              "causal_kills": 5,
+              "deliveries": 7,
+              "deaths": 5,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 27.875
+            }
+          },
+          "hard": {
+            "P1": {
+              "games": 8,
+              "win": 7,
+              "draw": 1,
+              "loss": 0,
+              "win_minus_loss": 7,
+              "bombs": 269,
+              "causal_kills": 5,
+              "deliveries": 7,
+              "deaths": 0,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 33.625
+            },
+            "P0": {
+              "games": 8,
+              "win": 7,
+              "draw": 0,
+              "loss": 1,
+              "win_minus_loss": 6,
+              "bombs": 177,
+              "causal_kills": 3,
+              "deliveries": 7,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 22.125
+            }
+          },
+          "normal": {
+            "P1": {
+              "games": 8,
+              "win": 7,
+              "draw": 0,
+              "loss": 1,
+              "win_minus_loss": 6,
+              "bombs": 218,
+              "causal_kills": 4,
+              "deliveries": 7,
+              "deaths": 1,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 27.25
+            },
+            "P0": {
+              "games": 8,
+              "win": 8,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 8,
+              "bombs": 168,
+              "causal_kills": 3,
+              "deliveries": 8,
+              "deaths": 5,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 21.0
+            }
+          }
+        }
+      }
+    },
+    "holdout": {
+      "online": {
+        "P1": {
+          "games": 16,
+          "win": 13,
+          "draw": 2,
+          "loss": 1,
+          "win_minus_loss": 12,
+          "bombs": 520,
+          "causal_kills": 9,
+          "deliveries": 11,
+          "deaths": 4,
+          "self_deaths": 0,
+          "carrying_deaths": 3,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 32.5
+        },
+        "P0": {
+          "games": 16,
+          "win": 14,
+          "draw": 0,
+          "loss": 2,
+          "win_minus_loss": 12,
+          "bombs": 377,
+          "causal_kills": 5,
+          "deliveries": 15,
+          "deaths": 5,
+          "self_deaths": 0,
+          "carrying_deaths": 1,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 23.5625
+        },
+        "by_tier": {
+          "hard": {
+            "P1": {
+              "games": 16,
+              "win": 13,
+              "draw": 2,
+              "loss": 1,
+              "win_minus_loss": 12,
+              "bombs": 520,
+              "causal_kills": 9,
+              "deliveries": 11,
+              "deaths": 4,
+              "self_deaths": 0,
+              "carrying_deaths": 3,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 32.5
+            },
+            "P0": {
+              "games": 16,
+              "win": 14,
+              "draw": 0,
+              "loss": 2,
+              "win_minus_loss": 12,
+              "bombs": 377,
+              "causal_kills": 5,
+              "deliveries": 15,
+              "deaths": 5,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 23.5625
+            }
+          }
+        }
+      },
+      "risk10849": {
+        "P1": {
+          "games": 16,
+          "win": 16,
+          "draw": 0,
+          "loss": 0,
+          "win_minus_loss": 16,
+          "bombs": 482,
+          "causal_kills": 9,
+          "deliveries": 16,
+          "deaths": 4,
+          "self_deaths": 0,
+          "carrying_deaths": 1,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 30.125
+        },
+        "P0": {
+          "games": 16,
+          "win": 15,
+          "draw": 0,
+          "loss": 1,
+          "win_minus_loss": 14,
+          "bombs": 410,
+          "causal_kills": 3,
+          "deliveries": 15,
+          "deaths": 5,
+          "self_deaths": 0,
+          "carrying_deaths": 2,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 25.625
+        },
+        "by_tier": {
+          "hard": {
+            "P1": {
+              "games": 16,
+              "win": 16,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 16,
+              "bombs": 482,
+              "causal_kills": 9,
+              "deliveries": 16,
+              "deaths": 4,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 30.125
+            },
+            "P0": {
+              "games": 16,
+              "win": 15,
+              "draw": 0,
+              "loss": 1,
+              "win_minus_loss": 14,
+              "bombs": 410,
+              "causal_kills": 3,
+              "deliveries": 15,
+              "deaths": 5,
+              "self_deaths": 0,
+              "carrying_deaths": 2,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 25.625
+            }
+          }
+        }
+      },
+      "risk8922": {
+        "P1": {
+          "games": 16,
+          "win": 16,
+          "draw": 0,
+          "loss": 0,
+          "win_minus_loss": 16,
+          "bombs": 546,
+          "causal_kills": 7,
+          "deliveries": 15,
+          "deaths": 3,
+          "self_deaths": 0,
+          "carrying_deaths": 1,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 34.125
+        },
+        "P0": {
+          "games": 16,
+          "win": 12,
+          "draw": 3,
+          "loss": 1,
+          "win_minus_loss": 11,
+          "bombs": 425,
+          "causal_kills": 3,
+          "deliveries": 8,
+          "deaths": 5,
+          "self_deaths": 0,
+          "carrying_deaths": 1,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 26.5625
+        },
+        "by_tier": {
+          "hard": {
+            "P1": {
+              "games": 16,
+              "win": 16,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 16,
+              "bombs": 546,
+              "causal_kills": 7,
+              "deliveries": 15,
+              "deaths": 3,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 34.125
+            },
+            "P0": {
+              "games": 16,
+              "win": 12,
+              "draw": 3,
+              "loss": 1,
+              "win_minus_loss": 11,
+              "bombs": 425,
+              "causal_kills": 3,
+              "deliveries": 8,
+              "deaths": 5,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 26.5625
+            }
+          }
+        }
+      },
+      "risk9809": {
+        "P1": {
+          "games": 16,
+          "win": 16,
+          "draw": 0,
+          "loss": 0,
+          "win_minus_loss": 16,
+          "bombs": 442,
+          "causal_kills": 5,
+          "deliveries": 15,
+          "deaths": 2,
+          "self_deaths": 0,
+          "carrying_deaths": 0,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 27.625
+        },
+        "P0": {
+          "games": 16,
+          "win": 12,
+          "draw": 1,
+          "loss": 3,
+          "win_minus_loss": 9,
+          "bombs": 458,
+          "causal_kills": 8,
+          "deliveries": 13,
+          "deaths": 11,
+          "self_deaths": 0,
+          "carrying_deaths": 2,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 28.625
+        },
+        "by_tier": {
+          "hard": {
+            "P1": {
+              "games": 16,
+              "win": 16,
+              "draw": 0,
+              "loss": 0,
+              "win_minus_loss": 16,
+              "bombs": 442,
+              "causal_kills": 5,
+              "deliveries": 15,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 0,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 27.625
+            },
+            "P0": {
+              "games": 16,
+              "win": 12,
+              "draw": 1,
+              "loss": 3,
+              "win_minus_loss": 9,
+              "bombs": 458,
+              "causal_kills": 8,
+              "deliveries": 13,
+              "deaths": 11,
+              "self_deaths": 0,
+              "carrying_deaths": 2,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 28.625
+            }
+          }
+        }
+      },
+      "risk9969": {
+        "P1": {
+          "games": 16,
+          "win": 14,
+          "draw": 1,
+          "loss": 1,
+          "win_minus_loss": 13,
+          "bombs": 595,
+          "causal_kills": 12,
+          "deliveries": 13,
+          "deaths": 2,
+          "self_deaths": 0,
+          "carrying_deaths": 2,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 37.1875
+        },
+        "P0": {
+          "games": 16,
+          "win": 12,
+          "draw": 3,
+          "loss": 1,
+          "win_minus_loss": 11,
+          "bombs": 492,
+          "causal_kills": 3,
+          "deliveries": 10,
+          "deaths": 12,
+          "self_deaths": 0,
+          "carrying_deaths": 1,
+          "zero_bomb_games": 0,
+          "bombs_per_game": 30.75
+        },
+        "by_tier": {
+          "hard": {
+            "P1": {
+              "games": 16,
+              "win": 14,
+              "draw": 1,
+              "loss": 1,
+              "win_minus_loss": 13,
+              "bombs": 595,
+              "causal_kills": 12,
+              "deliveries": 13,
+              "deaths": 2,
+              "self_deaths": 0,
+              "carrying_deaths": 2,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 37.1875
+            },
+            "P0": {
+              "games": 16,
+              "win": 12,
+              "draw": 3,
+              "loss": 1,
+              "win_minus_loss": 11,
+              "bombs": 492,
+              "causal_kills": 3,
+              "deliveries": 10,
+              "deaths": 12,
+              "self_deaths": 0,
+              "carrying_deaths": 1,
+              "zero_bomb_games": 0,
+              "bombs_per_game": 30.75
+            }
+          }
+        }
+      }
+    }
+  },
+  "rule_sha256": "f6e346f3022640556efc2a988eb3b9b8e90abd5776af6ca1b4b1b0ee2acd6abc",
+  "models": [
+    {
+      "id": "bun392-v2-risk-u9809",
+      "source_sha256": "6f758831a03f238d2aef7e4d0bd7d2ca597e71eb74b3a38293fde13be0d987d8",
+      "sha256": "6365c568b594d0dfd3c83f74d3a14afb4d9512d519579f0492d4781f1e6a2ddd",
+      "onnx_sha256": "3127be3f37f24e8ea81fafd9c8f02ea79a3ed9ec0dbe84d570fe3a43a33e0673"
+    },
+    {
+      "id": "bun392-v2-risk-u9969",
+      "source_sha256": "7aae3216fdecc5d85c31c9aa3158b50a97b00a3654dc0f5722df5f7f6d3f9afa",
+      "sha256": "a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278",
+      "onnx_sha256": "0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f"
+    }
+  ]
+}

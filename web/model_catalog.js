@@ -33,6 +33,13 @@
             || ![...r.move,...r.bomb,r.value].every(Number.isFinite)) {
           throw new Error('invalid ONNX metadata/reference');
         }
+        if(m.ability_actions>3 && (m.schema_version!=='five-item-slots-v1'
+            || m.action_schema!=='move-v1+five-item-slots-v1' || m.ability_actions!==7
+            || m.state_dim!==52 || m.global_dim!==52
+            || JSON.stringify(m.obs_shape)!=='[25,13,15]'
+            || JSON.stringify(m.ability_encoding)!=='["none","bomb","use_slot1","use_slot2","use_slot3","use_slot4","use_slot5"]')) {
+          throw new Error('invalid five-slot model schema');
+        }
       }
       return Object.freeze({ ...row });
     });

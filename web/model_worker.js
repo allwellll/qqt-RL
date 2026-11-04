@@ -33,13 +33,15 @@
       // Large verified assets can download slowly. Bound initialization to
       // 20 minutes; inference requests retain their separate 30s timeout.
       const initialized=await client.request('init',{row},20*60*1000);
+      if(initialized.meta.ability_actions>3 && initialized.meta.schema_version!=='five-item-slots-v1')throw Error('Unknown model action schema');
       // Reuse the existing asynchronous act/caching/greedy/mask implementation.
       const model=new QQT.ORTTransformerModel({meta:initialized.meta},null);
       model.backend=initialized.backend;model.backendReason=initialized.backendReason;
       model.parityMaxError=initialized.parityMaxError;model.greedy=true;model.inferEvery=1;
       model.forward=(obs,state)=>client.request('infer',{obs:Float32Array.from(obs),state:Float32Array.from(state)});
       model.forward2=async(o0,s0,o1,s1)=>[await model.forward(o0,s0),await model.forward(o1,s1)];
-      if(typeof QQTR3Inputs!=='undefined')QQTR3Inputs.attach(model);
+      if(initialized.meta.schema_version==='five-item-slots-v1')QQTFiveSlotsModel.attach(model,initialized.meta);
+      else if(typeof QQTR3Inputs!=='undefined')QQTR3Inputs.attach(model);
       model.close=()=>client.close();model.inferenceTimes=client.times;
       return model;
     } catch(error){client.close();throw error;}
