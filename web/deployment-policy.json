@@ -1,0 +1,25 @@
+{
+  "schema": "qqt.deployment-policy/v1",
+  "version": "post-banana-boundary-recovery-v1",
+  "scope": "human-vs-model; five-item-slots-v1; 2 players; bun-native-v2 only",
+  "enabled_by_default": true,
+  "can_disable": true,
+  "entry": "observed banana slide then world boundary release, 10 consecutive idle ticks without movement or ability",
+  "limits": {
+    "window_ticks": 50,
+    "max_overrides": 4,
+    "release_travel_tiles": 0.5
+  },
+  "actions": "legal inward movement, ranked by original model probability; no bomb/item change",
+  "vetoes": [
+    "current or predicted danger in swept body",
+    "bubble, field item, wall, brick, crate in swept body",
+    "dead, trapped, spawn protection",
+    "step distance above 0.5 tiles",
+    "model movement, bomb or item request"
+  ],
+  "evidence": "raw and effective action retained separately in lastDeploymentDecision and versioned guard events; effective actions are required for replay",
+  "historical_review_changed": false,
+  "model_weights_changed": false,
+  "training_migrated": false
+}

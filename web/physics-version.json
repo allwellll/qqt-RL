@@ -18,6 +18,6 @@
   },
   "training_migrated": false,
   "training_notice": "Multi-region current1280 and next320 retain their existing PHYSICS_VERSION.json. Future migration requires a new version and complete checkpoint boundary.",
-  "policy_adapter": "none in physics-only release",
+  "policy_adapter": "post-banana-boundary-recovery-v1; separate optional frontend aid, not raw model capability",
   "historical_review": "Exact archived simulator selected by original recorded SHA."
 }

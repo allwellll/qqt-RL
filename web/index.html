@@ -63,6 +63,8 @@
         <p><kbd>E / Shift</kbd> 使用道具栏第 1 格</p>
         <p>糖泡：队友碰触救援</p>
         <p id="physics-revision">香蕉边界修复 v1；历史 Review 使用录像记录的旧物理。</p>
+        <label class="check-label"><input id="boundary-recovery" type="checkbox" checked> 香蕉边界停滞恢复 v1（前端辅助，可关闭）</label>
+        <p id="boundary-recovery-status" class="note" role="status">仅用于五槽模型；原始模型决策与辅助动作分别记录，不代表模型原始能力。</p>
         <p id="bubble-passage-legend">泡上虚线箭头表示你此刻可穿；钟表表示短时穿泡。脚下泡离开后不能回穿，爆炸仍有危险。</p>
         <p><kbd>R</kbd> 重新开局</p>
         <button id="advanced-open" type="button" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button>
@@ -168,6 +170,7 @@
   <script src="r3_model_inputs.js"></script>
   <script src="five-item-slots-v1.js"></script>
   <script src="five-item-slots-model-v1.js"></script>
+  <script src="boundary-recovery-v1.js"></script>
   <script src="ruleset_selector.js"></script>
   <script src="controls.js"></script>
   <script src="model_catalog.js"></script>

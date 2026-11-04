@@ -342,7 +342,8 @@
     model = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)));
     }
     const previousModel = loadedModel;
-    loadedModel = model;
+    loadedModel = model.meta?.schema_version === 'five-item-slots-v1'
+      ? QQTBoundaryRecovery.attach(model, {enabled: () => localHumanControls() && document.getElementById('boundary-recovery').checked}) : model;
     if (previousModel && previousModel.close) {
       // A request may still belong to the old session. Let its obsolete-tick
       // guard resolve before terminating the worker; never reject a live tick.
@@ -423,6 +424,10 @@
     document.getElementById('settlement').style.top = window.matchMedia('(max-width: 820px)').matches
       ? '' : `${rect.top - stage.top + rect.height * .65}px`;
     hideLoading();
+    const guard = loadedModel?.boundaryRecovery;
+    const recoveryEvents = guard?.sim === sim && guard.generation === sim._gen ? guard.events : [];
+    document.getElementById('boundary-recovery-status').textContent =
+      `仅用于真人对战五槽模型；本局辅助 ${recoveryEvents.length} 次。前端辅助不代表模型原始能力。`;
     status.textContent = JSON.stringify({
       mode: QQTModelCatalog.matchLabel(matchMode.value),
       tick: sim.t,
@@ -435,6 +440,8 @@
         : sim.heldItem.map((item) => ['无', '香蕉皮', '慢慢胶'][item] || '无'),
       trapped: sim.nativeTrap ? sim.trapped : undefined,
       spawn_protection: sim.nativeTrap ? sim.spawnProtection : undefined,
+      boundary_recovery: guard?.sim === sim ? {version: QQTBoundaryRecovery.VERSION,
+        last_decision: loadedModel.lastDeploymentDecision, events: recoveryEvents} : undefined,
       team: sim.nPlayers > 2 ? sim.team : undefined,
       bot: [activeBot, ...extraBots.slice(2)].map((bot) => (bot && bot.bot && bot.bot.lastDecision
         ? `${bot.bot.lastDecision.mode} / ${bot.bot.lastDecision.reason}` : undefined)).filter(Boolean).join(' | ') || undefined,
