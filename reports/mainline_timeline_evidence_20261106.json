@@ -1,0 +1,1684 @@
+{
+  "schema": "mainline-timeline-evidence-v1",
+  "date": "2026-11-06",
+  "sources": {
+    "strong_original": {
+      "archive_path": "<EXTERNAL_RUN_ARCHIVE>/runs/cc_train_20261105/eval_strong_v1/points/L2_S05g_u019302__seats01.json",
+      "sha256": "607bcb6b41defe1b49a6b8f7eb2d8543b87bd1b7e98f2d3753cfc244e66c61fe"
+    },
+    "strong_retest": {
+      "archive_path": "<EXTERNAL_RUN_ARCHIVE>/runs/cc_train_20261105/eval_strong_v1/retest_v1/RETEST.json",
+      "sha256": "c53545f6abcf9492352a599b9fb5265b76ffdd639aef68e633968fb6273c3d78"
+    },
+    "retest_protocol": {
+      "archive_path": "<EXTERNAL_RUN_ARCHIVE>/runs/cc_train_20261105/eval_strong_v1/retest_v1/PROTOCOL.json",
+      "sha256": "f9b18bc031c7c059cfcc9349ea09c3591b1990754aca83f2833e723fd5cf0c6b"
+    },
+    "g_protocol": {
+      "archive_path": "<EXTERNAL_RUN_ARCHIVE>/runs/combat_regions_independent_20261104/training/protocols/G_REGIONS_V2_c000.json",
+      "sha256": "9c9212efe2eb062ab99ad9a422c014d7f8317f165c302c41032f55a9e381c4c6"
+    },
+    "g05_protocol": {
+      "archive_path": "<EXTERNAL_RUN_ARCHIVE>/runs/cc_train_20261105/training/protocols/CC_LEAGUE2_L2_S05g_V1.json",
+      "sha256": "5fe3616d8c1de4d92963cf6644f641ac270c73cacaab3079adbf1dd84f1d0165"
+    },
+    "i_protocol": {
+      "archive_path": "<EXTERNAL_RUN_ARCHIVE>/runs/cc_train_20261105/training/protocols/CC_LEAGUE2_L2_S05i_V1.json",
+      "sha256": "033c73bad83f63b37a2d59ce7a3b440f7a6f49ec0c3c74d45f7ec0a8c6a45a08"
+    },
+    "j_protocol": {
+      "archive_path": "<EXTERNAL_RUN_ARCHIVE>/runs/cc_train_20261105/training/protocols/CC_LEAGUE2_L2_S05j_V1.json",
+      "sha256": "c4e6f7c36461ec0670b1eadcbc06f1629b3774304203a69dc7f9c71122f20591"
+    },
+    "temperature": {
+      "archive_path": "<EXTERNAL_RUN_ARCHIVE>/runs/cc_train_20261105/eval_strong_v1/cx_temperature_20261106_v3/SUMMARY.json",
+      "sha256": "c3caf3f35b835a7aae8556a24cfebf9f895e78a70c1080353cf12e1aa2abeb7b"
+    },
+    "k1": {
+      "repository_path": "reports/publish_k1_u5282_20261101.md",
+      "sha256": "ec68b91f37c58c785fd3ac1e1e79b594d84a160c143de8ac4e42eebf387d0ac2"
+    },
+    "five_slots": {
+      "repository_path": "reports/web_model_promotion_20261104.md",
+      "sha256": "3a74085a6bd849ae50c5e4d64fbf9bdcb03ec860e2912cbabe52ef15bc8dc6d5"
+    },
+    "legacy": {
+      "repository_path": "reports/mainline_timeline_20261028.html",
+      "sha256": "ebfafb31f4ecb112b47aeeffef8654996ba1d1a0085ffcc65df1f4eed6eaa591"
+    },
+    "early_league_matrix": {
+      "archive_path": "<EXTERNAL_RUN_ARCHIVE>/runs/cc_train_20261105/eval_strong_v1/MATRIX.md",
+      "sha256": "81f20f65d78778416952b37d4c35d537ff9572649c6223285be975ffbf4b7277"
+    }
+  },
+  "strong_original": {
+    "G_frozen": {
+      "greedy": {
+        "wins": 50,
+        "losses": 18,
+        "draws": 20,
+        "score": 0.6818181818181818,
+        "deaths": 37,
+        "self_deaths": 23,
+        "causal_kills": 29,
+        "placed": 5388,
+        "zero_placement_games": 0,
+        "opposite_rate": 0.26868765060617034,
+        "acquisitions": 70,
+        "deliveries": 40,
+        "carry_failures": 0,
+        "item_pickups": 817,
+        "opp_self_deaths": 9
+      },
+      "categorical": {
+        "wins": 38,
+        "losses": 43,
+        "draws": 7,
+        "score": 0.4715909090909091,
+        "deaths": 63,
+        "self_deaths": 39,
+        "causal_kills": 31,
+        "placed": 7293,
+        "zero_placement_games": 0,
+        "opposite_rate": 0.14183140871352462,
+        "acquisitions": 70,
+        "deliveries": 40,
+        "carry_failures": 5,
+        "item_pickups": 766,
+        "opp_self_deaths": 12
+      }
+    },
+    "selection_key_vs_G_frozen": [
+      27,
+      80,
+      60,
+      -62
+    ]
+  },
+  "strong_retest": {
+    "status": "STRONG_RETEST_V1",
+    "protocol_sha256": "f9b18bc031c7c059cfcc9349ea09c3591b1990754aca83f2833e723fd5cf0c6b",
+    "rule": "PASS iff, on the retest sample only: score(greedy) > .500 + SE(greedy) and score(categorical) > .386 + SE(categorical), score = (W + D/2)/n over both seats (n = 176 per mode), SE = sd(per-game score)/sqrt(n); and net wins (W-L) and deliveries, each summed over both seats and both modes, >= those of G_frozen self-play on the same retest seeds. Reference .500/.386 = G_frozen two-seat self-play of cc_strong_eval_v1 (greedy self-play is .500 by symmetry). Seed-clustered SE is reported as a supplement only; merged (original + retest) scores and SE are reported, not used for the verdict.",
+    "results": {
+      "G_frozen": {
+        "greedy": {
+          "retest": {
+            "n": 176,
+            "wins": 52,
+            "losses": 52,
+            "draws": 72,
+            "score": 0.5,
+            "se": 0.029054360157398824,
+            "se_seed_cluster": 0.0,
+            "net": 0,
+            "deliveries": 39,
+            "self_deaths": 18,
+            "causal_kills": 27,
+            "deaths": 51
+          },
+          "original": {
+            "n": 88,
+            "wins": 25,
+            "losses": 25,
+            "draws": 38,
+            "score": 0.5,
+            "se": 0.04040676148970224,
+            "se_seed_cluster": 0.0,
+            "net": 0,
+            "deliveries": 22,
+            "self_deaths": 11,
+            "causal_kills": 14,
+            "deaths": 28
+          },
+          "merged": {
+            "n": 264,
+            "wins": 77,
+            "losses": 77,
+            "draws": 110,
+            "score": 0.5,
+            "se": 0.023547810222745522,
+            "se_seed_cluster": 0.0,
+            "net": 0,
+            "deliveries": 61,
+            "self_deaths": 29,
+            "causal_kills": 41,
+            "deaths": 79
+          }
+        },
+        "categorical": {
+          "retest": {
+            "n": 176,
+            "wins": 82,
+            "losses": 74,
+            "draws": 20,
+            "score": 0.5227272727272727,
+            "se": 0.035542680995854566,
+            "se_seed_cluster": 0.033475816405750855,
+            "net": 8,
+            "deliveries": 79,
+            "self_deaths": 64,
+            "causal_kills": 57,
+            "deaths": 115
+          },
+          "original": {
+            "n": 88,
+            "wins": 28,
+            "losses": 48,
+            "draws": 12,
+            "score": 0.38636363636363635,
+            "se": 0.04830409751170839,
+            "se_seed_cluster": 0.050404380524056026,
+            "net": -20,
+            "deliveries": 27,
+            "self_deaths": 33,
+            "causal_kills": 28,
+            "deaths": 74
+          },
+          "merged": {
+            "n": 264,
+            "wins": 110,
+            "losses": 122,
+            "draws": 32,
+            "score": 0.4772727272727273,
+            "se": 0.028868420572572762,
+            "se_seed_cluster": 0.02838450242878437,
+            "net": -12,
+            "deliveries": 106,
+            "self_deaths": 97,
+            "causal_kills": 85,
+            "deaths": 189
+          }
+        }
+      },
+      "L2_S05g_u019302": {
+        "greedy": {
+          "retest": {
+            "n": 176,
+            "wins": 95,
+            "losses": 44,
+            "draws": 37,
+            "score": 0.6448863636363636,
+            "se": 0.031753616077580225,
+            "se_seed_cluster": 0.03516121785905337,
+            "net": 51,
+            "deliveries": 69,
+            "self_deaths": 29,
+            "causal_kills": 45,
+            "deaths": 67
+          },
+          "original": {
+            "n": 88,
+            "wins": 50,
+            "losses": 18,
+            "draws": 20,
+            "score": 0.6818181818181818,
+            "se": 0.04290111149085925,
+            "se_seed_cluster": 0.043288784840260615,
+            "net": 32,
+            "deliveries": 40,
+            "self_deaths": 23,
+            "causal_kills": 29,
+            "deaths": 37
+          },
+          "merged": {
+            "n": 264,
+            "wins": 145,
+            "losses": 62,
+            "draws": 57,
+            "score": 0.6571969696969697,
+            "se": 0.025522065305448514,
+            "se_seed_cluster": 0.02747221471724658,
+            "net": 83,
+            "deliveries": 109,
+            "self_deaths": 52,
+            "causal_kills": 74,
+            "deaths": 104
+          }
+        },
+        "categorical": {
+          "retest": {
+            "n": 176,
+            "wins": 70,
+            "losses": 82,
+            "draws": 24,
+            "score": 0.4659090909090909,
+            "se": 0.03503034609563105,
+            "se_seed_cluster": 0.034329537520704896,
+            "net": -12,
+            "deliveries": 70,
+            "self_deaths": 87,
+            "causal_kills": 75,
+            "deaths": 130
+          },
+          "original": {
+            "n": 88,
+            "wins": 38,
+            "losses": 43,
+            "draws": 7,
+            "score": 0.4715909090909091,
+            "se": 0.051339142817707406,
+            "se_seed_cluster": 0.052182740358404936,
+            "net": -5,
+            "deliveries": 40,
+            "self_deaths": 39,
+            "causal_kills": 31,
+            "deaths": 63
+          },
+          "merged": {
+            "n": 264,
+            "wins": 108,
+            "losses": 125,
+            "draws": 31,
+            "score": 0.4678030303030303,
+            "se": 0.028896517514616124,
+            "se_seed_cluster": 0.0286318278893474,
+            "net": -17,
+            "deliveries": 110,
+            "self_deaths": 126,
+            "causal_kills": 106,
+            "deaths": 193
+          }
+        }
+      },
+      "L2_S05b_u019782": {
+        "greedy": {
+          "retest": {
+            "n": 176,
+            "wins": 87,
+            "losses": 48,
+            "draws": 41,
+            "score": 0.6107954545454546,
+            "se": 0.03202550152509535,
+            "se_seed_cluster": 0.032541357653995205,
+            "net": 39,
+            "deliveries": 60,
+            "self_deaths": 27,
+            "causal_kills": 44,
+            "deaths": 53
+          },
+          "original": {
+            "n": 88,
+            "wins": 48,
+            "losses": 25,
+            "draws": 15,
+            "score": 0.6306818181818182,
+            "se": 0.046770241304106425,
+            "se_seed_cluster": 0.046329774041255795,
+            "net": 23,
+            "deliveries": 39,
+            "self_deaths": 12,
+            "causal_kills": 29,
+            "deaths": 16
+          },
+          "merged": {
+            "n": 264,
+            "wins": 135,
+            "losses": 73,
+            "draws": 56,
+            "score": 0.6174242424242424,
+            "se": 0.026391412091252394,
+            "se_seed_cluster": 0.02653992431860715,
+            "net": 62,
+            "deliveries": 99,
+            "self_deaths": 39,
+            "causal_kills": 73,
+            "deaths": 69
+          }
+        },
+        "categorical": {
+          "retest": {
+            "n": 176,
+            "wins": 69,
+            "losses": 87,
+            "draws": 20,
+            "score": 0.44886363636363635,
+            "se": 0.03537359640062132,
+            "se_seed_cluster": 0.035262647826254316,
+            "net": -18,
+            "deliveries": 64,
+            "self_deaths": 65,
+            "causal_kills": 51,
+            "deaths": 108
+          },
+          "original": {
+            "n": 88,
+            "wins": 35,
+            "losses": 43,
+            "draws": 10,
+            "score": 0.45454545454545453,
+            "se": 0.050232195723692294,
+            "se_seed_cluster": 0.05408322471043828,
+            "net": -8,
+            "deliveries": 36,
+            "self_deaths": 34,
+            "causal_kills": 23,
+            "deaths": 56
+          },
+          "merged": {
+            "n": 264,
+            "wins": 104,
+            "losses": 130,
+            "draws": 30,
+            "score": 0.45075757575757575,
+            "se": 0.02886747566248389,
+            "se_seed_cluster": 0.029506430452200555,
+            "net": -26,
+            "deliveries": 100,
+            "self_deaths": 99,
+            "causal_kills": 74,
+            "deaths": 164
+          }
+        }
+      },
+      "L2_S05g_u019622": {
+        "greedy": {
+          "retest": {
+            "n": 176,
+            "wins": 79,
+            "losses": 72,
+            "draws": 25,
+            "score": 0.5198863636363636,
+            "se": 0.03497698581352836,
+            "se_seed_cluster": 0.03361822908804454,
+            "net": 7,
+            "deliveries": 60,
+            "self_deaths": 44,
+            "causal_kills": 33,
+            "deaths": 77
+          },
+          "original": {
+            "n": 88,
+            "wins": 48,
+            "losses": 28,
+            "draws": 12,
+            "score": 0.6136363636363636,
+            "se": 0.04830409751170839,
+            "se_seed_cluster": 0.04630546032977218,
+            "net": 20,
+            "deliveries": 37,
+            "self_deaths": 17,
+            "causal_kills": 25,
+            "deaths": 29
+          },
+          "merged": {
+            "n": 264,
+            "wins": 127,
+            "losses": 100,
+            "draws": 37,
+            "score": 0.5511363636363636,
+            "se": 0.02841485135745124,
+            "se_seed_cluster": 0.027384364101837425,
+            "net": 27,
+            "deliveries": 97,
+            "self_deaths": 61,
+            "causal_kills": 58,
+            "deaths": 106
+          }
+        },
+        "categorical": {
+          "retest": {
+            "n": 176,
+            "wins": 76,
+            "losses": 89,
+            "draws": 11,
+            "score": 0.4630681818181818,
+            "se": 0.03648961032605505,
+            "se_seed_cluster": 0.03580955006015284,
+            "net": -13,
+            "deliveries": 66,
+            "self_deaths": 78,
+            "causal_kills": 67,
+            "deaths": 112
+          },
+          "original": {
+            "n": 88,
+            "wins": 35,
+            "losses": 37,
+            "draws": 16,
+            "score": 0.48863636363636365,
+            "se": 0.048472805779751285,
+            "se_seed_cluster": 0.04594738109744261,
+            "net": -2,
+            "deliveries": 38,
+            "self_deaths": 31,
+            "causal_kills": 23,
+            "deaths": 57
+          },
+          "merged": {
+            "n": 264,
+            "wins": 111,
+            "losses": 126,
+            "draws": 27,
+            "score": 0.4715909090909091,
+            "se": 0.029159632869919783,
+            "se_seed_cluster": 0.028281578279301278,
+            "net": -15,
+            "deliveries": 104,
+            "self_deaths": 109,
+            "causal_kills": 90,
+            "deaths": 169
+          }
+        }
+      }
+    },
+    "verdict": {
+      "L2_S05g_u019302": {
+        "PASS": true,
+        "checks": {
+          "greedy": true,
+          "categorical": true,
+          "net": true,
+          "deliveries": true
+        },
+        "net": 39,
+        "deliveries": 139,
+        "thresholds": {
+          "greedy": 0.5317536160775802,
+          "categorical": 0.42103034609563106
+        }
+      },
+      "L2_S05b_u019782": {
+        "PASS": true,
+        "checks": {
+          "greedy": true,
+          "categorical": true,
+          "net": true,
+          "deliveries": true
+        },
+        "net": 21,
+        "deliveries": 124,
+        "thresholds": {
+          "greedy": 0.5320255015250953,
+          "categorical": 0.42137359640062133
+        }
+      },
+      "L2_S05g_u019622": {
+        "PASS": false,
+        "checks": {
+          "greedy": false,
+          "categorical": true,
+          "net": false,
+          "deliveries": true
+        },
+        "net": -6,
+        "deliveries": 126,
+        "thresholds": {
+          "greedy": 0.5349769858135284,
+          "categorical": 0.42248961032605503
+        }
+      }
+    },
+    "g_frozen_selfplay_retest": {
+      "net": 8,
+      "deliveries": 118
+    }
+  },
+  "retest_seed_range": [
+    2026612000,
+    2026612087
+  ],
+  "recipes": {
+    "g_protocol": {
+      "common": {
+        "bank_probability": 0.25,
+        "combat_kl": 0,
+        "dagger": 0,
+        "devices": 1,
+        "envs_per_device": 2048,
+        "epochs": 1,
+        "global_minibatch": 8192,
+        "rollout_ticks": 128
+      },
+      "arms": {
+        "G_REGIONS_V2_c000": {
+          "lr": 7.5e-05,
+          "entropy_coefficient": 0.005,
+          "combat_shaping": 0.0,
+          "curriculum_fraction": 0.0,
+          "opponent_weights": [
+            0.05,
+            0.2,
+            0.15,
+            0.15,
+            0.1,
+            0.05,
+            0.15,
+            0.1,
+            0.05
+          ],
+          "iter2_arm": "A3SR",
+          "fallback_policy_source": {
+            "checkpoint": "runs/bomb_threat_v1/formal/bt_slot01_c000024/u003680",
+            "policy_sha256": "cbe140bcabdf743a2321537013f54c1b02e87c037b39380bb01ec5a3a12ee2ce",
+            "update": 3680
+          },
+          "learner_seat_fraction": 0.5,
+          "r1_attack": true,
+          "r1_bank_fix": true,
+          "r1_arm": "ATTACK",
+          "line": "G",
+          "league_opponent_mix": {
+            "boundary": "every completed 40-update checkpoint",
+            "C_snapshots": {
+              "recent_submitted": 0.15,
+              "recent_ring": 0.1,
+              "fixed_history": 0.05
+            },
+            "G_snapshots": {
+              "current": 0.15,
+              "ring": 0.1,
+              "fixed_history": 0.05
+            },
+            "rule_bot": 0.4,
+            "missing_C_fallback": "start_empty_and_record_actual_exposure"
+          },
+          "league_mode": "comprehensive"
+        }
+      },
+      "seed": 2026548100,
+      "chunk_start_update": 18102,
+      "chunk_updates": 1280,
+      "curriculum": {
+        "natural_recipe": 0.7,
+        "regional": 0.3,
+        "clean_natural": 0.525,
+        "genuine_bank": 0.175,
+        "train_manifest": "runs/combat_regions_independent_20261104/train_starts.json",
+        "train_manifest_sha256": "61a01995864515add2a7de99c00c277449b6c0b25acefa32f2756e0587dbe312",
+        "source_episodes": "all source states/ledgers/RNG retained; course applied at actual resets only",
+        "no_cage_starts": true,
+        "native_regional_map": true,
+        "center_coverage": "unavailable",
+        "schema": "move5/ability3, unchanged G mode token; passive a3sr keys only",
+        "reward_changes": false,
+        "added_telemetry": [
+          "mr_distance",
+          "mr_heading",
+          "ca_last_tick",
+          "ca_eligible_age"
+        ]
+      },
+      "source_checkpoint": "runs/combat_regions_independent_20261104/parent/u018102"
+    },
+    "g05_protocol": {
+      "common": {
+        "bank_probability": 0.25,
+        "combat_kl": 0,
+        "dagger": 0,
+        "devices": 1,
+        "envs_per_device": 2048,
+        "epochs": 1,
+        "global_minibatch": 8192,
+        "rollout_ticks": 128
+      },
+      "arms": {
+        "L2_S05g": {
+          "lr": 7.5e-05,
+          "entropy_coefficient": 0.005,
+          "combat_shaping": 0.0,
+          "curriculum_fraction": 0.0,
+          "opponent_weights": [
+            0.0,
+            0.025,
+            0.05,
+            0.25,
+            0.2,
+            0.05,
+            0.275,
+            0.1,
+            0.05
+          ],
+          "iter2_arm": "A3SR",
+          "fallback_policy_source": {
+            "checkpoint": "runs/bomb_threat_v1/formal/bt_slot01_c000024/u003680",
+            "policy_sha256": "cbe140bcabdf743a2321537013f54c1b02e87c037b39380bb01ec5a3a12ee2ce",
+            "update": 3680
+          },
+          "learner_seat_fraction": 0.5,
+          "r1_attack": true,
+          "r1_bank_fix": true,
+          "r1_arm": "ATTACK",
+          "line": "G",
+          "league_opponent_mix": {
+            "rule_bot": 0.15,
+            "G_snapshots": {
+              "current": 0.25,
+              "ring": 0.2,
+              "fixed_history": 0.05
+            },
+            "C_snapshots": {
+              "peer_latest": 0.2,
+              "peer_ring": 0.1,
+              "G_frozen": 0.05
+            },
+            "boundary": "every completed 40-update checkpoint"
+          },
+          "league_mode": "comprehensive",
+          "sil_coef": 0.5,
+          "league2": {
+            "version": "CC_LEAGUE_V2",
+            "slots": [
+              "rule",
+              "hunter",
+              "hard",
+              "Gcurrent",
+              "Gring(own last 4 saves)",
+              "Gfixed(inherited G fixed history)",
+              "Ccurrent=peer latest COMMITTED",
+              "Cring=peer previous saves",
+              "Cfixed=G_frozen u018262"
+            ],
+            "peers": {
+              "max_age_hours": 2,
+              "exclude": [],
+              "rotation": "live peers sorted by name, one per 40-update generation",
+              "fallback": "G_frozen u018262 in all C slots, recorded in C_history.jsonl"
+            },
+            "progression": {
+              "window": 80,
+              "threshold": 1.01,
+              "min_games": 400,
+              "pools": [
+                "Gcurrent",
+                "Gring",
+                "Ccurrent",
+                "Cring"
+              ],
+              "action": "bot weights (rule+hunter+hard) halved, freed mass to peer-latest; below .02 total -> 0",
+              "frozen": "weights fixed at L2_S05 V2 floor; progression disabled"
+            },
+            "sil_updater": "cc_sil_updater_v1",
+            "weights_since_update": 19142,
+            "weight_history": [
+              {
+                "update": 19142,
+                "weights": [
+                  0.0,
+                  0.05,
+                  0.1,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.2,
+                  0.1,
+                  0.05
+                ],
+                "previous": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.35,
+                  0.1,
+                  0.05
+                ],
+                "reason": "CC_LEAGUE_V2 start"
+              },
+              {
+                "update": 19142,
+                "weights": [
+                  0.0,
+                  0.025,
+                  0.05,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.275,
+                  0.1,
+                  0.05
+                ],
+                "previous": [
+                  0.0,
+                  0.05,
+                  0.1,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.2,
+                  0.1,
+                  0.05
+                ],
+                "reason": "second seed of L2_S05f bot floor test: weights/progression of CC_LEAGUE2_L2_S05f_V1.json (sha 6fe401ab432fd31cafafa4b1e6d69e3c5c66f535667d3ca150b7cce29eb80627)"
+              }
+            ],
+            "source": {
+              "arm": "L2_S05",
+              "protocol": "runs/cc_train_20261105/training/protocols/CC_LEAGUE2_L2_S05_V4.json",
+              "protocol_sha256": "f55a514b7767b1dc1f97f585e23f1fcaf72826f7d496bb77bbd5492c64a017eb"
+            }
+          }
+        }
+      },
+      "seed": 2026619142,
+      "chunk_start_update": 19142,
+      "chunk_updates": 1280,
+      "curriculum": {
+        "natural_recipe": 0.7,
+        "regional": 0.3,
+        "clean_natural": 0.525,
+        "genuine_bank": 0.175,
+        "train_manifest": "runs/combat_regions_independent_20261104/train_starts.json",
+        "train_manifest_sha256": "61a01995864515add2a7de99c00c277449b6c0b25acefa32f2756e0587dbe312",
+        "source_episodes": "all source states/ledgers/RNG retained; course applied at actual resets only",
+        "no_cage_starts": true,
+        "native_regional_map": true,
+        "center_coverage": "unavailable",
+        "schema": "move5/ability3, unchanged G mode token; passive a3sr keys only",
+        "reward_changes": false,
+        "added_telemetry": [
+          "mr_distance",
+          "mr_heading",
+          "ca_last_tick",
+          "ca_eligible_age"
+        ]
+      },
+      "source_checkpoint": "runs/cc_train_20261105/training/formal/L2_S05/u019142"
+    },
+    "i_protocol": {
+      "common": {
+        "bank_probability": 0.25,
+        "combat_kl": 0,
+        "dagger": 0,
+        "devices": 1,
+        "envs_per_device": 2048,
+        "epochs": 1,
+        "global_minibatch": 8192,
+        "rollout_ticks": 128
+      },
+      "arms": {
+        "L2_S05i": {
+          "lr": 7.5e-05,
+          "entropy_coefficient": 0.005,
+          "combat_shaping": 0.0,
+          "curriculum_fraction": 0.0,
+          "opponent_weights": [
+            0.0,
+            0.025,
+            0.05,
+            0.25,
+            0.2,
+            0.05,
+            0.275,
+            0.1,
+            0.05
+          ],
+          "iter2_arm": "A3SR",
+          "fallback_policy_source": {
+            "checkpoint": "runs/bomb_threat_v1/formal/bt_slot01_c000024/u003680",
+            "policy_sha256": "cbe140bcabdf743a2321537013f54c1b02e87c037b39380bb01ec5a3a12ee2ce",
+            "update": 3680
+          },
+          "learner_seat_fraction": 0.5,
+          "r1_attack": true,
+          "r1_bank_fix": true,
+          "r1_arm": "ATTACK",
+          "line": "G",
+          "league_opponent_mix": {
+            "rule_bot": 0.15,
+            "G_snapshots": {
+              "current": 0.25,
+              "ring": 0.2,
+              "fixed_history": 0.05
+            },
+            "C_snapshots": {
+              "peer_latest": 0.2,
+              "peer_ring": 0.1,
+              "G_frozen": 0.05
+            },
+            "boundary": "every completed 40-update checkpoint"
+          },
+          "league_mode": "comprehensive",
+          "sil_coef": 0.5,
+          "league2": {
+            "version": "CC_LEAGUE_V2",
+            "slots": [
+              "rule",
+              "hunter",
+              "hard",
+              "Gcurrent",
+              "Gring(own last 4 saves)",
+              "Gfixed(inherited G fixed history)",
+              "Ccurrent=peer latest COMMITTED",
+              "Cring=peer previous saves",
+              "Cfixed=G_frozen u018262"
+            ],
+            "peers": {
+              "max_age_hours": 2,
+              "exclude": [],
+              "rotation": "live peers sorted by name, one per 40-update generation",
+              "fallback": "G_frozen u018262 in all C slots, recorded in C_history.jsonl"
+            },
+            "progression": {
+              "window": 80,
+              "threshold": 1.01,
+              "min_games": 400,
+              "pools": [
+                "Gcurrent",
+                "Gring",
+                "Ccurrent",
+                "Cring"
+              ],
+              "action": "bot weights (rule+hunter+hard) halved, freed mass to peer-latest; below .02 total -> 0",
+              "frozen": "weights fixed at L2_S05 V2 floor; progression disabled"
+            },
+            "sil_updater": "cc_sil_updater_v1",
+            "weights_since_update": 19302,
+            "weight_history": [
+              {
+                "update": 19302,
+                "weights": [
+                  0.0,
+                  0.05,
+                  0.1,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.2,
+                  0.1,
+                  0.05
+                ],
+                "previous": [
+                  0.0,
+                  0.025,
+                  0.05,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.275,
+                  0.1,
+                  0.05
+                ],
+                "reason": "CC_LEAGUE_V2 start"
+              },
+              {
+                "update": 19302,
+                "weights": [
+                  0.0,
+                  0.025,
+                  0.05,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.275,
+                  0.1,
+                  0.05
+                ],
+                "previous": [
+                  0.0,
+                  0.05,
+                  0.1,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.2,
+                  0.1,
+                  0.05
+                ],
+                "reason": "second re-seed of L2_S05g u019302: weights/progression of CC_LEAGUE2_L2_S05h_V1.json (sha c97e1e454017c831649500a5b709bc6ecd913b650004f95a5622f29d2c606e5c)"
+              }
+            ],
+            "source": {
+              "arm": "L2_S05g",
+              "protocol": "runs/cc_train_20261105/training/protocols/CC_LEAGUE2_L2_S05g_V1.json",
+              "protocol_sha256": "5fe3616d8c1de4d92963cf6644f641ac270c73cacaab3079adbf1dd84f1d0165"
+            }
+          }
+        }
+      },
+      "seed": 2026649302,
+      "chunk_start_update": 19302,
+      "chunk_updates": 1280,
+      "curriculum": {
+        "natural_recipe": 0.7,
+        "regional": 0.3,
+        "clean_natural": 0.525,
+        "genuine_bank": 0.175,
+        "train_manifest": "runs/combat_regions_independent_20261104/train_starts.json",
+        "train_manifest_sha256": "61a01995864515add2a7de99c00c277449b6c0b25acefa32f2756e0587dbe312",
+        "source_episodes": "all source states/ledgers/RNG retained; course applied at actual resets only",
+        "no_cage_starts": true,
+        "native_regional_map": true,
+        "center_coverage": "unavailable",
+        "schema": "move5/ability3, unchanged G mode token; passive a3sr keys only",
+        "reward_changes": false,
+        "added_telemetry": [
+          "mr_distance",
+          "mr_heading",
+          "ca_last_tick",
+          "ca_eligible_age"
+        ]
+      },
+      "source_checkpoint": "runs/cc_train_20261105/training/formal/L2_S05g/u019302"
+    },
+    "j_protocol": {
+      "common": {
+        "bank_probability": 0.25,
+        "combat_kl": 0,
+        "dagger": 0,
+        "devices": 1,
+        "envs_per_device": 2048,
+        "epochs": 1,
+        "global_minibatch": 8192,
+        "rollout_ticks": 128
+      },
+      "arms": {
+        "L2_S05j": {
+          "lr": 7.5e-05,
+          "entropy_coefficient": 0.005,
+          "combat_shaping": 0.0,
+          "curriculum_fraction": 0.0,
+          "opponent_weights": [
+            0.0,
+            0.025,
+            0.05,
+            0.25,
+            0.2,
+            0.05,
+            0.275,
+            0.1,
+            0.05
+          ],
+          "iter2_arm": "A3SR",
+          "fallback_policy_source": {
+            "checkpoint": "runs/bomb_threat_v1/formal/bt_slot01_c000024/u003680",
+            "policy_sha256": "cbe140bcabdf743a2321537013f54c1b02e87c037b39380bb01ec5a3a12ee2ce",
+            "update": 3680
+          },
+          "learner_seat_fraction": 0.5,
+          "r1_attack": true,
+          "r1_bank_fix": true,
+          "r1_arm": "ATTACK",
+          "line": "G",
+          "league_opponent_mix": {
+            "rule_bot": 0.15,
+            "G_snapshots": {
+              "current": 0.25,
+              "ring": 0.2,
+              "fixed_history": 0.05
+            },
+            "C_snapshots": {
+              "peer_latest": 0.2,
+              "peer_ring": 0.1,
+              "G_frozen": 0.05
+            },
+            "boundary": "every completed 40-update checkpoint"
+          },
+          "league_mode": "comprehensive",
+          "sil_coef": 0.5,
+          "league2": {
+            "version": "CC_LEAGUE_V2",
+            "slots": [
+              "rule",
+              "hunter",
+              "hard",
+              "Gcurrent",
+              "Gring(own last 4 saves)",
+              "Gfixed(inherited G fixed history)",
+              "Ccurrent=peer latest COMMITTED",
+              "Cring=peer previous saves",
+              "Cfixed=G_frozen u018262"
+            ],
+            "peers": {
+              "max_age_hours": 2,
+              "exclude": [],
+              "rotation": "live peers sorted by name, one per 40-update generation",
+              "fallback": "G_frozen u018262 in all C slots, recorded in C_history.jsonl"
+            },
+            "progression": {
+              "window": 80,
+              "threshold": 1.01,
+              "min_games": 400,
+              "pools": [
+                "Gcurrent",
+                "Gring",
+                "Ccurrent",
+                "Cring"
+              ],
+              "action": "bot weights (rule+hunter+hard) halved, freed mass to peer-latest; below .02 total -> 0",
+              "frozen": "weights fixed at L2_S05 V2 floor; progression disabled"
+            },
+            "sil_updater": "cc_sil_updater_v1",
+            "weights_since_update": 19302,
+            "weight_history": [
+              {
+                "update": 19302,
+                "weights": [
+                  0.0,
+                  0.05,
+                  0.1,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.2,
+                  0.1,
+                  0.05
+                ],
+                "previous": [
+                  0.0,
+                  0.025,
+                  0.05,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.275,
+                  0.1,
+                  0.05
+                ],
+                "reason": "CC_LEAGUE_V2 start"
+              },
+              {
+                "update": 19302,
+                "weights": [
+                  0.0,
+                  0.025,
+                  0.05,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.275,
+                  0.1,
+                  0.05
+                ],
+                "previous": [
+                  0.0,
+                  0.05,
+                  0.1,
+                  0.25,
+                  0.2,
+                  0.05,
+                  0.2,
+                  0.1,
+                  0.05
+                ],
+                "reason": "third re-seed of L2_S05g u019302: weights/progression of CC_LEAGUE2_L2_S05h_V1.json (sha c97e1e454017c831649500a5b709bc6ecd913b650004f95a5622f29d2c606e5c)"
+              }
+            ],
+            "source": {
+              "arm": "L2_S05g",
+              "protocol": "runs/cc_train_20261105/training/protocols/CC_LEAGUE2_L2_S05g_V1.json",
+              "protocol_sha256": "5fe3616d8c1de4d92963cf6644f641ac270c73cacaab3079adbf1dd84f1d0165"
+            }
+          }
+        }
+      },
+      "seed": 2026659302,
+      "chunk_start_update": 19302,
+      "chunk_updates": 1280,
+      "curriculum": {
+        "natural_recipe": 0.7,
+        "regional": 0.3,
+        "clean_natural": 0.525,
+        "genuine_bank": 0.175,
+        "train_manifest": "runs/combat_regions_independent_20261104/train_starts.json",
+        "train_manifest_sha256": "61a01995864515add2a7de99c00c277449b6c0b25acefa32f2756e0587dbe312",
+        "source_episodes": "all source states/ledgers/RNG retained; course applied at actual resets only",
+        "no_cage_starts": true,
+        "native_regional_map": true,
+        "center_coverage": "unavailable",
+        "schema": "move5/ability3, unchanged G mode token; passive a3sr keys only",
+        "reward_changes": false,
+        "added_telemetry": [
+          "mr_distance",
+          "mr_heading",
+          "ca_last_tick",
+          "ca_eligible_age"
+        ]
+      },
+      "source_checkpoint": "runs/cc_train_20261105/training/formal/L2_S05g/u019302"
+    }
+  },
+  "temperature_groups": {
+    "G_frozen/greedy/P0": {
+      "games": 88,
+      "wins": 35,
+      "losses": 13,
+      "draws": 40,
+      "score": 0.625,
+      "causal_controls": 10,
+      "causal_kills": 10,
+      "self_deaths": 10,
+      "deaths": 18,
+      "acquisitions": 51,
+      "deliveries": 13,
+      "carry_failures": 5,
+      "item_pickups": 598,
+      "item_releases": 61,
+      "stationary_pct": 32.52550816952631,
+      "actionable_stationary_pct": 31.595829559667056,
+      "max_actionable_stationary": 2376,
+      "p95_actionable_longest": 2227.8999999999983,
+      "mean_actionable_longest": 427.3863636363636,
+      "c_ticks": 314,
+      "c_pct_actionable": 0.16927588735067065,
+      "max_c_run": 29,
+      "fountain_streak": 1.1136363636363635,
+      "strict_fountain_streak": 0.5454545454545454,
+      "ticks": 188077
+    },
+    "G_frozen/greedy/P1": {
+      "games": 88,
+      "wins": 13,
+      "losses": 35,
+      "draws": 40,
+      "score": 0.375,
+      "causal_controls": 9,
+      "causal_kills": 9,
+      "self_deaths": 18,
+      "deaths": 27,
+      "acquisitions": 33,
+      "deliveries": 10,
+      "carry_failures": 3,
+      "item_pickups": 427,
+      "item_releases": 47,
+      "stationary_pct": 32.164485822296186,
+      "actionable_stationary_pct": 30.879356684584707,
+      "max_actionable_stationary": 2389,
+      "p95_actionable_longest": 2384.0,
+      "mean_actionable_longest": 432.02272727272725,
+      "c_ticks": 2396,
+      "c_pct_actionable": 1.298335356337784,
+      "max_c_run": 772,
+      "fountain_streak": 1.2727272727272727,
+      "strict_fountain_streak": 0.6477272727272727,
+      "ticks": 188077
+    },
+    "G_frozen/tau03/P0": {
+      "games": 88,
+      "wins": 43,
+      "losses": 17,
+      "draws": 28,
+      "score": 0.6477272727272727,
+      "causal_controls": 16,
+      "causal_kills": 16,
+      "self_deaths": 13,
+      "deaths": 38,
+      "acquisitions": 73,
+      "deliveries": 35,
+      "carry_failures": 10,
+      "item_pickups": 844,
+      "item_releases": 130,
+      "stationary_pct": 22.418833855338242,
+      "actionable_stationary_pct": 19.901886314723384,
+      "max_actionable_stationary": 52,
+      "p95_actionable_longest": 39.64999999999999,
+      "mean_actionable_longest": 16.704545454545453,
+      "c_ticks": 835,
+      "c_pct_actionable": 0.5285479174579061,
+      "max_c_run": 12,
+      "fountain_streak": 1.6590909090909092,
+      "strict_fountain_streak": 0.6704545454545454,
+      "ticks": 163153
+    },
+    "G_frozen/tau03/P1": {
+      "games": 88,
+      "wins": 24,
+      "losses": 33,
+      "draws": 31,
+      "score": 0.44886363636363635,
+      "causal_controls": 25,
+      "causal_kills": 25,
+      "self_deaths": 21,
+      "deaths": 39,
+      "acquisitions": 51,
+      "deliveries": 26,
+      "carry_failures": 6,
+      "item_pickups": 704,
+      "item_releases": 146,
+      "stationary_pct": 31.30882714997254,
+      "actionable_stationary_pct": 29.016575306708432,
+      "max_actionable_stationary": 127,
+      "p95_actionable_longest": 92.29999999999998,
+      "mean_actionable_longest": 24.96590909090909,
+      "c_ticks": 2043,
+      "c_pct_actionable": 1.3332028191072827,
+      "max_c_run": 13,
+      "fountain_streak": 1.6136363636363635,
+      "strict_fountain_streak": 0.8522727272727273,
+      "ticks": 158409
+    },
+    "G_frozen/tau05/P0": {
+      "games": 88,
+      "wins": 50,
+      "losses": 20,
+      "draws": 18,
+      "score": 0.6704545454545454,
+      "causal_controls": 18,
+      "causal_kills": 18,
+      "self_deaths": 19,
+      "deaths": 43,
+      "acquisitions": 79,
+      "deliveries": 43,
+      "carry_failures": 14,
+      "item_pickups": 843,
+      "item_releases": 210,
+      "stationary_pct": 23.742019633418,
+      "actionable_stationary_pct": 20.616662615633178,
+      "max_actionable_stationary": 128,
+      "p95_actionable_longest": 23.0,
+      "mean_actionable_longest": 12.340909090909092,
+      "c_ticks": 966,
+      "c_pct_actionable": 0.6905820620237056,
+      "max_c_run": 8,
+      "fountain_streak": 1.6590909090909092,
+      "strict_fountain_streak": 0.7272727272727273,
+      "ticks": 145670
+    },
+    "G_frozen/tau05/P1": {
+      "games": 88,
+      "wins": 29,
+      "losses": 34,
+      "draws": 25,
+      "score": 0.4715909090909091,
+      "causal_controls": 34,
+      "causal_kills": 34,
+      "self_deaths": 25,
+      "deaths": 44,
+      "acquisitions": 57,
+      "deliveries": 32,
+      "carry_failures": 8,
+      "item_pickups": 798,
+      "item_releases": 169,
+      "stationary_pct": 30.693505730238027,
+      "actionable_stationary_pct": 27.82594174865365,
+      "max_actionable_stationary": 39,
+      "p95_actionable_longest": 34.64999999999999,
+      "mean_actionable_longest": 13.602272727272727,
+      "c_ticks": 1876,
+      "c_pct_actionable": 1.3052977275573676,
+      "max_c_run": 32,
+      "fountain_streak": 1.75,
+      "strict_fountain_streak": 0.8863636363636364,
+      "ticks": 149732
+    },
+    "G_frozen/tau07/P0": {
+      "games": 88,
+      "wins": 54,
+      "losses": 17,
+      "draws": 17,
+      "score": 0.7102272727272727,
+      "causal_controls": 12,
+      "causal_kills": 12,
+      "self_deaths": 21,
+      "deaths": 39,
+      "acquisitions": 78,
+      "deliveries": 42,
+      "carry_failures": 10,
+      "item_pickups": 828,
+      "item_releases": 248,
+      "stationary_pct": 23.562959845593465,
+      "actionable_stationary_pct": 20.567825247405263,
+      "max_actionable_stationary": 23,
+      "p95_actionable_longest": 16.299999999999983,
+      "mean_actionable_longest": 8.625,
+      "c_ticks": 1568,
+      "c_pct_actionable": 1.1827178373159546,
+      "max_c_run": 8,
+      "fountain_streak": 1.6022727272727273,
+      "strict_fountain_streak": 0.8409090909090909,
+      "ticks": 137818
+    },
+    "G_frozen/tau07/P1": {
+      "games": 88,
+      "wins": 25,
+      "losses": 45,
+      "draws": 18,
+      "score": 0.38636363636363635,
+      "causal_controls": 31,
+      "causal_kills": 31,
+      "self_deaths": 31,
+      "deaths": 58,
+      "acquisitions": 67,
+      "deliveries": 29,
+      "carry_failures": 14,
+      "item_pickups": 754,
+      "item_releases": 189,
+      "stationary_pct": 27.888302154543098,
+      "actionable_stationary_pct": 23.82573080861251,
+      "max_actionable_stationary": 82,
+      "p95_actionable_longest": 25.64999999999999,
+      "mean_actionable_longest": 11.329545454545455,
+      "c_ticks": 2318,
+      "c_pct_actionable": 1.6714497916095816,
+      "max_c_run": 11,
+      "fountain_streak": 1.7272727272727273,
+      "strict_fountain_streak": 0.9204545454545454,
+      "ticks": 146574
+    },
+    "G_frozen/tau10/P0": {
+      "games": 88,
+      "wins": 46,
+      "losses": 33,
+      "draws": 9,
+      "score": 0.5738636363636364,
+      "causal_controls": 21,
+      "causal_kills": 21,
+      "self_deaths": 27,
+      "deaths": 61,
+      "acquisitions": 87,
+      "deliveries": 49,
+      "carry_failures": 17,
+      "item_pickups": 875,
+      "item_releases": 325,
+      "stationary_pct": 23.764396280252516,
+      "actionable_stationary_pct": 19.08178806387288,
+      "max_actionable_stationary": 29,
+      "p95_actionable_longest": 16.0,
+      "mean_actionable_longest": 8.295454545454545,
+      "c_ticks": 1863,
+      "c_pct_actionable": 1.4625759550314812,
+      "max_c_run": 7,
+      "fountain_streak": 1.8068181818181819,
+      "strict_fountain_streak": 0.9772727272727273,
+      "ticks": 135278
+    },
+    "G_frozen/tau10/P1": {
+      "games": 88,
+      "wins": 24,
+      "losses": 56,
+      "draws": 8,
+      "score": 0.3181818181818182,
+      "causal_controls": 34,
+      "causal_kills": 34,
+      "self_deaths": 38,
+      "deaths": 67,
+      "acquisitions": 71,
+      "deliveries": 29,
+      "carry_failures": 16,
+      "item_pickups": 745,
+      "item_releases": 268,
+      "stationary_pct": 27.54295002520939,
+      "actionable_stationary_pct": 22.025931928687196,
+      "max_actionable_stationary": 24,
+      "p95_actionable_longest": 14.649999999999991,
+      "mean_actionable_longest": 7.943181818181818,
+      "c_ticks": 2125,
+      "c_pct_actionable": 1.7220421393841168,
+      "max_c_run": 7,
+      "fountain_streak": 1.7840909090909092,
+      "strict_fountain_streak": 1.0909090909090908,
+      "ticks": 132887
+    },
+    "L2_S05g_u019302/greedy/P0": {
+      "games": 88,
+      "wins": 42,
+      "losses": 25,
+      "draws": 21,
+      "score": 0.5965909090909091,
+      "causal_controls": 20,
+      "causal_kills": 20,
+      "self_deaths": 17,
+      "deaths": 29,
+      "acquisitions": 70,
+      "deliveries": 30,
+      "carry_failures": 5,
+      "item_pickups": 739,
+      "item_releases": 107,
+      "stationary_pct": 47.91831596433624,
+      "actionable_stationary_pct": 46.59251271400804,
+      "max_actionable_stationary": 2187,
+      "p95_actionable_longest": 1913.3499999999992,
+      "mean_actionable_longest": 404.46590909090907,
+      "c_ticks": 4605,
+      "c_pct_actionable": 3.065340682163112,
+      "max_c_run": 1340,
+      "fountain_streak": 1.5454545454545454,
+      "strict_fountain_streak": 0.875,
+      "ticks": 154106
+    },
+    "L2_S05g_u019302/greedy/P1": {
+      "games": 88,
+      "wins": 40,
+      "losses": 29,
+      "draws": 19,
+      "score": 0.5625,
+      "causal_controls": 21,
+      "causal_kills": 21,
+      "self_deaths": 21,
+      "deaths": 43,
+      "acquisitions": 64,
+      "deliveries": 37,
+      "carry_failures": 1,
+      "item_pickups": 752,
+      "item_releases": 141,
+      "stationary_pct": 45.586917431515076,
+      "actionable_stationary_pct": 43.74397964438251,
+      "max_actionable_stationary": 2347,
+      "p95_actionable_longest": 1845.9499999999996,
+      "mean_actionable_longest": 494.29545454545456,
+      "c_ticks": 3757,
+      "c_pct_actionable": 2.276073062127041,
+      "max_c_run": 945,
+      "fountain_streak": 1.625,
+      "strict_fountain_streak": 0.9431818181818182,
+      "ticks": 170731
+    },
+    "L2_S05g_u019302/tau03/P0": {
+      "games": 88,
+      "wins": 59,
+      "losses": 19,
+      "draws": 10,
+      "score": 0.7272727272727273,
+      "causal_controls": 19,
+      "causal_kills": 19,
+      "self_deaths": 16,
+      "deaths": 32,
+      "acquisitions": 87,
+      "deliveries": 48,
+      "carry_failures": 5,
+      "item_pickups": 811,
+      "item_releases": 200,
+      "stationary_pct": 27.904375495004793,
+      "actionable_stationary_pct": 25.661934892119838,
+      "max_actionable_stationary": 63,
+      "p95_actionable_longest": 28.299999999999983,
+      "mean_actionable_longest": 15.0,
+      "c_ticks": 1655,
+      "c_pct_actionable": 1.1859293601714045,
+      "max_c_run": 55,
+      "fountain_streak": 1.75,
+      "strict_fountain_streak": 1.0,
+      "ticks": 143938
+    },
+    "L2_S05g_u019302/tau03/P1": {
+      "games": 88,
+      "wins": 40,
+      "losses": 40,
+      "draws": 8,
+      "score": 0.5,
+      "causal_controls": 35,
+      "causal_kills": 35,
+      "self_deaths": 33,
+      "deaths": 50,
+      "acquisitions": 69,
+      "deliveries": 35,
+      "carry_failures": 4,
+      "item_pickups": 768,
+      "item_releases": 164,
+      "stationary_pct": 31.24148372445117,
+      "actionable_stationary_pct": 27.66413629251898,
+      "max_actionable_stationary": 340,
+      "p95_actionable_longest": 130.49999999999991,
+      "mean_actionable_longest": 25.71590909090909,
+      "c_ticks": 1652,
+      "c_pct_actionable": 1.196615866025381,
+      "max_c_run": 13,
+      "fountain_streak": 1.7954545454545454,
+      "strict_fountain_streak": 1.0340909090909092,
+      "ticks": 145310
+    },
+    "L2_S05g_u019302/tau05/P0": {
+      "games": 88,
+      "wins": 47,
+      "losses": 34,
+      "draws": 7,
+      "score": 0.5738636363636364,
+      "causal_controls": 26,
+      "causal_kills": 25,
+      "self_deaths": 25,
+      "deaths": 44,
+      "acquisitions": 81,
+      "deliveries": 42,
+      "carry_failures": 4,
+      "item_pickups": 757,
+      "item_releases": 182,
+      "stationary_pct": 27.88861796284571,
+      "actionable_stationary_pct": 24.88488966253018,
+      "max_actionable_stationary": 30,
+      "p95_actionable_longest": 23.64999999999999,
+      "mean_actionable_longest": 11.477272727272727,
+      "c_ticks": 1508,
+      "c_pct_actionable": 1.0584535908810153,
+      "max_c_run": 10,
+      "fountain_streak": 1.8977272727272727,
+      "strict_fountain_streak": 1.0681818181818181,
+      "ticks": 148462
+    },
+    "L2_S05g_u019302/tau05/P1": {
+      "games": 88,
+      "wins": 31,
+      "losses": 43,
+      "draws": 14,
+      "score": 0.4318181818181818,
+      "causal_controls": 34,
+      "causal_kills": 34,
+      "self_deaths": 45,
+      "deaths": 66,
+      "acquisitions": 70,
+      "deliveries": 29,
+      "carry_failures": 7,
+      "item_pickups": 846,
+      "item_releases": 219,
+      "stationary_pct": 31.07279590907874,
+      "actionable_stationary_pct": 26.442860920715017,
+      "max_actionable_stationary": 49,
+      "p95_actionable_longest": 27.299999999999983,
+      "mean_actionable_longest": 13.625,
+      "c_ticks": 2194,
+      "c_pct_actionable": 1.5681173300551057,
+      "max_c_run": 11,
+      "fountain_streak": 1.9772727272727273,
+      "strict_fountain_streak": 1.0909090909090908,
+      "ticks": 149404
+    },
+    "L2_S05g_u019302/tau07/P0": {
+      "games": 88,
+      "wins": 42,
+      "losses": 36,
+      "draws": 10,
+      "score": 0.5340909090909091,
+      "causal_controls": 28,
+      "causal_kills": 28,
+      "self_deaths": 30,
+      "deaths": 50,
+      "acquisitions": 76,
+      "deliveries": 39,
+      "carry_failures": 8,
+      "item_pickups": 720,
+      "item_releases": 203,
+      "stationary_pct": 28.53576203455433,
+      "actionable_stationary_pct": 24.890680460734284,
+      "max_actionable_stationary": 24,
+      "p95_actionable_longest": 19.0,
+      "mean_actionable_longest": 9.079545454545455,
+      "c_ticks": 1001,
+      "c_pct_actionable": 0.7774696895558093,
+      "max_c_run": 8,
+      "fountain_streak": 1.8636363636363635,
+      "strict_fountain_streak": 0.9545454545454546,
+      "ticks": 135381
+    },
+    "L2_S05g_u019302/tau07/P1": {
+      "games": 88,
+      "wins": 30,
+      "losses": 45,
+      "draws": 13,
+      "score": 0.4147727272727273,
+      "causal_controls": 31,
+      "causal_kills": 31,
+      "self_deaths": 34,
+      "deaths": 60,
+      "acquisitions": 68,
+      "deliveries": 30,
+      "carry_failures": 9,
+      "item_pickups": 769,
+      "item_releases": 235,
+      "stationary_pct": 29.96984505203075,
+      "actionable_stationary_pct": 25.917455703507386,
+      "max_actionable_stationary": 38,
+      "p95_actionable_longest": 25.0,
+      "mean_actionable_longest": 11.079545454545455,
+      "c_ticks": 2720,
+      "c_pct_actionable": 1.9378602318307792,
+      "max_c_run": 9,
+      "fountain_streak": 1.8295454545454546,
+      "strict_fountain_streak": 1.2272727272727273,
+      "ticks": 148566
+    },
+    "L2_S05g_u019302/tau10/P0": {
+      "games": 88,
+      "wins": 38,
+      "losses": 44,
+      "draws": 6,
+      "score": 0.4659090909090909,
+      "causal_controls": 29,
+      "causal_kills": 29,
+      "self_deaths": 35,
+      "deaths": 58,
+      "acquisitions": 73,
+      "deliveries": 38,
+      "carry_failures": 7,
+      "item_pickups": 701,
+      "item_releases": 272,
+      "stationary_pct": 28.007283815910224,
+      "actionable_stationary_pct": 23.868466925594056,
+      "max_actionable_stationary": 26,
+      "p95_actionable_longest": 17.0,
+      "mean_actionable_longest": 8.113636363636363,
+      "c_ticks": 600,
+      "c_pct_actionable": 0.45872962475916695,
+      "max_c_run": 7,
+      "fountain_streak": 1.6363636363636365,
+      "strict_fountain_streak": 0.9772727272727273,
+      "ticks": 138389
+    },
+    "L2_S05g_u019302/tau10/P1": {
+      "games": 88,
+      "wins": 26,
+      "losses": 55,
+      "draws": 7,
+      "score": 0.3352272727272727,
+      "causal_controls": 26,
+      "causal_kills": 26,
+      "self_deaths": 36,
+      "deaths": 61,
+      "acquisitions": 59,
+      "deliveries": 27,
+      "carry_failures": 5,
+      "item_pickups": 684,
+      "item_releases": 259,
+      "stationary_pct": 30.21612269434914,
+      "actionable_stationary_pct": 25.670396299537444,
+      "max_actionable_stationary": 26,
+      "p95_actionable_longest": 19.0,
+      "mean_actionable_longest": 9.227272727272727,
+      "c_ticks": 2208,
+      "c_pct_actionable": 1.7252156519564945,
+      "max_c_run": 10,
+      "fountain_streak": 1.8181818181818181,
+      "strict_fountain_streak": 1.1022727272727273,
+      "ticks": 136404
+    }
+  },
+  "league_early": {
+    "model": "S05_sil_u018662",
+    "opponent": "G_frozen",
+    "seat": 0,
+    "mode": "greedy",
+    "wins": 19,
+    "losses": 8,
+    "draws": 17,
+    "score": 0.625
+  }
+}

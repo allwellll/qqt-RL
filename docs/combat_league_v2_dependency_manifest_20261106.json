@@ -1,0 +1,2748 @@
+{
+  "schema": "combat-training-source-closure-v1",
+  "roots": [
+    "model_diagnostics.py",
+    "model_entry.py",
+    "model_evaluation.js",
+    "model_evaluation.py",
+    "model_training.py",
+    "scripts/audit_combat_training_path.py",
+    "scripts/cc_attack_reward_v2.py",
+    "scripts/cc_attack_reward_v2_test.py",
+    "scripts/cc_fountain_reward_v1.py",
+    "scripts/cc_fountain_reward_v1_test.py",
+    "scripts/cc_league2_lib.py",
+    "scripts/cc_league2_prepare.py",
+    "scripts/cc_league2_prepare_g.py",
+    "scripts/cc_league2_resize_source.py",
+    "scripts/cc_league2_rewatch.sh",
+    "scripts/cc_league2_sp_lib.py",
+    "scripts/cc_league2_sp_lib_test.py",
+    "scripts/cc_league2_status.py",
+    "scripts/cc_league2_strong_table.py",
+    "scripts/cc_league2_strong_watch.py",
+    "scripts/cc_league2_supervise.py",
+    "scripts/cc_league2_supervise_atk.py",
+    "scripts/cc_league2_supervise_ftn.py",
+    "scripts/cc_league2_supervise_sp.py",
+    "scripts/cc_league2_supervise_variant.py",
+    "scripts/cc_league2_switch.sh",
+    "scripts/cc_league2_switch_v2.sh",
+    "scripts/cc_league2_switch_v3.sh",
+    "scripts/cc_league2_train.py",
+    "scripts/cc_league2_train_atk.py",
+    "scripts/cc_league2_train_ftn.py",
+    "scripts/cc_league2_train_sp.py",
+    "scripts/cc_league2_train_variant.py",
+    "scripts/cc_league2_variant_next.py",
+    "scripts/cc_prepare_v1.py",
+    "scripts/cc_prepare_v2.py",
+    "scripts/cc_prepare_v3.py",
+    "scripts/cc_prepare_v4.py",
+    "scripts/cc_reward_import_hook.py",
+    "scripts/cc_reward_import_hook_test.py",
+    "scripts/cc_sil_updater_v1.py",
+    "scripts/cc_sil_updater_v2.py",
+    "scripts/cc_sil_updater_v3.py",
+    "scripts/cc_sil_updater_v4.py",
+    "scripts/cc_snapshots_v1.py",
+    "scripts/cc_strong_eval_v1.py",
+    "scripts/cc_strong_metrics_fountain_v1.js",
+    "scripts/cc_strong_metrics_fountain_v1.py",
+    "scripts/cc_strong_retest_v1.py",
+    "scripts/cc_supervise_v1.py",
+    "scripts/cc_supervise_v2.py",
+    "scripts/cc_supervise_v3.py",
+    "scripts/cc_train_v1.py",
+    "scripts/cc_train_v2.py",
+    "scripts/cc_train_v3.py",
+    "scripts/cc_train_v4.py",
+    "scripts/combat_regions_completion_v2.py",
+    "scripts/combat_regions_cpu_v2.py",
+    "scripts/combat_regions_eval_v2.js",
+    "scripts/combat_regions_evaluation_v2.py",
+    "scripts/combat_regions_freeze_v2.py",
+    "scripts/combat_regions_metrics_v2.js",
+    "scripts/combat_regions_mixed_v2.py",
+    "scripts/combat_regions_owner_v2.py",
+    "scripts/combat_regions_prepare_v2.py",
+    "scripts/combat_regions_receipt_v2.py",
+    "scripts/combat_regions_render_v2.py",
+    "scripts/combat_regions_replay_frames_v2.js",
+    "scripts/combat_regions_report_v2.py",
+    "scripts/combat_regions_restore_cpu_v2.py",
+    "scripts/combat_regions_snapshots_v2.py",
+    "scripts/combat_regions_starts_v2.py",
+    "scripts/combat_regions_train_v2.py",
+    "scripts/combat_specialist_g_league_train.py",
+    "scripts/combat_specialist_g_mixed.py",
+    "scripts/combat_specialist_g_owner.py",
+    "scripts/cx_fountain_continuation_v2.py",
+    "scripts/cx_ftn2_budget_owner_v1.py",
+    "scripts/cx_ftn2_budget_policy_test_v1.py",
+    "scripts/cx_ftn2_budget_policy_v1.py",
+    "scripts/cx_ftn2_collector_test_v1.py",
+    "scripts/cx_ftn2_monitor_v1.py",
+    "scripts/cx_ftn2_native_test_v1.py",
+    "scripts/cx_ftn2_prepare_v1.py",
+    "scripts/cx_ftn2_reward_test_v1.py",
+    "scripts/cx_ftn2_reward_v1.py",
+    "scripts/cx_ftn2_switch_v1.py",
+    "scripts/cx_ftn2_train_v1.py",
+    "scripts/cx_idle_diagnosis_v1.py",
+    "scripts/cx_idle_observer_adapter_v1.js",
+    "scripts/cx_idle_replay_test_v1.js",
+    "scripts/cx_idle_replay_v1.js",
+    "scripts/cx_strong_holdout_v1.py",
+    "scripts/cx_strong_watch_v1.py",
+    "scripts/cx_temperature_eval_v1.py",
+    "scripts/cx_temperature_inference_v1.js",
+    "scripts/cx_temperature_report_v1.py",
+    "scripts/cx_temperature_test_v1.js",
+    "scripts/cx_temperature_worker_v1.js",
+    "scripts/cx_web_idle_adapter_v1.js",
+    "scripts/cx_web_temperature_acceptance_v1.py",
+    "scripts/cx_web_temperature_eval_v1.py",
+    "scripts/cx_web_temperature_setup_v1.js",
+    "scripts/cx_web_temperature_worker_v1.js",
+    "scripts/model_sampling_v1.js",
+    "scripts/multi_region_g_cpu_validation_v1.py",
+    "scripts/multi_region_g_mixed_v1.py",
+    "scripts/multi_region_g_train_v1.py",
+    "tests/test_combat_league_training_path.py"
+  ],
+  "optional_dependencies": {
+    "web/sim.js": [
+      "web/time_astar_ai.js"
+    ],
+    "web/sim-stock-window-v1.js": [
+      "web/time_astar_ai.js"
+    ],
+    "web/sim-bun-native-v2.js": [
+      "web/time_astar_ai.js"
+    ],
+    "web/review-sim/stock-legacy-20261028.js": [
+      "web/review-sim/time_astar_ai.js"
+    ],
+    "web/review-sim/bun-native-v2-20261104.js": [
+      "web/review-sim/time_astar_ai.js"
+    ]
+  },
+  "files": {
+    "jax_bomb/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "dependencies": []
+    },
+    "jax_bomb/attack_trace.py": {
+      "sha256": "94e9c5f44b5fd6fbf14be6513b05e0b9401d40b97df70a24d5eb76a636221fc0",
+      "dependencies": [
+        "scripts/eval_web_hunter.js",
+        "web/sim.js"
+      ]
+    },
+    "jax_bomb/bun_env.py": {
+      "sha256": "c200998f1c5ffe4125f618f3811da2efb87ba83712bd5cf228b34539af0f9a29",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_env.py",
+        "jax_bomb/levels.py",
+        "scripts/je10_causal_init.py"
+      ]
+    },
+    "jax_bomb/bun_jax_bots.py": {
+      "sha256": "fc9ac9a8a3bb2537a54fe84b67dee51ee98fe6b8183e09e642611baf8c15cdc8",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_env.py",
+        "web/bun_hunter_bot.js"
+      ]
+    },
+    "jax_bomb/bun_safety.py": {
+      "sha256": "d2bee3f1b0d620503865b3faf1d0fa7fdc538b5f2577360ac1b23c8f133964bd",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_env.py"
+      ]
+    },
+    "jax_bomb/jax_env.py": {
+      "sha256": "b0a8acbbcac13ff0479cb47eb8327752d84e02e1e9079e0d5106e704ac7c3f6f",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/levels.py"
+      ]
+    },
+    "jax_bomb/jax_net.py": {
+      "sha256": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+      "dependencies": [
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_env.py"
+      ]
+    },
+    "jax_bomb/jax_train.py": {
+      "sha256": "7e040bb1f4aa2c2db16ba0acdca493b9cdee8f9e0111b900d384c5f1efc98bd6",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_env.py",
+        "jax_bomb/jax_net.py",
+        "jax_bomb/levels.py",
+        "jax_bomb/platform.py"
+      ]
+    },
+    "jax_bomb/je05_bun_env.py": {
+      "sha256": "a63696a0a51ca4b8ed874a748967c6316a372ec5d0b8231f1bd8beeb8c7af5b9",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_env.py",
+        "jax_bomb/je05_core_env.py",
+        "jax_bomb/levels.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je10_causal_init.py"
+      ]
+    },
+    "jax_bomb/je05_core_env.py": {
+      "sha256": "6b664f01706022f432bd29865fa7f85e8fd9b6a2cac0beb3d128cb9f9c6f0a37",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/levels.py"
+      ]
+    },
+    "jax_bomb/je05_core_env_r1_items.py": {
+      "sha256": "4591c138dbfc0520148f63fa68dccf40caeb09f6e196e29e0c86f2a2a33c82a2",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/levels.py"
+      ]
+    },
+    "jax_bomb/je07_bun_env.py": {
+      "sha256": "457a196796cbc5f328796f05bd4337a14f777f5de89a9ee61bb536b62c262bad",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_env.py",
+        "jax_bomb/je05_core_env.py",
+        "jax_bomb/levels.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je10_causal_init.py"
+      ]
+    },
+    "jax_bomb/je07_bun_env_r1_items.py": {
+      "sha256": "f95aa6cefd09858665074d968be926a77c87f3279303bd05fbfa193f1c2d4e52",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_env.py",
+        "jax_bomb/je05_core_env_r1_items.py",
+        "jax_bomb/je07_native_items.py",
+        "jax_bomb/levels.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je10_causal_init.py"
+      ]
+    },
+    "jax_bomb/je07_native_items.py": {
+      "sha256": "0245aad1b6b9577ff5396e57f23d7f0a2e393d4edf1acdaf860975129c35219b",
+      "dependencies": []
+    },
+    "jax_bomb/levels.py": {
+      "sha256": "dd7932e33500383055c24b5d9e4f183b9da85b061821db82f8b217975f864444",
+      "dependencies": []
+    },
+    "jax_bomb/platform.py": {
+      "sha256": "17e30b702523152264bbb70c1c7a3db1475f00d4ef731090da63045fb090e80e",
+      "dependencies": []
+    },
+    "model_diagnostics.py": {
+      "sha256": "ecf83fc85cb056ff51cd5019537ea333f8a235031a8fda26623f9be3cc4897e1",
+      "dependencies": []
+    },
+    "model_entry.py": {
+      "sha256": "e05344c5a2e95ec7f716c97ed2891dafc502b00c92223242792889e93be925e4",
+      "dependencies": []
+    },
+    "model_evaluation.js": {
+      "sha256": "46f6e8a60d5d237fff3ff9ef4679426189b705e6dfd456ea3c59656e87dbd11f",
+      "dependencies": []
+    },
+    "model_evaluation.py": {
+      "sha256": "b706744f2a236ff2989bb69d86c79e6f50c9578a84fec5f39561d65fcb67b265",
+      "dependencies": []
+    },
+    "model_training.py": {
+      "sha256": "0f9b55c55e9167ba79458bb9095060dc28a201be271ec31d686f7cb99f4e0ff1",
+      "dependencies": []
+    },
+    "scripts/audit_combat_training_path.py": {
+      "sha256": "6033daf3a51fc23ff8a39b837782a0fad3526a7c967c051ac8125873a5ddf034",
+      "dependencies": [
+        "web/review-sim/bun-native-v2-20261104.js",
+        "web/review-sim/stock-legacy-20261028.js",
+        "web/sim-bun-native-v2.js",
+        "web/sim-stock-window-v1.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/bomb_threat_a3sr_spawn.py": {
+      "sha256": "35157682496dd5380258ff2acad8fc7a3a4eec228b6ffb56b9b9eb47bc4e592c",
+      "dependencies": [
+        "scripts/carrier_mechanism_engine.py"
+      ]
+    },
+    "scripts/bomb_threat_collector_diagnostics_v1.py": {
+      "sha256": "dd4ed716239be5659c89d2a80deb88e5e3b176a37282b37beb6f93fa7ed692a4",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "scripts/bomb_threat_passive_diagnostics.py",
+        "scripts/bomb_threat_reward.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/combat_item_engine.py",
+        "scripts/combat_mix_opponents.py",
+        "scripts/combat_mix_shaping.py"
+      ]
+    },
+    "scripts/bomb_threat_eval.js": {
+      "sha256": "6bb566ade3279dfaae2666ca12234ab0625286b277168fc0a4b8b21f334b710c",
+      "dependencies": [
+        "scripts/bomb_threat_eval_adapter.js",
+        "scripts/bun_spawn_side.js",
+        "scripts/dagger_rl_route.js",
+        "scripts/expert_validation_js_eval.js",
+        "scripts/je10_control_funnel.js",
+        "web/sim-stock-window-v1.js"
+      ]
+    },
+    "scripts/bomb_threat_eval_adapter.js": {
+      "sha256": "40cad76464fe665cf11441d299cc2c527f833532a2652011b26e6f33897524ca",
+      "dependencies": []
+    },
+    "scripts/bomb_threat_iter2_recipe.py": {
+      "sha256": "f45360f1c9e138d316a61878cdff3a575f20373145ba9bf0f02d27259805e29b",
+      "dependencies": []
+    },
+    "scripts/bomb_threat_passive_diagnostics.py": {
+      "sha256": "a81a1f66b153c72e42c214ebb2c91e22eec4ceb4c944b85131ec6af5a91b48b6",
+      "dependencies": []
+    },
+    "scripts/bomb_threat_r1_item_progress.py": {
+      "sha256": "f21c0c8f5aa6d10540e5f78370fce29a65e73241d793aa1db573a49a7e188638",
+      "dependencies": []
+    },
+    "scripts/bomb_threat_r1_items_runtime.py": {
+      "sha256": "ba7c8353c5946e20427ac17ac2818f63dd26402c4fc320524b46237a72757735",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je05_core_env_r1_items.py",
+        "jax_bomb/je07_bun_env_r1_items.py",
+        "scripts/carrier_mechanism_engine.py"
+      ]
+    },
+    "scripts/bomb_threat_r1_progress_collector.py": {
+      "sha256": "1c5d05a4a563ff349bd4f54c6f0074b3af8a0b9128f458530f6bf2c4f4770b35",
+      "dependencies": [
+        "scripts/bomb_threat_a3sr_spawn.py",
+        "scripts/bomb_threat_r1_item_progress.py",
+        "scripts/bomb_threat_r1_progress_reward.py",
+        "scripts/bomb_threat_seat5050_collector.py",
+        "scripts/bomb_threat_seat5050_reward.py",
+        "scripts/carrier_mechanism_analysis.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/bomb_threat_r1_progress_reward.py": {
+      "sha256": "41cc6c81190aabf0416d2de25d93a5dd94d1a5cf395af6426a4f9bff093ee1b9",
+      "dependencies": [
+        "jax_bomb/bun_safety.py",
+        "scripts/bomb_threat_r1_item_progress.py",
+        "scripts/bomb_threat_r1_reward.py",
+        "scripts/bomb_threat_reward.py",
+        "scripts/bomb_threat_seat5050_reward.py",
+        "scripts/carrier_mechanism_engine.py"
+      ]
+    },
+    "scripts/bomb_threat_r1_reward.py": {
+      "sha256": "948bdd2f21cd5c0d2c47824ff62bde0882cf4bbe45a6b69d5785a0925874eccd",
+      "dependencies": [
+        "jax_bomb/bun_safety.py",
+        "scripts/bomb_threat_r1_reward.py",
+        "scripts/bomb_threat_reward.py",
+        "scripts/bomb_threat_seat5050_reward.py",
+        "scripts/carrier_mechanism_engine.py"
+      ]
+    },
+    "scripts/bomb_threat_reward.py": {
+      "sha256": "2328e3ec58efcc75c1fb3fb181bf3ca24ca1bba9bff3226f74e1742f3c395b4a",
+      "dependencies": [
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/combat_mix_shaping.py"
+      ]
+    },
+    "scripts/bomb_threat_runtime.py": {
+      "sha256": "c46cda88466d9b997ea8298a69c9cd8e447487cc76a40ae46a0af5344d9bfb9d",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py"
+      ]
+    },
+    "scripts/bomb_threat_seat5050_collector.py": {
+      "sha256": "80a5ad71787d07d8d805ccb26301e20d8d0c0e01bd4970f0a5261a5e6db16bba",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/bun_safety.py",
+        "scripts/bomb_threat_collector_diagnostics_v1.py",
+        "scripts/bomb_threat_passive_diagnostics.py",
+        "scripts/bomb_threat_seat5050_reward.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/combat_item_engine.py",
+        "scripts/combat_mix_opponents.py",
+        "scripts/je09_stage_g_combat.py",
+        "scripts/je10_route_oracle.py"
+      ]
+    },
+    "scripts/bomb_threat_seat5050_reward.py": {
+      "sha256": "ff55012e964bcb2f100c021c8b80767d89fb73de382c51716683f7de29afb378",
+      "dependencies": [
+        "scripts/bomb_threat_iter2_recipe.py",
+        "scripts/bomb_threat_reward.py",
+        "scripts/carrier_mechanism_engine.py"
+      ]
+    },
+    "scripts/bun_native_v2_custody_collector.py": {
+      "sha256": "4ca09c8b211fb2f3cdb62bb1864a57b2d7b3e3316a0c6d049a3552750d98b960",
+      "dependencies": [
+        "scripts/bomb_threat_r1_progress_collector.py",
+        "scripts/bomb_threat_r1_progress_reward.py",
+        "scripts/bun_native_v2_custody_reward.py"
+      ]
+    },
+    "scripts/bun_native_v2_custody_fast.py": {
+      "sha256": "1bee17e4c8ad4649d94546e0155463320a78fa592d6be33009c50e4efff15eee",
+      "dependencies": [
+        "scripts/bun_native_v2_custody_reward.py",
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/bun_native_v2_custody_fast2.py": {
+      "sha256": "ec35f26b012cb1f80a0677aef0664bea957681515486426915e83a68c09a0a95",
+      "dependencies": [
+        "scripts/bun_native_v2_custody_fast.py",
+        "scripts/custody_distance_candidate.py",
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/bun_native_v2_custody_reward.py": {
+      "sha256": "0d013422fe8cdb53ace03d0c7632d2f6da1420f16bfe88e430cc040626effc6f",
+      "dependencies": [
+        "scripts/bun_native_v2_reward.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je10_control_credit.py",
+        "scripts/je10_ops.py"
+      ]
+    },
+    "scripts/bun_native_v2_eval.js": {
+      "sha256": "304defd618fce66b2bb64fba516b5bebf8814a09bec5624224177e4e1988758e",
+      "dependencies": [
+        "scripts/bomb_threat_eval.js",
+        "scripts/bun_native_v2_metrics.js",
+        "scripts/eval_web_hunter.js",
+        "scripts/expert_validation_js_eval.js",
+        "web/bot_contract.js",
+        "web/bun_coop_hunter_bot.js",
+        "web/sim-bun-native-v2.js",
+        "web/sim-stock-window-v1.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/bun_native_v2_metrics.js": {
+      "sha256": "2269622c185cf0e06a0979053a668a4215208e146162e5e51702945fee4eb856",
+      "dependencies": []
+    },
+    "scripts/bun_native_v2_reward.py": {
+      "sha256": "294aa911384f35978d05ae3a6b118968dfb1075e7d77ddb0127cddecfaf509bd",
+      "dependencies": [
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/je09_stage_f_reward.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h_reward.py",
+        "scripts/je10_control_credit.py",
+        "scripts/je10_ops.py",
+        "scripts/prestock_training_state.py",
+        "scripts/route_objective_consistency.py"
+      ]
+    },
+    "scripts/bun_native_v2_runtime.py": {
+      "sha256": "6df060602a0e7af509a2971ff11ef369f44735441bb36d53a9f65fa445fa7847",
+      "dependencies": [
+        "scripts/bomb_threat_r1_items_runtime.py",
+        "scripts/bomb_threat_runtime.py",
+        "scripts/carrier_mechanism_engine.py"
+      ]
+    },
+    "scripts/bun_spawn_side.js": {
+      "sha256": "3ba49b66adf6aa98def8b9785dd25ae6a6803134923ae48ca81c2f8017b20677",
+      "dependencies": []
+    },
+    "scripts/bun_spawn_side.py": {
+      "sha256": "7b1b34edd9be755ae4818377e3bb984ebde756966fa613bd9c93afd2ea3e99ca",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env_r1_items.py",
+        "scripts/bomb_threat_a3sr_spawn.py"
+      ]
+    },
+    "scripts/carrier_mechanism_analysis.py": {
+      "sha256": "42f1663a45432387dbc0f60f4e9ccf3e1d14cfad56da4ffe537d36ed4baaea5d",
+      "dependencies": [
+        "scripts/carrier_mechanism_analysis.py",
+        "scripts/carrier_mechanism_bank_eval.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/carrier_mechanism_run.py",
+        "scripts/carrier_mechanism_stats.py",
+        "scripts/carrier_mechanism_train.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/population_run_state.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/carrier_mechanism_bank_eval.py": {
+      "sha256": "2720228551aa77e8cbd2e46884d5715cb741e58f2e2271195c023b5894e5db98",
+      "dependencies": [
+        "scripts/carrier_mechanism_analysis.py",
+        "scripts/carrier_mechanism_run.py",
+        "scripts/carrier_mechanism_stats.py",
+        "scripts/population_run_state.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/carrier_mechanism_engine.py": {
+      "sha256": "600e10a2c53f9de3b28a4f9cf020c9ecd594f17d23371735ccab3d8feaf7929e",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je03_bun_stage1_20261011.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je10_ops.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/prestock_training_state.py",
+        "scripts/retention_phase_conditioning.py"
+      ]
+    },
+    "scripts/carrier_mechanism_run.py": {
+      "sha256": "a937ec813614cb73d4306d0203b4c77f7e86dadf4af71b1c50fa575bd5f0d856",
+      "dependencies": [
+        "scripts/carrier_mechanism_analysis.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/carrier_mechanism_run.py",
+        "scripts/carrier_mechanism_stats.py",
+        "scripts/population_run_state.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/carrier_mechanism_stats.py": {
+      "sha256": "b1c1acb62069b0482c82cf1bf57889ddca61bf79b44358695f7318f2de84e350",
+      "dependencies": []
+    },
+    "scripts/carrier_mechanism_train.py": {
+      "sha256": "75d980927b4a0b6e8aaec45ebd13914f4ec228ceec6876618f4e4347659c2f59",
+      "dependencies": [
+        "scripts/carrier_mechanism_analysis.py",
+        "scripts/carrier_mechanism_run.py",
+        "scripts/carrier_mechanism_train.py",
+        "scripts/population_run_state.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/carrier_route_fields.py": {
+      "sha256": "e716fc115b07f00877cd00b14d710077206dd05b29bfecc0bd753b2cfafc3c1b",
+      "dependencies": [
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/cc_attack_reward_v2.py": {
+      "sha256": "a64e54839b8bede56cd5dec4c1669ac440acbf2e541e4c91e32074c91a91a2df",
+      "dependencies": [
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cc_attack_reward_v2_test.py": {
+      "sha256": "0a7cd1c413ae7a71601612b84addaa2e8d66c0047926ab459ce8b544cea254f6",
+      "dependencies": [
+        "scripts/bun_native_v2_custody_reward.py",
+        "scripts/cc_attack_reward_v2.py",
+        "scripts/cc_attack_reward_v2_test.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cc_fixed_eval_v1.py": {
+      "sha256": "8e6126e881dd6cd0218762b58c200b1c9f52bc53def76d7d4521bc392ee257db",
+      "dependencies": [
+        "scripts/corner_counterplay_stage_report_v1.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py",
+        "scripts/r4_k4_export.py",
+        "scripts/resume_gpu67_eval_v1.js"
+      ]
+    },
+    "scripts/cc_fountain_reward_v1.py": {
+      "sha256": "2d8154256108956cf76adf4bf08202a5f02ec0d3225e43a513d29d57521efe52",
+      "dependencies": [
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cc_fountain_reward_v1_test.py": {
+      "sha256": "d1f61ba7cfe00a72649c79a4054f37eb8501e704d7883f9260d928a691c4cb6b",
+      "dependencies": [
+        "scripts/bun_native_v2_custody_reward.py",
+        "scripts/cc_fountain_reward_v1.py",
+        "scripts/cc_fountain_reward_v1_test.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cc_league2_lib.py": {
+      "sha256": "6641ff1195c003e0efda47430476ae2181dc6d9f53d271f18b48c4048e2e2f98",
+      "dependencies": [
+        "scripts/combat_specialist_snapshots.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_prepare.py": {
+      "sha256": "e2d964e147b00dda7f8855d8dc8f00d10b62da89886e43632178450c06903d25",
+      "dependencies": [
+        "scripts/cc_league2_lib.py",
+        "scripts/cc_league2_prepare.py",
+        "scripts/cc_league2_supervise.py",
+        "scripts/cc_league2_train.py",
+        "scripts/cc_sil_updater_v1.py",
+        "scripts/cc_sil_updater_v3.py",
+        "scripts/combat_regions_mixed_v2.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_prepare_g.py": {
+      "sha256": "23621bbe3bf9d3756946df018e0898520b89edd75d3a8a708ce8335756b57f73",
+      "dependencies": [
+        "scripts/cc_league2_lib.py",
+        "scripts/cc_league2_prepare.py",
+        "scripts/cc_league2_prepare_g.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_resize_source.py": {
+      "sha256": "a0ec2f9c81bb96e1aca455a92dbb8222fca66ba9f4c2ae958a4a30993d7ee741",
+      "dependencies": [
+        "scripts/cc_league2_resize_source.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_rewatch.sh": {
+      "sha256": "e91f049463b470bd3e6ea7bb8253846e8a3e18e1a186aa293acef4792f88a6d3",
+      "dependencies": [
+        "scripts/cc_league2_strong_watch.py",
+        "scripts/model_launch.py"
+      ]
+    },
+    "scripts/cc_league2_sp_lib.py": {
+      "sha256": "15abc76f6f87ddaa9d5a68b23e5b1c7976801ea48f8d7563b55e8574d9eaff04",
+      "dependencies": [
+        "scripts/cc_league2_lib.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_sp_lib_test.py": {
+      "sha256": "cdb0c9c51420e331f1184e645bbccf8b6344466a1b1e3df637bc2e1b968571cc",
+      "dependencies": [
+        "scripts/cc_league2_lib.py",
+        "scripts/cc_league2_sp_lib.py",
+        "scripts/cc_league2_sp_lib_test.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_status.py": {
+      "sha256": "226c8ff1047fab5caca1e8a0213564c8263476fbbc94ee76636fef1275acb395",
+      "dependencies": [
+        "scripts/cc_status_v1.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_strong_table.py": {
+      "sha256": "50e7aa398e7931c2b2995278377bd7811812c697a0125a25307354a1f1cfc3f7",
+      "dependencies": [
+        "scripts/cc_league2_strong_table.py"
+      ]
+    },
+    "scripts/cc_league2_strong_watch.py": {
+      "sha256": "15765874fd2b607460e3ae04c652745333c89b342d9d96af89deaaab339d484e",
+      "dependencies": [
+        "scripts/cc_fixed_eval_v1.py",
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/model_launch.py"
+      ]
+    },
+    "scripts/cc_league2_supervise.py": {
+      "sha256": "3e575ac2f6278d5a55c4bfaa34fba305459a4d94f8ded707688b1bee85bbcf8d",
+      "dependencies": [
+        "scripts/cc_fixed_eval_v1.py",
+        "scripts/cc_league2_train.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_supervise_atk.py": {
+      "sha256": "9b528e83076b38252e26d5c94add5e48fbb1175adace9f7f68540e54a636fb0e",
+      "dependencies": [
+        "scripts/cc_league2_supervise.py",
+        "scripts/cc_league2_train_atk.py"
+      ]
+    },
+    "scripts/cc_league2_supervise_ftn.py": {
+      "sha256": "b06e62465e48429eae6203049699df809c4e514432b6f2f6b6f7b44c4abc2485",
+      "dependencies": [
+        "scripts/cc_league2_supervise.py",
+        "scripts/cc_league2_train_ftn.py"
+      ]
+    },
+    "scripts/cc_league2_supervise_sp.py": {
+      "sha256": "baaa2b6c75629032be357744c05c192a57994eae8a483b0a8166b0204812d0bd",
+      "dependencies": [
+        "scripts/cc_league2_supervise.py",
+        "scripts/cc_league2_train_sp.py"
+      ]
+    },
+    "scripts/cc_league2_supervise_variant.py": {
+      "sha256": "3eb9aa5575b89d0bc2faaf8119e78b0407674a961f2ff77ab55fcaefd7fb6f62",
+      "dependencies": [
+        "scripts/cc_league2_supervise.py",
+        "scripts/cc_league2_train_variant.py"
+      ]
+    },
+    "scripts/cc_league2_switch.sh": {
+      "sha256": "32b02b8fdb6b1aedc7cc0fc25b26b0c42c8a169e3a73e254dff23e2509745cd9",
+      "dependencies": [
+        "scripts/cc_league2_prepare.py",
+        "scripts/cc_league2_supervise.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_switch_v2.sh": {
+      "sha256": "446346d7331cd29fcd897757dd1f6c6fb02e043285b38b80da4005194dd7ee4b",
+      "dependencies": [
+        "scripts/model_launch.py"
+      ]
+    },
+    "scripts/cc_league2_switch_v3.sh": {
+      "sha256": "c0f0d2f082f15ce3fd1024fc64dcefa2f3bf5387f38f0bd5aeef28eabbfd4d34",
+      "dependencies": [
+        "scripts/cc_league2_variant_next.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_train.py": {
+      "sha256": "8c141954b131ddbc9354fe3d6ca1e106a8b40bed62c09ce7eb277749ca125514",
+      "dependencies": [
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_league2_train_atk.py": {
+      "sha256": "2c000fad3835762e74857e056b819e2a9265d043c16fcfd03d6b12412538ac75",
+      "dependencies": [
+        "scripts/cc_attack_reward_v2.py",
+        "scripts/cc_league2_train.py"
+      ]
+    },
+    "scripts/cc_league2_train_ftn.py": {
+      "sha256": "35beea75963f51498aaf74bb2c39de8952dda1fb63cf90561f994b0ae78f6402",
+      "dependencies": [
+        "scripts/cc_fountain_reward_v1.py",
+        "scripts/cc_league2_train.py"
+      ]
+    },
+    "scripts/cc_league2_train_sp.py": {
+      "sha256": "6b73f766928fe9203b39d46f3755ecd0246e2648b364510916282ffbd10e230b",
+      "dependencies": [
+        "scripts/cc_league2_lib.py",
+        "scripts/cc_league2_sp_lib.py",
+        "scripts/cc_league2_train.py"
+      ]
+    },
+    "scripts/cc_league2_train_variant.py": {
+      "sha256": "317d2d53af47bdeeb67d7188f2c220c6ff4e54103a89c3fe85f4290f84d28b9e",
+      "dependencies": [
+        "scripts/cc_attack_reward_v2.py",
+        "scripts/cc_fountain_reward_v1.py",
+        "scripts/cc_league2_train.py",
+        "scripts/cc_reward_import_hook.py"
+      ]
+    },
+    "scripts/cc_league2_variant_next.py": {
+      "sha256": "8e9c13012f829c3026ecd03b8097f9bff1042a29347e18d2752e4624be8ac436",
+      "dependencies": [
+        "scripts/cc_attack_reward_v2.py",
+        "scripts/cc_fountain_reward_v1.py",
+        "scripts/cc_league2_supervise_variant.py",
+        "scripts/cc_league2_train_variant.py",
+        "scripts/cc_league2_variant_next.py",
+        "scripts/cc_reward_import_hook.py",
+        "scripts/cc_reward_import_hook_test.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cc_prepare_v1.py": {
+      "sha256": "8ffbdfa9757c2dd19b9bfd5b22f2d0c595a0706a9fc3bfe36c03d7c7e4360b6a",
+      "dependencies": [
+        "scripts/cc_sil_updater_v1.py",
+        "scripts/cc_snapshots_v1.py",
+        "scripts/cc_train_v1.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_prepare_v2.py": {
+      "sha256": "2dca1e5bef1d4a2cf6e7fbe6cca09b341005d6f4010be17e41ef39c716a816d3",
+      "dependencies": [
+        "scripts/cc_sil_updater_v2.py",
+        "scripts/cc_snapshots_v1.py",
+        "scripts/cc_supervise_v2.py",
+        "scripts/cc_train_v2.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_prepare_v3.py": {
+      "sha256": "1c8aabdee381bdcfba4bb38f4a78f4f30a7c0b723cb99fc05286cb620dcf31f6",
+      "dependencies": [
+        "scripts/cc_sil_updater_v2.py",
+        "scripts/cc_sil_updater_v3.py",
+        "scripts/cc_snapshots_v1.py",
+        "scripts/cc_supervise_v3.py",
+        "scripts/cc_train_v3.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_prepare_v4.py": {
+      "sha256": "d697460128c15db6d15d575469ed16d079d7c64f65fd7be4924801ef32b6dc96",
+      "dependencies": [
+        "scripts/cc_prepare_v4.py",
+        "scripts/cc_sil_updater_v2.py",
+        "scripts/cc_sil_updater_v4.py",
+        "scripts/cc_snapshots_v1.py",
+        "scripts/cc_supervise_v3.py",
+        "scripts/cc_train_v4.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_reward_import_hook.py": {
+      "sha256": "eb71f15ff0d30f647b27b72159a99ff5f852349a7f92a0e4547dff7268fc2aae",
+      "dependencies": [
+        "scripts/cc_reward_import_hook.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cc_reward_import_hook_test.py": {
+      "sha256": "5ff42779a6ea4d707e8c88418a3c83fe9f6ae139f582e1f9ce7d5c1874d28b03",
+      "dependencies": [
+        "scripts/cc_attack_reward_v2.py",
+        "scripts/cc_fountain_reward_v1.py",
+        "scripts/cc_reward_import_hook.py",
+        "scripts/cc_reward_import_hook_test.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cc_sil_updater_v1.py": {
+      "sha256": "a158276c439e7e93fc6f5671b2233262277383a69b3e11e0f6807e99e16646a8",
+      "dependencies": [
+        "jax_bomb/jax_train.py",
+        "scripts/r4_k4_collector.py",
+        "scripts/r4_k4_mixed.py",
+        "scripts/r4_k4_observation.py"
+      ]
+    },
+    "scripts/cc_sil_updater_v2.py": {
+      "sha256": "24bab83ba41a7ad3907f97169d581ba69a2c07010d612faf4d37d969e1d41d1e",
+      "dependencies": [
+        "jax_bomb/jax_train.py",
+        "scripts/cc_sil_updater_v1.py",
+        "scripts/r4_k4_collector.py",
+        "scripts/r4_k4_observation.py"
+      ]
+    },
+    "scripts/cc_sil_updater_v3.py": {
+      "sha256": "544bbdc157cec48d1f74a1e3f5a6d8ca4c6707f636fba15346f57b5a12f5f072",
+      "dependencies": [
+        "jax_bomb/jax_train.py",
+        "scripts/cc_sil_updater_v1.py",
+        "scripts/r4_k4_collector.py",
+        "scripts/r4_k4_observation.py"
+      ]
+    },
+    "scripts/cc_sil_updater_v4.py": {
+      "sha256": "41b2064994d79b38208ee698120b392b2b9bbb5b5f2fcec03f79c20a9c3ee286",
+      "dependencies": [
+        "jax_bomb/jax_train.py",
+        "scripts/cc_sil_updater_v1.py",
+        "scripts/cc_sil_updater_v2.py",
+        "scripts/r4_k4_collector.py",
+        "scripts/r4_k4_observation.py"
+      ]
+    },
+    "scripts/cc_snapshots_v1.py": {
+      "sha256": "8922c7665e1a71910339027ae9c57138464a1b712c01dffa1636ca027df889f4",
+      "dependencies": [
+        "scripts/combat_specialist_snapshots.py"
+      ]
+    },
+    "scripts/cc_status_v1.py": {
+      "sha256": "af08ce36540b9f052b3c8005dff7e6be8105ad9927ca61dd89ac65b03257f20e",
+      "dependencies": [
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_strong_eval_v1.py": {
+      "sha256": "aec8f3d6f623407e31e92f248c5208581f2b43e57735b0e7597341b297ba6300",
+      "dependencies": [
+        "scripts/cc_fixed_eval_v1.py",
+        "scripts/cc_strong_metrics_fountain_v1.py",
+        "scripts/corner_counterplay_stage_report_v1.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py",
+        "scripts/r4_k4_export.py",
+        "scripts/resume_gpu67_eval_v1.js"
+      ]
+    },
+    "scripts/cc_strong_metrics_fountain_v1.js": {
+      "sha256": "ab5cfa59bb23c2b8e2dec3149ea91e66359d70df6f6de0fec6fb99c1d7ad8553",
+      "dependencies": [
+        "scripts/cc_strong_metrics_fountain_v1.js",
+        "scripts/cc_strong_metrics_fountain_v1.py",
+        "scripts/native_eval_simulator_v1.js",
+        "scripts/resume_gpu67_eval_v1.js",
+        "web/five-item-slots-v1.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/cc_strong_metrics_fountain_v1.py": {
+      "sha256": "0393eeefc50d3fd22a083056657ee26bb8f4222046ec22b5026c5ff76bf78e0f",
+      "dependencies": [
+        "scripts/cc_fixed_eval_v1.py",
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/cc_strong_metrics_fountain_v1.js",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/cc_strong_retest_v1.py": {
+      "sha256": "ff4a1bef4ac6b8f0917e8a91f9ef3c21224e9863a8e85c9ddb7ca8bc653f331a",
+      "dependencies": [
+        "scripts/cc_fixed_eval_v1.py",
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/corner_counterplay_stage_report_v1.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py",
+        "scripts/resume_gpu67_eval_v1.js"
+      ]
+    },
+    "scripts/cc_supervise_v1.py": {
+      "sha256": "50234b6974d8aee41b27056b32ad2c69a34456119f2575df0f6a284f6f38a86d",
+      "dependencies": [
+        "scripts/cc_fixed_eval_v1.py",
+        "scripts/cc_train_v1.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_supervise_v2.py": {
+      "sha256": "96fd96ada8f814db55af73433170f50c0bc61a147aaec818c1412d3dc10a377c",
+      "dependencies": [
+        "scripts/cc_fixed_eval_v1.py",
+        "scripts/cc_train_v2.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_supervise_v3.py": {
+      "sha256": "530643fe9a44589b281b2f9093ed86142e733c92bb9e79534d21e960bfb98edf",
+      "dependencies": [
+        "scripts/cc_fixed_eval_v1.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_train_v1.py": {
+      "sha256": "6c1a5cf9695aaca7bb59d45836a944272fd95822ab1b2c8b4813bcf744667681",
+      "dependencies": [
+        "scripts/cc_sil_updater_v1.py",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_train_v2.py": {
+      "sha256": "07d282178b2f4d52b53b058bc7889761198cfa75872f89793629dde1e488bacd",
+      "dependencies": [
+        "scripts/cc_sil_updater_v2.py",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_train_v3.py": {
+      "sha256": "9ebc5b8d263dd3170a4ad8b0becbb0c48f20a266ac16f5dbc2c0d64d141f46a5",
+      "dependencies": [
+        "scripts/cc_sil_updater_v3.py",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cc_train_v4.py": {
+      "sha256": "9968a0cabd4c1e39bf78620843c152d0669ccc30f1bfe59d8cf01efec103b9fa",
+      "dependencies": [
+        "scripts/cc_sil_updater_v4.py",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/combat_item_engine.py": {
+      "sha256": "805de99e70d709e27985708f996c7410eedc98952e531d0d17127230b0b5f55e",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/combat_item_events.py",
+        "scripts/je09_stage_g_combat.py",
+        "scripts/je10_route_oracle.py"
+      ]
+    },
+    "scripts/combat_item_events.py": {
+      "sha256": "e10e5e9377bf34e7f815eab19772b6b8caffeecf2ef13964f34ca818f5da6c7f",
+      "dependencies": []
+    },
+    "scripts/combat_item_metrics.js": {
+      "sha256": "87e6df627c938b59be5619650f323ab069640a98631a2973c68d54afcf4c6c11",
+      "dependencies": [
+        "scripts/je08_web_diagnostics.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/combat_mix_opponents.py": {
+      "sha256": "74f4d78ac3521553ebc64a5669e70389ea2fee6104f80f44398c060b18e6953f",
+      "dependencies": []
+    },
+    "scripts/combat_mix_shaping.py": {
+      "sha256": "5965f2e10228078764cff4129e6e38db19b136389047e1cc6a0992f75d00adaa",
+      "dependencies": []
+    },
+    "scripts/combat_regions_completion_v2.py": {
+      "sha256": "cd4dd6486903f74fd41538d72738bf81c252778e8af6cefac579c317a1b51706",
+      "dependencies": [
+        "scripts/combat_regions_report_v2.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/combat_regions_cpu_v2.py": {
+      "sha256": "fb5445923ab410892358a0c41da73df43da800d8dd1c408d83d6c0a7f8d39938",
+      "dependencies": [
+        "scripts/bomb_threat_a3sr_spawn.py",
+        "scripts/combat_regions_mixed_v2.py",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/population_run_state.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/combat_regions_eval_v2.js": {
+      "sha256": "bb15b3b0619932dea7493cdc5d736ed330ccccb5cc1fbe9c8377dfb229e400f8",
+      "dependencies": [
+        "scripts/combat_regions_metrics_v2.js",
+        "scripts/five_item_slots_eval.js",
+        "scripts/interceptor_primary_eval_defendcap4_v6.js",
+        "web/five-item-slots-review-v1.js",
+        "web/review_protocol.js"
+      ]
+    },
+    "scripts/combat_regions_evaluation_v2.py": {
+      "sha256": "8e8dc8b81b1f125cd46eca7a19172f1ef5ce63b67e7bcf5d3e6c293628c33977",
+      "dependencies": [
+        "scripts/bun_spawn_side.py",
+        "scripts/combat_regions_eval_v2.js",
+        "scripts/combat_regions_report_v2.py",
+        "scripts/population_run_state.py",
+        "scripts/r4_k4_export.py"
+      ]
+    },
+    "scripts/combat_regions_freeze_v2.py": {
+      "sha256": "4040286f0eb55c352c6f7277909fbabe22955affcfbf93f4c4eb06c7333b466a",
+      "dependencies": [
+        "scripts/combat_specialist_g7_source_metrics.js",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/combat_specialist_g_owner.py",
+        "scripts/interceptor_primary_eval_defendcap4_v6.js",
+        "scripts/multi_region_continuous_audit_v1.js",
+        "scripts/multi_region_eval_v1.js",
+        "scripts/multi_region_g_cpu_validation_v1.py",
+        "scripts/multi_region_g_mixed_v1.py",
+        "scripts/multi_region_g_train_v1.py",
+        "scripts/multi_region_natural_audit_v1.js",
+        "scripts/r4_combat_eval.js",
+        "scripts/r4_k4_export.py",
+        "web/five-item-slots-review-v1.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/combat_regions_metrics_v2.js": {
+      "sha256": "f20acbc50900a53249fabbf903e730686660f8f7e7174bba87ba8bc963ce58ec",
+      "dependencies": []
+    },
+    "scripts/combat_regions_mixed_v2.py": {
+      "sha256": "97a46e816242c7607ebc8f5092bd243af3ef3b6237c8041473d546c867cdefc7",
+      "dependencies": [
+        "scripts/combat_specialist_g_mixed.py",
+        "scripts/multi_region_combat_v1.py",
+        "scripts/r4_k4_collector.py"
+      ]
+    },
+    "scripts/combat_regions_owner_v2.py": {
+      "sha256": "41fd0a48689c71d7d4e533060e09844912480b77713e96a197887d7e747cf2cc",
+      "dependencies": [
+        "scripts/combat_regions_train_v2.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/combat_regions_prepare_v2.py": {
+      "sha256": "5846482c25b801b83d1d90057b8728dd8a31028fc6fc6550f0023159e0cb1bf4",
+      "dependencies": [
+        "scripts/combat_regions_mixed_v2.py",
+        "scripts/combat_regions_owner_v2.py",
+        "scripts/combat_regions_snapshots_v2.py",
+        "scripts/combat_regions_train_v2.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/combat_regions_receipt_v2.py": {
+      "sha256": "ccaac283f2d1b164f6334671a45647e7dc999494ea5fce22f9b2007afa5efd9e",
+      "dependencies": [
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/combat_regions_render_v2.py": {
+      "sha256": "ac11cad846bfbf32518212eb0bcdec518754e6a3016532b6d77af8b553057ffc",
+      "dependencies": []
+    },
+    "scripts/combat_regions_replay_frames_v2.js": {
+      "sha256": "312a8aba21ccf505eaa4b3017ca44c92b777d1cb4334e9831f94363c71d8440f",
+      "dependencies": [
+        "web/five-item-slots-v1.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/combat_regions_report_v2.py": {
+      "sha256": "88e0351bb948f8922c5e8ad9fd2094b6cdc770e1e3fcf6fe14290c1822442795",
+      "dependencies": [
+        "scripts/population_run_state.py",
+        "web/sim.js"
+      ]
+    },
+    "scripts/combat_regions_restore_cpu_v2.py": {
+      "sha256": "eeeca95a14bef5a9f4976e918544e186902ddd39993844a5d645473109f0e0fd",
+      "dependencies": [
+        "scripts/combat_regions_mixed_v2.py",
+        "scripts/combat_regions_restore_cpu_v2.py",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/population_run_state.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/combat_regions_snapshots_v2.py": {
+      "sha256": "0de4f73ca6f427921918c4982a6807ccdd736606ae801234d7a85339bc298404",
+      "dependencies": [
+        "scripts/combat_specialist_snapshots.py"
+      ]
+    },
+    "scripts/combat_regions_starts_v2.py": {
+      "sha256": "b2d8d5b9478f907a0fa70f2861589500e7fffcc41a99232e3b5e61f6ea359a21",
+      "dependencies": [
+        "scripts/bomb_threat_a3sr_spawn.py",
+        "scripts/multi_region_combat_v1.py"
+      ]
+    },
+    "scripts/combat_regions_train_v2.py": {
+      "sha256": "054543f9aa81195cc9a84418901647e4fa033bfe97b711e19f57ba76f1ced3d7",
+      "dependencies": [
+        "scripts/combat_specialist_g_league_train.py"
+      ]
+    },
+    "scripts/combat_specialist_episode_bun.py": {
+      "sha256": "9e8e0e03ab44565a1c7664b07a9eac9cd4145235f70d41776818aadc1fb8e88e",
+      "dependencies": []
+    },
+    "scripts/combat_specialist_g7_source_metrics.js": {
+      "sha256": "ca20730bdba09d1f2495cf43a4c1a7b071c31e883806fcce070033cd71ed67bd",
+      "dependencies": []
+    },
+    "scripts/combat_specialist_g_league_train.py": {
+      "sha256": "8977000ca60bcf5d9f1243c78efdd8b33a2bac10c69e099f826bce04132520cc",
+      "dependencies": [
+        "scripts/bomb_threat_r1_progress_reward.py",
+        "scripts/bun_native_v2_custody_fast2.py",
+        "scripts/bun_spawn_side.py",
+        "scripts/combat_item_engine.py",
+        "scripts/combat_specialist_g_mixed.py",
+        "scripts/combat_specialist_snapshots.py",
+        "scripts/population_run_state.py",
+        "scripts/ppo_scale_longrun_train.py",
+        "scripts/r3_items_collector.py",
+        "scripts/r3_items_runtime.py",
+        "scripts/r4_k4_compilation.py",
+        "scripts/r4_k4_observation.py",
+        "scripts/r4_k4_runtime.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/combat_specialist_g_mixed.py": {
+      "sha256": "706e1b64557533a3c2d30eaf56944a70c32fbed1b73dbb3c94433c63eb5f2d33",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env_r1_items.py",
+        "scripts/bun_native_v2_custody_collector.py",
+        "scripts/combat_specialist_episode_bun.py",
+        "scripts/r3_items_collector.py",
+        "scripts/r4_k4_collector.py",
+        "scripts/r4_k4_mixed.py"
+      ]
+    },
+    "scripts/combat_specialist_g_owner.py": {
+      "sha256": "b3efbd8813faf50e0b342f4c2bf0f78675019a81e13595abe0f3ff94c863a836",
+      "dependencies": [
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/combat_specialist_g_owner.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/combat_specialist_snapshots.py": {
+      "sha256": "17b1af4ae6dc3151046efb4d0a5582d0ecbaaf42117bd97f080fd9d48591394f",
+      "dependencies": [
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/continuous_route_metric.py": {
+      "sha256": "815fed3373fb04eaba4a36e2dc19542c01de488dfec7167ee76e089062a4361e",
+      "dependencies": [
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/corner_counterplay_stage_report_v1.py": {
+      "sha256": "272ea1c15ea7cacce75aefe30bd022750bc1238b9ebc747bb60dc63fa9faa03f",
+      "dependencies": [
+        "scripts/combat_regions_report_v2.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/custody_distance_candidate.py": {
+      "sha256": "08cb917d35db7226b05758c30b7095ddb4877a20f629ee677aabd5a20a8b1137",
+      "dependencies": [
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/cx_fountain_continuation_v2.py": {
+      "sha256": "00a6d7a5b92f9215b6d2b97a6046fc2126c49a0fe739267dd27423c1261b1321",
+      "dependencies": [
+        "scripts/cc_fountain_reward_v1.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cx_ftn2_budget_owner_v1.py": {
+      "sha256": "da21e062e95df125c1bcac610ba5218e6eeca1e4a761de5792863889441f3947",
+      "dependencies": [
+        "scripts/cx_ftn2_budget_policy_v1.py",
+        "scripts/cx_ftn2_switch_v1.py",
+        "scripts/cx_ftn2_train_v1.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_ftn2_budget_policy_test_v1.py": {
+      "sha256": "d01c321fca5d24c7faa0eae10e85f14902a75a296360cc64d6ae7b9e380c9e20",
+      "dependencies": [
+        "scripts/cx_ftn2_budget_policy_v1.py"
+      ]
+    },
+    "scripts/cx_ftn2_budget_policy_v1.py": {
+      "sha256": "c0a1d8ee63a219cfe8fe5a3c84d3a99f2565c94e5462365dc51c61172f474a8f",
+      "dependencies": []
+    },
+    "scripts/cx_ftn2_collector_test_v1.py": {
+      "sha256": "84a82c58e581efdb20c529a6ec30473a898dd0b861461f6cffad7ba4f6ab202d",
+      "dependencies": [
+        "scripts/cc_league2_train.py",
+        "scripts/combat_regions_mixed_v2.py",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/cx_fountain_continuation_v2.py",
+        "scripts/cx_ftn2_reward_v1.py",
+        "scripts/cx_safe_frontier_v1.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_ftn2_monitor_v1.py": {
+      "sha256": "72b875c37fc8a9c10042f988944235a7e3c2f3542d7a28fba2f6db79b7ae84c2",
+      "dependencies": [
+        "scripts/cc_league2_train.py",
+        "scripts/cx_ftn2_train_v1.py",
+        "scripts/cx_takeover_status_v1.py"
+      ]
+    },
+    "scripts/cx_ftn2_native_test_v1.py": {
+      "sha256": "cf395bac786528c8525e8428d87fb413d06f74aba7830945b5e48c605b7adbea",
+      "dependencies": [
+        "scripts/bomb_threat_r1_progress_reward.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/cx_fountain_continuation_v2.py",
+        "scripts/cx_ftn2_reward_v1.py",
+        "scripts/cx_safe_frontier_v1.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cx_ftn2_prepare_v1.py": {
+      "sha256": "d2684aa51331070cd8dff4ef528a2e7e0f4469a927a9c4122d8a0d261b8c5c17",
+      "dependencies": [
+        "scripts/cc_league2_lib.py",
+        "scripts/cc_reward_import_hook.py",
+        "scripts/cx_fountain_continuation_v2.py",
+        "scripts/cx_ftn2_prepare_v1.py",
+        "scripts/cx_ftn2_reward_v1.py",
+        "scripts/cx_ftn2_switch_v1.py",
+        "scripts/cx_ftn2_train_v1.py",
+        "scripts/cx_safe_frontier_v1.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_ftn2_reward_test_v1.py": {
+      "sha256": "d9307fd3c6146f856331a0b029f2dff0ee6b09555677ce1cd81c7f9d77b8ddf9",
+      "dependencies": [
+        "scripts/bun_native_v2_custody_reward.py",
+        "scripts/cx_fountain_continuation_v2.py",
+        "scripts/cx_ftn2_reward_v1.py",
+        "scripts/cx_safe_frontier_v1.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cx_ftn2_reward_v1.py": {
+      "sha256": "fed30d969be959ecebdbd5ccde63ab31b3170cf758abbb5d54877a863d63f919",
+      "dependencies": [
+        "scripts/cx_fountain_continuation_v2.py",
+        "scripts/cx_safe_frontier_v1.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_ftn2_switch_v1.py": {
+      "sha256": "661673e3ce3ca2f1ce91146eaf550b11adea69d5bcb90e8dc3f7bcee70a0046b",
+      "dependencies": [
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/cx_ftn2_prepare_v1.py",
+        "scripts/cx_ftn2_train_v1.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_ftn2_train_v1.py": {
+      "sha256": "668790202d82c7d5c789c30d272254bf1fcd663c669fe036d9bca6f3af032fe4",
+      "dependencies": [
+        "scripts/cc_league2_train.py",
+        "scripts/cc_reward_import_hook.py",
+        "scripts/cx_ftn2_reward_v1.py"
+      ]
+    },
+    "scripts/cx_holdout_acceptance_v1.py": {
+      "sha256": "417b3d3b4c46ae755355a6de89cda2868bba3df083ddd3b976847a28bb8bdbcc",
+      "dependencies": [
+        "scripts/corner_counterplay_stage_report_v1.py",
+        "scripts/population_run_state.py",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/cx_idle_diagnosis_v1.py": {
+      "sha256": "ec8dac52457acb46e56bc99e085508d5953d1230ca995a4d8469bd12dade85f3",
+      "dependencies": [
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/cx_idle_replay_v1.js",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/cx_idle_observer_adapter_v1.js": {
+      "sha256": "86f77833ed260d8948d0f32419ac984b3b765680e405c7972549868fbdbf96b8",
+      "dependencies": []
+    },
+    "scripts/cx_idle_replay_test_v1.js": {
+      "sha256": "87a123f20aece4b6b87aee3743c755f278bdf34b5b8cffe8f018b7253d4a94c3",
+      "dependencies": [
+        "scripts/cx_idle_replay_v1.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/cx_idle_replay_v1.js": {
+      "sha256": "025fc647f56402a097c06ce95867ff69aca5f1355368cf960785cf747bca1a93",
+      "dependencies": [
+        "scripts/cc_strong_metrics_fountain_v1.js",
+        "scripts/native_eval_simulator_v1.js"
+      ]
+    },
+    "scripts/cx_safe_frontier_v1.py": {
+      "sha256": "fdebe47b50693b77abfad9301a2b35cf7816ca812db4fe8534f1ec7fbb6cb520",
+      "dependencies": [
+        "scripts/bomb_threat_r1_progress_reward.py",
+        "scripts/bun_native_v2_custody_reward.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/cx_fountain_continuation_v2.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cx_strong_holdout_v1.py": {
+      "sha256": "174ea8dd09858c5f2bbdbeff2ff24e418aafc851732d9a3397a1706cb1fbba80",
+      "dependencies": [
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/cc_strong_retest_v1.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_strong_watch_v1.py": {
+      "sha256": "dae962b3acb9ab393949905922dfacc96371258daba64b59a6ac2ba69f62cf34",
+      "dependencies": [
+        "scripts/cc_fixed_eval_v1.py",
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_takeover_status_v1.py": {
+      "sha256": "772b265658f0b274384ae68dc12f8cd78b574bc2f2382013f76d17c08a795fdb",
+      "dependencies": [
+        "scripts/cc_league2_train.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_temperature_eval_v1.py": {
+      "sha256": "03c993580dee10db822502a98a11b4d8229598f0e170d331c238a476dd58303a",
+      "dependencies": [
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/cc_strong_metrics_fountain_v1.js",
+        "scripts/cx_idle_observer_adapter_v1.js",
+        "scripts/cx_idle_replay_v1.js",
+        "scripts/cx_temperature_inference_v1.js",
+        "scripts/cx_temperature_report_v1.py",
+        "scripts/cx_temperature_worker_v1.js",
+        "scripts/model_launch.py",
+        "scripts/native_eval_simulator_v1.js",
+        "scripts/population_run_state.py",
+        "scripts/resume_gpu67_eval_v1.js",
+        "web/five-item-slots-model-v1.js",
+        "web/five-item-slots-v1.js",
+        "web/review-sim/bun-native-v2-20261104.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/cx_temperature_inference_v1.js": {
+      "sha256": "0dc6aaa22e69ea81a17c018162d4789e27095c49045baad6f805a3b6d8ae326c",
+      "dependencies": [
+        "scripts/interceptor_primary_inference_v1.js"
+      ]
+    },
+    "scripts/cx_temperature_report_v1.py": {
+      "sha256": "812ac000e912c7396d1e7af38eeacaa58592fb2784cdb3e34a2d78c9219ba01b",
+      "dependencies": [
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/cx_holdout_acceptance_v1.py",
+        "scripts/cx_idle_replay_v1.js",
+        "scripts/cx_temperature_eval_v1.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_temperature_test_v1.js": {
+      "sha256": "e2c631b42837d7d9e3ef0ebbbb4ede42fb23cca22a9cbbd3115aefca747f8c11",
+      "dependencies": [
+        "scripts/cx_temperature_inference_v1.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/cx_temperature_worker_v1.js": {
+      "sha256": "0f11bf706de8fd8db8e60e8bb169c142ce2efc13b327de002c8bd33d33649fd0",
+      "dependencies": [
+        "scripts/cx_idle_observer_adapter_v1.js",
+        "scripts/cx_temperature_inference_v1.js",
+        "scripts/interceptor_primary_inference_v1.js",
+        "scripts/resume_gpu67_eval_v1.js"
+      ]
+    },
+    "scripts/cx_web_idle_adapter_v1.js": {
+      "sha256": "e5ffc7de1a4a2d3d68c671efafeb286a35fd991eeae529f29bdc321e7ee6fd2d",
+      "dependencies": [
+        "scripts/cc_strong_metrics_fountain_v1.js"
+      ]
+    },
+    "scripts/cx_web_temperature_acceptance_v1.py": {
+      "sha256": "31fbdf5493c90439abeadb777065b9e3e82d1c8d617135abb914ac31d61f715b",
+      "dependencies": [
+        "scripts/cx_web_temperature_eval_v1.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_web_temperature_eval_v1.py": {
+      "sha256": "2f179ce80276fdeb44ac972582768f66e9b61a9ffc9248b3bbe0b4b9e1d32913",
+      "dependencies": [
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/cx_temperature_eval_v1.py",
+        "scripts/cx_temperature_report_v1.py",
+        "scripts/cx_web_idle_adapter_v1.js",
+        "scripts/cx_web_temperature_setup_v1.js",
+        "scripts/cx_web_temperature_worker_v1.js",
+        "scripts/interceptor_primary_inference_v1.js",
+        "scripts/model_launch.py",
+        "scripts/model_sampling_v1.js",
+        "scripts/native_eval_simulator_v1.js",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_inference.js",
+        "scripts/resume_gpu67_eval_v1.js",
+        "web/bot_contract.js",
+        "web/bun_coop_hunter_bot.js",
+        "web/bun_hunter_bot.js",
+        "web/bun_rule_bot.js",
+        "web/review-sim/bun-native-v2-20261104.js",
+        "web/sim-bun-native-v2.js",
+        "web/tactical_arena.js"
+      ]
+    },
+    "scripts/cx_web_temperature_setup_v1.js": {
+      "sha256": "c86c7702575a86be5c53c4c79ea0e1e309b6ca1747e3c4b452897f0657f93cb9",
+      "dependencies": [
+        "web/sim-bun-native-v2.js",
+        "web/tactical_arena.js"
+      ]
+    },
+    "scripts/cx_web_temperature_worker_v1.js": {
+      "sha256": "212ef53c37f46dcbb97d1810d9b16cd3bba1a9d5ffa46aa65f36b5709b36a0ef",
+      "dependencies": [
+        "scripts/cx_web_idle_adapter_v1.js",
+        "scripts/interceptor_primary_inference_v1.js",
+        "scripts/model_sampling_v1.js",
+        "web/bot_contract.js",
+        "web/bun_coop_hunter_bot.js",
+        "web/bun_hunter_bot.js",
+        "web/bun_rule_bot.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/dagger_rl_anchor.py": {
+      "sha256": "adbc82a8cd8c8376c8cbab8f64d2f430de9f0b132080e262b26f7dc620e2342d",
+      "dependencies": []
+    },
+    "scripts/dagger_rl_memory.py": {
+      "sha256": "480dfc478f1d13aef4356aa4568ff0e386ce271146a34e6e5b9b8bed443cf9f8",
+      "dependencies": [
+        "scripts/dagger_rl_reservoir.py"
+      ]
+    },
+    "scripts/dagger_rl_metrics.js": {
+      "sha256": "102859dc6ba9cb8adea69d9105a6b4240aa69848e9d33c07c2ee78bbf1a48fd6",
+      "dependencies": [
+        "scripts/combat_item_metrics.js"
+      ]
+    },
+    "scripts/dagger_rl_metrics_v2.js": {
+      "sha256": "74171565cc9435c5242f5780cf5cac2a4403cffa8da68b24473b6aa9029cc8a1",
+      "dependencies": [
+        "scripts/combat_item_metrics.js"
+      ]
+    },
+    "scripts/dagger_rl_oracle.py": {
+      "sha256": "76c942b67a34de8c08fd703b65b3d8a0ea48bea6b58392de8b274e95d95e8742",
+      "dependencies": [
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/je10_route_oracle.py"
+      ]
+    },
+    "scripts/dagger_rl_r4_bank.py": {
+      "sha256": "41d37563a745f6e9863d4d1f38c7c26e8f642687d27df9a078d7139d11439427",
+      "dependencies": [
+        "scripts/carrier_mechanism_analysis.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/combat_item_engine.py",
+        "scripts/dagger_rl_r4_run.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/dagger_rl_r4_run.py": {
+      "sha256": "705a988ae85146b3a4347645ac977aac3c9e4cb1650df575c047406ecd102486",
+      "dependencies": [
+        "scripts/carrier_mechanism_run.py",
+        "scripts/dagger_rl_r4_bank.py",
+        "scripts/dagger_rl_r4_train.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/dagger_rl_r4_train.py": {
+      "sha256": "ba24b3b7c1f87c762d0866c6af1457a0001e17389f419eb7e7b5540ae0c392b0",
+      "dependencies": [
+        "scripts/carrier_mechanism_analysis.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/carrier_mechanism_stats.py",
+        "scripts/carrier_mechanism_train.py",
+        "scripts/combat_item_engine.py",
+        "scripts/dagger_rl_anchor.py",
+        "scripts/dagger_rl_memory.py",
+        "scripts/dagger_rl_oracle.py",
+        "scripts/dagger_rl_r4_run.py",
+        "scripts/dagger_rl_r4_train.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/population_run_state.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/dagger_rl_reservoir.py": {
+      "sha256": "f1a61358df0c7498fa201ecab18c81f37eed37f5971b899aea4e32287a367159",
+      "dependencies": []
+    },
+    "scripts/dagger_rl_route.js": {
+      "sha256": "27e00140cde83a40a85087366f35693d4f29336491608ec2dc296fb724fb0946",
+      "dependencies": [
+        "scripts/dagger_rl_metrics.js",
+        "scripts/eval_web_hunter.js",
+        "scripts/eval_web_hunter_residual.js",
+        "scripts/je05_web_hunter.js",
+        "scripts/je08_web_diagnostics.js",
+        "scripts/je10_control_funnel.js",
+        "scripts/stock_acquisition_funnel.js",
+        "web/bun_hunter_bot.js",
+        "web/review_protocol.js",
+        "web/sim-stock-window-v1.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/eval_web_hunter.js": {
+      "sha256": "936ab747a15bc99036d7c44b386d8c770d8a6215e04d666f38566e5d0467652b",
+      "dependencies": [
+        "jax_bomb/attack_trace.py",
+        "scripts/eval_web_hunter.js",
+        "web/app.js",
+        "web/bot_contract.js",
+        "web/bun_hunter_bot.js",
+        "web/sim-stock-window-v1.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/eval_web_hunter_residual.js": {
+      "sha256": "d340f67c6f8558e085753cb955c28d9ac38f3265fdd8e37ab30d2ec8d8f51be4",
+      "dependencies": [
+        "scripts/eval_web_hunter.js",
+        "scripts/eval_web_hunter_residual.js",
+        "web/bot_contract.js",
+        "web/bun_hunter_bot.js",
+        "web/sim-stock-window-v1.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/expert_validation_js_eval.js": {
+      "sha256": "785bd1ddeaf4fd5662e58a773ee359a89ff56588dcce9cba5f747ec933e3c1aa",
+      "dependencies": [
+        "scripts/dagger_rl_metrics.js",
+        "scripts/ppo_scale_item_metrics_v4.js"
+      ]
+    },
+    "scripts/export_bun_web_model.py": {
+      "sha256": "b0c34f08ed049ddeccdb83c520b4bbd11824c6498d1550cb7129d849fe3f720c",
+      "dependencies": []
+    },
+    "scripts/five_item_slots_eval.js": {
+      "sha256": "a809e5ae33afee1a3cb3abc5fba813c9f17e7246a5aea57dbb187f434898d51a",
+      "dependencies": [
+        "scripts/five_item_slots_inference.js",
+        "scripts/r3_items_metrics.js",
+        "scripts/r4_iteration_metrics_20261101_funnel_helper.js",
+        "web/bot_contract.js",
+        "web/bun_hunter_bot.js",
+        "web/five-item-slots-model-v1.js",
+        "web/five-item-slots-review-v1.js",
+        "web/five-item-slots-v1.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/five_item_slots_inference.js": {
+      "sha256": "7c1c10765d9e33985447fa30d6fc92cbadbe15899b7bb38e9e17d143a1865c28",
+      "dependencies": [
+        "web/five-item-slots-model-v1.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/frontier_native_witness.py": {
+      "sha256": "cacc924588a38e7c95b59f8c258ccdc75f9695171d0812d327488bd0341030bc",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/interceptor_complete_v3.js": {
+      "sha256": "e21f74adafcf06db740fa156560bb0361e69af9f24e732662d91c247f5345a71",
+      "dependencies": [
+        "tests/interceptor_timing_v2.js",
+        "web/bun_hunter_bot.js"
+      ]
+    },
+    "scripts/interceptor_complete_v4.js": {
+      "sha256": "2587dee96707a5b36f99f502d3050f518f5071127117255700a3c89d95154e41",
+      "dependencies": [
+        "scripts/interceptor_complete_v3.js"
+      ]
+    },
+    "scripts/interceptor_complete_v7_p8.js": {
+      "sha256": "d88af552d53a076ccc219d9afafed2b2788adcaa58560b61f6d41d24df5bce02",
+      "dependencies": [
+        "scripts/interceptor_complete_v4.js",
+        "scripts/interceptor_public_attribute_witness_v1.js"
+      ]
+    },
+    "scripts/interceptor_complete_v8_p8.js": {
+      "sha256": "59c1ea318085f7014e42de8baecc811d4387386cb020e01d79cd9cac8315cbd5",
+      "dependencies": [
+        "scripts/interceptor_complete_v7_p8.js"
+      ]
+    },
+    "scripts/interceptor_defend_cap4_bot_v2.js": {
+      "sha256": "2b81365ad3723796c006549254d34cb242a76a921c51ba2bbb12d3ace778c9fb",
+      "dependencies": [
+        "scripts/interceptor_complete_v8_p8.js",
+        "scripts/interceptor_front_cutoff_p0_v2.js",
+        "scripts/interceptor_public_attribute_witness_v1.js",
+        "web/bun_interceptor_bot.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/interceptor_defend_cap4_bot_v4.js": {
+      "sha256": "aadc04f1334c5ea85bfbb8ec73ff9cc3fccecdaf821c2f93db4890c92549a7ec",
+      "dependencies": [
+        "scripts/interceptor_defend_cap4_bot_v2.js",
+        "scripts/interceptor_front_cutoff_p0_v2.js",
+        "web/bun_interceptor_bot.js"
+      ]
+    },
+    "scripts/interceptor_defend_cap4_bot_v5.js": {
+      "sha256": "35d4bc53c2e265fbbaf1a7e9bb0c352fd911158e92ad9d2a0bb358eb60356c87",
+      "dependencies": [
+        "scripts/interceptor_defend_cap4_bot_v4.js"
+      ]
+    },
+    "scripts/interceptor_defend_cap4_bot_v6.js": {
+      "sha256": "87dcbc902dc0f0d13fed9218768400374c0b132379055803ae59b01d5d464e6a",
+      "dependencies": [
+        "scripts/interceptor_defend_cap4_bot_v5.js"
+      ]
+    },
+    "scripts/interceptor_defend_cap4_v1.js": {
+      "sha256": "42b3e77a809ce87ae8687d9f89507f360f85e6ed6d0f018dfcb1c3e3ad9e6c28",
+      "dependencies": []
+    },
+    "scripts/interceptor_front_cutoff_p0_v1.js": {
+      "sha256": "209f736d0d546991172aedadcd6a1dcab5bcb16266c86a206fb92a3f824558bf",
+      "dependencies": [
+        "scripts/interceptor_complete_v8_p8.js",
+        "web/bun_hunter_bot.js",
+        "web/bun_interceptor_bot.js"
+      ]
+    },
+    "scripts/interceptor_front_cutoff_p0_v2.js": {
+      "sha256": "ffef3987513388c6b1c3fe601464f974a51f18dcfc372114b34fec32a09d2d8f",
+      "dependencies": [
+        "scripts/interceptor_complete_v8_p8.js",
+        "scripts/interceptor_front_cutoff_p0_v1.js",
+        "scripts/interceptor_public_attribute_witness_v1.js",
+        "web/bun_interceptor_bot.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/interceptor_primary_chain_metrics_v1.js": {
+      "sha256": "9037ef7c87441a5c3b52507659fac487f30089f7eb120f9c94689705e2d487be",
+      "dependencies": []
+    },
+    "scripts/interceptor_primary_eval_defendcap4_v6.js": {
+      "sha256": "ffee7e0d88a7b1dabbe14d5ba5da9ddc6a7f74f726767b7e2173abdd7b15a060",
+      "dependencies": [
+        "scripts/combat_specialist_g7_source_metrics.js",
+        "scripts/five_item_slots_eval.js",
+        "scripts/five_item_slots_inference.js",
+        "scripts/interceptor_defend_cap4_bot_v6.js",
+        "scripts/interceptor_defend_cap4_v1.js",
+        "scripts/interceptor_primary_chain_metrics_v1.js",
+        "scripts/interceptor_primary_inference_v1.js",
+        "scripts/r4_iteration_metrics_20261101_funnel_helper.js",
+        "web/bun_hunter_bot.js",
+        "web/five-item-slots-review-v1.js",
+        "web/review_protocol.js"
+      ]
+    },
+    "scripts/interceptor_primary_inference_v1.js": {
+      "sha256": "8130d0e2e135ac8b1fbe7c5dd1f3ec898b483d6e59a60f870255be449e54cecb",
+      "dependencies": [
+        "scripts/five_item_slots_inference.js",
+        "scripts/r3_items_inference.js"
+      ]
+    },
+    "scripts/interceptor_public_attribute_witness_v1.js": {
+      "sha256": "070d9b7b8d86e23a08886e163e513690e7eb724ced2c3f2d682a830ecc32e7cc",
+      "dependencies": [
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/je03_bun_selfplay_ops_20261012.py": {
+      "sha256": "e7fe3f46cebc4df120d5cbb06af9eecfacff723db37babca794bcbda207a5693",
+      "dependencies": [
+        "jax_bomb/jax_train.py"
+      ]
+    },
+    "scripts/je03_bun_stage1_20261011.py": {
+      "sha256": "4485ddde8a1f6b2e8043a101b1a527c3acc0ca84123530a1672e210a71ac9df9",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_net.py",
+        "jax_bomb/jax_train.py",
+        "scripts/eval_web_hunter.js",
+        "scripts/eval_web_hunter_residual.js",
+        "scripts/export_bun_web_model.py",
+        "scripts/je03_bun_stage1_20261011.py",
+        "scripts/je03_native_vit_export_20261011.py",
+        "scripts/population_run_state.py",
+        "web/bun_hunter_bot.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/je03_native_vit_export_20261011.py": {
+      "sha256": "a66c426c3b2b26df08f3b4eaf49e1a0374ced646cb17b3e00326965a7cbe60b5",
+      "dependencies": []
+    },
+    "scripts/je04_bun_ops.py": {
+      "sha256": "98b2a5f3c59591812feb3a4e75eb39b3c6e2c72691c54f661f14f2ee1365373f",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "scripts/je03_bun_selfplay_ops_20261012.py"
+      ]
+    },
+    "scripts/je05_bun_encoding.js": {
+      "sha256": "24357c84aaf42c4b7fec860081928c9d8437507da55232ab2f49611c43942fe7",
+      "dependencies": []
+    },
+    "scripts/je05_bun_ops.py": {
+      "sha256": "16e7a3f68784435ef7fd774b5825dfa7e267d398ea96758d69fb71864b74801e",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "scripts/je03_bun_selfplay_ops_20261012.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_scenes.py",
+        "scripts/je05_bun_transport.py"
+      ]
+    },
+    "scripts/je05_bun_scenes.py": {
+      "sha256": "7c5b8d9c2fea10ce7e5ddf85c1fce6c04431b1a583163307dbb0b1e764f838ec",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_env.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je10_causal_init.py"
+      ]
+    },
+    "scripts/je05_bun_transport.py": {
+      "sha256": "a7ca207e7f8cb471442e3f5ab0f247c6ad14284a3e843c4dad14edd9af05634f",
+      "dependencies": []
+    },
+    "scripts/je05_web_hunter.js": {
+      "sha256": "b2a05e9121ef41b6bebbf8e4f87b94bd80f1d6fabd9e159b06c550409bf9de21",
+      "dependencies": [
+        "scripts/eval_web_hunter.js",
+        "scripts/je05_bun_encoding.js",
+        "web/sim-stock-window-v1.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/je07_bun_curriculum.py": {
+      "sha256": "97ff64624670cb795d1a894c381728fd9ab5db3b2d0c3940a09efff3ea920968",
+      "dependencies": []
+    },
+    "scripts/je07_bun_ops.py": {
+      "sha256": "0acc302a6c7412959278815c60c691e6796078023abe24005857a1c61a1496fa",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je03_bun_selfplay_ops_20261012.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_ops.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je07_bun_scenes.py"
+      ]
+    },
+    "scripts/je07_bun_scenes.py": {
+      "sha256": "52d7b50b820a0e7d8f53c54693d56b1e986762b6ffb82995284a4819d99b147d",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je10_causal_init.py"
+      ]
+    },
+    "scripts/je08_bun_potential.py": {
+      "sha256": "74a3308b409db110c0fb73dbf02137892f84b07016dcbc1dfda1f3753bfa8597",
+      "dependencies": [
+        "scripts/carrier_route_fields.py"
+      ]
+    },
+    "scripts/je08_web_diagnostics.js": {
+      "sha256": "ceb1daefd060948946b8ac03e988ae3767a75215b49bb05cad0a0076ebc9d42a",
+      "dependencies": [
+        "scripts/eval_web_hunter.js",
+        "scripts/eval_web_hunter_residual.js",
+        "scripts/je05_web_hunter.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/je09_bun_bridge.py": {
+      "sha256": "27651916af29a9282f58d6123be10481ca0eeb9c7a974751761f5c19871109c0",
+      "dependencies": []
+    },
+    "scripts/je09_bun_ops.py": {
+      "sha256": "c381a336d48d89fa64576f273f88cec14365231adff3e9fa4734e9056ee59c2a",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je03_bun_selfplay_ops_20261012.py",
+        "scripts/je04_bun_ops.py",
+        "scripts/je05_bun_ops.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je07_bun_ops.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_bun_bridge.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_return_expert.py",
+        "scripts/je10_causal_init.py"
+      ]
+    },
+    "scripts/je09_bun_scenes.py": {
+      "sha256": "338de6e72f7c1f8563c5362dc9dc5c5e2735c8baf79640ed3f596bd1ad4bb9fe",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je05_bun_env.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je05_bun_transport.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je10_causal_init.py"
+      ]
+    },
+    "scripts/je09_chase_expert.py": {
+      "sha256": "437c6a0cf03b586ea6fadc34068814316370aa515ad74e65a14bb79dcf0c7fff",
+      "dependencies": [
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_return_expert.py"
+      ]
+    },
+    "scripts/je09_drop_expert.py": {
+      "sha256": "6864f581d2175b544a6b8ee08fa46275a903d6bbf58c2554ba351561f9729ee9",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_env.py",
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/je09_return_expert.py": {
+      "sha256": "aa76450a6ca1e115a0119b5a4f54e3c5b541642099fc320dc1acac40d9ca484a",
+      "dependencies": [
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/je09_route_pbrs.py": {
+      "sha256": "b0a87f1ad7ac306762dbadb856211e75e49a283d9f81bf764ae615512a08dc50",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "scripts/continuous_route_metric.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/prestock_training_state.py",
+        "scripts/route_objective_consistency.py"
+      ]
+    },
+    "scripts/je09_stage_e_coverage.py": {
+      "sha256": "84958c5f1815bd398b95939f494ed95540e4e88294c506d6cba14caee0800ef6",
+      "dependencies": [
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_return_expert.py",
+        "scripts/je09_stage_e_ops.py"
+      ]
+    },
+    "scripts/je09_stage_e_ops.py": {
+      "sha256": "d14bd9b68e911f8c56ab5110bb8d8e7d531718a25997637f25dd1283e9ee411e",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_stage_e_coverage.py"
+      ]
+    },
+    "scripts/je09_stage_f_mode.py": {
+      "sha256": "d56be99252820c85c47dd557ba0f3c7541cd3550ac77a845f56f9c3a9d8c1869",
+      "dependencies": [
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py"
+      ]
+    },
+    "scripts/je09_stage_f_reward.py": {
+      "sha256": "5202dedd2066c5ba978258a37103f61128770ad042d65728606313ac0434aa81",
+      "dependencies": [
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_stage_f_mode.py"
+      ]
+    },
+    "scripts/je09_stage_g_combat.py": {
+      "sha256": "6ae95ebcee57da79280cd065ce6ccec532b0d91efe2a35ccf5988d9928e5b42e",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py"
+      ]
+    },
+    "scripts/je09_stage_h2_ops.py": {
+      "sha256": "d020973ccb78d70e751d1abd93120895c13daa7927502208bf79b751043286dc",
+      "dependencies": [
+        "scripts/je09_stage_h_ops.py"
+      ]
+    },
+    "scripts/je09_stage_h3_ops.py": {
+      "sha256": "c64ed6e024638f13aa99aa7f610b1d0b7298235ca82109d2f7ab456a2a187fbf",
+      "dependencies": [
+        "scripts/je09_stage_h2_ops.py"
+      ]
+    },
+    "scripts/je09_stage_h5_course.py": {
+      "sha256": "ca31624b66e47c6b1d6aa64a08c5918a8bfa77b16ba56bd7c6d5a06858c19aee",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_return_expert.py"
+      ]
+    },
+    "scripts/je09_stage_h5c_dagger.py": {
+      "sha256": "d3b1038c95a23d1b74d94eb1651342bf1ddde0dfb8fa2d30e65508591ed186cd",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_return_expert.py"
+      ]
+    },
+    "scripts/je09_stage_h5c_ops.py": {
+      "sha256": "ddc6ddad880f48c631805f92a21bb881a2482b7229140153e1e7569681f5a5bb",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_stage_e_coverage.py",
+        "scripts/je09_stage_f_mode.py",
+        "scripts/je09_stage_g_combat.py",
+        "scripts/je09_stage_h2_ops.py",
+        "scripts/je09_stage_h3_ops.py",
+        "scripts/je09_stage_h5_course.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h_items.py",
+        "scripts/je10_control_credit.py",
+        "scripts/native_return_retention.py",
+        "scripts/prestock_training_state.py"
+      ]
+    },
+    "scripts/je09_stage_h6_ops.py": {
+      "sha256": "6feab0d1010fd24ed7faee4ee458982d847e3b20aaa6d7f4ad441341b0868fea",
+      "dependencies": [
+        "scripts/je09_stage_h3_ops.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/prestock_fragment_queries.py",
+        "scripts/prestock_verified_labels.py",
+        "scripts/return_query_diversity.py"
+      ]
+    },
+    "scripts/je09_stage_h8_course.py": {
+      "sha256": "f37f57b33818625a4d36897186edaffe5c1e838bf81d8800b958d0a1f79a88f0",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_return_expert.py"
+      ]
+    },
+    "scripts/je09_stage_h8_ops.py": {
+      "sha256": "ce17a1a11cb5036a2213ddc502489bbfe8b172416bef2b2aa99567faadc8e2d6",
+      "dependencies": [
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h6_ops.py",
+        "scripts/je09_stage_h8_course.py"
+      ]
+    },
+    "scripts/je09_stage_h_items.py": {
+      "sha256": "e16c93709f14e4f9d78a14543f36da3841269e8c0b854030d15f0eeccd65fb89",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/je09_stage_h_ops.py": {
+      "sha256": "43cee7cc1d89866ca838de47de7518156e359e430a3093002d72197343dbd28b",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je07_bun_curriculum.py",
+        "scripts/je09_bun_ops.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_chase_expert.py",
+        "scripts/je09_drop_expert.py",
+        "scripts/je09_stage_e_coverage.py",
+        "scripts/je09_stage_f_mode.py",
+        "scripts/je09_stage_g_combat.py",
+        "scripts/je09_stage_h_items.py",
+        "scripts/je09_stage_h_reward.py"
+      ]
+    },
+    "scripts/je09_stage_h_reward.py": {
+      "sha256": "bee558ff20b07e48e2bfd498e641fa56ec73715c6e1299930263914be21520c2",
+      "dependencies": [
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_stage_f_reward.py",
+        "scripts/je09_stage_h_items.py"
+      ]
+    },
+    "scripts/je10_causal_init.py": {
+      "sha256": "d35d369fd961190f6ce067cda4974f078269087c225e97b74a56a196718baa84",
+      "dependencies": []
+    },
+    "scripts/je10_control_credit.py": {
+      "sha256": "87ab187a13608768cf276e37a9af583b0df642dbc244e2652e546bcb6b9af5ff",
+      "dependencies": []
+    },
+    "scripts/je10_control_funnel.js": {
+      "sha256": "1342ae5ff4ea58f3649a873d9c7c8103f054bb6c0c485e0ee3aceef905d9e9ab",
+      "dependencies": []
+    },
+    "scripts/je10_ops.py": {
+      "sha256": "70b3193d520b39849aa544b25a36d8ded67f556fc2f006337a5204c05e14604c",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_bun_scenes.py",
+        "scripts/je09_return_expert.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/je09_stage_h5c_ops.py",
+        "scripts/je09_stage_h6_ops.py",
+        "scripts/je09_stage_h8_ops.py",
+        "scripts/je10_control_credit.py",
+        "scripts/je10_route_oracle.py",
+        "scripts/phase_balanced_joint_replay.py",
+        "scripts/prestock_joint_replay.py",
+        "scripts/prestock_training_state.py"
+      ]
+    },
+    "scripts/je10_route_oracle.py": {
+      "sha256": "99cb9b6de690957f7a70d98db8bf68bc271ac52f6b273b381954a85c7fef2c1c",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/continuous_route_metric.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_stage_h5c_dagger.py"
+      ]
+    },
+    "scripts/model_cuda_overlay.py": {
+      "sha256": "bdac9abba293deb15021369c0e1213c4201e0b400f373cbec563a9af57739696",
+      "dependencies": [
+        "scripts/bomb_threat_reward.py",
+        "scripts/bun_native_v2_custody_reward.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/je09_route_pbrs.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/model_launch.py": {
+      "sha256": "fc6d0254d0ff2d214f01aff2dfa2fd93254d8b6c5e163adacf4275afc0e9e281",
+      "dependencies": []
+    },
+    "scripts/model_sampling_v1.js": {
+      "sha256": "b1cbfb28fcd03a766f4e556d2bd3f8892157a9c632ae8d38bcd59761e67acc69",
+      "dependencies": []
+    },
+    "scripts/multi_region_combat_v1.py": {
+      "sha256": "6e573e109c7559cdf66056fd26c7c932bcf31ace69178f5b5606eb41431b12ab",
+      "dependencies": []
+    },
+    "scripts/multi_region_continuous_audit_v1.js": {
+      "sha256": "c49d2796dea303945375ec0cf3201459f0f8761dc3991443bdde17c4f6d4f9c1",
+      "dependencies": [
+        "scripts/multi_region_natural_audit_v1.js"
+      ]
+    },
+    "scripts/multi_region_eval_v1.js": {
+      "sha256": "2ecc9becbf763e750b492f678b1e168a1a57efd3333fe3f9598a43ff51ace4b5",
+      "dependencies": [
+        "scripts/r4_combat_eval.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/multi_region_g_cpu_validation_v1.py": {
+      "sha256": "9137a479db53e530fe7cd51ca36b95c1eee3ee0f71e650810829ee4540d4dbcd",
+      "dependencies": [
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/multi_region_g_mixed_v1.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/multi_region_g_mixed_v1.py": {
+      "sha256": "269a9d51e0836540fe1b5c275dc8ac5b92cf4615ac1c5cfd5221ad1fc18a25e6",
+      "dependencies": [
+        "scripts/combat_specialist_g_mixed.py",
+        "scripts/multi_region_combat_v1.py",
+        "scripts/r4_k4_collector.py"
+      ]
+    },
+    "scripts/multi_region_g_train_v1.py": {
+      "sha256": "0f6b9c09b434154a0a3454ef4b1ec270962d266a1b737e5451b1fdbde794910e",
+      "dependencies": [
+        "scripts/combat_specialist_g_league_train.py"
+      ]
+    },
+    "scripts/multi_region_natural_audit_v1.js": {
+      "sha256": "9038b3105f3a0fdd6cd7423117b44ee2a43425dfe1f115e7a954da1a1490cb07",
+      "dependencies": [
+        "scripts/combat_specialist_g7_source_metrics.js",
+        "scripts/interceptor_defend_cap4_v1.js",
+        "web/five-item-slots-review-v1.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/native_eval_simulator_v1.js": {
+      "sha256": "641ee341fcb97bab432919a3eef1457bad19d062757fc6c6fac391f7abd488cb",
+      "dependencies": [
+        "web/review-sim/bun-native-v2-20261104.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/native_return_retention.py": {
+      "sha256": "89d0abdb60cff47b3a770c3272db299d321247e4f9bc29eac2aa21ea36c9306d",
+      "dependencies": []
+    },
+    "scripts/native_route_certificate.py": {
+      "sha256": "485d23b5391ab50170f1511f73432b108d9303b4746c2a9631c26bd9b2c1cc44",
+      "dependencies": [
+        "scripts/je10_route_oracle.py"
+      ]
+    },
+    "scripts/phase_balanced_joint_replay.py": {
+      "sha256": "f77b58bcdd59f345e9fe33d55e90b3a3f6aa99c5bec26d330ce71e367dcdc206",
+      "dependencies": [
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/prestock_joint_replay.py"
+      ]
+    },
+    "scripts/population_run_state.py": {
+      "sha256": "ddd3f2dff880bdadc60c3e0a410a8b6208d5799c8a5e16f0f88b610bf9e55f04",
+      "dependencies": []
+    },
+    "scripts/ppo_scale_item_metrics_v4.js": {
+      "sha256": "8b9f1ec8a63c0617dc5d2e1a5752f4589dc88bf5ef5037aeb2864f6d91e08abf",
+      "dependencies": [
+        "scripts/dagger_rl_metrics_v2.js",
+        "web/sim.js"
+      ]
+    },
+    "scripts/ppo_scale_longrun_run.py": {
+      "sha256": "7ee83cb34671400fa7051a14e91e62a88541493456ed43f28968657921bc37a8",
+      "dependencies": [
+        "scripts/population_run_state.py",
+        "scripts/ppo_scale_longrun_train.py"
+      ]
+    },
+    "scripts/ppo_scale_longrun_train.py": {
+      "sha256": "0e339ac3151424b35ef4623b4d9493995d4ea927ccbb063ff4ebae5ea1ef9120",
+      "dependencies": [
+        "scripts/carrier_mechanism_analysis.py",
+        "scripts/carrier_mechanism_stats.py",
+        "scripts/combat_item_engine.py",
+        "scripts/dagger_rl_r4_train.py",
+        "scripts/population_run_state.py",
+        "scripts/ppo_scale_longrun_run.py"
+      ]
+    },
+    "scripts/prestock_fragment_queries.py": {
+      "sha256": "75861b6e9b02f5f8123c2dac3060886a584aedca30b612889fab3fd4a2c59a31",
+      "dependencies": []
+    },
+    "scripts/prestock_joint_oracle.py": {
+      "sha256": "f00ece341d08e20128aa4d08d78ac45b2463b8bcbfe03a26c96fd5ad15efa14d",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/frontier_native_witness.py"
+      ]
+    },
+    "scripts/prestock_joint_payload.py": {
+      "sha256": "992cf8a39f572639aea89d0ff4588f14849c8850b23529bacb430ba989eac653",
+      "dependencies": []
+    },
+    "scripts/prestock_joint_replay.py": {
+      "sha256": "0f3caed1422e9d4a7fed9cb7947293fae7c7fea19137a571ed2d05ba0a7486b6",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_train.py",
+        "scripts/je09_stage_h5c_dagger.py",
+        "scripts/return_dagger_weight.py"
+      ]
+    },
+    "scripts/prestock_native_teacher.py": {
+      "sha256": "393d760fae4ef77b97fe6588565a80ac20790036984d865ad1d7ea3a1f074045",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/native_route_certificate.py",
+        "scripts/prestock_joint_oracle.py",
+        "scripts/prestock_route_preparation.py"
+      ]
+    },
+    "scripts/prestock_route_preparation.py": {
+      "sha256": "537e465e5c879a79d89d5e1c7052c54d806bbf67ce244913674a75432420a356",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/continuous_route_metric.py",
+        "scripts/je08_bun_potential.py",
+        "scripts/route_frontier.py"
+      ]
+    },
+    "scripts/prestock_training_state.py": {
+      "sha256": "adff7b7085182c0a2740e0d10fe7b00e2291bc5c742572ef8ffa264980071a20",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/prestock_route_preparation.py"
+      ]
+    },
+    "scripts/prestock_verified_labels.py": {
+      "sha256": "f37c87dd99dabe5cd1134e4cae0460f2c948963727994b1998221dbde390c5c7",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/je07_bun_env.py",
+        "scripts/je09_stage_h6_ops.py",
+        "scripts/native_route_certificate.py",
+        "scripts/prestock_joint_payload.py",
+        "scripts/prestock_native_teacher.py"
+      ]
+    },
+    "scripts/r3_items_candidate_eval.js": {
+      "sha256": "b4b00fe0b488e5904f21db48bb0946f254745835db9db646ec525af2480d701c",
+      "dependencies": [
+        "scripts/bun_native_v2_eval.js",
+        "scripts/je05_web_hunter.js",
+        "scripts/r3_items_candidate_metrics.js",
+        "scripts/r3_items_inference.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/r3_items_candidate_metrics.js": {
+      "sha256": "2a8970fdd74af954f27510266ed6f54fa35d581588f8db4dd46ff9b77ac3059f",
+      "dependencies": [
+        "scripts/r3_items_metrics.js"
+      ]
+    },
+    "scripts/r3_items_collector.py": {
+      "sha256": "eacc72689f0cb15a0c6611942cbaa8da43841c9444fed315ac97cc7e9db8c9f4",
+      "dependencies": [
+        "scripts/bun_native_v2_custody_collector.py",
+        "scripts/r3_items_observation.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/r3_items_export.py": {
+      "sha256": "fc9701e9a7209a5561e0a952f808b705ad28581efc17863caeedf21f72eda724",
+      "dependencies": [
+        "scripts/export_bun_web_model.py",
+        "scripts/je03_native_vit_export_20261011.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/r3_items_inference.js": {
+      "sha256": "87d407ed1c7b2b421c141f27745c0977d575e1af43b7e1f78934b2192c4bf826",
+      "dependencies": [
+        "scripts/je05_bun_encoding.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/r3_items_metrics.js": {
+      "sha256": "9226ad144c58cb16482bf148eace5310aa0961dfdb8c10adca81f60d4784a8a7",
+      "dependencies": []
+    },
+    "scripts/r3_items_observation.py": {
+      "sha256": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_net.py",
+        "scripts/retention_phase_conditioning.py"
+      ]
+    },
+    "scripts/r3_items_reward.py": {
+      "sha256": "ca9f9370a73693a958aa740a1a61f6561d5cef98b8cc763ba86df86a778b815c",
+      "dependencies": [
+        "scripts/bomb_threat_r1_progress_reward.py",
+        "scripts/carrier_mechanism_engine.py",
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/r3_items_runtime.py": {
+      "sha256": "680045afe89bc7cae5bd63aeb4375e0ac49e9b69d2c30b7baef5dc8fc8c2b426",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env_r1_items.py",
+        "scripts/bun_native_v2_runtime.py"
+      ]
+    },
+    "scripts/r4_combat_eval.js": {
+      "sha256": "3a882b98859ee967304bf0d6f866beb5a0a24905006a6def1b317b2fb742a470",
+      "dependencies": [
+        "scripts/r3_items_candidate_eval.js",
+        "scripts/r4_combat_metrics.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/r4_combat_metrics.js": {
+      "sha256": "34f8d89a9a4d121c1b3115bdfcb826cf961183b4343a00cfe6eafb3a2ee80488",
+      "dependencies": []
+    },
+    "scripts/r4_iteration_metrics_20261101_funnel_helper.js": {
+      "sha256": "2d9989f8e5c0d23a2ac740a736ffa931ffb1af7c4c4568cfdb648b659b403bf6",
+      "dependencies": []
+    },
+    "scripts/r4_k4_arena_collector.py": {
+      "sha256": "9fe6109c2632db3208809504e5f7d6003f050b6de146cee3fffd78e52e4671c8",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_jax_bots.py",
+        "scripts/combat_mix_opponents.py",
+        "scripts/r4_k4_collector.py",
+        "scripts/r4_k4_observation.py",
+        "scripts/r4_k4_runtime.py",
+        "scripts/r4_kill_arena.py"
+      ]
+    },
+    "scripts/r4_k4_collector.py": {
+      "sha256": "91c624240a625f0cb64160ae943d1dcecbf1973eb6428ad4d76a68dca95d9596",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_train.py",
+        "jax_bomb/je07_bun_env_r1_items.py",
+        "scripts/r3_items_observation.py",
+        "scripts/r4_k4_observation.py",
+        "scripts/r4_kill_arena.py"
+      ]
+    },
+    "scripts/r4_k4_compilation.py": {
+      "sha256": "ddffd7d8317903a4ae022d2a8f0418b699813f52dd08e11f642b68db704270f8",
+      "dependencies": []
+    },
+    "scripts/r4_k4_export.py": {
+      "sha256": "78431fa2975d244ec7ed54f0163288f2a62b93f9c751bd9bc3548e7889fc86b3",
+      "dependencies": [
+        "scripts/population_run_state.py",
+        "scripts/r3_items_export.py",
+        "scripts/r4_k4_observation.py"
+      ]
+    },
+    "scripts/r4_k4_mixed.py": {
+      "sha256": "064a5700b7b5fec0e8e5bd2eb7cf603e35ce8af0b55a17c83a8cee3d7208a18e",
+      "dependencies": [
+        "scripts/combat_mix_opponents.py",
+        "scripts/r3_items_collector.py",
+        "scripts/r4_k4_arena_collector.py",
+        "scripts/r4_k4_collector.py",
+        "scripts/r4_k4_observation.py",
+        "scripts/r4_k4_runtime.py"
+      ]
+    },
+    "scripts/r4_k4_observation.py": {
+      "sha256": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+      "dependencies": [
+        "scripts/r3_items_observation.py"
+      ]
+    },
+    "scripts/r4_k4_runtime.py": {
+      "sha256": "26b587ec9e33ecc524d258c1db83d95d0db501f503d70c573b64ee9fb32b8bdc",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/bun_safety.py",
+        "jax_bomb/je07_bun_env_r1_items.py",
+        "jax_bomb/je07_native_items.py",
+        "jax_bomb/levels.py",
+        "scripts/bomb_threat_r1_progress_reward.py",
+        "scripts/r4_kill_arena.py"
+      ]
+    },
+    "scripts/r4_kill_arena.py": {
+      "sha256": "476ff7dc01a87a8f961e0f60e276f4a9bf2bca92e11b402a2efc01310b89ef9b",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env_r1_items.py",
+        "jax_bomb/je07_native_items.py",
+        "jax_bomb/levels.py"
+      ]
+    },
+    "scripts/resume_gpu67_eval_v1.js": {
+      "sha256": "49acb8838361d5c673392e74ba0df4d31e2890203602b86275966ba91258cc37",
+      "dependencies": [
+        "scripts/combat_regions_metrics_v2.js",
+        "scripts/combat_specialist_g7_source_metrics.js",
+        "scripts/interceptor_primary_chain_metrics_v1.js",
+        "scripts/interceptor_primary_inference_v1.js",
+        "scripts/native_eval_simulator_v1.js",
+        "scripts/r3_items_metrics.js",
+        "web/five-item-slots-v1.js"
+      ]
+    },
+    "scripts/retention_phase_conditioning.py": {
+      "sha256": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/jax_net.py"
+      ]
+    },
+    "scripts/return_dagger_weight.py": {
+      "sha256": "5b7cf54db77eae31f7a0b959d307a1023d62a6f8a20787288158200880a238b6",
+      "dependencies": [
+        "scripts/prestock_joint_oracle.py"
+      ]
+    },
+    "scripts/return_query_diversity.py": {
+      "sha256": "b90474fca221043fabd90fae53bbc679b8df5b5d361da532ca202de3d1b08f50",
+      "dependencies": [
+        "scripts/prestock_fragment_queries.py"
+      ]
+    },
+    "scripts/route_frontier.py": {
+      "sha256": "6e4cc4fa9c6af8d679b02b4bb1ccb2b2666491ae6b9560dce6b379e6450cd19a",
+      "dependencies": [
+        "scripts/je08_bun_potential.py"
+      ]
+    },
+    "scripts/route_objective_consistency.py": {
+      "sha256": "475cc660819c261404e30e6c0e98b02d56e44297c1fdd49b15987fd94a62ba53",
+      "dependencies": [
+        "scripts/continuous_route_metric.py"
+      ]
+    },
+    "scripts/stock_acquisition_funnel.js": {
+      "sha256": "65f3cf735a32469b5ad33626d070f516f74acea2e7cc0716815e4969ae3750c1",
+      "dependencies": []
+    },
+    "scripts/terminal_checkpoint_restore.py": {
+      "sha256": "8c90c38eb6d1bbe26d81b5c69acdc6604ee2e42ad293184abd8e23fc5b349395",
+      "dependencies": [
+        "scripts/population_run_state.py"
+      ]
+    },
+    "tests/interceptor_timing_v2.js": {
+      "sha256": "dbea9894f0b8274fe1d2b7aa492248fb7bfeb92d5b321d4fbbda754c0d29b8b3",
+      "dependencies": [
+        "web/bun_hunter_bot.js",
+        "web/bun_interceptor_bot.js"
+      ]
+    },
+    "tests/test_combat_league_training_path.py": {
+      "sha256": "cae6a8bec020ecc5cb2a9f8d177fd4107673af379ce87d519815a609a13b4352",
+      "dependencies": [
+        "scripts/audit_combat_training_path.py",
+        "scripts/cc_sil_updater_v3.py",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/cx_ftn2_train_v1.py",
+        "scripts/model_launch.py"
+      ]
+    },
+    "web/app.js": {
+      "sha256": "bba8a59fe8789ea18f38b74d2005f9a7173ea7dd6a55ec48031d701da6ad48df",
+      "dependencies": []
+    },
+    "web/bot_contract.js": {
+      "sha256": "3aadb87859f7dea0c483ee352a5c595f812f10b96a0104a23ef0a0b98a4ec411",
+      "dependencies": []
+    },
+    "web/bun_coop_hunter_bot.js": {
+      "sha256": "ee3d660b4cadb91d88293c63aac4313d9061f4c001630a87485811730c80f067",
+      "dependencies": [
+        "web/bun_hunter_bot.js"
+      ]
+    },
+    "web/bun_hunter_bot.js": {
+      "sha256": "5cf5e78b2c7251eb6a8995a6cf39fceaea5892e523b6141a84c25f8e903e05a1",
+      "dependencies": []
+    },
+    "web/bun_interceptor_bot.js": {
+      "sha256": "ded55e3cac5179c4ea40b2bed415b7eee0adb915ef0a09951b80c3eef1b67292",
+      "dependencies": [
+        "web/bun_hunter_bot.js"
+      ]
+    },
+    "web/bun_rule_bot.js": {
+      "sha256": "dc71b1069e60699ab2cd786c3e5b50cf355a577880902dbc6c7dfe093dc30554",
+      "dependencies": []
+    },
+    "web/five-item-slots-model-v1.js": {
+      "sha256": "b329c2be101d9b1005d125e8f3a1460e533a987088d86047d918d8ea7741cb9e",
+      "dependencies": [
+        "web/five-item-slots-v1.js"
+      ]
+    },
+    "web/five-item-slots-review-v1.js": {
+      "sha256": "646fd7e22128e5e2e26969f0d0b7998bbb5537796128b1df90412fad4015be43",
+      "dependencies": [
+        "web/five-item-slots-v1.js",
+        "web/review_protocol.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "web/five-item-slots-v1.js": {
+      "sha256": "410e2613da8c7d0701b91fd8cd8c5a63110c3c11f22d80c88461366b3c1a0108",
+      "dependencies": []
+    },
+    "web/review-sim/bun-native-v2-20261104.js": {
+      "sha256": "f6e346f3022640556efc2a988eb3b9b8e90abd5776af6ca1b4b1b0ee2acd6abc",
+      "dependencies": [
+        "jax_bomb/jax_env.py",
+        "jax_bomb/jax_net.py"
+      ]
+    },
+    "web/review-sim/stock-legacy-20261028.js": {
+      "sha256": "7d2047b7db2025608b38afec0f8283625b6f98a3d09ac49693f2a0a44d1d485b",
+      "dependencies": [
+        "jax_bomb/jax_env.py",
+        "jax_bomb/jax_net.py"
+      ]
+    },
+    "web/review_advantage.js": {
+      "sha256": "5ee6e364448dfe49395fcad6dddaaefa8b86f56c1499061e86a5c6b0f7fa71ad",
+      "dependencies": []
+    },
+    "web/review_dagger.js": {
+      "sha256": "9628bab670c6aacba90a3fef73d7929d61d8ad81df202c9ed8f9f7a4b4564643",
+      "dependencies": []
+    },
+    "web/review_metrics.js": {
+      "sha256": "70f00675c803420528b26e3118a3f2aa4ef7e9cfe4c65ee0959e54d8beb35597",
+      "dependencies": []
+    },
+    "web/review_protocol.js": {
+      "sha256": "da7423e756a6cb25f61878a23bb0b786aac6b62abe42dbefa749c8d6c0d3e8e7",
+      "dependencies": [
+        "web/review_advantage.js",
+        "web/review_dagger.js",
+        "web/review_metrics.js",
+        "web/review_route.js",
+        "web/sim.js",
+        "web/tactical_arena.js"
+      ]
+    },
+    "web/review_route.js": {
+      "sha256": "c5fbea871cb3541f3161cfcdfa37e9c179d1a2bae21a0d846daac860f5063c2a",
+      "dependencies": []
+    },
+    "web/sim-bun-native-v2.js": {
+      "sha256": "593b50e8278b5e544132f86dc4011c4dc06d0de1166c8ff8e751d9ac4f553154",
+      "dependencies": [
+        "jax_bomb/jax_env.py",
+        "jax_bomb/jax_net.py"
+      ]
+    },
+    "web/sim-stock-window-v1.js": {
+      "sha256": "2767cb4e2993383addc72d792fef8947f3ff86e1dcad4f73c8e1c04752a13f45",
+      "dependencies": [
+        "jax_bomb/jax_env.py",
+        "jax_bomb/jax_net.py",
+        "web/review-sim/stock-legacy-20261028.js"
+      ]
+    },
+    "web/sim.js": {
+      "sha256": "674ff0f6cde9123a158ee888b18be5e372d5929709e2d3025b4e8d5823737fda",
+      "dependencies": [
+        "jax_bomb/jax_env.py",
+        "jax_bomb/jax_net.py"
+      ]
+    },
+    "web/tactical_arena.js": {
+      "sha256": "aa44a558b4e084b19f1c619c03a4610c91dcde31a3de2eb8619b6aa0078deea9",
+      "dependencies": []
+    }
+  }
+}
