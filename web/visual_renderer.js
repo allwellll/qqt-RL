@@ -65,44 +65,41 @@
     return Math.max(0, fuseMaxTicks - fuseTicks) / tickHz;
   }
 
-  // Read the human pixel solver's permission, never the model's legalMask.
-  // Collision queries normally update contact timing: probe a private copy so
-  // drawing cannot charge passage, expire a real window or grant wall exits.
-  function bubblePassageHints(sim, humanPid) {
+  // Visual mirrors of the native solver's open charge window; physics stays
+  // authoritative (the regression places a real bomb at both boundaries).
+  const PASS_MIN_MS = 500, PASS_MAX_MS = 600, PASS_FRESH_MS = 100;
+  // frameStep advances st.clock on every rAF, independently of the 10Hz tick.
+  // Never initialize native state or use a collision query on the live state.
+  function bubblePassageHints(sim, humanPid, move = sim.lastMoveDir?.[humanPid]) {
     if (!Number.isInteger(humanPid) || humanPid < 0 || humanPid >= playerCount(sim) ||
         sim.done || !sim.alive?.[humanPid] || sim.trapped?.[humanPid] > 0 ||
         typeof sim._nativePositionWalkable !== 'function') return [];
-    const state = { clock: 0, passActive: false, touchValid: false,
-      ...(sim.nativeMove?.[humanPid] || {}) };
-    state.wallExit = state.wallExit ? { ...state.wallExit } : null;
+    const live = sim.nativeMove?.[humanPid];
+    if (!live?.touchValid || !(sim.fuse[live.touchCell] > 0)) return [];
+    const state = { ...live, wallExit: live.wallExit ? { ...live.wallExit } : null };
     sim._expireNativePass(state);
-    const timed = state.passActive;
-    const x = Math.round(sim.pos[humanPid * 2 + 1] * 40);
-    const y = Math.round(sim.pos[humanPid * 2] * 40);
-    const ownCell = Math.floor(y / 40) * 15 + Math.floor(x / 40), hints = new Map();
-    const add = (cell, move) => {
-      if (cell < 0 || cell >= 195 || !(sim.fuse[cell] > 0)) return;
-      if (!timed && cell !== ownCell) return;
-      if (!hints.has(cell)) hints.set(cell, { cell, kind: timed ? 'timed' : 'departure', directions: [] });
-      const directions = hints.get(cell).directions;
-      if (!directions.includes(move)) directions.push(move);
-    };
-    for (let move = 0; move < 4; move++) {
-      const [dy, dx] = [[-1, 0], [1, 0], [0, -1], [0, 1]][move];
-      const probe = { ...state, wallExit: state.wallExit ? { ...state.wallExit } : null };
-      // At most one adjacent cell; arrows describe permission at this clock,
-      // not a promise that a short window lasts until a distant bubble.
-      for (let offset = 1; offset <= (timed ? 40 : 1); offset++) {
-        const px = x + dx * offset, py = y + dy * offset;
-        if (!sim._nativePositionWalkable(probe, px, py, move)) break;
-        if (offset === 1) add(ownCell, move);
-        for (const hit of sim._nativeCollisions(probe, px, py, move)) {
-          if (hit.cell.row >= 0 && hit.cell.row < 13 && hit.cell.col >= 0 && hit.cell.col < 15)
-            add(hit.cell.row * 15 + hit.cell.col, move);
-        }
-      }
-    }
-    return [...hints.values()];
+    if (state.passActive) return [{ cell: state.touchCell, kind: 'active',
+      remainingMs: Math.max(0, state.passDuration - (state.clock - state.passStart)),
+      label: '已获穿泡' }];
+    const charged = state.clock - state.touchStart;
+    if (charged < 0 || charged >= PASS_MAX_MS || state.clock - state.touchLast >= PASS_FRESH_MS ||
+        !Number.isInteger(move) || move < 0 || move >= 4) return [];
+    const x = Math.round(sim.pos[humanPid * 2 + 1] * SOURCE_CELL);
+    const y = Math.round(sim.pos[humanPid * 2] * SOURCE_CELL);
+    // Mirror one native projection step on the copy. A one-pixel probe misses
+    // left/up contact: the solver can snap to the cell centre after a blocked
+    // two-pixel attempt. Never look beyond the native 25ms/40px projection.
+    const distance = Math.min(40, Math.max(1, Math.ceil(sim._nativeSpeedPx(humanPid) * .025)));
+    const probe = { ...state, wallExit: state.wallExit ? { ...state.wallExit } : null };
+    const blocked = sim._nativeSegmentCollision(probe, x, y, move, distance);
+    if (!blocked || !sim._nativeCollisions(state, blocked[0], blocked[1], move)
+      .every(hit => hit.cell.row * 15 + hit.cell.col === state.touchCell) ||
+        probe.touchStart !== state.touchStart || probe.touchCell !== state.touchCell ||
+        probe.touchLast !== state.clock) return [];
+    const ready = charged > PASS_MIN_MS;
+    return [{ cell: state.touchCell, kind: ready ? 'window' : 'charging', chargedMs: charged,
+      remainingMs: Math.max(0, (ready ? PASS_MAX_MS : PASS_MIN_MS) - charged),
+      label: ready ? '现在放泡' : '穿点倒计时' }];
   }
 
   // 脚底落在逻辑中心下方 9 源像素：若贴碰撞盒下沿(+19px)，脚和影子会比逻辑格低近半格，
@@ -717,14 +714,6 @@
           const image = assets.bombs[bombFrame(age, assets.bombs.length)];
           items.push([row * Z_ROW_STRIDE + 17, image, column * CELL + (CELL - image.width) / 2, (row + 1) * CELL - image.height]);
         }
-        // Explicit local-human perspective only; spectator/Review calls do not
-        // inherit pid0's permissions. Keep effects and characters above marks.
-        for (const hint of bubblePassageHints(sim, motion?.humanPid)) {
-          if (!coveredCells.has(hint.cell)) items.push([
-            Math.floor(hint.cell / 15) * Z_ROW_STRIDE + 17.5,
-            () => drawBubblePassage(hint),
-          ]);
-        }
         // 本地玩家头顶的原版 point.png 箭头；观战/回放时不画。
         const arrowPid = motion ? motion.humanPid : 0;
         let arrow = null;
@@ -844,6 +833,9 @@
           drawNativeEffect(assets.effects.bird, bird.x * CELL, bird.row * CELL, now);
         }
         if (arrow && assets.point) drawArrow(arrow, now);
+        for (const hint of bubblePassageHints(sim, motion?.humanPid, motion?.intents?.[motion.humanPid])) {
+          if (!coveredCells.has(hint.cell)) drawBubblePassage(hint, sim, now);
+        }
         // 死亡只压暗游戏画布，右侧 DOM 控件仍可读可点；观战/回放 viewerPid=-1 不遮挡。
         if (deathAlpha > 0) {
           ctx.fillStyle = `rgba(0,0,0,${deathAlpha.toFixed(3)})`;
@@ -862,29 +854,46 @@
       return withContextState(ctx, () => renderUnsafe(sim, now, motion));
     }
     const RESULT_COLORS = { win: '#ffd54a', lose: '#ff7a7a', draw: '#d8e6ea' };
-    function drawBubblePassage(hint) {
+    function drawBubblePassage(hint, sim, now) {
       const x = (hint.cell % 15 + .5) * CELL, y = (Math.floor(hint.cell / 15) + .5) * CELL;
+      const width = 184, height = 68, gap = 10;
+      const blockers = [];
+      for (let cell = 0; cell < 195; cell++) if (sim.fuse[cell] > 0)
+        blockers.push({ x: cell % 15 * CELL, y: Math.floor(cell / 15) * CELL, w: CELL, h: CELL });
+      for (let pid = 0; pid < playerCount(sim); pid++) if (sim.alive[pid])
+        blockers.push({ x: sim.pos[pid * 2 + 1] * CELL - 32, y: sim.pos[pid * 2] * CELL - 98, w: 64, h: 122 });
+      for (const exp of explosions) if (now - exp.t0 < 600)
+        for (let cell = 0; cell < 195; cell++) if (exp.covered[cell])
+          blockers.push({ x: cell % 15 * CELL, y: Math.floor(cell / 15) * CELL, w: CELL, h: CELL });
+      const candidates = [
+        [x - width / 2, y - CELL / 2 - gap - height],
+        [x + CELL / 2 + gap, y - height / 2],
+        [x - CELL / 2 - gap - width, y - height / 2],
+        [x - width / 2, y + CELL / 2 + gap],
+      ].map(([left, top]) => ({ x: Math.max(4, Math.min(canvas.width - width - 4, left)), y: top, w: width, h: height }));
+      const rect = candidates.find(r => r.y >= 0 && r.y + r.h <= BOARD_H &&
+        !blockers.some(b => r.x < b.x + b.w && r.x + r.w > b.x && r.y < b.y + b.h && r.y + r.h > b.y));
+      const color = hint.kind === 'window' ? '#ffe35b' : hint.kind === 'active' ? '#9ef2b5' : '#bceaff';
+      const value = `${Math.ceil(hint.remainingMs)}ms`;
       ctx.save();
-      const stroke = (draw, dash = []) => {
-        ctx.setLineDash(dash); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-        for (const [color, width] of [['#07131f', 9], ['#fff5c7', 4]]) {
-          ctx.strokeStyle = color; ctx.lineWidth = width; ctx.beginPath(); draw(); ctx.stroke();
-        }
-        ctx.setLineDash([]);
-      };
-      stroke(() => ctx.arc(x, y, 23, 0, Math.PI * 2), [5, 6]);
-      for (const move of hint.directions) {
-        const [dy, dx] = [[-1, 0], [1, 0], [0, -1], [0, 1]][move];
-        stroke(() => {
-          ctx.moveTo(x + dx * 13, y + dy * 13); ctx.lineTo(x + dx * 29, y + dy * 29);
-          ctx.moveTo(x + dx * 20 - dy * 7, y + dy * 20 + dx * 7);
-          ctx.lineTo(x + dx * 29, y + dy * 29);
-          ctx.lineTo(x + dx * 20 + dy * 7, y + dy * 20 - dx * 7);
-        });
-      }
-      if (hint.kind === 'timed') {
-        stroke(() => { ctx.arc(x, y - 23, 7, 0, Math.PI * 2); });
-        stroke(() => { ctx.moveTo(x, y - 28); ctx.lineTo(x, y - 23); ctx.lineTo(x + 4, y - 21); });
+      ctx.strokeStyle = color; ctx.lineWidth = 2;
+      // Mark the target's outer edge; no opaque symbol covers the bubble.
+      ctx.strokeRect(x - 28, y - 28, 56, 56);
+      ctx.font = 'bold 28px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (rect) {
+        const ax = Math.max(rect.x, Math.min(rect.x + rect.w, x));
+        const ay = Math.max(rect.y, Math.min(rect.y + rect.h, y));
+        ctx.beginPath(); ctx.moveTo(x, y - 28); ctx.lineTo(ax, ay); ctx.stroke();
+        ctx.fillStyle = '#101f2c'; ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
+        ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
+        ctx.fillStyle = color; ctx.fillText(hint.label, rect.x + rect.w / 2, rect.y + 20);
+        ctx.font = 'bold 30px monospace'; ctx.fillText(value, rect.x + rect.w / 2, rect.y + 50);
+      } else {
+        // Crowded board: use the reserved top band rather than cover a player,
+        // another bubble or a flame. The target remains outlined.
+        ctx.fillStyle = '#101f2c'; ctx.fillRect(0, -BOARD_OFFSET, canvas.width, BOARD_OFFSET);
+        ctx.fillStyle = color;
+        ctx.fillText(`${hint.label} ${value} · 第${Math.floor(hint.cell / 15) + 1}行${hint.cell % 15 + 1}列`, canvas.width / 2, -BOARD_OFFSET / 2);
       }
       ctx.restore();
     }
