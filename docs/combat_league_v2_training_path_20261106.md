@@ -6,7 +6,7 @@
 
 - G 自然局联赛由 `combat_specialist_g_league_train` 驱动，经 `multi_region_g_train_v1` 到独立 `combat_regions_train_v2`。独立区域线从 u18102 开始，70%自然配方、30%原生区域 reset；保留真实 Bank 总量25%、两席均衡、原地图与三技能接口。u18262 为 G_frozen。
 - G_frozen → `cc_train_v1` 自模仿各系 → `cc_league2_train` 的 peer 联赛。L2_S05g 从 L2_S05 u19142 换 seed2026619142，固定 bot floor、SIL=.5，到健康点 u019302。固定权重为 `[0,.025,.05,.25,.20,.05,.275,.10,.05]`，progression threshold=1.01 表示关闭自动变权；不把最初动态联赛配方当作此点配方。
-- L2_S05i（seed2026649302，u019382）和 L2_S05j（seed2026659302，u019462）均从同一 u019302 完整 checkpoint 换 seed，属于配方复现。独立候选 holdout 尚未完成时不得宣称晋升。
+- L2_S05i（seed2026649302，u019382）和 L2_S05j（seed2026659302，u019462）均从同一 u019302 完整 checkpoint 换 seed，属于配方复现。最新2112局独立候选 holdout 已完成：i/j argmax score=.5739/.5881，健康源=.5938；两者τ.3按预声明排序触发网页筛查，差异区间跨0，未宣称晋升。
 - FTN2 也是从健康 u019302 分叉，seed2026709302。初始160更新，后继累计1200更新按独立冻结预算执行。它增加 continuation-frontier v2 奖励，与原配方复现分列。FTN、ATK、SP 为实验支线；本次不将任何支线登记成新最佳。
 - 网页 u9809 是同期五槽发布线；G/联赛使用三技能，不能把 u9809 画成 G 的父 checkpoint。当前图同时呈现优化与发布里程碑，并用切换线说明两条路线。
 

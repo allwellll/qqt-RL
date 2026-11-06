@@ -205,7 +205,8 @@
       "title": "u019382 / u019462 · 同配方复现",
       "kind": "",
       "change": "L2_S05i/j 从健康 u019302 换独立 seed，保留奖励、权重与完整 Actor/Critic/Adam。",
-      "effect": "独立候选 holdout 尚待完整终态；FTN/ATK/SP 等支线未晋升，不能按最新 update 选模。",
+      "effect": "独立2112局完成：i/j argmax .5739/.5881，健康源 .5938；τ.3进入网页筛查，未发布。",
+      "extra": "采样差异区间跨0，不称显著胜出。FTN/ATK/SP等支线未晋升。",
       "source": "../docs/combat_league_v2_training_path_20261106.md"
     },
     {
