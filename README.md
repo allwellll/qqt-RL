@@ -8,9 +8,15 @@
 
 JE10 v38 的击杀信用、搬包路线方法、逐轮固定评估与当前能力边界见[长期训练总结](docs/je10_control_route_training_summary.md)及[20261019 固定评估报告](reports/je10_training_20261019.md)。r19 已在 g58 按用户指令安全暂停；[线上结果页](https://allwellll.github.io/qqt-RL/training.html)保留全部 61 个完成固定点。
 
-## 现行主线（2026-11-01）
+## 现行主线（2026-11-06）
 
-R1 道具/进攻 → R2 原生自由搬包与守恒归属势差 → R3 事件奖励/可见观测与本侧出生 → R4 对拼课程/对手组合。当前网页 catalog 首项为 R3-a u4002，规则 `bun-native-v2`；旧规则和 Review 保留。R4 K1/K3 正式训练，K2、击杀场和拦截 bot 的未完成闸门明确标为实验中，不能因代码入库视为放行。
+R1 道具/进攻 → R2 原生自由搬包与守恒归属势差 → R3 事件奖励/可见观测与本侧出生 → R4 对拼课程 → G 多区域联赛 → CC/CX 联赛 v2。当前已复测的强评估最佳为 **L2_S05g u019302（argmax）**：新 seed 双座复测95胜/44负/37平，得分0.6449；采样模式与长静止仍有短板。i/j 同配方复现的2112局独立 holdout 已完成；网页新线上选模待最终验收。网页当前默认为 **five-slot u9809**，u9969、K1 u5282 保留可选，规则 `bun-native-v2`；模型发布由独立任务验收，训练最佳与已上线身份分列。
+
+![主线优化与发布轨迹：it831 至联赛 v2](docs/assets/mainline_timeline_20261106.svg)
+
+[HTML 详细版](https://allwellll.github.io/qqt-RL/reports/mainline_timeline_20261106.html) · [图的源码](reports/mainline_timeline_20261106.html) · [数字来源与 SHA](reports/mainline_timeline_evidence_20261106.json)
+
+读法：按时间看“做了什么 / 效果”；虚线标记评估或训练路线切换，跨线数字不能直接横比。五槽网页发布线与 G 三技能训练线的关系单独标明；未晋升支线不展开。新路径的命令、完整依赖、同 checkpoint 新 seed 复测和防刷规则见[联赛 v2 训练路径](docs/combat_league_v2_training_path_20261106.md)。
 
 入口、评估分母、奖励防刷与发布边界见[现行指南](docs/r1_r4_training_guide_20261101.md)及[文档索引](docs/README.md)。历史 run、模型与完整 checkpoint 不随代码入库，旧队列的暂停状态保留。
 

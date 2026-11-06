@@ -24,3 +24,7 @@ web/test-artifacts/
 
 # Generated from the integrity-pinned npm runtime package.
 /web/vendor/ort/
+
+# Private generic process configurations and optional external interpreter alias.
+/local_config/
+/python_environment

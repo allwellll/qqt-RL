@@ -1,0 +1,20 @@
+'use strict';
+const assert=require('node:assert/strict'),Q=require('../web/sim-bun-native-v2'),fs=require('node:fs');
+const D=require('./cx_idle_replay_v1');
+function state(){const s=new Q.Sim(99);s.reset(JSON.parse(fs.readFileSync('web/assets/maps/levels.json')).find(l=>l.qqt_id===806),{nativeTrap:true,nativeItems:true});
+ s.wall.fill(0);s.brick.fill(0);s.fuse.fill(0);s.owner.fill(-1);s.pushable.fill(0);s.fieldItem.fill(0);s.blastLinger.fill(0);s.lastReplayCovered=new Uint8Array(195);
+ s.pos.set([6.5,3.5,6.5,11.5]);s.bombsCap=[2,2];s.blastCap=[2,2];s.bunCarried=[-1,-1];s.alive=[true,true];s.trapped=[0,0];s.movementStatus=[0,0];s.invuln=[0,0];return s;}
+let s=state();assert.equal(D.classify(s,0,0).kind,'c');
+assert.equal(D.classify(s,0,1).kind,'d');s.bunCarried[0]=1;assert.equal(D.classify(s,0,0).reason,'carrying_protected');
+s=state();s.fuse[0]=10;s.fuse[1]=10;s.owner[0]=0;s.owner[1]=0;assert.equal(D.classify(s,0,0).kind,'a');
+s=state();s.fuse[6*15+3]=10;s.owner[6*15+3]=1;s.bombBlast[6*15+3]=2;assert.notEqual(D.classify(s,0,0).kind,'c');
+s=state();s.alive[1]=false;assert.equal(D.classify(s,0,0).reason,'no_reachable_enemy_or_brick_target');
+s=state();s.alive[1]=false;s.brick[6*15+8]=1;assert.equal(D.classify(s,0,0).kind,'c');
+s=state();s.fuse[6*15+1]=10;s.owner[6*15+1]=1;s.bombBlast[6*15+1]=6;s.brick[6*15+2]=1;
+assert.equal(D.hazards(s).mask[6*15+3],1,'ignore destructible barriers conservatively');assert.notEqual(D.classify(s,0,0).kind,'c');
+s=state();s.movementStatus[0]=1;assert.equal(D.classify(s,0,0).reason,'movement_status_uncertain');
+s=state();const before=JSON.stringify(s.snapshotReplay());D.classify(s,0,0);assert.equal(JSON.stringify(s.snapshotReplay()),before,'observer must not mutate simulator or RNG');
+const mask=new Uint8Array(195);mask[6*15+4]=1;assert(!D.sweptSafe(6.5,3.5,6.5,4.5,mask),'sweep may not cross danger');
+assert(D.sweptSafe(6.5,3.5,6.2,3.5,mask),'unrelated existing hazard does not forbid all movement');
+s=state();s.wall.fill(1);s.wall[6*15+3]=0;assert.notEqual(D.classify(s,0,0).kind,'c','unreachable target cannot earn an advance certificate');
+console.log('PASS conservative idle certificates: open advance, active ability, carrier, full cap, all-owner hazards, no goal, brick goal, destructible-barrier superset, forced movement');

@@ -16,6 +16,32 @@ CATALOG=Path('jax_bomb/maps/kill_maps.json')
 _STEP=None
 _TABLE=None
 
+def _native_contact_cells(pos):
+    """Native sugar requires all center-adjacent cells in this tick's blast.
+
+    Explosion linger is visual and cannot create a new native sugar hit.
+    The 0.1-cell grid-line grace matches production Sim.step, not AABB damage.
+    """
+    cell=j.floor(pos).astype(j.int32);fraction=pos-cell
+    low=j.nextafter(j.float32(.1),j.float32(-j.inf))
+    high=j.nextafter(j.float32(.9),j.float32(j.inf))
+    offsets=j.array([-1,0,1],j.int32)
+    rows=cell[:,0,None]+offsets;cols=cell[:,1,None]+offsets
+    rv=j.stack([(fraction[:,0]<=low)&(cell[:,0]>0),j.ones(2,bool),
+                (fraction[:,0]>=high)&(cell[:,0]<12)],-1)
+    cv=j.stack([(fraction[:,1]<=low)&(cell[:,1]>0),j.ones(2,bool),
+                (fraction[:,1]>=high)&(cell[:,1]<14)],-1)
+    present=rv[:,:,None]&cv[:,None,:]
+    return j.clip(rows[:,:,None],0,12),j.clip(cols[:,None,:],0,14),present
+
+def _native_contact_covered(pos,covered):
+    rows,cols,present=_native_contact_cells(pos)
+    return j.all(~present|covered[rows,cols],axis=(1,2))
+
+def _native_contact_any(pos,horizontal,vertical,radius=None):
+    rows,cols,present=_native_contact_cells(pos)
+    return j.any(present&(horizontal|vertical)[rows,cols],axis=(1,2))
+
 class Arena(NamedTuple):
     state:object
     kills:object
@@ -52,6 +78,16 @@ def configure():
     anchor='(requested_dirs < 4) & ~active_slide,\n                              requested_dirs, state.last_move_dir'
     assert source.count(anchor)==1
     source=source.replace(anchor,'(dirs < 4) & state.alive & (state.trapped == 0),\n                              dirs, state.last_move_dir')
+    # Kill credit follows current explosion contact cells, not prior visual fire.
+    for kind in ('owner','causal','trigger'):
+        prefix='' if kind=='owner' else kind+'_'
+        for axis in (0,1):
+            old=f'blast_{kind}_linger[source, {axis}] > 0'
+            assert source.count(old)==1
+            source=source.replace(old,f'current_{prefix}sources[source, {axis}]')
+    old='base._is_hit_by_explosion('
+    assert source.count(old)==3
+    source=source.replace(old,'base._native_contact_any(')
     from types import ModuleType
     native_core=ModuleType('private_kill_arena_native_core')
     native_core.__dict__.update(E.base.__dict__)
@@ -73,9 +109,70 @@ def configure():
     # JS builds this once before its sequential player loop. Moving a box
     # changes brick immediately, but that tick still collides with old cells.
     core_source=core_source.replace(old,'    blocked = movement_blocked')
+    old='        in_f = (pr >= 0) & (pr < H) & (pc >= 0) & (pc < W)  # Web: 前缘出界 → 无箱可推'
+    assert core_source.count(old)==1
+    core_source=core_source.replace(old,'        front_index = pr * W + pc\n        in_f = (front_index >= 0) & (front_index < H * W)\n        pr, pc = jnp.floor(front_index / W), jnp.mod(front_index, W)')
+    old='        in_b = (ti >= 0) & (ti < H * W)'
+    assert core_source.count(old)==1
+    core_source=core_source.replace(old,'        in_b = (pr + dy >= 0) & (pr + dy < H) & (pc + dx >= 0) & (pc + dx < W)')
+    # Production processes player0 push+move before player1's occupancy check.
+    # Keep the pre-loop blocked grid, but expose p0's updated body to p1.
+    old='    # 3. 移动（blocked = 泡 | 墙 | 砖；位移 × spd_g）'
+    assert core_source.count(old)==1
+    core_source=core_source.replace(old,
+        '        if me == 0:\n'
+        '            p0_after = _steer(pos[0], dirs[0], alive0[0], movement_blocked,\n'
+        '                              spd_g[0] * move_scale[0], pushable)\n'
+        '            pos = pos.at[0].set(p0_after)\n\n'+old)
+    old='    p0 = _steer(pos[0], dirs[0], alive0[0], blocked,\n                spd_g[0] * move_scale[0], pushable)'
+    assert core_source.count(old)==1
+    core_source=core_source.replace(old,'    p0 = p0_after')
+    old='    hit = alive0 & _is_hit_by_explosion(newpos, horz_active, vert_active, RADIUS)'
+    assert core_source.count(old)==1
+    core_source=core_source.replace(old,'    hit = alive0 & _native_contact_covered(newpos, covered)')
+    old='    push_t = jnp.where(pushable_hit, 0.0, push_t)'
+    assert core_source.count(old)==1
+    # JS clears pushability on explosion but retains that cell's stale timer.
+    core_source=core_source.replace(old,'    # Keep exploded box timers, matching the JS pushT diagnostic field.')
     core_scope=dict(E.base.step.__globals__)
+    core_scope['_native_contact_covered']=_native_contact_covered
+    # JS assigns a chain source when a bomb first joins a wave. A later wave
+    # does not retroactively add another actor to an already-triggered bomb.
+    resolve_source=inspect.getsource(E.base._resolve_explosions_matrix)
+    old='''    def prop_body(carry, _):
+        burst, causal_actor, trigger_actor = carry
+        active_edges = reach & burst[:, None]
+        recv = active_edges.any(axis=0)
+        recv_cause = (active_edges[:, :, None]
+                      & causal_actor[:, None, :]).any(axis=0)
+        burst = burst | recv
+        causal_actor = causal_actor | recv_cause
+        trigger_actor = trigger_actor | recv_cause
+        return (burst, causal_actor, trigger_actor), None
+
+    (burst, causal_actor, trigger_actor), _ = jax.lax.scan(
+        prop_body, (burst, causal_actor, trigger_actor), None,
+        length=chain_cap)'''
+    new='''    def prop_body(carry, _):
+        burst, causal_actor, trigger_actor, wave = carry
+        active_edges = reach & wave[:, None] & ~burst[None, :]
+        recv = active_edges.any(axis=0)
+        recv_cause = (active_edges[:, :, None]
+                      & causal_actor[:, None, :]).any(axis=0)
+        burst = burst | recv
+        causal_actor = causal_actor | recv_cause
+        trigger_actor = trigger_actor | recv_cause
+        return (burst, causal_actor, trigger_actor, recv), None
+
+    (burst, causal_actor, trigger_actor, _), _ = jax.lax.scan(
+        prop_body, (burst, causal_actor, trigger_actor, burst), None,
+        length=chain_cap-1)'''
+    assert resolve_source.count(old)==1
+    resolve_source=resolve_source.replace(old,new)
+    exec(compile(resolve_source,__file__,'exec'),core_scope)
     exec(compile(core_source,__file__,'exec'),core_scope)
     native_core.step=core_scope['step']
+    native_core._native_contact_any=_native_contact_any
     scope=dict(E.step.__globals__,base=native_core)
     exec(compile(source,__file__,'exec'),scope);_STEP=scope['step']
 

@@ -4570,3 +4570,12 @@ R4-INTERCEPTOR-TIMING-V2终态（20261031）：64完整生产JS局/8分片，121
 本次保留旧 Review 的所有 replay/checkpoint/hash；为更新后的 evaluator 保存精确历史 source archive，兼容条目只接受整文件SHA及可逆差异。根级 AGENTS 忽略，runs/checkpoint/导出模型不入库；地图206张只压缩JSON空白。同步/排除、测试、隐私、commit与同SHA Pages验收见 `reports/main_sync_20261031.md`。
 
 MAIN-SYNC最终提交前验收：45项关键集成测试与31项显式版本化native定向测试全部PASS；72个Node测试文件、npm和Review通过。327文件历史审计为274通过/34失败/19项180秒超时，缺外部协议、历史patch/ABI不符与技术超时逐项分列，不声称全绿。8个默认运行/模型/对手文件SHA保持不变；历史run不入库的边界未因本次合入放宽。最终隐私、快进与同head Pages证据见同步报告及其本地回执。
+
+
+## MAIN-BEST-PATH-TIMELINE-20261106（2026-11-06）
+
+在独立集成工作树中，将 G_frozen u18262 → L2_S05g u019302 → i/j复现与FTN2的实际源码闭包合入 main；只读训练来源，无GPU启动/停止，无模型资产发布。训练代码提交 `ac0ac325778083df01802de2bf4b191067942806`，评估工具提交 `f35e61dbd872463bebd8a8c6d014618c117eee74`。包括 `model_*.py/js`、`scripts/combat_specialist_g_*`、`combat_regions_*`、`multi_region_g_*`、`r4_k4_*`、联赛v2/SIL/奖励hook/FTN2、强评估与复测/喷泉/静止/温度工具及必要依赖；逐文件清单见 `docs/combat_league_v2_dependency_manifest_20261106.json`，命令与门控见 `docs/combat_league_v2_training_path_20261106.md`。
+
+保留 main 的出生RNG审计、解释器和网页边界修复；历史重放通过精确归档物理SHA与显式版本选择，不放宽hash断言。源码采集入口的外部根改成配置项，通用launcher使用当前解释器；不提交历史短名、runs/checkpoint/local_config/python_environment或大型产物。完整状态与历史冻结协议是外部输入，本次不冒称已在新源码上完成GPU恢复。
+
+u019302 argmax 原强评估50胜/18负/20平，独立新seed复测95/44/37（176局、score=.6449），同批G=.5；categorical=.4659低于同批G=.5227，保留模式差异。i/j独立holdout和网页新默认按发布owner的最终验收，本记录不替其选模。`reports/mainline_timeline_20261106.html` 与 `docs/assets/mainline_timeline_20261106.svg` 续到联赛v2，README区分训练最佳和线上u9809；旧图保留，路线/口径切换显式标注。最终main head、Actions、测试和渲染核验见本地交付报告 `reports/cx_main_merge_20261106.md`。
