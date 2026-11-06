@@ -41,11 +41,18 @@
           throw new Error('invalid five-slot model schema');
         }
       }
+      for (const asset of [row, ...(row.onnx ? [row.onnx] : [])]) if (asset.oss_url) {
+        if (!/^https:\/\/qqt-model\.oss-cn-beijing\.aliyuncs\.com\/web-models\/[a-z0-9._-]+$/.test(asset.oss_url)
+            || !asset.oss_url.includes(asset.sha256)
+            || !asset.oss_url.endsWith(asset.file.endsWith('.onnx') ? '.onnx' : '.json')
+            || !/^https:\/\/github\.com\/[^/]+\/[^/]+\/releases\/download\/[^/]+\/[^/?#]+$/.test(asset.url || '')
+            || !asset.url.endsWith('/' + asset.file)) throw new Error('invalid OSS/Release asset sources');
+      }
       return Object.freeze({ ...row });
     });
   }
 
-  function modelUrl(row) { return `models/${row.file}`; }
+  function modelUrl(row) { return row.oss_url || `models/${row.file}`; }
   function matchLabel(mode) { return mode === 'model-vs-rule' ? '模型 vs 规则Bot' : '真人 vs 对手'; }
   return { validateManifest, modelUrl, matchLabel };
 });

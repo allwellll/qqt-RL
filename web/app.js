@@ -343,18 +343,11 @@
         modelProgressText.textContent = QQTModelLoader.progressText(loaded,total);
       });
     } else {
-    const response = await fetch(QQTModelCatalog.modelUrl(row), { cache: 'no-store' });
-    const buffer = await QQTModelLoader.readResponseWithProgress(response, (loaded, total) => {
+    const buffer = await QQTModelLoader.downloadModelAsset(row, (loaded, total) => {
       if (total > 0) modelProgress.value = loaded * 100 / total;
       else modelProgress.removeAttribute('value');
       modelProgressText.textContent = QQTModelLoader.progressText(loaded, total);
     });
-    if (buffer.byteLength !== row.bytes) throw new Error('模型大小校验失败');
-    modelProgress.removeAttribute('value');
-    modelProgressText.textContent = '正在校验模型 SHA-256…';
-    const digest = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', buffer)))
-      .map((value) => value.toString(16).padStart(2, '0')).join('');
-    if (digest !== row.sha256) throw new Error('模型 SHA-256 校验失败');
     modelProgressText.textContent = '正在解析并初始化模型…';
     await new Promise((resolve) => setTimeout(resolve, 0));
     model = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)),row);

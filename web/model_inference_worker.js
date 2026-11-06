@@ -4,7 +4,7 @@
 importScripts('sim.js', 'model_loader.js');
 let session, meta, reference, runtime, backend;
 async function verifiedDownload(asset) {
-  return QQTModelLoader.downloadVerifiedAsset(`models/${asset.file}`,asset,
+  return QQTModelLoader.downloadModelAsset(asset,
     (loaded,total)=>postMessage({progress:{loaded,total,asset:asset.file}}));
 }
 async function initialize(row) {

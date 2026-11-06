@@ -70,8 +70,10 @@
             0.8385803699493408
           ],
           "value": 1.4990057945251465
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-g-frozen-b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce.json"
     },
     {
       "id": "bun392-v2-risk-u9809",
@@ -164,9 +166,11 @@
             0.22658849663801225
           ],
           "value": 1.365045067236142
-        }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9809-3127be3f37f24e8ea81fafd9c8f02ea79a3ed9ec0dbe84d570fe3a43a33e0673.onnx"
       },
-      "score": 0.9583333333333334
+      "score": 0.9583333333333334,
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9809-6365c568b594d0dfd3c83f74d3a14afb4d9512d519579f0492d4781f1e6a2ddd.json"
     },
     {
       "id": "bun392-v2-risk-u9969",
@@ -259,9 +263,11 @@
             0.18387881636828654
           ],
           "value": 1.6937944065735642
-        }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9969-0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f.onnx"
       },
-      "score": 0.9166666666666666
+      "score": 0.9166666666666666,
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9969-a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278.json"
     },
     {
       "id": "bun392-v2-r4-k1-u5282",
@@ -332,8 +338,10 @@
             -3.0527544833094487
           ],
           "value": 2.2953588331301558
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r4-k1-u5282-2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r4-k1-u5282-88241ba1cd7a14756d6be51a29d564a071df578c18489a750b4cafdf42daeec2.json"
     },
     {
       "id": "bun392-v2-r3-a-u4002-u4002",
@@ -404,8 +412,10 @@
             3.513920282262249
           ],
           "value": 1.6218202038325769
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r3-a-u4002-u4002-f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r3-a-u4002-u4002-763ae64a325215de60fa4af403f4e03aeb27ad888bd859d54a097144e816c0a7.json"
     },
     {
       "id": "bun392-v2-r3-a-u3040-u3040",
@@ -476,8 +486,10 @@
             -1.558454526846029
           ],
           "value": 1.663176679468978
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r3-a-u3040-u3040-d9ef89f4b6454eae02395b0884079e04d77258f1827e2c52103a11e2af5afbd2.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r3-a-u3040-u3040-2a45af6ab8231d71e5104626ef58d08b0590385b1d0b9238fc73bf3b178590eb.json"
     },
     {
       "id": "bun392-r1-slot03-u2760",
@@ -548,8 +560,10 @@
             -3.196222530005783
           ],
           "value": 2.245158418542477
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-r1-slot03-u2760-d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-r1-slot03-u2760-cbd1069b6456b14ce577156a006715c89a5a1742d84871a7e00137e1c75a5b40.json"
     },
     {
       "id": "bun392-a3sr-slot00-u2400",
@@ -620,8 +634,10 @@
             -3.244211764368619
           ],
           "value": 2.359735379265811
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3sr-slot00-u2400-c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3sr-slot00-u2400-887079d10fc7b99647c847e40a39fb6a8240ddbccdad797722b326362a201732.json"
     },
     {
       "id": "bun392-a3sr-u1280",
@@ -692,8 +708,10 @@
             -1.5757055397004402
           ],
           "value": 2.5326301851937965
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json"
     },
     {
       "id": "bun392-a3-u800",
@@ -763,9 +781,11 @@
             -1.608080463888201
           ],
           "value": 2.6036760751525705
-        }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3-u800-d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d.onnx"
       },
-      "score": 0.1640625
+      "score": 0.1640625,
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3-u800-455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928.json"
     },
     {
       "id": "bun392-pbt-slot05-u720",
@@ -835,8 +855,10 @@
             -2.097180328343166
           ],
           "value": 2.4131738567792578
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-pbt-slot05-u720-2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-pbt-slot05-u720-ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088.json"
     },
     {
       "id": "bun392-je10-v38-r01-g8",
@@ -904,8 +926,10 @@
             -3.6403719898069338
           ],
           "value": -7.2872450605375665
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-je10-v38-r01-g8-b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-je10-v38-r01-g8-19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45.json"
     },
     {
       "bytes": 40294827,
@@ -970,14 +994,16 @@
             -2.022189189337481
           ],
           "value": 1.4379423910843636
-        }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx"
       },
       "score": 0.17708333333333334,
       "score_protocol": "Hunter hard/normal/easy safe kills 2/3/29 (64 each), Tactical17/64; controlled return capture15/16 main,13/16 holdout; fixed32 pickup0/16; full2400 pickup/capture0/16; exploratory, no significance claim",
       "sha256": "b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2",
       "source_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
       "strategy": "raw",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json"
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json"
     },
     {
       "id": "bun392-transport1536",
@@ -1047,8 +1073,10 @@
             3.2146418852287018
           ],
           "value": 2.2516169072456313
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-transport1536-raw-d5c8eb84936c18610d50f7044a13ec7d2ad480d5024b96ee75f82e1441b7b60a.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-transport1536-raw-2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0.json"
     },
     {
       "id": "bun392-selfplay3072",
@@ -1117,8 +1145,10 @@
             -0.393755089509511
           ],
           "value": 2.727728447982351
-        }
-      }
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-selfplay3072-7618ec5f6c23b2e2f0c9f45d086a6ca1429e73808aab3276c8b5cdbf29af5639.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-selfplay3072-raw-c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a.json"
     },
     {
       "id": "bun-tf-it4000",
@@ -1130,7 +1160,8 @@
       "candidate": "overnight_tf_v2_phase2",
       "cycle": 4000,
       "score": 0.418,
-      "source_sha256": "6e190b009f180f2e449fd19941c930c0d1a86d680071eeb02262aadb6808ebd0"
+      "source_sha256": "6e190b009f180f2e449fd19941c930c0d1a86d680071eeb02262aadb6808ebd0",
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun-tf-it4000-830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084.json"
     },
     {
       "id": "bun-kill-mlp4",
@@ -1142,7 +1173,8 @@
       "candidate": "bun_kill_mlp4",
       "cycle": 0,
       "score": 0.609375,
-      "source_sha256": "77248246133cbfb38ccd28420d0b762c01ce7960cc29aca4af54e5b93411f207"
+      "source_sha256": "77248246133cbfb38ccd28420d0b762c01ce7960cc29aca4af54e5b93411f207",
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun-kill-mlp4-1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70.json"
     },
     {
       "id": "safe-high-c16",
@@ -1154,7 +1186,8 @@
       "candidate": "safe_high",
       "cycle": 16,
       "score": 0.0390625,
-      "source_sha256": "fb2ffef79ffc0a7cf26360b325fab3513d7d1f63db9723f963635a488e080514"
+      "source_sha256": "fb2ffef79ffc0a7cf26360b325fab3513d7d1f63db9723f963635a488e080514",
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/safe-high-c16-cabd0dad115cd888dec4f715d999f862296ef4ce3dc1e6bfad7c0aea70d37aa1.json"
     },
     {
       "id": "safe-medium-c16",
@@ -1166,7 +1199,8 @@
       "candidate": "safe_medium",
       "cycle": 16,
       "score": -0.0296875,
-      "source_sha256": "971ed291924222f01e3980eb3ebb1ca4d3403bdc520661249e5cb2d4544fd83c"
+      "source_sha256": "971ed291924222f01e3980eb3ebb1ca4d3403bdc520661249e5cb2d4544fd83c",
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/safe-medium-c16-9908caa24d39fab7d34ab0047754c22a78ae2be267142290fbaad41a09bfe3f8.json"
     },
     {
       "id": "safe-high-c24",
@@ -1178,7 +1212,8 @@
       "candidate": "safe_high",
       "cycle": 24,
       "score": -0.030026830808080773,
-      "source_sha256": "ae0c0ca6310ac9125dc3d77dfd1b8512f822cddba95e8821bd3b685e7581a072"
+      "source_sha256": "ae0c0ca6310ac9125dc3d77dfd1b8512f822cddba95e8821bd3b685e7581a072",
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/safe-high-c24-9ba571c45791aa01dc03ddc8b1a5ae7916be1f5f24e30dec86bdc0c4f8700b5b.json"
     }
   ]
 }

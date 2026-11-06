@@ -83,7 +83,9 @@ for (const id of ['bun-tf-it4000','bun-kill-mlp4','safe-high-c16','safe-medium-c
   assert(production.models.some(row => row.id === id), `existing model retained: ${id}`);
 }
 for (const row of catalog.validateManifest(production)) {
-  assert.strictEqual(catalog.modelUrl(row), `models/${row.file}`, '浏览器必须同源加载模型，避免GitHub Release跨域失败');
+  assert.strictEqual(catalog.modelUrl(row), row.oss_url, 'OSS is preferred, Release and same-origin mirror remain fallbacks');
+  for(const asset of [row,...(row.onnx?[row.onnx]:[])]){assert(asset.oss_url.startsWith('https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/'));assert(asset.oss_url.includes(asset.sha256));assert(asset.url.startsWith('https://github.com/'));}
+  assert.throws(()=>catalog.validateManifest({...production,models:[{...row,oss_url:'https://example.org/'+row.file}]}),/sources/);
 }
 assert.strictEqual(catalog.matchLabel('model-vs-rule'), '模型 vs 规则Bot');
 console.log('网页模型目录与观战模式契约通过');
