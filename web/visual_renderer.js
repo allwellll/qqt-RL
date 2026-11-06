@@ -83,10 +83,12 @@
     if (charged < 0 || charged >= PASS_MAX_MS) return [];
     // Native touchCell owns the ring until replacement/expiry. Releasing keys
     // or walking away never resets its clock. Only freshness affects readiness.
-    const contact = state.clock - state.touchLast < PASS_FRESH_MS;
+    const contact = typeof sim._nativeFacingCell === 'function'
+      ? sim._nativeFacingCell(humanPid) === state.touchCell
+      : state.clock - state.touchLast < PASS_FRESH_MS;
     return [{ cell: state.touchCell, kind: charged > PASS_MIN_MS ? 'window' : 'charging',
       chargedMs: charged, progress: Math.min(1, charged / PASS_MIN_MS), contact,
-      ready: charged > PASS_MIN_MS && contact }];
+      ready: charged > PASS_MIN_MS && contact && state.clock - state.touchLast < PASS_FRESH_MS }];
   }
 
   // Tick motion stays one tick behind the authoritative solver. A 480px/s
@@ -424,6 +426,7 @@
     function updateFaces(sim, intents) {
       const previous = lastPositions;
       for (let pid = 0; pid < playerCount(sim); pid++) {
+        if (typeof sim._nativeFacingCell === 'function') { faces[pid] = sim.lastMoveDir[pid]; continue; }
         const intent = sim.movementStatus && sim.movementStatus[pid] === 2
           ? sim.slideDir[pid] : (intents ? intents[pid] : MOVE_IDLE);
         if (intent >= 0 && intent < MOVE_IDLE) { faces[pid] = intent; continue; }
@@ -863,14 +866,16 @@
         : `rgb(${Math.round(219 - 153 * progress)},${Math.round(233 + 3 * progress)},${Math.round(237 - 112 * progress)})`;
       ctx.save();
       ctx.lineCap = 'round';
-      // Thin outer track leaves the bubble centre and its animation visible.
-      ctx.strokeStyle = 'rgba(7,19,31,.85)'; ctx.lineWidth = 7;
+      // Dark outline stays 2px outside the 5px progress stroke.
+      ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.lineWidth = 9;
       ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.stroke();
-      ctx.strokeStyle = 'rgba(233,245,248,.35)'; ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(233,245,248,.35)'; ctx.lineWidth = 5;
       ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.stroke();
       ctx.globalAlpha = hint.kind === 'window' && !hint.ready ? .5 : 1;
       ctx.setLineDash(hint.kind === 'window' && !hint.ready ? [4, 5] : []);
-      ctx.strokeStyle = color; ctx.lineWidth = hint.ready ? 5 : 3;
+      ctx.strokeStyle = 'rgba(0,0,0,.65)'; ctx.lineWidth = 9;
+      ctx.beginPath(); ctx.arc(x, y, radius, start, start + Math.PI * 2 * progress); ctx.stroke();
+      ctx.strokeStyle = color; ctx.lineWidth = 5;
       ctx.beginPath(); ctx.arc(x, y, radius, start, start + Math.PI * 2 * progress); ctx.stroke();
       if (hint.kind === 'active') {
         ctx.setLineDash([]); ctx.lineWidth = 3;

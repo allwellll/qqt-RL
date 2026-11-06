@@ -13,6 +13,7 @@
   VERSION_FILES[STOCK_LEGACY_HASH]='review-sim/stock-legacy-20261028.js';
   VERSION_FILES['593b50e8278b5e544132f86dc4011c4dc06d0de1166c8ff8e751d9ac4f553154']='sim-bun-native-v2.js';
   VERSION_FILES['674ff0f6cde9123a158ee888b18be5e372d5929709e2d3025b4e8d5823737fda']='sim.js';
+  VERSION_FILES['6a9d3c07fad3de828e8bbb550e469c2e7b2a76cb057d1a9a58c6fbcdc03e48c9']='sim-bun-native-v2-face.js';
   const versions=new Map();
   function registerSimulator(hash,api){if(!VERSION_FILES[hash])throw Error('unknown simulator');versions.set(hash,api);}
   function simulator(meta){

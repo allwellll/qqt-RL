@@ -24,6 +24,15 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),{randomUUID}=re
   await db.exec(sql);assert.equal((await call('qqt_win_leaderboard')).rows.length,1);
   assert.equal((await call('qqt_ruleset_contract')).ruleset_contract_version,2);
   await db.exec('set role anon');await assert.rejects(()=>db.query('select * from qqt_private.match_results'),/permission denied/);await db.exec('reset role');
+  const faceSql=fs.readFileSync('supabase/migrations/20261107010000_pass_facing_ruleset.sql','utf8');await db.exec(faceSql);
+  const face=payload('bun-native-v2-face');const faceReceipt=await call('qqt_submit_result',[face]);assert.equal(faceReceipt.ruleset_version,'bun-native-v2-face');assert.equal(faceReceipt.match_rank.total,1);
+  const faceBoard=await call('qqt_my_win_leaderboard_ruleset',[face.player_id,face.player_secret,'bun-native-v2-face']);assert.equal(faceBoard.rows.length,1);
+  assert.notEqual(faceBoard.rows[0].record_id,native.rows[0].record_id);
+  assert.equal((await call('qqt_my_win_leaderboard_ruleset',[v2.player_id,v2.player_secret,'bun-native-v2'])).rows.length,1);
+  await assert.rejects(()=>call('qqt_submit_result',[{...face,ruleset_version:'bun-native-v2'}]),/ruleset mismatch/);
+  assert.deepEqual((await call('qqt_ruleset_contract')).rulesets,['stock-window-v1','bun-native-v2','bun-native-v2-face']);
+  await db.exec(faceSql);assert.equal((await call('qqt_my_win_leaderboard_ruleset',[face.player_id,face.player_secret,'bun-native-v2-face'])).rows.length,1);
+  assert.equal((await call('qqt_win_leaderboard')).rows.length,1);
   console.log('ruleset migration PASS: preservation, isolation, retry, ACL, repeat migration');
  }finally{await db.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
