@@ -27,7 +27,7 @@ function curl(args,input){return new Promise((resolve,reject)=>{
  const info=JSON.parse(await curl([`${base}build-info.json?verify=${head}`]));
  if(info.commit!==head)throw new Error('Published build-info is not exact HEAD');record.buildInfo=info;
  const files=['index.html','app.js','style.css','leaderboard.js','leaderboard_config.js','sound.js','sim.js','controls.js','ui_panels.js','visual_renderer.js',
- 'models.json','model_worker.js','model_inference_worker.js','vendor/ort/ort.wasm.min.js','vendor/ort/ort-wasm-simd-threaded.mjs','vendor/ort/ort-wasm-simd-threaded.wasm','model_catalog.js','model_loader.js','replay.js','bun_coop_hunter_bot.js','bun_hunter_bot.js','assets/native/sprites.json','assets/native/maomao_portrait.png','assets/snd/吃道具音效.wav'];
+ 'models.json','model_inference_defaults.json','model_sampling_v1.js','model_worker.js','model_inference_worker.js','sim-bun-native-v2.js','r3_model_inputs.js','ruleset_selector.js','five-item-slots-model-v1.js','vendor/ort/ort.wasm.min.js','vendor/ort/ort-wasm-simd-threaded.mjs','vendor/ort/ort-wasm-simd-threaded.wasm','model_catalog.js','model_loader.js','replay.js','bun_coop_hunter_bot.js','bun_hunter_bot.js','assets/native/sprites.json','assets/native/maomao_portrait.png','assets/snd/吃道具音效.wav'];
  // Fetch in small batches to keep network resource usage bounded.
  for(let i=0;i<files.length;i+=4){record.files.push(...await Promise.all(files.slice(i,i+4).map(async file=>{
    const data=await curl([`${base}${file.split('/').map(encodeURIComponent).join('/')}?verify=${head}`]);

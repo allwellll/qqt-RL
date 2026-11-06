@@ -3,6 +3,22 @@
 const assert = require('assert');
 const controls = require('./controls.js');
 
+{
+  const buttons = ['ArrowUp', 'Space'].map(key => ({ dataset: {controlKey:key}, handlers:{},
+    addEventListener(name,fn){this.handlers[name]=fn;}, setPointerCapture(){} }));
+  const held = new Set(), pressed = [];
+  const release = controls.bindTouchControls({querySelectorAll:()=>buttons},held,key=>pressed.push(key));
+  const event = pointerId => ({pointerId,preventDefault(){}});
+  buttons[0].handlers.pointerdown(event(1)); buttons[0].handlers.pointerdown(event(2));
+  buttons[1].handlers.pointerdown(event(3));
+  assert.equal(controls.moveForHeld(held),0); assert(held.has('Space'));
+  buttons[0].handlers.pointerup(event(1)); assert(held.has('ArrowUp'),'second pointer still holds direction');
+  buttons[0].handlers.pointercancel(event(2)); assert(!held.has('ArrowUp'));
+  buttons[1].handlers.lostpointercapture(event(3)); assert.equal(held.size,0);
+  buttons[0].handlers.pointerdown(event(4)); release(); assert.equal(held.size,0);
+  assert.deepEqual(pressed,['ArrowUp','ArrowUp','Space','ArrowUp']);
+}
+
 assert.strictEqual(controls.moveForHeld(new Set(['ArrowUp'])), 0);
 assert.strictEqual(controls.moveForHeld(new Set(['ArrowDown'])), 1);
 assert.strictEqual(controls.moveForHeld(new Set(['ArrowLeft'])), 2);

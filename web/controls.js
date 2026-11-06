@@ -42,6 +42,26 @@
     };
   }
 
+  function bindTouchControls(root, held, onPress) {
+    const active = new Map();
+    const release = event => {
+      const key = active.get(event.pointerId);
+      active.delete(event.pointerId);
+      if (key && ![...active.values()].includes(key)) held.delete(key);
+    };
+    for (const button of root.querySelectorAll('[data-control-key]')) {
+      button.addEventListener('pointerdown', event => {
+        event.preventDefault();
+        const key = button.dataset.controlKey;
+        if (active.has(event.pointerId)) return;
+        active.set(event.pointerId, key); held.add(key);
+        button.setPointerCapture(event.pointerId); onPress(key);
+      });
+      for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) button.addEventListener(name, release);
+    }
+    return () => { for (const key of active.values()) held.delete(key); active.clear(); };
+  }
+
   return { MOVEMENT_KEYS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld,
-    isTypingTarget, isRestartKey, createRestartGate };
+    isTypingTarget, isRestartKey, createRestartGate, bindTouchControls };
 });

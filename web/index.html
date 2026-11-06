@@ -8,6 +8,18 @@
 </head>
 <body>
   <main>
+    <nav id="touch-controls" class="touch-controls" aria-label="触屏游戏操作">
+      <div class="touch-directions">
+        <button type="button" class="touch-up" data-control-key="ArrowUp" aria-label="向上">↑</button>
+        <button type="button" class="touch-left" data-control-key="ArrowLeft" aria-label="向左">←</button>
+        <button type="button" class="touch-down" data-control-key="ArrowDown" aria-label="向下">↓</button>
+        <button type="button" class="touch-right" data-control-key="ArrowRight" aria-label="向右">→</button>
+      </div>
+      <div class="touch-actions">
+        <button type="button" data-control-key="Space" aria-label="放泡">放泡</button>
+        <button type="button" data-control-key="KeyE" aria-label="使用第一格道具">道具</button>
+      </div>
+    </nav>
     <section class="arena">
       <div class="stage">
         <canvas id="game" width="900" height="880" aria-label="抢包子对战画面"></canvas>
@@ -72,7 +84,7 @@
         <button id="advanced-close" type="button">关闭高阶设置</button>
         <button id="advanced-forget" type="button">忘记本设备授权 / 锁定高阶设置</button>
         <a href="review.html">回放诊断台</a>
-        <a id="latest-model-review" href="promotion-review.html" target="_blank" rel="noopener">五槽 u9809 · 固定8局完整Review（bun-native-v2）</a>
+        <a id="latest-model-review" href="promotion-review.html" target="_blank" rel="noopener">历史五槽 u9809 · 固定8局Review（只读）</a>
         <a href="training.html">JE10 训练结果</a>
         <button id="restart" type="button">重新开局</button>
         <button id="pending-submit" type="button">查看未完成的结算</button>
@@ -91,6 +103,15 @@
           <select id="match-mode">
             <option value="human-vs-opponent">真人 vs 对手</option>
             <option value="model-vs-rule">模型 vs 规则Bot（观战）</option>
+          </select>
+        </label>
+        <label id="model-opponent-wrap" hidden>观战对手（模型固定 P1）
+          <select id="model-opponent">
+            <option value="bun.coop_hunter@hard" selected>协作猎手 · 困难</option>
+            <option value="bun.hunter@hard">猎手 · 困难</option>
+            <option value="bun.hunter@normal">猎手 · 普通</option>
+            <option value="bun.hunter@easy">猎手 · 简单</option>
+            <option value="bun.tactical_v2">安全战术规则 Bot</option>
           </select>
         </label>
         <label>队伍
@@ -118,7 +139,7 @@
             <optgroup id="model-options" label="训练模型（仅 1v1，选择后下载）"></optgroup>
           </select>
         </label>
-        <p class="note">自 2026-10-30 起对战采用新偷包规则：只能在敌方死亡或被原生糖浆困住的窗口内取库存包；已持包可继续返程。历史成绩与新规则成绩混排。</p>
+        <p class="note">默认采用 bun-native-v2 自由取包、原生道具和糖泡规则。旧库存窗口规则可在高阶设置切换；历史 Review 使用录像各自的冻结规则。</p>
         <p id="model-details" class="note"></p>
         <div id="model-progress-wrap" class="progress-wrap" hidden>
           <progress id="model-progress" max="100" value="0"></progress>
@@ -175,6 +196,7 @@
   <script src="controls.js"></script>
   <script src="model_catalog.js"></script>
   <script src="model_loader.js"></script>
+  <script src="model_sampling_v1.js"></script>
   <script src="model_worker.js"></script>
   <script src="replay.js"></script>
   <script src="tactical_arena.js"></script>

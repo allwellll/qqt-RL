@@ -2,6 +2,78 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "bun392-g-frozen",
+      "display_name": "Bun392 G_frozen \u00b7 \u03c40.3",
+      "file": "bun392-g-frozen-b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce.json",
+      "sha256": "b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce",
+      "bytes": 40340827,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-model-temperature-20261106/bun392-g-frozen-b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce.json",
+      "cycle": 18262,
+      "candidate": "G_frozen",
+      "strategy": "raw",
+      "source_sha256": "f2e6c9b8c0fa9a8ac46ba483fca714c4b31e06d9185ef833cd02fb97c03a7d9b",
+      "rule_version": "bun-native-v2",
+      "score": 0.9890625,
+      "description": "\u539f\u751f\u7b56\u7565\u3001\u6a21\u578bP1\uff1b\u79fb\u52a8\u548c\u80fd\u529b\u4e24\u5934\u5408\u6cd5mask\u5185\u6e29\u5ea6\u91c7\u6837\u3002\u56fa\u5b9a\u8bad\u7ec3\u6a21\u5f0f0\uff0c\u65e0\u5728\u7ebf\u8001\u5e08\u3002\u72ec\u7acbholdout\u53ca\u7f51\u9875P1\u4e94\u5bf9\u624b\u7b5b\u67e5\u89c1\u53d1\u5e03\u62a5\u544a\uff1b\u5c0f\u6837\u672c\u4e0d\u4fdd\u8bc1\u771f\u4eba\u80dc\u7387\u3002\u65e7\u6a21\u578b\u4fdd\u7559\u53ef\u9009\u56de\u6eda\u3002",
+      "score_protocol": "current web native-v2; P1; five paired opponents x 64 seeds; independent frozen-opponent holdout separately reported",
+      "onnx": {
+        "file": "bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
+        "sha256": "0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480",
+        "bytes": 30276775,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-model-temperature-20261106/bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
+        "meta": {
+          "name": "g-frozen",
+          "display_name": "g-frozen",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "arch": "transformer",
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20,
+          "value_max": 20,
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "checkpoint_sha256": "f2e6c9b8c0fa9a8ac46ba483fca714c4b31e06d9185ef833cd02fb97c03a7d9b",
+          "onnx_sha256": "0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "48e5697a9b99fad340d03a96453941253242cb27c7253d0842e45d441313e7a0",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI",
+          "onnx_file": "bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
+          "rule_version": "bun-native-v2"
+        },
+        "reference_zero": {
+          "move": [
+            1.7847744226455688,
+            2.3832197189331055,
+            2.457134962081909,
+            2.0040807723999023,
+            2.319208860397339
+          ],
+          "bomb": [
+            3.2921104431152344,
+            -1.1357014179229736,
+            0.8385803699493408
+          ],
+          "value": 1.4990057945251465
+        }
+      }
+    },
+    {
       "id": "bun392-v2-risk-u9809",
       "display_name": "Bun392 \u4e94\u69fd\u98ce\u9669\u7ebf u9809",
       "file": "bun392-v2-risk-u9809-6365c568b594d0dfd3c83f74d3a14afb4d9512d519579f0492d4781f1e6a2ddd.json",

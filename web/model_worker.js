@@ -43,7 +43,7 @@
       if(initialized.meta.schema_version==='five-item-slots-v1')QQTFiveSlotsModel.attach(model,initialized.meta);
       else if(typeof QQTR3Inputs!=='undefined')QQTR3Inputs.attach(model);
       model.close=()=>client.close();model.inferenceTimes=client.times;
-      return model;
+      return typeof QQTModelSampling !== 'undefined' ? QQTModelSampling.attach(model,row) : model;
     } catch(error){client.close();throw error;}
   }
   return {Client,load};

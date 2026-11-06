@@ -86,11 +86,18 @@
   await useMap(trainingLevel);
 
   const held = new Set();
-  const modelRng = QQT.mulberry32(0x515154);
+  let modelRng = QQT.mulberry32(0x515154);
+  let botRng = QQT.mulberry32(0x515154 ^ 0x5CA17);
   // 按键瞬间记下所在格（-1=未按）；下一个 10Hz tick 在该格放泡/放道具。
   let bombCell = -1;
   let itemCell = -1;
   let itemSlot = 0;
+  const touchControls = document.getElementById('touch-controls');
+  const releaseTouchControls = QQTControls.bindTouchControls(touchControls, held, key => {
+    if (!localHumanControls() || sim.done) { held.delete(key); return; }
+    if (QQTControls.BOMB_KEYS.includes(key) && bombCell < 0) bombCell = humanCell();
+    if (QQTControls.ITEM_KEYS.includes(key) && itemCell < 0) { itemCell = humanCell(); itemSlot = 0; }
+  });
   let loadedModel = null;
   let loadedModelId = null;
   let publishedModels = [];
@@ -150,15 +157,16 @@
     sim.frameStep(0, move, dt);
   }
 
-  function instantiateModel(document) {
+  function instantiateModel(document, row) {
     if(document.meta?.ability_actions>3 && document.meta.schema_version!=='five-item-slots-v1')throw Error('Unknown model action schema');
     const arch = document.meta && document.meta.arch;
     const model = arch === 'transformer' ? new QQT.TransformerModel(document)
       : arch === 'cnn' ? new QQT.CNNModel(document)
       : arch === 'mlp4' ? new QQT.MLP4Model(document) : new QQT.MLPModel(document);
     model.greedy = true;
-    return document.meta?.schema_version==='five-item-slots-v1'
+    const consumer = document.meta?.schema_version==='five-item-slots-v1'
       ? QQTFiveSlotsModel.attach(model,document.meta) : QQTR3Inputs.attach(model);
+    return QQTModelSampling.attach(consumer,row);
   }
 
   function createRegistry() {
@@ -188,7 +196,7 @@
     for (const bot of extraBots) if (bot && bot.close) bot.close();
     const registry = createRegistry();
     // 选项值形如 "bun.hunter@hard"：@ 后为难度配置。
-    const choice = matchMode.value === 'model-vs-rule' ? 'bun.tactical_v2'
+    const choice = matchMode.value === 'model-vs-rule' ? document.getElementById('model-opponent').value
       : isModelChoice(opponentSelect.value) ? 'bun.browser_model' : opponentSelect.value;
     const [botId, difficulty] = choice.split('@');
     const context = (seed) => ({
@@ -196,11 +204,11 @@
       seed, ruleset: 'bun', max_ticks: null, metadata: {},
     });
     activeBot = registry.create(botId, difficulty ? { difficulty } : {});
-    activeBot.reset(context(Date.now() >>> 0));
+    activeBot.reset(context(sim.seed >>> 0));
     extraBots = [];
     for (let pid = 2; pid < sim.nPlayers; pid++) {
       extraBots[pid] = registry.create(botId, difficulty ? { difficulty } : {});
-      extraBots[pid].reset(context((Date.now() + pid * 7919) >>> 0));
+      extraBots[pid].reset(context((sim.seed + pid * 7919) >>> 0));
     }
   }
 
@@ -219,24 +227,33 @@
     if (level !== selectedLevel()) await useMap(selectedLevel());
     // Switch rules only when rebuilding the whole match, after any map load.
     QQTRulesets.select(requestedRuleset);
-    sim = new QQT.Sim(Date.now() >>> 0);
+    const requestedSeed = new URLSearchParams(location.search).get('seed');
+    const episodeSeed = requestedSeed != null && /^\d+$/.test(requestedSeed) ? Number(requestedSeed) >>> 0 : Date.now() >>> 0;
+    sim = new QQT.Sim(episodeSeed);
+    modelRng = QQT.mulberry32((episodeSeed ^ (loadedModel?.samplingProfile?.seed ?? 0x515154)) >>> 0);
+    botRng = QQT.mulberry32((episodeSeed ^ 0x515154 ^ 0x5CA17) >>> 0);
     const wantModel = isModelChoice(opponentSelect.value);
     if (wantModel && loadedModelId !== opponentSelect.value.slice(MODEL_PREFIX.length)) opponentSelect.value = 'bun.coop_hunter@hard';
     if (matchMode.value === 'model-vs-rule' && !loadedModel) {
       matchMode.value = 'human-vs-opponent';
       modelStatus.textContent = '请先在「策略」中选择一个训练模型';
     }
+    if (matchMode.value === 'model-vs-rule') teamMode.value = '1v1';
+    document.getElementById('model-opponent-wrap').hidden = matchMode.value !== 'model-vs-rule';
     if (teamMode.value !== '1v1' && !teamCapable(opponentSelect.value)) opponentSelect.value = 'bun.coop_hunter@hard';
-    // 原版道具栏/糖泡只在真人对局开启；模型评测与录像保持训练规则。
+    // Fresh model matches use the selected native rules; archived Review keeps its frozen engine.
     const native = localHumanControls();
-    sim.reset(level, { nativeItems: native, nativeTrap: native, teams: teamLayout(),
+    sim.reset(level, { nativeItems: true, nativeTrap: true, teams: teamLayout(),
       bananaSlideSpeedPx: native ? 480 : undefined });
+    sim.maxSteps = 2400;
+    QQTModelSampling.watch(sim);
     const [opponent, difficulty] = opponentSelect.value.split('@');
     leaderboardMatch = native ? leaderboard.begin({ seed: sim.seed, opponent,
       ruleset_version: QQTRulesets.current,
       difficulty: difficulty || (isModelChoice(opponent) ? 'model' : 'fixed'),
       mode: teamMode.value, map_id: mapSelect.value }) : null;
     resetBot();
+    releaseTouchControls();
     bombCell = -1;
     itemCell = -1;
     itemSlot = 0;
@@ -246,6 +263,7 @@
 
   function resetReplay() {
     if (!replayDocument) return;
+    releaseTouchControls();
     sessionRevision++;
     leaderboardMatch = null;
     leaderboard.setSettlementReady(false);
@@ -339,7 +357,7 @@
     if (digest !== row.sha256) throw new Error('模型 SHA-256 校验失败');
     modelProgressText.textContent = '正在解析并初始化模型…';
     await new Promise((resolve) => setTimeout(resolve, 0));
-    model = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)));
+    model = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)),row);
     }
     const previousModel = loadedModel;
     loadedModel = model.meta?.schema_version === 'five-item-slots-v1'
@@ -355,7 +373,8 @@
     modelProgressText.textContent = '模型加载完成';
     opponentSelect.disabled = false;
     modelStatus.textContent = `已加载：${row.display_name}`;
-    modelDetails.textContent = `${row.candidate} · cycle ${row.cycle} · score ${row.score.toFixed(4)} · ${(row.bytes / 1048576).toFixed(1)} MiB`;
+    const decision = model.greedy ? 'argmax' : `τ ${model.temperature}`;
+    modelDetails.textContent = `${row.candidate} · cycle ${row.cycle} · score ${row.score.toFixed(4)} · ${decision} · ${(row.bytes / 1048576).toFixed(1)} MiB`;
   }
 
   async function loadCatalog() {
@@ -363,6 +382,14 @@
       const response = await fetch('models.json', { cache: 'no-store' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       publishedModels = QQTModelCatalog.validateManifest(await response.json());
+      const defaultsResponse = await fetch('model_inference_defaults.json', {cache:'no-store'});
+      if (!defaultsResponse.ok) throw new Error('模型推理配置不可用');
+      const defaults = await defaultsResponse.json();
+      if (defaults.schema !== 'qqt.model-inference-defaults/v1' || defaults.ruleset !== 'bun-native-v2' || defaults.max_ticks !== 2400 || !publishedModels.some(row=>row.id===defaults.default_model_id)) throw new Error('模型推理配置无效');
+      if (!defaults.policies || Object.keys(defaults.policies).some(id=>!publishedModels.some(row=>row.id===id))) throw new Error('模型推理策略无效');
+      publishedModels = publishedModels.map(row => defaults.policies[row.id]
+        ? {...row,inference:QQTModelSampling.profile({inference:defaults.policies[row.id]})} : row);
+      publishedModels.sort((a,b) => Number(b.id===defaults.default_model_id)-Number(a.id===defaults.default_model_id));
       modelOptions.replaceChildren(...publishedModels.map((row) => new Option(row.display_name, MODEL_PREFIX + row.id)));
       modelDetails.textContent = `可选模型 ${publishedModels.length} 个`;
     } catch (error) {
@@ -412,6 +439,7 @@
   }
 
   function render(now = performance.now()) {
+    touchControls.hidden = !localHumanControls() || sim.done;
     if (sim.done && localHumanControls() && leaderboardMatch) {
       const match = { ...leaderboardMatch, client_version: clientVersion };
       leaderboardMatch = null;
@@ -431,8 +459,8 @@
     status.textContent = JSON.stringify({
       mode: QQTModelCatalog.matchLabel(matchMode.value),
       tick: sim.t,
-      player_or_model_alive: sim.alive[0],
-      rule_bot_alive: sim.alive[1],
+      player_or_model_alive: sim.alive[matchMode.value === 'model-vs-rule' ? 1 : 0],
+      rule_bot_alive: sim.alive[matchMode.value === 'model-vs-rule' ? 0 : 1],
       bun_score: sim.bunScore,
       carrying: sim.bunCarried,
       held_item: sim.nativeItems
@@ -462,41 +490,44 @@
         }
       } else if (!sim.done) {
         const first = matchMode.value === 'model-vs-rule'
-          ? await Promise.resolve(loadedModel.act(sim, 0, modelRng)) : humanAction();
+          ? await Promise.resolve(loadedModel.act(sim, 1, modelRng)) : humanAction();
         if (obsolete()) return;
         const state = QQTBunRuleBot.stateFromSim(sim);
         const observation = {
           schema: 'qqt.bot.observation/v1', tick: sim.t, state,
           legal_moves: [0, 1, 2, 3, 4], legal_abilities: [0, 1, 2], metadata: { sim },
         };
-        const action = await Promise.resolve(activeBot.act(observation, 1, modelRng));
+        const botPid = matchMode.value === 'model-vs-rule' ? 0 : 1;
+        const action = await Promise.resolve(activeBot.act(observation, botPid, botRng));
         if (obsolete()) return;
         const extra = [];
         for (let pid = 2; pid < sim.nPlayers; pid++) {
-          extra[pid] = await Promise.resolve(extraBots[pid].act(observation, pid, modelRng));
+          extra[pid] = await Promise.resolve(extraBots[pid].act(observation, pid, botRng));
           if (obsolete()) return;
         }
         const botActions = [null, action, ...extra.slice(2)];
         prevPos.set(sim.pos);
         const before = QQTSound.snapshot(sim);
-        const info = sim.step([
+        const joint = [
           [Number(first[0]), Number(first[1]), Number(first[2]) || 0, Number(first[3]) || 0,
             first[4] == null ? -1 : first[4], first[5] == null ? -1 : first[5], first[6] == null ? 0 : first[6]],
           ...botActions.slice(1).map((a) => [a.move, a.ability === 1 ? 1 : 0, a.ability === 2 ? 1 : 0,
             0, -1, -1, a.itemSlot == null ? 0 : a.itemSlot]),
-        ]);
+        ];
+        if (matchMode.value === 'model-vs-rule') [joint[0],joint[1]] = [joint[1],joint[0]];
+        const info = sim.step(joint);
         curPos.set(sim.pos); lastTickT = performance.now();
         if (localHumanControls()) {
           for (let pid = 1; pid < sim.nPlayers; pid++) {
             intents[pid] = sim.alive[pid] ? sim.playerMoveDirection(pid, botActions[pid].move) : QQT.MOVE_IDLE;
           }
-        } else setTickIntents(first[0], action.move);
+        } else setTickIntents(action.move, first[0]);
         renderer.addExplosion(info, performance.now());
         playEvents(before, info, 0);
         if (activeBot.observe_transition) {
           activeBot.observe_transition(info, {
             ...observation, tick: sim.t, state: QQTBunRuleBot.stateFromSim(sim),
-          }, 1);
+          }, botPid);
         }
       }
     } finally {
@@ -537,6 +568,7 @@
     if (event.target.matches('input, textarea') || event.target.closest('dialog, #advanced-settings')) { held.clear(); bombCell = -1; itemCell = -1; }
   });
   window.addEventListener('blur', () => {
+    releaseTouchControls();
     held.clear(); bombCell = -1; itemCell = -1;
   });
   restart.addEventListener('click', () => requestRestart());
@@ -590,6 +622,7 @@
     reset();
   }
   matchMode.addEventListener('change', reset);
+  document.getElementById('model-opponent').addEventListener('change', reset);
   teamMode.addEventListener('change', reset);
   opponentSelect.addEventListener('change', onStrategyChange);
   mapSelect.addEventListener('change', reset);

@@ -487,8 +487,8 @@ const controls = require('./controls.js');
 assert(controls.ITEM_KEYS.includes('KeyE') && controls.ITEM_KEYS.includes('ShiftLeft'), 'E/Shift 必须是放道具键');
 assert.deepEqual(controls.ITEM_SLOT_KEYS, ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7'], '数字键 1-7 对应道具栏');
 assert(/ITEM_SLOT_KEYS\.indexOf\(event\.code\)/.test(fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8')), 'app.js 必须把数字键接到道具栏格位');
-assert(/nativeItems: native, nativeTrap: native/.test(fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8')),
-  '真人对局开启原版道具栏/糖泡，模型评测保持训练规则');
+assert(/nativeItems: true, nativeTrap: true/.test(fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8')),
+  '真人与新模型观战均采用原生道具栏/糖泡，历史Review独立冻结');
 
 // 4k) 终局提示：运包成功/时间到 → 胜利/失败/平局。
 {

@@ -1,0 +1,13 @@
+{
+  "schema": "qqt.model-inference-defaults/v1",
+  "ruleset": "bun-native-v2",
+  "max_ticks": 2400,
+  "default_model_id": "bun392-g-frozen",
+  "policies": {
+    "bun392-g-frozen": {
+      "greedy": false,
+      "temperature": 0.3,
+      "seed": 5329236
+    }
+  }
+}

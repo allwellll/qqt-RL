@@ -16,7 +16,15 @@ assert.throws(() => catalog.validateManifest({ schema: 'bad', models: [] }), /sc
 assert.throws(() => catalog.validateManifest({ schema: 'qqt.web-models/v1', models: [{ ...manifest.models[0], file: '../x' }] }), /file/);
 assert.strictEqual(catalog.modelUrl(rows[0]), 'models/safe-high-c16.json');
 const production = require('./models.json');
-const current=production.models[0];
+const defaults=require('./model_inference_defaults.json');
+assert.strictEqual(production.models[0].id,defaults.default_model_id);
+assert.strictEqual(defaults.ruleset,'bun-native-v2');
+assert.strictEqual(defaults.max_ticks,2400);
+for(const [id,inference]of Object.entries(defaults.policies)){
+  assert(production.models.some(row=>row.id===id));
+  require('./model_sampling_v1').profile({inference});
+}
+const current=production.models.find(row=>row.id==='bun392-v2-risk-u9809');
 assert.strictEqual(current.id,'bun392-v2-risk-u9809');
 assert.strictEqual(current.source_sha256,require('./promotion-review.json').policy_sha256);
 assert.strictEqual(current.sha256,require('./promotion-review.json').model_sha256);
