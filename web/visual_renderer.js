@@ -69,37 +69,49 @@
   // authoritative (the regression places a real bomb at both boundaries).
   const PASS_MIN_MS = 500, PASS_MAX_MS = 600, PASS_FRESH_MS = 100;
   // frameStep advances st.clock on every rAF, independently of the 10Hz tick.
-  // Never initialize native state or use a collision query on the live state.
-  function bubblePassageHints(sim, humanPid, move = sim.lastMoveDir?.[humanPid]) {
+  // Never initialize native state or expire permissions on the live state.
+  function bubblePassageHints(sim, humanPid) {
     if (!Number.isInteger(humanPid) || humanPid < 0 || humanPid >= playerCount(sim) ||
-        sim.done || !sim.alive?.[humanPid] || sim.trapped?.[humanPid] > 0 ||
-        typeof sim._nativePositionWalkable !== 'function') return [];
+        sim.done || !sim.alive?.[humanPid] || sim.trapped?.[humanPid] > 0) return [];
     const live = sim.nativeMove?.[humanPid];
     if (!live?.touchValid || !(sim.fuse[live.touchCell] > 0)) return [];
     const state = { ...live, wallExit: live.wallExit ? { ...live.wallExit } : null };
     sim._expireNativePass(state);
-    if (state.passActive) return [{ cell: state.touchCell, kind: 'active',
-      remainingMs: Math.max(0, state.passDuration - (state.clock - state.passStart)),
-      label: '已获穿泡' }];
     const charged = state.clock - state.touchStart;
-    if (charged < 0 || charged >= PASS_MAX_MS || state.clock - state.touchLast >= PASS_FRESH_MS ||
-        !Number.isInteger(move) || move < 0 || move >= 4) return [];
-    const x = Math.round(sim.pos[humanPid * 2 + 1] * SOURCE_CELL);
-    const y = Math.round(sim.pos[humanPid * 2] * SOURCE_CELL);
-    // Mirror one native projection step on the copy. A one-pixel probe misses
-    // left/up contact: the solver can snap to the cell centre after a blocked
-    // two-pixel attempt. Never look beyond the native 25ms/40px projection.
-    const distance = Math.min(40, Math.max(1, Math.ceil(sim._nativeSpeedPx(humanPid) * .025)));
-    const probe = { ...state, wallExit: state.wallExit ? { ...state.wallExit } : null };
-    const blocked = sim._nativeSegmentCollision(probe, x, y, move, distance);
-    if (!blocked || !sim._nativeCollisions(state, blocked[0], blocked[1], move)
-      .every(hit => hit.cell.row * 15 + hit.cell.col === state.touchCell) ||
-        probe.touchStart !== state.touchStart || probe.touchCell !== state.touchCell ||
-        probe.touchLast !== state.clock) return [];
-    const ready = charged > PASS_MIN_MS;
-    return [{ cell: state.touchCell, kind: ready ? 'window' : 'charging', chargedMs: charged,
-      remainingMs: Math.max(0, (ready ? PASS_MAX_MS : PASS_MIN_MS) - charged),
-      label: ready ? '现在放泡' : '穿点倒计时' }];
+    if (state.passActive) return [{ cell: state.touchCell, kind: 'active', progress: 1,
+      ready: false, contact: false }];
+    if (charged < 0 || charged >= PASS_MAX_MS) return [];
+    // Native touchCell owns the ring until replacement/expiry. Releasing keys
+    // or walking away never resets its clock. Only freshness affects readiness.
+    const contact = state.clock - state.touchLast < PASS_FRESH_MS;
+    return [{ cell: state.touchCell, kind: charged > PASS_MIN_MS ? 'window' : 'charging',
+      chargedMs: charged, progress: Math.min(1, charged / PASS_MIN_MS), contact,
+      ready: charged > PASS_MIN_MS && contact }];
+  }
+
+  // Tick motion stays one tick behind the authoritative solver. A 480px/s
+  // banana slide moves 1.2 cells/tick: the old one-cell teleport cutoff snapped
+  // it at 10Hz. Permit only native slide-axis displacements within its speed
+  // bound; respawns/teleports and explicit Review positions retain precedence.
+  function playerRenderPosition(sim, pid, motion, now) {
+    const offset = pid * 2, raw = [sim.pos[offset], sim.pos[offset + 1]];
+    const override = motion?.visualPos;
+    if (override && Number.isFinite(override[offset]) && Number.isFinite(override[offset + 1]))
+      return [override[offset], override[offset + 1]];
+    if (!motion || pid === motion.humanPid) return raw;
+    const py = motion.prevPos[offset], px = motion.prevPos[offset + 1];
+    const cy = motion.curPos[offset], cx = motion.curPos[offset + 1];
+    const dy = cy - py, dx = cx - px, distance = Math.abs(dy) + Math.abs(dx);
+    const direction = sim.slideDir?.[pid];
+    const alongSlide = direction === 0 ? dy <= 0 && Math.abs(dx) < 1e-6
+      : direction === 1 ? dy >= 0 && Math.abs(dx) < 1e-6
+      : direction === 2 ? dx <= 0 && Math.abs(dy) < 1e-6
+      : direction === 3 && dx >= 0 && Math.abs(dy) < 1e-6;
+    const slideLimit = (sim.bananaSlideSpeedPx || 268) * motion.tickMs / 1000 / SOURCE_CELL;
+    const nativeSlide = sim.movementStatus?.[pid] === 2 && alongSlide && distance <= slideLimit + 1e-6;
+    if (distance > 1 && !nativeSlide) return [cy, cx];
+    const alpha = Math.min(1, Math.max(0, (now - motion.lastTickT) / motion.tickMs));
+    return [py + dy * alpha, px + dx * alpha];
   }
 
   // 脚底落在逻辑中心下方 9 源像素：若贴碰撞盒下沿(+19px)，脚和影子会比逻辑格低近半格，
@@ -674,8 +686,7 @@
       const previousPositions = updateFaces(sim, intents);
       // 逻辑节拍 10Hz，渲染 60Hz：对手(10Hz)在两个 sim tick 之间线性插值位置 → 顺滑。
       // 本地人类(motion.humanPid)不插值：由 rAF 逐帧 frameStep 连续移动，sim.pos 本身即每帧真实位置。
-      // 复活/传送(位移>1格)时不插值直接吸附。
-      const alpha = motion ? Math.min(1, Math.max(0, (now - motion.lastTickT) / motion.tickMs)) : 1;
+      // 原生香蕉滑行允许在速度边界内插值；复活/传送仍直接吸附。
       const viewerPid = motion ? motion.humanPid : 0;
       const deathAlpha = deathOverlayAlpha(sim, viewerPid);
       ctx.filter = 'none';
@@ -719,17 +730,8 @@
         let arrow = null;
         const humanTeam = teamOf(sim, motion ? motion.humanPid : 0);
         for (let pid = 0; pid < playerCount(sim); pid++) if (sim.alive[pid]) {
-          let gy = sim.pos[pid * 2], gx = sim.pos[pid * 2 + 1];
-          const visualOverride=motion?.visualPos;
-          if(visualOverride && Number.isFinite(visualOverride[pid*2]) && Number.isFinite(visualOverride[pid*2+1])){
-            gy=visualOverride[pid*2];gx=visualOverride[pid*2+1];
-          } else if (motion && pid !== motion.humanPid) {
-            const py = motion.prevPos[pid * 2], px = motion.prevPos[pid * 2 + 1];
-            const cy = motion.curPos[pid * 2], cx = motion.curPos[pid * 2 + 1];
-            // 位移过大（复活/传送）不插值，避免角色横扫全图
-            if (Math.abs(cy - py) + Math.abs(cx - px) <= 1.0) { gy = py + (cy - py) * alpha; gx = px + (cx - px) * alpha; }
-            else { gy = cy; gx = cx; }
-          }
+          const [gy, gx] = playerRenderPosition(sim, pid, motion, now);
+          const visualOverride = motion?.visualPos;
           const row = MOVE_TO_SPRITE_ROW[faces[pid]];
           const pushing = intents && intents[pid] >= 0 && intents[pid] < MOVE_IDLE;
           const moved = pushing || (previousPositions && (Math.abs(sim.pos[pid * 2] - previousPositions[pid * 2]) + Math.abs(sim.pos[pid * 2 + 1] - previousPositions[pid * 2 + 1]) > 1e-5));
@@ -833,8 +835,8 @@
           drawNativeEffect(assets.effects.bird, bird.x * CELL, bird.row * CELL, now);
         }
         if (arrow && assets.point) drawArrow(arrow, now);
-        for (const hint of bubblePassageHints(sim, motion?.humanPid, motion?.intents?.[motion.humanPid])) {
-          if (!coveredCells.has(hint.cell)) drawBubblePassage(hint, sim, now);
+        for (const hint of bubblePassageHints(sim, motion?.humanPid)) {
+          if (!coveredCells.has(hint.cell)) drawBubblePassage(hint);
         }
         // 死亡只压暗游戏画布，右侧 DOM 控件仍可读可点；观战/回放 viewerPid=-1 不遮挡。
         if (deathAlpha > 0) {
@@ -854,46 +856,25 @@
       return withContextState(ctx, () => renderUnsafe(sim, now, motion));
     }
     const RESULT_COLORS = { win: '#ffd54a', lose: '#ff7a7a', draw: '#d8e6ea' };
-    function drawBubblePassage(hint, sim, now) {
+    function drawBubblePassage(hint) {
       const x = (hint.cell % 15 + .5) * CELL, y = (Math.floor(hint.cell / 15) + .5) * CELL;
-      const width = 184, height = 68, gap = 10;
-      const blockers = [];
-      for (let cell = 0; cell < 195; cell++) if (sim.fuse[cell] > 0)
-        blockers.push({ x: cell % 15 * CELL, y: Math.floor(cell / 15) * CELL, w: CELL, h: CELL });
-      for (let pid = 0; pid < playerCount(sim); pid++) if (sim.alive[pid])
-        blockers.push({ x: sim.pos[pid * 2 + 1] * CELL - 32, y: sim.pos[pid * 2] * CELL - 98, w: 64, h: 122 });
-      for (const exp of explosions) if (now - exp.t0 < 600)
-        for (let cell = 0; cell < 195; cell++) if (exp.covered[cell])
-          blockers.push({ x: cell % 15 * CELL, y: Math.floor(cell / 15) * CELL, w: CELL, h: CELL });
-      const candidates = [
-        [x - width / 2, y - CELL / 2 - gap - height],
-        [x + CELL / 2 + gap, y - height / 2],
-        [x - CELL / 2 - gap - width, y - height / 2],
-        [x - width / 2, y + CELL / 2 + gap],
-      ].map(([left, top]) => ({ x: Math.max(4, Math.min(canvas.width - width - 4, left)), y: top, w: width, h: height }));
-      const rect = candidates.find(r => r.y >= 0 && r.y + r.h <= BOARD_H &&
-        !blockers.some(b => r.x < b.x + b.w && r.x + r.w > b.x && r.y < b.y + b.h && r.y + r.h > b.y));
-      const color = hint.kind === 'window' ? '#ffe35b' : hint.kind === 'active' ? '#9ef2b5' : '#bceaff';
-      const value = `${Math.ceil(hint.remainingMs)}ms`;
+      const progress = hint.progress, start = -Math.PI / 2, radius = 27;
+      const color = hint.kind === 'active' ? '#77f6d2'
+        : `rgb(${Math.round(219 - 153 * progress)},${Math.round(233 + 3 * progress)},${Math.round(237 - 112 * progress)})`;
       ctx.save();
-      ctx.strokeStyle = color; ctx.lineWidth = 2;
-      // Mark the target's outer edge; no opaque symbol covers the bubble.
-      ctx.strokeRect(x - 28, y - 28, 56, 56);
-      ctx.font = 'bold 28px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      if (rect) {
-        const ax = Math.max(rect.x, Math.min(rect.x + rect.w, x));
-        const ay = Math.max(rect.y, Math.min(rect.y + rect.h, y));
-        ctx.beginPath(); ctx.moveTo(x, y - 28); ctx.lineTo(ax, ay); ctx.stroke();
-        ctx.fillStyle = '#101f2c'; ctx.fillRect(rect.x, rect.y, rect.w, rect.h);
-        ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
-        ctx.fillStyle = color; ctx.fillText(hint.label, rect.x + rect.w / 2, rect.y + 20);
-        ctx.font = 'bold 30px monospace'; ctx.fillText(value, rect.x + rect.w / 2, rect.y + 50);
-      } else {
-        // Crowded board: use the reserved top band rather than cover a player,
-        // another bubble or a flame. The target remains outlined.
-        ctx.fillStyle = '#101f2c'; ctx.fillRect(0, -BOARD_OFFSET, canvas.width, BOARD_OFFSET);
-        ctx.fillStyle = color;
-        ctx.fillText(`${hint.label} ${value} · 第${Math.floor(hint.cell / 15) + 1}行${hint.cell % 15 + 1}列`, canvas.width / 2, -BOARD_OFFSET / 2);
+      ctx.lineCap = 'round';
+      // Thin outer track leaves the bubble centre and its animation visible.
+      ctx.strokeStyle = 'rgba(7,19,31,.85)'; ctx.lineWidth = 7;
+      ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = 'rgba(233,245,248,.35)'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(x, y, radius, 0, Math.PI * 2); ctx.stroke();
+      ctx.globalAlpha = hint.kind === 'window' && !hint.ready ? .5 : 1;
+      ctx.setLineDash(hint.kind === 'window' && !hint.ready ? [4, 5] : []);
+      ctx.strokeStyle = color; ctx.lineWidth = hint.ready ? 5 : 3;
+      ctx.beginPath(); ctx.arc(x, y, radius, start, start + Math.PI * 2 * progress); ctx.stroke();
+      if (hint.kind === 'active') {
+        ctx.setLineDash([]); ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(x - 6, y - 1); ctx.lineTo(x - 1, y + 4); ctx.lineTo(x + 8, y - 6); ctx.stroke();
       }
       ctx.restore();
     }
@@ -948,5 +929,5 @@
     return { render, addExplosion, reset };
   }
 
-  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, AIRDROP_ANIMATION_TICKS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, bubblePassageHints, playerVisualY, respawnSeconds, respawnMarkers, deathOverlayAlpha, withContextState, heldItemSpriteKey, playerLabel, matchResult, bunTokens, explosionFrame, loadAssets, createRenderer, bluePaletteColor };
+  return { CELL, BOARD_OFFSET, BUN_ELEMENT_IDS, ITEM_FRAME_MS, AIRDROP_ANIMATION_TICKS, crateSpriteKey, levelElementIds, bombFrame, bombAgeSeconds, bubblePassageHints, playerRenderPosition, playerVisualY, respawnSeconds, respawnMarkers, deathOverlayAlpha, withContextState, heldItemSpriteKey, playerLabel, matchResult, bunTokens, explosionFrame, loadAssets, createRenderer, bluePaletteColor };
 });

@@ -570,3 +570,28 @@ assert(/stepHumanFrame\(now\)/.test(appSource), 'rAF 回调必须先驱动 stepH
 
 assert(/if \(QQTControls\.BOMB_KEYS\.includes\(event\.code\) && bombCell < 0\) bombCell = humanCell\(\);/.test(appSource), '放泡键按下瞬间必须记录所在格');
 console.log('网页手感回归（连续逐帧移动 / 原版像素物理 / 人类raw渲染 / 复活压暗）通过');
+
+// Native banana motion over one tile/tick is movement, not a teleport. Both
+// model/bot player slots use the same bounded visual interpolation path.
+{
+  for (const pid of [0, 1]) for (const direction of [0, 1, 2, 3]) {
+    const s = new QQT.Sim(77);s.reset('open', {nativeItems:true,nativeTrap:true,bananaSlideSpeedPx:480});
+    s.movementStatus[pid]=QQT.MOVE_STATUS_SLIDE;s.slideDir[pid]=direction;
+    const motion={humanPid:-1,tickMs:100,lastTickT:1000,prevPos:Float64Array.from([5.5,5.5,9.5,5.5]),curPos:Float64Array.from([5.5,5.5,9.5,5.5])};
+    const axis=pid*2+(direction>=2?1:0),sign=direction===0||direction===2?-1:1;
+    motion.curPos[axis]+=sign*1.2;s.pos.set(motion.curPos);
+    const before=JSON.stringify(s),values=[];
+    for(let frame=0;frame<=6;frame++)values.push(visual.playerRenderPosition(s,pid,motion,1000+frame*100/6)[axis-pid*2]);
+    for(let i=1;i<values.length;i++)assert(Math.abs((values[i]-values[i-1])*sign-.2)<1e-8,'slide has continuous monotone per-frame positions');
+    const end=values.at(-1);motion.prevPos.set(motion.curPos);motion.curPos[axis]+=sign*1.2;motion.lastTickT+=100;
+    assert.equal(visual.playerRenderPosition(s,pid,motion,1100)[axis-pid*2],end,'tick boundary is continuous');
+    motion.curPos[axis]+=sign*5;
+    assert.equal(visual.playerRenderPosition(s,pid,motion,1150)[axis-pid*2],motion.curPos[axis],'teleport above native speed still snaps');
+    motion.curPos.set(motion.prevPos);motion.curPos[pid*2+(axis%2===0?1:0)]+=1.2;
+    assert.deepEqual(visual.playerRenderPosition(s,pid,motion,1150),Array.from(motion.curPos.slice(pid*2,pid*2+2)),'wrong slide axis is not smoothed');
+    assert.equal(JSON.stringify(s),before,'render coordinates do not mutate simulator');
+    motion.humanPid=pid;assert.deepEqual(visual.playerRenderPosition(s,pid,motion,1150),Array.from(s.pos.slice(pid*2,pid*2+2)),'local human remains raw');
+    motion.visualPos=Float64Array.from([2,3,4,5]);assert.deepEqual(visual.playerRenderPosition(s,pid,motion,1150),Array.from(motion.visualPos.slice(pid*2,pid*2+2)),'explicit Review positions win');
+  }
+}
+console.log('Banana visual motion PASS: both player slots/four directions, monotone high-speed interpolation, tick continuity, speed/axis teleport bounds, immutable physics and Review/raw precedence');
