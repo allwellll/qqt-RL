@@ -1,0 +1,14 @@
+{
+  "schema": "qqt.reviewed-integration-source/v1",
+  "base_sha": "c2ed1cb26b4c9546c7e8554f10dceae2eb451c74",
+  "method": "Explicit file allowlist; retain main game/runtime bytes and historical ledger records. No training workspace writes.",
+  "sources": [
+    {
+      "source_role": "training owner final stop report",
+      "file": "reports/cx_training_stopped_20261107.md",
+      "sha256": "a93841187c7bab913fbd48912a7a8db0f472f018bac9f51524d2e62111247d82",
+      "review": "read in full; current stop supersedes after-active budget authorization; no secrets or machine identity copied"
+    }
+  ],
+  "training_code_review_handoff": "Not yet supplied; do not assume dirty working tree is reviewed."
+}

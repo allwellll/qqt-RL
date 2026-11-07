@@ -8,19 +8,53 @@
 
 JE10 v38 的击杀信用、搬包路线方法、逐轮固定评估与当前能力边界见[长期训练总结](docs/je10_control_route_training_summary.md)及[20261019 固定评估报告](reports/je10_training_20261019.md)。r19 已在 g58 按用户指令安全暂停；[线上结果页](https://allwellll.github.io/qqt-RL/training.html)保留全部 61 个完成固定点。
 
-## 现行主线（2026-11-06）
+## 当前网页与训练状态（2026-11-07）
 
-R1 道具/进攻 → R2 原生自由搬包与守恒归属势差 → R3 事件奖励/可见观测与本侧出生 → R4 对拼课程 → G 多区域联赛 → CC/CX 联赛 v2。当前已复测的强评估最佳为 **L2_S05g u019302（argmax）**：新 seed 双座复测95胜/44负/37平，得分0.6449；采样模式与长静止仍有短板。i/j 同配方复现的2112局独立 holdout 已完成；网页新线上选模待最终验收。网页当前默认为 **five-slot u9809**，u9969、K1 u5282 保留可选，规则 `bun-native-v2`；模型发布由独立任务验收，训练最佳与已上线身份分列。
+[在线游戏](https://allwellll.github.io/qqt-RL/) · [当前使用与代码入口](docs/current_web_and_training_status_20261107.md) · [报告索引](reports/README.md)
 
-![主线优化与发布轨迹：it831 至联赛 v2](docs/assets/mainline_timeline_20261106.svg)
+网页物理为 **`bun-native-v4-facing`**，继承 v3 的道具供给与全图死亡掉落。面朝同一行/列、前方最多 3 格且无遮挡的首个泡即可原地起计，不需要按键或碰撞；圆环与真实放泡权限共用原生判定。旧 Review 按记录版本与 SHA 使用冻结物理，不套用新规则。
 
-[HTML 详细版](https://allwellll.github.io/qqt-RL/reports/mainline_timeline_20261106.html) · [图的源码](reports/mainline_timeline_20261106.html) · [数字来源与 SHA](reports/mainline_timeline_evidence_20261106.json)
+|模型菜单|适合尝试的长处|明确短板与证据范围|
+|---|---|---|
+|**G_frozen τ0.3（默认）**|保留现有默认与完整局参照|没有以专项或 8 局快筛替换默认|
+|**DUEL u019902 τ0.3 · 近身击杀**|v3 人工近身 dev/holdout 因果杀 8/7（各16局），同批 G 为1/0；网页40局40胜|v3 网页自死9次，同批G为4；完整局可行动静止23.94%，G为18.83%|
+|**SP u023302 τ0.3 · 猎手对抗与喷泉**|v3 网页40局39胜0负1平、自死1次；困难猎手8局因果杀7、交付10|完整局可行动静止34.08%；近身优势未建立，喷泉串弱于同点argmax|
 
-读法：按时间看“做了什么 / 效果”；虚线标记评估或训练路线切换，跨线数字不能直接横比。五槽网页发布线与 G 三技能训练线的关系单独标明；未晋升支线不展开。新路径的命令、完整依赖、同 checkpoint 新 seed 复测和防刷规则见[联赛 v2 训练路径](docs/combat_league_v2_training_path_20261106.md)。
+原生产 JS 选模总计 **856 局**，网页每对手每方式 **8 局**；表中是 v3 证据。当前 v4 另做每模型8局的针对快筛与桌面/手机加载复核，未见所标长处明显反转；不把 v3 数字称作 v4 成绩，不宣称全面胜出。[模型交付与 SHA](reports/cx_web_specialists_items_v3_20261107.md)
 
-入口、评估分母、奖励防刷与发布边界见[现行指南](docs/r1_r4_training_guide_20261101.md)及[文档索引](docs/README.md)。历史 run、模型与完整 checkpoint 不随代码入库，旧队列的暂停状态保留。
+手机方向/放泡/道具按钮最小 **56px**，宽度充足时64px；控制区局部禁选中、callout与菜单，不影响昵称编辑和普通说明文字。三道具键 **1/2/3** 直接放置对应槽位，有真实图标和数量；库存4–7槽经可见换页使用。多指移动＋放泡/道具、松手/cancel/失焦清理均已验证。[手机验收](reports/cx_mobile_controls_20261107.md) 的范围为真实 Chromium 触摸事件与手机视口，不冒称真机 iOS Safari。
+
+|操作|键位|
+|---|---|
+|移动|方向键；小键盘 **5上、1左、2下、3右**（NumLock开关均支持）|
+|放泡|Space / W；手机“放泡”|
+|道具|主键盘1–7直接对应槽位；E / Shift为首槽；手机当前页三个槽位按钮|
+|重开|R（输入框内不劫持）|
+
+小键盘移动不触发道具。模型按需下载，**OSS → GitHub Release → Pages同源镜像** 回退，所有资产先校验 SHA256；仅 `web-models/` 对象public-read、bucket private、CORS限Pages及本地预览，凭据不进入仓库或前端。[当前模型交付规范](docs/github_pages_model_delivery.md)
+
+**训练已按用户指令立即暂停，所有自动后继及续跑授权撤销；保留已有 COMMITTED，不再等待固定预算终点。** 训练owner已核实训练worker为0、八卡计算进程为空且锁释放，七臂最后COMMITTED的state/policy SHA已核对；[停训报告](reports/cx_training_stopped_20261107.md)。main 的文档、历史命令或代码合入均不是恢复授权。只能读取已完成 checkpoint/READY 做不触发训练的评估，未来恢复必须重新获得用户明确授权。历史 runs、checkpoint、旧录像与秘密文件全部保留。
+
+## 训练路线与历史证据
+
+R1 道具/进攻 → R2 原生搬包 → R3 事件奖励/可见观测 → R4 对拼课程 → G 多区域联赛 → 联赛v2。旧规则下 L2_S05g u019302 argmax 新seed双座复测95胜/44负/37平（176局）；这是历史训练参照，不能替代当前 v3/v4 选模。
+
+![截至20261106的主线优化与发布轨迹](docs/assets/mainline_timeline_20261106.svg)
+
+[HTML详细版](https://allwellll.github.io/qqt-RL/reports/mainline_timeline_20261106.html) · [数字来源与SHA](reports/mainline_timeline_evidence_20261106.json) · [历史训练代码闭包](docs/combat_league_v2_training_path_20261106.md)
+
+图保留截至11月6日的快照；当前模型、规则与停训状态以上方11月7日说明为准。历史 run、完整状态及大模型不入 Git，旧队列不恢复。
 
 ## 快速开始
+
+网页预览只需Node依赖，不会启动训练：
+
+```bash
+npm ci
+npm run serve
+```
+
+需要Python源码检查或CPU评估时再安装Python环境：
 
 ```bash
 cd /path/to/qqt-RL
@@ -48,12 +82,11 @@ GPU 环境请按机器 CUDA/JAX 版本安装匹配的 JAX wheel；仓库不固�
 python -m compileall -q jax_bomb qqt_rl scripts tests
 pytest -q
 npm test
-bash scripts/smoke_train_cpu.sh
 ```
 
-CPU smoke 必须显式设置 `QQT_ALLOW_CPU=1`，脚本已自动处理。正式训练不设置该变量，若没有加速设备会直接失败，避免误用 CPU 长训。
+以上为静态检查和测试，不包含训练。下方训练命令是历史复现资料，在用户重新授权前不执行，包括 CPU training smoke。
 
-## 历史 1..360 Cycle 训练
+## 历史 1..360 Cycle 训练（已暂停，仅供代码追溯）
 
 训练 bootstrap 不进入 Git。将以下文件放到任意外部目录，例如 `/path/to/bootstrap`：
 
@@ -169,7 +202,7 @@ checkpoint 使用 Python pickle 格式，只能加载本机训练并已核对哈
 npm run serve
 ```
 
-浏览器访问终端打印的本地地址。蓝方使用 `W/A/S/D` 移动、`Space` 放泡、`R` 重开；红方可使用冻结安全战术 Bot，或在页面中加载上一步导出的模型 JSON。服务健康检查为 `/healthz`。
+浏览器访问终端打印的本地地址。本地人类使用方向键或小键盘5123移动、`Space/W`放泡、主键盘1–7使用对应库存槽、`R`重开；手机提供方向、放泡及三槽快捷键。对手可选择已发布模型/规则Bot，亦可在高级设置中加载本地模型JSON。服务健康检查为 `/healthz`。
 
 Bot 扩展契约和 Python/JavaScript 最小插件见 `docs/bot_plugins_zh.md`。
 
@@ -193,4 +226,4 @@ python scripts/benchmark_v2_pipeline.py \
 
 ## 用户排行榜
 
-GitHub Pages接入Supabase客户端测试排行榜；初始化、RPC/RLS、升级口径和隐私限制见 [部署文档](supabase/README.md)。前端仅含公开publishable key，远端建表状态见当天排行榜验证报告。
+排行榜按用户要求暂缓整理。当前 v4 后端未支持时明确显示暂不可用，游戏照常开局和本地结算；不提交旧 ruleset、不混榜、不删旧数据。[历史部署文档](supabase/README.md)保留，SQL迁移不是当前发布前置。

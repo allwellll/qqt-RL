@@ -1,6 +1,6 @@
 # 手机触控修复交付（20261107）
 
-基线为候选模型正式发布 `cd9cddf0af110f7825a31181e519e08ee1b8921f`；手机改动独立提交，正常快进发布，不改训练、物理或历史 Review。最终发布 SHA 与线上结果在验收后回填本报告。
+基线为候选模型正式发布 `cd9cddf0af110f7825a31181e519e08ee1b8921f`；手机改动独立提交，正常快进发布，不改训练、物理或历史 Review。手机发布 SHA：`c2ed1cb26b4c9546c7e8554f10dceae2eb451c74`；已正常快进推送 main，线上结果在验收后回填本报告。
 
 ## 根因与实现
 
@@ -32,4 +32,22 @@
 
 ## 发布验收
 
-待本次提交正常 push 后，按同一 SHA 等待 Actions 的 test-and-build/deploy 最终成功，核对 Pages build-info、关键文件字节，并在线上重跑触摸验收；结果回填此处。
+正常快进 push main：`c2ed1cb26b4c9546c7e8554f10dceae2eb451c74`。
+
+[同 SHA Actions/Pages](https://github.com/allwellll/qqt-RL/actions/runs/42347826789)：test-and-build、deploy、workflow 均最终 success。Pages 的 build-info.commit 与该 SHA 一致，当前 ruleset 为 bun-native-v4-facing；CSS、HTML、app、controls、模型 manifest/说明、各版物理与旧 Review 引擎均逐字节回读一致。证据：`cx_mobile_controls_20261107/mobile-release-actions.json`、`cx_mobile_controls_20261107/mobile-release-public-readback.json`。
+
+线上四尺寸（320×844、360×800、390×844、844×390）真实触摸复验全部 PASS；实际连续长按分别 2164、2171、2166、2165ms，按钮最小 56–64px。多指放泡及三个槽位、空槽、七槽换页、cancel/失焦/页面隐藏处理、普通文字与输入、主键盘/小键盘隔离均重验通过；截图已查看且无覆盖或横向溢出。线上 v4 桌面/手机半格及整格空隙起计、零接触、满圈放泡并穿过也 PASS。证据：`cx_mobile_controls_20261107/mobile-public-browser.json` 及四尺寸 public-layout 截图、`facing-range-public-browser-results.json`。
+
+本次手机部署后的候选回归也全部 PASS：1280 桌面与 390 手机各选择 DUEL/SP，真实 worker-wasm 推理各至少三次、OSS verified/SHA 通过，原 v3 证据与当前 v4 快筛说明均可见；回切 G_frozen 仍 τ0.3、非 greedy，无页面错误或溢出。证据：`cx_mobile_controls_20261107/specialists-public-browser.json` 及两张模型截图。
+
+远端 main 最终只读核验仍为 `c2ed1cb26b4c9546c7e8554f10dceae2eb451c74`。完整 tracked 隐私扫描与最终交付 JSON/报告的路径、私有标识、内网地址、PID、凭据检查均 0 命中。最终线上结果回填本地报告，不为回填触发额外部署。
+
+## 最新授权与 READY 复核（20261107）
+
+用户最新明确：立即停止训练，撤销全部后继，覆盖此前等待active段完成的安排；未来重新授权前不得续训、启动新训练或后继。训练owner已交付worker归零、八卡释放与COMMITTED保存回执；持久停止闸门由训练 CX 管理；网页交付侧不写训练工作树、不更改或终止其进程，不请求任何新训练。后续选模只允许读取既有 checkpoint/READY 并评估。
+
+本次只读复核 READY 仍为 DUEL u019902 τ0.3、SP u023302 τ0.3，两候选 JSON/ONNX SHA 与已发布 manifest 完全相同，没有新的待消费候选，不重复导出上传或重跑能力评测。证据：`cx_mobile_controls_20261107/latest-web-ready-check.json`。现有长短板标注、默认 G_frozen τ0.3、手机修复均已实际部署，不等待训练或全面胜出。
+
+当前 main 为 `c2ed1cb26b4c9546c7e8554f10dceae2eb451c74`；同 SHA Actions/Pages 最终 success，部署后桌面/手机候选 OSS 校验与真实推理均 PASS。此次复核只回填本地报告，不为无代码变更重复发布。未将旧 READY 中历史性的 training_continues 字段解释为当前续训授权。
+
+发布回执 `.hermes/WEB_CANDIDATE_PUBLISHED.json` 已生成，并按用户明确要求回写训练侧同名交付文件；包含两候选资产身份、OSS、同 SHA Actions/Pages、桌面/手机真实加载与默认保持说明。训练侧仅写该交付回执，未触碰训练源码、停止状态或进程。

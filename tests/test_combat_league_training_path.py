@@ -42,6 +42,6 @@ def test_generic_launcher_uses_current_interpreter_and_rejects_another_tree(monk
 
 
 def test_source_closure_has_no_missing_node_dependencies_or_opaque_entries():
-    manifest = json.loads(Path('docs/combat_league_v2_dependency_manifest_20261106.json').read_text())
+    manifest = json.loads(Path(audit.DEFAULT_MANIFEST).read_text())
     result = audit.audit(manifest['roots'])
     assert result == manifest

@@ -1,6 +1,8 @@
 # 文档索引
 
-- [现行 R1–R4 训练、评估与奖励](r1_r4_training_guide_20261101.md)：当前入口、版本和证据边界。
+当前状态以 [20261107 网页、模型与暂停说明](current_web_and_training_status_20261107.md) 为准：[模型交付](../reports/cx_web_specialists_items_v3_20261107.md) · [手机触控](../reports/cx_mobile_controls_20261107.md) · [报告索引](../reports/README.md)。当前 v4-facing、G_frozen τ0.3 默认、DUEL/SP可选，训练立即暂停、全部后继撤销；旧日期文档中的运行状态是历史快照。
+
+- [20261101 R1–R4 训练、评估与奖励快照](r1_r4_training_guide_20261101.md)：历史入口、版本和证据边界；不代表当前网页规则或训练授权。
 - [实验总账](training_experiment_ledger.md)：包含历史负结果、协议修订、停止与恢复记录；按实验ID检索。
 - [本次 main 同步验收](../reports/main_sync_20261031.md)：同步、排除、测试及同 SHA Pages 验收。
 - [网页模型交付](github_pages_model_delivery.md)、[Bun392 导出](bun392_model_release_20261012.md)：模型SHA、Release资产、冷加载和回放。

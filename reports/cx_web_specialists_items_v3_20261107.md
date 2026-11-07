@@ -46,4 +46,20 @@ v3及v4正常图/对拼双方12状态+零输入，每模型每规则13个样本�
 
 ## 发布
 
-待正常push与同SHA Actions/Pages、线上桌面/手机选择和OSS加载回读后回填。
+正常快进push main：`cd9cddf0af110f7825a31181e519e08ee1b8921f`。
+
+[同SHA Actions/Pages](https://github.com/allwellll/qqt-RL/actions/runs/42346134048)：test-and-build、deploy及整个workflow最终均success。构建从Release实际下载并SHA校验全部模型资产，已证明新候选回退资产可用；本机代理对Release匿名链接下载失败不冒充成功，OSS匿名回读及浏览器均成功。
+
+[线上关键文件逐字节回读](cx_web_specialists_items_v3_20261107/specialists-release-public-readback.json)的build-info.commit与上述SHA一致，默认物理仍v4。
+
+[线上桌面/手机浏览器结果](cx_web_specialists_items_v3_20261107/specialists-public-browser.json)：1280和390各选两候选，worker-wasm实际推理、每候选OSS下载verified、SHA通过，v3原评测和v4快筛说明同时可见；默认G回切、τ0.3保持，零页错误、无横向溢出。截图已查看，本任务最终线上证据回填本地报告，不为回填触发额外部署。
+
+## 最新授权与 READY 复核（20261107）
+
+用户最新明确：立即停止训练，撤销全部后继，覆盖此前等待active段完成的安排；未来重新授权前不得续训、启动新训练或后继。训练owner已交付worker归零、八卡释放与COMMITTED保存回执；持久停止闸门由训练 CX 管理；网页交付侧不写训练工作树、不更改或终止其进程，不请求任何新训练。后续选模只允许读取既有 checkpoint/READY 并评估。
+
+本次只读复核 READY 仍为 DUEL u019902 τ0.3、SP u023302 τ0.3，两候选 JSON/ONNX SHA 与已发布 manifest 完全相同，没有新的待消费候选，不重复导出上传或重跑能力评测。证据：`cx_web_specialists_items_v3_20261107/latest-web-ready-check.json`。现有长短板标注、默认 G_frozen τ0.3、手机修复均已实际部署，不等待训练或全面胜出。
+
+当前 main 为 `c2ed1cb26b4c9546c7e8554f10dceae2eb451c74`；同 SHA Actions/Pages 最终 success，部署后桌面/手机候选 OSS 校验与真实推理均 PASS。此次复核只回填本地报告，不为无代码变更重复发布。未将旧 READY 中历史性的 training_continues 字段解释为当前续训授权。
+
+发布回执 `.hermes/WEB_CANDIDATE_PUBLISHED.json` 已生成，并按用户明确要求回写训练侧同名交付文件；包含两候选资产身份、OSS、同 SHA Actions/Pages、桌面/手机真实加载与默认保持说明。训练侧仅写该交付回执，未触碰训练源码、停止状态或进程。

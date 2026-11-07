@@ -1,5 +1,7 @@
 # 训练优化实验总账
 
+> **2026-11-07 最新覆盖状态**：用户要求立即停止当前训练、撤销全部后继，未来重新授权前禁止训练/恢复/自动续跑。旧条目中的“训练中”“下一段”“持续”保留为历史事实。网页已发布G_frozen τ0.3默认、DUEL u019902/SP u023302 τ0.3可选，实际规则v4-facing，手机修复已在线；[当前状态](current_web_and_training_status_20261107.md)与[交付索引](../reports/README.md)。
+
 > 2026-10-28 集成说明：保留 main 与来源分支的全部实验记录。下文“当前／正在／已暂停”为各条目记录当时的状态，后续状态以较晚日期条目为准。
 
 <!-- JE10-LEDGER:BEGIN -->
@@ -1277,7 +1279,7 @@ r10 g64固定完成点（20261018）：唯一CPU/JS owner完成g64并等待g96�
 g64 capped优势：return449中route负424/normalized正161、中位-.110931；navigation195中负157/normalized正97、中位+.112332；own recovery169中负155/normalized正63；drop157中route负8。实际对手暴露override后current/ring/fixed=2.0059%/9.1983%/13.4950%。自然full交付仍1/16，继续保留r11返程x2候选；r10 formal g74/155189248 fresh ticks、finite/nonzero。
 
 
-【历史解释已撤回：以下携包末状态分母含无事件预置训练初态；其静态INF不代表真实取包后无路，亦不支持动态封路或预开返程通道。原始计数仅作污染证据保留。】r10 g64固定Review/拓扑补充（20261018）：原seed game0 drop return80左gain-.157497（右+.267498）、JS近似GAE-.018309；far51左-.082497（下+.337502/右+.277504）、近似GAE-.005185；mid117右+.202500为新连续场最佳，保留旧oracle偏航假阳性，不误算训练错误。全部动作/state hash/事件/目标/phase/势能存REVIEW_G64_PHASE_FIELD_COMPARISON。8184 ready缓存drop/home/physical逐值parity通过；末状态carrier2221中physical不可达397、saved-home/native不可达398（时序差异1），错误saved finite而物理INF为0。静态当前连通不等于未来安全通路。固定FIFO条件gradient反向投影navigation/return/opening为5.156%/2.917%/15.994%，仅最多64行非在线PPO全梯度，不据此将KL视作首因。
+【历史解释已撤回：以下携包末状态分母含无事件预置训练初态；其静态INF不代表真实取包后无路，亦不支持动态封路或预开返程通道。原始计数仅作污染证据保留。】r10 g64固定Review/拓扑补充（20261018）：原seed game0 drop return80左gain-.157497（右+.267498）、JS近似GAE-.018309；far51左-.082497（下+.337502/右+.277504）、近似GAE-.005185；mid117右+.202500为新连续场最佳，保留旧oracle偏航假阳性，不误算训练错误。全部动作/state hash/事件/目标/phase/势能存REVIEW_G64_PHASE_FIELD_COMPARISON。8184 ready缓存drop、home、physical逐值parity通过；末状态carrier2221中physical不可达397、saved-home/native不可达398（时序差异1），错误saved finite而物理INF为0。静态当前连通不等于未来安全通路。固定FIFO条件gradient反向投影navigation/return/opening为5.156%/2.917%/15.994%，仅最多64行非在线PPO全梯度，不据此将KL视作首因。
 
 r10 g96固定完成点（20261018）：唯一CPU/JS owner完成g96并等待最终g128；Hunter难/中/易1/2/7、Tactical9（各64），Hunter self0/0/1、Tactical death/self0/0。八路线交付death/sugar/drop/near/mid/far/recovery/full=1/0/3/16/16/6/0/3（各16）；natural full window→target8/8、first5/6、持续937/1405、进度972/3672、pickup5/16→delivery3/16、恢复23/26；首控27/归因8/pop27主动19/因果kill8存活7、death6/self0。相对g64 full交付+2、pickup+2，Hunter/Tactical短点波动不设门禁。
 
@@ -4579,3 +4581,24 @@ MAIN-SYNC最终提交前验收：45项关键集成测试与31项显式版本化n
 保留 main 的出生RNG审计、解释器和网页边界修复；历史重放通过精确归档物理SHA与显式版本选择，不放宽hash断言。源码采集入口的外部根改成配置项，通用launcher使用当前解释器；不提交历史短名、runs/checkpoint/local_config/python_environment或大型产物。完整状态与历史冻结协议是外部输入，本次不冒称已在新源码上完成GPU恢复。
 
 u019302 argmax 原强评估50胜/18负/20平，独立新seed复测95/44/37（176局、score=.6449），同批G=.5；categorical=.4659低于同批G=.5227，保留模式差异。i/j独立holdout和网页新默认按发布owner的最终验收，本记录不替其选模。`reports/mainline_timeline_20261106.html` 与 `docs/assets/mainline_timeline_20261106.svg` 续到联赛v2，README区分训练最佳和线上u9809；旧图保留，路线/口径切换显式标注。最终main head、Actions、测试和渲染核验见本地交付报告 `reports/cx_main_merge_20261106.md`。
+
+
+## WEB-SPECIALISTS-ITEMS-V3-20261107 / V4复核与发布
+
+消费训练owner READY固定DUEL u019902 τ0.3、SP u023302 τ0.3，作为专项可选，不改默认G_frozen τ0.3。原生产JS总856局（216筛查+320独立确认+320网页），网页各对手每方式8局；公开选定τ0.3各80局证据。DUEL网页40胜、自死9对同批G的4，完整局可行动静止23.94%；SP网页39胜0负1平、自死1，完整局可行动静止34.08%，G为18.83%。P1/有限样本/选择偏差保留，不宣称全面胜出。
+
+原评测bun-native-v3-items；线上v4-facing针对快筛24局（两候选和G各8），与v3同seed子集关键指标一致，没有把v3分母冒充v4。CPU独立重导出、JSON/ONNX与policy身份、JS/ORT parity通过；OSS前缀对象public-read、bucket private，Release同字节回退与CI实际下载SHA通过。模型发布 `cd9cddf0af110f7825a31181e519e08ee1b8921f`，Actions `42346134048` success；桌面/手机选择、OSS verified及真实推理通过。[报告](../reports/cx_web_specialists_items_v3_20261107.md)
+
+## WEB-V4-FACING-MOBILE-20261107
+
+v4 `de78ae7d7d75647b29db2ee213ad7c1114e723c7`：同向主行/列首泡、前方最多3格、原生遮挡；松键不接触起计。半格及整格明显空隙、满圈放泡获权限、真实穿过逐帧核验；旧Review冻结物理不改。继承v3供给约1.5倍、全图合法掉落和生产属性上限，保留音效/OSS/小键盘。
+
+手机独立发布 `c2ed1cb26b4c9546c7e8554f10dceae2eb451c74`，Actions `42347826789` success；同SHA Pages回读一致。局部防长按选择/菜单，按钮56–64px、三槽直接放置和4–7换页、多指/取消/失焦清理。线上320/360/390竖屏及844横屏真实长按超过2秒、真实世界放泡/道具与库存守恒通过，桌面/手机候选OSS与推理再验通过。Chromium触摸环境不是实体iOS。[手机报告](../reports/cx_mobile_controls_20261107.md)、[v4修复](../reports/cx_pass_facing_range_fix_20261107.md)
+
+## USER-IMMEDIATE-STOP-AND-DOCS-20261107
+
+最新明确用户授权覆盖此前“active固定预算段完成再停”：立即停止训练、撤销全部后继；保留最后完整COMMITTED、历史run/checkpoint/旧录像及秘密文件，不大范围清理。训练owner实施停止并保留私有持久闸门，网页owner不启动、恢复、触发训练；历史启动命令不是当前授权。CPU选模可以继续但不得绕过闸门或触发训练。停止事实与已review代码文档交付以owner最终回执分列，不把停止请求冒充八卡已释放。
+
+本次在最新main隔离分支整理README模型/控制/v4/OSS/停训说明、文档与报告索引，保留全部旧ledger条目，区分实际网页入口和历史兼容。只非破坏性合入明确review清单，最终来源SHA、测试、隐私、发布与Pages见[统一交付](../reports/cx_web_and_docs_delivery_20261107.md)。
+
+训练owner最终立即停训回执：状态STOPPED_RELEASED_PERSISTENT_USER_HOLD，训练worker=0、GPU compute进程为空、八卡锁释放；七臂最后完整COMMITTED的state/policy SHA重新核验，未为保存或fresh额外训练。最后点为SYNC2 u020048（旧物理namespace，不能混入v3选模）、DUEL u020905、DUEL75 u020903、FTN2 u022292、DUEL25 u020844、SP u024155、ATK u025623；不是这些最后点都已过能力评测。网页只使用既有READY u019902/u023302。[停训报告](../reports/cx_training_stopped_20261107.md)。

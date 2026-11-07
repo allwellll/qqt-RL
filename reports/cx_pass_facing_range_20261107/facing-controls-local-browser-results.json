@@ -1,0 +1,951 @@
+{
+  "status": "PASS",
+  "results": [
+    {
+      "width": 1280,
+      "input": "CDP physical numpad codes",
+      "proof": [
+        {
+          "code": "Numpad5",
+          "key": "5",
+          "numlock": true,
+          "before": {
+            "pos": [
+              6.5,
+              6.5
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 5,
+            "pos": [
+              6.275,
+              6.5
+            ],
+            "direction": 0,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 64,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 64,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 6,
+            "pos": [
+              6.275,
+              6.5
+            ],
+            "direction": 0,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 96,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 96,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad5",
+          "key": "Clear",
+          "numlock": false,
+          "before": {
+            "pos": [
+              6.275,
+              6.5
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 7,
+            "pos": [
+              6.05,
+              6.5
+            ],
+            "direction": 0,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 224,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 224,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 7,
+            "pos": [
+              6.05,
+              6.5
+            ],
+            "direction": 0,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 256,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 256,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad1",
+          "key": "1",
+          "numlock": true,
+          "before": {
+            "pos": [
+              6.05,
+              6.5
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 9,
+            "pos": [
+              6.05,
+              6.275
+            ],
+            "direction": 2,
+            "facing": -1,
+            "gap": -0.75,
+            "state": {
+              "clock": 384,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 384,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 9,
+            "pos": [
+              6.05,
+              6.275
+            ],
+            "direction": 2,
+            "facing": -1,
+            "gap": -0.75,
+            "state": {
+              "clock": 416,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 416,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad1",
+          "key": "End",
+          "numlock": false,
+          "before": {
+            "pos": [
+              6.05,
+              6.275
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 10,
+            "pos": [
+              6.05,
+              6.05
+            ],
+            "direction": 2,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 544,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 544,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 11,
+            "pos": [
+              6.05,
+              6.05
+            ],
+            "direction": 2,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 576,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 576,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad2",
+          "key": "2",
+          "numlock": true,
+          "before": {
+            "pos": [
+              6.05,
+              6.05
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 12,
+            "pos": [
+              6.275,
+              6.05
+            ],
+            "direction": 1,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 704,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 704,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 12,
+            "pos": [
+              6.275,
+              6.05
+            ],
+            "direction": 1,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 736,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 736,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad2",
+          "key": "ArrowDown",
+          "numlock": false,
+          "before": {
+            "pos": [
+              6.275,
+              6.05
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 13,
+            "pos": [
+              6.5,
+              6.05
+            ],
+            "direction": 1,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 864,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 864,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 14,
+            "pos": [
+              6.5,
+              6.05
+            ],
+            "direction": 1,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 896,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 896,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad3",
+          "key": "3",
+          "numlock": true,
+          "before": {
+            "pos": [
+              6.5,
+              6.05
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 15,
+            "pos": [
+              6.5,
+              6.275
+            ],
+            "direction": 3,
+            "facing": -1,
+            "gap": -0.75,
+            "state": {
+              "clock": 1024,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 1024,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 15,
+            "pos": [
+              6.5,
+              6.275
+            ],
+            "direction": 3,
+            "facing": -1,
+            "gap": -0.75,
+            "state": {
+              "clock": 1056,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 1056,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad3",
+          "key": "PageDown",
+          "numlock": false,
+          "before": {
+            "pos": [
+              6.5,
+              6.275
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 17,
+            "pos": [
+              6.5,
+              6.5
+            ],
+            "direction": 3,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 1184,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 1184,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 17,
+            "pos": [
+              6.5,
+              6.5
+            ],
+            "direction": 3,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 1216,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 1216,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        }
+      ],
+      "blurClear": true,
+      "typingNotHijacked": true,
+      "mainDigitUsesItem": true
+    },
+    {
+      "width": 390,
+      "input": "CDP physical numpad codes",
+      "proof": [
+        {
+          "code": "Numpad5",
+          "key": "5",
+          "numlock": true,
+          "before": {
+            "pos": [
+              6.5,
+              6.5
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 5,
+            "pos": [
+              6.275,
+              6.5
+            ],
+            "direction": 0,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 64,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 64,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 6,
+            "pos": [
+              6.275,
+              6.5
+            ],
+            "direction": 0,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 96,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 96,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad5",
+          "key": "Clear",
+          "numlock": false,
+          "before": {
+            "pos": [
+              6.275,
+              6.5
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 7,
+            "pos": [
+              6.05,
+              6.5
+            ],
+            "direction": 0,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 224,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 224,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 7,
+            "pos": [
+              6.05,
+              6.5
+            ],
+            "direction": 0,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 256,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 256,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad1",
+          "key": "1",
+          "numlock": true,
+          "before": {
+            "pos": [
+              6.05,
+              6.5
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 9,
+            "pos": [
+              6.05,
+              6.275
+            ],
+            "direction": 2,
+            "facing": -1,
+            "gap": -0.75,
+            "state": {
+              "clock": 384,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 384,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 9,
+            "pos": [
+              6.05,
+              6.275
+            ],
+            "direction": 2,
+            "facing": -1,
+            "gap": -0.75,
+            "state": {
+              "clock": 416,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 416,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad1",
+          "key": "End",
+          "numlock": false,
+          "before": {
+            "pos": [
+              6.05,
+              6.275
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 10,
+            "pos": [
+              6.05,
+              6.05
+            ],
+            "direction": 2,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 544,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 544,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 11,
+            "pos": [
+              6.05,
+              6.05
+            ],
+            "direction": 2,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 576,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 576,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad2",
+          "key": "2",
+          "numlock": true,
+          "before": {
+            "pos": [
+              6.05,
+              6.05
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 12,
+            "pos": [
+              6.275,
+              6.05
+            ],
+            "direction": 1,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 704,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 704,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 12,
+            "pos": [
+              6.275,
+              6.05
+            ],
+            "direction": 1,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 736,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 736,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad2",
+          "key": "ArrowDown",
+          "numlock": false,
+          "before": {
+            "pos": [
+              6.275,
+              6.05
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 13,
+            "pos": [
+              6.5,
+              6.05
+            ],
+            "direction": 1,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 864,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 864,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 14,
+            "pos": [
+              6.5,
+              6.05
+            ],
+            "direction": 1,
+            "facing": -1,
+            "gap": -0.5249999999999995,
+            "state": {
+              "clock": 896,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 896,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad3",
+          "key": "3",
+          "numlock": true,
+          "before": {
+            "pos": [
+              6.5,
+              6.05
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 15,
+            "pos": [
+              6.5,
+              6.275
+            ],
+            "direction": 3,
+            "facing": -1,
+            "gap": -0.75,
+            "state": {
+              "clock": 1024,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 1024,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 15,
+            "pos": [
+              6.5,
+              6.275
+            ],
+            "direction": 3,
+            "facing": -1,
+            "gap": -0.75,
+            "state": {
+              "clock": 1056,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 1056,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        },
+        {
+          "code": "Numpad3",
+          "key": "PageDown",
+          "numlock": false,
+          "before": {
+            "pos": [
+              6.5,
+              6.275
+            ],
+            "count": 10
+          },
+          "during": {
+            "tick": 17,
+            "pos": [
+              6.5,
+              6.5
+            ],
+            "direction": 3,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 1184,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 1184,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          },
+          "stopped": {
+            "tick": 17,
+            "pos": [
+              6.5,
+              6.5
+            ],
+            "direction": 3,
+            "facing": -1,
+            "gap": -0.9749999999999996,
+            "state": {
+              "clock": 1216,
+              "touchValid": false,
+              "touchCell": -1,
+              "touchStart": 0,
+              "touchLast": 0,
+              "charged": 1216,
+              "passActive": false,
+              "passCell": -1,
+              "passDuration": 0
+            },
+            "hints": [],
+            "ready": false
+          }
+        }
+      ],
+      "blurClear": true,
+      "typingNotHijacked": true,
+      "mainDigitUsesItem": true
+    }
+  ]
+}

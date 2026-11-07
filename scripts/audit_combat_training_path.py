@@ -11,12 +11,15 @@ import os
 import re
 from pathlib import Path
 
+DEFAULT_MANIFEST = 'docs/combat_league_v2_dependency_manifest_20261107.json'
 PACKAGES = ('scripts', 'jax_bomb', 'qqt_rl')
 OPAQUE = {'r.py', 'a.py', 'a.js', 'q'}
 # Legacy sim catches this optional bot import; the native training/eval path
 # never selects TimeAStarAI. Keep the exception visible in the manifest.
 OPTIONAL_NODE = {name: {'web/time_astar_ai.js'} for name in
-                 ('web/sim.js', 'web/sim-stock-window-v1.js', 'web/sim-bun-native-v2.js')}
+                 ('web/sim.js', 'web/sim-stock-window-v1.js', 'web/sim-bun-native-v2.js',
+                  'web/sim-bun-native-v2-face.js', 'web/sim-bun-native-v3-items.js',
+                  'web/sim-bun-native-v4-facing.js')}
 OPTIONAL_NODE['web/review-sim/stock-legacy-20261028.js'] = {'web/review-sim/time_astar_ai.js'}
 OPTIONAL_NODE['web/review-sim/bun-native-v2-20261104.js'] = {'web/review-sim/time_astar_ai.js'}
 
@@ -90,7 +93,7 @@ def audit(roots):
 
 def main():
     parser = argparse.ArgumentParser(__doc__)
-    parser.add_argument('--manifest', default='docs/combat_league_v2_dependency_manifest_20261106.json')
+    parser.add_argument('--manifest', default=DEFAULT_MANIFEST)
     parser.add_argument('--write', action='store_true')
     args = parser.parse_args()
     manifest = Path(args.manifest)

@@ -1,0 +1,11 @@
+{
+  "npm_test": "PASS",
+  "controls_catalog_v4": "PASS",
+  "static_closure": "PASS 109 roots / 321 dependencies",
+  "static_pytest": "PASS 2",
+  "local_links": "PASS",
+  "tracked_privacy": "PASS 0 findings",
+  "staged_privacy_paths_credentials": "PASS 0 findings",
+  "web_bytes_preserved": true,
+  "training_started": false
+}

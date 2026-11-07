@@ -35,4 +35,18 @@
 
 ## 发布核验
 
-待正常 push 后，回填同 SHA Actions/Pages 和线上桌面/手机结果。
+已正常快进 push main：`de78ae7d7d75647b29db2ee213ad7c1114e723c7`，无 force。
+
+- [同 SHA Actions / Pages](https://github.com/allwellll/qqt-RL/actions/runs/42343851641)：test-and-build **success**，deploy **success**，整个 workflow 最终 **success**。
+- [Actions记录](cx_pass_facing_range_20261107/facing-range-release-actions.json)；[Pages在线回读](cx_pass_facing_range_20261107/facing-range-release-public-readback.json)：build-info.commit 与 main SHA 完全相同，默认 v4。包括实际 v4/v3/face/v2、capture/selector、renderer、app、OSS配置、小键盘、音效、Review 所有归档引擎在内，线上关键文件逐字节比对成功。
+- [线上桌面/手机逐帧证据](cx_pass_facing_range_20261107/facing-range-public-browser-results.json)：实际加载 v4 文件200，运行 `_nativeFacingCell` 确认是范围扫描实现，而非仅看规则名。半格/整格空隙分别0.575/1.075格，真实转向后松键、31帧idle位置不变、零碰撞命中起计，512ms满圈放泡获得目标权限、实际移动穿过，桌面与手机都通过；墙/砖遮挡、最近泡、背后和超3格负例通过。
+- [线上桌面整格满圈](cx_pass_facing_range_20261107/facing-range-public-1280-whole-cell-ready.png)；[线上手机整格起点后实际穿过](cx_pass_facing_range_20261107/facing-range-public-390-whole-cell-passed.png)。截图已人工查看。
+- [线上控制回归](cx_pass_facing_range_20261107/facing-controls-public-browser-results.json)：桌面/手机各8组 Numpad5/1/2/3 NumLock on/off key+code 真实移动，keyup 后停止，blur 清理，输入框不劫持，小键盘不消耗道具，主键盘 Digit1 实际消耗一个道具。
+- [线上道具/模型/音效回归](cx_pass_facing_range_20261107/facing-preservation-audio-public-browser.json)：G_frozen τ0.3 正常图及对拼均能运行；供给24/15、上限及全图掉落守恒通过；人类/模型拾取事件各对应一次真实WebAudio播放，满库存不响，静音/手势解锁有效，AudioContext running、4音频资源200；无排行榜写入。
+- [线上旧Review](cx_pass_facing_range_20261107/face-old-review-public.json)：8录像校验、seek、播放通过，继续冻结旧SHA。
+
+隐私扫描：`git ls-files` 加明确新增交付文件/READY，用户标识、内网IP、机器PID、私有绝对路径和密钥格式均无命中。未触碰训练工作树和在训进程，未调用CC。最终发布证据在本地报告回填，不为回填额外产生第二次部署。
+
+`.hermes/FACING_RULE_READY.json` 已同步本任务树和原交接树，含新版本/精确定义/路径SHA/测试命令/已发布SHA，未写训练CX源码。
+
+专项候选 `WEB_CANDIDATE_READY.json` 最后复查仍未出现；本次没有夹带候选变更，没有用旧样本宣称新模型更强。其 CPU 导出/JS-ONNX 对接、OSS只读SHA检查与专项说明卡真实浏览器对接已准备，通过后续独立候选交付消费。

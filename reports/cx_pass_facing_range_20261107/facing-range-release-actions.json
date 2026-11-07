@@ -1,0 +1,21 @@
+{
+  "sha": "de78ae7d7d75647b29db2ee213ad7c1114e723c7",
+  "run_id": 42343851641,
+  "url": "https://github.com/allwellll/qqt-RL/actions/runs/42343851641",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "test-and-build",
+      "status": "completed",
+      "conclusion": "success",
+      "active_steps": []
+    },
+    {
+      "name": "deploy",
+      "status": "completed",
+      "conclusion": "success",
+      "active_steps": []
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # R1–R4 现行代码指南（2026-11-01）
 
+> 本文是20261101代码/规则快照。“当前”仅指当日；现行网页为v4-facing、G_frozen τ0.3默认与DUEL/SP可选，训练已按用户指令立即暂停、撤销全部后继。[最新状态与有效入口](current_web_and_training_status_20261107.md)覆盖本文旧运行状态；下方训练命令不获恢复授权。
+
 本页整理现行实现，不启动、停止或改变已有训练。权威实验事件见[总账](training_experiment_ledger.md)，运行事实以对应 namespace 的原子 checkpoint、updates 和评估分片为准。线上默认模型以 `web/models.json` 首项为准；本次同步保持 R3-a u4002、`bun-native-v2`、默认对手不变。
 
 ## 版本与入口

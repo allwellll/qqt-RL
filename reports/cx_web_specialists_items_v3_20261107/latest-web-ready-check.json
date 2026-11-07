@@ -1,0 +1,23 @@
+{
+  "status": "READY",
+  "ready_sha256": "1545a14d4f4349b7c9affa2bdd8ed7f5a93de39db6d18bc988a3caaedeecfcbc",
+  "rule": "bun-native-v3-items",
+  "candidates": [
+    {
+      "id": "items-l2_duel_u019902-tau03",
+      "policy_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
+      "published_matches": [
+        "items-l2-duel-u019902-tau03"
+      ],
+      "temperature": 0.3
+    },
+    {
+      "id": "items-l2_sp_u023302-tau03",
+      "policy_sha256": "39b0dea7327221891bdd4cfba93ab917c897aa86fd78d83401241ad945a982cf",
+      "published_matches": [
+        "items-l2-sp-u023302-tau03"
+      ],
+      "temperature": 0.3
+    }
+  ]
+}
