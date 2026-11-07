@@ -68,6 +68,31 @@ python -m pip install -e '.[test]'
 
 GPU 环境请按机器 CUDA/JAX 版本安装匹配的 JAX wheel；仓库不固定设备专属 wheel。正式训练默认拒绝静默回退到 CPU。
 
+## 海光 DCU 训练（`dcu` 分支）
+
+`dcu` 分支用于从 H200/CUDA 迁移至海光 DCU/ROCm，复用容器预装的海光 JAX，
+通过项目 `.venv` 补充依赖。当前验证环境为 DTK 26.04、Python 3.11.9、
+JAX/JAXlib `0.6.0+das.opt1.dtk2604`；不替换驱动或系统训练依赖。
+
+| 文档 | 内容 |
+|---|---|
+| [DCU 迁移与训练方法](docs/dcu_migration.md) | 环境安装、模型数据下载与校验、单卡检查、正式训练入口和编译缓存 |
+| [单卡验证记录](reports/dcu_validation_20261108.json) | DUEL 真实采样、GAE、PPO/Adam 更新结果，以及 SP 前向验证范围 |
+| [模型迁移与续训语义](docs/continue_training_on_new_machine.md) | Release 权重来源、Actor 热启动、Critic/Adam 重建及模型保存边界 |
+| [后续8卡训练](docs/dcu_migration.md#后续8卡机器) | 8卡机器就绪后的数据并行、梯度聚合和卡间通信验证计划 |
+
+按迁移文档配置环境和下载数据后，在分配给自己的空闲 DCU 上验证：
+
+```bash
+source scripts/dcu_env.sh
+python -u -m scripts.dcu_smoke --line DUEL --device 0 --update
+```
+
+已通过单卡 DUEL 的4 env × 2 tick、minibatch 8 完整更新，SP 已通过前向检查。
+首次 DUEL 采样图编译约12分钟，缓存位于项目 `.jax_cache/dcu/`。
+正式单卡入口为 `python -m scripts.dcu_training`，用法见迁移文档；当前保留停训设置，
+本机不启动长训。8卡适配与验收将在新机器就绪后进行，当前单卡结果不代表8卡已验证。
+
 ## 目录
 
 - `jax_bomb/`：Bun 环境、网络、PPO/GAE、安全动作分析、规则 Bot 与 Critic 核心。
