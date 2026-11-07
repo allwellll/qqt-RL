@@ -1,0 +1,3014 @@
+{
+  "status": "PASS",
+  "browser": "Chromium; mobile viewport and real CDP touch; not a physical iOS test",
+  "results": [
+    {
+      "viewport": {
+        "width": 320,
+        "height": 844
+      },
+      "layout": {
+        "overflow": false,
+        "board": {
+          "x": 0,
+          "y": 0,
+          "width": 320,
+          "height": 312.875
+        },
+        "nav": {
+          "x": 0,
+          "y": 312.875,
+          "width": 320,
+          "height": 132
+        },
+        "buttons": [
+          {
+            "key": "ArrowUp",
+            "width": 56,
+            "height": 56,
+            "x": 68,
+            "y": 320.875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowLeft",
+            "width": 56,
+            "height": 56,
+            "x": 8,
+            "y": 380.875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowDown",
+            "width": 56,
+            "height": 56,
+            "x": 68,
+            "y": 380.875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowRight",
+            "width": 56,
+            "height": 56,
+            "x": 128,
+            "y": 380.875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Space",
+            "width": 56,
+            "height": 56,
+            "x": 196,
+            "y": 320.875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit1",
+            "width": 56,
+            "height": 56,
+            "x": 256,
+            "y": 320.875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit2",
+            "width": 56,
+            "height": 56,
+            "x": 196,
+            "y": 380.875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit3",
+            "width": 56,
+            "height": 56,
+            "x": 256,
+            "y": 380.875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          }
+        ]
+      },
+      "longPress": {
+        "elapsedMs": 2167,
+        "start": {
+          "pos": [
+            5.5,
+            2.5
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [],
+          "sounds": [],
+          "selection": ""
+        },
+        "holding": {
+          "pos": [
+            5.5,
+            10.875
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        },
+        "released": {
+          "pos": [
+            5.5,
+            10.925
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        },
+        "stopped": {
+          "pos": [
+            5.5,
+            10.925
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        }
+      },
+      "contextmenu": [
+        {
+          "prevented": true,
+          "target": "ArrowRight"
+        }
+      ],
+      "gestures": {
+        "selectstart": true,
+        "dragstart": true
+      },
+      "multiBomb": {
+        "afterBomb": {
+          "pos": [
+            5.5,
+            3.6
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [
+            {
+              "tick": 32,
+              "placed": true,
+              "released": false,
+              "action": [
+                4,
+                1,
+                0,
+                1,
+                77,
+                -1,
+                0
+              ],
+              "pos": [
+                5.5,
+                3.075
+              ]
+            }
+          ],
+          "presses": [
+            "ArrowRight",
+            "Space"
+          ],
+          "sounds": [
+            "place"
+          ],
+          "selection": ""
+        },
+        "stillMoving": {
+          "pos": [
+            5.5,
+            4.375
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [
+            {
+              "tick": 32,
+              "placed": true,
+              "released": false,
+              "action": [
+                4,
+                1,
+                0,
+                1,
+                77,
+                -1,
+                0
+              ],
+              "pos": [
+                5.5,
+                3.075
+              ]
+            }
+          ],
+          "presses": [
+            "ArrowRight",
+            "Space"
+          ],
+          "sounds": [
+            "place"
+          ],
+          "selection": ""
+        }
+      },
+      "slotCases": [
+        {
+          "index": 0,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 2
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 1,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 37,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  0
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit1"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        },
+        {
+          "index": 1,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 4
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 2,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 44,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  1
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit2"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        },
+        {
+          "index": 2,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 6
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 1,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 50,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  2
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit3"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        }
+      ],
+      "emptyResult": {
+        "pos": [
+          5.5,
+          2.5
+        ],
+        "slots": [],
+        "field": [],
+        "events": [],
+        "presses": [
+          "Digit3"
+        ],
+        "sounds": [],
+        "selection": ""
+      },
+      "paging": {
+        "pager": "槽7–7 / 7　换页 ▶",
+        "usedSeventh": {
+          "pos": [
+            5.5,
+            2.5
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 2
+            },
+            {
+              "item": 2,
+              "count": 3
+            },
+            {
+              "item": 1,
+              "count": 4
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 6
+            },
+            {
+              "item": 2,
+              "count": 7
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [
+            {
+              "cell": 77,
+              "item": 1,
+              "owner": 0
+            }
+          ],
+          "events": [
+            {
+              "tick": 61,
+              "placed": false,
+              "released": true,
+              "action": [
+                4,
+                0,
+                1,
+                1,
+                -1,
+                77,
+                6
+              ],
+              "pos": [
+                5.5,
+                2.5
+              ]
+            }
+          ],
+          "presses": [
+            "Digit7"
+          ],
+          "sounds": [
+            "pickup"
+          ],
+          "selection": ""
+        }
+      },
+      "cancelCleared": true,
+      "blurCleared": true,
+      "visibilityHandlerCleared": true,
+      "outsideAndBack": true,
+      "typingPreserved": true,
+      "ordinarySelection": true,
+      "keypad": [
+        {
+          "code": "Numpad5",
+          "key": "Clear",
+          "direction": 0,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad1",
+          "key": "End",
+          "direction": 2,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad2",
+          "key": "ArrowDown",
+          "direction": 1,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad3",
+          "key": "PageDown",
+          "direction": 3,
+          "moved": true,
+          "itemUntouched": true
+        }
+      ],
+      "mainDigit": {
+        "pos": [
+          5.5,
+          2.5
+        ],
+        "slots": [
+          {
+            "item": 1,
+            "count": 3
+          },
+          {
+            "item": 2,
+            "count": 4
+          },
+          {
+            "item": 1,
+            "count": 7
+          }
+        ],
+        "field": [
+          {
+            "cell": 77,
+            "item": 2,
+            "owner": 0
+          }
+        ],
+        "events": [
+          {
+            "tick": 88,
+            "placed": false,
+            "released": true,
+            "action": [
+              4,
+              0,
+              1,
+              1,
+              -1,
+              77,
+              1
+            ],
+            "pos": [
+              5.5,
+              2.5
+            ]
+          }
+        ],
+        "presses": [],
+        "sounds": [
+          "pickup"
+        ],
+        "selection": ""
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "layout": {
+        "overflow": false,
+        "board": {
+          "x": 0,
+          "y": 0,
+          "width": 360,
+          "height": 352
+        },
+        "nav": {
+          "x": 0,
+          "y": 352,
+          "width": 360,
+          "height": 135.1875
+        },
+        "buttons": [
+          {
+            "key": "ArrowUp",
+            "width": 57.59375,
+            "height": 57.59375,
+            "x": 69.59375,
+            "y": 360,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowLeft",
+            "width": 57.59375,
+            "height": 57.59375,
+            "x": 8,
+            "y": 421.59375,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowDown",
+            "width": 57.59375,
+            "height": 57.59375,
+            "x": 69.59375,
+            "y": 421.59375,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowRight",
+            "width": 57.59375,
+            "height": 57.59375,
+            "x": 131.1875,
+            "y": 421.59375,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Space",
+            "width": 57.59375,
+            "height": 57.59375,
+            "x": 232.8125,
+            "y": 360,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit1",
+            "width": 57.59375,
+            "height": 57.59375,
+            "x": 294.40625,
+            "y": 360,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit2",
+            "width": 57.59375,
+            "height": 57.59375,
+            "x": 232.8125,
+            "y": 421.59375,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit3",
+            "width": 57.59375,
+            "height": 57.59375,
+            "x": 294.40625,
+            "y": 421.59375,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          }
+        ]
+      },
+      "longPress": {
+        "elapsedMs": 2167,
+        "start": {
+          "pos": [
+            5.5,
+            2.5
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [],
+          "sounds": [],
+          "selection": ""
+        },
+        "holding": {
+          "pos": [
+            5.5,
+            10.875
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        },
+        "released": {
+          "pos": [
+            5.5,
+            10.925
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        },
+        "stopped": {
+          "pos": [
+            5.5,
+            10.925
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        }
+      },
+      "contextmenu": [
+        {
+          "prevented": true,
+          "target": "ArrowRight"
+        }
+      ],
+      "gestures": {
+        "selectstart": true,
+        "dragstart": true
+      },
+      "multiBomb": {
+        "afterBomb": {
+          "pos": [
+            5.5,
+            3.525
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [
+            {
+              "tick": 30,
+              "placed": true,
+              "released": false,
+              "action": [
+                4,
+                1,
+                0,
+                1,
+                77,
+                -1,
+                0
+              ],
+              "pos": [
+                5.5,
+                2.95
+              ]
+            }
+          ],
+          "presses": [
+            "ArrowRight",
+            "Space"
+          ],
+          "sounds": [
+            "place"
+          ],
+          "selection": ""
+        },
+        "stillMoving": {
+          "pos": [
+            5.5,
+            4.3
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [
+            {
+              "tick": 30,
+              "placed": true,
+              "released": false,
+              "action": [
+                4,
+                1,
+                0,
+                1,
+                77,
+                -1,
+                0
+              ],
+              "pos": [
+                5.5,
+                2.95
+              ]
+            }
+          ],
+          "presses": [
+            "ArrowRight",
+            "Space"
+          ],
+          "sounds": [
+            "place"
+          ],
+          "selection": ""
+        }
+      },
+      "slotCases": [
+        {
+          "index": 0,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 2
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 1,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 35,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  0
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit1"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        },
+        {
+          "index": 1,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 4
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 2,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 42,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  1
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit2"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        },
+        {
+          "index": 2,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 6
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 1,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 49,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  2
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit3"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        }
+      ],
+      "emptyResult": {
+        "pos": [
+          5.5,
+          2.5
+        ],
+        "slots": [],
+        "field": [],
+        "events": [],
+        "presses": [
+          "Digit3"
+        ],
+        "sounds": [],
+        "selection": ""
+      },
+      "paging": {
+        "pager": "槽7–7 / 7　换页 ▶",
+        "usedSeventh": {
+          "pos": [
+            5.5,
+            2.5
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 2
+            },
+            {
+              "item": 2,
+              "count": 3
+            },
+            {
+              "item": 1,
+              "count": 4
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 6
+            },
+            {
+              "item": 2,
+              "count": 7
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [
+            {
+              "cell": 77,
+              "item": 1,
+              "owner": 0
+            }
+          ],
+          "events": [
+            {
+              "tick": 60,
+              "placed": false,
+              "released": true,
+              "action": [
+                4,
+                0,
+                1,
+                1,
+                -1,
+                77,
+                6
+              ],
+              "pos": [
+                5.5,
+                2.5
+              ]
+            }
+          ],
+          "presses": [
+            "Digit7"
+          ],
+          "sounds": [
+            "pickup"
+          ],
+          "selection": ""
+        }
+      },
+      "cancelCleared": true,
+      "blurCleared": true,
+      "visibilityHandlerCleared": true,
+      "outsideAndBack": true,
+      "typingPreserved": true,
+      "ordinarySelection": true,
+      "keypad": [
+        {
+          "code": "Numpad5",
+          "key": "Clear",
+          "direction": 0,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad1",
+          "key": "End",
+          "direction": 2,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad2",
+          "key": "ArrowDown",
+          "direction": 1,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad3",
+          "key": "PageDown",
+          "direction": 3,
+          "moved": true,
+          "itemUntouched": true
+        }
+      ],
+      "mainDigit": {
+        "pos": [
+          5.5,
+          2.5
+        ],
+        "slots": [
+          {
+            "item": 1,
+            "count": 3
+          },
+          {
+            "item": 2,
+            "count": 4
+          },
+          {
+            "item": 1,
+            "count": 7
+          }
+        ],
+        "field": [
+          {
+            "cell": 77,
+            "item": 2,
+            "owner": 0
+          }
+        ],
+        "events": [
+          {
+            "tick": 87,
+            "placed": false,
+            "released": true,
+            "action": [
+              4,
+              0,
+              1,
+              1,
+              -1,
+              77,
+              1
+            ],
+            "pos": [
+              5.5,
+              2.5
+            ]
+          }
+        ],
+        "presses": [],
+        "sounds": [
+          "pickup"
+        ],
+        "selection": ""
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "layout": {
+        "overflow": false,
+        "board": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 381.328125
+        },
+        "nav": {
+          "x": 0,
+          "y": 381.328125,
+          "width": 390,
+          "height": 144.78125
+        },
+        "buttons": [
+          {
+            "key": "ArrowUp",
+            "width": 62.390625,
+            "height": 62.390625,
+            "x": 74.390625,
+            "y": 389.328125,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowLeft",
+            "width": 62.390625,
+            "height": 62.390625,
+            "x": 8,
+            "y": 455.71875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowDown",
+            "width": 62.390625,
+            "height": 62.390625,
+            "x": 74.390625,
+            "y": 455.71875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowRight",
+            "width": 62.390625,
+            "height": 62.390625,
+            "x": 140.78125,
+            "y": 455.71875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Space",
+            "width": 62.390625,
+            "height": 62.390625,
+            "x": 253.21875,
+            "y": 389.328125,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit1",
+            "width": 62.390625,
+            "height": 62.390625,
+            "x": 319.609375,
+            "y": 389.328125,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit2",
+            "width": 62.390625,
+            "height": 62.390625,
+            "x": 253.21875,
+            "y": 455.71875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit3",
+            "width": 62.390625,
+            "height": 62.390625,
+            "x": 319.609375,
+            "y": 455.71875,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          }
+        ]
+      },
+      "longPress": {
+        "elapsedMs": 2165,
+        "start": {
+          "pos": [
+            5.5,
+            2.5
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [],
+          "sounds": [],
+          "selection": ""
+        },
+        "holding": {
+          "pos": [
+            5.5,
+            10.875
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        },
+        "released": {
+          "pos": [
+            5.5,
+            10.925
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        },
+        "stopped": {
+          "pos": [
+            5.5,
+            10.925
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        }
+      },
+      "contextmenu": [
+        {
+          "prevented": true,
+          "target": "ArrowRight"
+        }
+      ],
+      "gestures": {
+        "selectstart": true,
+        "dragstart": true
+      },
+      "multiBomb": {
+        "afterBomb": {
+          "pos": [
+            5.5,
+            3.6
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [
+            {
+              "tick": 32,
+              "placed": true,
+              "released": false,
+              "action": [
+                4,
+                1,
+                0,
+                1,
+                77,
+                -1,
+                0
+              ],
+              "pos": [
+                5.5,
+                3.275
+              ]
+            }
+          ],
+          "presses": [
+            "ArrowRight",
+            "Space"
+          ],
+          "sounds": [
+            "place"
+          ],
+          "selection": ""
+        },
+        "stillMoving": {
+          "pos": [
+            5.5,
+            4.375
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [
+            {
+              "tick": 32,
+              "placed": true,
+              "released": false,
+              "action": [
+                4,
+                1,
+                0,
+                1,
+                77,
+                -1,
+                0
+              ],
+              "pos": [
+                5.5,
+                3.275
+              ]
+            }
+          ],
+          "presses": [
+            "ArrowRight",
+            "Space"
+          ],
+          "sounds": [
+            "place"
+          ],
+          "selection": ""
+        }
+      },
+      "slotCases": [
+        {
+          "index": 0,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 2
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 1,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 36,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  0
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit1"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        },
+        {
+          "index": 1,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.25
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 4
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 2,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 44,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  1
+                ],
+                "pos": [
+                  5.5,
+                  2.95
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit2"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        },
+        {
+          "index": 2,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 6
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 1,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 51,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  2
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit3"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        }
+      ],
+      "emptyResult": {
+        "pos": [
+          5.5,
+          2.5
+        ],
+        "slots": [],
+        "field": [],
+        "events": [],
+        "presses": [
+          "Digit3"
+        ],
+        "sounds": [],
+        "selection": ""
+      },
+      "paging": {
+        "pager": "槽7–7 / 7　换页 ▶",
+        "usedSeventh": {
+          "pos": [
+            5.5,
+            2.5
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 2
+            },
+            {
+              "item": 2,
+              "count": 3
+            },
+            {
+              "item": 1,
+              "count": 4
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 6
+            },
+            {
+              "item": 2,
+              "count": 7
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [
+            {
+              "cell": 77,
+              "item": 1,
+              "owner": 0
+            }
+          ],
+          "events": [
+            {
+              "tick": 63,
+              "placed": false,
+              "released": true,
+              "action": [
+                4,
+                0,
+                1,
+                1,
+                -1,
+                77,
+                6
+              ],
+              "pos": [
+                5.5,
+                2.5
+              ]
+            }
+          ],
+          "presses": [
+            "Digit7"
+          ],
+          "sounds": [
+            "pickup"
+          ],
+          "selection": ""
+        }
+      },
+      "cancelCleared": true,
+      "blurCleared": true,
+      "visibilityHandlerCleared": true,
+      "outsideAndBack": true,
+      "typingPreserved": true,
+      "ordinarySelection": true,
+      "keypad": [
+        {
+          "code": "Numpad5",
+          "key": "Clear",
+          "direction": 0,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad1",
+          "key": "End",
+          "direction": 2,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad2",
+          "key": "ArrowDown",
+          "direction": 1,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad3",
+          "key": "PageDown",
+          "direction": 3,
+          "moved": true,
+          "itemUntouched": true
+        }
+      ],
+      "mainDigit": {
+        "pos": [
+          5.5,
+          2.5
+        ],
+        "slots": [
+          {
+            "item": 1,
+            "count": 3
+          },
+          {
+            "item": 2,
+            "count": 4
+          },
+          {
+            "item": 1,
+            "count": 7
+          }
+        ],
+        "field": [
+          {
+            "cell": 77,
+            "item": 2,
+            "owner": 0
+          }
+        ],
+        "events": [
+          {
+            "tick": 92,
+            "placed": false,
+            "released": true,
+            "action": [
+              4,
+              0,
+              1,
+              1,
+              -1,
+              77,
+              1
+            ],
+            "pos": [
+              5.5,
+              2.5
+            ]
+          }
+        ],
+        "presses": [],
+        "sounds": [
+          "pickup"
+        ],
+        "selection": ""
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "layout": {
+        "overflow": false,
+        "board": {
+          "x": 32.5,
+          "y": 0,
+          "width": 382.5,
+          "height": 374
+        },
+        "nav": {
+          "x": 455.5,
+          "y": 113,
+          "width": 356,
+          "height": 148
+        },
+        "buttons": [
+          {
+            "key": "ArrowUp",
+            "width": 64,
+            "height": 64,
+            "x": 531.5,
+            "y": 121,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowLeft",
+            "width": 64,
+            "height": 64,
+            "x": 463.5,
+            "y": 189,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowDown",
+            "width": 64,
+            "height": 64,
+            "x": 531.5,
+            "y": 189,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "ArrowRight",
+            "width": 64,
+            "height": 64,
+            "x": 599.5,
+            "y": 189,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Space",
+            "width": 64,
+            "height": 64,
+            "x": 671.5,
+            "y": 121,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit1",
+            "width": 64,
+            "height": 64,
+            "x": 739.5,
+            "y": 121,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit2",
+            "width": 64,
+            "height": 64,
+            "x": 671.5,
+            "y": 189,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          },
+          {
+            "key": "Digit3",
+            "width": 64,
+            "height": 64,
+            "x": 739.5,
+            "y": 189,
+            "userSelect": "none",
+            "webkitUserSelect": "none",
+            "touchAction": "none"
+          }
+        ]
+      },
+      "longPress": {
+        "elapsedMs": 2165,
+        "start": {
+          "pos": [
+            5.5,
+            2.5
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [],
+          "sounds": [],
+          "selection": ""
+        },
+        "holding": {
+          "pos": [
+            5.5,
+            10.875
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        },
+        "released": {
+          "pos": [
+            5.5,
+            10.95
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        },
+        "stopped": {
+          "pos": [
+            5.5,
+            10.95
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [],
+          "presses": [
+            "ArrowRight"
+          ],
+          "sounds": [],
+          "selection": ""
+        }
+      },
+      "contextmenu": [
+        {
+          "prevented": true,
+          "target": "ArrowRight"
+        }
+      ],
+      "gestures": {
+        "selectstart": true,
+        "dragstart": true
+      },
+      "multiBomb": {
+        "afterBomb": {
+          "pos": [
+            5.5,
+            3.525
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [
+            {
+              "tick": 31,
+              "placed": true,
+              "released": false,
+              "action": [
+                4,
+                1,
+                0,
+                1,
+                77,
+                -1,
+                0
+              ],
+              "pos": [
+                5.5,
+                2.95
+              ]
+            }
+          ],
+          "presses": [
+            "ArrowRight",
+            "Space"
+          ],
+          "sounds": [
+            "place"
+          ],
+          "selection": ""
+        },
+        "stillMoving": {
+          "pos": [
+            5.5,
+            4.3
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 3
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [],
+          "events": [
+            {
+              "tick": 31,
+              "placed": true,
+              "released": false,
+              "action": [
+                4,
+                1,
+                0,
+                1,
+                77,
+                -1,
+                0
+              ],
+              "pos": [
+                5.5,
+                2.95
+              ]
+            }
+          ],
+          "presses": [
+            "ArrowRight",
+            "Space"
+          ],
+          "sounds": [
+            "place"
+          ],
+          "selection": ""
+        }
+      },
+      "slotCases": [
+        {
+          "index": 0,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 2
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 1,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 37,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  0
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit1"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        },
+        {
+          "index": 1,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 4
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 2,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 43,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  1
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit2"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        },
+        {
+          "index": 2,
+          "before": {
+            "pos": [
+              5.5,
+              2.5
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 7
+              }
+            ],
+            "field": [],
+            "events": [],
+            "presses": [],
+            "sounds": [],
+            "selection": ""
+          },
+          "active": {
+            "pos": [
+              5.5,
+              4.175
+            ],
+            "slots": [
+              {
+                "item": 1,
+                "count": 3
+              },
+              {
+                "item": 2,
+                "count": 5
+              },
+              {
+                "item": 1,
+                "count": 6
+              }
+            ],
+            "field": [
+              {
+                "cell": 77,
+                "item": 1,
+                "owner": 0
+              }
+            ],
+            "events": [
+              {
+                "tick": 50,
+                "placed": false,
+                "released": true,
+                "action": [
+                  4,
+                  0,
+                  1,
+                  1,
+                  -1,
+                  77,
+                  2
+                ],
+                "pos": [
+                  5.5,
+                  2.875
+                ]
+              }
+            ],
+            "presses": [
+              "ArrowRight",
+              "Digit3"
+            ],
+            "sounds": [
+              "pickup"
+            ],
+            "selection": ""
+          },
+          "continuedMovement": true
+        }
+      ],
+      "emptyResult": {
+        "pos": [
+          5.5,
+          2.5
+        ],
+        "slots": [],
+        "field": [],
+        "events": [],
+        "presses": [
+          "Digit3"
+        ],
+        "sounds": [],
+        "selection": ""
+      },
+      "paging": {
+        "pager": "槽7–7 / 7　换页 ▶",
+        "usedSeventh": {
+          "pos": [
+            5.5,
+            2.5
+          ],
+          "slots": [
+            {
+              "item": 1,
+              "count": 2
+            },
+            {
+              "item": 2,
+              "count": 3
+            },
+            {
+              "item": 1,
+              "count": 4
+            },
+            {
+              "item": 2,
+              "count": 5
+            },
+            {
+              "item": 1,
+              "count": 6
+            },
+            {
+              "item": 2,
+              "count": 7
+            },
+            {
+              "item": 1,
+              "count": 7
+            }
+          ],
+          "field": [
+            {
+              "cell": 77,
+              "item": 1,
+              "owner": 0
+            }
+          ],
+          "events": [
+            {
+              "tick": 61,
+              "placed": false,
+              "released": true,
+              "action": [
+                4,
+                0,
+                1,
+                1,
+                -1,
+                77,
+                6
+              ],
+              "pos": [
+                5.5,
+                2.5
+              ]
+            }
+          ],
+          "presses": [
+            "Digit7"
+          ],
+          "sounds": [
+            "pickup"
+          ],
+          "selection": ""
+        }
+      },
+      "cancelCleared": true,
+      "blurCleared": true,
+      "visibilityHandlerCleared": true,
+      "outsideAndBack": true,
+      "typingPreserved": true,
+      "ordinarySelection": true,
+      "keypad": [
+        {
+          "code": "Numpad5",
+          "key": "Clear",
+          "direction": 0,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad1",
+          "key": "End",
+          "direction": 2,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad2",
+          "key": "ArrowDown",
+          "direction": 1,
+          "moved": true,
+          "itemUntouched": true
+        },
+        {
+          "code": "Numpad3",
+          "key": "PageDown",
+          "direction": 3,
+          "moved": true,
+          "itemUntouched": true
+        }
+      ],
+      "mainDigit": {
+        "pos": [
+          5.5,
+          2.5
+        ],
+        "slots": [
+          {
+            "item": 1,
+            "count": 3
+          },
+          {
+            "item": 2,
+            "count": 4
+          },
+          {
+            "item": 1,
+            "count": 7
+          }
+        ],
+        "field": [
+          {
+            "cell": 77,
+            "item": 2,
+            "owner": 0
+          }
+        ],
+        "events": [
+          {
+            "tick": 88,
+            "placed": false,
+            "released": true,
+            "action": [
+              4,
+              0,
+              1,
+              1,
+              -1,
+              77,
+              1
+            ],
+            "pos": [
+              5.5,
+              2.5
+            ]
+          }
+        ],
+        "presses": [],
+        "sounds": [
+          "pickup"
+        ],
+        "selection": ""
+      },
+      "errors": []
+    }
+  ]
+}

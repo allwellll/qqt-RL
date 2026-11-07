@@ -48,6 +48,17 @@
     };
   }
 
+  // Pagination changes only visible shortcuts, never the authoritative inventory.
+  function touchItemPage(slots, requestedPage = 0) {
+    const pages = Math.max(1, Math.ceil(Math.min(slots.length, ITEM_SLOT_KEYS.length) / 3));
+    const page = Math.max(0, Math.min(pages - 1, Number.isInteger(requestedPage) ? requestedPage : 0));
+    return {page, pages, buttons: Array.from({length: 3}, (_, i) => {
+      const index = page * 3 + i;
+      return {index, number: index < ITEM_SLOT_KEYS.length ? index + 1 : null,
+        key: ITEM_SLOT_KEYS[index] || '', slot: slots[index] || null};
+    })};
+  }
+
   function bindTouchControls(root, held, onPress) {
     const active = new Map();
     const release = event => {
@@ -55,13 +66,19 @@
       active.delete(event.pointerId);
       if (key && ![...active.values()].includes(key)) held.delete(key);
     };
+    // Restrict browser gesture suppression to the game controls.
+    for (const name of ['contextmenu', 'selectstart', 'dragstart'])
+      root.addEventListener?.(name, event => event.preventDefault());
     for (const button of root.querySelectorAll('[data-control-key]')) {
       button.addEventListener('pointerdown', event => {
+        if (event.button != null && event.button !== 0) return;
         event.preventDefault();
         const key = button.dataset.controlKey;
-        if (active.has(event.pointerId)) return;
+        if (!key || active.has(event.pointerId)) return;
+        const alreadyHeld = [...active.values()].includes(key);
         active.set(event.pointerId, key); held.add(key);
-        button.setPointerCapture(event.pointerId); onPress(key);
+        button.setPointerCapture(event.pointerId);
+        if (!alreadyHeld) onPress(key);
       });
       for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) button.addEventListener(name, release);
     }
@@ -69,5 +86,5 @@
   }
 
   return { MOVEMENT_KEYS, MOVEMENT_DIRECTIONS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld,
-    isTypingTarget, isRestartKey, createRestartGate, bindTouchControls };
+    isTypingTarget, isRestartKey, createRestartGate, touchItemPage, bindTouchControls };
 });

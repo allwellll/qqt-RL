@@ -2,27 +2,30 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>qqt-RL · 抢包子真人测试</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main>
-    <nav id="touch-controls" class="touch-controls" aria-label="触屏游戏操作">
-      <div class="touch-directions">
-        <button type="button" class="touch-up" data-control-key="ArrowUp" aria-label="向上">↑</button>
-        <button type="button" class="touch-left" data-control-key="ArrowLeft" aria-label="向左">←</button>
-        <button type="button" class="touch-down" data-control-key="ArrowDown" aria-label="向下">↓</button>
-        <button type="button" class="touch-right" data-control-key="ArrowRight" aria-label="向右">→</button>
-      </div>
-      <div class="touch-actions">
-        <button type="button" data-control-key="Space" aria-label="放泡">放泡</button>
-        <button type="button" data-control-key="KeyE" aria-label="使用第一格道具">道具</button>
-      </div>
-    </nav>
     <section class="arena">
       <div class="stage">
         <canvas id="game" width="900" height="880" aria-label="抢包子对战画面"></canvas>
+        <nav id="touch-controls" class="touch-controls" aria-label="触屏游戏操作">
+          <div class="touch-directions">
+            <button type="button" class="touch-up" data-control-key="ArrowUp" aria-label="向上">↑</button>
+            <button type="button" class="touch-left" data-control-key="ArrowLeft" aria-label="向左">←</button>
+            <button type="button" class="touch-down" data-control-key="ArrowDown" aria-label="向下">↓</button>
+            <button type="button" class="touch-right" data-control-key="ArrowRight" aria-label="向右">→</button>
+          </div>
+          <div class="touch-actions">
+            <button type="button" data-control-key="Space" aria-label="放泡">放泡</button>
+            <button type="button" class="touch-item" data-control-key="Digit1" data-touch-item="0" aria-label="使用槽位1，空槽"><span class="touch-slot-number">1</span><canvas width="32" height="32" aria-hidden="true"></canvas><span class="touch-slot-count">空</span></button>
+            <button type="button" class="touch-item" data-control-key="Digit2" data-touch-item="1" aria-label="使用槽位2，空槽"><span class="touch-slot-number">2</span><canvas width="32" height="32" aria-hidden="true"></canvas><span class="touch-slot-count">空</span></button>
+            <button type="button" class="touch-item" data-control-key="Digit3" data-touch-item="2" aria-label="使用槽位3，空槽"><span class="touch-slot-number">3</span><canvas width="32" height="32" aria-hidden="true"></canvas><span class="touch-slot-count">空</span></button>
+            <button type="button" id="touch-item-page" class="touch-item-page" hidden aria-label="切换显示的道具槽">槽1–3 / 7　换页 ▶</button>
+          </div>
+        </nav>
         <div id="loading" class="loading" role="status" aria-live="polite">
           <div class="loading-bubble" aria-hidden="true"></div>
           <p id="loading-text">正在加载地图与素材…</p>

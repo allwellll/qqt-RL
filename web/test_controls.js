@@ -16,9 +16,19 @@ const controls = require('./controls.js');
   buttons[0].handlers.pointercancel(event(2)); assert(!held.has('ArrowUp'));
   buttons[1].handlers.lostpointercapture(event(3)); assert.equal(held.size,0);
   buttons[0].handlers.pointerdown(event(4)); release(); assert.equal(held.size,0);
-  assert.deepEqual(pressed,['ArrowUp','ArrowUp','Space','ArrowUp']);
+  assert.deepEqual(pressed,['ArrowUp','Space','ArrowUp'],'two pointers holding the same key produce only one initial press');
 }
 
+{
+  const slots=Array.from({length:7},(_,i)=>({item:i%2+1,count:i+2}));
+  const before=JSON.stringify(slots);
+  const pages=[0,1,2].map(p=>controls.touchItemPage(slots,p));
+  assert.deepEqual(pages.map(p=>p.buttons.map(b=>b.key)),[['Digit1','Digit2','Digit3'],['Digit4','Digit5','Digit6'],['Digit7','','']]);
+  assert.deepEqual(pages.flatMap(p=>p.buttons.filter(b=>b.slot).map(b=>b.slot)),slots,'all seven slots remain accessible');
+  assert.equal(JSON.stringify(slots),before,'paging never mutates inventory');
+  assert.equal(controls.touchItemPage([],2).page,0,'reset/empty inventory returns first page');
+  assert.equal(controls.touchItemPage(slots.slice(0,3),2).page,0,'inventory shrink clamps to an accessible page');
+}
 assert.strictEqual(controls.moveForHeld(new Set(['ArrowUp'])), 0);
 assert.strictEqual(controls.moveForHeld(new Set(['ArrowDown'])), 1);
 assert.strictEqual(controls.moveForHeld(new Set(['ArrowLeft'])), 2);

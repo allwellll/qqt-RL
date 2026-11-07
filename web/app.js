@@ -68,7 +68,7 @@
   const trainingLevel = baseLevel;                                    // 训练实际采样的真实 806 抢包子图（带砖/道具/包子屋）
   const arenaLevel = QQTTacticalArena.buildTacticalArena(baseLevel);  // 清空砖块的空场能力测试
   let level = trainingLevel;
-  let renderer = null;
+  let renderer = null, touchItemAssets = null;
   function selectedLevel() { return mapSelect.value === 'arena' ? arenaLevel : trainingLevel; }
   // 切换地图需重建资源与渲染器（不同图砖块/精灵集合不同）；调用方随后自行 reset。
   async function useMap(target) {
@@ -77,6 +77,7 @@
     showLoading('正在加载地图与素材…');
     try {
       const visualAssets = await QQTVisual.loadAssets(level, loadingStep);
+      touchItemAssets = visualAssets.items;
       renderer = QQTVisual.createRenderer(canvas, level, visualAssets);
     } catch (error) {
       loadingText.textContent = `加载失败：${error.message}，请刷新重试`;
@@ -95,10 +96,39 @@
   let itemCell = -1;
   let itemSlot = 0;
   const touchControls = document.getElementById('touch-controls');
+  let touchItemPage = 0;
+  const touchItemButtons = [...touchControls.querySelectorAll('[data-touch-item]')];
+  const touchItemPager = document.getElementById('touch-item-page');
+  touchItemPager.addEventListener('click', () => {
+    const view = QQTControls.touchItemPage(sim.itemSlots?.[0] || [], touchItemPage);
+    touchItemPage = (view.page + 1) % view.pages; updateTouchItems();
+  });
+  function updateTouchItems() {
+    const view = QQTControls.touchItemPage(sim.itemSlots?.[0] || [], touchItemPage);
+    touchItemPage = view.page;
+    for (const [i, value] of view.buttons.entries()) {
+      const button = touchItemButtons[i], slot = value.slot;
+      button.dataset.controlKey = value.key;
+      button.dataset.slotIndex = String(value.index);
+      button.setAttribute('aria-disabled', slot ? 'false' : 'true');
+      const name = slot ? (['', '香蕉皮', '慢慢胶'][slot.item] || '道具') : '空槽';
+      button.setAttribute('aria-label', `槽位${value.number || '无'}，${name}${slot ? `，${slot.count}个，点击直接放置` : ''}`);
+      button.querySelector('.touch-slot-number').textContent = value.number || '—';
+      button.querySelector('.touch-slot-count').textContent = slot ? `×${slot.count}` : '空';
+      const icon = button.querySelector('canvas'), context = icon.getContext('2d');
+      context.clearRect(0, 0, icon.width, icon.height);
+      const image = touchItemAssets?.[QQTVisual.heldItemSpriteKey(slot?.item)]?.frames[0];
+      if (image) { const k = 30 / Math.max(image.width, image.height);
+        context.drawImage(image, (32-image.width*k)/2, (32-image.height*k)/2, image.width*k, image.height*k); }
+    }
+    touchItemPager.hidden = view.pages <= 1;
+    touchItemPager.textContent = `槽${view.page*3+1}–${Math.min(view.page*3+3, 7)} / ${sim.itemSlots?.[0]?.length || 0}　换页 ▶`;
+  }
   const releaseTouchControls = QQTControls.bindTouchControls(touchControls, held, key => {
     if (!localHumanControls() || sim.done) { held.delete(key); return; }
     if (QQTControls.BOMB_KEYS.includes(key) && bombCell < 0) bombCell = humanCell();
-    if (QQTControls.ITEM_KEYS.includes(key) && itemCell < 0) { itemCell = humanCell(); itemSlot = 0; }
+    const slot = QQTControls.ITEM_SLOT_KEYS.indexOf(key);
+    if (slot >= 0 && sim.itemSlots?.[0]?.[slot] && itemCell < 0) { itemCell = humanCell(); itemSlot = slot; }
   });
   let loadedModel = null;
   let loadedModelId = null;
@@ -436,6 +466,7 @@
 
   function render(now = performance.now()) {
     touchControls.hidden = !localHumanControls() || sim.done;
+    if (!touchControls.hidden) updateTouchItems();
     if (sim.done && localHumanControls() && leaderboardMatch) {
       const match = { ...leaderboardMatch, client_version: clientVersion };
       leaderboardMatch = null;

@@ -66,7 +66,7 @@ pre { min-height: 150px; padding: 12px; overflow: auto; border-radius: 7px; back
 .leaderboard-ellipsis td { text-align: center; color: #aababb; padding: 5px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .settlement[hidden] { display: none; }
-@media (max-width: 820px) {
+@media (max-width: 900px) {
   body { overflow: auto; height: auto; }
   main, .arena, .stage, aside { height: auto; }
   .arena { grid-template-columns: 1fr; }
@@ -91,7 +91,7 @@ pre { min-height: 150px; padding: 12px; overflow: auto; border-radius: 7px; back
 .profile-actions { display: flex; gap: 10px; }
 #profile-status { margin: 6px 0 0; font-size: 12px; overflow-wrap: anywhere; }
 
-@media (max-width: 820px) {
+@media (max-width: 900px) {
   .stage { flex-direction: column; }
   .upgrade-profile { position: static; margin: 6px 0; padding: 6px 8px; font-size: 12px; }
   .profile-fields { gap: 6px; }
@@ -113,7 +113,7 @@ button:disabled { cursor: default; opacity: .6; }
 .game-dialog h2 { margin: 0 44px 16px 0; color: #ffd54a; font-size: 21px; }
 .game-dialog p { line-height: 1.8; overflow-wrap: anywhere; }
 .game-dialog a { color: #77e7de; }
-@media (max-width: 820px) {
+@media (max-width: 900px) {
   .settlement { top: 67%; padding: 8px 50px 8px 10px; font-size: 12px; }
   .settlement .note { font-size: 12px; line-height: 1.4; }
   .game-dialog { padding: 18px; }
@@ -133,7 +133,7 @@ button:disabled { cursor: default; opacity: .6; }
 .aside-toolbar { display: flex; justify-content: flex-end; margin: 0 0 12px; padding-top: env(safe-area-inset-top, 0px); }
 #announcement-open { padding: 7px 18px; transform: rotate(-2deg); }
 #announcement-open:hover { transform: rotate(0); }
-@media (max-width: 820px) {
+@media (max-width: 900px) {
   .settlement { top: 65%; min-height: 56px; padding: 8px 46px 8px 10px; font-size: 14px; border-radius: 12px; }
   .settlement .note { font-size: 13px; }
   .settlement .profile-fields { grid-template-columns: 1fr 1.4fr; gap: 6px; }
@@ -141,19 +141,38 @@ button:disabled { cursor: default; opacity: .6; }
   .settlement button { font-size: 16px; }
   .aside-toolbar { padding-right: env(safe-area-inset-right, 0px); }
 }
-@media (max-width: 820px) {
+@media (max-width: 900px) {
   .settlement { position: relative; top: auto; left: auto; transform: none; margin: 8px 0 12px; width: 94%; }
 }
-/* Native input buttons share keyboard state; no policy or physics assistance. */
+/* Native input buttons share the authoritative keyboard/item path. */
 .touch-controls { display: none; }
-.touch-controls[hidden] { display: none; }
-@media (max-width: 820px), (pointer: coarse) {
-  .touch-controls { position: fixed; z-index: 20; bottom: max(8px, env(safe-area-inset-bottom)); left: 8px; right: 8px; display: flex; justify-content: space-between; align-items: end; pointer-events: none; }
-  .touch-directions { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(2, 44px); gap: 4px; }
+.touch-controls[hidden], .touch-controls [hidden] { display: none; }
+.touch-controls, .touch-controls * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-user-drag: none; }
+@media (max-width: 900px), (pointer: coarse) {
+  body { overflow: auto; height: auto; }
+  main { height: auto; }
+  .arena { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .stage { flex-direction: column; height: auto; }
+  .stage > #game { width: 100%; }
+  .touch-controls { --touch-size: clamp(56px, 16vw, 64px); box-sizing: border-box; flex: none; width: 100%; max-width: 600px; padding: 8px max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); display: flex; justify-content: space-between; align-items: end; gap: 8px; background: #09171e; touch-action: none; }
+  .touch-directions { display: grid; grid-template-columns: repeat(3, var(--touch-size)); grid-template-rows: repeat(2, var(--touch-size)); gap: 4px; }
   .touch-up { grid-column: 2; }
   .touch-left { grid-column: 1; grid-row: 2; }
   .touch-down { grid-column: 2; grid-row: 2; }
   .touch-right { grid-column: 3; grid-row: 2; }
-  .touch-actions { display: flex; gap: 8px; }
-  .touch-controls button { min-height: 44px; min-width: 44px; margin: 0; padding: 8px; pointer-events: auto; touch-action: none; user-select: none; background: rgba(19, 34, 52, .88); color: white; border: 1px solid #b6c9dd; border-radius: 12px; }
+  .touch-actions { display: grid; grid-template-columns: repeat(2, var(--touch-size)); gap: 4px; }
+  .touch-controls button { box-sizing: border-box; height: var(--touch-size); min-height: 56px; width: var(--touch-size); min-width: 56px; margin: 0; padding: 4px; touch-action: none; font-size: 20px; font-weight: bold; background: #132234; color: white; border: 2px solid #b6c9dd; border-radius: 12px; }
+  .touch-controls button:active { background: #245c68; }
+  .touch-controls .touch-item { position: relative; }
+  .touch-item canvas { width: 32px; height: 32px; background: transparent; margin: 0 auto; }
+  .touch-slot-number { position: absolute; top: 2px; left: 4px; font-size: 15px; text-shadow: 0 1px 3px #000; }
+  .touch-slot-count { position: absolute; bottom: 1px; right: 3px; font-size: 13px; color: #ffe27e; text-shadow: 0 1px 3px #000; }
+  .touch-item[aria-disabled="true"] { border-color: #647581; color: #a8b7c0; }
+  .touch-controls .touch-item-page { grid-column: span 2; width: auto; font-size: 13px; }
+  aside { height: auto; }
+}
+@media (max-width: 900px) and (orientation: landscape), (pointer: coarse) and (orientation: landscape) {
+  .stage { flex-direction: row; align-items: center; justify-content: space-evenly; gap: 8px; }
+  .stage > #game { width: min(calc(100% - 364px), calc((100svh - 16px) * 900 / 880)); }
+  .touch-controls { width: 356px; }
 }
