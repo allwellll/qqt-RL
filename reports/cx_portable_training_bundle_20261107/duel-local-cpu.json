@@ -1,0 +1,47 @@
+{
+  "actor_source_update": 20905,
+  "bank_rows": [
+    25,
+    16
+  ],
+  "critic": "fresh deterministic initialization",
+  "devices": [
+    "cpu"
+  ],
+  "forward_finite": true,
+  "fresh_environments": 4,
+  "global_shape": [
+    4,
+    38
+  ],
+  "line": "DUEL",
+  "model_count": 9,
+  "obs_shape": [
+    4,
+    25,
+    13,
+    15
+  ],
+  "opponent_slots": [
+    "Ccurrent",
+    "Cfixed",
+    "Cring",
+    "Gcurrent",
+    "Gfixed",
+    "Gring"
+  ],
+  "optimizer_updates": 0,
+  "private_modules_loaded": 4,
+  "rollout_calls": 0,
+  "ruleset": "bun-native-v3-items",
+  "scenes": [
+    8,
+    8,
+    9,
+    9
+  ],
+  "state_pickle_reads": 0,
+  "state_pickle_writes": 0,
+  "status": "PASS_CPU_ONLY",
+  "training_enabled": false
+}

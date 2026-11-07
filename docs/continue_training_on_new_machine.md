@@ -2,7 +2,7 @@
 
 截至 2026-11-07，所有训练已停止，自动续跑与后继已撤销。此文档是迁移操作说明，不是恢复训练授权。必须先获得用户重新授权，再由新机器的操作者解除停止策略；当前仓库默认 `training_launch_policy.json` 的 `training_enabled: false`，开训入口会在导入 JAX 前拒绝运行。
 
-**验证范围：仅 DUEL 本机 CPU 加载检查通过，SP 与干净目录未验证。** 用户随后要求直接上传，因此跳过后续 CPU、干净目录和 GPU 验证。上传前隐私扫描与上传后逐资产 SHA256 回读仍执行。未宣称已在第二台机器或 GPU 上完成训练。
+**验证范围：仅 DUEL 本机 CPU 加载检查通过，SP 与干净目录未验证。** 用户随后要求直接上传，因此跳过后续 CPU、干净目录和 GPU 验证。上传前隐私扫描已完成；上传后SHA256回读仅完成 **11/21**，用户随后明确要求停止回读、节约时间，其余10项未复核，不再继续下载或额外验证。未宣称已在第二台机器或 GPU 上完成训练。
 
 ## 当前有效入口与版本
 
@@ -10,7 +10,7 @@
 - 代码以本次合入 main 的 `scripts/portable_training.py` 为新机器入口；加载 `training_runtime/items_v3/` 下四个封存的实际物理/混合任务模块。旧 `scripts.cx_items_install_v2` 的历史训练包装器、旧协议及 state 恢复命令属于历史入口，不能直接拿来迁移。
 - 训练包物理是 **bun-native-v3-items**，与原 DUEL/SP 训练及专项评测一致。网页当前是 **bun-native-v4-facing**；没有将 v3 训练包称作 v4，也没有悄悄变更训练物理。
 - DUEL 从 **u020905**、SP 从 **u024155** 的 `policy.pt` 开新一轮；额外保留网页上线点 **u019902 / u023302** 的完整 actor 权重。默认网页模型不因打包变更。
-- `policy.pt` 只含 actor。旧 critic、Adam、RNG、环境和对手池状态没有恢复。新 critic 确定性随机初始化、Adam 从零、环境从 fresh reset、对手池重建；这不是精确断点续训。不得恢复或重建旧 `state.pkl`。
+- `policy.pt` 只含 actor。旧 critic、Adam、RNG、环境和对手池状态没有恢复。新 critic 确定性随机初始化、Adam 从零、环境从 fresh reset、RNG按协议seed重新初始化、对手池重建；这不是精确断点续训。不得恢复或重建旧 `state.pkl`。
 
 ## 硬件和环境
 
@@ -92,9 +92,21 @@ python -m scripts.portable_training --line DUEL --train --gpu 0 --updates 40 --e
 
 ## 只保存模型
 
-每40个update及最后一轮保存 `runs/portable/<LINE>/uNNNNNN/policy.pt` 和 `POLICY.json`（actor SHA、原来源点、规则与本轮update）。只写模型与日志，不写 `state.pkl`、优化器、环境、旧RNG或完整恢复token。保存后的再次启动仍是新的 policy-only round，不是本轮的精确恢复。输出目录已存在时拒绝覆盖，避免混写。
+当前入口每40个update及最后一轮只保存 `runs/portable/<LINE>/uNNNNNN/policy.pt` 和 `POLICY.json`（actor SHA、原来源点、规则与本轮update）；**目前未保存 Critic**。只写模型与日志，不写 `state.pkl`、优化器、环境、旧RNG或完整恢复token。保存后的再次启动仍是新的 policy-only round，不是本轮的精确恢复。输出目录已存在时拒绝覆盖，避免混写。
 
 `--updates` 是固定上限，结束后不启动后继。下次重新授权的停止方式：关闭 tracked训练策略，或在该任务输出目录创建 `USER_STOP`；入口在每轮开始检查，当前已开始的一轮结束后才会再次检查。此轮不执行这些开训/停止命令，也不触碰其他机器或未知进程。
+
+## Critic：迁移事实、预热建议和今后保存策略
+
+`policy.pt` 只含 Actor。训练使用独立 Critic：`r4_k4_observation.actor_critic_forward` 从 `params['critic']` 计算价值。旧 Critic 仅存在于已经删除的 `state.pkl`，当前 DUEL/SP 两线都无可用旧 Critic。不能从 actor 文件恢复旧 Critic，也不会为此重建旧 `state.pkl`；新机器 Critic 从零初始化。
+
+**建议的第一段**：冻结 Actor，仅训练 Critic **40次 update**，随后在价值损失的滑动均值/波动稳定、预测值保持有限且没有持续发散时，再进行 Actor/Critic 联合训练。40只是“几十次”的经验起点，**未实测、不是已验证阈值**，不能保证40次后一定稳定；若仍不稳定，先检查回报尺度、样本与初始化，而非自动解除冻结。Actor冻结应同时确保不执行Actor优化器更新；Critic预热阶段可以用固定Actor采样新的on-policy数据。首段价值曲线抖动、联合训练后短暂小幅回退均属可能现象，不应宣称与旧状态无缝接续。
+
+**当前实现边界与待办**：本入口没有现成的“冻结Actor／仅更新Critic／预热结束切换”开关，上面的开训命令直接进入联合训练，尚未实现该推荐流程。须在未来用户授权的代码任务中增加并核验这些开关；不能把上文40次当成当前命令已经执行的预热。本轮按用户要求只改文档，不添加开关、不运行预热或训练。
+
+**今后每个保存点的目标策略**：在 `policy.pt` 之外附带独立 **`critic.pt`**，保存真实的 `params['critic']`（约30MB，实际以参数文件大小为准），分别记录Actor/Critic的SHA256、规则、模型结构和update。只增加Critic模型参数，仍不保存优化器、环境、RNG或对手池状态。这样以后可加载Actor+Critic并重建Adam/环境/池；仍不是完整状态恢复。
+
+**当前保存器待办**：本轮代码尚未写出或加载 `critic.pt`；现有Release也没有Critic资产。落实此保存策略及加载配对校验需要后续单独授权修改代码。在实现之前，不得把当前policy-only保存点描述成已经保留Critic。
 
 ## 常见问题与已知边界
 

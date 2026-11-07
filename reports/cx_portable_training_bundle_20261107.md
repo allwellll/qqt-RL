@@ -1,6 +1,6 @@
 # DUEL/SP 最小迁移包交付（20261107）
 
-用户最新指令为“不用验证，直接上传”，覆盖此前等待SP及干净目录验收的要求。**仅 DUEL 本机 CPU 加载检查通过，SP 与干净目录未验证。** 本轮不跑GPU训练、collector rollout或优化器更新，不恢复/重建旧state.pkl。没有启动训练/后继、没有CC/force，没有终止未知进程。检查停止自启验证进程时其已结束，没有额外发送进程信号。
+用户最新指令为“不用复核，节约时间”：停止本任务下载回读，不再做SHA256回读或额外验证，只保留快速隐私扫描、文档提交和同SHA Pages等待。此前“不用验证，直接上传”已覆盖等待SP及干净目录验收的要求。**仅 DUEL 本机 CPU 加载检查通过，SP 与干净目录未验证。** 本轮不跑GPU训练、collector rollout或优化器更新，不恢复/重建旧state.pkl。没有启动训练/后继、没有CC/force，没有终止未知进程。检查停止自启验证进程时其已结束，没有额外发送进程信号。
 
 ## Release 和代码
 
@@ -18,7 +18,7 @@
 
 模型9个：DUEL最后点u020905与网页点u019902、SP最后点u024155与网页点u023302；5个实际对手锚点G_health(u019302)、G_j(u019462)、G_i(u019382)、G_frozen(u018262)、SP_fixed(u004002)。G_frozen是本次Cfixed/SP回退的实际运行依赖，因此包含。旧own ring不打包，按用户授权从起点重建；C是明确的封存fallback，不冒称已接入动态跨线peer。
 
-旧K1 u004642、bt_slot01 u003680、bt_slot05 u002320、env2048 u000160、r3_a u002749是原协议中的历史policy/lineage引用。新入口不读取这些模型，因此不把它们当成运行缺口，不上传无关历史。当前source tree缺少其中若干历史点，不伪造替代。需要的9份actor均找到且按来源COMMITTED或既有固定对手manifest核对SHA；未缺实际运行actor。
+旧K1 u004642、bt_slot01 u003680、bt_slot05 u002320、env2048 u000160、r3_a u002749是原协议中的历史policy/lineage引用。新入口不读取这些模型，因此不把它们当成运行缺口，不上传无关历史。来源工作树缺少其中若干历史点；跨工作树只读检索已找到列出的全部5个真实policy并记录SHA，它们均是新入口不读取的溯源引用，仍按最小包要求不上传，不伪造替代。需要的9份actor均找到且按来源COMMITTED或既有固定对手manifest核对SHA；未缺实际运行actor。
 
 新入口明确不是旧full-state继续：actor继承，critic确定性随机初始化、Adam从零、环境/RNG fresh、pool重建。只保存policy.pt与POLICY.json及日志，不保存完整状态/优化器；每40update和最后保存，固定预算结束不续跑。GPU更新路径本轮未执行，不把CPU加载或文件完整性等同于GPU训练已验收。
 
@@ -26,7 +26,7 @@
 
 此前DUEL本机CPU检查输出PASS_CPU_ONLY：起点20905、9模型、6对手槽、4私有模块、Bank25/16、4fresh环境、obs[4,25,13,15]/global[4,38]、推理finite；CPU设备，rollout_calls=0、optimizer_updates=0、state_pickle_reads/writes=0。
 
-按最新要求，SP不作为已验证交付，干净clone目录未执行，GPU未执行。只保留用户要求不可跳过的隐私扫描和Release上传后SHA256回读；不启动新一轮或补跑验证。
+按最新要求，SP不作为已验证交付，干净clone目录未执行，GPU未执行。最新要求仅保留隐私扫描；Release回读已按用户指令停止，明确为11/21，剩余10项未回读，不再启动新一轮、下载复核或补跑验证。
 
 ## 19个运行文件
 
@@ -54,6 +54,16 @@
 | protocols/DUEL.json | 5214 | runtime protocol/rule |
 | protocols/SP.json | 5217 | runtime protocol/rule |
 
+## Critic追加文档
+
+已按追加2仅修改正式说明：policy.pt只有Actor，独立Critic仅曾存于已删除state.pkl，两线新机器Critic从零初始化。建议冻结Actor、仅预热Critic40次update（经验值、未实测），价值损失稳定再联合；首段可能抖动/小幅回退。建议今后每点另存真实critic.pt参数约30MB，仍不存优化器/环境/池状态。当前代码无冻结/预热开关，也不保存/加载critic.pt；这两项明确列为后续代码待办，本轮没有修改训练代码或启动训练。
+
 ## 发布收据
 
-Release上传后SHA256回读、tracked与Release隐私扫描、同SHA Actions/Pages结果待发布完成回填；不以此段提前宣称成功。
+Release已公开：19个运行payload与MANIFEST.json/SHA256SUMS共21个资产上传完成。**上传后完整字节SHA256回读只完成11/21**，其余10项按用户明确要求停止，不宣称全部回读通过。仅终止本任务仍在运行的下载回读进程，未知进程信号为0。没有把下载回读当成SP或干净目录验收。
+
+代码首发main/Release tag提交：`f792d784003d712e064f5138722dae91cb3f3ded`；[首发Actions/Pages](https://github.com/allwellll/qqt-RL/actions/runs/42384728362)最终success。Critic追加及收尾只改文档和公开交付证据，最终main以承载本报告的提交为准；待该最终SHA Pages成功后向用户回报，不复用首发结果冒充最终结果。
+
+隐私扫描0命中，覆盖tracked与明确公开文件/Release数据；policy/Bank按pickle文本字段检查，无机器绝对路径、用户标识、内网IP、真实PID或凭据。Release不含.hermes、秘密文件、state.pkl或优化器状态。
+
+[部分回读记录（11/21）](cx_portable_training_bundle_20261107/release-readback.json) · [公开发布回执](cx_portable_training_bundle_20261107/release-publication.json) · [DUEL本机CPU记录](cx_portable_training_bundle_20261107/duel-local-cpu.json) · [历史引用只读检索](cx_portable_training_bundle_20261107/historical-model-search.json)。实际运行资产缺失项：无；验证缺项：SP、干净目录、GPU更新路径未验收，剩余10资产未回读。

@@ -1,0 +1,86 @@
+{
+  "status": "STOPPED_BY_USER",
+  "assets": [
+    {
+      "name": "ACCEPTED_RULE.json",
+      "bytes": 2643,
+      "sha256": "536fc575a6f9837c42798de8ba4cf90a2702e014d250157e93bd77b635816188",
+      "status": "PASS_RELEASE_READBACK",
+      "transport": "github-release"
+    },
+    {
+      "name": "canonical--web--assets--maps--levels.json",
+      "bytes": 21765,
+      "sha256": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+      "status": "PASS_RELEASE_READBACK",
+      "transport": "github-release"
+    },
+    {
+      "name": "datasets--BANK.json",
+      "bytes": 460,
+      "sha256": "088bc5efb5248a5b48c26bf9bf790f83fcb60f27afab0bbc103649866e6f5892",
+      "transport": "github-release",
+      "status": "PASS_RELEASE_READBACK"
+    },
+    {
+      "name": "datasets--SCENARIOS.json",
+      "bytes": 748392,
+      "sha256": "49c1093db8b57528b981bf6099660cad783658c645a413357913dc5803f5fde2",
+      "transport": "github-api-asset",
+      "status": "PASS_RELEASE_READBACK"
+    },
+    {
+      "name": "datasets--p0_bank.pkl",
+      "bytes": 1501210,
+      "sha256": "90045a46a120bf943edc85fea231519fc74f7837377f310bbd0a711971c9364c",
+      "transport": "github-api-asset",
+      "status": "PASS_RELEASE_READBACK"
+    },
+    {
+      "name": "datasets--p1_bank.pkl",
+      "bytes": 961210,
+      "sha256": "7ce9a133ce3997f577b5abbf62cab117e6dcb316d1b57c32607c649720f42fac",
+      "transport": "github-api-asset",
+      "status": "PASS_RELEASE_READBACK"
+    },
+    {
+      "name": "datasets--train_spawns.json",
+      "bytes": 1801,
+      "sha256": "581d807d21c5f6864f10c6951cc2b16f15e873f7b455b5213d8d347c99ac2ec0",
+      "transport": "github-api-asset",
+      "status": "PASS_RELEASE_READBACK"
+    },
+    {
+      "name": "datasets--train_starts.json",
+      "bytes": 135432,
+      "sha256": "61a01995864515add2a7de99c00c277449b6c0b25acefa32f2756e0587dbe312",
+      "transport": "github-release",
+      "status": "PASS_RELEASE_READBACK"
+    },
+    {
+      "name": "models--DUEL_latest--policy.pt",
+      "bytes": 30257447,
+      "sha256": "f90f87aa9bbb2ec9bd0df876ee35a658d4bcf731b63cd8c69916a666b0206dac",
+      "transport": "github-api-asset",
+      "status": "PASS_RELEASE_READBACK"
+    },
+    {
+      "name": "models--DUEL_web--policy.pt",
+      "bytes": 30257447,
+      "sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
+      "transport": "github-api-asset",
+      "status": "PASS_RELEASE_READBACK"
+    },
+    {
+      "name": "models--G_i--policy.pt",
+      "bytes": 30257447,
+      "sha256": "b68212abac66e73e5379b2ffdb72d056d2db09df8a9e7b7bccb31d4d482152fa",
+      "transport": "github-api-asset",
+      "status": "PASS_RELEASE_READBACK"
+    }
+  ],
+  "total_bytes": 94145254,
+  "total_assets": 21,
+  "completed_assets": 11,
+  "remaining_readback_skipped": true
+}

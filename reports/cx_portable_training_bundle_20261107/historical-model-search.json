@@ -1,0 +1,47 @@
+[
+  {
+    "historical_suffix": "r4_k1_c000000/u004642/policy.pt",
+    "found": 1,
+    "sha256s": [
+      "8f14698bf5359a523739d0804924e0ad9e70c1716f1c7921821365a1889b528f"
+    ],
+    "runtime_required": false,
+    "omission": "lineage only; no portable runtime reads"
+  },
+  {
+    "historical_suffix": "bt_slot01_c000024/u003680/policy.pt",
+    "found": 1,
+    "sha256s": [
+      "cbe140bcabdf743a2321537013f54c1b02e87c037b39380bb01ec5a3a12ee2ce"
+    ],
+    "runtime_required": false,
+    "omission": "lineage only; no portable runtime reads"
+  },
+  {
+    "historical_suffix": "bt_slot05_c000032/u002320/policy.pt",
+    "found": 1,
+    "sha256s": [
+      "a79beabb101481a165ab7c1a807ae8e2433a4b5a79061067fa3796b22ba2333f"
+    ],
+    "runtime_required": false,
+    "omission": "lineage only; no portable runtime reads"
+  },
+  {
+    "historical_suffix": "env2048_mb8192_s2026103051/u000160/policy.pt",
+    "found": 1,
+    "sha256s": [
+      "b689bdf33c60855028476a3c88dc6459baeaa0fba98be49c5098998bfb2f9489"
+    ],
+    "runtime_required": false,
+    "omission": "lineage only; no portable runtime reads"
+  },
+  {
+    "historical_suffix": "r3_a_c000000/u002749/policy.pt",
+    "found": 1,
+    "sha256s": [
+      "9bc86e1c7d0b54ee0d806b26037cccb13b1eadd47609cd6c1db827db7d6e1da3"
+    ],
+    "runtime_required": false,
+    "omission": "lineage only; no portable runtime reads"
+  }
+]

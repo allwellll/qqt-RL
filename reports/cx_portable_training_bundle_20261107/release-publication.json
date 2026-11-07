@@ -1,0 +1,16 @@
+{
+  "id": 437644251,
+  "url": "https://github.com/allwellll/qqt-RL/releases/tag/training-bundle-20261107",
+  "tag": "training-bundle-20261107",
+  "code_sha": "f792d784003d712e064f5138722dae91cb3f3ded",
+  "published_at": "2026-11-07T15:06:39Z",
+  "payload_files": 19,
+  "metadata_assets": 2,
+  "payload_bytes": 275698799,
+  "readback_completed": 11,
+  "readback_total": 21,
+  "readback_stopped_by_user": true,
+  "privacy_findings": 0,
+  "validation_scope": "仅 DUEL 本机 CPU 加载检查通过，SP 与干净目录未验证",
+  "training_enabled": false
+}
