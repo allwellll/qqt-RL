@@ -4,6 +4,7 @@
   else root.QQTLeaderboard = factory();
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   const KEY = 'qqt.leaderboard.v1';
+  const UNAVAILABLE = '该规则排行榜暂不可用（bun-native-v2-face），本局仅本地结算，可继续游戏';
   const length = value => Array.from(value).length;
   function profile(nickname, victoryMessage) {
     const nick = String(nickname).trim(), message = String(victoryMessage).trim();
@@ -35,6 +36,8 @@
     let data, persistent = true, pendingRequest = null, status = '', rows = [], progress = null, settlement = null, profileRequest = null, refreshRevision = 0, combinedRequest = null, identityRequest = null, identityRevision = 0;
     let profileKnown = false;
     let boardRuleset = config.rulesetVersion || 'stock-window-v1';
+    const unavailable = version => (config.unavailableRulesets || []).includes(version);
+    const readyMatch = match => match.approved !== false && !unavailable(match.ruleset_version);
     try { data = JSON.parse(storage.getItem(KEY)); } catch (_) { persistent = false; }
     if (!data || !/^[0-9a-f-]{36}$/.test(data.player_id || '') || !/^[0-9a-f]{64}$/.test(data.secret || '')) {
       const playerId = uuid(crypto);
@@ -62,10 +65,16 @@
           wasSavedNickname: data.nickname_auto !== true } : {}), cardStatus: '' });
     }
     data.cards = data.cards.slice(-20);
+    for (const card of data.cards) {
+      const match = data.queue.find(value => value.client_match_id === card.client_match_id);
+      if (!card.submitted && match && unavailable(match.ruleset_version)) {
+        card.eligible = false; card.rankingUnavailable = true; card.cardStatus = UNAVAILABLE;
+      }
+    }
     settlement = data.cards.findLast(card => !card.complete) || null;
     const completed = new Set([...data.queue, ...data.cards].map(x => x.client_match_id));
     function state() { return { nickname: data.nickname, victory_message: data.victory_message,
-      player_id: data.player_id, persistent, status, rows, progress, settlement, settlementReady, pending: data.queue.length,
+      player_id: data.player_id, persistent, status: unavailable(boardRuleset) ? UNAVAILABLE : status, rows, progress, settlement, settlementReady, pending: data.queue.length,
       savedNickname: data.confirmed_profile?.registered === true, profileReady: profileKnown,
       profileSubmitting: !!profileRequest, submitting: !!pendingRequest || !!combinedRequest }; }
     function remember() {
@@ -139,6 +148,7 @@
     }
     async function refresh() {
       const revision = ++refreshRevision;
+      if (unavailable(boardRuleset)) { rows = []; emit(UNAVAILABLE); return false; }
       try {
         const records = config.leaderboardRpc === 'qqt_my_win_leaderboard';
         const response = await rpc(records && config.rulesetVersion ? 'qqt_my_win_leaderboard_ruleset' : records ? 'qqt_my_win_leaderboard' : 'qqt_leaderboard', records
@@ -168,8 +178,8 @@
             now() - Date.parse(match.completed_at) <= 7 * 86400000);
           save();
           do {
-            while (data.queue.some(match => match.approved !== false)) {
-              const index = data.queue.findIndex(match => match.approved !== false);
+            while (data.queue.some(readyMatch)) {
+              const index = data.queue.findIndex(readyMatch);
               const { approved, ...match } = data.queue[index];
               const result = await rpc('qqt_submit_result', { p_payload: { ...match, player_secret: data.secret } });
               if (!result || !['level', 'points', 'wins', 'games'].every(key => Number.isInteger(result[key])) ||
@@ -195,7 +205,7 @@
             }
             // A fast restart may finish another match while the prior leaderboard read
             // is pending. Drain that newly queued result before releasing this request.
-          } while (data.queue.some(match => match.approved !== false));
+          } while (data.queue.some(readyMatch));
         } catch (error) { emit('提交失败，请重试'); }
       })().finally(() => { pendingRequest = null; emit(); });
       return pendingRequest;
@@ -206,6 +216,10 @@
       completed.add(match.client_match_id);
       settlement = { client_match_id: match.client_match_id, result, duration_ms: gameDurationMs, submitted: false, ranking: null, closed: false, eligible: false,
         draft: { nickname: data.confirmed_profile?.registered ? data.nickname : data.nicknameDraft, victory_message: data.nextDeclaration || '' }, cardStatus: '' };
+      if (unavailable(match.ruleset_version)) {
+        settlement.rankingUnavailable = true; settlement.cardStatus = UNAVAILABLE;
+        emit(UNAVAILABLE); return Promise.resolve(false);
+      }
       const wall = Math.round(now() - match.started);
       if (!['win','loss','draw'].includes(result) || !Number.isInteger(gameDurationMs) ||
           gameDurationMs < 1000 || gameDurationMs > 240000 || wall < Math.max(1000, gameDurationMs * .75) || wall > 3600000) {
@@ -365,7 +379,7 @@
     if (!value) return null;
     return { time: `本局耗时 ${time(value.duration_ms)}`,
       rank: value.ranking ? `第 ${value.ranking.rank} 名 / ${value.ranking.total} 位玩家` : '',
-      percentile: value.ranking ? `超过 ${value.ranking.percentile.toFixed(2)}% 玩家`
+      percentile: value.rankingUnavailable ? '该规则排行榜暂不可用' : value.ranking ? `超过 ${value.ranking.percentile.toFixed(2)}% 玩家`
         : value.submitted ? '暂无排名' : value.result === 'loss' ? '' : '提交后查看排名' };
   }
   // Canvas keeps the terminal title; HTML exposes accessible actions and status.
@@ -381,7 +395,7 @@
     const loss = value?.result === 'loss';
     el('settlement').hidden = !value;
     const form = el('settlement-form');
-    if (form) form.hidden = !value || loss;
+    if (form) form.hidden = !value || loss || value.rankingUnavailable === true;
     const submit = el('settlement-submit'), close = el('settlement-close');
     if (submit) {
       submit.disabled = loss || !value || !value.eligible || value.complete || state.submitting || state.profileReady === false;
@@ -408,7 +422,7 @@
     el('settlement-title').textContent = { win: '胜利', loss: '失败', draw: '平局' }[value.result] || '本局结束';
     el('settlement-time').textContent = lines.time;
     el('settlement-rank').textContent = [lines.rank, lines.percentile].filter(Boolean).join(' · ');
-    el('settlement-status').textContent = loss ? '小伙子，再沉淀沉淀吧'
+    el('settlement-status').textContent = value.rankingUnavailable ? UNAVAILABLE : loss ? '小伙子，再沉淀沉淀吧'
       : value.cardStatus || (value.eligible ? '' : '本局无法参与排名，继续练习吧～');
   }
   function maskIp(value) {

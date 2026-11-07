@@ -44,7 +44,8 @@
   }
 
   function createPlayer(options = {}) {
-    const Ctor = options.AudioContext || (typeof AudioContext !== 'undefined' ? AudioContext : null);
+    const Ctor = options.AudioContext || (typeof AudioContext !== 'undefined' ? AudioContext
+      : typeof webkitAudioContext !== 'undefined' ? webkitAudioContext : null);
     const fetchFn = options.fetch || (typeof fetch !== 'undefined' ? fetch : null);
     let context = null;
     const buffers = {};
@@ -65,11 +66,15 @@
 
     // 浏览器自动播放策略：首次用户交互后才能出声。
     function unlock() {
-      if (context && context.state === 'suspended') context.resume();
+      if (context && context.state !== 'running' && context.state !== 'closed') {
+        // Mobile browsers may interrupt an already unlocked context. Resume only
+        // from the existing user-gesture handlers; a rejection must stay local.
+        Promise.resolve(context.resume()).catch(() => {});
+      }
     }
 
     function play(name) {
-      if (!enabled || !context || !buffers[name]) return;
+      if (!enabled || !context || context.state !== 'running' || !buffers[name]) return;
       const source = context.createBufferSource();
       source.buffer = buffers[name];
       const gain = context.createGain();

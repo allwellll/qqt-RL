@@ -516,7 +516,7 @@
           }
         } else setTickIntents(action.move, first[0]);
         renderer.addExplosion(info, performance.now());
-        playEvents(before, info, 0);
+        playEvents(before, info, matchMode.value === 'model-vs-rule' ? 1 : 0);
         if (activeBot.observe_transition) {
           activeBot.observe_transition(info, {
             ...observation, tick: sim.t, state: QQTBunRuleBot.stateFromSim(sim),

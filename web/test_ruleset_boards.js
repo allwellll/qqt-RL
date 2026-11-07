@@ -4,7 +4,7 @@ const metadata={opponent:'bun.hunter',difficulty:'hard',seed:7,mode:'1v1',map_id
 (async()=>{
  const values=new Map(),storage={getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)};
  let now=Date.now(),offline=false,wrong=false;const calls=[];
- const make=version=>LB.createClient({config:{url:'https://fixture.invalid',publishableKey:'public',leaderboardRpc:'qqt_my_win_leaderboard',...(version?{rulesetVersion:version}:{})},storage,crypto:webcrypto,now:()=>now,fetch:async(url,o)=>{
+ const make=version=>LB.createClient({config:{url:'https://fixture.invalid',publishableKey:'public',leaderboardRpc:'qqt_my_win_leaderboard',...(version?{rulesetVersion:version}:{}),...(version==='bun-native-v2-face-disabled'?{rulesetVersion:'bun-native-v2-face',unavailableRulesets:['bun-native-v2-face']}:{})},storage,crypto:webcrypto,now:()=>now,fetch:async(url,o)=>{
   const args=JSON.parse(o.body);calls.push({url,args});if(offline)throw Error('offline');
   if(url.endsWith('qqt_my_win_leaderboard_ruleset'))return {ok:true,json:async()=>({leaderboard_contract_version:1,ruleset_contract_version:2,ruleset_version:wrong?'stock-window-v1':args.p_ruleset_version,rows:[]})};
   if(url.endsWith('qqt_my_win_leaderboard'))return {ok:true,json:async()=>({leaderboard_contract_version:1,rows:[]})};
@@ -14,8 +14,17 @@ const metadata={opponent:'bun.hunter',difficulty:'hard',seed:7,mode:'1v1',map_id
  const v2=make('bun-native-v2');offline=false;await v2.retry();const legacy=calls.filter(x=>x.url.endsWith('qqt_submit_result')).at(-1).args.p_payload;assert(!('ruleset_version'in legacy),'legacy retry keeps old unversioned payload');
  const match=v2.begin(metadata);assert.equal(match.ruleset_version,'bun-native-v2');now+=5000;await v2.finish(match,{result:'win',gameDurationMs:5000});assert.equal(calls.filter(x=>x.url.endsWith('qqt_submit_result')).at(-1).args.p_payload.ruleset_version,'bun-native-v2');
  const face=make('bun-native-v2-face');const facingMatch=face.begin(metadata);assert.equal(facingMatch.ruleset_version,'bun-native-v2-face');now+=5000;await face.finish(facingMatch,{result:'win',gameDurationMs:5000});assert.equal(calls.filter(x=>x.url.endsWith('qqt_submit_result')).at(-1).args.p_payload.ruleset_version,'bun-native-v2-face');await face.setBoardRuleset('bun-native-v2-face');assert.equal(calls.at(-1).args.p_ruleset_version,'bun-native-v2-face');
+ const deferred=make('bun-native-v2-face-disabled');const beforeDeferred=calls.length;
+ assert.equal(await deferred.refresh(),false);assert.equal(calls.length,beforeDeferred,'disabled face board sends no unsupported request');
+ const local=deferred.begin(metadata);now+=5000;await deferred.finish(local,{result:'win',gameDurationMs:5000});
+ assert.equal(deferred.state().settlement.submitted,false);assert.equal(deferred.state().settlement.ranking,null);assert.equal(deferred.state().settlement.rankingUnavailable,true);assert.equal(deferred.state().pending,0);
+ assert.match(deferred.state().status,/该规则排行榜暂不可用/);assert.equal(await deferred.submitCard(),false);await deferred.retry();assert.equal(calls.length,beforeDeferred,'local face settlement never writes or falls back to an old ruleset');
+ assert.equal(deferred.closeSettlement(),true);deferred.clearSettlement();assert(deferred.begin(metadata),'local restart remains available');
+ await deferred.setBoardRuleset('bun-native-v2');assert.equal(calls.at(-1).args.p_ruleset_version,'bun-native-v2');assert.equal(deferred.state().status,'排行榜已更新','old rule boards remain usable');
  await v2.setBoardRuleset('stock-window-v1');assert.equal(calls.at(-1).args.p_ruleset_version,'stock-window-v1');
  wrong=true;assert.equal(await v2.setBoardRuleset('bun-native-v2'),false);assert.deepEqual(v2.state().rows,[]);assert.throws(()=>v2.setBoardRuleset('invalid'));
+ offline=true;const savedFace=make('bun-native-v2-face');const savedMatch=savedFace.begin(metadata);now+=5000;await savedFace.finish(savedMatch,{result:'win',gameDurationMs:5000});offline=false;
+ const restoredDeferred=make('bun-native-v2-face-disabled'),beforeRetry=calls.length;assert.equal(restoredDeferred.state().pending,1);assert.equal(restoredDeferred.state().settlement.rankingUnavailable,true);await restoredDeferred.retry();assert.equal(calls.length,beforeRetry);assert.equal(restoredDeferred.state().pending,1,'existing deferred queue remains preserved without writes');
  const receipt={...metadata,result:'win',duration_ms:5000,rank:1,total:1,percentile:0,comparison:'player-best-v1'};
  assert(!LB.validRanking({...receipt,ruleset_version:'stock-window-v1'},{...match,result:'win',game_duration_ms:5000}));
  assert(LB.validRanking({...receipt,ruleset_version:'bun-native-v2'},{...match,result:'win',game_duration_ms:5000}));
