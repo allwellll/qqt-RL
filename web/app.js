@@ -133,6 +133,7 @@
   let loadedModel = null;
   let loadedModelId = null;
   let publishedModels = [];
+  let defaultModelId = 'items-l2-sp-u023302-tau03';
   let activeBot = null;
   // 组队模式下 pid>=2 的猎手（pid1 仍是 activeBot）。
   let extraBots = [];
@@ -413,11 +414,12 @@
       const defaults = await defaultsResponse.json();
       if (defaults.schema !== 'qqt.model-inference-defaults/v1' || defaults.ruleset !== 'bun-native-v2' || defaults.max_ticks !== 2400 || !publishedModels.some(row=>row.id===defaults.default_model_id)) throw new Error('模型推理配置无效');
       if (!defaults.policies || Object.keys(defaults.policies).some(id=>!publishedModels.some(row=>row.id===id))) throw new Error('模型推理策略无效');
+      defaultModelId = defaults.default_model_id;
       publishedModels = publishedModels.map(row => defaults.policies[row.id]
         ? {...row,inference:QQTModelSampling.profile({inference:defaults.policies[row.id]})} : row);
       publishedModels.sort((a,b) => Number(b.id===defaults.default_model_id)-Number(a.id===defaults.default_model_id));
       modelOptions.replaceChildren(...publishedModels.map((row) => new Option(QQTModelCatalog.optionLabel(row), MODEL_PREFIX + row.id)));
-      modelDetails.textContent = `可选模型 ${publishedModels.length} 个`;
+      modelDetails.textContent = `可选模型 ${publishedModels.length} 个 · 默认：${publishedModels.find(row => row.id === defaultModelId).display_name}`;
     } catch (error) {
       modelOptions.replaceChildren();
       modelDetails.textContent = `模型列表读取失败：${error.message}`;
@@ -637,7 +639,8 @@
     requestedRuleset = QQTRulesets.current;
   });
   async function onStrategyChange() {
-    const value = opponentSelect.value;
+    const value = QQTModelCatalog.resolveSelection(opponentSelect.value, publishedModels, defaultModelId);
+    opponentSelect.value = value;
     if (!teamCapable(value)) teamMode.value = '1v1';
     const row = isModelChoice(value) ? publishedModels.find((item) => MODEL_PREFIX + item.id === value) : null;
     const specialty = QQTModelCatalog.specialistLines(row);

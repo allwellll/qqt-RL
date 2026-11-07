@@ -2,1322 +2,8 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
-      "id": "bun392-g-frozen",
-      "display_name": "Bun392 G_frozen \u00b7 \u03c40.3",
-      "file": "bun392-g-frozen-b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce.json",
-      "sha256": "b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce",
-      "bytes": 40340827,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-model-temperature-20261106/bun392-g-frozen-b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce.json",
-      "cycle": 18262,
-      "candidate": "G_frozen",
-      "strategy": "raw",
-      "source_sha256": "f2e6c9b8c0fa9a8ac46ba483fca714c4b31e06d9185ef833cd02fb97c03a7d9b",
-      "rule_version": "bun-native-v2",
-      "score": 0.9890625,
-      "description": "\u539f\u751f\u7b56\u7565\u3001\u6a21\u578bP1\uff1b\u79fb\u52a8\u548c\u80fd\u529b\u4e24\u5934\u5408\u6cd5mask\u5185\u6e29\u5ea6\u91c7\u6837\u3002\u56fa\u5b9a\u8bad\u7ec3\u6a21\u5f0f0\uff0c\u65e0\u5728\u7ebf\u8001\u5e08\u3002\u72ec\u7acbholdout\u53ca\u7f51\u9875P1\u4e94\u5bf9\u624b\u7b5b\u67e5\u89c1\u53d1\u5e03\u62a5\u544a\uff1b\u5c0f\u6837\u672c\u4e0d\u4fdd\u8bc1\u771f\u4eba\u80dc\u7387\u3002\u65e7\u6a21\u578b\u4fdd\u7559\u53ef\u9009\u56de\u6eda\u3002",
-      "score_protocol": "current web native-v2; P1; five paired opponents x 64 seeds; independent frozen-opponent holdout separately reported",
-      "onnx": {
-        "file": "bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
-        "sha256": "0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480",
-        "bytes": 30276775,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-model-temperature-20261106/bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
-        "meta": {
-          "name": "g-frozen",
-          "display_name": "g-frozen",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "arch": "transformer",
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            25,
-            13,
-            15
-          ],
-          "state_dim": 37,
-          "n_players": 2,
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "r3_input_encoding": "r3-items-route-chain-visible-v1",
-          "checkpoint_sha256": "f2e6c9b8c0fa9a8ac46ba483fca714c4b31e06d9185ef833cd02fb97c03a7d9b",
-          "onnx_sha256": "0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480",
-          "r4_mode": 0,
-          "r4_full_checkpoint_sha256": "48e5697a9b99fad340d03a96453941253242cb27c7253d0842e45d441313e7a0",
-          "r4_full_input_abi": "obs25-global38",
-          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI",
-          "onnx_file": "bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
-          "rule_version": "bun-native-v2"
-        },
-        "reference_zero": {
-          "move": [
-            1.7847744226455688,
-            2.3832197189331055,
-            2.457134962081909,
-            2.0040807723999023,
-            2.319208860397339
-          ],
-          "bomb": [
-            3.2921104431152344,
-            -1.1357014179229736,
-            0.8385803699493408
-          ],
-          "value": 1.4990057945251465
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-g-frozen-b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce.json"
-    },
-    {
-      "id": "bun392-v2-risk-u9809",
-      "display_name": "Bun392 \u4e94\u69fd\u98ce\u9669\u7ebf u9809",
-      "file": "bun392-v2-risk-u9809-6365c568b594d0dfd3c83f74d3a14afb4d9512d519579f0492d4781f1e6a2ddd.json",
-      "sha256": "6365c568b594d0dfd3c83f74d3a14afb4d9512d519579f0492d4781f1e6a2ddd",
-      "bytes": 40381088,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-five-slots-20261104/bun392-v2-risk-u9809-6365c568b594d0dfd3c83f74d3a14afb4d9512d519579f0492d4781f1e6a2ddd.json",
-      "cycle": 9809,
-      "candidate": "RISK_CARRY_LIGHT_SAFETY2_50_s2026371202_c000/u009809",
-      "strategy": "raw",
-      "source_sha256": "6f758831a03f238d2aef7e4d0bd7d2ca597e71eb74b3a38293fde13be0d987d8",
-      "rule_version": "bun-native-v2",
-      "description": "\u4e94\u69fd\u98ce\u9669\u7ebf u9809\uff1b\u771f\u4ebaP0/\u6a21\u578bP1\uff0cbun-native-v2\u3001argmax\u3001\u8001\u5e08\u5173\u95ed\u3002\u663e\u5f0f7\u6280\u80fd\u52a8\u4f5c/52\u7ef4\u5e93\u5b58\uff0c\u69fd1\u81f35\u72ec\u7acb\u63a9\u7801\u548c\u539f\u751f\u653e\u7f6e\u3002\u540cseed\u4e09\u6863\u54048\u73af\u5883seed\u00d7\u53cc\u5e2d\u63a2\u7d22\uff1aP1\u5408\u8ba123/1/0\uff0c\u80dc\u8d1f\u5dee+23\u4e0e\u65e7K1\u76f8\u540c\uff1b\u4ea4\u4ed823\u5bf924\u3001\u56e0\u679c\u674016\u5bf915\u3002\u72ec\u7acbhard16\u73af\u5883seed\u00d7\u53cc\u5e2d\uff1aP1 16/0/0\u5bf9\u65e713/2/1\uff0c\u4ea4\u4ed815\u5bf911\u3001\u6301\u5305\u6b7b0\u5bf93\uff1b\u56e0\u679c\u67405\u5bf99\u3001\u6ce127.625\u5bf932.5/\u5c40\uff0c\u4e0d\u80fd\u79f0\u5168\u9762\u8fdb\u653b\u589e\u5f3a\u3002P0 holdout12/1/3\u5bf9\u65e714/0/2\uff0c\u5b58\u5728\u5e2d\u4f4d\u9000\u6b65\u3002\u91cd\u62e6\u622av6 DEV P1 31/0/1\u3001\u4ea4\u4ed830/35\u3001\u6301\u5305\u6b7b4\uff0c\u5355\u5217\u4e0d\u4e0eHunter\u6df7\u6bd4\u3002\u7528\u6237\u8ba4\u53efu9969\u53ca\u65e7\u9ed8\u8ba4K1\u4fdd\u7559\u53ef\u9009\u56de\u6eda\u3002\u5355\u56fe\u5c0f\u6837\u672c\uff0c\u4e0d\u58f0\u79f0\u7a33\u5b9a\u771f\u4eba\u80dc\u7387\uff1b\u4ecd\u53ef\u80fd\u96f6\u6ce1\u3001\u632f\u8361\u3001\u6301\u5305\u505c\u6ede\u3002ownBombDefeat\u4e0d\u8986\u76d6\u5168\u90e8\u95f4\u63a5\u81ea\u4f24\u3002fp32\u90e8\u7f72parity\u4e0d\u7b49\u4e8e\u8bad\u7ec3bf16\u9010\u4f4d\u4e00\u81f4\uff1b\u56fa\u5b9a8\u5c40Review\u4e0d\u4f30\u8ba1\u80dc\u7387\uff0cReward/A1\u672a\u8bb0\u5f55\u3002",
-      "score_protocol": "production JS Hunter; bun-native-v2; argmax; teacher off; own-side natural map806; hard/normal/easy 8 seeds each x P0/P1; seeds2026540000/2026541000/2026542000; independent hard holdout seed2026550000,16 seeds x P0/P1",
-      "onnx": {
-        "file": "bun392-v2-risk-u9809-3127be3f37f24e8ea81fafd9c8f02ea79a3ed9ec0dbe84d570fe3a43a33e0673.onnx",
-        "sha256": "3127be3f37f24e8ea81fafd9c8f02ea79a3ed9ec0dbe84d570fe3a43a33e0673",
-        "bytes": 30306583,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-five-slots-20261104/bun392-v2-risk-u9809-3127be3f37f24e8ea81fafd9c8f02ea79a3ed9ec0dbe84d570fe3a43a33e0673.onnx",
-        "meta": {
-          "schema_version": "five-item-slots-v1",
-          "action_schema": "move-v1+five-item-slots-v1",
-          "ability_actions": 7,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_slot1",
-            "use_slot2",
-            "use_slot3",
-            "use_slot4",
-            "use_slot5"
-          ],
-          "observation_schema": "r3-visible37+slot15-v1",
-          "obs_shape": [
-            25,
-            13,
-            15
-          ],
-          "state_dim": 52,
-          "global_dim": 52,
-          "max_engine_slots": 7,
-          "max_selectable_slots": 5,
-          "parent_checkpoint_sha256": "6f758831a03f238d2aef7e4d0bd7d2ca597e71eb74b3a38293fde13be0d987d8",
-          "migration": {
-            "old_use_to": "use_slot1",
-            "new_slot_rows": 4,
-            "new_slot_rows_initialized": "independent_small_normal"
-          },
-          "name": "bun392-v2-risk-u9809",
-          "display_name": "Bun392 \u4e94\u69fd\u98ce\u9669\u7ebf u9809",
-          "arch": "transformer",
-          "rule": "bun-native-v2",
-          "rule_version": "bun-native-v2",
-          "move_actions": 5,
-          "n_players": 2,
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "value_min": -20,
-          "value_max": 20,
-          "checkpoint_sha256": "6f758831a03f238d2aef7e4d0bd7d2ca597e71eb74b3a38293fde13be0d987d8",
-          "onnx_sha256": "3127be3f37f24e8ea81fafd9c8f02ea79a3ed9ec0dbe84d570fe3a43a33e0673",
-          "r3_input_encoding": "r3-items-route-chain-visible-v1",
-          "source_global_dim": 53,
-          "evaluation_global_dim": 52,
-          "fixed_mode": 0,
-          "projection": "drop only last mode row; all visible52 rows and seven abilities retained",
-          "source": "runs/risk_carry_light_safety_v2_20261104/formal/RISK_CARRY_LIGHT_SAFETY2_50_s2026371202_c000/u009809/policy.pt",
-          "strategy": "raw",
-          "update": 9809,
-          "attention_heads": 4,
-          "qqt_map_id": 806
-        },
-        "reference_zero": {
-          "move": [
-            1.8894616011095755,
-            0.6976972659445613,
-            1.6288821874217772,
-            2.0685756956617114,
-            1.5801873146142573
-          ],
-          "bomb": [
-            2.1133298673821184,
-            1.2361203624964394,
-            -2.104924780954734,
-            -2.7453810116065576,
-            0.04028615839510537,
-            -0.0702700677661202,
-            0.22658849663801225
-          ],
-          "value": 1.365045067236142
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9809-3127be3f37f24e8ea81fafd9c8f02ea79a3ed9ec0dbe84d570fe3a43a33e0673.onnx"
-      },
-      "score": 0.9583333333333334,
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9809-6365c568b594d0dfd3c83f74d3a14afb4d9512d519579f0492d4781f1e6a2ddd.json"
-    },
-    {
-      "id": "bun392-v2-risk-u9969",
-      "display_name": "Bun392 \u4e94\u69fd\u98ce\u9669\u7ebf u9969",
-      "file": "bun392-v2-risk-u9969-a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278.json",
-      "sha256": "a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278",
-      "bytes": 40381088,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-five-slots-20261104/bun392-v2-risk-u9969-a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278.json",
-      "cycle": 9969,
-      "candidate": "RISK_CARRY_LIGHT_SAFETY2_50_s2026371202_c001/u009969",
-      "strategy": "raw",
-      "source_sha256": "7aae3216fdecc5d85c31c9aa3158b50a97b00a3654dc0f5722df5f7f6d3f9afa",
-      "rule_version": "bun-native-v2",
-      "description": "\u4e94\u69fd\u98ce\u9669\u7ebf u9969\uff1b\u771f\u4ebaP0/\u6a21\u578bP1\uff0cbun-native-v2\u3001argmax\u3001\u8001\u5e08\u5173\u95ed\u3002\u663e\u5f0f7\u6280\u80fd\u52a8\u4f5c/52\u7ef4\u5e93\u5b58\uff0c\u69fd1\u81f35\u72ec\u7acb\u63a9\u7801\u548c\u539f\u751f\u653e\u7f6e\u3002\u7528\u6237\u8ba4\u53ef\u5f55\u50cf\u70b9\uff1b\u914d\u5bf9\u4e09\u6863\u54048seed\u53cc\u5e2d\u63a2\u7d22\u4e2dP1 22/1/1\u3001\u4ea4\u4ed822\u3001\u56e0\u679c\u51fb\u674017\u3001\u6301\u5305\u6b7b1\uff1b\u65e7K1\u4e3a23/1/0\u3001\u4ea4\u4ed824\u3001\u51fb\u674015\u3001\u6301\u5305\u6b7b1\uff1b\u5e76\u975e\u5168\u9762\u80dc\u7387\u63d0\u5347\u3002\u72ec\u7acbhard holdout\u5355\u5217\u3002\u91cd\u62e6\u622av6 DEV\u4ea4\u4ed827/36\u3001\u6301\u5305\u6b7b8\uff0c\u7236u8922\u4e3a27/34\u3001\u6b7b4\uff0c\u98ce\u9669\u76ee\u6807\u672a\u901a\u8fc7\u3002\u65e7\u9ed8\u8ba4K1\u4fdd\u7559\u53ef\u9009\u56de\u6eda\u3002\u53ef\u80fd\u96f6\u6ce1\u3001\u632f\u8361\u3001\u6301\u5305\u505c\u6ede\uff1b\u539f\u751fownBombDefeat\u4e0d\u8986\u76d6\u5168\u90e8\u95f4\u63a5\u81ea\u4f24\u3002fp32\u90e8\u7f72parity\u4e0d\u7b49\u4e8e\u8bad\u7ec3bf16\u9010\u4f4d\u4e00\u81f4\uff1b\u56fa\u5b9a8\u5c40Review\u4e0d\u4f30\u8ba1\u80dc\u7387\uff0cReward/A1\u672a\u8bb0\u5f55\u3002 \u72ec\u7acbhard16\u73af\u5883seed\u00d7\u53cc\u5e2d\uff1aP1 14/1/1\u3001\u4ea4\u4ed813\u3001\u56e0\u679c\u674012\u3001\u6301\u5305\u6b7b2\uff1bP0 12/3/1\uff0c\u975e\u672c\u6b21\u76ee\u5f55\u9ed8\u8ba4\u3002",
-      "score_protocol": "production JS Hunter; bun-native-v2; argmax; teacher off; own-side natural map806; hard/normal/easy 8 seeds each x P0/P1; seeds2026540000/2026541000/2026542000; independent hard holdout seed2026550000,16 seeds x P0/P1",
-      "onnx": {
-        "file": "bun392-v2-risk-u9969-0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f.onnx",
-        "sha256": "0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f",
-        "bytes": 30306583,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-five-slots-20261104/bun392-v2-risk-u9969-0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f.onnx",
-        "meta": {
-          "schema_version": "five-item-slots-v1",
-          "action_schema": "move-v1+five-item-slots-v1",
-          "ability_actions": 7,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_slot1",
-            "use_slot2",
-            "use_slot3",
-            "use_slot4",
-            "use_slot5"
-          ],
-          "observation_schema": "r3-visible37+slot15-v1",
-          "obs_shape": [
-            25,
-            13,
-            15
-          ],
-          "state_dim": 52,
-          "global_dim": 52,
-          "max_engine_slots": 7,
-          "max_selectable_slots": 5,
-          "parent_checkpoint_sha256": "7aae3216fdecc5d85c31c9aa3158b50a97b00a3654dc0f5722df5f7f6d3f9afa",
-          "migration": {
-            "old_use_to": "use_slot1",
-            "new_slot_rows": 4,
-            "new_slot_rows_initialized": "independent_small_normal"
-          },
-          "name": "bun392-v2-risk-u9969",
-          "display_name": "Bun392 \u4e94\u69fd\u98ce\u9669\u7ebf u9969",
-          "arch": "transformer",
-          "rule": "bun-native-v2",
-          "rule_version": "bun-native-v2",
-          "move_actions": 5,
-          "n_players": 2,
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "value_min": -20,
-          "value_max": 20,
-          "checkpoint_sha256": "7aae3216fdecc5d85c31c9aa3158b50a97b00a3654dc0f5722df5f7f6d3f9afa",
-          "onnx_sha256": "0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f",
-          "r3_input_encoding": "r3-items-route-chain-visible-v1",
-          "source_global_dim": 53,
-          "evaluation_global_dim": 52,
-          "fixed_mode": 0,
-          "projection": "drop only last mode row; all visible52 rows and seven abilities retained",
-          "source": "runs/risk_carry_light_safety_v2_20261104/formal/RISK_CARRY_LIGHT_SAFETY2_50_s2026371202_c001/u009969/policy.pt",
-          "strategy": "raw",
-          "update": 9969,
-          "attention_heads": 4,
-          "qqt_map_id": 806
-        },
-        "reference_zero": {
-          "move": [
-            2.0597882491565236,
-            1.3629172434328582,
-            1.977315371968008,
-            2.6550885110556632,
-            1.0279341641151567
-          ],
-          "bomb": [
-            2.0835823243565232,
-            1.0262903989162924,
-            -1.009604561459369,
-            -1.570820993842627,
-            0.1558420205118117,
-            -0.013177707624781262,
-            0.18387881636828654
-          ],
-          "value": 1.6937944065735642
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9969-0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f.onnx"
-      },
-      "score": 0.9166666666666666,
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9969-a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278.json"
-    },
-    {
-      "id": "bun392-v2-r4-k1-u5282",
-      "display_name": "Bun392 v2 R4 K1 u5282\uff08P1\u4e09\u6863+359\uff09",
-      "file": "bun392-v2-r4-k1-u5282-88241ba1cd7a14756d6be51a29d564a071df578c18489a750b4cafdf42daeec2.json",
-      "sha256": "88241ba1cd7a14756d6be51a29d564a071df578c18489a750b4cafdf42daeec2",
-      "bytes": 40340752,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r4-k1-u5282-20261101/bun392-v2-r4-k1-u5282-88241ba1cd7a14756d6be51a29d564a071df578c18489a750b4cafdf42daeec2.json",
-      "cycle": 5282,
-      "candidate": "r4_k1_c000001_u005282",
-      "strategy": "raw",
-      "score": 0.87890625,
-      "source_sha256": "694b1d8b2ebb7e76debf965fc41d594f8fdbc013fa00c73f45e7a7f0eee6859f",
-      "rule_version": "bun-native-v2",
-      "description": "\u7f51\u9875\u771f\u4ebaP0\u3001\u6a21\u578bP1\uff0cbun-native-v2\u89c4\u5219\u4e0d\u53d8\u3002K1 r4_k1_c000001/u005282\uff0c\u751f\u4ea7JS Hunter/argmax/\u8001\u5e08\u5173\u95ed\uff1b\u672c\u4fa7\u51fa\u751f\uff0c\u4e09\u6863\u5404256\u5c40\uff08\u6bcf\u5e2d128\uff09\u3002P1 hard114/9/5\u3001normal125/2/1\u3001easy126/2/0\uff0c\u4e09\u6863\u80dc\u8d1f\u5dee\u5408\u8ba1+359\uff08\u65e7u4002 +338\uff09\uff1bP0\u5408\u8ba1+349\uff08\u65e7+353\uff09\u3002P1\u56e0\u679c\u51fb\u674078/84/119\uff0c\u65e760/63/101\uff1b\u81ea\u4f24\u57470\u3002hard holdout P1 111/9/8\uff0c\u80dc\u8d1f\u5dee+103\uff0c\u65e7113/10/5\u4e3a+108\uff0c\u4fdd\u7559\u8fd9\u9879\u5c0f\u5e45\u56de\u9000\u3002hard P1\u653e\u6ce13777/128\u5c40\uff0c\u65e74806/128\u5c40\uff1b\u4e0d\u80fd\u5ba3\u79f0\u6301\u7eed\u8fde\u6ce1\u5df2\u8bc1\u5b9e\u66f4\u5f3a\u3002\u65e73\u6280\u80fdnone/bomb/use_item\uff0cuse_item\u4ecd\u53ea\u7528\u65e7\u69fd1\uff0c\u4e0d\u652f\u6301\u4e94\u69fd\u72ec\u7acb\u9009\u62e9\uff1b\u4e94\u69fd\u63a5\u53e3\u53caC/G\u6a21\u578b\u672a\u53d1\u5e03\u3002\u65e7u4002\u4fdd\u7559\u53ef\u9009\uff0c\u4ecd\u53ef\u80fd\u6709\u96f6\u6ce1\u3001\u632f\u8361\u4e0e\u6301\u5305\u505c\u6ede\u3002\u90e8\u7f72fp32\u5bfc\u51faparity\u5355\u5217\uff0c\u4e0d\u5ba3\u79f0\u8bad\u7ec3bf16\u6216\u771f\u4ebaframeStep\u9010\u4f4d\u4e00\u81f4\uff1b\u56fa\u5b9a8\u5c40\u5f55\u50cf\u4e0d\u4f5c\u80dc\u7387\u4f30\u8ba1\u3002",
-      "score_protocol": "production JS Hunter; argmax; teacher off; own-side fresh hard/normal/easy 256 each, P0/P1 128 each; seeds2026318000/2026319000/2026320000; independent holdout hard separately reported",
-      "onnx": {
-        "file": "bun392-v2-r4-k1-u5282-2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6.onnx",
-        "sha256": "2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6",
-        "bytes": 30276775,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r4-k1-u5282-20261101/bun392-v2-r4-k1-u5282-2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6.onnx",
-        "meta": {
-          "name": "bun392-v2-r4-k1-u5282",
-          "display_name": "bun392-v2-r4-k1-u5282",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "arch": "transformer",
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            25,
-            13,
-            15
-          ],
-          "state_dim": 37,
-          "n_players": 2,
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "r3_input_encoding": "r3-items-route-chain-visible-v1",
-          "checkpoint_sha256": "694b1d8b2ebb7e76debf965fc41d594f8fdbc013fa00c73f45e7a7f0eee6859f",
-          "onnx_sha256": "2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6",
-          "source": "runs/r4_combat_20261031/formal/r4_k1_c000001/u005282/policy.pt",
-          "committed_sha256": "c46e7f8b8808e8971d7af1e541bc21012df40c3008b19b1cb3a27dfe2d67f699",
-          "strategy": "raw",
-          "attention_heads": 4,
-          "update": 5282,
-          "rule_version": "bun-native-v2"
-        },
-        "reference_zero": {
-          "move": [
-            2.2292682305875133,
-            2.6913134455751293,
-            3.57375502342765,
-            2.850053245308364,
-            3.238729217915158
-          ],
-          "bomb": [
-            2.8156316960155254,
-            -0.08553510025208322,
-            -3.0527544833094487
-          ],
-          "value": 2.2953588331301558
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r4-k1-u5282-2491959a098051bdecd97aebf00f00168923d0a47b79dfe3b11db9d2d03bebe6.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r4-k1-u5282-88241ba1cd7a14756d6be51a29d564a071df578c18489a750b4cafdf42daeec2.json"
-    },
-    {
-      "id": "bun392-v2-r3-a-u4002-u4002",
-      "display_name": "Bun392 v2 r3_a_u4002\uff08P1\u4e09\u6863+338\uff09",
-      "file": "bun392-v2-r3-a-u4002-u4002-763ae64a325215de60fa4af403f4e03aeb27ad888bd859d54a097144e816c0a7.json",
-      "sha256": "763ae64a325215de60fa4af403f4e03aeb27ad888bd859d54a097144e816c0a7",
-      "bytes": 40340774,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r3-a-u4002-u4002-20261031/bun392-v2-r3-a-u4002-u4002-763ae64a325215de60fa4af403f4e03aeb27ad888bd859d54a097144e816c0a7.json",
-      "cycle": 4002,
-      "candidate": "r3_a_ownside_c000001_u004002",
-      "strategy": "raw",
-      "score": 0.859375,
-      "source_sha256": "f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30",
-      "rule_version": "bun-native-v2",
-      "description": "\u7f51\u9875\u771f\u4ebaP0\u3001\u6a21\u578bP1\u3002bun-native-v2\u81ea\u7531\u53d6\u5305\uff0c\u751f\u4ea7JS Hunter\u3001argmax\u3001\u8001\u5e08\u5173\u95ed\u3002\u56fa\u5b9a\u4e09\u6863\u6bcf\u6863256\u5c40\uff08\u5404\u5e2d128\uff09\uff0cP1\u4e09\u6863\u80dc\u8d1f\u5dee{'hunter_hard': 99, 'hunter_normal': 116, 'hunter_easy': 123}\uff0c\u5408\u8ba1+338\uff08\u7f51\u9875\u65e7Actor\u5728v2\u4e0b+320\uff09\uff1bP0\u5408\u8ba1+353\uff08\u57fa\u7ebf+345\uff09\uff1b\u81ea\u4f240\u3002\u9010\u6863/P0/\u81ea\u4f24\u62a4\u680f\u5168\u90e8\u901a\u8fc7\u3002\u534f\u4f5cHunter hard\u5355\u5217\u538b\u529b\u6d4b\u8bd5\uff0c\u4e0d\u6df7\u6392\u540d\u300216\u51fa\u751f\u51e0\u4f55\u91cd\u590d\uff1b\u4e0d\u5ba3\u79f0\u7edf\u8ba1\u663e\u8457\u6216\u771f\u4eba\u6cdb\u5316\u3002\u65e7v1\u53ef\u9009\u3001\u65e7\u5f55\u50cf\u6309\u539f\u89c4\u5219\u56de\u653e\uff0c\u6210\u7ee9\u5206\u699c\u4e0d\u6df7\u6392\u3002R3\u5982\u6709\u4f7f\u752825\u5e73\u9762/37\u7ef4\u53ef\u89c1\u8f93\u5165\uff1b\u771f\u4ebaP0 frameStep\u4e0e\u8bc4\u4f30Sim.step\u8303\u56f4\u5206\u5f00\uff0c\u4e0d\u5ba3\u79f0\u9010\u4f4d\u7b49\u4ef7\u3002\u4ecd\u53ef\u80fd\u6709\u96f6\u6ce1\u3001\u632f\u8361\u4e0e\u6301\u5305\u505c\u6ede\u3002",
-      "score_protocol": "production JS Hunter three tiers; bun-native-v2; argmax; teacher off; paired256/tier, P0/P1 128 each; fresh2026318000/2026319000/2026320000; 16 own-side native geometries reused; coop_hard separate",
-      "onnx": {
-        "file": "bun392-v2-r3-a-u4002-u4002-f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656.onnx",
-        "sha256": "f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656",
-        "bytes": 30276775,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r3-a-u4002-u4002-20261031/bun392-v2-r3-a-u4002-u4002-f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656.onnx",
-        "meta": {
-          "name": "bun392-v2-r3-a-u4002-u4002",
-          "display_name": "bun392-v2-r3-a-u4002-u4002",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "arch": "transformer",
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            25,
-            13,
-            15
-          ],
-          "state_dim": 37,
-          "n_players": 2,
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "r3_input_encoding": "r3-items-route-chain-visible-v1",
-          "checkpoint_sha256": "f12ab745ca746ae364bcb172fb425399cbf47038f60f7129617036a4051d6a30",
-          "onnx_sha256": "f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656",
-          "source": "runs/r3_items_route_20261030/formal/r3_a_ownside_c000001/u004002/policy.pt",
-          "committed_sha256": "068d14e4658ef3e68cd79236c262da007f1ab66dc293e396bc9ead2f19d82708",
-          "strategy": "raw",
-          "attention_heads": 4,
-          "update": 4002,
-          "rule_version": "bun-native-v2"
-        },
-        "reference_zero": {
-          "move": [
-            2.028625392160973,
-            3.6367900995094966,
-            3.928364959608603,
-            3.076754789571838,
-            2.720594257592865
-          ],
-          "bomb": [
-            1.3570715420062902,
-            -1.3720023258923266,
-            3.513920282262249
-          ],
-          "value": 1.6218202038325769
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r3-a-u4002-u4002-f11461f32ba29e3aed09c280e9cf66f974f22cce5b9cfb157839a0e3fad59656.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r3-a-u4002-u4002-763ae64a325215de60fa4af403f4e03aeb27ad888bd859d54a097144e816c0a7.json"
-    },
-    {
-      "id": "bun392-v2-r3-a-u3040-u3040",
-      "display_name": "Bun392 v2 r3_a_u3040\uff08P1\u4e09\u6863+320\uff09",
-      "file": "bun392-v2-r3-a-u3040-u3040-2a45af6ab8231d71e5104626ef58d08b0590385b1d0b9238fc73bf3b178590eb.json",
-      "sha256": "2a45af6ab8231d71e5104626ef58d08b0590385b1d0b9238fc73bf3b178590eb",
-      "bytes": 40340766,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r3-a-u3040-u3040-20261031/bun392-v2-r3-a-u3040-u3040-2a45af6ab8231d71e5104626ef58d08b0590385b1d0b9238fc73bf3b178590eb.json",
-      "cycle": 3040,
-      "candidate": "r3_a_c000000_u003040",
-      "strategy": "raw",
-      "score": 0.83203125,
-      "source_sha256": "80ae9005b1563b1ba7a1cbc07ed9044ea051f466fd47b509b2759e7c174f36d2",
-      "rule_version": "bun-native-v2",
-      "description": "\u7f51\u9875\u771f\u4ebaP0\u3001\u6a21\u578bP1\u3002bun-native-v2\u81ea\u7531\u53d6\u5305\uff0c\u751f\u4ea7JS Hunter\u3001argmax\u3001\u8001\u5e08\u5173\u95ed\u3002\u56fa\u5b9a\u4e09\u6863\u6bcf\u6863256\u5c40\uff08\u5404\u5e2d128\uff09\uff0cP1\u4e09\u6863\u80dc\u8d1f\u5dee{'hunter_hard': 91, 'hunter_normal': 110, 'hunter_easy': 119}\uff0c\u5408\u8ba1+320\uff08\u7f51\u9875\u65e7Actor\u5728v2\u4e0b+260\uff09\uff1bP0\u5408\u8ba1+345\uff08\u57fa\u7ebf+307\uff09\uff1b\u81ea\u4f240\u3002\u9010\u6863/P0/\u81ea\u4f24\u62a4\u680f\u5168\u90e8\u901a\u8fc7\u3002\u534f\u4f5cHunter hard\u5355\u5217\u538b\u529b\u6d4b\u8bd5\uff0c\u4e0d\u6df7\u6392\u540d\u300216\u51fa\u751f\u51e0\u4f55\u91cd\u590d\uff1b\u4e0d\u5ba3\u79f0\u7edf\u8ba1\u663e\u8457\u6216\u771f\u4eba\u6cdb\u5316\u3002\u65e7v1\u53ef\u9009\u3001\u65e7\u5f55\u50cf\u6309\u539f\u89c4\u5219\u56de\u653e\uff0c\u6210\u7ee9\u5206\u699c\u4e0d\u6df7\u6392\u3002R3\u5982\u6709\u4f7f\u752825\u5e73\u9762/37\u7ef4\u53ef\u89c1\u8f93\u5165\uff1b\u771f\u4ebaP0 frameStep\u4e0e\u8bc4\u4f30Sim.step\u8303\u56f4\u5206\u5f00\uff0c\u4e0d\u5ba3\u79f0\u9010\u4f4d\u7b49\u4ef7\u3002\u4ecd\u53ef\u80fd\u6709\u96f6\u6ce1\u3001\u632f\u8361\u4e0e\u6301\u5305\u505c\u6ede\u3002",
-      "score_protocol": "production JS Hunter three tiers; bun-native-v2; argmax; teacher off; paired256/tier, P0/P1 128 each; fresh2026318000/2026319000/2026320000; 16 own-side native geometries reused; coop_hard separate",
-      "onnx": {
-        "file": "bun392-v2-r3-a-u3040-u3040-d9ef89f4b6454eae02395b0884079e04d77258f1827e2c52103a11e2af5afbd2.onnx",
-        "sha256": "d9ef89f4b6454eae02395b0884079e04d77258f1827e2c52103a11e2af5afbd2",
-        "bytes": 30276775,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-r3-a-u3040-u3040-20261031/bun392-v2-r3-a-u3040-u3040-d9ef89f4b6454eae02395b0884079e04d77258f1827e2c52103a11e2af5afbd2.onnx",
-        "meta": {
-          "name": "bun392-v2-r3-a-u3040-u3040",
-          "display_name": "bun392-v2-r3-a-u3040-u3040",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "arch": "transformer",
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            25,
-            13,
-            15
-          ],
-          "state_dim": 37,
-          "n_players": 2,
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "r3_input_encoding": "r3-items-route-chain-visible-v1",
-          "checkpoint_sha256": "80ae9005b1563b1ba7a1cbc07ed9044ea051f466fd47b509b2759e7c174f36d2",
-          "onnx_sha256": "d9ef89f4b6454eae02395b0884079e04d77258f1827e2c52103a11e2af5afbd2",
-          "source": "runs/r3_items_route_20261030/formal/r3_a_c000000/u003040/policy.pt",
-          "committed_sha256": "5355c8aa2b7942e5e3f39e536ba355ec3a4557b47c5bfab67f998fde17bf1210",
-          "strategy": "raw",
-          "attention_heads": 4,
-          "update": 3040,
-          "rule_version": "bun-native-v2"
-        },
-        "reference_zero": {
-          "move": [
-            2.6289743137760064,
-            3.949312787439265,
-            3.057185625369147,
-            3.4814629621173685,
-            3.3037638663945184
-          ],
-          "bomb": [
-            2.531072230609933,
-            0.7779765148757858,
-            -1.558454526846029
-          ],
-          "value": 1.663176679468978
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r3-a-u3040-u3040-d9ef89f4b6454eae02395b0884079e04d77258f1827e2c52103a11e2af5afbd2.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-r3-a-u3040-u3040-2a45af6ab8231d71e5104626ef58d08b0590385b1d0b9238fc73bf3b178590eb.json"
-    },
-    {
-      "id": "bun392-r1-slot03-u2760",
-      "display_name": "Bun392 R1 slot03 u2760\uff08P1\u4e09\u6863+178\uff09",
-      "file": "bun392-r1-slot03-u2760-cbd1069b6456b14ce577156a006715c89a5a1742d84871a7e00137e1c75a5b40.json",
-      "sha256": "cbd1069b6456b14ce577156a006715c89a5a1742d84871a7e00137e1c75a5b40",
-      "bytes": 40294802,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-r1-slot03-u2760-20261030/bun392-r1-slot03-u2760-cbd1069b6456b14ce577156a006715c89a5a1742d84871a7e00137e1c75a5b40.json",
-      "cycle": 2760,
-      "candidate": "bt_slot03_c000036_u002760_raw",
-      "source_sha256": "b2237ce4045d0e1659a638979c34b7636d962ed585a63dba509518afc562802d",
-      "strategy": "raw",
-      "score": 0.39453125,
-      "description": "\u7f51\u9875\u771f\u4ebaP0\u3001\u6a21\u578bP1\uff1b\u751f\u4ea7JS Hunter\u3001stock-window-v1\u3001argmax\u3001\u8001\u5e08\u5173\u95ed\u3002hard P1 +43\uff08\u7f51\u9875\u539f\u6a21\u578b+21\uff09\uff1bnormal P1 +59\uff08\u7f51\u9875\u539f\u6a21\u578b+42\uff09\uff1beasy P1 +76\uff08\u7f51\u9875\u539f\u6a21\u578b+67\uff09\uff1bP1\u5408\u8ba1+178 vs\u539f\u6a21\u578b+130\uff1bP0\u5408\u8ba1+198 vs +133\u3002\u9010\u6863/P0/\u81ea\u4f24\u62a4\u680f\u901a\u8fc7\uff1b\u56fa\u5b9a\u5019\u9009\u4e09\u6863\u5404256\u5c40\u3001\u6bcf\u5e2d128\u300264\u51e0\u4f55\u590d\u7528\uff0c\u4e0d\u5ba3\u79f0\u7edf\u8ba1\u663e\u8457\u6216\u771f\u4eba\u6cdb\u5316\u3002R1\u539f\u751f\u9053\u5177\u8bad\u7ec3\u89c4\u5219\u4e0eJS\u90e8\u7f72\u80fd\u529b\u5206\u5f00\uff1b\u8bad\u7ec3bf16\u4e0e\u90e8\u7f72fp32\u5b58\u5728\u5dee\u5f02\uff1b\u4ecd\u53ef\u80fd\u6709\u96f6\u6ce1\u3001\u632f\u8361\u3001\u6301\u5305\u505c\u6ede\u3002",
-      "score_protocol": "production JS bun.hunter; stock-window-v1; argmax; teacher off; paired256 per tier P0/P1 128 each; hard2026193000 normal2026194000 easy2026195000; hard wins/256;64 geometries reused",
-      "onnx": {
-        "file": "bun392-r1-slot03-u2760-d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1.onnx",
-        "sha256": "d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1",
-        "bytes": 30242279,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-r1-slot03-u2760-20261030/bun392-r1-slot03-u2760-d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1.onnx",
-        "meta": {
-          "name": "Bun392 R1 slot03 u2760",
-          "display_name": "Bun392 R1 slot03 u2760",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            24,
-            13,
-            15
-          ],
-          "n_players": 2,
-          "source": "runs/bomb_threat_v1/formal/bt_slot03_c000036/u002760/policy.pt",
-          "generated_at": "2026-10-30T10:13:27.383253+00:00",
-          "arch": "transformer",
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "bun_state_encoding": "bun24-trap-timer-v2",
-          "onnx_sha256": "d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1",
-          "checkpoint_sha256": "b2237ce4045d0e1659a638979c34b7636d962ed585a63dba509518afc562802d",
-          "committed_sha256": "4fc9a4542e741106979404df0114154c47e43bf342eb78c8414f4f98243269af",
-          "strategy": "raw",
-          "state_dim": 24,
-          "attention_heads": 4,
-          "update": 2760,
-          "rule_version": "stock-window-v1"
-        },
-        "reference_zero": {
-          "move": [
-            2.5400995790011036,
-            5.362762339649366,
-            3.580854945833994,
-            3.730910752604657,
-            3.0988142102664145
-          ],
-          "bomb": [
-            2.946734407324023,
-            2.233002704881689,
-            -3.196222530005783
-          ],
-          "value": 2.245158418542477
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-r1-slot03-u2760-d724280ee7052bdb04d4f59fe9b9bba541e682901cee3324db19c717a0c615b1.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-r1-slot03-u2760-cbd1069b6456b14ce577156a006715c89a5a1742d84871a7e00137e1c75a5b40.json"
-    },
-    {
-      "id": "bun392-a3sr-slot00-u2400",
-      "display_name": "Bun392 A3SR slot00 u2400\uff08P1\u4e09\u6863\u80dc\u8d1f\u5dee +130\uff09",
-      "file": "bun392-a3sr-slot00-u2400-887079d10fc7b99647c847e40a39fb6a8240ddbccdad797722b326362a201732.json",
-      "sha256": "887079d10fc7b99647c847e40a39fb6a8240ddbccdad797722b326362a201732",
-      "bytes": 40294794,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-slot00-u2400-20261030/bun392-a3sr-slot00-u2400-887079d10fc7b99647c847e40a39fb6a8240ddbccdad797722b326362a201732.json",
-      "cycle": 2400,
-      "candidate": "bt_slot00_c000034_u002400_raw",
-      "source_sha256": "419a8a10d4554b189a8025592e6222be46900e0ce984e19780f8001f2b885ad4",
-      "strategy": "raw",
-      "score": 0.20703125,
-      "description": "\u7f51\u9875\u771f\u4eba\u5750P0\u3001\u6a21\u578b\u5750P1\uff1b\u751f\u4ea7JS\u730e\u624bbun.hunter\uff0cstock-window-v1\uff0cargmax\uff0c\u8001\u5e08\u5173\u95ed\u3002\u9884\u58f0\u660e\u540cseed\u914d\u5bf9\u6bcf\u6863256\u5c40\uff08P0/P1\u5404128\uff09\uff1ahard P1 +21\uff08u1280 +17\uff09\uff1bnormal P1 +42\uff08u1280 +25\uff09\uff1beasy P1 +67\uff08u1280 +51\uff09\uff1bP1\u5408\u8ba1+130 vs u1280 +93\uff0cP0\u5408\u8ba1+133 vs +135\u3002\u901a\u8fc7\u6bcf\u6863/P0/\u81ea\u4f24\u62a4\u680f\u3002\u5df2\u77e5\u77ed\u677f\uff1a\u96f6\u6ce1\u5c40\u3001\u632f\u8361\u3001\u6301\u5305\u53d7\u7816\u963b\uff1b\u4e0d\u5ba3\u79f0\u5168\u90e8\u6218\u6597\u6307\u6807\u6216\u771f\u4eba\u6cdb\u5316\u63d0\u5347\u3002\u8bad\u7ec3bf16\u4e0e\u7f51\u9875fp32\u5b58\u5728\u6570\u503c\u5dee\u5f02\u3002",
-      "score_protocol": "production JS bun.hunter; stock-window-v1; argmax; teacher off; 256 paired games/tier, P0/P1 128 each; seeds hard2026193000 normal2026194000 easy2026195000; score=hard wins/256; 64 geometries reused; no significance claim",
-      "onnx": {
-        "file": "bun392-a3sr-slot00-u2400-c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f.onnx",
-        "sha256": "c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f",
-        "bytes": 30242279,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-slot00-u2400-20261030/bun392-a3sr-slot00-u2400-c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f.onnx",
-        "meta": {
-          "name": "Bun392 A3SR slot00 u2400",
-          "display_name": "Bun392 A3SR slot00 u2400",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            24,
-            13,
-            15
-          ],
-          "n_players": 2,
-          "source": "runs/bomb_threat_v1/formal/bt_slot00_c000034/u002400/policy.pt",
-          "generated_at": "2026-10-30T00:00:00Z",
-          "arch": "transformer",
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "bun_state_encoding": "bun24-trap-timer-v2",
-          "onnx_sha256": "c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f",
-          "checkpoint_sha256": "419a8a10d4554b189a8025592e6222be46900e0ce984e19780f8001f2b885ad4",
-          "committed_sha256": "822b32a67774fce56e7fc7cde52370a8a871cb090d7ab7cf3bf7ce61f9e901ef",
-          "strategy": "raw",
-          "state_dim": 24,
-          "attention_heads": 4,
-          "update": 2400,
-          "rule_version": "stock-window-v1"
-        },
-        "reference_zero": {
-          "move": [
-            4.167517891656404,
-            5.517636637473553,
-            3.7390828201694255,
-            5.382221885538142,
-            5.064909881248094
-          ],
-          "bomb": [
-            3.7809306753168475,
-            1.2157607928746808,
-            -3.244211764368619
-          ],
-          "value": 2.359735379265811
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3sr-slot00-u2400-c0145d534bc57ae1f07e068d440106c1de25345da0939ee7126bb5a14726910f.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3sr-slot00-u2400-887079d10fc7b99647c847e40a39fb6a8240ddbccdad797722b326362a201732.json"
-    },
-    {
-      "id": "bun392-a3sr-u1280",
-      "display_name": "Bun392 A3SR u1280\uff08fresh256 P1\uff1ahard +13 / normal +26 / easy +52\uff09",
-      "file": "bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json",
-      "sha256": "736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed",
-      "bytes": 40294780,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-u1280-20261030-r1/bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json",
-      "candidate": "bomb_threat_v1_slot05_c000028_u001280_raw",
-      "cycle": 1280,
-      "source_sha256": "a552a3094182db7d49d498d8ebe37cdae34fc8ba058396661b7e58c2e812699a",
-      "strategy": "raw",
-      "score": 0.20703125,
-      "description": "\u7f51\u9875\u771f\u4eba\u5750P0\uff0c\u6a21\u578b\u5750P1\uff1bstock-window-v1\uff0c\u4fdd\u6301argmax\u3002fresh256 P1\u80dc-\u8d1f\uff1ahard +13\u3001normal +26\u3001easy +52\uff0c\u5408\u8ba1+91\uff1bu800\u540cseed\u5bf9\u71670/+6/+11\uff0c\u5408\u8ba1+17\u3002\u4e24\u5ea7\u4f4d\u5408\u8ba1\u80dc/\u5e73/\u8d1f\uff08\u6bcf\u6863256\u5c40\uff09\uff1ahard 53/196/7\uff1bnormal 68/185/3\uff1beasy 111/141/4\u3002\u5bf9\u624b\u4e3a\u730e\u624b\uff08bun.hunter\uff09\uff0c\u4e0d\u662f\u534f\u4f5c\u730e\u624b\u3002\u5df2\u77e5\u77ed\u677f\uff1a\u4ecd\u6709\u96f6\u6ce1\u5c40\u3001\u5de6\u53f3\u632f\u8361\u3001\u6301\u5305\u88ab\u7816\u56f0\uff1b\u90e8\u5206\u51fb\u6740/\u5b89\u5168\u6307\u6807\u672a\u5168\u9762\u4e0d\u5dee\uff0c\u4e0d\u5ba3\u79f0\u666e\u904d\u63d0\u5347\u3002\u7f51\u9875fp32\u4e0e\u8bad\u7ec3bf16\u5b58\u5728\u6570\u503c/\u52a8\u4f5c\u5dee\u5f02\u3002",
-      "score_protocol": "production JS bun.hunter; stock-window-v1; argmax; teacher off; fixed paired 256 games per tier, P0/P1 128 each; hard/normal/easy seeds2026142900/2026143900/2026144900; score=hard wins/256, not comparable with historical scores",
-      "onnx": {
-        "file": "bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx",
-        "sha256": "f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1",
-        "bytes": 30242279,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3sr-u1280-20261030-r1/bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx",
-        "meta": {
-          "name": "Bun392 A3SR u1280",
-          "display_name": "Bun392 A3SR u1280",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            24,
-            13,
-            15
-          ],
-          "n_players": 2,
-          "source": "runs/bomb_threat_v1/formal/bt_slot05_c000028/u001280/policy.pt",
-          "generated_at": "2026-10-30T00:00:00Z",
-          "arch": "transformer",
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "bun_state_encoding": "bun24-trap-timer-v2",
-          "onnx_sha256": "f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1",
-          "checkpoint_sha256": "a552a3094182db7d49d498d8ebe37cdae34fc8ba058396661b7e58c2e812699a",
-          "committed_sha256": "7e33f66cabced65d9bfd1f1dca4ac490d9de1bf5f15427ab61d4f204b3c19a29",
-          "strategy": "raw",
-          "state_dim": 24,
-          "attention_heads": 4,
-          "update": 1280,
-          "rule_version": "stock-window-v1"
-        },
-        "reference_zero": {
-          "move": [
-            3.343099798923804,
-            5.039219972816565,
-            4.166749560097255,
-            6.860066850269856,
-            3.7888234629887143
-          ],
-          "bomb": [
-            4.9453099754231875,
-            -0.3020019862424406,
-            -1.5757055397004402
-          ],
-          "value": 2.5326301851937965
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3sr-u1280-f3ab40a46f935796b50185a63f5b43ed28ee66abd67c57d1d23a9b6af592abe1.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3sr-u1280-736bc0c2d458682d771879be0cca80e25b90779336440beb40cbd800de0b7fed.json"
-    },
-    {
-      "id": "bun392-a3-u800",
-      "display_name": "Bun392 A3 u800\uff08fresh256 argmax\uff1ahard 42/207/7\uff0cnormal 68/180/8 \u80dc/\u5e73/\u8d1f\uff09",
-      "file": "bun392-a3-u800-455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928.json",
-      "sha256": "455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928",
-      "bytes": 40294692,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3-u800-stockwindow-20261030/bun392-a3-u800-455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928.json",
-      "candidate": "bomb_threat_v1_slot01_c000015_u000800_raw",
-      "cycle": 800,
-      "source_sha256": "8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6",
-      "strategy": "raw",
-      "description": "\u5bf9\u6218\u91c7\u7528 stock-window-v1\uff1a\u4ec5\u654c\u65b9\u6b7b\u4ea1\u6216\u539f\u751f\u7cd6\u6d46\u7a97\u53e3\u53ef\u53d6\u5e93\u5b58\u5305\u3002\u7f51\u9875\u771f\u4eba\u5750P0\uff0c\u6a21\u578b\u5750P1\u3002fresh256 hard argmax\uff1a42\u80dc207\u5e737\u8d1f\uff0cP0\u80dc-\u8d1f+35\u3001P1\u80dc-\u8d1f0\uff1bnormal 68\u80dc180\u5e738\u8d1f\u3001\u80dc-\u8d1f+60\uff08\u5404256\u5c40\uff09\u3002\u5df2\u77e5\u77ed\u677f\uff1aP1\u504f\u5f31\u3001\u5b58\u5728\u96f6\u6ce1\u5c40\u3001\u5de6\u53f3\u632f\u8361\u3001\u6301\u5305\u5e38\u88ab\u7816\u56f0\u4f4f\u3002\u7f51\u9875fp32\u4e0e\u8bad\u7ec3bf16\u6709\u6570\u503c\u5dee\u5f02\uff1b\u4e0d\u4e0e\u65e7\u76ee\u5f55score\u6df7\u7528\u3002",
-      "score_protocol": "fresh256 independent fixed natural games; stock-window-v1; JS Hunter hard/normal; argmax; 256 games per tier, balanced P0/P1. hard W/D/L=42/207/7; P0 W-L=35; P1 W-L=0; normal W-L=60. score=hard wins/256, a protocol-specific display only; never comparable with historical scores.",
-      "onnx": {
-        "file": "bun392-a3-u800-d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d.onnx",
-        "sha256": "d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d",
-        "bytes": 30242279,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-a3-u800-stockwindow-20261030/bun392-a3-u800-d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d.onnx",
-        "meta": {
-          "name": "Bun392 A3 u800",
-          "display_name": "Bun392 A3 u800",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            24,
-            13,
-            15
-          ],
-          "n_players": 2,
-          "source": "runs/bomb_threat_v1/formal/bt_slot01_c000015/u000800/policy.pt",
-          "generated_at": "2026-10-29T23:30:00Z",
-          "arch": "transformer",
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "checkpoint_sha256": "8153dafb2b15b7e4be17225bc95cc482417ce0afd8455081234f85f2406b16b6",
-          "committed_sha256": "aaf9a1de7cd918079874d78c3c13c3e334ef2b937cec293d34d70caaf159900d",
-          "strategy": "raw",
-          "state_dim": 24,
-          "attention_heads": 4,
-          "update": 800,
-          "bun_state_encoding": "bun24-trap-timer-v2",
-          "rule_version": "stock-window-v1",
-          "onnx_sha256": "d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d"
-        },
-        "reference_zero": {
-          "move": [
-            4.807938354370284,
-            2.2318491802243465,
-            6.168451251028626,
-            2.4367603467985814,
-            4.488399263637238
-          ],
-          "bomb": [
-            2.104828811862163,
-            1.6476495412675045,
-            -1.608080463888201
-          ],
-          "value": 2.6036760751525705
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3-u800-d4d718999397d3c2a56201f09705f9ab542602a9ade5bfc7b08f4579b0ee182d.onnx"
-      },
-      "score": 0.1640625,
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-a3-u800-455d40c702ff444e3c8cd5c01275c67c7dbe31817ec690986a67d576bafca928.json"
-    },
-    {
-      "id": "bun392-pbt-slot05-u720",
-      "display_name": "Bun392 PBT u720\uff08D\uff09",
-      "file": "bun392-pbt-slot05-u720-ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088.json",
-      "bytes": 40294669,
-      "sha256": "ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-pbt-slot05-u720-20261028/bun392-pbt-slot05-u720-ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088.json",
-      "candidate": "iter_pbt_v1_slot05_c000005_u000720_raw",
-      "cycle": 720,
-      "source_sha256": "ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663",
-      "strategy": "raw",
-      "score": 0.4010416666666667,
-      "description": "\u4fdd\u7559\u96c6\u5feb\u7b5b\uff08seed 20261001\uff09\uff1a\u7f51\u9875 JS Hunter \u56f0\u96be/\u666e\u901a/\u7b80\u5355\u540464\u5c40\uff0csafe_win 18/27/32\uff0c\u6b7b\u4ea10/0/2\uff1bJAX \u91c7\u6837/argmax\u5404304\u5c40\uff0c\u4ea4\u4ed8304/302\u3002\u91cd\u590d\u81ea\u9002\u5e94\u5feb\u7b5b\uff0c\u4e0d\u4ee3\u8868\u663e\u8457\u6027\u68c0\u9a8c\u6216\u7efc\u5408\u664b\u5347\u3002\u7f51\u9875\u4f7f\u7528fp32\uff0c\u4e0e\u8bad\u7ec3bf16\u5b58\u5728\u6570\u503c\u53ca\u52a8\u4f5c\u5dee\u5f02\u3002",
-      "score_protocol": "Holdout quick screen; seed 20261001; JS Hunter hard/normal/easy 64 episodes each. score=pooled JS safe_win/192=77/192; not the PBT selection score. JAX categorical/argmax delivery reported separately, 304 episodes each. Repeated adaptive holdout; not significance or admission.",
-      "onnx": {
-        "file": "bun392-pbt-slot05-u720-2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7.onnx",
-        "sha256": "2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7",
-        "bytes": 30242279,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-pbt-slot05-u720-20261028/bun392-pbt-slot05-u720-2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7.onnx",
-        "meta": {
-          "name": "Bun392 PBT u720\uff08D\uff09",
-          "display_name": "Bun392 PBT u720\uff08D\uff09",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            24,
-            13,
-            15
-          ],
-          "n_players": 2,
-          "source": "runs/iter_pbt_v1/formal/slot05_c000005/u000720/policy.pt",
-          "generated_at": "2026-10-28T00:00:00Z",
-          "arch": "transformer",
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "checkpoint_sha256": "ed5a2b1860e8256fa34ac5a5830ff9b5c81e67a0b33d5c8a73101b3149796663",
-          "bun_state_encoding": "bun24-trap-timer-v2",
-          "strategy": "raw",
-          "committed_sha256": "10f87427e8cd6bdf199f58a40e9874bfacdd3db8e89606859b9fe9e1364c19b0",
-          "state_dim": 24,
-          "attention_heads": 4,
-          "update": 720,
-          "onnx_sha256": "2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7"
-        },
-        "reference_zero": {
-          "move": [
-            0.12356508847124037,
-            -0.005594233244800118,
-            7.135233217727707,
-            5.895276860416011,
-            -1.5305890661626327
-          ],
-          "bomb": [
-            2.714812280925896,
-            0.8931601153562685,
-            -2.097180328343166
-          ],
-          "value": 2.4131738567792578
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-pbt-slot05-u720-2380ddc1c44afc3ad75831bbfdc6bd201a7257db18687d107cdeb2ee591cffa7.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-pbt-slot05-u720-ed52b79d7a1cc138a1458e275364dff0369e6510c928c09461d4e46b6fe82088.json"
-    },
-    {
-      "id": "bun392-je10-v38-r01-g8",
-      "display_name": "Bun392 JE10 v38 r01 g8",
-      "file": "bun392-je10-v38-r01-g8-19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45.json",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je10-v38-r01-g8-20261018/bun392-je10-v38-r01-g8-19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45.json",
-      "sha256": "19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45",
-      "bytes": 40296711,
-      "candidate": "je10_v38_r01_attempt04_g8_raw",
-      "cycle": 8,
-      "source_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
-      "strategy": "raw",
-      "score": 0.2641064787299655,
-      "description": "\u5df2\u5b8c\u6210\u56fa\u5b9a\u534f\u8bae\u7684\u5e73\u8861\u9009\u62e9\uff1anatural full\u4ea4\u4ed86/16\u3001\u4e03\u7c7b\u8def\u7ebf62/112\u3001Tactical12/64\uff1bHunter hard0/64\uff0c\u56f0\u96be\u6218\u6597\u4ecd\u8584\u5f31\u3002\u8bca\u65ad\u4e0d\u4ee3\u8868\u7efc\u5408\u664b\u5347\u3002",
-      "score_protocol": "zero observed self harm first; maximize geometric mean of natural delivery/16, seven route delivery/112, Tactical safe kills/64, pooled Hunter safe kills/192; ties lexical round then generation. Exploratory selection, not significance or admission.",
-      "onnx": {
-        "file": "bun392-je10-v38-r01-g8-b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16.onnx",
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je10-v38-r01-g8-20261018/bun392-je10-v38-r01-g8-b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16.onnx",
-        "sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
-        "bytes": 30242279,
-        "meta": {
-          "name": "model",
-          "display_name": "model",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20,
-          "value_max": 20,
-          "obs_shape": [
-            24,
-            13,
-            15
-          ],
-          "n_players": 2,
-          "source": "policy.pt",
-          "generated_at": "2026-10-17T17:48:54.361411+00:00",
-          "arch": "transformer",
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "bun_state_encoding": "bun24-trap-timer-v2",
-          "onnx_sha256": "b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16",
-          "checkpoint_sha256": "d392bf8caeb0ce149a91ce5af1c69806c556cadd69d89bef3c00758d2d3a89fc",
-          "state_dim": 24,
-          "attention_heads": 4,
-          "generation": 8
-        },
-        "reference_zero": {
-          "move": [
-            0.8917693411222556,
-            -0.7955194826411595,
-            -3.8797543025079086,
-            -0.36386929587026695,
-            -2.5932989688495725
-          ],
-          "bomb": [
-            0.1348083248853454,
-            1.854656975807751,
-            -3.6403719898069338
-          ],
-          "value": -7.2872450605375665
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-je10-v38-r01-g8-b1da0c13915e1093d18b07d1f059f579b68a7f47c8469c3b49e378c2c117dc16.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-je10-v38-r01-g8-19b98f2192a237e994ffd29801de7934dfe6168de3507530b19b3c7dd4d5ca45.json"
-    },
-    {
-      "bytes": 40294827,
-      "candidate": "je09_stage_c_return_set_pfsp8_g8_raw",
-      "cycle": 8,
-      "description": "\u53d7\u63a7\u771f\u5b9e\u6389\u5305\u540e\u7684\u8fd4\u7a0b\u5df2\u6539\u5584\uff1bfixed32\u957f\u8ddd\u79bb\u9996\u62fe\u53cafull\u81ea\u7136\u94fe\u4ecd\u672a\u89e3\u51b3\u3002Stage D\u672a\u7efc\u5408\u664b\u5347\u3002",
-      "display_name": "Bun392 JE09\u8fd0\u5305\u6865\u63a5g8",
-      "file": "bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
-      "id": "bun392-je09-stage-c-g8",
-      "onnx": {
-        "file": "bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
-        "bytes": 30242279,
-        "sha256": "b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d",
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx",
-        "meta": {
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "arch": "transformer",
-          "arm": "bun392_bridge_pfsp8",
-          "attention_heads": 4,
-          "bun_state_encoding": "bun24-trap-timer-v2",
-          "checkpoint_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
-          "committed_sha256": "c37b32d5727140c727918a908fb007d8d523eeb369f2ef27088151f02bed2bbf",
-          "depth": 4,
-          "display_name": "Bun392 JE09\u8fd0\u5305\u6865\u63a5g8",
-          "embed": 392,
-          "generated_at": "2026-10-15T00:00:00Z",
-          "generation": 8,
-          "move_actions": 5,
-          "n_players": 2,
-          "name": "Bun392 JE09\u8fd0\u5305\u6865\u63a5g8",
-          "obs_shape": [
-            24,
-            13,
-            15
-          ],
-          "patch": 3,
-          "plan_sha256": "d1484490e180f1ed8a98e377f93c45c3d3fcaf7613f51868b6fbfc454ceacb0b",
-          "qqt_map_id": 806,
-          "rule": "bun",
-          "source": "runs/je09_bun_20261015/stage_c_return_set_pfsp8_v8/formal/bun392_bridge_pfsp8/gen000008/policy.pt",
-          "state_dim": 24,
-          "strategy": "raw",
-          "value_max": 20,
-          "value_min": -20
-        },
-        "reference_zero": {
-          "move": [
-            0.8898895713831178,
-            -0.7100460054738482,
-            1.6911690348127766,
-            0.4342138291123921,
-            0.5660775501322692
-          ],
-          "bomb": [
-            0.6696535161930481,
-            0.5922261795411865,
-            -2.022189189337481
-          ],
-          "value": 1.4379423910843636
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-je09-stage-c-g8-raw-b606294fc8bc1e137c55db7600e4a1eb0284b03a1721279869978ba3bf82764d.onnx"
-      },
-      "score": 0.17708333333333334,
-      "score_protocol": "Hunter hard/normal/easy safe kills 2/3/29 (64 each), Tactical17/64; controlled return capture15/16 main,13/16 holdout; fixed32 pickup0/16; full2400 pickup/capture0/16; exploratory, no significance claim",
-      "sha256": "b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2",
-      "source_sha256": "53dff88d00391bfb99b04a1d15c4da9fcebba9ad9d70e118903a6eeff93497fe",
-      "strategy": "raw",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-je09-stage-c-g8-v1/bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json",
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-je09-stage-c-g8-raw-b80373c1a34cceb6eaeb549074c4fa154313b7b31272b42698f4430e2c7c50d2.json"
-    },
-    {
-      "id": "bun392-transport1536",
-      "display_name": "Bun392\u6218\u6597\u8fd0\u8f931536",
-      "file": "bun392-transport1536-raw-2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0.json",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-transport1536-v1/bun392-transport1536-raw-2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0.json",
-      "sha256": "2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0",
-      "bytes": 40294842,
-      "candidate": "je05_combat_transport_pfsp8_g1536_raw",
-      "cycle": 1536,
-      "score": 0.1875,
-      "source_sha256": "16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719",
-      "strategy": "raw",
-      "score_protocol": "Hunter safe kills 3/1/32, 36/192; 64/tier exploratory; carry15/16, near steal15/16; not significance evidence",
-      "onnx": {
-        "file": "bun392-transport1536-raw-d5c8eb84936c18610d50f7044a13ec7d2ad480d5024b96ee75f82e1441b7b60a.onnx",
-        "bytes": 30242279,
-        "sha256": "d5c8eb84936c18610d50f7044a13ec7d2ad480d5024b96ee75f82e1441b7b60a",
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-transport1536-v1/bun392-transport1536-raw-d5c8eb84936c18610d50f7044a13ec7d2ad480d5024b96ee75f82e1441b7b60a.onnx",
-        "meta": {
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "arch": "transformer",
-          "arm": "bun392_combat_transport_pfsp8",
-          "attention_heads": 4,
-          "bun_state_encoding": "bun24-trap-timer-v2",
-          "checkpoint_sha256": "16ba817d53ef1f3ed4cf6039ff58f33f1f0de4adc69b3578047c5c3cdfbda719",
-          "committed_sha256": "34cede065d72d2c3674eaec42cf8f3e57292a2fc0bc40fb47a10c2d2c1b67e44",
-          "depth": 4,
-          "display_name": "Bun392\u6218\u6597\u8fd0\u8f931536",
-          "embed": 392,
-          "generated_at": "2026-10-13T00:00:00Z",
-          "generation": 1536,
-          "move_actions": 5,
-          "n_players": 2,
-          "name": "Bun392\u6218\u6597\u8fd0\u8f931536",
-          "obs_shape": [
-            24,
-            13,
-            15
-          ],
-          "patch": 3,
-          "plan_sha256": "abc7a055ec08109e70f34fc091fe2da387ad6bea0759abc212d8799773e6446c",
-          "qqt_map_id": 806,
-          "rule": "bun",
-          "source": "runs/je05_bun_20261013/combat_transport_pfsp8_v1/formal/bun392_combat_transport_pfsp8/gen001536/policy.pt",
-          "state_dim": 24,
-          "strategy": "raw",
-          "value_max": 20,
-          "value_min": -20
-        },
-        "reference_zero": {
-          "move": [
-            1.1989415916561712,
-            1.0549244209003237,
-            1.3396873589866025,
-            2.0958717961159268,
-            -0.15305966680381727
-          ],
-          "bomb": [
-            1.644230372592183,
-            -2.383269040710049,
-            3.2146418852287018
-          ],
-          "value": 2.2516169072456313
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-transport1536-raw-d5c8eb84936c18610d50f7044a13ec7d2ad480d5024b96ee75f82e1441b7b60a.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-transport1536-raw-2ec354adfd72c65f0b5b601b40a13d7f879729350572897c660cbc2866710dc0.json"
-    },
-    {
-      "id": "bun392-selfplay3072",
-      "display_name": "Bun392\u52a8\u6001\u81ea\u5bf9\u5f083072",
-      "file": "bun392-selfplay3072-raw-c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a.json",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-selfplay3072-v1/bun392-selfplay3072-raw-c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a.json",
-      "sha256": "c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a",
-      "bytes": 40294795,
-      "candidate": "bun392_selfplay12_v2_dynamic_raw",
-      "cycle": 3072,
-      "score": 0.140625,
-      "source_sha256": "dc3919a5e7a2f415f951e23f20069d14c3c1df332acf5dfa7b1bb21314ca4f70",
-      "strategy": "raw",
-      "score_protocol": "Hunter safe kills 27/192; exploratory 64/tier; not significance evidence",
-      "onnx": {
-        "file": "bun392-selfplay3072.onnx",
-        "bytes": 30242279,
-        "sha256": "7618ec5f6c23b2e2f0c9f45d086a6ca1429e73808aab3276c8b5cdbf29af5639",
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-selfplay3072-v1/bun392-selfplay3072.onnx",
-        "meta": {
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "arch": "transformer",
-          "arm": "bun392_selfplay_dynamic",
-          "attention_heads": 4,
-          "checkpoint_sha256": "dc3919a5e7a2f415f951e23f20069d14c3c1df332acf5dfa7b1bb21314ca4f70",
-          "committed_sha256": "a6b4149329b42f203e58d05d607866dd357c1d3d657a9c40474e42aedf658c8b",
-          "depth": 4,
-          "display_name": "Bun392\u52a8\u6001\u81ea\u5bf9\u5f083072",
-          "embed": 392,
-          "generated_at": "2026-10-12T00:00:00Z",
-          "generation": 3072,
-          "move_actions": 5,
-          "n_players": 2,
-          "name": "Bun392\u52a8\u6001\u81ea\u5bf9\u5f083072",
-          "obs_shape": [
-            24,
-            13,
-            15
-          ],
-          "patch": 3,
-          "plan_sha256": "4e89f524c9e428da48417403f0326cc049d6f5e4a36ed2f216f6c322c4b4f5f5",
-          "qqt_map_id": 806,
-          "rule": "bun",
-          "source": "runs/je03_bun_stage2_20261012/bun392_selfplay12_v2/formal/bun392_selfplay_dynamic/gen003072/policy.pt",
-          "state_dim": 24,
-          "strategy": "raw",
-          "value_max": 20,
-          "value_min": -20
-        },
-        "reference_zero": {
-          "move": [
-            2.045218308287805,
-            0.16097231869320724,
-            1.0011017587764965,
-            1.3943039641678345,
-            1.0948877813223457
-          ],
-          "bomb": [
-            1.4530754126029206,
-            -1.1697586920211904,
-            -0.393755089509511
-          ],
-          "value": 2.727728447982351
-        },
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-selfplay3072-7618ec5f6c23b2e2f0c9f45d086a6ca1429e73808aab3276c8b5cdbf29af5639.onnx"
-      },
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-selfplay3072-raw-c100cc13aa01315b9263b300448c18a5d9a534af07438ae6b86e07ca7a02e94a.json"
-    },
-    {
-      "id": "bun-tf-it4000",
-      "display_name": "Bun Transformer \u00b7 \u81ea\u5bf9\u5f08 it4000\uff08vs Tactical v2 \u51fb\u6740 0.418\uff09",
-      "file": "bun-tf-it4000-830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084.json",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/bun-tf-it4000-830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084.json",
-      "sha256": "830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084",
-      "bytes": 9907406,
-      "candidate": "overnight_tf_v2_phase2",
-      "cycle": 4000,
-      "score": 0.418,
-      "source_sha256": "6e190b009f180f2e449fd19941c930c0d1a86d680071eeb02262aadb6808ebd0",
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun-tf-it4000-830cdf89747123a9ba1e112ccc43cce55adce0f57d203dab574c84b76905f084.json"
-    },
-    {
-      "id": "bun-kill-mlp4",
-      "display_name": "Bun \u51fb\u6740 \u00b7 MLP4\uff08vs jax-bot \u81ea\u5bf9\u5f08\u9a8c\u6536\uff09",
-      "file": "bun-kill-mlp4-1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70.json",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/bun-kill-mlp4-1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70.json",
-      "sha256": "1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70",
-      "bytes": 32372445,
-      "candidate": "bun_kill_mlp4",
-      "cycle": 0,
-      "score": 0.609375,
-      "source_sha256": "77248246133cbfb38ccd28420d0b762c01ce7960cc29aca4af54e5b93411f207",
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun-kill-mlp4-1de4cd682680966e46fe0d11eb2075a5d1f5ca3e5512499031af8572d40a5c70.json"
-    },
-    {
-      "id": "safe-high-c16",
-      "display_name": "Safe High \u00b7 \u5468\u671f16\uff08\u7efc\u5408\u6700\u4f73\uff09",
-      "file": "safe-high-c16.json",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/safe-high-c16.json",
-      "sha256": "cabd0dad115cd888dec4f715d999f862296ef4ce3dc1e6bfad7c0aea70d37aa1",
-      "bytes": 40294224,
-      "candidate": "safe_high",
-      "cycle": 16,
-      "score": 0.0390625,
-      "source_sha256": "fb2ffef79ffc0a7cf26360b325fab3513d7d1f63db9723f963635a488e080514",
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/safe-high-c16-cabd0dad115cd888dec4f715d999f862296ef4ce3dc1e6bfad7c0aea70d37aa1.json"
-    },
-    {
-      "id": "safe-medium-c16",
-      "display_name": "Safe Medium \u00b7 \u5468\u671f16\uff08\u5b89\u5168\u5747\u8861\uff09",
-      "file": "safe-medium-c16.json",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/safe-medium-c16.json",
-      "sha256": "9908caa24d39fab7d34ab0047754c22a78ae2be267142290fbaad41a09bfe3f8",
-      "bytes": 40294230,
-      "candidate": "safe_medium",
-      "cycle": 16,
-      "score": -0.0296875,
-      "source_sha256": "971ed291924222f01e3980eb3ebb1ca4d3403bdc520661249e5cb2d4544fd83c",
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/safe-medium-c16-9908caa24d39fab7d34ab0047754c22a78ae2be267142290fbaad41a09bfe3f8.json"
-    },
-    {
-      "id": "safe-high-c24",
-      "display_name": "Safe High \u00b7 \u5468\u671f24\uff08\u4f4e\u81ea\u7206\uff09",
-      "file": "safe-high-c24.json",
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-models-v1/safe-high-c24.json",
-      "sha256": "9ba571c45791aa01dc03ddc8b1a5ae7916be1f5f24e30dec86bdc0c4f8700b5b",
-      "bytes": 40294224,
-      "candidate": "safe_high",
-      "cycle": 24,
-      "score": -0.030026830808080773,
-      "source_sha256": "ae0c0ca6310ac9125dc3d77dfd1b8512f822cddba95e8821bd3b685e7581a072",
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/safe-high-c24-9ba571c45791aa01dc03ddc8b1a5ae7916be1f5f24e30dec86bdc0c4f8700b5b.json"
-    },
-    {
-      "id": "items-l2-duel-u019902-tau03",
-      "display_name": "DUEL u019902 \u00b7 \u03c40.3",
-      "cycle": 19902,
-      "candidate": "L2_DUEL_u019902 tau0.3",
-      "strategy": "raw",
-      "source_sha256": "ecdc66d7741d5fdf3e6d27586fed7c17932006f96ab510ecf9309d209c0df3c8",
-      "full_source_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
-      "rule_version": "bun-native-v3-items",
-      "inference": {
-        "greedy": false,
-        "temperature": 0.3,
-        "seed": 5329236
-      },
-      "file": "items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
-      "sha256": "b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109",
-      "bytes": 40342900,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
-      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
-      "onnx": {
-        "file": "items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
-        "sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
-        "bytes": 30276775,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
-        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
-        "meta": {
-          "name": "L2_DUEL_u019902",
-          "display_name": "L2_DUEL_u019902",
-          "rule": "bun",
-          "qqt_map_id": 806,
-          "arch": "transformer",
-          "move_actions": 5,
-          "ability_actions": 3,
-          "ability_encoding": [
-            "none",
-            "bomb",
-            "use_item"
-          ],
-          "value_min": -20.0,
-          "value_max": 20.0,
-          "obs_shape": [
-            25,
-            13,
-            15
-          ],
-          "state_dim": 37,
-          "n_players": 2,
-          "embed": 392,
-          "patch": 3,
-          "depth": 4,
-          "r3_input_encoding": "r3-items-route-chain-visible-v1",
-          "checkpoint_sha256": "ecdc66d7741d5fdf3e6d27586fed7c17932006f96ab510ecf9309d209c0df3c8",
-          "onnx_path": "runs/items_candidates_20261107/v1/export_cache/exports/L2_DUEL_u019902/model.onnx",
-          "onnx_sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
-          "r4_mode": 0,
-          "r4_full_checkpoint_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
-          "r4_full_input_abi": "obs25-global38",
-          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI"
-        },
-        "reference_zero": {
-          "move": [
-            1.923891913549119,
-            1.4770353326628973,
-            1.879425341975236,
-            1.9410505275376064,
-            1.7632531031832432
-          ],
-          "bomb": [
-            1.651286800642592,
-            2.178953833383605,
-            -3.0803303485440443
-          ],
-          "value": 1.8191789058214993
-        }
-      },
-      "description": "\u53ef\u9009\u4e13\u9879\u6a21\u578b\uff1b\u539f\u6210\u7ee9\u57fa\u4e8e bun-native-v3-items\u3002\u5f53\u524d\u6e38\u620f\u4e3a bun-native-v4-facing\uff0c\u65b0\u589e\u5feb\u7b5b\u53e6\u5217\uff1b\u4e0d\u4ee3\u8868\u5168\u9762\u80dc\u7387\u4f18\u52bf\u3002",
-      "specialist": {
-        "label": "\u8fd1\u8eab\u51fb\u6740",
-        "strengths": [
-          "v3 \u4e13\u9879\u77ed\u5c40\uff1adev/holdout \u56e0\u679c\u51fb\u6740 8/7\uff08\u540416\u5c40\uff09\uff0c\u540c\u6279 G \u4e3a1/0",
-          "v3 \u7f51\u9875\u4e94\u5bf9\u624b\uff1a40\u80dc/0\u8d1f\uff0c\u4ea4\u4ed840\u6b21"
-        ],
-        "weaknesses": [
-          "v3 \u7f51\u987540\u5c40\u81ea\u6b7b9\u6b21\uff0c\u9ad8\u4e8e\u540c\u6279G\u76844\u6b21",
-          "v3 \u5b8c\u6574\u5c40\u53ef\u884c\u52a8\u9759\u6b6223.94%\uff0c\u9ad8\u4e8eG\u768418.83%\uff1b\u975e\u5168\u9762\u66f4\u6d41\u7545",
-          "\u4ec5P1\u6709\u9650\u6837\u672c\uff1bv3\u6210\u7ee9\u4e0d\u80fd\u5f53v4\u6210\u7ee9"
-        ],
-        "evidence": {
-          "ruleset": "bun-native-v3-items",
-          "games": 80,
-          "summary": "v3\uff1a\u4eba\u5de5\u77ed\u5c40dev/holdout\u540416\u3001\u5b8c\u6574\u5c40holdout8\u3001\u7f51\u9875\u4e94\u5bf9\u624b40\u3002\u5f53\u524dv4\u4ec5\u9488\u5bf9\u6027\u5feb\u7b5b\uff0c\u89c1\u72ec\u7acb\u680f\u76ee\uff1b\u4e0d\u5ba3\u79f0\u5168\u9762\u4f18\u52bf\u3002",
-          "url": "specialists/items-20261107.json#duel-u019902"
-        },
-        "compatibility": {
-          "ruleset": "bun-native-v4-facing",
-          "games": 8,
-          "summary": "\u8fd1\u8eab3\u80dc/0\u8d1f/1\u5e73\uff1b\u4e24\u7c7b\u56f0\u96be\u730e\u624b\u5408\u8ba14\u80dc/0\u8d1f\uff0c\u4f46\u81ea\u6b7b4\u6b21\u3002\u4e0e\u539fv3\u540cseed\u5b50\u96c6\u5173\u952e\u6307\u6807\u4e00\u81f4\uff1b\u4ec5\u517c\u5bb9\u6027\u5feb\u7b5b\uff0c\u4e0d\u662f\u5168\u9762\u4f18\u52bf\u8bc1\u660e\u3002"
-        }
-      }
-    },
-    {
       "id": "items-l2-sp-u023302-tau03",
-      "display_name": "SP u023302 \u00b7 \u03c40.3",
+      "display_name": "SP · 少自死/猎手强/偶停（默认）",
       "cycle": 23302,
       "candidate": "L2_SP_u023302 tau0.3",
       "strategy": "raw",
@@ -1390,30 +76,305 @@
           "value": 1.5364447518903772
         }
       },
-      "description": "\u53ef\u9009\u4e13\u9879\u6a21\u578b\uff1b\u539f\u6210\u7ee9\u57fa\u4e8e bun-native-v3-items\u3002\u5f53\u524d\u6e38\u620f\u4e3a bun-native-v4-facing\uff0c\u65b0\u589e\u5feb\u7b5b\u53e6\u5217\uff1b\u4e0d\u4ee3\u8868\u5168\u9762\u80dc\u7387\u4f18\u52bf\u3002",
+      "description": "可选专项模型；原成绩基于 bun-native-v3-items。当前游戏为 bun-native-v4-facing，新增快筛另列；不代表全面胜率优势。",
       "specialist": {
-        "label": "\u730e\u624b\u5bf9\u6297\u4e0e\u55b7\u6cc9",
+        "label": "猎手对抗与喷泉",
         "strengths": [
-          "v3 \u7f51\u9875\u4e94\u5bf9\u624b\uff1a39\u80dc/0\u8d1f/1\u5e73\uff0c\u81ea\u6b7b1\u6b21\uff1b\u540c\u6279 G \u4e3a37\u80dc/3\u8d1f\u3001\u81ea\u6b7b4\u6b21",
-          "v3 \u56f0\u96be\u730e\u624b8\u5c40\u56e0\u679c\u51fb\u67407\u6b21\u3001\u4ea4\u4ed810\u6b21\uff1b\u6709\u8fde\u7eed\u55b7\u6cc9\u4fe1\u53f7"
+          "v3 网页五对手：39胜/0负/1平，自死1次；同批 G 为37胜/3负、自死4次",
+          "v3 困难猎手8局因果击杀7次、交付10次；有连续喷泉信号"
         ],
         "weaknesses": [
-          "v3 \u5b8c\u6574\u5c40\u53ef\u884c\u52a8\u9759\u6b6234.08%\uff0c\u9ad8\u4e8eG\u768418.83%",
-          "\u8fd1\u8eab\u51fb\u6740\u672a\u5efa\u7acb\u663e\u8457\u4f18\u52bf\uff1b\u55b7\u6cc9\u4e32\u5f31\u4e8e\u540c\u70b9argmax\uff0c\u4e0d\u66ff\u4ee3\u9ed8\u8ba4",
-          "\u4ec5P1\u6709\u9650\u6837\u672c\uff1bv3\u6210\u7ee9\u4e0d\u80fd\u5f53v4\u6210\u7ee9"
+          "v3 完整局可行动静止34.08%，高于G的18.83%",
+          "近身击杀未建立显著优势；喷泉串弱于同点argmax，不替代默认",
+          "仅P1有限样本；v3成绩不能当v4成绩"
         ],
         "evidence": {
           "ruleset": "bun-native-v3-items",
           "games": 80,
-          "summary": "v3\uff1a\u4eba\u5de5\u77ed\u5c40dev/holdout\u540416\u3001\u5b8c\u6574\u5c40holdout8\u3001\u7f51\u9875\u4e94\u5bf9\u624b40\u3002\u5f53\u524dv4\u4ec5\u9488\u5bf9\u6027\u5feb\u7b5b\uff0c\u89c1\u72ec\u7acb\u680f\u76ee\uff1b\u4e0d\u5ba3\u79f0\u5168\u9762\u4f18\u52bf\u3002",
+          "summary": "v3：人工短局dev/holdout各16、完整局holdout8、网页五对手40。当前v4仅针对性快筛，见独立栏目；不宣称全面优势。",
           "url": "specialists/items-20261107.json#sp-u023302"
         },
         "compatibility": {
           "ruleset": "bun-native-v4-facing",
           "games": 8,
-          "summary": "\u8fd1\u8eab2\u80dc/1\u8d1f/1\u5e73\uff1b\u4e24\u7c7b\u56f0\u96be\u730e\u624b\u5408\u8ba14\u80dc/0\u8d1f\u3001\u81ea\u6b7b0\u6b21\u3002\u4e0e\u539fv3\u540cseed\u5b50\u96c6\u5173\u952e\u6307\u6807\u4e00\u81f4\uff1b\u4ec5\u517c\u5bb9\u6027\u5feb\u7b5b\uff0c\u4e0d\u662f\u5168\u9762\u4f18\u52bf\u8bc1\u660e\u3002"
+          "summary": "近身2胜/1负/1平；两类困难猎手合计4胜/0负、自死0次。与原v3同seed子集关键指标一致；仅兼容性快筛，不是全面优势证明。"
         }
-      }
+      },
+      "menu_label": "SP · 少自死/猎手强/偶停（默认）"
+    },
+    {
+      "id": "bun392-g-frozen",
+      "display_name": "G_frozen · 均衡",
+      "file": "bun392-g-frozen-b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce.json",
+      "sha256": "b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce",
+      "bytes": 40340827,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-model-temperature-20261106/bun392-g-frozen-b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce.json",
+      "cycle": 18262,
+      "candidate": "G_frozen",
+      "strategy": "raw",
+      "source_sha256": "f2e6c9b8c0fa9a8ac46ba483fca714c4b31e06d9185ef833cd02fb97c03a7d9b",
+      "rule_version": "bun-native-v2",
+      "score": 0.9890625,
+      "description": "原生策略、模型P1；移动和能力两头合法mask内温度采样。固定训练模式0，无在线老师。独立holdout及网页P1五对手筛查见发布报告；小样本不保证真人胜率。旧模型保留可选回滚。",
+      "score_protocol": "current web native-v2; P1; five paired opponents x 64 seeds; independent frozen-opponent holdout separately reported",
+      "onnx": {
+        "file": "bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
+        "sha256": "0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480",
+        "bytes": 30276775,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-model-temperature-20261106/bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
+        "meta": {
+          "name": "g-frozen",
+          "display_name": "g-frozen",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "arch": "transformer",
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20,
+          "value_max": 20,
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "checkpoint_sha256": "f2e6c9b8c0fa9a8ac46ba483fca714c4b31e06d9185ef833cd02fb97c03a7d9b",
+          "onnx_sha256": "0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "48e5697a9b99fad340d03a96453941253242cb27c7253d0842e45d441313e7a0",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI",
+          "onnx_file": "bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
+          "rule_version": "bun-native-v2"
+        },
+        "reference_zero": {
+          "move": [
+            1.7847744226455688,
+            2.3832197189331055,
+            2.457134962081909,
+            2.0040807723999023,
+            2.319208860397339
+          ],
+          "bomb": [
+            3.2921104431152344,
+            -1.1357014179229736,
+            0.8385803699493408
+          ],
+          "value": 1.4990057945251465
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx"
+      },
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-g-frozen-b0601e29ca06556d8fb561a1baa43dd6b723a8d6996fa72c879a3d1e31af24ce.json",
+      "menu_label": "G_frozen · 均衡"
+    },
+    {
+      "id": "items-l2-duel-u019902-tau03",
+      "display_name": "DUEL · 近身击杀强 / 自死偏多",
+      "cycle": 19902,
+      "candidate": "L2_DUEL_u019902 tau0.3",
+      "strategy": "raw",
+      "source_sha256": "ecdc66d7741d5fdf3e6d27586fed7c17932006f96ab510ecf9309d209c0df3c8",
+      "full_source_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
+      "rule_version": "bun-native-v3-items",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
+      "sha256": "b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109",
+      "bytes": 40342900,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
+      "onnx": {
+        "file": "items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+        "sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
+        "bytes": 30276775,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+        "meta": {
+          "name": "L2_DUEL_u019902",
+          "display_name": "L2_DUEL_u019902",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "arch": "transformer",
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20.0,
+          "value_max": 20.0,
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "checkpoint_sha256": "ecdc66d7741d5fdf3e6d27586fed7c17932006f96ab510ecf9309d209c0df3c8",
+          "onnx_path": "runs/items_candidates_20261107/v1/export_cache/exports/L2_DUEL_u019902/model.onnx",
+          "onnx_sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI"
+        },
+        "reference_zero": {
+          "move": [
+            1.923891913549119,
+            1.4770353326628973,
+            1.879425341975236,
+            1.9410505275376064,
+            1.7632531031832432
+          ],
+          "bomb": [
+            1.651286800642592,
+            2.178953833383605,
+            -3.0803303485440443
+          ],
+          "value": 1.8191789058214993
+        }
+      },
+      "description": "可选专项模型；原成绩基于 bun-native-v3-items。当前游戏为 bun-native-v4-facing，新增快筛另列；不代表全面胜率优势。",
+      "specialist": {
+        "label": "近身击杀",
+        "strengths": [
+          "v3 专项短局：dev/holdout 因果击杀 8/7（各16局），同批 G 为1/0",
+          "v3 网页五对手：40胜/0负，交付40次"
+        ],
+        "weaknesses": [
+          "v3 网页40局自死9次，高于同批G的4次",
+          "v3 完整局可行动静止23.94%，高于G的18.83%；非全面更流畅",
+          "仅P1有限样本；v3成绩不能当v4成绩"
+        ],
+        "evidence": {
+          "ruleset": "bun-native-v3-items",
+          "games": 80,
+          "summary": "v3：人工短局dev/holdout各16、完整局holdout8、网页五对手40。当前v4仅针对性快筛，见独立栏目；不宣称全面优势。",
+          "url": "specialists/items-20261107.json#duel-u019902"
+        },
+        "compatibility": {
+          "ruleset": "bun-native-v4-facing",
+          "games": 8,
+          "summary": "近身3胜/0负/1平；两类困难猎手合计4胜/0负，但自死4次。与原v3同seed子集关键指标一致；仅兼容性快筛，不是全面优势证明。"
+        }
+      },
+      "menu_label": "DUEL · 近身击杀强 / 自死偏多"
+    },
+    {
+      "id": "bun392-v2-risk-u9969",
+      "display_name": "风险线 u9969 · 旧规则录像认可点",
+      "file": "bun392-v2-risk-u9969-a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278.json",
+      "sha256": "a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278",
+      "bytes": 40381088,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-five-slots-20261104/bun392-v2-risk-u9969-a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278.json",
+      "cycle": 9969,
+      "candidate": "RISK_CARRY_LIGHT_SAFETY2_50_s2026371202_c001/u009969",
+      "strategy": "raw",
+      "source_sha256": "7aae3216fdecc5d85c31c9aa3158b50a97b00a3654dc0f5722df5f7f6d3f9afa",
+      "rule_version": "bun-native-v2",
+      "description": "五槽风险线 u9969；真人P0/模型P1，bun-native-v2、argmax、老师关闭。显式7技能动作/52维库存，槽1至5独立掩码和原生放置。用户认可录像点；配对三档各8seed双席探索中P1 22/1/1、交付22、因果击杀17、持包死1；旧K1为23/1/0、交付24、击杀15、持包死1；并非全面胜率提升。独立hard holdout单列。重拦截v6 DEV交付27/36、持包死8，父u8922为27/34、死4，风险目标未通过。旧默认K1保留可选回滚。可能零泡、振荡、持包停滞；原生ownBombDefeat不覆盖全部间接自伤。fp32部署parity不等于训练bf16逐位一致；固定8局Review不估计胜率，Reward/A1未记录。 独立hard16环境seed×双席：P1 14/1/1、交付13、因果杀12、持包死2；P0 12/3/1，非本次目录默认。",
+      "score_protocol": "production JS Hunter; bun-native-v2; argmax; teacher off; own-side natural map806; hard/normal/easy 8 seeds each x P0/P1; seeds2026540000/2026541000/2026542000; independent hard holdout seed2026550000,16 seeds x P0/P1",
+      "onnx": {
+        "file": "bun392-v2-risk-u9969-0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f.onnx",
+        "sha256": "0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f",
+        "bytes": 30306583,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-bun392-v2-five-slots-20261104/bun392-v2-risk-u9969-0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f.onnx",
+        "meta": {
+          "schema_version": "five-item-slots-v1",
+          "action_schema": "move-v1+five-item-slots-v1",
+          "ability_actions": 7,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_slot1",
+            "use_slot2",
+            "use_slot3",
+            "use_slot4",
+            "use_slot5"
+          ],
+          "observation_schema": "r3-visible37+slot15-v1",
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 52,
+          "global_dim": 52,
+          "max_engine_slots": 7,
+          "max_selectable_slots": 5,
+          "parent_checkpoint_sha256": "7aae3216fdecc5d85c31c9aa3158b50a97b00a3654dc0f5722df5f7f6d3f9afa",
+          "migration": {
+            "old_use_to": "use_slot1",
+            "new_slot_rows": 4,
+            "new_slot_rows_initialized": "independent_small_normal"
+          },
+          "name": "bun392-v2-risk-u9969",
+          "display_name": "Bun392 五槽风险线 u9969",
+          "arch": "transformer",
+          "rule": "bun-native-v2",
+          "rule_version": "bun-native-v2",
+          "move_actions": 5,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "value_min": -20,
+          "value_max": 20,
+          "checkpoint_sha256": "7aae3216fdecc5d85c31c9aa3158b50a97b00a3654dc0f5722df5f7f6d3f9afa",
+          "onnx_sha256": "0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f",
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "source_global_dim": 53,
+          "evaluation_global_dim": 52,
+          "fixed_mode": 0,
+          "projection": "drop only last mode row; all visible52 rows and seven abilities retained",
+          "source": "runs/risk_carry_light_safety_v2_20261104/formal/RISK_CARRY_LIGHT_SAFETY2_50_s2026371202_c001/u009969/policy.pt",
+          "strategy": "raw",
+          "update": 9969,
+          "attention_heads": 4,
+          "qqt_map_id": 806
+        },
+        "reference_zero": {
+          "move": [
+            2.0597882491565236,
+            1.3629172434328582,
+            1.977315371968008,
+            2.6550885110556632,
+            1.0279341641151567
+          ],
+          "bomb": [
+            2.0835823243565232,
+            1.0262903989162924,
+            -1.009604561459369,
+            -1.570820993842627,
+            0.1558420205118117,
+            -0.013177707624781262,
+            0.18387881636828654
+          ],
+          "value": 1.6937944065735642
+        },
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9969-0d92d0a93303bf33310d7be298d2267e81223908ef3418ab5eb482f28935d49f.onnx"
+      },
+      "score": 0.9166666666666666,
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9969-a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278.json",
+      "menu_label": "风险线 u9969 · 旧规则录像认可点"
     }
   ]
 }

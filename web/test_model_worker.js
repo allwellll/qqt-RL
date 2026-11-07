@@ -23,7 +23,7 @@ const crypto=require('node:crypto');
   await verifyBuffer(bytes,{bytes:3,sha256:sha},crypto.webcrypto);
   await assert.rejects(verifyBuffer(bytes,{bytes:4,sha256:sha},crypto.webcrypto),/大小/);
   await assert.rejects(verifyBuffer(bytes,{bytes:3,sha256:'0'.repeat(64)},crypto.webcrypto),/SHA-256/);
-  const catalog=require('./model_catalog.js'),manifest=require('./models.json');
+  const catalog=require('./model_catalog.js'),manifest=require('./retired-models-20261107.json');
   const row=manifest.models.find(r=>r.id==='bun392-selfplay3072');assert(row.onnx);
   assert.throws(()=>catalog.validateManifest({...manifest,models:[{...row,onnx:{...row.onnx,file:'../x.onnx'}}]}),/ONNX/);
   assert.throws(()=>catalog.validateManifest({...manifest,models:[{...row,onnx:{...row.onnx,meta:{...row.onnx.meta,checkpoint_sha256:'0'.repeat(64)}}}]}),/metadata/);
