@@ -1,0 +1,478 @@
+{
+  "status": "PASS",
+  "ready_sha256": "1545a14d4f4349b7c9affa2bdd8ed7f5a93de39db6d18bc988a3caaedeecfcbc",
+  "candidates": [
+    {
+      "id": "items-l2_duel_u019902-tau03",
+      "policy_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
+      "checkpoint_committed_sha256": "46920af787d3d61e90ed378f2e481d5454b28023110f35acb89e8c385bf2a5c8",
+      "json_sha256": "b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109",
+      "onnx_sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
+      "retained_tensor_identity": true,
+      "independent_export": {
+        "status": "PASS",
+        "ruleset": "bun-native-v3-items",
+        "checkpoint_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
+        "source_global_dim": 38,
+        "state_dim": 37,
+        "ability_actions": 3,
+        "fixed_mode": 0,
+        "projection_max_abs": 0.0,
+        "files": {
+          "model.json": {
+            "sha256": "7a1eab95acaf38e8f21036825dbb868641821b6c60c037eca4fcfee729e2442b",
+            "bytes": 40340646
+          },
+          "model.onnx": {
+            "sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
+            "bytes": 30276775
+          }
+        }
+      },
+      "parity": [
+        {
+          "status": "PASS",
+          "ruleset": "bun-native-v3-items",
+          "samples": 13,
+          "max_abs": 2.2301072946540046e-05,
+          "masked_greedy_exact": true,
+          "reference_zero": {
+            "move": [
+              1.923891913549119,
+              1.4770353326628973,
+              1.879425341975236,
+              1.9410505275376064,
+              1.7632531031832432
+            ],
+            "bomb": [
+              1.651286800642592,
+              2.178953833383605,
+              -3.0803303485440443
+            ],
+            "value": 1.8191789058214993
+          },
+          "errors": [
+            {
+              "map": "zero",
+              "seat": null,
+              "tick": 0,
+              "max_abs": 1.884035987664845e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 0,
+              "max_abs": 2.762396354327734e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 0,
+              "max_abs": 7.741134650629533e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 12,
+              "max_abs": 6.8841571945199576e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 12,
+              "max_abs": 2.2301072946540046e-05
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 36,
+              "max_abs": 1.0604472108877161e-05
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 36,
+              "max_abs": 1.8411295215514656e-05
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 0,
+              "max_abs": 3.670373119657455e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 0,
+              "max_abs": 1.7851362987819641e-06
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 12,
+              "max_abs": 5.277161532646346e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 12,
+              "max_abs": 6.112593878171424e-06
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 36,
+              "max_abs": 1.5017045782883542e-05
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 36,
+              "max_abs": 9.715304704727146e-06
+            }
+          ],
+          "scope": "fp32 CPU JS/ONNX integration; not a win-rate or training-bf16 claim"
+        },
+        {
+          "status": "PASS",
+          "ruleset": "bun-native-v4-facing",
+          "samples": 13,
+          "max_abs": 2.2301072946540046e-05,
+          "masked_greedy_exact": true,
+          "reference_zero": {
+            "move": [
+              1.923891913549119,
+              1.4770353326628973,
+              1.879425341975236,
+              1.9410505275376064,
+              1.7632531031832432
+            ],
+            "bomb": [
+              1.651286800642592,
+              2.178953833383605,
+              -3.0803303485440443
+            ],
+            "value": 1.8191789058214993
+          },
+          "errors": [
+            {
+              "map": "zero",
+              "seat": null,
+              "tick": 0,
+              "max_abs": 1.884035987664845e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 0,
+              "max_abs": 2.762396354327734e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 0,
+              "max_abs": 7.741134650629533e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 12,
+              "max_abs": 6.8841571945199576e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 12,
+              "max_abs": 2.2301072946540046e-05
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 36,
+              "max_abs": 1.0604472108877161e-05
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 36,
+              "max_abs": 1.8411295215514656e-05
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 0,
+              "max_abs": 3.670373119657455e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 0,
+              "max_abs": 1.7851362987819641e-06
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 12,
+              "max_abs": 5.277161532646346e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 12,
+              "max_abs": 6.112593878171424e-06
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 36,
+              "max_abs": 1.5017045782883542e-05
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 36,
+              "max_abs": 9.715304704727146e-06
+            }
+          ],
+          "scope": "fp32 CPU JS/ONNX integration; not a win-rate or training-bf16 claim"
+        }
+      ]
+    },
+    {
+      "id": "items-l2_sp_u023302-tau03",
+      "policy_sha256": "39b0dea7327221891bdd4cfba93ab917c897aa86fd78d83401241ad945a982cf",
+      "checkpoint_committed_sha256": "7d64478cdee04250bf6786e8a0cadfaf04365d21e6abc3b2efc48711855c26b8",
+      "json_sha256": "6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543",
+      "onnx_sha256": "c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037",
+      "retained_tensor_identity": true,
+      "independent_export": {
+        "status": "PASS",
+        "ruleset": "bun-native-v3-items",
+        "checkpoint_sha256": "39b0dea7327221891bdd4cfba93ab917c897aa86fd78d83401241ad945a982cf",
+        "source_global_dim": 38,
+        "state_dim": 37,
+        "ability_actions": 3,
+        "fixed_mode": 0,
+        "projection_max_abs": 0.0,
+        "files": {
+          "model.json": {
+            "sha256": "90a3f7c42cad4f51ba87bfdfc03a5d9a8f12bec561bf689a020e99b0cfd5fd73",
+            "bytes": 40340642
+          },
+          "model.onnx": {
+            "sha256": "c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037",
+            "bytes": 30276775
+          }
+        }
+      },
+      "parity": [
+        {
+          "status": "PASS",
+          "ruleset": "bun-native-v3-items",
+          "samples": 13,
+          "max_abs": 2.5921174572118844e-05,
+          "masked_greedy_exact": true,
+          "reference_zero": {
+            "move": [
+              1.6086088945916583,
+              2.0594687747238427,
+              2.566567178215556,
+              2.517921007492953,
+              1.772958385474195
+            ],
+            "bomb": [
+              0.2706147127357481,
+              1.3915167082057367,
+              1.1231767262228747
+            ],
+            "value": 1.5364447518903772
+          },
+          "errors": [
+            {
+              "map": "zero",
+              "seat": null,
+              "tick": 0,
+              "max_abs": 2.3885111284371874e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 0,
+              "max_abs": 1.7003772152246466e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 0,
+              "max_abs": 5.281756304320595e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 12,
+              "max_abs": 3.883373702606718e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 12,
+              "max_abs": 3.3663834886343835e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 36,
+              "max_abs": 9.96342747150436e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 36,
+              "max_abs": 2.5921174572118844e-05
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 0,
+              "max_abs": 2.8085401941879695e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 0,
+              "max_abs": 3.3552329199437736e-06
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 12,
+              "max_abs": 4.3670153904162845e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 12,
+              "max_abs": 4.675989798474944e-06
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 36,
+              "max_abs": 8.544568599333502e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 36,
+              "max_abs": 4.2079249373827565e-06
+            }
+          ],
+          "scope": "fp32 CPU JS/ONNX integration; not a win-rate or training-bf16 claim"
+        },
+        {
+          "status": "PASS",
+          "ruleset": "bun-native-v4-facing",
+          "samples": 13,
+          "max_abs": 2.5921174572118844e-05,
+          "masked_greedy_exact": true,
+          "reference_zero": {
+            "move": [
+              1.6086088945916583,
+              2.0594687747238427,
+              2.566567178215556,
+              2.517921007492953,
+              1.772958385474195
+            ],
+            "bomb": [
+              0.2706147127357481,
+              1.3915167082057367,
+              1.1231767262228747
+            ],
+            "value": 1.5364447518903772
+          },
+          "errors": [
+            {
+              "map": "zero",
+              "seat": null,
+              "tick": 0,
+              "max_abs": 2.3885111284371874e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 0,
+              "max_abs": 1.7003772152246466e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 0,
+              "max_abs": 5.281756304320595e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 12,
+              "max_abs": 3.883373702606718e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 12,
+              "max_abs": 3.3663834886343835e-06
+            },
+            {
+              "map": "normal",
+              "seat": 0,
+              "tick": 36,
+              "max_abs": 9.96342747150436e-06
+            },
+            {
+              "map": "normal",
+              "seat": 1,
+              "tick": 36,
+              "max_abs": 2.5921174572118844e-05
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 0,
+              "max_abs": 2.8085401941879695e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 0,
+              "max_abs": 3.3552329199437736e-06
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 12,
+              "max_abs": 4.3670153904162845e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 12,
+              "max_abs": 4.675989798474944e-06
+            },
+            {
+              "map": "duel",
+              "seat": 0,
+              "tick": 36,
+              "max_abs": 8.544568599333502e-06
+            },
+            {
+              "map": "duel",
+              "seat": 1,
+              "tick": 36,
+              "max_abs": 4.2079249373827565e-06
+            }
+          ],
+          "scope": "fp32 CPU JS/ONNX integration; not a win-rate or training-bf16 claim"
+        }
+      ]
+    }
+  ]
+}

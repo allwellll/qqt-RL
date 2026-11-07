@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "model_id": "items-l2-duel-u019902-tau03",
+  "verify_only": false,
+  "bucket_acl": "private",
+  "cors_origins": [
+    "http://127.0.0.1:*",
+    "http://localhost:*",
+    "https://allwellll.github.io"
+  ],
+  "objects": [
+    {
+      "key": "web-models/items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
+      "bytes": 40342900,
+      "sha256": "b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109",
+      "acl": "public-read"
+    },
+    {
+      "key": "web-models/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+      "bytes": 30276775,
+      "sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
+      "acl": "public-read"
+    }
+  ]
+}

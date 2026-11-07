@@ -17,6 +17,21 @@
       if (!SHA256.test(row.sha256 || '')) throw new Error('invalid model sha256');
       if (!Number.isInteger(row.bytes) || row.bytes <= 0) throw new Error('invalid model bytes');
       if (!Number.isInteger(row.cycle) || row.cycle < 0) throw new Error('invalid model cycle');
+      if (row.specialist) {
+        const card = row.specialist, evidence = card.evidence;
+        const text = value => typeof value === 'string' && value.trim().length > 0;
+        const list = value => Array.isArray(value) && value.length > 0 && value.every(text);
+        if (row.rule_version !== 'bun-native-v3-items' || !text(card.label)
+            || !list(card.strengths) || !list(card.weaknesses) || !evidence
+            || evidence.ruleset !== row.rule_version || !Number.isInteger(evidence.games) || evidence.games <= 0
+            || !text(evidence.summary)
+            || !/^specialists\/[a-z0-9][a-z0-9._-]*\.json(?:#[a-z0-9-]+)?$/.test(evidence.url || '')) {
+          throw new Error('invalid specialist evidence card');
+        }
+        if (card.compatibility && (card.compatibility.ruleset !== 'bun-native-v4-facing'
+            || !Number.isInteger(card.compatibility.games) || card.compatibility.games <= 0
+            || !text(card.compatibility.summary))) throw new Error('invalid specialist compatibility scope');
+      }
       if (row.onnx && (!/^[a-z0-9][a-z0-9._-]*\.onnx$/.test(row.onnx.file || '')
           || !SHA256.test(row.onnx.sha256 || '') || !Number.isInteger(row.onnx.bytes) || row.onnx.bytes <= 0)) {
         throw new Error('invalid ONNX asset');
@@ -53,6 +68,16 @@
   }
 
   function modelUrl(row) { return row.oss_url || `models/${row.file}`; }
+  function optionLabel(row) {
+    return row.specialist ? `${row.display_name} · 专项：${row.specialist.label}` : row.display_name;
+  }
+  function specialistLines(row) {
+    const card = row?.specialist;
+    return card ? [`专项：${card.label}`, `长处：${card.strengths.join('；')}`,
+      `短板：${card.weaknesses.join('；')}`,
+      `证据范围：原评测 ${card.evidence.ruleset} · ${card.evidence.games} 局；${card.evidence.summary}`,
+      ...(card.compatibility ? [`当前规则快筛：${card.compatibility.ruleset} · ${card.compatibility.games} 局；${card.compatibility.summary}`] : [])] : [];
+  }
   function matchLabel(mode) { return mode === 'model-vs-rule' ? '模型 vs 规则Bot' : '真人 vs 对手'; }
-  return { validateManifest, modelUrl, matchLabel };
+  return { validateManifest, modelUrl, optionLabel, specialistLines, matchLabel };
 });

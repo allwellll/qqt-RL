@@ -1214,6 +1214,206 @@
       "score": -0.030026830808080773,
       "source_sha256": "ae0c0ca6310ac9125dc3d77dfd1b8512f822cddba95e8821bd3b685e7581a072",
       "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/safe-high-c24-9ba571c45791aa01dc03ddc8b1a5ae7916be1f5f24e30dec86bdc0c4f8700b5b.json"
+    },
+    {
+      "id": "items-l2-duel-u019902-tau03",
+      "display_name": "DUEL u019902 \u00b7 \u03c40.3",
+      "cycle": 19902,
+      "candidate": "L2_DUEL_u019902 tau0.3",
+      "strategy": "raw",
+      "source_sha256": "ecdc66d7741d5fdf3e6d27586fed7c17932006f96ab510ecf9309d209c0df3c8",
+      "full_source_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
+      "rule_version": "bun-native-v3-items",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
+      "sha256": "b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109",
+      "bytes": 40342900,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
+      "onnx": {
+        "file": "items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+        "sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
+        "bytes": 30276775,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+        "meta": {
+          "name": "L2_DUEL_u019902",
+          "display_name": "L2_DUEL_u019902",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "arch": "transformer",
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20.0,
+          "value_max": 20.0,
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "checkpoint_sha256": "ecdc66d7741d5fdf3e6d27586fed7c17932006f96ab510ecf9309d209c0df3c8",
+          "onnx_path": "runs/items_candidates_20261107/v1/export_cache/exports/L2_DUEL_u019902/model.onnx",
+          "onnx_sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI"
+        },
+        "reference_zero": {
+          "move": [
+            1.923891913549119,
+            1.4770353326628973,
+            1.879425341975236,
+            1.9410505275376064,
+            1.7632531031832432
+          ],
+          "bomb": [
+            1.651286800642592,
+            2.178953833383605,
+            -3.0803303485440443
+          ],
+          "value": 1.8191789058214993
+        }
+      },
+      "description": "\u53ef\u9009\u4e13\u9879\u6a21\u578b\uff1b\u539f\u6210\u7ee9\u57fa\u4e8e bun-native-v3-items\u3002\u5f53\u524d\u6e38\u620f\u4e3a bun-native-v4-facing\uff0c\u65b0\u589e\u5feb\u7b5b\u53e6\u5217\uff1b\u4e0d\u4ee3\u8868\u5168\u9762\u80dc\u7387\u4f18\u52bf\u3002",
+      "specialist": {
+        "label": "\u8fd1\u8eab\u51fb\u6740",
+        "strengths": [
+          "v3 \u4e13\u9879\u77ed\u5c40\uff1adev/holdout \u56e0\u679c\u51fb\u6740 8/7\uff08\u540416\u5c40\uff09\uff0c\u540c\u6279 G \u4e3a1/0",
+          "v3 \u7f51\u9875\u4e94\u5bf9\u624b\uff1a40\u80dc/0\u8d1f\uff0c\u4ea4\u4ed840\u6b21"
+        ],
+        "weaknesses": [
+          "v3 \u7f51\u987540\u5c40\u81ea\u6b7b9\u6b21\uff0c\u9ad8\u4e8e\u540c\u6279G\u76844\u6b21",
+          "v3 \u5b8c\u6574\u5c40\u53ef\u884c\u52a8\u9759\u6b6223.94%\uff0c\u9ad8\u4e8eG\u768418.83%\uff1b\u975e\u5168\u9762\u66f4\u6d41\u7545",
+          "\u4ec5P1\u6709\u9650\u6837\u672c\uff1bv3\u6210\u7ee9\u4e0d\u80fd\u5f53v4\u6210\u7ee9"
+        ],
+        "evidence": {
+          "ruleset": "bun-native-v3-items",
+          "games": 80,
+          "summary": "v3\uff1a\u4eba\u5de5\u77ed\u5c40dev/holdout\u540416\u3001\u5b8c\u6574\u5c40holdout8\u3001\u7f51\u9875\u4e94\u5bf9\u624b40\u3002\u5f53\u524dv4\u4ec5\u9488\u5bf9\u6027\u5feb\u7b5b\uff0c\u89c1\u72ec\u7acb\u680f\u76ee\uff1b\u4e0d\u5ba3\u79f0\u5168\u9762\u4f18\u52bf\u3002",
+          "url": "specialists/items-20261107.json#duel-u019902"
+        },
+        "compatibility": {
+          "ruleset": "bun-native-v4-facing",
+          "games": 8,
+          "summary": "\u8fd1\u8eab3\u80dc/0\u8d1f/1\u5e73\uff1b\u4e24\u7c7b\u56f0\u96be\u730e\u624b\u5408\u8ba14\u80dc/0\u8d1f\uff0c\u4f46\u81ea\u6b7b4\u6b21\u3002\u4e0e\u539fv3\u540cseed\u5b50\u96c6\u5173\u952e\u6307\u6807\u4e00\u81f4\uff1b\u4ec5\u517c\u5bb9\u6027\u5feb\u7b5b\uff0c\u4e0d\u662f\u5168\u9762\u4f18\u52bf\u8bc1\u660e\u3002"
+        }
+      }
+    },
+    {
+      "id": "items-l2-sp-u023302-tau03",
+      "display_name": "SP u023302 \u00b7 \u03c40.3",
+      "cycle": 23302,
+      "candidate": "L2_SP_u023302 tau0.3",
+      "strategy": "raw",
+      "source_sha256": "a87960cf68c94fced49917c460eed2250d8b9caaf156c4d37da34a511f01e2ac",
+      "full_source_sha256": "39b0dea7327221891bdd4cfba93ab917c897aa86fd78d83401241ad945a982cf",
+      "rule_version": "bun-native-v3-items",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "items-sp-u023302-6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543.json",
+      "sha256": "6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543",
+      "bytes": 40342894,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-sp-u023302-6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543.json",
+      "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-sp-u023302-6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543.json",
+      "onnx": {
+        "file": "items-sp-u023302-c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037.onnx",
+        "sha256": "c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037",
+        "bytes": 30276775,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-sp-u023302-c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037.onnx",
+        "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-sp-u023302-c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037.onnx",
+        "meta": {
+          "name": "L2_SP_u023302",
+          "display_name": "L2_SP_u023302",
+          "rule": "bun",
+          "qqt_map_id": 806,
+          "arch": "transformer",
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "value_min": -20.0,
+          "value_max": 20.0,
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "checkpoint_sha256": "a87960cf68c94fced49917c460eed2250d8b9caaf156c4d37da34a511f01e2ac",
+          "onnx_path": "runs/items_candidates_20261107/v1/export_cache/exports/L2_SP_u023302/model.onnx",
+          "onnx_sha256": "c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "39b0dea7327221891bdd4cfba93ab917c897aa86fd78d83401241ad945a982cf",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI"
+        },
+        "reference_zero": {
+          "move": [
+            1.6086088945916583,
+            2.0594687747238427,
+            2.566567178215556,
+            2.517921007492953,
+            1.772958385474195
+          ],
+          "bomb": [
+            0.2706147127357481,
+            1.3915167082057367,
+            1.1231767262228747
+          ],
+          "value": 1.5364447518903772
+        }
+      },
+      "description": "\u53ef\u9009\u4e13\u9879\u6a21\u578b\uff1b\u539f\u6210\u7ee9\u57fa\u4e8e bun-native-v3-items\u3002\u5f53\u524d\u6e38\u620f\u4e3a bun-native-v4-facing\uff0c\u65b0\u589e\u5feb\u7b5b\u53e6\u5217\uff1b\u4e0d\u4ee3\u8868\u5168\u9762\u80dc\u7387\u4f18\u52bf\u3002",
+      "specialist": {
+        "label": "\u730e\u624b\u5bf9\u6297\u4e0e\u55b7\u6cc9",
+        "strengths": [
+          "v3 \u7f51\u9875\u4e94\u5bf9\u624b\uff1a39\u80dc/0\u8d1f/1\u5e73\uff0c\u81ea\u6b7b1\u6b21\uff1b\u540c\u6279 G \u4e3a37\u80dc/3\u8d1f\u3001\u81ea\u6b7b4\u6b21",
+          "v3 \u56f0\u96be\u730e\u624b8\u5c40\u56e0\u679c\u51fb\u67407\u6b21\u3001\u4ea4\u4ed810\u6b21\uff1b\u6709\u8fde\u7eed\u55b7\u6cc9\u4fe1\u53f7"
+        ],
+        "weaknesses": [
+          "v3 \u5b8c\u6574\u5c40\u53ef\u884c\u52a8\u9759\u6b6234.08%\uff0c\u9ad8\u4e8eG\u768418.83%",
+          "\u8fd1\u8eab\u51fb\u6740\u672a\u5efa\u7acb\u663e\u8457\u4f18\u52bf\uff1b\u55b7\u6cc9\u4e32\u5f31\u4e8e\u540c\u70b9argmax\uff0c\u4e0d\u66ff\u4ee3\u9ed8\u8ba4",
+          "\u4ec5P1\u6709\u9650\u6837\u672c\uff1bv3\u6210\u7ee9\u4e0d\u80fd\u5f53v4\u6210\u7ee9"
+        ],
+        "evidence": {
+          "ruleset": "bun-native-v3-items",
+          "games": 80,
+          "summary": "v3\uff1a\u4eba\u5de5\u77ed\u5c40dev/holdout\u540416\u3001\u5b8c\u6574\u5c40holdout8\u3001\u7f51\u9875\u4e94\u5bf9\u624b40\u3002\u5f53\u524dv4\u4ec5\u9488\u5bf9\u6027\u5feb\u7b5b\uff0c\u89c1\u72ec\u7acb\u680f\u76ee\uff1b\u4e0d\u5ba3\u79f0\u5168\u9762\u4f18\u52bf\u3002",
+          "url": "specialists/items-20261107.json#sp-u023302"
+        },
+        "compatibility": {
+          "ruleset": "bun-native-v4-facing",
+          "games": 8,
+          "summary": "\u8fd1\u8eab2\u80dc/1\u8d1f/1\u5e73\uff1b\u4e24\u7c7b\u56f0\u96be\u730e\u624b\u5408\u8ba14\u80dc/0\u8d1f\u3001\u81ea\u6b7b0\u6b21\u3002\u4e0e\u539fv3\u540cseed\u5b50\u96c6\u5173\u952e\u6307\u6807\u4e00\u81f4\uff1b\u4ec5\u517c\u5bb9\u6027\u5feb\u7b5b\uff0c\u4e0d\u662f\u5168\u9762\u4f18\u52bf\u8bc1\u660e\u3002"
+        }
+      }
     }
   ]
 }

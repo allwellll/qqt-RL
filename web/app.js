@@ -22,6 +22,8 @@
   updateCharacterPortrait();
   const modelOptions = document.getElementById('model-options');
   const modelDetails = document.getElementById('model-details');
+  const modelSpecialty = document.getElementById('model-specialty');
+  const modelSpecialtyEvidence = document.getElementById('model-specialty-evidence');
   const modelProgressWrap = document.getElementById('model-progress-wrap');
   const modelProgress = document.getElementById('model-progress');
   const modelProgressText = document.getElementById('model-progress-text');
@@ -367,7 +369,8 @@
     opponentSelect.disabled = false;
     modelStatus.textContent = `已加载：${row.display_name}`;
     const decision = model.greedy ? 'argmax' : `τ ${model.temperature}`;
-    modelDetails.textContent = `${row.candidate} · cycle ${row.cycle} · score ${row.score.toFixed(4)} · ${decision} · ${(row.bytes / 1048576).toFixed(1)} MiB`;
+    const score = !row.specialist && Number.isFinite(row.score) ? ` · score ${row.score.toFixed(4)}` : '';
+    modelDetails.textContent = `${row.candidate} · cycle ${row.cycle}${score} · ${decision} · ${(row.bytes / 1048576).toFixed(1)} MiB`;
   }
 
   async function loadCatalog() {
@@ -383,7 +386,7 @@
       publishedModels = publishedModels.map(row => defaults.policies[row.id]
         ? {...row,inference:QQTModelSampling.profile({inference:defaults.policies[row.id]})} : row);
       publishedModels.sort((a,b) => Number(b.id===defaults.default_model_id)-Number(a.id===defaults.default_model_id));
-      modelOptions.replaceChildren(...publishedModels.map((row) => new Option(row.display_name, MODEL_PREFIX + row.id)));
+      modelOptions.replaceChildren(...publishedModels.map((row) => new Option(QQTModelCatalog.optionLabel(row), MODEL_PREFIX + row.id)));
       modelDetails.textContent = `可选模型 ${publishedModels.length} 个`;
     } catch (error) {
       modelOptions.replaceChildren();
@@ -606,6 +609,12 @@
     const value = opponentSelect.value;
     if (!teamCapable(value)) teamMode.value = '1v1';
     const row = isModelChoice(value) ? publishedModels.find((item) => MODEL_PREFIX + item.id === value) : null;
+    const specialty = QQTModelCatalog.specialistLines(row);
+    modelSpecialty.textContent = specialty.join('\n');
+    modelSpecialty.hidden = specialty.length === 0;
+    modelSpecialtyEvidence.hidden = !row?.specialist;
+    if (row?.specialist) modelSpecialtyEvidence.href = row.specialist.evidence.url;
+    else modelSpecialtyEvidence.removeAttribute('href');
     if (row && loadedModelId !== row.id) {
       try { await loadPublishedModel(row); }
       catch (error) {

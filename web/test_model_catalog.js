@@ -10,6 +10,23 @@ const manifest = {
   ],
 };
 const rows = catalog.validateManifest(manifest);
+const specialist = {...manifest.models[0], rule_version: 'bun-native-v3-items', specialist: {
+  label: '对接测试样例', strengths: ['测试长处'], weaknesses: ['测试短板'],
+  evidence: {ruleset: 'bun-native-v3-items', games: 16, summary: '测试范围，不是候选成绩', url: 'specialists/integration.json#sample'},
+}};
+assert.equal(catalog.optionLabel(rows[0]), rows[0].display_name);
+assert.deepEqual(catalog.specialistLines(rows[0]), []);
+assert.deepEqual(catalog.specialistLines(null), []);
+assert.equal(catalog.validateManifest({...manifest, models: [specialist]}).length, 1);
+assert(catalog.optionLabel(specialist).includes('专项：对接测试样例'));
+assert(catalog.specialistLines(specialist).join('\n').includes('短板：测试短板'));
+for (const patch of [{weaknesses: []}, {strengths: []}, {evidence: {...specialist.specialist.evidence, ruleset: 'bun-native-v2'}},
+  {evidence: {...specialist.specialist.evidence, games: 0}}, {evidence: {...specialist.specialist.evidence, url: 'https://example.org/unverified'}}]) {
+  assert.throws(() => catalog.validateManifest({...manifest, models: [{...specialist, specialist: {...specialist.specialist, ...patch}}]}), /specialist/);
+}
+const scoped={...specialist,specialist:{...specialist.specialist,compatibility:{ruleset:'bun-native-v4-facing',games:8,summary:'仅兼容性快筛'}}};
+assert(catalog.specialistLines(catalog.validateManifest({...manifest,models:[scoped]})[0]).join('\n').includes('当前规则快筛：bun-native-v4-facing'));
+assert.throws(()=>catalog.validateManifest({...manifest,models:[{...scoped,specialist:{...scoped.specialist,compatibility:{...scoped.specialist.compatibility,games:0}}}]}),/compatibility/);
 assert.strictEqual(rows.length, 1);
 assert.strictEqual(rows[0].cycle, 16);
 assert.throws(() => catalog.validateManifest({ schema: 'bad', models: [] }), /schema/);

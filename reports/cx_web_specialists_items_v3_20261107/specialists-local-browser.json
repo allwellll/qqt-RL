@@ -1,0 +1,129 @@
+{
+  "status": "PASS",
+  "target": "local",
+  "mode": "published-candidates",
+  "results": [
+    {
+      "width": 1280,
+      "id": "items-l2-duel-u019902-tau03",
+      "verified_sources": [
+        {
+          "url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+          "status": "verified"
+        }
+      ],
+      "purpose": "published specialist",
+      "text": "专项：近身击杀\n长处：v3 专项短局：dev/holdout 因果击杀 8/7（各16局），同批 G 为1/0；v3 网页五对手：40胜/0负，交付40次\n短板：v3 网页40局自死9次，高于同批G的4次；v3 完整局可行动静止23.94%，高于G的18.83%；非全面更流畅；仅P1有限样本；v3成绩不能当v4成绩\n证据范围：原评测 bun-native-v3-items · 80 局；v3：人工短局dev/holdout各16、完整局holdout8、网页五对手40。当前v4仅针对性快筛，见独立栏目；不宣称全面优势。\n当前规则快筛：bun-native-v4-facing · 8 局；近身3胜/0负/1平；两类困难猎手合计4胜/0负，但自死4次。与原v3同seed子集关键指标一致；仅兼容性快筛，不是全面优势证明。",
+      "visible": true,
+      "backend": "worker-wasm",
+      "parity": 0.0000025992917249695324,
+      "calls": 3,
+      "rule": "bun-native-v4-facing",
+      "tick": 3,
+      "temperature": 0.3,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "id": "items-l2-sp-u023302-tau03",
+      "verified_sources": [
+        {
+          "url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-sp-u023302-c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037.onnx",
+          "status": "verified"
+        }
+      ],
+      "purpose": "published specialist",
+      "text": "专项：猎手对抗与喷泉\n长处：v3 网页五对手：39胜/0负/1平，自死1次；同批 G 为37胜/3负、自死4次；v3 困难猎手8局因果击杀7次、交付10次；有连续喷泉信号\n短板：v3 完整局可行动静止34.08%，高于G的18.83%；近身击杀未建立显著优势；喷泉串弱于同点argmax，不替代默认；仅P1有限样本；v3成绩不能当v4成绩\n证据范围：原评测 bun-native-v3-items · 80 局；v3：人工短局dev/holdout各16、完整局holdout8、网页五对手40。当前v4仅针对性快筛，见独立栏目；不宣称全面优势。\n当前规则快筛：bun-native-v4-facing · 8 局；近身2胜/1负/1平；两类困难猎手合计4胜/0负、自死0次。与原v3同seed子集关键指标一致；仅兼容性快筛，不是全面优势证明。",
+      "visible": true,
+      "backend": "worker-wasm",
+      "parity": 0.0000014348368120309374,
+      "calls": 3,
+      "rule": "bun-native-v4-facing",
+      "tick": 3,
+      "temperature": 0.3,
+      "overflow": false
+    },
+    {
+      "width": 1280,
+      "verified_sources": [
+        {
+          "url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "retained_default": {
+        "temperature": 0.3,
+        "greedy": false,
+        "backend": "worker-wasm",
+        "parity": 0.000001430511474609375,
+        "calls": 3,
+        "rule": "bun-native-v4-facing"
+      },
+      "errors": []
+    },
+    {
+      "width": 390,
+      "id": "items-l2-duel-u019902-tau03",
+      "verified_sources": [
+        {
+          "url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+          "status": "verified"
+        }
+      ],
+      "purpose": "published specialist",
+      "text": "专项：近身击杀\n长处：v3 专项短局：dev/holdout 因果击杀 8/7（各16局），同批 G 为1/0；v3 网页五对手：40胜/0负，交付40次\n短板：v3 网页40局自死9次，高于同批G的4次；v3 完整局可行动静止23.94%，高于G的18.83%；非全面更流畅；仅P1有限样本；v3成绩不能当v4成绩\n证据范围：原评测 bun-native-v3-items · 80 局；v3：人工短局dev/holdout各16、完整局holdout8、网页五对手40。当前v4仅针对性快筛，见独立栏目；不宣称全面优势。\n当前规则快筛：bun-native-v4-facing · 8 局；近身3胜/0负/1平；两类困难猎手合计4胜/0负，但自死4次。与原v3同seed子集关键指标一致；仅兼容性快筛，不是全面优势证明。",
+      "visible": true,
+      "backend": "worker-wasm",
+      "parity": 0.0000025992917249695324,
+      "calls": 3,
+      "rule": "bun-native-v4-facing",
+      "tick": 3,
+      "temperature": 0.3,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "id": "items-l2-sp-u023302-tau03",
+      "verified_sources": [
+        {
+          "url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/items-sp-u023302-c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037.onnx",
+          "status": "verified"
+        }
+      ],
+      "purpose": "published specialist",
+      "text": "专项：猎手对抗与喷泉\n长处：v3 网页五对手：39胜/0负/1平，自死1次；同批 G 为37胜/3负、自死4次；v3 困难猎手8局因果击杀7次、交付10次；有连续喷泉信号\n短板：v3 完整局可行动静止34.08%，高于G的18.83%；近身击杀未建立显著优势；喷泉串弱于同点argmax，不替代默认；仅P1有限样本；v3成绩不能当v4成绩\n证据范围：原评测 bun-native-v3-items · 80 局；v3：人工短局dev/holdout各16、完整局holdout8、网页五对手40。当前v4仅针对性快筛，见独立栏目；不宣称全面优势。\n当前规则快筛：bun-native-v4-facing · 8 局；近身2胜/1负/1平；两类困难猎手合计4胜/0负、自死0次。与原v3同seed子集关键指标一致；仅兼容性快筛，不是全面优势证明。",
+      "visible": true,
+      "backend": "worker-wasm",
+      "parity": 0.0000014348368120309374,
+      "calls": 3,
+      "rule": "bun-native-v4-facing",
+      "tick": 3,
+      "temperature": 0.3,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "verified_sources": [
+        {
+          "url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-g-frozen-0cca2473fb0b6af900d523a04fb65526d22f289486c4ec31fb9875cee671f480.onnx",
+          "status": "verified"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "retained_default": {
+        "temperature": 0.3,
+        "greedy": false,
+        "backend": "worker-wasm",
+        "parity": 0.000001430511474609375,
+        "calls": 3,
+        "rule": "bun-native-v4-facing"
+      },
+      "errors": []
+    }
+  ]
+}

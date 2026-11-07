@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "published": true,
+  "url": "https://github.com/allwellll/qqt-RL/releases/tag/web-items-specialists-20261107",
+  "assets": [
+    {
+      "name": "items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json",
+      "size": 40342900,
+      "digest": "sha256:b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109",
+      "browser_download_url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-duel-u019902-b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109.json"
+    },
+    {
+      "name": "items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx",
+      "size": 30276775,
+      "digest": "sha256:6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
+      "browser_download_url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-duel-u019902-6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3.onnx"
+    },
+    {
+      "name": "items-sp-u023302-6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543.json",
+      "size": 40342894,
+      "digest": "sha256:6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543",
+      "browser_download_url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-sp-u023302-6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543.json"
+    },
+    {
+      "name": "items-sp-u023302-c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037.onnx",
+      "size": 30276775,
+      "digest": "sha256:c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037",
+      "browser_download_url": "https://github.com/allwellll/qqt-RL/releases/download/web-items-specialists-20261107/items-sp-u023302-c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037.onnx"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "model_id": "items-l2-sp-u023302-tau03",
+  "verify_only": false,
+  "bucket_acl": "private",
+  "cors_origins": [
+    "http://127.0.0.1:*",
+    "http://localhost:*",
+    "https://allwellll.github.io"
+  ],
+  "objects": [
+    {
+      "key": "web-models/items-sp-u023302-6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543.json",
+      "bytes": 40342894,
+      "sha256": "6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543",
+      "acl": "public-read"
+    },
+    {
+      "key": "web-models/items-sp-u023302-c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037.onnx",
+      "bytes": 30276775,
+      "sha256": "c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037",
+      "acl": "public-read"
+    }
+  ]
+}

@@ -1,0 +1,727 @@
+{
+  "schema": "qqt.web-candidate-ready/v1",
+  "status": "READY",
+  "rule": "bun-native-v3-items",
+  "simulator_sha256": "24c5bcc0f12088a11f24bc0f581d4b3cfd25094148a144afa573bf7af88a7c40",
+  "protocol_sha256": "d14b125b3fd9416aab876c5e506a2d69299d7deef31b790fbed0c3b9d3f9ea76",
+  "selection_scope": "optional specialists; default untouched; no global superiority gate",
+  "online_reference": "G_frozen tau0.3",
+  "candidates": [
+    {
+      "id": "items-l2_duel_u019902-tau03",
+      "display_name": "L2_DUEL_u019902 tau0.3",
+      "policy_sha256": "c2058a0f2dbf0bb2ecd4ea9b17be975a2bd51caf4e47c1713d17c9c6947f0a70",
+      "checkpoint_committed_sha256": "46920af787d3d61e90ed378f2e481d5454b28023110f35acb89e8c385bf2a5c8",
+      "model_json_sha256": "b90889c1136841206f6497f23f0771f1292e10dc8b5b1872e7f8cb28594fa109",
+      "onnx_sha256": "6ce7ee768c9f6a80cef455a23e7eb9305a3a748682de776765b6d16036a899d3",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "rule": "bun-native-v3-items",
+      "simulator_sha256": "24c5bcc0f12088a11f24bc0f581d4b3cfd25094148a144afa573bf7af88a7c40",
+      "metrics": {
+        "duel_dev": {
+          "games": 16,
+          "wins": 10,
+          "losses": 0,
+          "draws": 6,
+          "score": 0.8125,
+          "causal_controls": 8,
+          "causal_kills": 8,
+          "self_deaths": 0,
+          "deaths": 0,
+          "acquisitions": 0,
+          "deliveries": 0,
+          "carry_failures": 0,
+          "item_pickups": 99,
+          "item_releases": 32,
+          "stationary_pct": 9.2560553633218,
+          "actionable_stationary_pct": 9.2560553633218,
+          "max_actionable_stationary": 16,
+          "p95_actionable_longest": 13.0,
+          "mean_actionable_longest": 6.0,
+          "c_ticks": 56,
+          "c_pct_actionable": 1.6147635524798154,
+          "max_c_run": 7,
+          "fountain_streak": 1.0,
+          "strict_fountain_streak": 0.6875,
+          "ticks": 3468
+        },
+        "duel_holdout": {
+          "games": 16,
+          "wins": 10,
+          "losses": 0,
+          "draws": 6,
+          "score": 0.8125,
+          "causal_controls": 7,
+          "causal_kills": 7,
+          "self_deaths": 0,
+          "deaths": 0,
+          "acquisitions": 0,
+          "deliveries": 0,
+          "carry_failures": 0,
+          "item_pickups": 106,
+          "item_releases": 29,
+          "stationary_pct": 9.696609161213564,
+          "actionable_stationary_pct": 9.696609161213564,
+          "max_actionable_stationary": 14,
+          "p95_actionable_longest": 11.75,
+          "mean_actionable_longest": 6.625,
+          "c_ticks": 64,
+          "c_pct_actionable": 1.9036287923854849,
+          "max_c_run": 10,
+          "fountain_streak": 1.1875,
+          "strict_fountain_streak": 0.8125,
+          "ticks": 3362
+        },
+        "full_holdout": {
+          "games": 8,
+          "wins": 4,
+          "losses": 3,
+          "draws": 1,
+          "score": 0.5625,
+          "causal_controls": 4,
+          "causal_kills": 4,
+          "self_deaths": 1,
+          "deaths": 1,
+          "acquisitions": 8,
+          "deliveries": 5,
+          "carry_failures": 0,
+          "item_pickups": 124,
+          "item_releases": 35,
+          "stationary_pct": 25.135695253133328,
+          "actionable_stationary_pct": 23.944650556502555,
+          "max_actionable_stationary": 26,
+          "p95_actionable_longest": 24.95,
+          "mean_actionable_longest": 16.5,
+          "c_ticks": 124,
+          "c_pct_actionable": 1.2433570640729972,
+          "max_c_run": 15,
+          "fountain_streak": 2.0,
+          "strict_fountain_streak": 1.0,
+          "ticks": 10133
+        },
+        "web": {
+          "bun.tactical_v2": {
+            "games": 8,
+            "wins": 8,
+            "losses": 0,
+            "draws": 0,
+            "score": 1.0,
+            "causal_controls": 2,
+            "causal_kills": 2,
+            "self_deaths": 1,
+            "deaths": 1,
+            "acquisitions": 8,
+            "deliveries": 4,
+            "carry_failures": 0,
+            "item_pickups": 61,
+            "item_releases": 6,
+            "stationary_pct": 8.677776962043902,
+            "actionable_stationary_pct": 7.599732560731001,
+            "max_actionable_stationary": 14,
+            "p95_actionable_longest": 12.95,
+            "mean_actionable_longest": 8.875,
+            "c_ticks": 83,
+            "c_pct_actionable": 0.6165960924151251,
+            "max_c_run": 7,
+            "fountain_streak": 1.0,
+            "strict_fountain_streak": 0.875,
+            "ticks": 13621
+          },
+          "bun.hunter@hard": {
+            "games": 8,
+            "wins": 8,
+            "losses": 0,
+            "draws": 0,
+            "score": 1.0,
+            "causal_controls": 4,
+            "causal_kills": 4,
+            "self_deaths": 2,
+            "deaths": 2,
+            "acquisitions": 9,
+            "deliveries": 8,
+            "carry_failures": 0,
+            "item_pickups": 159,
+            "item_releases": 40,
+            "stationary_pct": 31.721510951222093,
+            "actionable_stationary_pct": 29.350564012703977,
+            "max_actionable_stationary": 21,
+            "p95_actionable_longest": 20.299999999999997,
+            "mean_actionable_longest": 14.125,
+            "c_ticks": 73,
+            "c_pct_actionable": 0.7994743182564888,
+            "max_c_run": 10,
+            "fountain_streak": 2.125,
+            "strict_fountain_streak": 1.0,
+            "ticks": 9451
+          },
+          "bun.hunter@normal": {
+            "games": 8,
+            "wins": 8,
+            "losses": 0,
+            "draws": 0,
+            "score": 1.0,
+            "causal_controls": 5,
+            "causal_kills": 5,
+            "self_deaths": 2,
+            "deaths": 2,
+            "acquisitions": 10,
+            "deliveries": 10,
+            "carry_failures": 0,
+            "item_pickups": 192,
+            "item_releases": 44,
+            "stationary_pct": 29.384003974167907,
+            "actionable_stationary_pct": 26.487325400931194,
+            "max_actionable_stationary": 21,
+            "p95_actionable_longest": 20.65,
+            "mean_actionable_longest": 15.625,
+            "c_ticks": 88,
+            "c_pct_actionable": 1.1381272633212622,
+            "max_c_run": 11,
+            "fountain_streak": 2.625,
+            "strict_fountain_streak": 1.25,
+            "ticks": 8052
+          },
+          "bun.hunter@easy": {
+            "games": 8,
+            "wins": 8,
+            "losses": 0,
+            "draws": 0,
+            "score": 1.0,
+            "causal_controls": 6,
+            "causal_kills": 6,
+            "self_deaths": 0,
+            "deaths": 0,
+            "acquisitions": 8,
+            "deliveries": 8,
+            "carry_failures": 0,
+            "item_pickups": 148,
+            "item_releases": 56,
+            "stationary_pct": 21.640316205533598,
+            "actionable_stationary_pct": 21.640316205533598,
+            "max_actionable_stationary": 14,
+            "p95_actionable_longest": 14.0,
+            "mean_actionable_longest": 10.875,
+            "c_ticks": 35,
+            "c_pct_actionable": 0.691699604743083,
+            "max_c_run": 10,
+            "fountain_streak": 1.25,
+            "strict_fountain_streak": 1.0,
+            "ticks": 5060
+          },
+          "bun.coop_hunter@hard": {
+            "games": 8,
+            "wins": 8,
+            "losses": 0,
+            "draws": 0,
+            "score": 1.0,
+            "causal_controls": 5,
+            "causal_kills": 5,
+            "self_deaths": 4,
+            "deaths": 4,
+            "acquisitions": 10,
+            "deliveries": 10,
+            "carry_failures": 0,
+            "item_pickups": 180,
+            "item_releases": 39,
+            "stationary_pct": 31.297709923664122,
+            "actionable_stationary_pct": 26.091422701592194,
+            "max_actionable_stationary": 26,
+            "p95_actionable_longest": 24.249999999999996,
+            "mean_actionable_longest": 14.625,
+            "c_ticks": 136,
+            "c_pct_actionable": 1.746276322547509,
+            "max_c_run": 26,
+            "fountain_streak": 1.875,
+            "strict_fountain_streak": 1.125,
+            "ticks": 8384
+          }
+        }
+      },
+      "comparison": [
+        {
+          "reference": "G_frozen",
+          "kill_dev_holdout": true,
+          "web_causal_kills": [
+            22,
+            20
+          ],
+          "transport_holdout_and_web": true,
+          "fountain_holdout_and_web": true,
+          "flow_holdout_and_web": false
+        },
+        {
+          "reference": "L2_S05g_u019302",
+          "kill_dev_holdout": true,
+          "web_causal_kills": [
+            22,
+            22
+          ],
+          "transport_holdout_and_web": true,
+          "fountain_holdout_and_web": true,
+          "flow_holdout_and_web": false
+        }
+      ],
+      "paired_holdout": {
+        "G_frozen": {
+          "duel": {
+            "reference": "G_frozen tau0.3",
+            "paired_games": 16,
+            "bootstrap_seed": 2026799099,
+            "intervals": {
+              "causal_kills": {
+                "delta_per_game": 0.4375,
+                "lower95": 0.1875,
+                "upper95": 0.6875
+              },
+              "deliveries": {
+                "delta_per_game": 0.0,
+                "lower95": 0.0,
+                "upper95": 0.0
+              },
+              "self_deaths": {
+                "delta_per_game": 0.0,
+                "lower95": 0.0,
+                "upper95": 0.0
+              }
+            },
+            "interpretation": "descriptive paired fixed-seed bootstrap; selection and multi-metric exploration prevent global significance claim"
+          },
+          "strong_full": {
+            "reference": "G_frozen tau0.3",
+            "paired_games": 8,
+            "bootstrap_seed": 2026799099,
+            "intervals": {
+              "causal_kills": {
+                "delta_per_game": 0.25,
+                "lower95": -0.25,
+                "upper95": 0.625
+              },
+              "deliveries": {
+                "delta_per_game": 0.125,
+                "lower95": -0.375,
+                "upper95": 0.75
+              },
+              "self_deaths": {
+                "delta_per_game": 0.0,
+                "lower95": -0.375,
+                "upper95": 0.375
+              }
+            },
+            "interpretation": "descriptive paired fixed-seed bootstrap; selection and multi-metric exploration prevent global significance claim"
+          }
+        },
+        "L2_S05g_u019302": {
+          "duel": {
+            "reference": "L2_S05g_u019302 tau0.3",
+            "paired_games": 16,
+            "bootstrap_seed": 2026799099,
+            "intervals": {
+              "causal_kills": {
+                "delta_per_game": 0.375,
+                "lower95": 0.0625,
+                "upper95": 0.6875
+              },
+              "deliveries": {
+                "delta_per_game": 0.0,
+                "lower95": 0.0,
+                "upper95": 0.0
+              },
+              "self_deaths": {
+                "delta_per_game": -0.1875,
+                "lower95": -0.375,
+                "upper95": 0.0
+              }
+            },
+            "interpretation": "descriptive paired fixed-seed bootstrap; selection and multi-metric exploration prevent global significance claim"
+          },
+          "strong_full": {
+            "reference": "L2_S05g_u019302 tau0.3",
+            "paired_games": 8,
+            "bootstrap_seed": 2026799099,
+            "intervals": {
+              "causal_kills": {
+                "delta_per_game": 0.125,
+                "lower95": -0.625,
+                "upper95": 0.625
+              },
+              "deliveries": {
+                "delta_per_game": 0.125,
+                "lower95": -0.375,
+                "upper95": 0.625
+              },
+              "self_deaths": {
+                "delta_per_game": 0.0,
+                "lower95": -0.375,
+                "upper95": 0.375
+              }
+            },
+            "interpretation": "descriptive paired fixed-seed bootstrap; selection and multi-metric exploration prevent global significance claim"
+          }
+        }
+      }
+    },
+    {
+      "id": "items-l2_sp_u023302-tau03",
+      "display_name": "L2_SP_u023302 tau0.3",
+      "policy_sha256": "39b0dea7327221891bdd4cfba93ab917c897aa86fd78d83401241ad945a982cf",
+      "checkpoint_committed_sha256": "7d64478cdee04250bf6786e8a0cadfaf04365d21e6abc3b2efc48711855c26b8",
+      "model_json_sha256": "6d175a9dba370d45ac6218c066b9b1eb154c2a329c58ed242c9bed91e6853543",
+      "onnx_sha256": "c22e3ea0ab8c3c86389f374c693df6948b50471d39910a920a722d7140ca7037",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "rule": "bun-native-v3-items",
+      "simulator_sha256": "24c5bcc0f12088a11f24bc0f581d4b3cfd25094148a144afa573bf7af88a7c40",
+      "metrics": {
+        "duel_dev": {
+          "games": 16,
+          "wins": 2,
+          "losses": 4,
+          "draws": 10,
+          "score": 0.4375,
+          "causal_controls": 2,
+          "causal_kills": 2,
+          "self_deaths": 2,
+          "deaths": 4,
+          "acquisitions": 0,
+          "deliveries": 0,
+          "carry_failures": 0,
+          "item_pickups": 56,
+          "item_releases": 11,
+          "stationary_pct": 23.094904160822814,
+          "actionable_stationary_pct": 20.261754726127,
+          "max_actionable_stationary": 17,
+          "p95_actionable_longest": 17.0,
+          "mean_actionable_longest": 8.5625,
+          "c_ticks": 18,
+          "c_pct_actionable": 0.4362578768783325,
+          "max_c_run": 5,
+          "fountain_streak": 1.1875,
+          "strict_fountain_streak": 0.9375,
+          "ticks": 4278
+        },
+        "duel_holdout": {
+          "games": 16,
+          "wins": 4,
+          "losses": 1,
+          "draws": 11,
+          "score": 0.59375,
+          "causal_controls": 2,
+          "causal_kills": 2,
+          "self_deaths": 1,
+          "deaths": 1,
+          "acquisitions": 0,
+          "deliveries": 0,
+          "carry_failures": 0,
+          "item_pickups": 62,
+          "item_releases": 15,
+          "stationary_pct": 21.771388824484116,
+          "actionable_stationary_pct": 20.66776393134258,
+          "max_actionable_stationary": 18,
+          "p95_actionable_longest": 16.5,
+          "mean_actionable_longest": 8.9375,
+          "c_ticks": 28,
+          "c_pct_actionable": 0.6583588055490243,
+          "max_c_run": 8,
+          "fountain_streak": 1.125,
+          "strict_fountain_streak": 0.9375,
+          "ticks": 4313
+        },
+        "full_holdout": {
+          "games": 8,
+          "wins": 4,
+          "losses": 4,
+          "draws": 0,
+          "score": 0.5,
+          "causal_controls": 2,
+          "causal_kills": 2,
+          "self_deaths": 1,
+          "deaths": 3,
+          "acquisitions": 8,
+          "deliveries": 4,
+          "carry_failures": 1,
+          "item_pickups": 105,
+          "item_releases": 35,
+          "stationary_pct": 36.86214775323686,
+          "actionable_stationary_pct": 34.07915672235481,
+          "max_actionable_stationary": 30,
+          "p95_actionable_longest": 27.549999999999997,
+          "mean_actionable_longest": 17.125,
+          "c_ticks": 101,
+          "c_pct_actionable": 1.0043754972155927,
+          "max_c_run": 7,
+          "fountain_streak": 1.875,
+          "strict_fountain_streak": 0.875,
+          "ticks": 10504
+        },
+        "web": {
+          "bun.tactical_v2": {
+            "games": 8,
+            "wins": 8,
+            "losses": 0,
+            "draws": 0,
+            "score": 1.0,
+            "causal_controls": 0,
+            "causal_kills": 0,
+            "self_deaths": 0,
+            "deaths": 0,
+            "acquisitions": 8,
+            "deliveries": 7,
+            "carry_failures": 0,
+            "item_pickups": 33,
+            "item_releases": 3,
+            "stationary_pct": 16.280295047418335,
+            "actionable_stationary_pct": 16.280295047418335,
+            "max_actionable_stationary": 15,
+            "p95_actionable_longest": 14.649999999999999,
+            "mean_actionable_longest": 7.875,
+            "c_ticks": 23,
+            "c_pct_actionable": 0.4039339655778012,
+            "max_c_run": 3,
+            "fountain_streak": 0.5,
+            "strict_fountain_streak": 0.5,
+            "ticks": 5694
+          },
+          "bun.hunter@hard": {
+            "games": 8,
+            "wins": 8,
+            "losses": 0,
+            "draws": 0,
+            "score": 1.0,
+            "causal_controls": 7,
+            "causal_kills": 7,
+            "self_deaths": 0,
+            "deaths": 2,
+            "acquisitions": 10,
+            "deliveries": 10,
+            "carry_failures": 0,
+            "item_pickups": 219,
+            "item_releases": 41,
+            "stationary_pct": 25.289611360239164,
+            "actionable_stationary_pct": 23.64626110209149,
+            "max_actionable_stationary": 21,
+            "p95_actionable_longest": 19.95,
+            "mean_actionable_longest": 15.125,
+            "c_ticks": 91,
+            "c_pct_actionable": 0.8690669468054627,
+            "max_c_run": 10,
+            "fountain_streak": 1.875,
+            "strict_fountain_streak": 1.125,
+            "ticks": 10704
+          },
+          "bun.hunter@normal": {
+            "games": 8,
+            "wins": 8,
+            "losses": 0,
+            "draws": 0,
+            "score": 1.0,
+            "causal_controls": 7,
+            "causal_kills": 7,
+            "self_deaths": 0,
+            "deaths": 0,
+            "acquisitions": 8,
+            "deliveries": 7,
+            "carry_failures": 0,
+            "item_pickups": 172,
+            "item_releases": 42,
+            "stationary_pct": 26.408985125973896,
+            "actionable_stationary_pct": 26.408985125973896,
+            "max_actionable_stationary": 22,
+            "p95_actionable_longest": 21.299999999999997,
+            "mean_actionable_longest": 16.5,
+            "c_ticks": 53,
+            "c_pct_actionable": 0.5362744106040676,
+            "max_c_run": 9,
+            "fountain_streak": 2.125,
+            "strict_fountain_streak": 1.125,
+            "ticks": 9883
+          },
+          "bun.hunter@easy": {
+            "games": 8,
+            "wins": 8,
+            "losses": 0,
+            "draws": 0,
+            "score": 1.0,
+            "causal_controls": 6,
+            "causal_kills": 6,
+            "self_deaths": 0,
+            "deaths": 0,
+            "acquisitions": 8,
+            "deliveries": 8,
+            "carry_failures": 0,
+            "item_pickups": 159,
+            "item_releases": 27,
+            "stationary_pct": 25.49884881043745,
+            "actionable_stationary_pct": 25.49884881043745,
+            "max_actionable_stationary": 24,
+            "p95_actionable_longest": 21.9,
+            "mean_actionable_longest": 14.375,
+            "c_ticks": 48,
+            "c_pct_actionable": 0.920951650038373,
+            "max_c_run": 20,
+            "fountain_streak": 1.5,
+            "strict_fountain_streak": 1.125,
+            "ticks": 5212
+          },
+          "bun.coop_hunter@hard": {
+            "games": 8,
+            "wins": 7,
+            "losses": 0,
+            "draws": 1,
+            "score": 0.9375,
+            "causal_controls": 4,
+            "causal_kills": 4,
+            "self_deaths": 1,
+            "deaths": 1,
+            "acquisitions": 8,
+            "deliveries": 7,
+            "carry_failures": 0,
+            "item_pickups": 163,
+            "item_releases": 34,
+            "stationary_pct": 33.72682926829268,
+            "actionable_stationary_pct": 32.81899109792285,
+            "max_actionable_stationary": 30,
+            "p95_actionable_longest": 26.499999999999993,
+            "mean_actionable_longest": 16.875,
+            "c_ticks": 326,
+            "c_pct_actionable": 3.224530168150346,
+            "max_c_run": 30,
+            "fountain_streak": 1.875,
+            "strict_fountain_streak": 0.875,
+            "ticks": 10250
+          }
+        }
+      },
+      "comparison": [
+        {
+          "reference": "G_frozen",
+          "kill_dev_holdout": true,
+          "web_causal_kills": [
+            24,
+            20
+          ],
+          "transport_holdout_and_web": false,
+          "fountain_holdout_and_web": true,
+          "flow_holdout_and_web": false
+        },
+        {
+          "reference": "L2_S05g_u019302",
+          "kill_dev_holdout": true,
+          "web_causal_kills": [
+            24,
+            22
+          ],
+          "transport_holdout_and_web": false,
+          "fountain_holdout_and_web": false,
+          "flow_holdout_and_web": false
+        }
+      ],
+      "paired_holdout": {
+        "G_frozen": {
+          "duel": {
+            "reference": "G_frozen tau0.3",
+            "paired_games": 16,
+            "bootstrap_seed": 2026799099,
+            "intervals": {
+              "causal_kills": {
+                "delta_per_game": 0.125,
+                "lower95": 0.0,
+                "upper95": 0.3125
+              },
+              "deliveries": {
+                "delta_per_game": 0.0,
+                "lower95": 0.0,
+                "upper95": 0.0
+              },
+              "self_deaths": {
+                "delta_per_game": 0.0625,
+                "lower95": 0.0,
+                "upper95": 0.1875
+              }
+            },
+            "interpretation": "descriptive paired fixed-seed bootstrap; selection and multi-metric exploration prevent global significance claim"
+          },
+          "strong_full": {
+            "reference": "G_frozen tau0.3",
+            "paired_games": 8,
+            "bootstrap_seed": 2026799099,
+            "intervals": {
+              "causal_kills": {
+                "delta_per_game": 0.0,
+                "lower95": -0.5,
+                "upper95": 0.5
+              },
+              "deliveries": {
+                "delta_per_game": 0.0,
+                "lower95": -0.625,
+                "upper95": 0.5
+              },
+              "self_deaths": {
+                "delta_per_game": 0.0,
+                "lower95": -0.375,
+                "upper95": 0.375
+              }
+            },
+            "interpretation": "descriptive paired fixed-seed bootstrap; selection and multi-metric exploration prevent global significance claim"
+          }
+        },
+        "L2_S05g_u019302": {
+          "duel": {
+            "reference": "L2_S05g_u019302 tau0.3",
+            "paired_games": 16,
+            "bootstrap_seed": 2026799099,
+            "intervals": {
+              "causal_kills": {
+                "delta_per_game": 0.0625,
+                "lower95": -0.125,
+                "upper95": 0.25
+              },
+              "deliveries": {
+                "delta_per_game": 0.0,
+                "lower95": 0.0,
+                "upper95": 0.0
+              },
+              "self_deaths": {
+                "delta_per_game": -0.125,
+                "lower95": -0.3125,
+                "upper95": 0.0
+              }
+            },
+            "interpretation": "descriptive paired fixed-seed bootstrap; selection and multi-metric exploration prevent global significance claim"
+          },
+          "strong_full": {
+            "reference": "L2_S05g_u019302 tau0.3",
+            "paired_games": 8,
+            "bootstrap_seed": 2026799099,
+            "intervals": {
+              "causal_kills": {
+                "delta_per_game": -0.125,
+                "lower95": -0.75,
+                "upper95": 0.375
+              },
+              "deliveries": {
+                "delta_per_game": 0.0,
+                "lower95": -0.5,
+                "upper95": 0.5
+              },
+              "self_deaths": {
+                "delta_per_game": 0.0,
+                "lower95": -0.375,
+                "upper95": 0.375
+              }
+            },
+            "interpretation": "descriptive paired fixed-seed bootstrap; selection and multi-metric exploration prevent global significance claim"
+          }
+        }
+      }
+    }
+  ],
+  "scope": "Original v3-items evidence only; v4-facing compatibility screen is separate. Default G_frozen tau0.3 retained.",
+  "current_rule_compatibility_screen": "v4-screen-20261107.json"
+}
