@@ -74,11 +74,12 @@
     if (!Number.isInteger(humanPid) || humanPid < 0 || humanPid >= playerCount(sim) ||
         sim.done || !sim.alive?.[humanPid] || sim.trapped?.[humanPid] > 0) return [];
     const live = sim.nativeMove?.[humanPid];
-    if (!live?.touchValid || !(sim.fuse[live.touchCell] > 0)) return [];
+    const activeCell = live?.passActive && live.passCell >= 0 ? live.passCell : live?.touchCell;
+    if (!live?.touchValid || !(sim.fuse[activeCell] > 0)) return [];
     const state = { ...live, wallExit: live.wallExit ? { ...live.wallExit } : null };
     sim._expireNativePass(state);
     const charged = state.clock - state.touchStart;
-    if (state.passActive) return [{ cell: state.touchCell, kind: 'active', progress: 1,
+    if (state.passActive) return [{ cell: activeCell, kind: 'active', progress: 1,
       ready: false, contact: false }];
     if (charged < 0 || charged >= PASS_MAX_MS) return [];
     // Native touchCell owns the ring until replacement/expiry. Releasing keys
@@ -88,7 +89,8 @@
       : state.clock - state.touchLast < PASS_FRESH_MS;
     return [{ cell: state.touchCell, kind: charged > PASS_MIN_MS ? 'window' : 'charging',
       chargedMs: charged, progress: Math.min(1, charged / PASS_MIN_MS), contact,
-      ready: charged > PASS_MIN_MS && contact && state.clock - state.touchLast < PASS_FRESH_MS }];
+      ready: typeof sim._nativePassReady === 'function' ? sim._nativePassReady(humanPid, state)
+        : charged > PASS_MIN_MS && contact && state.clock - state.touchLast < PASS_FRESH_MS }];
   }
 
   // Tick motion stays one tick behind the authoritative solver. A 480px/s

@@ -1,0 +1,523 @@
+{
+  "status": "PASS",
+  "results": [
+    {
+      "width": 1280,
+      "initialSupply": {
+        "version": "bun-native-v3-items",
+        "multiplier": 1.5,
+        "baselineInitial": 0,
+        "baselineBricks": 81,
+        "brickRate": 0.582011,
+        "expectedBaseline": 47.142891,
+        "zeroSupplyReference": 0,
+        "requestedExtra": 24,
+        "added": 24,
+        "unplaced": 0,
+        "initialActual": 24,
+        "expectedTotal": 71.14289099999999,
+        "brickDropsActual": 0
+      },
+      "growth": [
+        {
+          "type": 0,
+          "before": [
+            2,
+            2,
+            1.3
+          ],
+          "after": [
+            3,
+            2,
+            1.3
+          ]
+        },
+        {
+          "type": 1,
+          "before": [
+            2,
+            2,
+            1.3
+          ],
+          "after": [
+            2,
+            3,
+            1.3
+          ]
+        },
+        {
+          "type": 2,
+          "before": [
+            2,
+            2,
+            1.3
+          ],
+          "after": [
+            2,
+            2,
+            1.457142857142857
+          ]
+        }
+      ],
+      "corpse": [
+        3.5,
+        1.5
+      ],
+      "death": {
+        "alive": false,
+        "cells": [
+          {
+            "cell": 90,
+            "type": 4,
+            "count": 6
+          },
+          {
+            "cell": 101,
+            "type": 0,
+            "count": 3
+          },
+          {
+            "cell": 113,
+            "type": 2,
+            "count": 2
+          },
+          {
+            "cell": 114,
+            "type": 3,
+            "count": 4
+          },
+          {
+            "cell": 164,
+            "type": 1,
+            "count": 2
+          }
+        ],
+        "pending": []
+      },
+      "modelSmoke": [
+        {
+          "map": "training806",
+          "tick": 35,
+          "rule": "bun-native-v4-facing",
+          "supply": {
+            "version": "bun-native-v3-items",
+            "multiplier": 1.5,
+            "baselineInitial": 0,
+            "baselineBricks": 81,
+            "brickRate": 0.582011,
+            "expectedBaseline": 47.142891,
+            "zeroSupplyReference": 0,
+            "requestedExtra": 24,
+            "added": 24,
+            "unplaced": 0,
+            "initialActual": 24,
+            "expectedTotal": 71.14289099999999,
+            "brickDropsActual": 2
+          },
+          "caps": [
+            10,
+            8,
+            2.4
+          ],
+          "stats": [
+            2,
+            4,
+            1.3
+          ],
+          "done": false,
+          "status": "已加载：Bun392 G_frozen · τ0.3"
+        },
+        {
+          "map": "arena",
+          "tick": 33,
+          "rule": "bun-native-v4-facing",
+          "supply": {
+            "version": "bun-native-v3-items",
+            "multiplier": 1.5,
+            "baselineInitial": 0,
+            "baselineBricks": 0,
+            "brickRate": 0,
+            "expectedBaseline": 0,
+            "zeroSupplyReference": 10,
+            "requestedExtra": 15,
+            "added": 15,
+            "unplaced": 0,
+            "initialActual": 15,
+            "expectedTotal": 15,
+            "brickDropsActual": 0
+          },
+          "caps": [
+            10,
+            8,
+            2.4
+          ],
+          "stats": [
+            6,
+            6,
+            1.85
+          ],
+          "done": false,
+          "status": "已加载：Bun392 G_frozen · τ0.3"
+        }
+      ],
+      "resources": [
+        {
+          "file": "放炮.wav",
+          "status": 200
+        },
+        {
+          "file": "爆炸.wav",
+          "status": 200
+        },
+        {
+          "file": "syrup_pop.wav",
+          "status": 200
+        },
+        {
+          "file": "吃道具音效.wav",
+          "status": 200
+        }
+      ],
+      "human": {
+        "starts": [
+          {
+            "state": "running",
+            "duration": 0.8054421768707483,
+            "ended": false,
+            "time": 0.24090702947845805
+          }
+        ],
+        "events": [
+          {
+            "pid": 0,
+            "tick": 5
+          }
+        ],
+        "slots": [
+          {
+            "item": 1,
+            "count": 1
+          }
+        ],
+        "playbackCompleted": true
+      },
+      "full": {
+        "crate": 1,
+        "events": [],
+        "starts": []
+      },
+      "model": {
+        "events": [
+          {
+            "pid": 1,
+            "tick": 1
+          }
+        ],
+        "starts": [
+          {
+            "state": "running",
+            "duration": 0.05714285714285714,
+            "ended": false,
+            "time": 3.541043083900227
+          },
+          {
+            "state": "running",
+            "duration": 0.8054421768707483,
+            "ended": false,
+            "time": 3.541043083900227
+          }
+        ],
+        "slots": [
+          {
+            "item": 1,
+            "count": 1
+          }
+        ],
+        "status": "已加载：Bun392 G_frozen · τ0.3"
+      },
+      "context": {
+        "state": "running",
+        "time": 7.090793650793651,
+        "decoded": [
+          {
+            "duration": 0.05714285714285714,
+            "peak": 0.934722900390625
+          },
+          {
+            "duration": 0.38603174603174606,
+            "peak": 0.8962370753288269
+          },
+          {
+            "duration": 0.47020408163265304,
+            "peak": 0.9790337681770325
+          },
+          {
+            "duration": 0.8054421768707483,
+            "peak": 0.4828943610191345
+          }
+        ]
+      },
+      "writes": [],
+      "errors": []
+    },
+    {
+      "width": 390,
+      "initialSupply": {
+        "version": "bun-native-v3-items",
+        "multiplier": 1.5,
+        "baselineInitial": 0,
+        "baselineBricks": 81,
+        "brickRate": 0.582011,
+        "expectedBaseline": 47.142891,
+        "zeroSupplyReference": 0,
+        "requestedExtra": 24,
+        "added": 24,
+        "unplaced": 0,
+        "initialActual": 24,
+        "expectedTotal": 71.14289099999999,
+        "brickDropsActual": 0
+      },
+      "growth": [
+        {
+          "type": 0,
+          "before": [
+            2,
+            2,
+            1.3
+          ],
+          "after": [
+            3,
+            2,
+            1.3
+          ]
+        },
+        {
+          "type": 1,
+          "before": [
+            2,
+            2,
+            1.3
+          ],
+          "after": [
+            2,
+            3,
+            1.3
+          ]
+        },
+        {
+          "type": 2,
+          "before": [
+            2,
+            2,
+            1.3
+          ],
+          "after": [
+            2,
+            2,
+            1.457142857142857
+          ]
+        }
+      ],
+      "corpse": [
+        3.5,
+        1.5
+      ],
+      "death": {
+        "alive": false,
+        "cells": [
+          {
+            "cell": 90,
+            "type": 4,
+            "count": 6
+          },
+          {
+            "cell": 101,
+            "type": 0,
+            "count": 3
+          },
+          {
+            "cell": 113,
+            "type": 2,
+            "count": 2
+          },
+          {
+            "cell": 114,
+            "type": 3,
+            "count": 4
+          },
+          {
+            "cell": 164,
+            "type": 1,
+            "count": 2
+          }
+        ],
+        "pending": []
+      },
+      "modelSmoke": [
+        {
+          "map": "training806",
+          "tick": 34,
+          "rule": "bun-native-v4-facing",
+          "supply": {
+            "version": "bun-native-v3-items",
+            "multiplier": 1.5,
+            "baselineInitial": 0,
+            "baselineBricks": 81,
+            "brickRate": 0.582011,
+            "expectedBaseline": 47.142891,
+            "zeroSupplyReference": 0,
+            "requestedExtra": 24,
+            "added": 24,
+            "unplaced": 0,
+            "initialActual": 24,
+            "expectedTotal": 71.14289099999999,
+            "brickDropsActual": 2
+          },
+          "caps": [
+            10,
+            8,
+            2.4
+          ],
+          "stats": [
+            2,
+            4,
+            1.3
+          ],
+          "done": false,
+          "status": "已加载：Bun392 G_frozen · τ0.3"
+        },
+        {
+          "map": "arena",
+          "tick": 33,
+          "rule": "bun-native-v4-facing",
+          "supply": {
+            "version": "bun-native-v3-items",
+            "multiplier": 1.5,
+            "baselineInitial": 0,
+            "baselineBricks": 0,
+            "brickRate": 0,
+            "expectedBaseline": 0,
+            "zeroSupplyReference": 10,
+            "requestedExtra": 15,
+            "added": 15,
+            "unplaced": 0,
+            "initialActual": 15,
+            "expectedTotal": 15,
+            "brickDropsActual": 0
+          },
+          "caps": [
+            10,
+            8,
+            2.4
+          ],
+          "stats": [
+            6,
+            6,
+            1.85
+          ],
+          "done": false,
+          "status": "已加载：Bun392 G_frozen · τ0.3"
+        }
+      ],
+      "resources": [
+        {
+          "file": "放炮.wav",
+          "status": 200
+        },
+        {
+          "file": "爆炸.wav",
+          "status": 200
+        },
+        {
+          "file": "吃道具音效.wav",
+          "status": 200
+        },
+        {
+          "file": "syrup_pop.wav",
+          "status": 200
+        }
+      ],
+      "human": {
+        "starts": [
+          {
+            "state": "running",
+            "duration": 0.8054421768707483,
+            "ended": false,
+            "time": 0.18285714285714286
+          }
+        ],
+        "events": [
+          {
+            "pid": 0,
+            "tick": 5
+          }
+        ],
+        "slots": [
+          {
+            "item": 1,
+            "count": 1
+          }
+        ],
+        "playbackCompleted": true
+      },
+      "full": {
+        "crate": 1,
+        "events": [],
+        "starts": []
+      },
+      "model": {
+        "events": [
+          {
+            "pid": 1,
+            "tick": 1
+          }
+        ],
+        "starts": [
+          {
+            "state": "running",
+            "duration": 0.05714285714285714,
+            "ended": false,
+            "time": 3.1724263038548752
+          },
+          {
+            "state": "running",
+            "duration": 0.8054421768707483,
+            "ended": false,
+            "time": 3.1724263038548752
+          }
+        ],
+        "slots": [
+          {
+            "item": 1,
+            "count": 1
+          }
+        ],
+        "status": "已加载：Bun392 G_frozen · τ0.3"
+      },
+      "context": {
+        "state": "running",
+        "time": 6.681541950113378,
+        "decoded": [
+          {
+            "duration": 0.05714285714285714,
+            "peak": 0.934722900390625
+          },
+          {
+            "duration": 0.47020408163265304,
+            "peak": 0.9790337681770325
+          },
+          {
+            "duration": 0.38603174603174606,
+            "peak": 0.8962370753288269
+          },
+          {
+            "duration": 0.8054421768707483,
+            "peak": 0.4828943610191345
+          }
+        ]
+      },
+      "writes": [],
+      "errors": []
+    }
+  ]
+}

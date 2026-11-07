@@ -15,6 +15,7 @@
   VERSION_FILES['674ff0f6cde9123a158ee888b18be5e372d5929709e2d3025b4e8d5823737fda']='sim.js';
   VERSION_FILES['6a9d3c07fad3de828e8bbb550e469c2e7b2a76cb057d1a9a58c6fbcdc03e48c9']='sim-bun-native-v2-face.js';
   VERSION_FILES['24c5bcc0f12088a11f24bc0f581d4b3cfd25094148a144afa573bf7af88a7c40']='sim-bun-native-v3-items.js';
+  VERSION_FILES['5b4f93d0f994cbabc9ef2012e6d9b4062c031f5b801a7b3847778950af372fad']='sim-bun-native-v4-facing.js';
   const versions=new Map();
   function registerSimulator(hash,api){if(!VERSION_FILES[hash])throw Error('unknown simulator');versions.set(hash,api);}
   function simulator(meta){

@@ -37,7 +37,7 @@ function ledger(s){const counts={};const add=(t,n)=>counts[t]=(counts[t]||0)+n;f
 {
  const s=open();s.alive.fill(true);s.pos.set([1.5,1.5,11.5,13.5]);s.invuln.fill(100);s.brick[81]=1;s.crateRate=1;s.fuse[80]=1;s.owner[80]=0;s.bombBlast[80]=2;s.step([[4,0,0,1],[4,0,0,1]]);assert.equal(s.itemSupply.brickDropsActual,1,'actual brick supply is counted when generated');assert(s.pendingCrateType[81]>=0);const saved=s.itemSupply.brickDropsActual;s.step([[4,0,0,1],[4,0,0,1]]);assert.equal(s.itemSupply.brickDropsActual,saved,'lingering flames cannot count the same brick twice');
  const R=require('./review_protocol'),h=crypto.createHash('sha256').update(fs.readFileSync('web/sim-bun-native-v3-items.js')).digest('hex');assert.equal(R.simulatorFile(h),'sim-bun-native-v3-items.js');assert.equal(R.simulator({simulator_sha256:h}).RULE_VERSION,Q.RULE_VERSION);
- const Eval=require('../scripts/native_eval_simulator_v1');assert.equal(Eval.RULE_VERSION,Q.RULE_VERSION);assert.equal(Eval.SIMULATOR_SHA256,h);
+ const Eval=require('../scripts/native_eval_simulator_v1');assert.equal(Eval.RULE_VERSION,'bun-native-v4-facing');assert.equal(Eval.SIMULATOR_SHA256,crypto.createHash('sha256').update(fs.readFileSync('web/sim-bun-native-v4-facing.js')).digest('hex'));
 }
 {
  const s=open();s.graveyard=[{type:3,count:6,isSuper:false}];for(let t=270;t<=300;t++){s.t=t;s._nativeAirdropStep();assert.equal(ledger(s)[3],6,'bird recycling never loses or duplicates the bombed death stack');}assert.equal(s.crate.reduce((a,b)=>a+b),1);

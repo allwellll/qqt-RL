@@ -47,7 +47,7 @@
       <aside>
         <div class="aside-toolbar"><button id="announcement-open" type="button"><span aria-hidden="true">★</span> 公告</button></div>
         <section class="leaderboard" aria-labelledby="leaderboard-heading">
-          <h2 id="leaderboard-heading">胜局排行榜 · Top 20</h2><label>规则分榜 <select id="leaderboard-ruleset"><option value="bun-native-v3-items">bun-native-v3-items · 榜单暂缓</option><option value="bun-native-v2-face">旧 face 规则</option><option value="bun-native-v2">旧 bun-native-v2 成绩</option><option value="stock-window-v1">旧 v1 成绩</option></select></label>
+          <h2 id="leaderboard-heading">胜局排行榜 · Top 20</h2><label>规则分榜 <select id="leaderboard-ruleset"><option value="bun-native-v4-facing">bun-native-v4-facing · 榜单暂缓</option><option value="bun-native-v3-items">旧 v3 道具规则</option><option value="bun-native-v2-face">旧 face 规则</option><option value="bun-native-v2">旧 bun-native-v2 成绩</option><option value="stock-window-v1">旧 v1 成绩</option></select></label>
           <div class="leaderboard-table-wrap">
             <table class="leaderboard-table" aria-label="胜局排行榜">
               <caption>胜利用时由短到长</caption>
@@ -78,7 +78,7 @@
         <p id="physics-revision">道具供给约增至 1.5 倍；死亡物品随机散落全图合法空格，属性仍有上限。历史 Review 使用原规则。</p>
         <label class="check-label"><input id="boundary-recovery" type="checkbox" checked> 香蕉边界停滞恢复 v1（前端辅助，可关闭）</label>
         <p id="boundary-recovery-status" class="note" role="status">仅用于五槽模型；原始模型决策与辅助动作分别记录，不代表模型原始能力。</p>
-        <p id="bubble-passage-legend">面朝泡就开始计时，不用顶。圆环顺时针渐绿；转向或走开仍继续；面朝新泡时转移，过期消失。完整亮绿实圈表示仍面朝目标、可放泡穿过，淡绿虚圈表示已转向或走开，青色勾表示已获穿泡；爆炸仍有危险。</p>
+        <p id="bubble-passage-legend">面朝同行/同列前方 3 格内、无遮挡的首个泡就开始计时，不用碰撞或按住方向键。圆环顺时针渐绿；转向或走开仍继续；面朝新泡时转移，过期消失。完整亮绿实圈表示仍面朝目标、可放泡穿过，淡绿虚圈表示已转向或走开，青色勾表示已获穿泡；爆炸仍有危险。</p>
         <p><kbd>R</kbd> 重新开局</p>
         <button id="advanced-open" type="button" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button>
         <section id="advanced-settings" hidden>
@@ -92,7 +92,7 @@
         <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效</label>
         <h2>对手</h2>
         <label>对局规则
-          <select id="ruleset-select" aria-label="对局规则"><option value="bun-native-v3-items" selected>bun-native-v3-items · 更多道具 / 全图掉落</option><option value="bun-native-v2-face">bun-native-v2-face · 旧面朝规则</option><option value="bun-native-v2">bun-native-v2 · 旧顶泡规则</option><option value="stock-window-v1">stock-window-v1 · 旧库存窗口</option></select>
+          <select id="ruleset-select" aria-label="对局规则"><option value="bun-native-v4-facing" selected>bun-native-v4-facing · 前方首泡 / 更多道具</option><option value="bun-native-v3-items">bun-native-v3-items · 旧贴近面朝</option><option value="bun-native-v2-face">bun-native-v2-face · 旧面朝规则</option><option value="bun-native-v2">bun-native-v2 · 旧顶泡规则</option><option value="stock-window-v1">stock-window-v1 · 旧库存窗口</option></select>
         </label>
         <label>地图
           <select id="map-select">
@@ -140,7 +140,7 @@
             <optgroup id="model-options" label="训练模型（仅 1v1，选择后下载）"></optgroup>
           </select>
         </label>
-        <p class="note">默认采用 bun-native-v2-face 面朝穿点、自由取包、原生道具和糖泡规则。旧规则可在高阶设置切换，排行榜按规则分榜；历史 Review 使用录像各自的冻结规则。</p>
+        <p class="note">当前采用 bun-native-v4-facing：前方 3 格内无遮挡首泡计时，保留更多道具和全图死亡掉落。旧规则可在高阶设置切换；历史 Review 使用录像各自的冻结规则。</p>
         <p id="model-details" class="note"></p>
         <div id="model-progress-wrap" class="progress-wrap" hidden>
           <progress id="model-progress" max="100" value="0"></progress>
@@ -193,6 +193,8 @@
   <script src="sim-bun-native-v2-face.js"></script>
   <script src="ruleset_face_capture.js"></script>
   <script src="sim-bun-native-v3-items.js"></script>
+  <script src="ruleset_items_capture.js"></script>
+  <script src="sim-bun-native-v4-facing.js"></script>
   <script src="r3_model_inputs.js"></script>
   <script src="five-item-slots-v1.js"></script>
   <script src="five-item-slots-model-v1.js"></script>
