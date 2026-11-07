@@ -37,7 +37,7 @@ jobs:
           cp docs/assets/mainline_timeline_20261106.svg docs/assets/mainline_timeline_20261106.json _site/docs/assets/
           cp docs/combat_league_v2_training_path_20261106.md _site/docs/
           node scripts/assemble_web_runtime.js _site/vendor/ort
-          node -e 'require("fs").writeFileSync("_site/build-info.json", JSON.stringify({version:"leaderboard-v1",ruleset_version:"bun-native-v2-face",commit:process.env.GITHUB_SHA}) + "\n")'
+          node -e 'require("fs").writeFileSync("_site/build-info.json", JSON.stringify({version:"leaderboard-v1",ruleset_version:"bun-native-v3-items",commit:process.env.GITHUB_SHA}) + "\n")'
           mkdir -p _site/models
           python3 scripts/fetch_web_models.py --manifest web/models.json --output _site/models
           python3 - <<'PY'

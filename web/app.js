@@ -449,7 +449,11 @@
     const recoveryEvents = guard?.sim === sim && guard.generation === sim._gen ? guard.events : [];
     document.getElementById('boundary-recovery-status').textContent =
       `仅用于真人对战五槽模型；本局辅助 ${recoveryEvents.length} 次。前端辅助不代表模型原始能力。`;
+    const supply = sim.itemSupply;
+    document.getElementById('item-supply-status').textContent = supply
+      ? `本局开局道具 ${supply.initialActual} 件；砖内已掉落 ${supply.brickDropsActual} 件${supply.unplaced ? `；空格不足未补 ${supply.unplaced} 件` : ''}` : '';
     status.textContent = JSON.stringify({
+      item_supply: supply,
       mode: QQTModelCatalog.matchLabel(matchMode.value),
       tick: sim.t,
       player_or_model_alive: sim.alive[matchMode.value === 'model-vs-rule' ? 1 : 0],

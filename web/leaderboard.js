@@ -4,7 +4,7 @@
   else root.QQTLeaderboard = factory();
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   const KEY = 'qqt.leaderboard.v1';
-  const UNAVAILABLE = '该规则排行榜暂不可用（bun-native-v2-face），本局仅本地结算，可继续游戏';
+  const UNAVAILABLE = '该规则排行榜暂不可用，本局仅本地结算，可继续游戏';
   const length = value => Array.from(value).length;
   function profile(nickname, victoryMessage) {
     const nick = String(nickname).trim(), message = String(victoryMessage).trim();
@@ -329,7 +329,7 @@
       settlement = { ...card, closed: false }; emit(); return true;
     }
     function profileActive() { return !!profileRequest || !!(settlement && settlement.result !== 'loss' && settlement.submitted && !settlement.profileSkipped && !settlement.profileSaved); }
-    return { setBoardRuleset(version){if(!['bun-native-v2-face','bun-native-v2','stock-window-v1'].includes(version))throw Error('ruleset');boardRuleset=version;rows=[];refreshRevision++;emit();return refresh();}, state, begin, finish, refresh, syncProfile, retry: drain, setDraft, submitCard, openPending, submitProfile, submitSettlement, profileActive,
+    return { setBoardRuleset(version){if(!['bun-native-v3-items','bun-native-v2-face','bun-native-v2','stock-window-v1'].includes(version))throw Error('ruleset');boardRuleset=version;rows=[];refreshRevision++;emit();return refresh();}, state, begin, finish, refresh, syncProfile, retry: drain, setDraft, submitCard, openPending, submitProfile, submitSettlement, profileActive,
       setSettlementReady(ready) { if (settlementReady !== !!ready) { settlementReady = !!ready; emit(); } },
       markProfileDirty() { if (settlement) settlement.profileSaved = false; emit(); },
       closeSettlement() { if (pendingRequest || profileRequest || combinedRequest) return false; if (settlement) settlement.closed = true; emit(); return true; },
