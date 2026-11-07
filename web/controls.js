@@ -5,7 +5,14 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.QQTControls = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function buildControls() {
-  const MOVEMENT_KEYS = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+  // Physical codes stay stable when NumLock changes key values (5/Clear,
+  // 1/End, 2/ArrowDown, 3/PageDown). Keep aliases separate in held state so
+  // releasing one key never releases another key with the same direction.
+  const MOVEMENT_DIRECTIONS = Object.freeze({
+    ArrowUp: 0, ArrowDown: 1, ArrowLeft: 2, ArrowRight: 3,
+    Numpad5: 0, Numpad1: 2, Numpad2: 1, Numpad3: 3,
+  });
+  const MOVEMENT_KEYS = Object.keys(MOVEMENT_DIRECTIONS);
   // 原版用 Ctrl 放道具，但浏览器里 Ctrl+W/R 会关闭/刷新页面，改用 E / Shift。
   const ITEM_KEYS = ['KeyE', 'ShiftLeft', 'ShiftRight'];
   const BOMB_KEYS = ['Space', 'KeyW'];
@@ -15,8 +22,7 @@
   function moveForHeld(held) {
     let move = 4;
     for (const key of held) {
-      const direction = MOVEMENT_KEYS.indexOf(key);
-      if (direction >= 0) move = direction;
+      if (Object.hasOwn(MOVEMENT_DIRECTIONS, key)) move = MOVEMENT_DIRECTIONS[key];
     }
     return move;
   }
@@ -62,6 +68,6 @@
     return () => { for (const key of active.values()) held.delete(key); active.clear(); };
   }
 
-  return { MOVEMENT_KEYS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld,
+  return { MOVEMENT_KEYS, MOVEMENT_DIRECTIONS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld,
     isTypingTarget, isRestartKey, createRestartGate, bindTouchControls };
 });

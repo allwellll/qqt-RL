@@ -557,13 +557,15 @@
     if (slotKey >= 0 && itemCell < 0) { itemCell = humanCell(); itemSlot = slotKey; }
   });
   window.addEventListener('keyup', (event) => held.delete(event.code));
-  document.addEventListener('focusin', (event) => {
-    if (event.target.matches('input, textarea') || event.target.closest('dialog, #advanced-settings')) { held.clear(); bombCell = -1; itemCell = -1; }
-  });
-  window.addEventListener('blur', () => {
+  function clearHeldControls() {
     releaseTouchControls();
-    held.clear(); bombCell = -1; itemCell = -1;
+    held.clear(); bombCell = -1; itemCell = -1; itemSlot = 0;
+  }
+  document.addEventListener('focusin', (event) => {
+    if (QQTControls.isTypingTarget(event.target) || event.target.closest?.('dialog, #advanced-settings')) clearHeldControls();
   });
+  window.addEventListener('blur', clearHeldControls);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) clearHeldControls(); });
   restart.addEventListener('click', () => requestRestart());
   soundToggle.addEventListener('change', () => sound.setEnabled(soundToggle.checked));
   characterSelect.addEventListener('change', () => {

@@ -27,11 +27,11 @@ assert.strictEqual(controls.moveForHeld(new Set()), 4);
 for (const first of controls.MOVEMENT_KEYS) for (const last of controls.MOVEMENT_KEYS) {
   if (first === last) continue;
   const held = new Set([first, last]);
-  assert.equal(controls.moveForHeld(held), controls.MOVEMENT_KEYS.indexOf(last), 'new direction wins');
+  assert.equal(controls.moveForHeld(held), controls.MOVEMENT_DIRECTIONS[last], 'new direction wins');
   held.add(first);
-  assert.equal(controls.moveForHeld(held), controls.MOVEMENT_KEYS.indexOf(last), 'repeat cannot steal priority');
+  assert.equal(controls.moveForHeld(held), controls.MOVEMENT_DIRECTIONS[last], 'repeat cannot steal priority');
   held.delete(last);
-  assert.equal(controls.moveForHeld(held), controls.MOVEMENT_KEYS.indexOf(first), 'release restores held direction');
+  assert.equal(controls.moveForHeld(held), controls.MOVEMENT_DIRECTIONS[first], 'release restores held direction');
   held.clear();
   assert.equal(controls.moveForHeld(held), 4);
 }
@@ -39,7 +39,14 @@ for (const key of ['KeyW', 'KeyA', 'KeyS', 'KeyD']) {
   assert.strictEqual(controls.moveForHeld(new Set([key])), 4, `${key} 不再控制移动`);
 }
 assert.deepStrictEqual(controls.BOMB_KEYS, ['Space', 'KeyW'], 'Space 与 W 都放泡');
-assert(controls.MOVEMENT_KEYS.every((code) => code.startsWith('Arrow')), '必须声明并拦截四个方向键');
+for (const [code, direction] of Object.entries({Numpad5:0,Numpad1:2,Numpad2:1,Numpad3:3})) {
+  assert.equal(controls.moveForHeld(new Set([code])),direction);
+  assert(controls.MOVEMENT_KEYS.includes(code),'numpad movement must be intercepted');
+  assert(!controls.ITEM_SLOT_KEYS.includes(code),'numpad must never request an item');
+}
+assert.deepEqual(controls.ITEM_SLOT_KEYS,['Digit1','Digit2','Digit3','Digit4','Digit5','Digit6','Digit7'],'main-row items stay unchanged');
+assert.equal(controls.moveForHeld(new Set(['Digit1','Digit2','Digit3','Digit5','Numpad4','Numpad6','Numpad8'])),4);
+assert.equal(controls.moveForHeld(new Set(['toString'])),4,'unknown keys cannot inherit directions');
 console.log('网页方向键移动控制测试通过');
 
 (async () => {
