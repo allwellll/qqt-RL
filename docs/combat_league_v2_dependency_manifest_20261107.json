@@ -1537,7 +1537,7 @@
       ]
     },
     "scripts/cx_items_build_v2.py": {
-      "sha256": "94abeb7a33e6c4d8863998da9f15745a43ad4e9692863077898af3811316a1df",
+      "sha256": "3af15593b4a4ab35ed12c85a6af0e8b9c8447e5c2a3ebb564ae926234f5b97fa",
       "dependencies": [
         "jax_bomb/je05_core_env_r1_items.py",
         "jax_bomb/je07_bun_env_r1_items.py",
@@ -1603,7 +1603,7 @@
       ]
     },
     "scripts/cx_items_candidates_v1.py": {
-      "sha256": "a22170fa9b53088ce47f4e0f3850876441cd978513d7d64e9161675873707ffb",
+      "sha256": "8ffaed9572a5a701c4fa8fad4fa858a7b3e797cf9f9a93f7728afafe853597ba",
       "dependencies": [
         "scripts/cc_strong_eval_v1.py",
         "scripts/cc_strong_metrics_fountain_v1.js",

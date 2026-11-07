@@ -25,7 +25,7 @@ def freeze():
         p=read(path)
         for f,h in p['source_sha256'].items():assert sha(f)==h,f
         return p
-    ready=Path('../cx_main_best_path_20261106/.hermes/ITEM_RULE_READY.json');r=read(ready)
+    ready=Path(os.environ.get('QQT_ITEM_RULE_READY', '.hermes/ITEM_RULE_READY.json'));r=read(ready)
     production=os.path.relpath((ready.parent/r['repository_relative_to_manifest']).resolve())
     engine=production+'/web/sim-bun-native-v3-items.js'
     assert sha(engine)==r['paths_sha256']['web/sim-bun-native-v3-items.js']

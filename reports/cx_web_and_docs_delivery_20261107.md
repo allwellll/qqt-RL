@@ -33,7 +33,7 @@
 
 新增默认关闭的 `training_launch_policy.json` 与 `model_entry.py` 的导入前闸门；即使没有私有停止状态，训练角色/GPU配置/CUDA环境仍拒绝，CPU任务清理继承GPU环境。引入明确清单内DUEL混合/同步、v3物品版本迁移、CPU选模工具和代码图，全部只作封存来源或显式CPU用途，不执行prep/migration/owner/训练/fresh。外部protocol、Bank、场景、冻结副本和模型仍是必需本地输入，不冒称干净checkout可恢复。
 
-冲突处理：保留main已修复的可移植 `scripts/model_launch.py`，不回退到训练树机器专属别名；AGENTS规则只合本地忽略文件；ledger提取相对来源base的纯新增历史段追加到main，保留两侧记录，公开副本脱敏一个机器进程标识；当前停训覆盖所有历史后继文本。其余清单文件按封存字节接收；训练树全部web改动排除，旧协议/Review归档不改。[逐文件源SHA/处理/结果SHA](cx_web_and_docs_delivery_20261107/training-code-integration.json)。
+冲突处理：保留main已修复的可移植 `scripts/model_launch.py`，不回退到训练树机器专属别名；AGENTS规则只合本地忽略文件；ledger提取相对来源base的纯新增历史段追加到main，保留两侧记录，公开副本脱敏一个机器进程标识；当前停训覆盖所有历史后继文本。两个历史物品准备/CPU选模工具的契约定位改为QQT_ITEM_RULE_READY（默认当前仓库私有契约），去掉兄弟工作树绑定；来源报告外部契约位置改中性占位符。算法与原封存协议未改，源/结果SHA分列；其余清单文件按封存字节接收；训练树全部web改动排除，旧协议/Review归档不改。[逐文件源SHA/处理/结果SHA](cx_web_and_docs_delivery_20261107/training-code-integration.json)。
 
 静态闭包加入已review入口后扩为135roots/348dependencies，显式package import无缺文件。当前实际合并源码的停训闸门与闭包pytest9项、既有训练路径4项、69项CPU纯结算/防hack、5项独立DUEL纯结算检查均通过；allowlist内Python/Node语法通过，包内显式import本地依赖无缺失。完整npm在整合后再次全部通过。无collector、训练、优化器更新或fresh启动。
 

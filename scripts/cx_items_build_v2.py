@@ -1,10 +1,10 @@
 """Freeze opt-in rule/worker copies. Never edit a source used by old runs."""
-import json,shutil
+import json,shutil,os
 from pathlib import Path
 from scripts.population_run_state import atomic_json,sha
 
 ROOT=Path('runs/items_alignment_20261107/v2')
-READY=Path('../cx_main_best_path_20261106/.hermes/ITEM_RULE_READY.json')
+READY=Path(os.environ.get('QQT_ITEM_RULE_READY', '.hermes/ITEM_RULE_READY.json'))
 
 
 def once(text,old,new):

@@ -13,8 +13,8 @@
     {
       "path": "docs/training_code_map_20261107.md",
       "source_sha256": "9fbbbf6027f35f01be5204120bcf2cb51b43cfa784cb2aa482e5ea7325bcda58",
-      "integration": "copied exact reviewed bytes",
-      "result_sha256": "9fbbbf6027f35f01be5204120bcf2cb51b43cfa784cb2aa482e5ea7325bcda58"
+      "integration": "reviewed text with additive main portability note",
+      "result_sha256": "d40c7514c3c5a0a716da0e5c7b773a036a5cd515f8116136e9d009a275f2ed99"
     },
     {
       "path": "docs/training_experiment_ledger.md",
@@ -67,8 +67,8 @@
     {
       "path": "reports/cx_items_training_align_20261107.md",
       "source_sha256": "0124c67b2b64a5ed63ee69325e7e4919a2cf99178478c10c9b9f1b4110845d1c",
-      "integration": "copied exact reviewed bytes",
-      "result_sha256": "0124c67b2b64a5ed63ee69325e7e4919a2cf99178478c10c9b9f1b4110845d1c"
+      "integration": "external private contract location changed to neutral placeholder; original measurements retained",
+      "result_sha256": "9dab4175f1111e7c264073f9704e393aefb7f8b2ab92737ffc5fa88e85bce528"
     },
     {
       "path": "reports/cx_training_stopped_20261107.md",
@@ -175,8 +175,8 @@
     {
       "path": "scripts/cx_items_build_v2.py",
       "source_sha256": "94abeb7a33e6c4d8863998da9f15745a43ad4e9692863077898af3811316a1df",
-      "integration": "copied exact reviewed bytes",
-      "result_sha256": "94abeb7a33e6c4d8863998da9f15745a43ad4e9692863077898af3811316a1df"
+      "integration": "portable private contract lookup via QQT_ITEM_RULE_READY; algorithm unchanged; original sealed protocol/source hashes retained externally",
+      "result_sha256": "3af15593b4a4ab35ed12c85a6af0e8b9c8447e5c2a3ebb564ae926234f5b97fa"
     },
     {
       "path": "scripts/cx_items_candidate_cpu_v2.py",
@@ -211,8 +211,8 @@
     {
       "path": "scripts/cx_items_candidates_v1.py",
       "source_sha256": "a22170fa9b53088ce47f4e0f3850876441cd978513d7d64e9161675873707ffb",
-      "integration": "copied exact reviewed bytes",
-      "result_sha256": "a22170fa9b53088ce47f4e0f3850876441cd978513d7d64e9161675873707ffb"
+      "integration": "portable private contract lookup via QQT_ITEM_RULE_READY; algorithm unchanged; original sealed protocol/source hashes retained externally",
+      "result_sha256": "8ffaed9572a5a701c4fa8fad4fa858a7b3e797cf9f9a93f7728afafe853597ba"
     },
     {
       "path": "scripts/cx_items_install_v2.py",

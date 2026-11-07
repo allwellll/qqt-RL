@@ -61,3 +61,8 @@
 CPU已通过7项真实启动闸门测试、69项FTN2结算/防hack测试和5项DUEL纯结算测试。`git diff --check`通过；源码、资产、协议和最后COMMITTED的SHA均复核。复核只更新当前审计产物，不重写封存protocol/测试回执。
 
 训练树有大量既有实验与网页修改；本次不整树add、reset、搬目录或push。交付按明确文件清单及SHA，由网页集成owner非破坏性review后合main。不能覆盖main自己的AGENTS、现行v4网页规则/模型目录或旧Review，不纳入`.hermes`、`local_config`、runs/checkpoints、私有软链及凭证。完整主仓库全测由集成owner在其实际合并HEAD执行并记录Actions/Pages SHA。
+
+
+## main可移植整合补注
+
+main保留现有 `scripts/model_launch.py` 的当前仓库/解释器实现，不依赖本机别名。历史v3准备与CPU选模工具的契约查找统一使用 `QQT_ITEM_RULE_READY`，缺省为当前仓库私有 `.hermes/ITEM_RULE_READY.json`；不硬编码兄弟工作树。它们仍需要原冻结protocol/来源SHA与外部产物，封存协议不改，当前不执行准备/迁移/训练。源包身份与这些可移植修改在逐项整合收据分列。
