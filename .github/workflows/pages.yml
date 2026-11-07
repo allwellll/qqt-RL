@@ -39,7 +39,7 @@ jobs:
           mkdir -p _site/reports _site/docs/assets
           cp reports/mainline_timeline_20261028.html reports/mainline_timeline_20261106.html reports/mainline_timeline_evidence_20261106.json reports/publish_k1_u5282_20261101.md reports/web_model_promotion_20261104.md _site/reports/
           cp docs/assets/mainline_timeline_20261106.svg docs/assets/mainline_timeline_20261106.json _site/docs/assets/
-          cp docs/combat_league_v2_training_path_20261106.md docs/current_web_and_training_status_20261107.md docs/training_code_map_20261107.md _site/docs/
+          cp docs/continue_training_on_new_machine.md docs/combat_league_v2_training_path_20261106.md docs/current_web_and_training_status_20261107.md docs/training_code_map_20261107.md _site/docs/
           node scripts/assemble_web_runtime.js _site/vendor/ort
           node -e 'require("fs").writeFileSync("_site/build-info.json", JSON.stringify({version:"leaderboard-v1",ruleset_version:"bun-native-v4-facing",commit:process.env.GITHUB_SHA}) + "\n")'
           mkdir -p _site/models

@@ -1630,7 +1630,7 @@
       ]
     },
     "scripts/cx_items_install_v2.py": {
-      "sha256": "ce107a7a0a9e372aa8b56d152308ce4487a51e31aac82937f43065cce81961f2",
+      "sha256": "3b7d908dd4fe84557e83ae847dad9c3143fbd3e3ec9c0cf4138687b66f81a498",
       "dependencies": [
         "scripts/cc_league2_train.py",
         "scripts/population_run_state.py"

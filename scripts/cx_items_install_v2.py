@@ -18,8 +18,8 @@ def install(protocol):
     for f,h in protocol['source_sha256'].items():assert sha(f)==h,f
     mapping=rule['private_modules']
     for name in mapping:assert name not in sys.modules,'already imported '+name
-    os.environ.update(CX_ITEMS_ACCEPTED_RULE=str(path),CX_ITEMS_BASE_SOURCE=mapping['scripts.cc_league2_train'],
-        JAXBOMB_BUN_LEVELS=str((path.parent/'canonical/web/assets/maps/levels.json').resolve()))
+    os.environ.update(CX_ITEMS_ACCEPTED_RULE=str(path),CX_ITEMS_BASE_SOURCE=mapping.get('scripts.cc_league2_train',''),
+        JAXBOMB_BUN_LEVELS=str(Path(rule.get('levels_path',path.parent/'canonical/web/assets/maps/levels.json')).resolve()))
     sys.meta_path.insert(0,Finder(mapping))
     return rule
 

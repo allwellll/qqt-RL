@@ -11,3 +11,5 @@
 - [JE10 长训总结](je10_control_route_training_summary.md)、[CX 经验](cx_experiment_lessons.md)、[主动击杀历史结论](active_kill_experiment_conclusions_20261004.md)：保留旧协议的限制，不作为 R3/R4 晋升证据。
 
 `runs/`、完整 state/Adam/env/RNG、原始逐局记录及大模型不进入 Git。下列指南明确哪些复现需要外部产物；干净 checkout 不具备这些数据时，不应把缺数据称为测试通过。
+
+- [新机器继续 DUEL/SP：Release、环境、停训授权与只存模型](continue_training_on_new_machine.md)

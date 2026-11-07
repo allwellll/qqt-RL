@@ -31,3 +31,5 @@
 - [R1–R4快照](../docs/r1_r4_training_guide_20261101.md)、[G/联赛v2闭包快照](../docs/combat_league_v2_training_path_20261106.md)：历史代码与外部产物要求，非恢复授权。
 - [JE10长期总结](../docs/je10_control_route_training_summary.md)、[旧Review与D证据](../docs/README.md)：旧规则、hash、奖励口径继续按原版本读取。
 - `runs/`、`checkpoints/`、原始录像和秘密文件保持原地、不因索引整理删除或发布。训练owner停止/COMMITTED的本地原始回执仅在明确review、脱敏后进入公开报告，不复制私有编排状态。
+
+- [DUEL/SP 最小迁移包与 Release 交付](cx_portable_training_bundle_20261107.md)

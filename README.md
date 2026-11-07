@@ -1,5 +1,7 @@
 # qqt-RL
 
+新机器继续 DUEL / SP：见[正式迁移与续训说明](docs/continue_training_on_new_machine.md)（Release 权重与必要数据、安装/校验/开训命令；当前仍停训，恢复需重新授权；仅 DUEL 本机 CPU 加载检查通过，SP 与干净目录未验证）。
+
 纯 Bun（抢包子）强化学习仓库，覆盖 JAX 环境仿真、PPO/GAE 训练、独立 Critic/Target Critic、模型评估与浏览器真人测试。
 
 早期 safe-aggression r6 与 cycle 9 的 runner 保留用于历史复现；现行 R1–R4 主线、网页规则和实验边界见本页现行索引。历史训练命令不表示旧队列获准恢复。
