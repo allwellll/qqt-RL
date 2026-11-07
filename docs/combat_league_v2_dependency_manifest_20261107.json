@@ -77,6 +77,15 @@
     "scripts/combat_specialist_g_league_train.py",
     "scripts/combat_specialist_g_mixed.py",
     "scripts/combat_specialist_g_owner.py",
+    "scripts/cx_duel_lib_v3.py",
+    "scripts/cx_duel_mixed_v3.py",
+    "scripts/cx_duel_reward_v1.py",
+    "scripts/cx_duel_scenarios_v1.py",
+    "scripts/cx_duel_sync_train_v3.py",
+    "scripts/cx_duel_sync_train_v4.py",
+    "scripts/cx_duel_sync_update_v1.py",
+    "scripts/cx_duel_train_v3.py",
+    "scripts/cx_duel_updater_v1.py",
     "scripts/cx_fountain_continuation_v2.py",
     "scripts/cx_ftn2_budget_owner_v1.py",
     "scripts/cx_ftn2_budget_policy_test_v1.py",
@@ -93,6 +102,21 @@
     "scripts/cx_idle_observer_adapter_v1.js",
     "scripts/cx_idle_replay_test_v1.js",
     "scripts/cx_idle_replay_v1.js",
+    "scripts/cx_items_build_v2.py",
+    "scripts/cx_items_candidate_cpu_v2.py",
+    "scripts/cx_items_candidate_cpu_v3.py",
+    "scripts/cx_items_candidate_games_v1.js",
+    "scripts/cx_items_candidate_worker_v1.js",
+    "scripts/cx_items_candidates_report_v1.py",
+    "scripts/cx_items_candidates_v1.py",
+    "scripts/cx_items_install_v2.py",
+    "scripts/cx_items_native_v2.py",
+    "scripts/cx_items_parity_v2.js",
+    "scripts/cx_items_receipts_v2.py",
+    "scripts/cx_items_rules_v2.py",
+    "scripts/cx_items_test_v2.py",
+    "scripts/cx_items_transition_v2.py",
+    "scripts/cx_safe_frontier_v1.py",
     "scripts/cx_strong_holdout_v1.py",
     "scripts/cx_strong_watch_v1.py",
     "scripts/cx_temperature_eval_v1.py",
@@ -105,11 +129,13 @@
     "scripts/cx_web_temperature_eval_v1.py",
     "scripts/cx_web_temperature_setup_v1.js",
     "scripts/cx_web_temperature_worker_v1.js",
+    "scripts/model_launch.py",
     "scripts/model_sampling_v1.js",
     "scripts/multi_region_g_cpu_validation_v1.py",
     "scripts/multi_region_g_mixed_v1.py",
     "scripts/multi_region_g_train_v1.py",
-    "tests/test_combat_league_training_path.py"
+    "tests/test_combat_league_training_path.py",
+    "training_launch_policy.json"
   ],
   "optional_dependencies": {
     "web/sim.js": [
@@ -271,7 +297,7 @@
       "dependencies": []
     },
     "model_entry.py": {
-      "sha256": "e05344c5a2e95ec7f716c97ed2891dafc502b00c92223242792889e93be925e4",
+      "sha256": "37d5f45e21a11db36003a3071710daa2423d1bedc738cff9597766053385bf99",
       "dependencies": []
     },
     "model_evaluation.js": {
@@ -1281,6 +1307,88 @@
         "scripts/je08_bun_potential.py"
       ]
     },
+    "scripts/cx_duel_lib_v3.py": {
+      "sha256": "8788e45cfa2c9cbfa6d232b07da2b3d073ef5d2a3e476353d3805e5cb5a45882",
+      "dependencies": [
+        "scripts/cc_league2_lib.py",
+        "scripts/cx_duel_mixed_v3.py",
+        "scripts/cx_duel_reward_v1.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_reward.py"
+      ]
+    },
+    "scripts/cx_duel_mixed_v3.py": {
+      "sha256": "82bd0f1065bdfec785852ee8ef237976533df7ce063309faa3d016bf2adaf8db",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_native_items.py",
+        "scripts/combat_regions_mixed_v2.py",
+        "scripts/cx_duel_reward_v1.py",
+        "scripts/cx_duel_scenarios_v1.py",
+        "scripts/r4_k4_collector.py",
+        "scripts/r4_k4_observation.py"
+      ]
+    },
+    "scripts/cx_duel_reward_v1.py": {
+      "sha256": "85497f1232a8ec3fce334bf0e171398bfcff9c1dba96432643ec6a40cf536833",
+      "dependencies": []
+    },
+    "scripts/cx_duel_scenarios_v1.py": {
+      "sha256": "e98c6f2fed93a8dccc78b2646068bba9cb2a399aceaa91a055ae9bc7b9a80a47",
+      "dependencies": []
+    },
+    "scripts/cx_duel_sync_train_v3.py": {
+      "sha256": "d79365b140951557cab52374ff860c3a472b386f8208d6266f2ceb3d59fc05a1",
+      "dependencies": [
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/cx_duel_lib_v3.py",
+        "scripts/cx_duel_mixed_v3.py",
+        "scripts/cx_duel_sync_update_v1.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_collector.py",
+        "scripts/r4_k4_observation.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/cx_duel_sync_train_v4.py": {
+      "sha256": "4321c102b5e268d8fb2abca683bfb90c35f7520ea48882f2200966c5e2a3bc27",
+      "dependencies": [
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/cx_duel_lib_v3.py",
+        "scripts/cx_duel_mixed_v3.py",
+        "scripts/cx_duel_sync_update_v1.py",
+        "scripts/model_cuda_overlay.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_collector.py",
+        "scripts/r4_k4_observation.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/cx_duel_sync_update_v1.py": {
+      "sha256": "3e392396da4556eb1f121725142bcdf76bc1e2a9f7902b299609818082cae6c1",
+      "dependencies": [
+        "scripts/cx_duel_updater_v1.py"
+      ]
+    },
+    "scripts/cx_duel_train_v3.py": {
+      "sha256": "85e129d646f23e935db651ffa5e6c4ebb791896eb7ff02e925e1effd0f7df6eb",
+      "dependencies": [
+        "scripts/cc_league2_train.py",
+        "scripts/cc_sil_updater_v1.py",
+        "scripts/cx_duel_lib_v3.py",
+        "scripts/cx_duel_updater_v1.py",
+        "scripts/cx_ftn2_train_v1.py"
+      ]
+    },
+    "scripts/cx_duel_updater_v1.py": {
+      "sha256": "886c8c16d69ac65ec0684bc2823bd6700f884fcee21e98d8c06c377684c857a1",
+      "dependencies": [
+        "jax_bomb/jax_train.py",
+        "scripts/r4_k4_collector.py",
+        "scripts/r4_k4_observation.py"
+      ]
+    },
     "scripts/cx_fountain_continuation_v2.py": {
       "sha256": "00a6d7a5b92f9215b6d2b97a6046fc2126c49a0fe739267dd27423c1261b1321",
       "dependencies": [
@@ -1426,6 +1534,169 @@
       "dependencies": [
         "scripts/cc_strong_metrics_fountain_v1.js",
         "scripts/native_eval_simulator_v1.js"
+      ]
+    },
+    "scripts/cx_items_build_v2.py": {
+      "sha256": "94abeb7a33e6c4d8863998da9f15745a43ad4e9692863077898af3811316a1df",
+      "dependencies": [
+        "jax_bomb/je05_core_env_r1_items.py",
+        "jax_bomb/je07_bun_env_r1_items.py",
+        "scripts/cc_league2_train.py",
+        "scripts/cc_league2_train_sp.py",
+        "scripts/combat_regions_mixed_v2.py",
+        "scripts/cx_duel_mixed_v3.py",
+        "scripts/cx_duel_sync_train_v4.py",
+        "scripts/cx_duel_train_v3.py",
+        "scripts/cx_ftn2_train_v1.py",
+        "scripts/cx_items_build_v2.py",
+        "scripts/cx_items_receipts_v2.py",
+        "scripts/cx_items_rules_v2.py",
+        "scripts/population_run_state.py",
+        "web/sim-bun-native-v2-face.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/cx_items_candidate_cpu_v2.py": {
+      "sha256": "9c9cacf4394b05fe58ca0866fda2befced1c728308ad326899f43c504af89def",
+      "dependencies": [
+        "scripts/cx_items_candidates_v1.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_items_candidate_cpu_v3.py": {
+      "sha256": "79eaddcbbf135725c4c7008fbac8528f15867105f841b50546722bdbc77b9a76",
+      "dependencies": [
+        "scripts/cx_items_candidates_v1.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_items_candidate_games_v1.js": {
+      "sha256": "e1d602ce4a2d4874ef1b21fe18f749219313f5ee427da751747696fe476db7a1",
+      "dependencies": [
+        "web/tactical_arena.js"
+      ]
+    },
+    "scripts/cx_items_candidate_worker_v1.js": {
+      "sha256": "d321b8fccb461f45ad083543054ad197cbc3336b1cb7820231e08d3b5d364773",
+      "dependencies": [
+        "scripts/cc_strong_metrics_fountain_v1.js",
+        "scripts/cx_idle_replay_v1.js",
+        "scripts/interceptor_primary_inference_v1.js",
+        "scripts/resume_gpu67_eval_v1.js",
+        "web/bot_contract.js",
+        "web/bun_coop_hunter_bot.js",
+        "web/bun_hunter_bot.js",
+        "web/bun_rule_bot.js",
+        "web/model_sampling_v1.js",
+        "web/sim-bun-native-v2.js"
+      ]
+    },
+    "scripts/cx_items_candidates_report_v1.py": {
+      "sha256": "4f2a2efb0b29a1c2af972cc7d4ab01670b1aa5bf2a444c192022e24c03c0e554",
+      "dependencies": [
+        "scripts/corner_counterplay_stage_report_v1.py",
+        "scripts/cx_items_candidate_cpu_v3.py",
+        "scripts/cx_items_candidates_report_v1.py",
+        "scripts/cx_items_candidates_v1.py",
+        "scripts/population_run_state.py",
+        "scripts/r4_k4_export.py"
+      ]
+    },
+    "scripts/cx_items_candidates_v1.py": {
+      "sha256": "a22170fa9b53088ce47f4e0f3850876441cd978513d7d64e9161675873707ffb",
+      "dependencies": [
+        "scripts/cc_strong_eval_v1.py",
+        "scripts/cc_strong_metrics_fountain_v1.js",
+        "scripts/combat_regions_metrics_v2.js",
+        "scripts/combat_specialist_g7_source_metrics.js",
+        "scripts/cx_idle_replay_v1.js",
+        "scripts/cx_items_candidate_games_v1.js",
+        "scripts/cx_items_candidate_worker_v1.js",
+        "scripts/cx_items_candidates_report_v1.py",
+        "scripts/cx_items_candidates_v1.py",
+        "scripts/cx_temperature_report_v1.py",
+        "scripts/five_item_slots_inference.js",
+        "scripts/interceptor_primary_chain_metrics_v1.js",
+        "scripts/interceptor_primary_inference_v1.js",
+        "scripts/je05_bun_encoding.js",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py",
+        "scripts/r3_items_inference.js",
+        "scripts/r3_items_metrics.js",
+        "scripts/resume_gpu67_eval_v1.js",
+        "web/five-item-slots-model-v1.js",
+        "web/five-item-slots-v1.js",
+        "web/sim-bun-native-v3-items.js"
+      ]
+    },
+    "scripts/cx_items_install_v2.py": {
+      "sha256": "ce107a7a0a9e372aa8b56d152308ce4487a51e31aac82937f43065cce81961f2",
+      "dependencies": [
+        "scripts/cc_league2_train.py",
+        "scripts/population_run_state.py"
+      ]
+    },
+    "scripts/cx_items_native_v2.py": {
+      "sha256": "108e3ef5c4fec9fc27f8bb21c8c5369d1cc965ebc61ca2baa77cb5f47b752fde",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_native_items.py",
+        "scripts/cx_items_rules_v2.py"
+      ]
+    },
+    "scripts/cx_items_parity_v2.js": {
+      "sha256": "ad85a5f737f356f911691571e4e447a8105b0802a0742bdd2d63b0f3ad7e5304",
+      "dependencies": []
+    },
+    "scripts/cx_items_receipts_v2.py": {
+      "sha256": "a88c275582b449b37c0bcd529b8c8d4ebb48e37a96fa946944540481b7adb78e",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "jax_bomb/levels.py",
+        "scripts/cc_league2_lib.py",
+        "scripts/cc_league2_sp_lib.py",
+        "scripts/cx_items_rules_v2.py",
+        "scripts/population_run_state.py",
+        "scripts/terminal_checkpoint_restore.py"
+      ]
+    },
+    "scripts/cx_items_rules_v2.py": {
+      "sha256": "ff3ca434fcf0798af0c8e876d0a0f90e67928863e1cd578c7ece0ea9b5a0ecef",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "jax_bomb/je07_native_items.py",
+        "jax_bomb/levels.py"
+      ]
+    },
+    "scripts/cx_items_test_v2.py": {
+      "sha256": "6867a18b217be2c2318d6572ae6d82c8321b92c40e1cccc286d8ec8f1dcfd64e",
+      "dependencies": [
+        "jax_bomb/__init__.py",
+        "jax_bomb/je07_bun_env.py",
+        "jax_bomb/je07_native_items.py",
+        "jax_bomb/levels.py",
+        "scripts/combat_specialist_g_league_train.py",
+        "scripts/cx_duel_mixed_v3.py",
+        "scripts/cx_items_build_v2.py",
+        "scripts/cx_items_install_v2.py",
+        "scripts/cx_items_parity_v2.js",
+        "scripts/cx_items_rules_v2.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py",
+        "scripts/terminal_checkpoint_restore.py",
+        "web/sim-bun-native-v3-items.js",
+        "web/test_item_rules.js"
+      ]
+    },
+    "scripts/cx_items_transition_v2.py": {
+      "sha256": "8748490a56eba70c1e26aeae04455cbbc232d1942c4dbf3b6087b3e77b356e15",
+      "dependencies": [
+        "scripts/cx_duel_sync_train_v4.py",
+        "scripts/cx_items_install_v2.py",
+        "scripts/model_launch.py",
+        "scripts/population_run_state.py"
       ]
     },
     "scripts/cx_safe_frontier_v1.py": {
@@ -2646,8 +2917,16 @@
         "scripts/model_launch.py"
       ]
     },
+    "training_launch_policy.json": {
+      "sha256": "d33de02d4400fe687b988cafd3675e145fd06297c066934aa44cec757414c271",
+      "dependencies": []
+    },
     "web/app.js": {
       "sha256": "ea9394605c2bb7ae345d2567374209376887cc1a0f3f102beea17975ca176858",
+      "dependencies": []
+    },
+    "web/assets/maps/levels.json": {
+      "sha256": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
       "dependencies": []
     },
     "web/bot_contract.js": {
@@ -2690,6 +2969,10 @@
     },
     "web/five-item-slots-v1.js": {
       "sha256": "410e2613da8c7d0701b91fd8cd8c5a63110c3c11f22d80c88461366b3c1a0108",
+      "dependencies": []
+    },
+    "web/model_sampling_v1.js": {
+      "sha256": "da4f26ebd630826f5c9ff47ecc91c224e5c8aa342bbd7b7ea079380425b64a85",
       "dependencies": []
     },
     "web/review-sim/bun-native-v2-20261104.js": {
@@ -2779,6 +3062,18 @@
     "web/tactical_arena.js": {
       "sha256": "aa44a558b4e084b19f1c619c03a4610c91dcde31a3de2eb8619b6aa0078deea9",
       "dependencies": []
+    },
+    "web/test_item_rules.js": {
+      "sha256": "5d0c011a569f44ee1b1ee929bd24e76a691fa83b0760dfe37b4b195b4da8fd60",
+      "dependencies": [
+        "scripts/native_eval_simulator_v1.js",
+        "web/assets/maps/levels.json",
+        "web/review_protocol.js",
+        "web/sim-bun-native-v2-face.js",
+        "web/sim-bun-native-v3-items.js",
+        "web/sim-bun-native-v4-facing.js",
+        "web/tactical_arena.js"
+      ]
     }
   }
 }

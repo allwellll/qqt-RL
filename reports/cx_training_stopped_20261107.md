@@ -32,3 +32,11 @@ GPU实测：
 统一持久状态 `.hermes/TRAINING_STOP_STATE.json`，全局worker停止闸门 `runs/cc_train_20261105/training/USER_STOP.json`，每臂USER_STOP/NO_SUCCESSOR及namespace SUCCESSOR_CANCELLED均保留。原预算目标已撤销，不再等待终点。通用入口model_entry在GPU导入前拒绝新训练，fresh白名单清空；恢复必须用户以后明确重新授权。
 
 网页候选沿用856局与READY契约：DUEL u019902 τ0.3近身击杀、SP u023302 τ0.3猎手与喷泉。发布回执 `.hermes/WEB_CANDIDATE_PUBLISHED.json`；不等待大规模新评测。
+
+## CPU代码复核与网页发布
+
+7项停止闸门测试、69项FTN2防刷分测试、5项DUEL结算测试、生产道具JS回归、Python/JS语法及diff检查均通过。所有active协议来源SHA仍一致；未改旧protocol，未启动GPU更新。新`training_launch_policy.json`可入版本库，缺失私有停止文件也默认禁止训练。代码索引 `docs/training_code_map_20261107.md`，审计 `runs/code_review_20261107/REVIEW_TESTS.json`。
+
+两候选已由网页CX发布并在桌面/移动端核验，默认仍G_frozen τ0.3。线上为v4-facing，v3评测与v4兼容快筛分开。线上URL https://allwellll.github.io/qqt-RL/；SHA `c2ed1cb26b4c9546c7e8554f10dceae2eb451c74`；Actions https://github.com/allwellll/qqt-RL/actions/runs/42347826789 success。本owner独立读回线上模型目录确认两可选存在。
+
+review后的代码/文档按文件SHA清单交网页集成owner合main，不整树覆盖、不并发push。原始所有runs/checkpoints/协议保留。

@@ -2,6 +2,7 @@
 
 当前状态以 [20261107 网页、模型与暂停说明](current_web_and_training_status_20261107.md) 为准：[模型交付](../reports/cx_web_specialists_items_v3_20261107.md) · [手机触控](../reports/cx_mobile_controls_20261107.md) · [报告索引](../reports/README.md)。当前 v4-facing、G_frozen τ0.3 默认、DUEL/SP可选，训练立即暂停、全部后继撤销；旧日期文档中的运行状态是历史快照。
 
+- [训练代码与封存索引](training_code_map_20261107.md)：已review工具、暂停策略、外部冻结输入与旧入口禁用边界。
 - [20261101 R1–R4 训练、评估与奖励快照](r1_r4_training_guide_20261101.md)：历史入口、版本和证据边界；不代表当前网页规则或训练授权。
 - [实验总账](training_experiment_ledger.md)：包含历史负结果、协议修订、停止与恢复记录；按实验ID检索。
 - [本次 main 同步验收](../reports/main_sync_20261031.md)：同步、排除、测试及同 SHA Pages 验收。

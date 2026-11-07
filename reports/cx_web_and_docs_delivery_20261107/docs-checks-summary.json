@@ -1,11 +1,16 @@
 {
-  "npm_test": "PASS",
+  "npm_test": "PASS including after reviewed integration",
   "controls_catalog_v4": "PASS",
-  "static_closure": "PASS 109 roots / 321 dependencies",
+  "static_closure": "PASS 135 roots / 348 dependencies",
   "static_pytest": "PASS 2",
   "local_links": "PASS",
   "tracked_privacy": "PASS 0 findings",
   "staged_privacy_paths_credentials": "PASS 0 findings",
   "web_bytes_preserved": true,
-  "training_started": false
+  "training_started": false,
+  "stop_gate_tests": "PASS 7",
+  "existing_training_path": "PASS 4",
+  "ftn2_antihack": "PASS 69 CPU only",
+  "duel_settlement": "PASS 5 CPU only",
+  "owner_review_handoff": "46 source entries verified; explicit merge exceptions documented"
 }

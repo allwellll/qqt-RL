@@ -35,11 +35,11 @@
 |模型菜单/推理|`models.json`、`model_catalog.js`、`model_inference_defaults.json`、`model_loader.js`、model worker；manifest和SHA是资产身份|
 |本地预览/测试|`npm ci`、`npm run serve`；`npm test`包含旧Review兼容，测试不表示恢复训练|
 |版本化Review|`review.html`、`review_protocol.js`、`web/review-sim/`及明确版本simulator；按原ruleset/SHA回放，不改旧录像|
-|历史G/联赛训练闭包|`model_training.py`、`model_entry.py`、`scripts/model_launch.py`及明确配置module；[11月6日闭包](combat_league_v2_training_path_20261106.md)是快照，不含所有本地后续实验|
+|历史G/联赛训练闭包|`model_training.py`已由`training_launch_policy.json`默认关闭；`model_entry.py`在导入payload前阻断训练/GPU并清理CPU任务继承的GPU环境，`scripts/model_launch.py`保留main可移植实现；[11月6日闭包](combat_league_v2_training_path_20261106.md)是快照，不含所有本地后续实验|
 |评估/诊断|`model_evaluation.py`、`model_diagnostics.py`、`model_evaluation.js`读取本地配置；必须核对配置目标是评估而非训练，物理/模型SHA与输出分母单列|
 |历史r6/cycle/JE10/R1–R4|保留源码、报告与原协议；旧命令/自动后继说明仅供追溯，不是当前启动入口或授权|
 
-当前静态依赖闭包见 [20261107 manifest](combat_league_v2_dependency_manifest_20261107.json)，执行 `python3 scripts/audit_combat_training_path.py` 只解析源码、不导入训练或启动worker；109个根入口、321个本地依赖。11月6日manifest保留为历史快照。
+当前静态依赖闭包见 [20261107 manifest](combat_league_v2_dependency_manifest_20261107.json)，执行 `python3 scripts/audit_combat_training_path.py` 只解析源码、不导入训练或启动worker；135个根入口、348个本地依赖。11月6日manifest保留为历史快照。
 
 不把文件名相似当作可互换的入口；历史 `sim-bun-native-v2.js`、v2-face、v3-items 与归档Review仍保留，不通过覆盖旧文件“升级”录像。当前物理由selector和实际加载文件决定，不单凭规则名判断生效。
 
@@ -57,4 +57,4 @@
 
 持久停止状态在本地 `.hermes/TRAINING_STOP_STATE.json`，它是编排文件而非公开凭据/协议。历史“持续”“下一1200”等ledger条目不构成新授权。CPU选模可继续，但不得以评估/恢复验证触发训练。不得删除runs、checkpoints、旧录像、秘密文件或大范围整理无关目录。
 
-[实验ledger](training_experiment_ledger.md)保留原条目并新增有日期的覆盖记录；[报告索引](../reports/README.md)区分研究、规则、模型、手机与发布。训练owner交付只有在明确review清单和SHA匹配后非破坏性合并，不整树覆盖其未就绪网页文件。
+[实验ledger](training_experiment_ledger.md)保留原条目并新增有日期的覆盖记录；[报告索引](../reports/README.md)区分研究、规则、模型、手机与发布。训练owner已review的46项交付已核对封存包与逐文件SHA，非破坏性合并停训策略、专项/物品/CPU评估工具和文档；保留main可移植launcher、增量合并ledger、AGENTS仅合本地忽略规则，不整树覆盖其未就绪网页文件。[训练代码与封存索引](training_code_map_20261107.md)说明历史入口、外部冻结输入与当前禁用边界。

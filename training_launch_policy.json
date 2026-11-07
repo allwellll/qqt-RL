@@ -1,0 +1,7 @@
+{
+  "schema": "qqt.training-launch-policy/v1",
+  "training_enabled": false,
+  "gpu_diagnostics_enabled": false,
+  "resume_requires_explicit_user_authorization": true,
+  "reason": "User requested training stop. Preserve checkpoints; CPU evaluation, export and code review remain allowed."
+}

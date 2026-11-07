@@ -1,0 +1,315 @@
+{
+  "schema": "qqt.reviewed-training-integration/v1",
+  "source_status": "REVIEWED_READY_FOR_INTEGRATION",
+  "source_base_sha": "47579065def50e8d87fc30dccb8b1e256858654b",
+  "bundle_sha256": "2fd41b9509f6435771f35dcabc2526f4ee94a1204f7862a3b6ba91c7adb31075",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "source_sha256": "8677b29a0705e02c42ae42b10f28ff8eb2cc872d6ccac2022dea2d0d472a0d56",
+      "integration": "merged local ignored rules; not tracked",
+      "result_sha256": "a3954fe181934e640b58480fc1b53b7650a16f06209e0c348a769b2d70d09a8e"
+    },
+    {
+      "path": "docs/training_code_map_20261107.md",
+      "source_sha256": "9fbbbf6027f35f01be5204120bcf2cb51b43cfa784cb2aa482e5ea7325bcda58",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "9fbbbf6027f35f01be5204120bcf2cb51b43cfa784cb2aa482e5ea7325bcda58"
+    },
+    {
+      "path": "docs/training_experiment_ledger.md",
+      "source_sha256": "5ee594fd98eaf72db0518d6b84033b47ff2935456fae86093e991d71411eafed",
+      "integration": "additive historical insertions; runtime identity redactions=9",
+      "result_sha256": "44cdbc05fceac8c6f44df8128c4ed90c9c83acdefba03d6b083cf1ef7859a370"
+    },
+    {
+      "path": "model_diagnostics.py",
+      "source_sha256": "ecf83fc85cb056ff51cd5019537ea333f8a235031a8fda26623f9be3cc4897e1",
+      "integration": "same bytes already on main",
+      "result_sha256": "ecf83fc85cb056ff51cd5019537ea333f8a235031a8fda26623f9be3cc4897e1"
+    },
+    {
+      "path": "model_entry.py",
+      "source_sha256": "37d5f45e21a11db36003a3071710daa2423d1bedc738cff9597766053385bf99",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "37d5f45e21a11db36003a3071710daa2423d1bedc738cff9597766053385bf99"
+    },
+    {
+      "path": "model_evaluation.js",
+      "source_sha256": "46f6e8a60d5d237fff3ff9ef4679426189b705e6dfd456ea3c59656e87dbd11f",
+      "integration": "same bytes already on main",
+      "result_sha256": "46f6e8a60d5d237fff3ff9ef4679426189b705e6dfd456ea3c59656e87dbd11f"
+    },
+    {
+      "path": "model_evaluation.py",
+      "source_sha256": "b706744f2a236ff2989bb69d86c79e6f50c9578a84fec5f39561d65fcb67b265",
+      "integration": "same bytes already on main",
+      "result_sha256": "b706744f2a236ff2989bb69d86c79e6f50c9578a84fec5f39561d65fcb67b265"
+    },
+    {
+      "path": "model_training.py",
+      "source_sha256": "0f9b55c55e9167ba79458bb9095060dc28a201be271ec31d686f7cb99f4e0ff1",
+      "integration": "same bytes already on main",
+      "result_sha256": "0f9b55c55e9167ba79458bb9095060dc28a201be271ec31d686f7cb99f4e0ff1"
+    },
+    {
+      "path": "reports/cx_duel_supplement_20261107.md",
+      "source_sha256": "9b772eb7c1cf4a4e0773326778595c50759cc294ed2c5d0b8c50c883219b7f50",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "9b772eb7c1cf4a4e0773326778595c50759cc294ed2c5d0b8c50c883219b7f50"
+    },
+    {
+      "path": "reports/cx_eight_gpu_20261107.md",
+      "source_sha256": "1292e0b6efd2414f44ebb17d8bfc076f6f7e0781a3fd89a5b4ef99848d67a8da",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "1292e0b6efd2414f44ebb17d8bfc076f6f7e0781a3fd89a5b4ef99848d67a8da"
+    },
+    {
+      "path": "reports/cx_items_training_align_20261107.md",
+      "source_sha256": "0124c67b2b64a5ed63ee69325e7e4919a2cf99178478c10c9b9f1b4110845d1c",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "0124c67b2b64a5ed63ee69325e7e4919a2cf99178478c10c9b9f1b4110845d1c"
+    },
+    {
+      "path": "reports/cx_training_stopped_20261107.md",
+      "source_sha256": "4fdfa53e7dea39dbb11655da2258235175088f67cb185819d58d1e99ce6e7758",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "4fdfa53e7dea39dbb11655da2258235175088f67cb185819d58d1e99ce6e7758"
+    },
+    {
+      "path": "reports/cx_web_candidates_items_v3_20261107.md",
+      "source_sha256": "76dd81405a86f95e67809a0186d8f9cb6680bc8287dcc7ad02ff87ceb46c65ea",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "76dd81405a86f95e67809a0186d8f9cb6680bc8287dcc7ad02ff87ceb46c65ea"
+    },
+    {
+      "path": "scripts/cc_league2_train.py",
+      "source_sha256": "8c141954b131ddbc9354fe3d6ca1e106a8b40bed62c09ce7eb277749ca125514",
+      "integration": "same bytes already on main",
+      "result_sha256": "8c141954b131ddbc9354fe3d6ca1e106a8b40bed62c09ce7eb277749ca125514"
+    },
+    {
+      "path": "scripts/cc_league2_train_sp.py",
+      "source_sha256": "6b73f766928fe9203b39d46f3755ecd0246e2648b364510916282ffbd10e230b",
+      "integration": "same bytes already on main",
+      "result_sha256": "6b73f766928fe9203b39d46f3755ecd0246e2648b364510916282ffbd10e230b"
+    },
+    {
+      "path": "scripts/cx_duel_lib_v3.py",
+      "source_sha256": "8788e45cfa2c9cbfa6d232b07da2b3d073ef5d2a3e476353d3805e5cb5a45882",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "8788e45cfa2c9cbfa6d232b07da2b3d073ef5d2a3e476353d3805e5cb5a45882"
+    },
+    {
+      "path": "scripts/cx_duel_mixed_v3.py",
+      "source_sha256": "82bd0f1065bdfec785852ee8ef237976533df7ce063309faa3d016bf2adaf8db",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "82bd0f1065bdfec785852ee8ef237976533df7ce063309faa3d016bf2adaf8db"
+    },
+    {
+      "path": "scripts/cx_duel_reward_v1.py",
+      "source_sha256": "85497f1232a8ec3fce334bf0e171398bfcff9c1dba96432643ec6a40cf536833",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "85497f1232a8ec3fce334bf0e171398bfcff9c1dba96432643ec6a40cf536833"
+    },
+    {
+      "path": "scripts/cx_duel_scenarios_v1.py",
+      "source_sha256": "e98c6f2fed93a8dccc78b2646068bba9cb2a399aceaa91a055ae9bc7b9a80a47",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "e98c6f2fed93a8dccc78b2646068bba9cb2a399aceaa91a055ae9bc7b9a80a47"
+    },
+    {
+      "path": "scripts/cx_duel_sync_train_v3.py",
+      "source_sha256": "d79365b140951557cab52374ff860c3a472b386f8208d6266f2ceb3d59fc05a1",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "d79365b140951557cab52374ff860c3a472b386f8208d6266f2ceb3d59fc05a1"
+    },
+    {
+      "path": "scripts/cx_duel_sync_train_v4.py",
+      "source_sha256": "4321c102b5e268d8fb2abca683bfb90c35f7520ea48882f2200966c5e2a3bc27",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "4321c102b5e268d8fb2abca683bfb90c35f7520ea48882f2200966c5e2a3bc27"
+    },
+    {
+      "path": "scripts/cx_duel_sync_update_v1.py",
+      "source_sha256": "3e392396da4556eb1f121725142bcdf76bc1e2a9f7902b299609818082cae6c1",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "3e392396da4556eb1f121725142bcdf76bc1e2a9f7902b299609818082cae6c1"
+    },
+    {
+      "path": "scripts/cx_duel_train_v3.py",
+      "source_sha256": "85e129d646f23e935db651ffa5e6c4ebb791896eb7ff02e925e1effd0f7df6eb",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "85e129d646f23e935db651ffa5e6c4ebb791896eb7ff02e925e1effd0f7df6eb"
+    },
+    {
+      "path": "scripts/cx_duel_updater_v1.py",
+      "source_sha256": "886c8c16d69ac65ec0684bc2823bd6700f884fcee21e98d8c06c377684c857a1",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "886c8c16d69ac65ec0684bc2823bd6700f884fcee21e98d8c06c377684c857a1"
+    },
+    {
+      "path": "scripts/cx_fountain_continuation_v2.py",
+      "source_sha256": "00a6d7a5b92f9215b6d2b97a6046fc2126c49a0fe739267dd27423c1261b1321",
+      "integration": "same bytes already on main",
+      "result_sha256": "00a6d7a5b92f9215b6d2b97a6046fc2126c49a0fe739267dd27423c1261b1321"
+    },
+    {
+      "path": "scripts/cx_ftn2_reward_test_v1.py",
+      "source_sha256": "d9307fd3c6146f856331a0b029f2dff0ee6b09555677ce1cd81c7f9d77b8ddf9",
+      "integration": "same bytes already on main",
+      "result_sha256": "d9307fd3c6146f856331a0b029f2dff0ee6b09555677ce1cd81c7f9d77b8ddf9"
+    },
+    {
+      "path": "scripts/cx_ftn2_reward_v1.py",
+      "source_sha256": "fed30d969be959ecebdbd5ccde63ab31b3170cf758abbb5d54877a863d63f919",
+      "integration": "same bytes already on main",
+      "result_sha256": "fed30d969be959ecebdbd5ccde63ab31b3170cf758abbb5d54877a863d63f919"
+    },
+    {
+      "path": "scripts/cx_ftn2_train_v1.py",
+      "source_sha256": "668790202d82c7d5c789c30d272254bf1fcd663c669fe036d9bca6f3af032fe4",
+      "integration": "same bytes already on main",
+      "result_sha256": "668790202d82c7d5c789c30d272254bf1fcd663c669fe036d9bca6f3af032fe4"
+    },
+    {
+      "path": "scripts/cx_items_build_v2.py",
+      "source_sha256": "94abeb7a33e6c4d8863998da9f15745a43ad4e9692863077898af3811316a1df",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "94abeb7a33e6c4d8863998da9f15745a43ad4e9692863077898af3811316a1df"
+    },
+    {
+      "path": "scripts/cx_items_candidate_cpu_v2.py",
+      "source_sha256": "9c9cacf4394b05fe58ca0866fda2befced1c728308ad326899f43c504af89def",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "9c9cacf4394b05fe58ca0866fda2befced1c728308ad326899f43c504af89def"
+    },
+    {
+      "path": "scripts/cx_items_candidate_cpu_v3.py",
+      "source_sha256": "79eaddcbbf135725c4c7008fbac8528f15867105f841b50546722bdbc77b9a76",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "79eaddcbbf135725c4c7008fbac8528f15867105f841b50546722bdbc77b9a76"
+    },
+    {
+      "path": "scripts/cx_items_candidate_games_v1.js",
+      "source_sha256": "e1d602ce4a2d4874ef1b21fe18f749219313f5ee427da751747696fe476db7a1",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "e1d602ce4a2d4874ef1b21fe18f749219313f5ee427da751747696fe476db7a1"
+    },
+    {
+      "path": "scripts/cx_items_candidate_worker_v1.js",
+      "source_sha256": "d321b8fccb461f45ad083543054ad197cbc3336b1cb7820231e08d3b5d364773",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "d321b8fccb461f45ad083543054ad197cbc3336b1cb7820231e08d3b5d364773"
+    },
+    {
+      "path": "scripts/cx_items_candidates_report_v1.py",
+      "source_sha256": "4f2a2efb0b29a1c2af972cc7d4ab01670b1aa5bf2a444c192022e24c03c0e554",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "4f2a2efb0b29a1c2af972cc7d4ab01670b1aa5bf2a444c192022e24c03c0e554"
+    },
+    {
+      "path": "scripts/cx_items_candidates_v1.py",
+      "source_sha256": "a22170fa9b53088ce47f4e0f3850876441cd978513d7d64e9161675873707ffb",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "a22170fa9b53088ce47f4e0f3850876441cd978513d7d64e9161675873707ffb"
+    },
+    {
+      "path": "scripts/cx_items_install_v2.py",
+      "source_sha256": "ce107a7a0a9e372aa8b56d152308ce4487a51e31aac82937f43065cce81961f2",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "ce107a7a0a9e372aa8b56d152308ce4487a51e31aac82937f43065cce81961f2"
+    },
+    {
+      "path": "scripts/cx_items_native_v2.py",
+      "source_sha256": "108e3ef5c4fec9fc27f8bb21c8c5369d1cc965ebc61ca2baa77cb5f47b752fde",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "108e3ef5c4fec9fc27f8bb21c8c5369d1cc965ebc61ca2baa77cb5f47b752fde"
+    },
+    {
+      "path": "scripts/cx_items_parity_v2.js",
+      "source_sha256": "ad85a5f737f356f911691571e4e447a8105b0802a0742bdd2d63b0f3ad7e5304",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "ad85a5f737f356f911691571e4e447a8105b0802a0742bdd2d63b0f3ad7e5304"
+    },
+    {
+      "path": "scripts/cx_items_receipts_v2.py",
+      "source_sha256": "a88c275582b449b37c0bcd529b8c8d4ebb48e37a96fa946944540481b7adb78e",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "a88c275582b449b37c0bcd529b8c8d4ebb48e37a96fa946944540481b7adb78e"
+    },
+    {
+      "path": "scripts/cx_items_rules_v2.py",
+      "source_sha256": "ff3ca434fcf0798af0c8e876d0a0f90e67928863e1cd578c7ece0ea9b5a0ecef",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "ff3ca434fcf0798af0c8e876d0a0f90e67928863e1cd578c7ece0ea9b5a0ecef"
+    },
+    {
+      "path": "scripts/cx_items_test_v2.py",
+      "source_sha256": "6867a18b217be2c2318d6572ae6d82c8321b92c40e1cccc286d8ec8f1dcfd64e",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "6867a18b217be2c2318d6572ae6d82c8321b92c40e1cccc286d8ec8f1dcfd64e"
+    },
+    {
+      "path": "scripts/cx_items_transition_v2.py",
+      "source_sha256": "8748490a56eba70c1e26aeae04455cbbc232d1942c4dbf3b6087b3e77b356e15",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "8748490a56eba70c1e26aeae04455cbbc232d1942c4dbf3b6087b3e77b356e15"
+    },
+    {
+      "path": "scripts/cx_safe_frontier_v1.py",
+      "source_sha256": "fdebe47b50693b77abfad9301a2b35cf7816ca812db4fe8534f1ec7fbb6cb520",
+      "integration": "same bytes already on main",
+      "result_sha256": "fdebe47b50693b77abfad9301a2b35cf7816ca812db4fe8534f1ec7fbb6cb520"
+    },
+    {
+      "path": "scripts/model_launch.py",
+      "source_sha256": "ecd0127104079d39cb9486db81bb63f00f0916810a14fd05033765b3038b37b4",
+      "integration": "retained main portable project/interpreter implementation; reviewed source is machine-specific",
+      "result_sha256": "fc6d0254d0ff2d214f01aff2dfa2fd93254d8b6c5e163adacf4275afc0e9e281"
+    },
+    {
+      "path": "tests/test_training_stop_gate.py",
+      "source_sha256": "563b7273faf8c824657f400f3e571b101f4a8b92ff99bd85bf0ed6a868d802e1",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "563b7273faf8c824657f400f3e571b101f4a8b92ff99bd85bf0ed6a868d802e1"
+    },
+    {
+      "path": "training_launch_policy.json",
+      "source_sha256": "d33de02d4400fe687b988cafd3675e145fd06297c066934aa44cec757414c271",
+      "integration": "copied exact reviewed bytes",
+      "result_sha256": "d33de02d4400fe687b988cafd3675e145fd06297c066934aa44cec757414c271"
+    }
+  ],
+  "source_review": {
+    "status": "PASS_CPU_REVIEW_AND_TESTS",
+    "stop_gate_tests": 7,
+    "ftn2_antihack_tests": 69,
+    "duel_settlement_tests": 5,
+    "production_items_js": "PASS supply/caps/global uniform legal drops/conservation/shortage/RNG/frozen old rules",
+    "python_syntax_files": 33,
+    "node_syntax_files": 4,
+    "git_diff_check": "PASS",
+    "privacy_scan": "PASS",
+    "protocol_source_checks": 2578,
+    "gpu_updates_started": 0,
+    "old_protocols_changed": false,
+    "first_items_test_invocation": "cwd mismatch ENOENT; fixed only private adapter cwd then full PASS",
+    "unix": 1794046748.2335289
+  },
+  "web_runtime_changes": false,
+  "runs_or_checkpoints_copied": false,
+  "training_started": false,
+  "integration_tests": {
+    "stop_gate": 7,
+    "source_closure": 2,
+    "existing_training_path": 4,
+    "ftn2_pure_cpu_antihack": 69,
+    "duel_pure_cpu_settlement": 5,
+    "python_node_syntax": "PASS",
+    "source_dependency_roots": 135,
+    "source_dependency_files": 348,
+    "gpu_or_training_updates": 0,
+    "npm_test": "PASS"
+  }
+}

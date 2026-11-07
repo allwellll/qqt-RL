@@ -18,6 +18,12 @@
 
 模型与手机的浏览器JSON/截图在各报告同名证据目录。新增报告回填会说明哪些验证是本次fresh、哪些是原发布后已完成证据；没有重跑时不改称新的实测。
 
+## 已review训练交付（CPU复核，训练不启动）
+
+- [训练代码图](../docs/training_code_map_20261107.md)、[八卡准入历史](cx_eight_gpu_20261107.md)、[对拼专项历史](cx_duel_supplement_20261107.md)、[v3道具对齐](cx_items_training_align_20261107.md)：按日期保留历史运行事实，最后立即停训覆盖旧后继计划。
+- [856局选模报告](cx_web_candidates_items_v3_20261107.md)：训练owner原v3选模依据，与网页owner当前v4兼容快筛分列。
+- [整合逐项来源SHA与处理](cx_web_and_docs_delivery_20261107/training-code-integration.json)：保留main可移植launcher、只本地合AGENTS、增量保留ledger；不拷贝runs或训练树web改动。
+
 ## 研究与历史兼容
 
 - [实验ledger](../docs/training_experiment_ledger.md)：保留正/负结果、协议修订及停止授权，最新状态在顶部与末尾日期条目。

@@ -10,5 +10,5 @@
       "review": "read in full; current stop supersedes after-active budget authorization; no secrets or machine identity copied"
     }
   ],
-  "training_code_review_handoff": "Not yet supplied; do not assume dirty working tree is reviewed."
+  "training_code_review_handoff": "Received REVIEWED_READY_FOR_INTEGRATION sealed bundle; see training-code-integration.json"
 }
