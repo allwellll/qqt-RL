@@ -2922,7 +2922,7 @@
       "dependencies": []
     },
     "web/app.js": {
-      "sha256": "3feefbd81b353787c4cee02dd58354d623fe955b44b55db5f01f1ebd436d826f",
+      "sha256": "c340dbeee3cab74e8e9543bf1d9a32d7fa45a6da86b378a4a1f1a216d6dec7af",
       "dependencies": []
     },
     "web/assets/maps/levels.json": {
@@ -3038,7 +3038,7 @@
       ]
     },
     "web/sim-bun-native-v4-facing.js": {
-      "sha256": "5b4f93d0f994cbabc9ef2012e6d9b4062c031f5b801a7b3847778950af372fad",
+      "sha256": "442176b87da4b8a7a3f399efe9fa586dcc67395d9211fdfa4c9120b346cedc09",
       "dependencies": [
         "jax_bomb/jax_env.py",
         "jax_bomb/jax_net.py"
