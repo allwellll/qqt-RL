@@ -85,7 +85,8 @@ JAX/JAXlib `0.6.0+das.opt1.dtk2604`；不替换驱动或系统训练依赖。
 | [DCU 迁移与训练方法](docs/dcu_migration.md) | 环境安装、模型数据下载与校验、单卡检查、正式训练入口和编译缓存 |
 | [单卡验证记录](reports/dcu_validation_20261108.json) | DUEL 真实采样、GAE、PPO/Adam 更新结果，以及 SP 前向验证范围 |
 | [模型迁移与续训语义](docs/continue_training_on_new_machine.md) | Release 权重来源、Actor 热启动、Critic/Adam 重建及模型保存边界 |
-| [后续8卡训练](docs/dcu_migration.md#后续8卡机器) | 8卡机器就绪后的数据并行、梯度聚合和卡间通信验证计划 |
+| [空笼击杀：8卡约5小时训练](docs/dcu_kill_training.md) | 已合入 main 新模式；原生规则采样、对拼奖励、同步 PPO、启动和停止方法 |
+| [空笼击杀验证记录](reports/dcu_kill_validation_20261109.json) | 单卡真实更新与评估、8分片数学校验，以及物理8卡待验证范围 |
 
 按迁移文档配置环境和下载数据后，在分配给自己的空闲 DCU 上验证：
 
@@ -97,7 +98,15 @@ python -u -m scripts.dcu_smoke --line DUEL --device 0 --update
 已通过单卡 DUEL 的4 env × 2 tick、minibatch 8 完整更新，SP 已通过前向检查。
 首次 DUEL 采样图编译约12分钟，缓存位于项目 `.jax_cache/dcu/`。
 正式单卡入口为 `python -m scripts.dcu_training`，用法见迁移文档；当前保留停训设置，
-本机不启动长训。8卡适配与验收将在新机器就绪后进行，当前单卡结果不代表8卡已验证。
+本机不启动长训。针对用户本轮明确授权的空笼击杀训练，已新增独立入口和同步8卡实现，
+不解锁历史训练入口。新机器就绪后先验收物理8卡通信和短更新，再按文档启动：
+
+```bash
+bash scripts/launch_dcu_kill_8card.sh runs/kill-8card-5h-001
+```
+
+配置、准备步骤与约5小时预算见[空笼击杀训练说明](docs/dcu_kill_training.md)。
+当前单卡结果及虚拟8分片校验不代表物理8卡已验证。
 
 ## 目录
 

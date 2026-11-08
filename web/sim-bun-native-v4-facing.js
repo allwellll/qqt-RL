@@ -250,6 +250,10 @@
       this._pendingDeathDrops = [];
       this.killRespawn = per(0);
       this.killCount = per(0);
+      // Delayed native-trap deaths need the original hit attribution. The
+      // current tick may contain no explosion when a trap expires or is popped.
+      this.killTrapPhysical = per(() => per(false));
+      this.killTrapCausal = per(() => per(false));
       this.killRespawnPos = per(() => [0, 0]);
       this.fuse = new Int16Array(N);
       this.owner = new Int8Array(N);
@@ -409,6 +413,10 @@
         killMode: this.killMode,
         killRespawn: this.killRespawn.slice(),
         killCount: this.killCount.slice(),
+        ...(this.killMode ? {
+          killTrapPhysical: this.killTrapPhysical.map(x => x.slice()),
+          killTrapCausal: this.killTrapCausal.map(x => x.slice()),
+        } : {}),
         killRespawnPos: this.killRespawnPos.map((x) => x.slice()),
         itemRngState: this.rng.state ? this.rng.state() : null,
         nativeFacing: (this.nativeMove || []).map(st => st ? {...st, wallExit: st.wallExit ? {...st.wallExit} : null} : null),
@@ -548,6 +556,8 @@
       this.killMode = !!frame.killMode;
       this.killRespawn = (frame.killRespawn || [0, 0]).slice();
       this.killCount = (frame.killCount || [0, 0]).slice();
+      this.killTrapPhysical = (frame.killTrapPhysical || this.alive.map(() => this.alive.map(() => false))).map(x => x.slice());
+      this.killTrapCausal = (frame.killTrapCausal || this.alive.map(() => this.alive.map(() => false))).map(x => x.slice());
       this.killRespawnPos = (frame.killRespawnPos || [[0, 0], [0, 0]]).map((x) => x.slice());
       this.pushBoxes = (frame.pushBoxes || []).map((b) => ({
         o: b.o, cells: b.cells.slice(), eid: b.eid, dead: !!b.dead,
@@ -1054,6 +1064,7 @@
     // 原版糖泡（actor_state.go resolveActorContacts）：其他角色中心进入 ±41 原生像素（不含边界）时，
     // 同队立即救出、敌方立即爆破；都没有则倒计时结束自动爆破。
     _trapStep(newlyTrapped) {
+      const poppedBy = this.alive.map(() => -1);
       const reach = 41 / NATIVE_CELL_PX;
       for (let p = 0; p < this.nPlayers; p++) {
         if (!this.alive[p] || this.trapped[p] <= 0 || newlyTrapped[p]) continue;
@@ -1066,6 +1077,7 @@
           popper = q;
         }
         if (outcome === 'pop') {
+          poppedBy[p] = popper;
           // 碰爆者空手时直接接走被困者携带的包子（否则照常掉落散包）。
           if (this.isBun && this.bunCarried[p] >= 0 && this.bunCarried[popper] < 0) {
             this.bunCarried[popper] = this.bunCarried[p];
@@ -1081,6 +1093,7 @@
         }
         if (--this.trapped[p] <= 0) this._killPlayer(p);
       }
+      return poppedBy;
     }
 
     _armFieldItems() {
@@ -1503,7 +1516,11 @@
           }
         }
       }
-      if (this.nativeTrap) this._trapStep(newlyTrapped);
+      if (this.killMode) for (let p = 0; p < nP; p++) if (newlyTrapped[p]) {
+        this.killTrapPhysical[p] = physicalDamageSource[p].slice();
+        this.killTrapCausal[p] = causalDamageSource[p].slice();
+      }
+      const trapPoppers = this.nativeTrap ? this._trapStep(newlyTrapped) : null;
       // 无敌期递减（≥0）；实际掉血者重新进入无敌期
       for (let p = 0; p < nP; p++) this.invuln[p] = Math.max(0, this.invuln[p] - 1);
       for (let p = 0; p < nP; p++) this.spawnProtection[p] = Math.min(this.invuln[p], Math.max(0, this.spawnProtection[p] - 1));
@@ -1652,20 +1669,44 @@
       const creditedKill = this.alive.map(() => false);
       const causalKill = this.alive.map(() => false);
       const ownBombDefeat = this.alive.map(() => false);
+      const defeatPhysical = physicalDamageSource.map(x => x.slice());
+      const defeatCausal = causalDamageSource.map(x => x.slice());
+      if (this.killMode && this.nativeTrap) for (let victim = 0; victim < nP; victim++) {
+        if (!this.lastDied[victim]) continue;
+        // Contact finishers get the kill; otherwise retain the trapping hit.
+        const finisher = trapPoppers[victim];
+        defeatPhysical[victim] = finisher >= 0
+          ? this.alive.map((_, p) => p === finisher) : this.killTrapPhysical[victim].slice();
+        defeatCausal[victim] = finisher >= 0
+          ? this.alive.map((_, p) => p === finisher) : this.killTrapCausal[victim].slice();
+      }
       // 击杀归因只服务 1v1 训练奖励；多人网页对局不计算。
       for (let actor = 0; actor < (nP === 2 ? 2 : 0); actor++) {
         const victim = 1 - actor;
-        const physicalCount = Number(physicalDamageSource[victim][0]) + Number(physicalDamageSource[victim][1]);
-        const causalCount = Number(causalDamageSource[victim][0]) + Number(causalDamageSource[victim][1]);
-        creditedKill[actor] = !mutualDeath && this.lastDied[victim] &&
-          physicalDamageSource[victim][actor] && physicalCount === 1;
-        causalKill[actor] = !mutualDeath && this.lastDied[victim] &&
-          causalDamageSource[victim][actor] && causalCount === 1;
-        const selfPhysicalCount = Number(physicalDamageSource[actor][0]) + Number(physicalDamageSource[actor][1]);
-        ownBombDefeat[actor] = !mutualDeath && this.lastDied[actor] &&
-          physicalDamageSource[actor][actor] && selfPhysicalCount === 1 &&
-          !causalDamageSource[actor][victim];
+        const physicalCount = Number(defeatPhysical[victim][0]) + Number(defeatPhysical[victim][1]);
+        const causalCount = Number(defeatCausal[victim][0]) + Number(defeatCausal[victim][1]);
+        const countTrade = this.killMode || !mutualDeath;
+        creditedKill[actor] = countTrade && this.lastDied[victim] &&
+          defeatPhysical[victim][actor] && physicalCount === 1;
+        causalKill[actor] = countTrade && this.lastDied[victim] &&
+          defeatCausal[victim][actor] && causalCount === 1;
+        const selfPhysicalCount = Number(defeatPhysical[actor][0]) + Number(defeatPhysical[actor][1]);
+        ownBombDefeat[actor] = countTrade && this.lastDied[actor] &&
+          defeatPhysical[actor][actor] && selfPhysicalCount === 1 &&
+          !defeatCausal[actor][victim];
         if (this.killMode && creditedKill[actor]) this.killCount[actor]++;
+      }
+      if (this.killMode) {
+        for (let p = 0; p < nP; p++) if (!this.alive[p] || this.trapped[p] <= 0) {
+          this.killTrapPhysical[p].fill(false);
+          this.killTrapCausal[p].fill(false);
+        }
+        // Include a delayed kill occurring on the last tick in the result.
+        if (this.t >= this.maxSteps) {
+          this.done = true;
+          this.winner = this.killCount[0] === this.killCount[1]
+            ? null : (this.killCount[0] > this.killCount[1] ? 0 : 1);
+        }
       }
       // Logical policies use the same 25ms facing observations as local frames.
       // Their movement remains the original 10Hz solver, with no extra moves.
