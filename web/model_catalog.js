@@ -67,7 +67,7 @@
     });
   }
 
-  function modelUrl(row) { return row.oss_url || `models/${row.file}`; }
+  function modelUrl(row) { return `models/${row.file}`; }
   function optionLabel(row) {
     return row.menu_label || (row.specialist ? `${row.display_name} · 专项：${row.specialist.label}` : row.display_name);
   }

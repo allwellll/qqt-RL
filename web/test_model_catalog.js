@@ -102,7 +102,7 @@ for (const id of ['bun-tf-it4000','bun-kill-mlp4','safe-high-c16','safe-medium-c
   assert(retired.models.some(row => row.id === id), `historical metadata retained: ${id}`);
 }
 for (const row of [...catalog.validateManifest(production),...catalog.validateManifest(retired)]) {
-  assert.strictEqual(catalog.modelUrl(row), row.oss_url, 'OSS is preferred, Release and same-origin mirror remain fallbacks');
+  assert.strictEqual(catalog.modelUrl(row), `models/${row.file}`, 'Pages Release mirror is preferred; OSS metadata is unused');
   for(const asset of [row,...(row.onnx?[row.onnx]:[])]){assert(asset.oss_url.startsWith('https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/'));assert(asset.oss_url.includes(asset.sha256));assert(asset.url.startsWith('https://github.com/'));}
   assert.throws(()=>catalog.validateManifest({...production,models:[{...row,oss_url:'https://example.org/'+row.file}]}),/sources/);
 }

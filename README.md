@@ -37,7 +37,7 @@ JE10 v38 的击杀信用、搬包路线方法、逐轮固定评估与当前能�
 |道具|主键盘1–7直接对应槽位；E / Shift为首槽；手机当前页三个槽位按钮|
 |重开|R（输入框内不劫持）|
 
-小键盘移动不触发道具。模型按需下载，**OSS → GitHub Release → Pages同源镜像** 回退，所有资产先校验 SHA256；仅 `web-models/` 对象public-read、bucket private、CORS限Pages及本地预览，凭据不进入仓库或前端。[当前模型交付规范](docs/github_pages_model_delivery.md)
+小键盘移动不触发道具。模型按需下载，**Pages 同源 Release 镜像 → GitHub Release 直链** 回退，所有资产先校验大小和 SHA256；浏览器已停用 OSS 下载，历史资产保留，凭据不进入仓库或前端。[当前模型交付规范](docs/github_pages_model_delivery.md)
 
 **训练已按用户指令立即暂停，所有自动后继及续跑授权撤销；保留已有 COMMITTED，不再等待固定预算终点。** 训练owner已核实训练worker为0、八卡计算进程为空且锁释放，七臂最后COMMITTED的state/policy SHA已核对；[停训报告](reports/cx_training_stopped_20261107.md)。可版本管理的 `training_launch_policy.json` 默认关闭训练，即使缺少私有状态也阻止通用训练/GPU入口；[训练代码与封存索引](docs/training_code_map_20261107.md)。main 的文档、历史命令或代码合入均不是恢复授权。只能读取已完成 checkpoint/READY 做不触发训练的评估，未来恢复必须重新获得用户明确授权。历史 runs、checkpoint、旧录像与秘密文件全部保留。
 

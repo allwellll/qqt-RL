@@ -107,16 +107,17 @@
       return await verifyBuffer(output.buffer,asset,options.cryptoApi);
     } catch(error) {failed=true;for(const controller of controllers)controller.abort();throw error;}
   }
-  // Public immutable OSS bytes first, original Release second. Pages retains
-  // an exact Release mirror for browsers/networks that block Release CORS.
+  // Pages serves the exact Release bytes as a same-origin mirror.
+  // The original Release URL is a fallback; legacy OSS metadata is unused.
   // Every source must independently pass the same size and SHA verification.
   async function downloadModelAsset(asset, onProgress=()=>{}, options={}) {
-    const sources=[...new Set([asset.oss_url, asset.url, `models/${asset.file}`].filter(Boolean))];
+    const mirror=`models/${asset.file}`;
+    const sources=[...new Set([mirror, asset.url].filter(Boolean))];
     for (const [index,url] of sources.entries()) {
       try {
         options.onSource?.({url,index,status:'loading'});
         let buffer;
-        if (url===asset.oss_url) {
+        if (url===mirror) {
           const controller=new AbortController();
           const timer=setTimeout(()=>controller.abort(),options.timeoutMs || 120000);
           try {

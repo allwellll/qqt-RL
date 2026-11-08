@@ -371,7 +371,8 @@
       if (phase === 'loading') {
         downloadStarted = performance.now(); latest = null;
         clearTimeout(timer);
-        if (index > 0) loadingSource.textContent = '主线路较慢或不可用，改用备用线路…';
+        loadingSource.textContent = index > 0
+          ? 'Release 镜像不可用，正在尝试 Release 直链…' : '下载来源：Release 镜像';
         timer = setTimeout(display, 600);
       } else if (phase === 'download') {
         // Measure body streaming time, excluding connection/header latency.

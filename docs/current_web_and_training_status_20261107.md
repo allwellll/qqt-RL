@@ -43,11 +43,11 @@
 
 不把文件名相似当作可互换的入口；历史 `sim-bun-native-v2.js`、v2-face、v3-items 与归档Review仍保留，不通过覆盖旧文件“升级”录像。当前物理由selector和实际加载文件决定，不单凭规则名判断生效。
 
-## OSS与部署
+## Release镜像与部署
 
-浏览器按 **OSS → Release → Pages同源镜像** 下载，逐资产验证大小/SHA256后才实例化；失败明确报错。只对 `web-models/` 前缀对象public-read；bucket private，CORS只含GitHub Pages与本地预览。密钥仅在本机环境使用，不能入Git/前端/报告/日志。当前资产不因整理而删除。
+浏览器按 **Pages同源Release镜像 → Release直链** 下载，逐资产验证大小/SHA256后才实例化；失败明确报错。OSS下载已停用，manifest历史OSS字段仅作元数据保留；不删除旧资产，不使用或公开凭据。
 
-正常push main触发 `.github/workflows/pages.yml`；构建从Release取得manifest资产并SHA核验。只有同一SHA的Actions测试/部署最终成功、Pages build-info.commit和关键文件字节一致、浏览器OSS加载与推理通过才记交付。[当前发布规范](github_pages_model_delivery.md)
+正常push main触发 `.github/workflows/pages.yml`；构建从Release取得manifest资产并SHA核验。只有同一SHA的Actions测试/部署最终成功、Pages build-info.commit和关键文件字节一致、浏览器Pages镜像加载与推理通过、Network无OSS请求才记交付。[当前发布规范](github_pages_model_delivery.md)
 
 排行榜暂缓；后端尚不支持当前ruleset时显示暂不可用，仍能开局、本地结算，不发旧ruleset、不混榜、不删除旧数据。无需Supabase管理凭据或迁移阻塞玩法。
 
