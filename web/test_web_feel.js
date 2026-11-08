@@ -333,22 +333,21 @@ function dimRects(rects, canvas) {
   assert(dimRects(rects, canvas).length === 0, '复活倒计时归零瞬间必须恢复亮度');
 }
 
-// 4g) Every dead player gets a compact identity/countdown at the authoritative spawn.
-{
-  const { canvas, texts } = mockCanvas();
-  const r = visual.createRenderer(canvas, level, mockAssets());
-  const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [0, 0], isBun: true, bunRespawn: [15, 42] });
-  r.render(s, 1050, { prevPos: s.pos, curPos: s.pos, lastTickT: 1000, tickMs: 100, humanPid: 0 });
-  assert(texts.some((t) => t.text === '你1 · 2秒复活' && t.x === 2.5 * CELL), 'local player countdown is at its spawn');
-  const bot = texts.find((t) => t.text === '敌1 · 5秒复活');
-  assert(bot && Math.abs(bot.x - 12.5 * CELL) < 1e-6, '对手倒计时(42 tick→5 秒)应画在其复活点');
-}
-{
-  const { canvas, texts } = mockCanvas();
-  const r = visual.createRenderer(canvas, level, mockAssets());
-  const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [1, 1], isBun: true });
-  r.render(s, 1050, null);
-  assert.equal(texts.length, 0, '双方存活时不显示倒计时');
+// 4g) Dead players stay invisible and never announce a spawn position.
+for (const viewer of [0, 1, -1]) {
+  for (const killMode of [false, true]) {
+    const { canvas, texts, draws } = mockCanvas();
+    const r = visual.createRenderer(canvas, level, mockAssets());
+    const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [0, 0],
+      isBun: !killMode, killMode, bunRespawn: [15, 42],
+      killRespawn: [15, 29], killRespawnPos: [[2.5, 2.5], [10.5, 12.5]] });
+    r.render(s, 1050, { prevPos: s.pos, curPos: s.pos, lastTickT: 1000, tickMs: 100, humanPid: viewer });
+    assert(!texts.some(t => t.text.includes('秒复活')), 'no spatial respawn countdown');
+    assert(!draws.some(d => d.tag === 'p0' || d.tag === 'p1'), 'no dead player sprite at a future spawn');
+    s.alive = [1, 1];
+    r.render(s, 1150, { prevPos: s.pos, curPos: s.pos, lastTickT: 1100, tickMs: 100, humanPid: viewer });
+    assert(draws.some(d => d.tag === 'p0') && draws.some(d => d.tag === 'p1'), 'sprites appear on actual respawn');
+  }
 }
 
 // 4h) 朝向跟随移动意图：顶墙不动时按上也必须面朝上（精灵行 3），松手后保持朝向。

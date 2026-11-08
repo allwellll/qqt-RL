@@ -30,12 +30,7 @@ game.reset(level, { nPlayers: 4, teams: [0, 0, 1, 1], nativeTrap: true });
 game.alive.fill(false); game.bunRespawn.fill(21);
 const before = JSON.stringify(game.snapshotReplay());
 const markers = visual.respawnMarkers(game, 0);
-assert.equal(markers.length, 4);
-for (const marker of markers) {
-  assert.equal(marker.row, game.bunSpawnPos[marker.pid][0]);
-  assert.equal(marker.col, game.bunSpawnPos[marker.pid][1]);
-  assert.equal(marker.seconds, 3);
-}
+assert.deepEqual(markers, [], 'live views hide all respawn locations');
 assert.equal(JSON.stringify(game.snapshotReplay()), before, 'markers never mutate authoritative state');
 const replay = new Q.Sim(1); replay.restoreReplay(JSON.parse(before));
 assert.deepEqual(visual.respawnMarkers(replay, -1), visual.respawnMarkers(game, -1));
@@ -43,4 +38,15 @@ game.lastDied.fill(false); game.bunRespawn.fill(1); game._bunRespawnStep();
 assert.deepEqual(visual.respawnMarkers(game, 0), [], 'all markers disappear on the respawn tick');
 game.alive[0] = false; game.bunRespawn[0] = 10; game.done = true;
 assert.deepEqual(visual.respawnMarkers(game, 0), [], 'completed matches never announce stale respawns');
-console.log('authoritative spawn marker identity, replay and immediate respawn removal passed');
+assert.deepEqual(visual.respawnMarkers(replay, -1), [], 'Review/spectator views also hide spawn locations');
+const Kill = require('./sim-bun-native-v4-facing');
+const kill = new Kill.Sim(73);
+kill.reset(level, {nativeItems:true, nativeTrap:true, killMode:true});
+kill._killPlayer(1);
+for (let tick = 0; tick < 30; tick++) {
+  assert(!kill.alive[1]);
+  for (const viewer of [-1, 0, 1]) assert.deepEqual(visual.respawnMarkers(kill, viewer), []);
+  kill.step([[4,0], [4,0]]);
+}
+assert(kill.alive[1], 'hidden markers do not delay respawn');
+console.log('respawn locations hidden for both sides, spectators and Review; physics unchanged');

@@ -193,24 +193,9 @@
     try { return draw(); } finally { ctx.restore(); }
   }
 
-  function respawnMarkers(sim, viewerPid = -1) {
-    if (!sim || (!sim.isBun && !sim.killMode) || sim.done) return [];
-    const markers = [];
-    for (let pid = 0; pid < playerCount(sim); pid++) {
-      const respawn = sim.killMode ? sim.killRespawn : sim.bunRespawn;
-      const spawn = sim.killMode ? sim.killRespawnPos?.[pid] : sim.bunSpawnPos && sim.bunSpawnPos[pid];
-      if (sim.alive[pid] || !(respawn?.[pid] > 0) || !spawn ||
-          !Number.isFinite(spawn[0]) || !Number.isFinite(spawn[1])) continue;
-      if (spawn[0] < 0 || spawn[0] >= 13 || spawn[1] < 0 || spawn[1] >= 15) continue;
-      markers.push({ pid, row: spawn[0], col: spawn[1], team: teamOf(sim, pid),
-        seconds: respawnSeconds(respawn[pid]),
-        label: viewerPid < 0 ? `${teamOf(sim, pid) === 0 ? '蓝' : '红'}${pid + 1}`
-          : teamOf(sim, pid) === teamOf(sim, viewerPid)
-            ? `${playerLabel(sim, pid, viewerPid, teamOf(sim, viewerPid))}${pid + 1}`
-            : playerLabel(sim, pid, viewerPid, teamOf(sim, viewerPid)) });
-    }
-    return markers;
-  }
+  // Kept as a compatibility helper for renderer consumers. Neither live games
+  // nor Review/spectator views expose a future spawn location for any player.
+  function respawnMarkers() { return []; }
 
   function bunTokens(sim) {
     const tokens = [];
@@ -851,7 +836,6 @@
           ctx.fillRect(0, 0, canvas.width, BOARD_H);
         }
         ctx.filter = 'none';
-        if ((sim.isBun || sim.killMode) && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0, motion?.playerLabels);
       } finally { ctx.restore(); }
       // Only the playfield was dimmed; HUD/result rendering remains legible.
       ctx.filter = 'none';
@@ -916,24 +900,6 @@
       const ax = Math.round(anchor.x - image.width / 2);
       const ay = Math.max(-BOARD_OFFSET, Math.round(anchor.y - 3 - image.height * POINT_TIP_FRAC + bob));
       ctx.drawImage(image, ax, ay);
-    }
-    // Compact spawn markers keep paths visible, including in spectator/replay views.
-    function drawRespawnCountdowns(sim, humanPid, labels) {
-      for (const marker of respawnMarkers(sim, humanPid)) {
-        const x = marker.col * CELL, y = marker.row * CELL;
-        ctx.save();
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = marker.team === 0 ? '#8ee9ff' : '#ffa6bf'; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.ellipse(x, y + CELL * .2, CELL * .36, CELL * .16, 0, 0, Math.PI * 2); ctx.stroke();
-        const text = `${labels?.[marker.pid] || marker.label} · ${marker.seconds}秒复活`;
-        const labelX = Math.max(96, Math.min(canvas.width - 96, x));
-        const labelY = Math.max(16, y - CELL * .35);
-        ctx.font = 'bold 24px sans-serif'; ctx.lineWidth = 5;
-        ctx.strokeStyle = 'rgba(0,0,0,.85)'; ctx.fillStyle = marker.pid === humanPid ? '#ffe477' : '#ffffff';
-        ctx.strokeText(text, labelX, labelY); ctx.fillText(text, labelX, labelY);
-        ctx.restore();
-      }
     }
     return { render, addExplosion, reset };
   }
