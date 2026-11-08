@@ -71,6 +71,14 @@
             <select id="character"><option value="pipi">皮皮</option><option value="maomao" selected>毛毛</option></select>
           </span>
         </label>
+        <label>玩法模式
+          <select id="game-mode" aria-label="玩法模式">
+            <option value="kill" selected>纯击杀（默认）</option>
+            <option value="carry">正常运包</option>
+          </select>
+        </label>
+        <p id="kill-mode-status" class="note" role="status" aria-live="polite"></p>
+        <p class="note">纯击杀使用当前选中模型作为对手；模型未针对纯击杀训练，表现仅供娱乐。击杀模式成绩不写入运包排行榜。</p>
         <h2>操作</h2>
         <p><kbd>方向键 / 小键盘 5↑ 1← 2↓ 3→</kbd> 移动</p>
         <p><kbd>Space / W</kbd> 放泡</p>

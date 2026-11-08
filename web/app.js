@@ -8,9 +8,14 @@
   const opponentSelect = document.getElementById('opponent');
   const mapSelect = document.getElementById('map-select');
   const matchMode = document.getElementById('match-mode');
+  const gameMode = document.getElementById('game-mode');
   const teamMode = document.getElementById('team-mode');
   const characterSelect = document.getElementById('character');
   const characterPortrait = document.getElementById('character-portrait');
+  try {
+    const savedGameMode = localStorage.getItem('qqt.game-mode');
+    if (savedGameMode === 'kill' || savedGameMode === 'carry') gameMode.value = savedGameMode;
+  } catch (_) {}
   try {
     const savedCharacter = localStorage.getItem('qqt.character');
     if (['pipi', 'maomao'].includes(savedCharacter)) characterSelect.value = savedCharacter;
@@ -265,26 +270,25 @@
     sim = new QQT.Sim(episodeSeed);
     modelRng = QQT.mulberry32((episodeSeed ^ (loadedModel?.samplingProfile?.seed ?? 0x515154)) >>> 0);
     botRng = QQT.mulberry32((episodeSeed ^ 0x515154 ^ 0x5CA17) >>> 0);
-    const wantModel = isModelChoice(opponentSelect.value);
-    if (wantModel && loadedModelId !== opponentSelect.value.slice(MODEL_PREFIX.length)) opponentSelect.value = 'bun.coop_hunter@hard';
     if (matchMode.value === 'model-vs-rule' && !loadedModel) {
       matchMode.value = 'human-vs-opponent';
       modelStatus.textContent = '请先在「策略」中选择一个训练模型';
     }
     if (matchMode.value === 'model-vs-rule') teamMode.value = '1v1';
     document.getElementById('model-opponent-wrap').hidden = matchMode.value !== 'model-vs-rule';
-    if (teamMode.value !== '1v1' && !teamCapable(opponentSelect.value)) opponentSelect.value = 'bun.coop_hunter@hard';
+    if (isModelChoice(opponentSelect.value)) teamMode.value = '1v1';
+    else if (teamMode.value !== '1v1' && !teamCapable(opponentSelect.value)) opponentSelect.value = 'bun.coop_hunter@hard';
     // Fresh model matches use the selected native rules; archived Review keeps its frozen engine.
     const native = localHumanControls();
-    sim.reset(level, { nativeItems: true, nativeTrap: true, teams: teamLayout(),
+    sim.reset(level, { nativeItems: true, nativeTrap: true, killMode: gameMode.value === 'kill', teams: teamLayout(),
       bananaSlideSpeedPx: native ? 480 : undefined });
-    sim.maxSteps = 2400;
+    sim.maxSteps = gameMode.value === 'kill' ? 1800 : 2400;
     QQTModelSampling.watch(sim);
     const [opponent, difficulty] = opponentSelect.value.split('@');
-    leaderboardMatch = native ? leaderboard.begin({ seed: sim.seed, opponent,
+    leaderboardMatch = native && gameMode.value !== 'kill' ? leaderboard.begin({ seed: sim.seed, opponent,
       ruleset_version: QQTRulesets.current,
       difficulty: difficulty || (isModelChoice(opponent) ? 'model' : 'fixed'),
-      mode: teamMode.value, map_id: mapSelect.value }) : null;
+      mode: teamMode.value, map_id: mapSelect.value, game_mode: gameMode.value }) : null;
     resetBot();
     releaseTouchControls();
     bombCell = -1;
@@ -488,8 +492,23 @@
     const supply = sim.itemSupply;
     document.getElementById('item-supply-status').textContent = supply
       ? `本局开局道具 ${supply.initialActual} 件；砖内已掉落 ${supply.brickDropsActual} 件${supply.unplaced ? `；空格不足未补 ${supply.unplaced} 件` : ''}` : '';
+    const killStatus = document.getElementById('kill-mode-status');
+    if (gameMode.value === 'kill') {
+      const seconds = Math.max(0, Math.ceil((sim.maxSteps - sim.t) / 10));
+      const mm = Math.floor(seconds / 60), ss = String(seconds % 60).padStart(2, '0');
+      killStatus.textContent = `纯击杀 · ${mm}:${ss} · 击杀 ${sim.killCount?.[0] || 0}–${sim.killCount?.[1] || 0} · 死亡后3秒复活，1秒无敌；排行榜暂不记录`;
+    } else {
+      killStatus.textContent = '正常运包：按现有 bun-native-v4-facing 规则结算。';
+    }
     status.textContent = JSON.stringify({
       item_supply: supply,
+      game_mode: gameMode.value,
+      is_bun: sim.isBun,
+      breakable_bricks: sim.brick.reduce((n, value) => n + Number(value), 0),
+      ground_crates: sim.crate.reduce((n, value) => n + Number(value), 0),
+      model_opponent: isModelChoice(opponentSelect.value),
+      kill_count: sim.killCount,
+      respawn_ticks: sim.killRespawn,
       mode: QQTModelCatalog.matchLabel(matchMode.value),
       tick: sim.t,
       player_or_model_alive: sim.alive[matchMode.value === 'model-vs-rule' ? 1 : 0],
@@ -664,12 +683,19 @@
     reset();
   }
   matchMode.addEventListener('change', reset);
+  gameMode.addEventListener('change', async () => {
+    try { localStorage.setItem('qqt.game-mode', gameMode.value); } catch (_) {}
+    await reset();
+  });
   document.getElementById('model-opponent').addEventListener('change', reset);
   teamMode.addEventListener('change', reset);
   opponentSelect.addEventListener('change', onStrategyChange);
   mapSelect.addEventListener('change', reset);
   await loadCatalog();
-  reset(true);
+  if (publishedModels.length) {
+    opponentSelect.value = `${MODEL_PREFIX}${defaultModelId}`;
+    await onStrategyChange();
+  } else reset(true);
   await loadReplayCatalog();
   function animationFrame(now) {
     stepHumanFrame(now);

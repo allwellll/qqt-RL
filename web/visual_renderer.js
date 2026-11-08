@@ -194,15 +194,16 @@
   }
 
   function respawnMarkers(sim, viewerPid = -1) {
-    if (!sim || !sim.isBun || sim.done) return [];
+    if (!sim || (!sim.isBun && !sim.killMode) || sim.done) return [];
     const markers = [];
     for (let pid = 0; pid < playerCount(sim); pid++) {
-      const spawn = sim.bunSpawnPos && sim.bunSpawnPos[pid];
-      if (sim.alive[pid] || !(sim.bunRespawn[pid] > 0) || !spawn ||
+      const respawn = sim.killMode ? sim.killRespawn : sim.bunRespawn;
+      const spawn = sim.killMode ? sim.killRespawnPos?.[pid] : sim.bunSpawnPos && sim.bunSpawnPos[pid];
+      if (sim.alive[pid] || !(respawn?.[pid] > 0) || !spawn ||
           !Number.isFinite(spawn[0]) || !Number.isFinite(spawn[1])) continue;
       if (spawn[0] < 0 || spawn[0] >= 13 || spawn[1] < 0 || spawn[1] >= 15) continue;
       markers.push({ pid, row: spawn[0], col: spawn[1], team: teamOf(sim, pid),
-        seconds: respawnSeconds(sim.bunRespawn[pid]),
+        seconds: respawnSeconds(respawn[pid]),
         label: viewerPid < 0 ? `${teamOf(sim, pid) === 0 ? '蓝' : '红'}${pid + 1}`
           : teamOf(sim, pid) === teamOf(sim, viewerPid)
             ? `${playerLabel(sim, pid, viewerPid, teamOf(sim, viewerPid))}${pid + 1}`
@@ -634,6 +635,7 @@
         for (let row = 0; row < 13; row++) for (let column = 0; column < 15; column++) {
           const index = row * 15 + column, value = layer[index];
           if (!value || value < 0) continue;
+          if (sim.killMode && Math.abs(value) === 6003) continue;
           if (layerIndex === 1 && !sim.wall[index] && !sim.brick[index] && !sim.cover[index]) continue;
           if (layerIndex === 1 && !sim.wall[index] && brickDebris(sim, index)) continue;
           const id = Math.abs(value), meta = assets.elements[String(id)] || assets.elements[id], image = assets.elementImages.get(id);
@@ -849,7 +851,7 @@
           ctx.fillRect(0, 0, canvas.width, BOARD_H);
         }
         ctx.filter = 'none';
-        if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0, motion?.playerLabels);
+        if ((sim.isBun || sim.killMode) && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0, motion?.playerLabels);
       } finally { ctx.restore(); }
       // Only the playfield was dimmed; HUD/result rendering remains legible.
       ctx.filter = 'none';

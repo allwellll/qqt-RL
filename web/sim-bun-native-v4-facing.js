@@ -195,6 +195,7 @@
       this.crateRate = CFG.growthCrateProb; this.superFraction = 0; this.speedStep = CFG.growthSpeedStep;
       this.itemDuel = !!(mode && typeof mode === 'object' && mode.id === 240);
       if (this.itemDuel) mode = {...mode, no_items:false, item_field:1};
+      this.killMode = !!(opts && opts.killMode);
       this.playerModes = (opts && opts.playerModes) ? opts.playerModes.slice() : (this.playerModes || ['new', 'new']);
       this.oldMode = !!(opts && opts.oldMode);
       // 可推箱运行时状态(所有模式都初始化; 关卡模式在 _loadLevel 填充)
@@ -247,6 +248,9 @@
       this._airdropQueue = [];
       this.airdropFalls = [];
       this._pendingDeathDrops = [];
+      this.killRespawn = per(0);
+      this.killCount = per(0);
+      this.killRespawnPos = per(() => [0, 0]);
       this.fuse = new Int16Array(N);
       this.owner = new Int8Array(N);
       this.owner.fill(-1);
@@ -402,6 +406,10 @@
         ruleset_version: 'bun-native-v4-facing',
         itemSupply: {...this.itemSupply},
         itemDuel: this.itemDuel,
+        killMode: this.killMode,
+        killRespawn: this.killRespawn.slice(),
+        killCount: this.killCount.slice(),
+        killRespawnPos: this.killRespawnPos.map((x) => x.slice()),
         itemRngState: this.rng.state ? this.rng.state() : null,
         nativeFacing: (this.nativeMove || []).map(st => st ? {...st, wallExit: st.wallExit ? {...st.wallExit} : null} : null),
         ...(this.nativeMove && this.alive.some((alive, p) => alive && this.nativeMove[p] && this.nativeMove[p].wallExit) ? {
@@ -537,6 +545,10 @@
       this._airdropQueue = (frame.airdropQueue || []).map((x) => ({ ...x }));
       this.airdropFalls = (frame.airdropFalls || []).map((x) => ({ ...x }));
       this._pendingDeathDrops = (frame.pendingDeathDrops || []).map((x) => ({ ...x }));
+      this.killMode = !!frame.killMode;
+      this.killRespawn = (frame.killRespawn || [0, 0]).slice();
+      this.killCount = (frame.killCount || [0, 0]).slice();
+      this.killRespawnPos = (frame.killRespawnPos || [[0, 0], [0, 0]]).map((x) => x.slice());
       this.pushBoxes = (frame.pushBoxes || []).map((b) => ({
         o: b.o, cells: b.cells.slice(), eid: b.eid, dead: !!b.dead,
       }));
@@ -591,6 +603,12 @@
         if (level.overhead && level.overhead[i]) this.cover[i] = 1;
         // 灌木丛可炸毁，绝不能混入永久不可炸的小屋遮蔽层 (this.cover)
         if (this.bush[i]) this.cover[i] = 0;
+      }
+      // 纯击杀使用同一张地图的硬墙布局，但移除全部可炸砖/灌木；包子笼
+      // 仅保留外观，不进入运包规则，也不生成笼内库存。
+      if (this.killMode) {
+        this.brick.fill(0);
+        this.bush.fill(0);
       }
       // 旧模型兼容: 多出的两列(13,14)填为不可通行墙 → 环境与旧版 13 宽一致
       if (this.oldMode) {
@@ -680,6 +698,7 @@
         }
       }
       this.itemsEnabled = level.item_field !== 0 && !level.no_items;
+      if (this.killMode) this.itemsEnabled = false;
       // 炸砖 → 宝箱的爆率。非道具场显式禁用，其他旧地图保留原有 0→1 兼容语义。
       this.crateRate = this.itemsEnabled && level.crate_rate != null && level.crate_rate > 0
         ? level.crate_rate : 1.0;
@@ -693,7 +712,7 @@
       this.speedMax = level.speed_max !== undefined ? level.speed_max : CFG.growthSpeedMax;
       this.speedStep = (this.speedMax - CFG.growthSpeedStart) / 7;
       // 空场景：开局中心十字宝箱直接放地上（踩到必升）
-      if (level.initial_crates && level.initial_crates.length) {
+      if (!this.killMode && level.initial_crates && level.initial_crates.length) {
         for (const [r, c] of level.initial_crates) {
           const i = r * W + c;
           if (!this._crateBlocked(i)) {
@@ -704,10 +723,14 @@
       }
       // 初始宝箱写入发生在兼容墙生成之后；再次清理可防止地图数据越界覆盖。
       this._clearBlockedCrates();
+      if (this.killMode) {
+        this.crate.fill(0); this.superCrate.fill(0); this.crateType.fill(-1); this.crateCount.fill(0);
+      }
       this._initBun(level);
     }
 
     _initBun(level) {
+      if (this.killMode) { this.isBun = false; return; }
       this.isBun = !!(level && (level.bun || level.native_rule === 3 || level.game_mode === '抢包山(bun)'));
       if (!this.isBun) return;
       this.bunBases = (level.bun_bases || [[1, 4], [1, 8]]).map((x) => [x[0], x[1]]);
@@ -898,9 +921,15 @@
       this.lastDied[player] = true;
       this._clearMovementStatus(player);
       if (this.nativeItems) this._dropDeathInventory(player);
+      if (this.killMode && this.nativeItems) this._dropKillInventory(player);
       if (this.isBun) {
         this._bunDrop(player);
         this.bunRespawn[player] = this.bunRespawnTicks;
+      }
+      if (this.killMode) {
+        const [row, col] = this.centerCell(player);
+        this.killRespawnPos[player] = [row + 0.5, col + 0.5];
+        this.killRespawn[player] = 30; // 3 秒 @ 10Hz
       }
     }
 
@@ -919,6 +948,10 @@
       }
       this.itemSlots[player] = [];
       this._syncHeldItem(player);
+    }
+
+    _dropKillInventory(player) {
+      for (let i = 0; i < 8; i++) this._pendingDeathDrops.push({ type: i % 3, count: 1, isSuper: false });
     }
 
     _dropCellAvailable(cell, landingDrop = null) {
@@ -1120,6 +1153,30 @@
         this.spawnProtection[p] = this.nativeTrap ? 3 * CFG.tickHz : 0;
         this.trapped[p] = 0;
         this._clearMovementStatus(p);
+      }
+    }
+
+    _killRespawnStep() {
+      if (!this.killMode) return;
+      for (let p = 0; p < this.nPlayers; p++) {
+        if (this.alive[p] || this.killRespawn[p] <= 0) continue;
+        this.killRespawn[p]--;
+        if (this.killRespawn[p] > 0) continue;
+        const cells = this._itemSupplyCells();
+        if (!cells.length) { this.killRespawn[p] = 1; continue; }
+        const cell = cells[Math.floor(this.rng() * cells.length)];
+        this.pos[p * 2] = Math.floor(cell / W) + 0.5;
+        this.pos[p * 2 + 1] = cell % W + 0.5;
+        this.hp[p] = this.initialHp || 1;
+        this.alive[p] = true;
+        this.invuln[p] = 10; // 1 秒重生保护 @ 10Hz
+        this.spawnProtection[p] = 10;
+        this.trapped[p] = 0;
+        this.bombsCap[p] = this.loBombs[p];
+        this.blastCap[p] = this.loBlast[p];
+        this.spdG[p] = this.loSpeed[p];
+        this.itemSlots[p] = [];
+        this._syncHeldItem(p);
       }
     }
 
@@ -1515,6 +1572,7 @@
       this._movementStatusStep();
       this._bunUpdate();
       this._bunRespawnStep();
+      this._killRespawnStep();
       if (this.nativeItems) this._releaseDeathDrops();
       for (let p = 0; p < this.nPlayers; p++) {
         if (!this.alive[p] || this.trapped[p] > 0) continue;
@@ -1579,9 +1637,13 @@
         if (totals[0] === totals[1]) this.winner = null;
         else this.winner = totals[0] > totals[1] ? 0 : 1;
         this.done = true;
-      } else if (!this.isBun && nAlive <= 1) {
+      } else if (!this.isBun && !this.killMode && nAlive <= 1) {
         this.done = true;
         this.winner = nAlive === 1 ? (this.alive[0] ? 0 : 1) : null;
+      } else if (this.killMode && this.t >= this.maxSteps) {
+        this.done = true;
+        this.winner = this.killCount[0] === this.killCount[1]
+          ? null : (this.killCount[0] > this.killCount[1] ? 0 : 1);
       } else if (!this.isBun && this.t >= CFG.maxSteps) {
         this.done = true;
         this.winner = this.hp[0] === this.hp[1] ? null : (this.hp[0] > this.hp[1] ? 0 : 1);
@@ -1603,6 +1665,7 @@
         ownBombDefeat[actor] = !mutualDeath && this.lastDied[actor] &&
           physicalDamageSource[actor][actor] && selfPhysicalCount === 1 &&
           !causalDamageSource[actor][victim];
+        if (this.killMode && creditedKill[actor]) this.killCount[actor]++;
       }
       // Logical policies use the same 25ms facing observations as local frames.
       // Their movement remains the original 10Hz solver, with no extra moves.
@@ -1618,6 +1681,7 @@
         placed, itemReleased, covered, triggered, died: this.lastDied.slice(),
         physicalDamageSource, causalDamageSource, creditedKill, causalKill,
         ownBombDefeat, mutualDeath,
+        killMode: this.killMode, killCount: this.killCount.slice(),
       };
     }
 
