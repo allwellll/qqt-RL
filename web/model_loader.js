@@ -116,18 +116,8 @@
     for (const [index,url] of sources.entries()) {
       try {
         options.onSource?.({url,index,status:'loading'});
-        let buffer;
-        if (url===mirror) {
-          const controller=new AbortController();
-          const timer=setTimeout(()=>controller.abort(),options.timeoutMs || 120000);
-          try {
-            const response=await (options.fetch || globalThis.fetch)(url,
-              {cache:options.cache || 'default',credentials:'omit',signal:controller.signal});
-            buffer=await readResponseWithProgress(response,(n)=>onProgress(n,asset.bytes));
-            options.onSource?.({url,index,status:'verifying'});
-            await verifyBuffer(buffer,asset,options.cryptoApi);
-          } finally {clearTimeout(timer);}
-        } else buffer=await downloadVerifiedAsset(url,asset,onProgress,{...options,onVerifying:()=>options.onSource?.({url,index,status:'verifying'})});
+        const buffer=await downloadVerifiedAsset(url,asset,onProgress,
+          {...options,onVerifying:()=>options.onSource?.({url,index,status:'verifying'})});
         options.onSource?.({url,index,status:'verified'});
         return buffer;
       } catch(error) {

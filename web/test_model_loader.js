@@ -57,7 +57,7 @@ const loader = require('./model_loader.js');
   const mirror=`models/${a.file}`;
   const fetch=async(url,opts)=>{calls.push(url);
    assert.notEqual(url,a.oss_url,'OSS must never be requested');
-   if(url===mirror){assert.equal(opts.credentials,'omit');assert.equal(opts.cache,'default');assert.equal(opts.headers,undefined);
+   if(url.startsWith(mirror+'?range=')){assert.equal(opts.cache,'no-store');assert(opts.headers.Range);
     if(scenario==='network'||scenario==='all-fail')throw new TypeError('unavailable');
     if(scenario==='http')return reply(bytes,403);if(scenario==='size')return reply(bytes.slice(1));if(scenario==='hash')return reply(Uint8Array.from([0,0,0,0]));return reply(bytes);}
    assert(url.startsWith(a.url+'?range='),'only Release can be the fallback');
@@ -67,7 +67,7 @@ const loader = require('./model_loader.js');
   const promise=L.downloadModelAsset(a,(n,t)=>progress.push([n,t]),{fetch,cryptoApi:crypto.webcrypto,pause:async()=>{},onSource:e=>events.push(e)});
   if(scenario==='all-fail'){await assert.rejects(promise,/所有模型下载来源/);assert(!events.some(e=>e.status==='verified'));continue;}
   assert.deepEqual(Array.from(new Uint8Array(await promise)),Array.from(bytes));
-  assert.equal(calls[0],mirror);assert.deepEqual(progress.at(-1),[4,4]);
+  assert.equal(calls[0],mirror+'?range=0');assert.deepEqual(progress.at(-1),[4,4]);
   const success=events.find(e=>e.status==='verified').url;
   if(scenario==='healthy'){assert.equal(calls.length,1);assert.equal(success,mirror);assert.deepEqual(events.map(e=>e.status),['loading','verifying','verified']);assert(events.every(e=>e.index===0));}
   else {assert.equal(success,a.url);assert.deepEqual(events.filter(e=>e.status==='loading').map(e=>e.url),[mirror,a.url]);}
