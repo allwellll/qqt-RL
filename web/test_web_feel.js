@@ -446,7 +446,7 @@ for (const viewer of [0, 1, -1]) {
   assert(!one.texts.some((t) => t.text === '你'), '1v1 不画名牌');
 }
 const appTeamSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
-assert(/teams: teamLayout\(\)/.test(appTeamSource) && /'2v2': \[0, 1, 0, 1\]/.test(appTeamSource), 'app.js 按队伍模式创建多人对局');
+assert(appTeamSource.includes('teams: [0, 1]') && !appTeamSource.includes('teamLayout()'), 'live app is fixed human/model 1v1; multiplayer renderer stays compatible');
 
 // 4j3) 携带包子贴在头顶：包子底边落在帧顶透明留白以下，而不是悬在帧顶上方。
 {

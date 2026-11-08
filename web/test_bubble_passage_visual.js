@@ -51,5 +51,5 @@ for(const state of ['charging','window','active']){
 for(const move of [Q.MOVE_UP,Q.MOVE_DOWN,Q.MOVE_LEFT,Q.MOVE_RIGHT]){
  const s=scene(),offset=[-15,15,-1,1][move];s.fuse[cell+offset]=30;for(let i=0;i<4&&!hints(s).length;i++)s.frameStep(0,move,.02);assert.equal(hints(s)[0].cell,cell+offset);
 }
-const html=fs.readFileSync('web/index.html','utf8');assert(html.includes('圆环')&&html.includes('淡绿虚圈')&&!html.includes('穿点倒计时'));
+const html=fs.readFileSync('web/index.html','utf8');assert(!html.includes('id="bubble-passage-legend"'),'sidebar no longer contains explanatory legend');
 console.log('Pass ring PASS: native target lifecycle across release/turn/walk, transfer, strict charge/freshness bounds, real placement/traversal, hidden perspectives and 1000-query immutability');

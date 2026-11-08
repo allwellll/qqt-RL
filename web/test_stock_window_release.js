@@ -18,6 +18,6 @@ for(let seed=20261030;seed<20261046;seed++){
  }
 }
 assert.equal(crypto.createHash('sha256').update(fs.readFileSync('web/sim-stock-window-v1.js')).digest('hex'),'2767cb4e2993383addc72d792fef8947f3ff86e1dcad4f73c8e1c04752a13f45');
-assert(fs.readFileSync('web/index.html','utf8').includes('src="sim-stock-window-v1.js"'));
+assert(!fs.readFileSync('web/index.html','utf8').includes('src="sim-stock-window-v1.js"'),'live page no longer synchronously loads historical physics');
 for(const f of ['web/review.html','web/training.html'])assert(!fs.readFileSync(f,'utf8').includes('sim-stock-window-v1.js'));
 console.log(`stock-window release: PASS, ${frames} native non-stock frames, alive/death/native-trap inventory gates`);

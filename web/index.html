@@ -49,10 +49,9 @@
       <aside>
         <div class="aside-toolbar"><button id="announcement-open" type="button"><span aria-hidden="true">★</span> 公告</button></div>
         <section class="leaderboard" aria-labelledby="leaderboard-heading">
-          <h2 id="leaderboard-heading">胜局排行榜 · Top 20</h2><label>规则分榜 <select id="leaderboard-ruleset"><option value="bun-native-v4-facing">bun-native-v4-facing · 榜单暂缓</option><option value="bun-native-v3-items">旧 v3 道具规则</option><option value="bun-native-v2-face">旧 face 规则</option><option value="bun-native-v2">旧 bun-native-v2 成绩</option><option value="stock-window-v1">旧 v1 成绩</option></select></label>
+          <h2 id="leaderboard-heading">胜局排行榜 · Top 20</h2><label>规则分榜 <select id="leaderboard-ruleset"><option value="bun-native-v4-facing">bun-native-v4-facing</option></select></label>
           <div class="leaderboard-table-wrap">
             <table class="leaderboard-table" aria-label="胜局排行榜">
-              <caption>胜利用时由短到长</caption>
               <thead><tr><th scope="col" class="rank">排名</th><th scope="col" class="player">昵称</th><th scope="col" class="best-win">本局胜利用时</th><th scope="col" class="message">胜利感言</th><th scope="col" class="ip">脱敏 IP</th></tr></thead>
               <tbody id="leaderboard-list"></tbody>
             </table>
@@ -76,20 +75,7 @@
             <option value="carry">正常运包</option>
           </select>
         </label>
-        <p id="kill-mode-status" class="note" role="status" aria-live="polite"></p>
-        <p class="note">纯击杀使用当前选中模型作为对手；模型未针对纯击杀训练，表现仅供娱乐。击杀模式成绩不写入运包排行榜。</p>
-        <h2>操作</h2>
-        <p><kbd>方向键 / 小键盘 5↑ 1← 2↓ 3→</kbd> 移动</p>
-        <p><kbd>Space / W</kbd> 放泡</p>
-        <p><kbd>1 - 7</kbd> 使用道具栏对应格（左下角）</p>
-        <p><kbd>E / Shift</kbd> 使用道具栏第 1 格</p>
-        <p>糖泡：队友碰触救援</p>
-        <p id="item-supply-status" class="note" role="status"></p>
-        <p id="physics-revision">道具供给约增至 1.5 倍；死亡物品随机散落全图合法空格，属性仍有上限。历史 Review 使用原规则。</p>
-        <label class="check-label"><input id="boundary-recovery" type="checkbox" checked> 香蕉边界停滞恢复 v1（前端辅助，可关闭）</label>
-        <p id="boundary-recovery-status" class="note" role="status">仅用于五槽模型；原始模型决策与辅助动作分别记录，不代表模型原始能力。</p>
-        <p id="bubble-passage-legend">面朝同行/同列前方 3 格内、无遮挡的首个泡就开始计时，不用碰撞或按住方向键。圆环顺时针渐绿；转向或走开仍继续；面朝新泡时转移，过期消失。完整亮绿实圈表示仍面朝目标、可放泡穿过，淡绿虚圈表示已转向或走开，青色勾表示已获穿泡；爆炸仍有危险。</p>
-        <p><kbd>R</kbd> 重新开局</p>
+        <input id="boundary-recovery" type="checkbox" checked hidden>
         <button id="advanced-open" type="button" aria-expanded="false" aria-controls="advanced-settings">高阶设置</button>
         <section id="advanced-settings" hidden>
         <button id="advanced-close" type="button">关闭高阶设置</button>
@@ -101,59 +87,11 @@
         <button id="pending-submit" type="button">查看未完成的结算</button>
         <label class="check-label"><input id="sound-toggle" type="checkbox" checked> 音效</label>
         <h2>对手</h2>
-        <label>对局规则
-          <select id="ruleset-select" aria-label="对局规则"><option value="bun-native-v4-facing" selected>bun-native-v4-facing · 前方首泡 / 更多道具</option><option value="bun-native-v3-items">bun-native-v3-items · 旧贴近面朝</option><option value="bun-native-v2-face">bun-native-v2-face · 旧面朝规则</option><option value="bun-native-v2">bun-native-v2 · 旧顶泡规则</option><option value="stock-window-v1">stock-window-v1 · 旧库存窗口</option></select>
-        </label>
-        <label>地图
-          <select id="map-select">
-            <option value="training806">训练地图 806（真实抢包子）</option>
-            <option value="arena">空场竞技场（能力测试）</option>
-          </select>
-        </label>
-        <label>对局模式
-          <select id="match-mode">
-            <option value="human-vs-opponent">真人 vs 对手</option>
-            <option value="model-vs-rule">模型 vs 规则Bot（观战）</option>
-          </select>
-        </label>
-        <label id="model-opponent-wrap" hidden>观战对手（模型固定 P1）
-          <select id="model-opponent">
-            <option value="bun.coop_hunter@hard" selected>协作猎手 · 困难</option>
-            <option value="bun.hunter@hard">猎手 · 困难</option>
-            <option value="bun.hunter@normal">猎手 · 普通</option>
-            <option value="bun.hunter@easy">猎手 · 简单</option>
-            <option value="bun.tactical_v2">安全战术规则 Bot</option>
-          </select>
-        </label>
-        <label>队伍
-          <select id="team-mode">
-            <option value="1v1">1v1</option>
-            <option value="1v2" selected>1v2（你 vs 两个猎手，可互救）</option>
-            <option value="2v2">2v2（你 + 猎手队友 vs 两个猎手）</option>
-          </select>
-        </label>
         <label>策略
           <select id="opponent">
-            <optgroup label="协作猎手">
-              <option value="bun.coop_hunter@normal">协作猎手 · 普通</option>
-              <option value="bun.coop_hunter@hard" selected>协作猎手 · 困难</option>
-            </optgroup>
-            <optgroup label="猎手 Bot：躲泡 + 进攻 + 偷包子">
-              <option value="bun.hunter@easy">猎手 · 简单</option>
-              <option value="bun.hunter@normal">猎手 · 普通</option>
-              <option value="bun.hunter@hard">猎手 · 困难</option>
-            </optgroup>
-            <optgroup label="规则 Bot（仅 1v1）">
-              <option value="bun.tactical_v2">安全战术规则 Bot</option>
-              <option value="bun.random_roam">随机漫游 Bot</option>
-            </optgroup>
-            <optgroup id="model-options" label="训练模型（默认 SP · 仅 1v1，选择后下载）"></optgroup>
+            <optgroup id="model-options" label="模型"></optgroup>
           </select>
         </label>
-        <p class="note">当前采用 bun-native-v4-facing：前方 3 格内无遮挡首泡计时，保留更多道具和全图死亡掉落。旧规则可在高阶设置切换；历史 Review 使用录像各自的冻结规则。</p>
-        <p id="model-details" class="note"></p>
-        <p id="model-specialty" class="note" style="white-space: pre-line" aria-live="polite" hidden></p>
-        <a id="model-specialty-evidence" class="note" target="_blank" rel="noopener" hidden>查看专项评测证据</a>
         <div id="model-progress-wrap" class="progress-wrap" hidden>
           <progress id="model-progress" max="100" value="0"></progress>
           <span id="model-progress-text">准备下载…</span>
@@ -175,9 +113,9 @@
         <input id="replay-seek" type="range" min="0" max="0" value="0" step="1" aria-label="录像进度">
         <p id="replay-status" class="note" aria-live="polite"></p>
         </details>
-        <details class="fold">
-        <summary>状态</summary>
-        <pre id="status">正在加载 Bun06…</pre>
+        <details class="fold" hidden>
+        <summary hidden>状态</summary>
+        <pre id="status" hidden>正在加载 Bun06…</pre>
         </details>
         </section>
       </aside>
@@ -198,14 +136,6 @@
   </dialog>
   <script src="device_auth.js"></script>
   <script src="ui_panels.js"></script>
-  <script src="sim-stock-window-v1.js"></script>
-  <script src="ruleset_v1_capture.js"></script>
-  <script src="sim-bun-native-v2.js"></script>
-  <script src="ruleset_v2_capture.js"></script>
-  <script src="sim-bun-native-v2-face.js"></script>
-  <script src="ruleset_face_capture.js"></script>
-  <script src="sim-bun-native-v3-items.js"></script>
-  <script src="ruleset_items_capture.js"></script>
   <script src="sim-bun-native-v4-facing.js"></script>
   <script src="r3_model_inputs.js"></script>
   <script src="five-item-slots-v1.js"></script>
@@ -219,9 +149,6 @@
   <script src="model_worker.js"></script>
   <script src="replay.js"></script>
   <script src="tactical_arena.js"></script>
-  <script src="bun_rule_bot.js"></script>
-  <script src="bun_hunter_bot.js"></script>
-  <script src="bun_coop_hunter_bot.js"></script>
   <script src="bot_contract.js"></script>
   <script src="visual_renderer.js"></script>
   <script src="sound.js"></script>
