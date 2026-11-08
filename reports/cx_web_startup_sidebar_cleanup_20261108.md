@@ -43,3 +43,16 @@ PLAYWRIGHT_MODULE=<PLAYWRIGHT_MODULE> node scripts/verify_startup_cleanup_browse
 ```
 
 相关Node回归、HTTP、npm测试、源码闭包审计及隐私扫描后正常commit/push main；不force、不CC、不动训练、不做额外模型评测或资产SHA回读。最终等同SHA Actions/Pages成功并线上回读，SHA与回执在最终消息及忽略目录保存。
+
+## 已发布线上复测
+
+版本 `364c687f01469b53b999dbe3bc55432c6b86e429` 的 [Actions/Pages](https://github.com/allwellll/qqt-RL/actions/runs/42492960209)成功，线上同SHA四轮与只读Review检查通过，隐私扫描零发现。
+
+|视口/访问|导航至首帧 ms|就绪至首帧：修改前 → 修改后 ms|reset ms|
+|---|---:|---:|---:|
+|桌面冷|12540.3|347.3 → 19.8|5.9|
+|桌面热|2030.1|393.6 → 12.4|2.1|
+|手机冷|71108.4|243.3 → 23.6|6.6|
+|手机热|2166.9|234.6 → 11.2|4.9|
+
+四轮首帧时录像目录都未完成，证明其不再阻塞游戏。手机冷访仍有54,960.1ms在运行时加载/创建阶段（包括运行时资源网络等待及会话创建，不能误称全是CPU）；真正零输入预热31.5ms。热访运行时307.1ms、预热32.6ms。此慢段现在显示“正在加载推理运行时…”，而非“模型就绪”。冷网络总耗时并未保证缩短，明确已达成的是热访就绪后可操作小于1秒。原始阶段收据：`.hermes/startup-before.json`、`.hermes/startup-cleanup-public.json`。
