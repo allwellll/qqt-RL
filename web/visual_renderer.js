@@ -88,7 +88,7 @@
       ? sim._nativeFacingCell(humanPid) === state.touchCell
       : state.clock - state.touchLast < PASS_FRESH_MS;
     return [{ cell: state.touchCell, kind: charged > PASS_MIN_MS ? 'window' : 'charging',
-      chargedMs: charged, progress: Math.min(1, charged / PASS_MIN_MS), contact,
+      chargedMs: charged, progress: Math.min(1, charged / ((PASS_MIN_MS + PASS_MAX_MS) / 2)), contact,
       ready: typeof sim._nativePassReady === 'function' ? sim._nativePassReady(humanPid, state)
         : charged > PASS_MIN_MS && contact && state.clock - state.touchLast < PASS_FRESH_MS }];
   }
