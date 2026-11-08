@@ -61,8 +61,7 @@
   }
 
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
-  // Geometry in CSS pixels. A separate state machine makes boundary behavior
-  // independent of browser event frequency and keeps keyboard holds untouched.
+  // Geometry in CSS pixels, separate from DOM events and keyboard holds.
   function createFloatingStick({radius = 48, deadzone = 10, resumeMs = 250, hysteresis = 15} = {}) {
     let center = null, habit = null, direction = null, previous = null, released = -Infinity;
     const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction});
@@ -136,6 +135,7 @@
     const clear = () => {
       const id = pointer; pointer = null;
       if (stick) paint(stick.reset());
+      stick = null; // Re-read the scaled radius after rotation or viewport resize.
       if (id != null && zone.hasPointerCapture?.(id)) zone.releasePointerCapture(id);
     };
     globalThis.addEventListener?.('resize', clear);
