@@ -12,14 +12,11 @@
       <div class="stage">
         <canvas id="game" width="900" height="880" aria-label="抢包子对战画面"></canvas>
         <nav id="touch-controls" class="touch-controls" aria-label="触屏游戏操作">
-          <div class="touch-directions">
-            <button type="button" class="touch-up" data-control-key="ArrowUp" aria-label="向上">↑</button>
-            <button type="button" class="touch-left" data-control-key="ArrowLeft" aria-label="向左">←</button>
-            <button type="button" class="touch-down" data-control-key="ArrowDown" aria-label="向下">↓</button>
-            <button type="button" class="touch-right" data-control-key="ArrowRight" aria-label="向右">→</button>
+          <div class="touch-directions" data-floating-direction aria-label="浮动方向区：按住滑动移动">
+            <div class="touch-stick" aria-hidden="true"><span data-arrow="ArrowUp">↑</span><span data-arrow="ArrowLeft">←</span><span data-arrow="ArrowDown">↓</span><span data-arrow="ArrowRight">→</span></div>
           </div>
           <div class="touch-actions">
-            <button type="button" data-control-key="Space" aria-label="放泡">放泡</button>
+            <div class="touch-bomb-hit" data-control-key="Space"><button type="button" aria-label="放泡">放泡</button></div>
             <button type="button" class="touch-item" data-control-key="Digit1" data-touch-item="0" aria-label="使用槽位1，空槽"><span class="touch-slot-number">1</span><canvas width="32" height="32" aria-hidden="true"></canvas><span class="touch-slot-count">空</span></button>
             <button type="button" class="touch-item" data-control-key="Digit2" data-touch-item="1" aria-label="使用槽位2，空槽"><span class="touch-slot-number">2</span><canvas width="32" height="32" aria-hidden="true"></canvas><span class="touch-slot-count">空</span></button>
             <button type="button" class="touch-item" data-control-key="Digit3" data-touch-item="2" aria-label="使用槽位3，空槽"><span class="touch-slot-number">3</span><canvas width="32" height="32" aria-hidden="true"></canvas><span class="touch-slot-count">空</span></button>
