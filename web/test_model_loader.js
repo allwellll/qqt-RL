@@ -66,7 +66,7 @@ const loader = require('./model_loader.js');
   assert.deepEqual(Array.from(new Uint8Array(await promise)),Array.from(bytes));
   assert.equal(calls[0],a.oss_url);assert.deepEqual(progress.at(-1),[4,4]);
   const success=events.find(e=>e.status==='verified').url;
-  if(scenario==='healthy'){assert.equal(calls.length,1);assert.equal(success,a.oss_url);}
+  if(scenario==='healthy'){assert.equal(calls.length,1);assert.equal(success,a.oss_url);assert.deepEqual(events.map(e=>e.status),['loading','verifying','verified']);assert(events.every(e=>e.index===0));}
   else if(scenario==='mirror'){assert(success.startsWith('models/test.json'));assert(calls.some(u=>u.startsWith(a.url)));}
   else {assert(success.startsWith(a.url));assert(!calls.some(u=>u.startsWith('models/')));}
  }

@@ -14,7 +14,10 @@ select, input { width: 100%; margin-top: 7px; padding: 8px; color: #eafcff; back
 .stage { position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; height: 100vh; background: #000; }
 .loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: radial-gradient(circle at 50% 40%, #1b3d33, #07141a 75%); color: #eafcff; font-weight: 700; transition: opacity .35s ease; }
 .loading.done { opacity: 0; pointer-events: none; }
-.loading p { margin: 0; }
+.loading { z-index: 3; padding: 20px; text-align: center; }
+.loading p { margin: 0; max-width: 100%; overflow-wrap: anywhere; }
+.loading [hidden] { display: none; }
+.loading #loading-source { min-height: 1.6em; }
 .loading progress { width: min(320px, 60%); height: 10px; accent-color: #ffd54a; }
 .loading-bubble { width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff8 0 14%, #ffd54a 15% 60%, #e09a1a 100%); box-shadow: 0 0 22px #ffd54a88; animation: bubble-bob 0.9s ease-in-out infinite alternate; }
 @keyframes bubble-bob { from { transform: translateY(-8px) scale(1.04, .96); } to { transform: translateY(8px) scale(.96, 1.04); } }

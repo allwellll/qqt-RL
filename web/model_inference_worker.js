@@ -5,11 +5,13 @@ importScripts('sim.js', 'model_loader.js');
 let session, meta, reference, runtime, backend;
 async function verifiedDownload(asset) {
   return QQTModelLoader.downloadModelAsset(asset,
-    (loaded,total)=>postMessage({progress:{loaded,total,asset:asset.file}}));
+    (loaded,total)=>postMessage({progress:{phase:'download',loaded,total,asset:asset.file}}),
+    {onSource:({status,index})=>postMessage({progress:{phase:status,index,asset:asset.file}})});
 }
 async function initialize(row) {
   async function loadReference() {
     const bytes=await verifiedDownload(row);
+    postMessage({progress:{phase:'initializing'}});
     const doc=JSON.parse(new TextDecoder().decode(bytes));
     meta=doc.meta;reference=new QQT.TransformerModel(doc);
   }
@@ -25,6 +27,7 @@ async function initialize(row) {
     // fallback. HTTP/integrity failures never turn into a skipped model.
     const onnx=await verifiedDownload(row.onnx);
     try {
+      postMessage({progress:{phase:'initializing'}});
       importScripts('vendor/ort/ort.wasm.min.js');runtime=ort;
       runtime.env.logLevel='error'; // Native WASM warnings otherwise reach console.error on some CPUs.
       runtime.env.wasm.numThreads=1; // Pages has no COOP/COEP / SharedArrayBuffer.

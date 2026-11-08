@@ -91,7 +91,7 @@
     onProgress(0,asset.bytes);
     try {
       const first=await range(0,Math.min(chunkBytes,asset.bytes)-1);
-      if(first.full)return await verifyBuffer(first.buffer,asset,options.cryptoApi);
+      if(first.full){options.onVerifying?.();return await verifyBuffer(first.buffer,asset,options.cryptoApi);}
       const output=new Uint8Array(asset.bytes);output.set(new Uint8Array(first.buffer));
       loaded=first.buffer.byteLength;onProgress(loaded,asset.bytes);
       let next=loaded;
@@ -103,6 +103,7 @@
         }
       }
       await Promise.all(Array.from({length:concurrency},()=>consume()));
+      options.onVerifying?.();
       return await verifyBuffer(output.buffer,asset,options.cryptoApi);
     } catch(error) {failed=true;for(const controller of controllers)controller.abort();throw error;}
   }
@@ -113,7 +114,7 @@
     const sources=[...new Set([asset.oss_url, asset.url, `models/${asset.file}`].filter(Boolean))];
     for (const [index,url] of sources.entries()) {
       try {
-        options.onSource?.({url,status:'loading'});
+        options.onSource?.({url,index,status:'loading'});
         let buffer;
         if (url===asset.oss_url) {
           const controller=new AbortController();
@@ -122,13 +123,14 @@
             const response=await (options.fetch || globalThis.fetch)(url,
               {cache:options.cache || 'default',credentials:'omit',signal:controller.signal});
             buffer=await readResponseWithProgress(response,(n)=>onProgress(n,asset.bytes));
+            options.onSource?.({url,index,status:'verifying'});
             await verifyBuffer(buffer,asset,options.cryptoApi);
           } finally {clearTimeout(timer);}
-        } else buffer=await downloadVerifiedAsset(url,asset,onProgress,options);
-        options.onSource?.({url,status:'verified'});
+        } else buffer=await downloadVerifiedAsset(url,asset,onProgress,{...options,onVerifying:()=>options.onSource?.({url,index,status:'verifying'})});
+        options.onSource?.({url,index,status:'verified'});
         return buffer;
       } catch(error) {
-        options.onSource?.({url,status:'failed',reason:error.message});
+        options.onSource?.({url,index,status:'failed',reason:error.message});
         if(index===sources.length-1)throw Error(`所有模型下载来源均失败：${error.message}`);
       }
     }

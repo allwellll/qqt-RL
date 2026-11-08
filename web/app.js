@@ -42,6 +42,10 @@
   const loading = document.getElementById('loading');
   const loadingText = document.getElementById('loading-text');
   const loadingProgress = document.getElementById('loading-progress');
+  const loadingSource = document.getElementById('loading-source');
+  const loadingRetry = document.getElementById('loading-retry');
+  let modelPending = false, modelFailed = false;
+  loadingRetry.addEventListener('click', () => onStrategyChange());
   const leaderboard = QQTLeaderboard.mount(document, { config: QQTLeaderboardConfig,
     storage: { getItem: key => localStorage.getItem(key), setItem: (key, value) => localStorage.setItem(key, value) },
     crypto, fetch: (...args) => fetch(...args), settlementReady: false, onRestart: () => requestRestart() });
@@ -54,6 +58,8 @@
     loading.classList.remove('done');
     loadingText.textContent = text;
     loadingProgress.value = 0;
+    loadingRetry.hidden = true;
+    loadingSource.textContent = '';
   }
   function loadingStep(done, total) {
     loadingProgress.value = total ? done * 100 / total : 0;
@@ -62,7 +68,7 @@
   // 首帧真正画出后才撤掉遮罩，避免先露出一块黑画布。
   let assetsPending = true;
   function hideLoading() {
-    if (!assetsPending) {
+    if (!assetsPending && !modelPending && !modelFailed) {
       loading.classList.add('done');
       leaderboard.setSettlementReady(true);
     }
@@ -186,7 +192,7 @@
   // rAF 逐帧推进本地人类 pid0：sim.frameStep 内走原版像素移动（含 6px 拐角修正、泡泡 3px 入口带），
   // 空闲帧也调用以推进穿泡计时。
   function stepHumanFrame(now) {
-    if (!sim || !localHumanControls()) { prevFrame = now; return; }
+    if (!sim || modelPending || modelFailed || !localHumanControls()) { prevFrame = now; return; }
     const dt = Math.min((now - prevFrame) / 1000 || 0, 0.25);
     prevFrame = now;
     if (sim.done) return;
@@ -368,27 +374,62 @@
   }
 
   async function loadPublishedModel(row) {
+    modelPending = true; modelFailed = false;
+    showLoading(`正在初始化模型 ${row.display_name}…`);
+    loadingProgress.removeAttribute('value');
+    clearHeldControls();
     opponentSelect.disabled = true;
     modelProgressWrap.hidden = false;
     modelProgress.removeAttribute('value');
-    modelProgressText.textContent = '正在连接模型文件…';
     modelStatus.textContent = `正在加载：${row.display_name}`;
+    modelProgressText.textContent = '正在连接并初始化模型…';
+    // Fast cached reads finish before this delay, avoiding a flash of 0–100%.
+    let downloadStarted = performance.now(), latest = null, timer = null;
+    const display = () => {
+      if (!latest) return;
+      const {loaded,total} = latest;
+      const mb = n => (n / 1048576).toFixed(1);
+      const text = `正在下载模型 ${row.display_name}… ${mb(loaded)}${total > 0 ? ` / ${mb(total)} MB（${Math.min(100, Math.floor(loaded*100/total))}%）` : ' MB'}`;
+      loadingText.textContent = modelProgressText.textContent = text;
+      for (const bar of [loadingProgress, modelProgress]) {
+        if (total > 0) bar.value = loaded * 100 / total;
+        else bar.removeAttribute('value');
+      }
+    };
+    const progress = event => {
+      const {phase,loaded,total,index} = event;
+      if (phase === 'loading') {
+        downloadStarted = performance.now(); latest = null;
+        clearTimeout(timer);
+        if (index > 0) loadingSource.textContent = '主线路较慢或不可用，改用备用线路…';
+        timer = setTimeout(display, 600);
+      } else if (phase === 'download') {
+        // Measure body streaming time, excluding connection/header latency.
+        if (loaded === 0) {
+          downloadStarted = performance.now(); clearTimeout(timer);
+          timer = setTimeout(display, 600);
+        }
+        latest = {loaded,total};
+        if (performance.now() - downloadStarted >= 600) display();
+      } else if (phase === 'verifying' || phase === 'initializing') {
+        clearTimeout(timer); latest = null;
+        loadingText.textContent = modelProgressText.textContent = phase === 'verifying'
+          ? '下载完成，正在校验并初始化模型…' : '正在初始化模型…';
+        loadingProgress.removeAttribute('value'); modelProgress.removeAttribute('value');
+      }
+    };
     let model;
-    if (row.onnx) {
-      model = await QQTModelWorker.load(row, ({loaded,total}) => {
-        if (total > 0) modelProgress.value = loaded * 100 / total;
-        modelProgressText.textContent = QQTModelLoader.progressText(loaded,total);
-      });
-    } else {
-    const buffer = await QQTModelLoader.downloadModelAsset(row, (loaded, total) => {
-      if (total > 0) modelProgress.value = loaded * 100 / total;
-      else modelProgress.removeAttribute('value');
-      modelProgressText.textContent = QQTModelLoader.progressText(loaded, total);
-    });
-    modelProgressText.textContent = '正在解析并初始化模型…';
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    model = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)),row);
-    }
+    try {
+      if (row.onnx) model = await QQTModelWorker.load(row, progress);
+      else {
+        const buffer = await QQTModelLoader.downloadModelAsset(row,
+          (loaded,total)=>progress({phase:'download',loaded,total}),
+          {onSource:({status,index})=>progress({phase:status,index})});
+        progress({phase:'initializing'});
+        await new Promise(resolve => setTimeout(resolve, 0));
+        model = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)),row);
+      }
+    } finally { clearTimeout(timer); }
     const previousModel = loadedModel;
     loadedModel = model.meta?.schema_version === 'five-item-slots-v1'
       ? QQTBoundaryRecovery.attach(model, {enabled: () => localHumanControls() && document.getElementById('boundary-recovery').checked}) : model;
@@ -401,6 +442,9 @@
     modelProgress.value = 100;
     loadedModelId = row.id;
     modelProgressText.textContent = '模型加载完成';
+    loadingText.textContent = '模型就绪，正在开局…';
+    loadingProgress.value = 100;
+    modelPending = false;
     opponentSelect.disabled = false;
     modelStatus.textContent = `已加载：${row.display_name}`;
     const decision = model.greedy ? 'argmax' : `τ ${model.temperature}`;
@@ -471,6 +515,7 @@
   }
 
   function render(now = performance.now()) {
+    if (!sim) return;
     touchControls.hidden = !localHumanControls() || sim.done;
     if (!touchControls.hidden) updateTouchItems();
     if (sim.done && localHumanControls() && leaderboardMatch) {
@@ -530,7 +575,7 @@
   }
 
   async function tick() {
-    if (ticking || assetsPending) return;
+    if (!sim || ticking || assetsPending || modelPending || modelFailed) return;
     ticking = true;
     const tickSim = sim, revision = sessionRevision;
     const obsolete = () => sim !== tickSim || revision !== sessionRevision;
@@ -658,6 +703,7 @@
     requestedRuleset = QQTRulesets.current;
   });
   async function onStrategyChange() {
+    if (modelPending) return;
     const value = QQTModelCatalog.resolveSelection(opponentSelect.value, publishedModels, defaultModelId);
     opponentSelect.value = value;
     if (!teamCapable(value)) teamMode.value = '1v1';
@@ -671,16 +717,20 @@
     if (row && loadedModelId !== row.id) {
       try { await loadPublishedModel(row); }
       catch (error) {
-        loadedModel = null;
-        loadedModelId = null;
+        modelPending = false; modelFailed = true;
+        loadingText.textContent = `模型加载失败：${error.message}`;
+        loadingProgress.removeAttribute('value');
+        loadingRetry.hidden = false;
         opponentSelect.disabled = false;
         modelProgressWrap.hidden = false;
         modelProgress.removeAttribute('value');
         modelProgressText.textContent = `加载失败：${error.message}`;
         modelStatus.textContent = `加载失败：${error.message}`;
+        return;
       }
     }
-    reset();
+    modelFailed = false;
+    await reset();
   }
   matchMode.addEventListener('change', reset);
   gameMode.addEventListener('change', async () => {
