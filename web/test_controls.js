@@ -29,6 +29,28 @@ const controls = require('./controls.js');
   assert.equal(controls.touchItemPage([],2).page,0,'reset/empty inventory returns first page');
   assert.equal(controls.touchItemPage(slots.slice(0,3),2).page,0,'inventory shrink clamps to an accessible page');
 }
+{
+  const stick = controls.createFloatingStick();
+  assert.equal(stick.start(70, 90, 1000).direction, null, 'off-center initial tap is idle');
+  assert.equal(stick.move(79, 90).direction, null, 'deadzone');
+  assert.equal(stick.move(100, 90).direction, 'ArrowRight');
+  assert.equal(stick.move(90, 115).direction, 'ArrowRight', '51 degrees retains right');
+  assert.equal(stick.move(80, 120).direction, 'ArrowDown', '72 degrees switches down');
+  stick.end(1100);
+  assert.equal(stick.start(75, 92, 1349).direction, 'ArrowDown', 'resume below 250ms');
+  assert.equal(stick.move(75, 92).direction, null, 'return to deadzone idles');
+  stick.move(110, 92); stick.end(1400);
+  assert.equal(stick.start(76, 93, 1650).direction, null, '250ms is expired');
+  const far = stick.move(400, 93);
+  assert.equal(far.direction, 'ArrowRight'); assert(far.center.x > 76 && far.center.x < 100, 'slow center following');
+  stick.end(1700, true);
+  assert.equal(stick.start(400, 93, 1701).direction, null, 'cancel clears resume');
+  assert.deepEqual(stick.start(700, 400, 1800).habit, {x:700,y:400}, 'distant tap resets habit');
+  stick.reset(); assert.equal(stick.start(1, 1, 1801).direction, null, 'blur/reset clears resume');
+  const held = new Set(['ArrowRight', 'touch:ArrowRight']);
+  held.delete('touch:ArrowRight'); assert.equal(controls.moveForHeld(held), 3, 'touch release preserves keyboard');
+  assert(!controls.MOVEMENT_KEYS.includes('touch:ArrowRight'), 'touch keys are not keyboard input');
+}
 assert.strictEqual(controls.moveForHeld(new Set(['ArrowUp'])), 0);
 assert.strictEqual(controls.moveForHeld(new Set(['ArrowDown'])), 1);
 assert.strictEqual(controls.moveForHeld(new Set(['ArrowLeft'])), 2);

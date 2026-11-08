@@ -10,15 +10,15 @@ function place(s){return s.step([[Q.MOVE_IDLE,1,0,1],[Q.MOVE_IDLE,0,0,1]]);}
 function unchanged(s){const before=JSON.stringify(s);for(let i=0;i<1000;i++)hints(s);assert.equal(JSON.stringify(s),before,'1000 queries preserve entire simulation/replay JSON');}
 {
  const s=touching();assert.equal(hints(s).length,1);assert.equal(hints(s)[0].progress,0);
- for(const t of [8,16,33,199,350,499,500]){advanceTo(s,t);const h=hints(s)[0];assert.equal(h.kind,'charging');assert.equal(h.progress,t/500);unchanged(s);}
+ for(const t of [8,16,33,199,350,499,500]){advanceTo(s,t);const h=hints(s)[0];assert.equal(h.kind,'charging');assert.equal(h.progress,t/550);unchanged(s);}
  assert.equal(s.t,0,'ring updates between 10Hz ticks');
- advanceTo(s,500.5);const h=hints(s)[0];assert.equal(h.kind,'window');assert.equal(h.progress,1);assert(h.ready&&h.contact);unchanged(s);
+ advanceTo(s,500.5);const h=hints(s)[0];assert.equal(h.kind,'window');assert.equal(h.progress,500.5/550);assert(h.ready&&h.contact);unchanged(s);
  assert(place(s).placed[0]);assert(s.nativeMove[0].passActive,'real native placement grants passage');assert.equal(hints(s)[0].kind,'active');unchanged(s);
  for(let i=0;i<8;i++)s.frameStep(0,Q.MOVE_RIGHT,.1);assert(s.pos[1]>7,'real movement through target bubble');assert.deepEqual(hints(s),[],'no stale active mark');
 }
 for(const move of [Q.MOVE_IDLE,Q.MOVE_LEFT,Q.MOVE_UP,Q.MOVE_DOWN]){
  const s=touching();advanceTo(s,100);const start=s.nativeMove[0].touchStart;
- advanceTo(s,300,move);assert.equal(s.nativeMove[0].touchStart,start);assert.equal(hints(s)[0].progress,.6,'release/turn/walk keeps growing');
+ advanceTo(s,300,move);assert.equal(s.nativeMove[0].touchStart,start);assert.equal(hints(s)[0].progress,300/550,'release/turn/walk keeps growing');
  advanceTo(s,550,move);const h=hints(s)[0];assert.equal(h.progress,1);assert.equal(h.kind,'window');assert(!h.contact&&!h.ready,'full ring is faded/dashed after freshness expires');unchanged(s);
  assert(place(s).placed[0]);assert(!s.nativeMove[0].passActive,'full but stale ring cannot grant real passage');
 }
@@ -26,6 +26,10 @@ for(const move of [Q.MOVE_IDLE,Q.MOVE_LEFT,Q.MOVE_UP,Q.MOVE_DOWN]){
  const s=touching();advanceTo(s,450);advanceTo(s,510,Q.MOVE_IDLE);assert(hints(s)[0].ready,'native freshness grace remains valid through short release');
  advanceTo(s,550,Q.MOVE_IDLE);assert(!hints(s)[0].ready,'exactly 100ms freshness boundary is excluded');
  s.frameStep(0,Q.MOVE_RIGHT,.02);assert(hints(s)[0].ready,'return before MAX restores native readiness without resetting progress');assert(place(s).placed[0]);assert(s.nativeMove[0].passActive);
+}
+for(const ms of [500,500.5,549,550,575,599]){
+ const s=touching();advanceTo(s,ms);const h=hints(s)[0];
+ assert.equal(h.progress,Math.min(1,ms/550));assert.equal(h.ready,ms>500);
 }
 for(const charged of [500,600,650]){
  const s=touching();advanceTo(s,charged);if(charged>=600)assert.deepEqual(hints(s),[],'600ms expiration');
@@ -47,5 +51,5 @@ for(const state of ['charging','window','active']){
 for(const move of [Q.MOVE_UP,Q.MOVE_DOWN,Q.MOVE_LEFT,Q.MOVE_RIGHT]){
  const s=scene(),offset=[-15,15,-1,1][move];s.fuse[cell+offset]=30;for(let i=0;i<4&&!hints(s).length;i++)s.frameStep(0,move,.02);assert.equal(hints(s)[0].cell,cell+offset);
 }
-const html=fs.readFileSync('web/index.html','utf8');assert(html.includes('圆环')&&html.includes('淡绿虚圈')&&!html.includes('穿点倒计时'));
+const html=fs.readFileSync('web/index.html','utf8');assert(!html.includes('id="bubble-passage-legend"'),'sidebar no longer contains explanatory legend');
 console.log('Pass ring PASS: native target lifecycle across release/turn/walk, transfer, strict charge/freshness bounds, real placement/traversal, hidden perspectives and 1000-query immutability');

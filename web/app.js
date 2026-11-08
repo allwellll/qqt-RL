@@ -1,16 +1,19 @@
 'use strict';
 
 (async function startBunArena() {
+  performance.mark('qqt:startup');
   QQTPanels.mount(document);
   const canvas = document.getElementById('game');
   const status = document.getElementById('status');
   const restart = document.getElementById('restart');
   const opponentSelect = document.getElementById('opponent');
-  const mapSelect = document.getElementById('map-select');
-  const matchMode = document.getElementById('match-mode');
-  const teamMode = document.getElementById('team-mode');
+  const gameMode = document.getElementById('game-mode');
   const characterSelect = document.getElementById('character');
   const characterPortrait = document.getElementById('character-portrait');
+  try {
+    const savedGameMode = localStorage.getItem('qqt.game-mode');
+    if (savedGameMode === 'kill' || savedGameMode === 'carry') gameMode.value = savedGameMode;
+  } catch (_) {}
   try {
     const savedCharacter = localStorage.getItem('qqt.character');
     if (['pipi', 'maomao'].includes(savedCharacter)) characterSelect.value = savedCharacter;
@@ -21,9 +24,6 @@
   }
   updateCharacterPortrait();
   const modelOptions = document.getElementById('model-options');
-  const modelDetails = document.getElementById('model-details');
-  const modelSpecialty = document.getElementById('model-specialty');
-  const modelSpecialtyEvidence = document.getElementById('model-specialty-evidence');
   const modelProgressWrap = document.getElementById('model-progress-wrap');
   const modelProgress = document.getElementById('model-progress');
   const modelProgressText = document.getElementById('model-progress-text');
@@ -37,6 +37,10 @@
   const loading = document.getElementById('loading');
   const loadingText = document.getElementById('loading-text');
   const loadingProgress = document.getElementById('loading-progress');
+  const loadingSource = document.getElementById('loading-source');
+  const loadingRetry = document.getElementById('loading-retry');
+  let modelPending = false, modelFailed = false;
+  loadingRetry.addEventListener('click', () => onStrategyChange());
   const leaderboard = QQTLeaderboard.mount(document, { config: QQTLeaderboardConfig,
     storage: { getItem: key => localStorage.getItem(key), setItem: (key, value) => localStorage.setItem(key, value) },
     crypto, fetch: (...args) => fetch(...args), settlementReady: false, onRestart: () => requestRestart() });
@@ -49,6 +53,8 @@
     loading.classList.remove('done');
     loadingText.textContent = text;
     loadingProgress.value = 0;
+    loadingRetry.hidden = true;
+    loadingSource.textContent = '';
   }
   function loadingStep(done, total) {
     loadingProgress.value = total ? done * 100 / total : 0;
@@ -57,7 +63,8 @@
   // 首帧真正画出后才撤掉遮罩，避免先露出一块黑画布。
   let assetsPending = true;
   function hideLoading() {
-    if (!assetsPending) {
+    if (!assetsPending && !modelPending && !modelFailed) {
+      if (!loading.classList.contains('done')) performance.mark('qqt:first-frame');
       loading.classList.add('done');
       leaderboard.setSettlementReady(true);
     }
@@ -69,10 +76,11 @@
   const arenaLevel = QQTTacticalArena.buildTacticalArena(baseLevel);  // 清空砖块的空场能力测试
   let level = trainingLevel;
   let renderer = null, touchItemAssets = null;
-  function selectedLevel() { return mapSelect.value === 'arena' ? arenaLevel : trainingLevel; }
+  function selectedLevel() { return trainingLevel; }
   // 切换地图需重建资源与渲染器（不同图砖块/精灵集合不同）；调用方随后自行 reset。
   async function useMap(target) {
     level = target;
+    performance.mark('qqt:assets-start');
     assetsPending = true;
     showLoading('正在加载地图与素材…');
     try {
@@ -83,7 +91,8 @@
       loadingText.textContent = `加载失败：${error.message}，请刷新重试`;
       throw error;
     }
-    loadingText.textContent = '素材就绪，正在开局…';
+    performance.mark('qqt:assets-ready');
+    loadingText.textContent = '正在读取模型目录…';
     assetsPending = false;
   }
   await useMap(trainingLevel);
@@ -133,9 +142,8 @@
   let loadedModel = null;
   let loadedModelId = null;
   let publishedModels = [];
+  let defaultModelId = 'items-l2-sp-u023302-tau03';
   let activeBot = null;
-  // 组队模式下 pid>=2 的猎手（pid1 仍是 activeBot）。
-  let extraBots = [];
   let ticking = false;
   let sessionRevision = 0;
   let replayCatalog = [];
@@ -165,11 +173,7 @@
     intents.fill(QQT.MOVE_IDLE);
     prevPos.set(sim.pos); curPos.set(sim.pos); lastTickT = performance.now(); prevFrame = performance.now();
   }
-  // 1v2 → [红, 蓝, 蓝]；2v2 → [红, 蓝, 红, 蓝]（pid1 恒为第一个敌人）。
-  const TEAM_LAYOUTS = { '1v1': [0, 1], '1v2': [0, 1, 1], '2v2': [0, 1, 0, 1] };
-  function teamLayout() { return localHumanControls() ? (TEAM_LAYOUTS[teamMode.value] || TEAM_LAYOUTS['1v1']) : TEAM_LAYOUTS['1v1']; }
-  // 本地人类操控 pid0（非回放、非观战 model-vs-rule）时 humanPid=0 → 渲染 raw；否则 -1（两方皆插值）。
-  function localHumanControls() { return !replayDocument && matchMode.value !== 'model-vs-rule'; }
+  function localHumanControls() { return !replayDocument; }
   function motionState() {
     return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1, intents,
       settlement: QQTLeaderboard.settlementText(leaderboard.state().settlement),
@@ -180,7 +184,7 @@
   // rAF 逐帧推进本地人类 pid0：sim.frameStep 内走原版像素移动（含 6px 拐角修正、泡泡 3px 入口带），
   // 空闲帧也调用以推进穿泡计时。
   function stepHumanFrame(now) {
-    if (!sim || !localHumanControls()) { prevFrame = now; return; }
+    if (!sim || modelPending || modelFailed || !localHumanControls()) { prevFrame = now; return; }
     const dt = Math.min((now - prevFrame) / 1000 || 0, 0.25);
     prevFrame = now;
     if (sim.done) return;
@@ -203,9 +207,6 @@
 
   function createRegistry() {
     return QQTBots.createDefaultRegistry({
-      BunRuleTacticalBot,
-      hunter: QQTBunHunterBot,
-      coopHunter: QQTBunCoopHunterBot,
       modelFactory: loadedModel ? () => ({
         reset(context) {},
         async act(observation, playerId, rng) {
@@ -220,32 +221,16 @@
 
   const MODEL_PREFIX = 'model:';
   const isModelChoice = (value) => value.startsWith(MODEL_PREFIX);
-  // 组队只支持猎手；规则 Bot 与训练模型按 1v1 训练。
-  const teamCapable = (value) => value.startsWith('bun.hunter') || value.startsWith('bun.coop_hunter');
-
   function resetBot() {
-    if (activeBot && activeBot.close) activeBot.close();
-    for (const bot of extraBots) if (bot && bot.close) bot.close();
-    const registry = createRegistry();
-    // 选项值形如 "bun.hunter@hard"：@ 后为难度配置。
-    const choice = matchMode.value === 'model-vs-rule' ? document.getElementById('model-opponent').value
-      : isModelChoice(opponentSelect.value) ? 'bun.browser_model' : opponentSelect.value;
-    const [botId, difficulty] = choice.split('@');
-    const context = (seed) => ({
-      schema: 'qqt.bot.context/v1', episode_id: `web-${Date.now()}`,
-      seed, ruleset: 'bun', max_ticks: null, metadata: {},
-    });
-    activeBot = registry.create(botId, difficulty ? { difficulty } : {});
-    activeBot.reset(context(sim.seed >>> 0));
-    extraBots = [];
-    for (let pid = 2; pid < sim.nPlayers; pid++) {
-      extraBots[pid] = registry.create(botId, difficulty ? { difficulty } : {});
-      extraBots[pid].reset(context((sim.seed + pid * 7919) >>> 0));
-    }
+    if (activeBot?.close) activeBot.close();
+    activeBot = loadedModel ? createRegistry().create('bun.browser_model') : null;
+    activeBot?.reset({schema:'qqt.bot.context/v1', episode_id:`web-${Date.now()}`,
+      seed:sim.seed >>> 0, ruleset:'bun', max_ticks:null, metadata:{}});
   }
 
   let requestedRuleset = QQTRulesets.current;
   async function reset(preserveCard = false) {
+    performance.mark('qqt:reset-start');
     if (leaderboard.state().submitting || leaderboard.state().profileSubmitting) return;
     sessionRevision++;
     leaderboardMatch = null;
@@ -264,26 +249,18 @@
     sim = new QQT.Sim(episodeSeed);
     modelRng = QQT.mulberry32((episodeSeed ^ (loadedModel?.samplingProfile?.seed ?? 0x515154)) >>> 0);
     botRng = QQT.mulberry32((episodeSeed ^ 0x515154 ^ 0x5CA17) >>> 0);
-    const wantModel = isModelChoice(opponentSelect.value);
-    if (wantModel && loadedModelId !== opponentSelect.value.slice(MODEL_PREFIX.length)) opponentSelect.value = 'bun.coop_hunter@hard';
-    if (matchMode.value === 'model-vs-rule' && !loadedModel) {
-      matchMode.value = 'human-vs-opponent';
-      modelStatus.textContent = '请先在「策略」中选择一个训练模型';
-    }
-    if (matchMode.value === 'model-vs-rule') teamMode.value = '1v1';
-    document.getElementById('model-opponent-wrap').hidden = matchMode.value !== 'model-vs-rule';
-    if (teamMode.value !== '1v1' && !teamCapable(opponentSelect.value)) opponentSelect.value = 'bun.coop_hunter@hard';
     // Fresh model matches use the selected native rules; archived Review keeps its frozen engine.
     const native = localHumanControls();
-    sim.reset(level, { nativeItems: true, nativeTrap: true, teams: teamLayout(),
+    sim.reset(level, { nativeItems: true, nativeTrap: true, killMode: gameMode.value === 'kill', teams: [0, 1],
       bananaSlideSpeedPx: native ? 480 : undefined });
-    sim.maxSteps = 2400;
+    if (native) { QQTSelfRespawnPreview.attach(sim); QQTKillOpeningItems.apply(sim); }
+    sim.maxSteps = gameMode.value === 'kill' ? 1800 : 2400;
     QQTModelSampling.watch(sim);
     const [opponent, difficulty] = opponentSelect.value.split('@');
-    leaderboardMatch = native ? leaderboard.begin({ seed: sim.seed, opponent,
+    leaderboardMatch = native && gameMode.value !== 'kill' ? leaderboard.begin({ seed: sim.seed, opponent,
       ruleset_version: QQTRulesets.current,
       difficulty: difficulty || (isModelChoice(opponent) ? 'model' : 'fixed'),
-      mode: teamMode.value, map_id: mapSelect.value }) : null;
+      mode: '1v1', map_id: 'training806', game_mode: gameMode.value }) : null;
     resetBot();
     releaseTouchControls();
     bombCell = -1;
@@ -291,6 +268,7 @@
     itemSlot = 0;
     snapMotion();
     renderer.reset();
+    performance.mark('qqt:reset-ready');
   }
 
   function resetReplay() {
@@ -308,6 +286,7 @@
     replaySeek.value = '0';
     snapMotion();
     renderer.reset();
+    performance.mark('qqt:reset-ready');
   }
 
   function setTickIntents(move0, move1) {
@@ -363,27 +342,66 @@
   }
 
   async function loadPublishedModel(row) {
+    performance.mark('qqt:model-start');
+    modelPending = true; modelFailed = false;
+    showLoading(`正在初始化模型 ${row.display_name}…`);
+    loadingProgress.removeAttribute('value');
+    clearHeldControls();
     opponentSelect.disabled = true;
     modelProgressWrap.hidden = false;
     modelProgress.removeAttribute('value');
-    modelProgressText.textContent = '正在连接模型文件…';
     modelStatus.textContent = `正在加载：${row.display_name}`;
+    modelProgressText.textContent = '正在连接并初始化模型…';
+    // Fast cached reads finish before this delay, avoiding a flash of 0–100%.
+    let downloadStarted = performance.now(), latest = null, timer = null;
+    const display = () => {
+      if (!latest) return;
+      const {loaded,total} = latest;
+      const mb = n => (n / 1048576).toFixed(1);
+      const text = `正在下载模型 ${row.display_name}… ${mb(loaded)}${total > 0 ? ` / ${mb(total)} MB（${Math.min(100, Math.floor(loaded*100/total))}%）` : ' MB'}`;
+      loadingText.textContent = modelProgressText.textContent = text;
+      for (const bar of [loadingProgress, modelProgress]) {
+        if (total > 0) bar.value = loaded * 100 / total;
+        else bar.removeAttribute('value');
+      }
+    };
+    const progress = event => {
+      const {phase,loaded,total,index} = event;
+      if (phase && phase !== 'download') performance.mark('qqt:model-' + phase);
+      if (phase === 'loading') {
+        downloadStarted = performance.now(); latest = null;
+        clearTimeout(timer);
+        loadingSource.textContent = index > 0
+          ? 'Release 镜像不可用，正在尝试 Release 直链…' : '下载来源：Release 镜像';
+        timer = setTimeout(display, 600);
+      } else if (phase === 'download') {
+        // Measure body streaming time, excluding connection/header latency.
+        if (loaded === 0) {
+          downloadStarted = performance.now(); clearTimeout(timer);
+          timer = setTimeout(display, 600);
+        }
+        latest = {loaded,total};
+        if (performance.now() - downloadStarted >= 600) display();
+      } else if (['verifying', 'initializing', 'runtime', 'warming'].includes(phase)) {
+        clearTimeout(timer); latest = null;
+        loadingText.textContent = modelProgressText.textContent = phase === 'verifying'
+          ? '下载完成，正在校验并初始化模型…' : phase === 'runtime' ? '正在加载推理运行时…'
+          : phase === 'warming' ? '正在预热模型…' : '正在初始化模型…';
+        loadingProgress.removeAttribute('value'); modelProgress.removeAttribute('value');
+      }
+    };
     let model;
-    if (row.onnx) {
-      model = await QQTModelWorker.load(row, ({loaded,total}) => {
-        if (total > 0) modelProgress.value = loaded * 100 / total;
-        modelProgressText.textContent = QQTModelLoader.progressText(loaded,total);
-      });
-    } else {
-    const buffer = await QQTModelLoader.downloadModelAsset(row, (loaded, total) => {
-      if (total > 0) modelProgress.value = loaded * 100 / total;
-      else modelProgress.removeAttribute('value');
-      modelProgressText.textContent = QQTModelLoader.progressText(loaded, total);
-    });
-    modelProgressText.textContent = '正在解析并初始化模型…';
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    model = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)),row);
-    }
+    try {
+      if (row.onnx) model = await QQTModelWorker.load(row, progress);
+      else {
+        const buffer = await QQTModelLoader.downloadModelAsset(row,
+          (loaded,total)=>progress({phase:'download',loaded,total}),
+          {onSource:({status,index})=>progress({phase:status,index})});
+        progress({phase:'initializing'});
+        await new Promise(resolve => setTimeout(resolve, 0));
+        model = instantiateModel(JSON.parse(new TextDecoder().decode(buffer)),row);
+      }
+    } finally { clearTimeout(timer); }
     const previousModel = loadedModel;
     loadedModel = model.meta?.schema_version === 'five-item-slots-v1'
       ? QQTBoundaryRecovery.attach(model, {enabled: () => localHumanControls() && document.getElementById('boundary-recovery').checked}) : model;
@@ -396,11 +414,14 @@
     modelProgress.value = 100;
     loadedModelId = row.id;
     modelProgressText.textContent = '模型加载完成';
+    modelProgressWrap.hidden = true;
+    performance.mark('qqt:model-ready');
+    loadingText.textContent = '模型就绪，正在开局…';
+    loadingProgress.value = 100;
+    modelPending = false;
     opponentSelect.disabled = false;
-    modelStatus.textContent = `已加载：${row.display_name}`;
-    const decision = model.greedy ? 'argmax' : `τ ${model.temperature}`;
-    const score = !row.specialist && Number.isFinite(row.score) ? ` · score ${row.score.toFixed(4)}` : '';
-    modelDetails.textContent = `${row.candidate} · cycle ${row.cycle}${score} · ${decision} · ${(row.bytes / 1048576).toFixed(1)} MiB`;
+    modelStatus.textContent = '';
+
   }
 
   async function loadCatalog() {
@@ -413,18 +434,21 @@
       const defaults = await defaultsResponse.json();
       if (defaults.schema !== 'qqt.model-inference-defaults/v1' || defaults.ruleset !== 'bun-native-v2' || defaults.max_ticks !== 2400 || !publishedModels.some(row=>row.id===defaults.default_model_id)) throw new Error('模型推理配置无效');
       if (!defaults.policies || Object.keys(defaults.policies).some(id=>!publishedModels.some(row=>row.id===id))) throw new Error('模型推理策略无效');
+      defaultModelId = defaults.default_model_id;
       publishedModels = publishedModels.map(row => defaults.policies[row.id]
         ? {...row,inference:QQTModelSampling.profile({inference:defaults.policies[row.id]})} : row);
       publishedModels.sort((a,b) => Number(b.id===defaults.default_model_id)-Number(a.id===defaults.default_model_id));
       modelOptions.replaceChildren(...publishedModels.map((row) => new Option(QQTModelCatalog.optionLabel(row), MODEL_PREFIX + row.id)));
-      modelDetails.textContent = `可选模型 ${publishedModels.length} 个`;
     } catch (error) {
       modelOptions.replaceChildren();
-      modelDetails.textContent = `模型列表读取失败：${error.message}`;
+      modelFailed = true; loadingText.textContent = `模型列表读取失败：${error.message}`;
+      loadingRetry.hidden = false;
+      loadingRetry.onclick = () => location.reload();
     }
   }
 
   async function loadReplayCatalog() {
+    performance.mark('qqt:replays-start');
     try {
       const response = await fetch('replays.json', { cache: 'no-store' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -436,6 +460,7 @@
         replaySelect.add(new Option(`${row.model_id} · seed ${row.seed} · ${row.summary.ticks} ticks`, row.id));
       }
       const legacyNotice = document.deprecated === true ? ' · 旧版只读兼容；新诊断录像请使用 Review' : '';
+      performance.mark('qqt:replays-ready');
       replayStatus.textContent = `可选录像 ${replayCatalog.length} 局${legacyNotice}`;
     } catch (error) {
       replaySelect.replaceChildren(new Option('录像列表读取失败', ''));
@@ -465,6 +490,7 @@
   }
 
   function render(now = performance.now()) {
+    if (!sim) return;
     touchControls.hidden = !localHumanControls() || sim.done;
     if (!touchControls.hidden) updateTouchItems();
     if (sim.done && localHumanControls() && leaderboardMatch) {
@@ -479,37 +505,10 @@
     document.getElementById('settlement').style.top = window.matchMedia('(max-width: 820px)').matches
       ? '' : `${rect.top - stage.top + rect.height * .65}px`;
     hideLoading();
-    const guard = loadedModel?.boundaryRecovery;
-    const recoveryEvents = guard?.sim === sim && guard.generation === sim._gen ? guard.events : [];
-    document.getElementById('boundary-recovery-status').textContent =
-      `仅用于真人对战五槽模型；本局辅助 ${recoveryEvents.length} 次。前端辅助不代表模型原始能力。`;
-    const supply = sim.itemSupply;
-    document.getElementById('item-supply-status').textContent = supply
-      ? `本局开局道具 ${supply.initialActual} 件；砖内已掉落 ${supply.brickDropsActual} 件${supply.unplaced ? `；空格不足未补 ${supply.unplaced} 件` : ''}` : '';
-    status.textContent = JSON.stringify({
-      item_supply: supply,
-      mode: QQTModelCatalog.matchLabel(matchMode.value),
-      tick: sim.t,
-      player_or_model_alive: sim.alive[matchMode.value === 'model-vs-rule' ? 1 : 0],
-      rule_bot_alive: sim.alive[matchMode.value === 'model-vs-rule' ? 0 : 1],
-      bun_score: sim.bunScore,
-      carrying: sim.bunCarried,
-      held_item: sim.nativeItems
-        ? sim.itemSlots.map((slots) => slots.map((slot) => `${['无', '香蕉皮', '慢慢胶'][slot.item] || '?'}×${slot.count}`))
-        : sim.heldItem.map((item) => ['无', '香蕉皮', '慢慢胶'][item] || '无'),
-      trapped: sim.nativeTrap ? sim.trapped : undefined,
-      spawn_protection: sim.nativeTrap ? sim.spawnProtection : undefined,
-      boundary_recovery: guard?.sim === sim ? {version: QQTBoundaryRecovery.VERSION,
-        last_decision: loadedModel.lastDeploymentDecision, events: recoveryEvents} : undefined,
-      team: sim.nPlayers > 2 ? sim.team : undefined,
-      bot: [activeBot, ...extraBots.slice(2)].map((bot) => (bot && bot.bot && bot.bot.lastDecision
-        ? `${bot.bot.lastDecision.mode} / ${bot.bot.lastDecision.reason}` : undefined)).filter(Boolean).join(' | ') || undefined,
-      winner: sim.done ? sim.winner : null,
-    }, null, 2);
   }
 
   async function tick() {
-    if (ticking || assetsPending) return;
+    if (!sim || ticking || assetsPending || modelPending || modelFailed) return;
     ticking = true;
     const tickSim = sim, revision = sessionRevision;
     const obsolete = () => sim !== tickSim || revision !== sessionRevision;
@@ -520,23 +519,12 @@
           while (replayAccumulator >= 1 && replayPlaying) { stepReplay(); replayAccumulator -= 1; }
         }
       } else if (!sim.done) {
-        const first = matchMode.value === 'model-vs-rule'
-          ? await Promise.resolve(loadedModel.act(sim, 1, modelRng)) : humanAction();
+        if (!activeBot) return;
+        const first = humanAction();
         if (obsolete()) return;
-        const state = QQTBunRuleBot.stateFromSim(sim);
-        const observation = {
-          schema: 'qqt.bot.observation/v1', tick: sim.t, state,
-          legal_moves: [0, 1, 2, 3, 4], legal_abilities: [0, 1, 2], metadata: { sim },
-        };
-        const botPid = matchMode.value === 'model-vs-rule' ? 0 : 1;
-        const action = await Promise.resolve(activeBot.act(observation, botPid, botRng));
+        const action = await Promise.resolve(activeBot.act(null, 1, botRng));
         if (obsolete()) return;
-        const extra = [];
-        for (let pid = 2; pid < sim.nPlayers; pid++) {
-          extra[pid] = await Promise.resolve(extraBots[pid].act(observation, pid, botRng));
-          if (obsolete()) return;
-        }
-        const botActions = [null, action, ...extra.slice(2)];
+        const botActions = [null, action];
         prevPos.set(sim.pos);
         const before = QQTSound.snapshot(sim);
         const joint = [
@@ -545,7 +533,6 @@
           ...botActions.slice(1).map((a) => [a.move, a.ability === 1 ? 1 : 0, a.ability === 2 ? 1 : 0,
             0, -1, -1, a.itemSlot == null ? 0 : a.itemSlot]),
         ];
-        if (matchMode.value === 'model-vs-rule') [joint[0],joint[1]] = [joint[1],joint[0]];
         const info = sim.step(joint);
         curPos.set(sim.pos); lastTickT = performance.now();
         if (localHumanControls()) {
@@ -554,12 +541,8 @@
           }
         } else setTickIntents(action.move, first[0]);
         renderer.addExplosion(info, performance.now());
-        playEvents(before, info, matchMode.value === 'model-vs-rule' ? 1 : 0);
-        if (activeBot.observe_transition) {
-          activeBot.observe_transition(info, {
-            ...observation, tick: sim.t, state: QQTBunRuleBot.stateFromSim(sim),
-          }, botPid);
-        }
+        playEvents(before, info, 0);
+
       }
     } finally {
       ticking = false;
@@ -626,48 +609,40 @@
     resetReplay(); replayPlaying = true; replayToggle.textContent = '暂停';
   });
   replaySeek.addEventListener('input', () => { if (replayDocument) seekReplay(Number(replaySeek.value)); });
-  document.getElementById('ruleset-select').addEventListener('change', async event => {
-    if (leaderboard.state().submitting || leaderboard.state().profileSubmitting) {
-      event.target.value = QQTRulesets.current;
-      return;
-    }
-    requestedRuleset = event.target.value;
-    await requestRestart();
-    event.target.value = QQTRulesets.current;
-    requestedRuleset = QQTRulesets.current;
-  });
   async function onStrategyChange() {
-    const value = opponentSelect.value;
-    if (!teamCapable(value)) teamMode.value = '1v1';
+    if (modelPending) return;
+    const value = QQTModelCatalog.resolveSelection(opponentSelect.value, publishedModels, defaultModelId);
+    opponentSelect.value = value;
     const row = isModelChoice(value) ? publishedModels.find((item) => MODEL_PREFIX + item.id === value) : null;
-    const specialty = QQTModelCatalog.specialistLines(row);
-    modelSpecialty.textContent = specialty.join('\n');
-    modelSpecialty.hidden = specialty.length === 0;
-    modelSpecialtyEvidence.hidden = !row?.specialist;
-    if (row?.specialist) modelSpecialtyEvidence.href = row.specialist.evidence.url;
-    else modelSpecialtyEvidence.removeAttribute('href');
     if (row && loadedModelId !== row.id) {
       try { await loadPublishedModel(row); }
       catch (error) {
-        loadedModel = null;
-        loadedModelId = null;
+        modelPending = false; modelFailed = true;
+        loadingText.textContent = `模型加载失败：${error.message}`;
+        loadingProgress.removeAttribute('value');
+        loadingRetry.hidden = false;
         opponentSelect.disabled = false;
         modelProgressWrap.hidden = false;
         modelProgress.removeAttribute('value');
         modelProgressText.textContent = `加载失败：${error.message}`;
         modelStatus.textContent = `加载失败：${error.message}`;
+        return;
       }
     }
-    reset();
+    modelFailed = false;
+    await reset();
   }
-  matchMode.addEventListener('change', reset);
-  document.getElementById('model-opponent').addEventListener('change', reset);
-  teamMode.addEventListener('change', reset);
+  gameMode.addEventListener('change', async () => {
+    try { localStorage.setItem('qqt.game-mode', gameMode.value); } catch (_) {}
+    await reset();
+  });
   opponentSelect.addEventListener('change', onStrategyChange);
-  mapSelect.addEventListener('change', reset);
   await loadCatalog();
-  reset(true);
-  await loadReplayCatalog();
+  if (publishedModels.length) {
+    opponentSelect.value = `${MODEL_PREFIX}${defaultModelId}`;
+    await onStrategyChange();
+  } else reset(true);
+  void loadReplayCatalog();
   function animationFrame(now) {
     stepHumanFrame(now);
     render(now);

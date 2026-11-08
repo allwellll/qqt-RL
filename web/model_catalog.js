@@ -67,9 +67,15 @@
     });
   }
 
-  function modelUrl(row) { return row.oss_url || `models/${row.file}`; }
+  function modelUrl(row) { return `models/${row.file}`; }
   function optionLabel(row) {
-    return row.specialist ? `${row.display_name} · 专项：${row.specialist.label}` : row.display_name;
+    return row.menu_label || (row.specialist ? `${row.display_name} · 专项：${row.specialist.label}` : row.display_name);
+  }
+  function resolveSelection(value, rows, defaultModelId) {
+    if (value && !value.startsWith('model:')) return value;
+    const id = value?.slice('model:'.length);
+    const selected = rows.find(row => row.id === id) || rows.find(row => row.id === defaultModelId);
+    return selected ? `model:${selected.id}` : '';
   }
   function specialistLines(row) {
     const card = row?.specialist;
@@ -79,5 +85,5 @@
       ...(card.compatibility ? [`当前规则快筛：${card.compatibility.ruleset} · ${card.compatibility.games} 局；${card.compatibility.summary}`] : [])] : [];
   }
   function matchLabel(mode) { return mode === 'model-vs-rule' ? '模型 vs 规则Bot' : '真人 vs 对手'; }
-  return { validateManifest, modelUrl, optionLabel, specialistLines, matchLabel };
+  return { validateManifest, modelUrl, optionLabel, resolveSelection, specialistLines, matchLabel };
 });

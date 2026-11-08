@@ -88,7 +88,7 @@
       ? sim._nativeFacingCell(humanPid) === state.touchCell
       : state.clock - state.touchLast < PASS_FRESH_MS;
     return [{ cell: state.touchCell, kind: charged > PASS_MIN_MS ? 'window' : 'charging',
-      chargedMs: charged, progress: Math.min(1, charged / PASS_MIN_MS), contact,
+      chargedMs: charged, progress: Math.min(1, charged / ((PASS_MIN_MS + PASS_MAX_MS) / 2)), contact,
       ready: typeof sim._nativePassReady === 'function' ? sim._nativePassReady(humanPid, state)
         : charged > PASS_MIN_MS && contact && state.clock - state.touchLast < PASS_FRESH_MS }];
   }
@@ -193,22 +193,16 @@
     try { return draw(); } finally { ctx.restore(); }
   }
 
+  // A viewer must be explicitly local and the live match must opt in.
+  // Review/spectators have humanPid=-1 and never expose future positions.
   function respawnMarkers(sim, viewerPid = -1) {
-    if (!sim || !sim.isBun || sim.done) return [];
-    const markers = [];
-    for (let pid = 0; pid < playerCount(sim); pid++) {
-      const spawn = sim.bunSpawnPos && sim.bunSpawnPos[pid];
-      if (sim.alive[pid] || !(sim.bunRespawn[pid] > 0) || !spawn ||
-          !Number.isFinite(spawn[0]) || !Number.isFinite(spawn[1])) continue;
-      if (spawn[0] < 0 || spawn[0] >= 13 || spawn[1] < 0 || spawn[1] >= 15) continue;
-      markers.push({ pid, row: spawn[0], col: spawn[1], team: teamOf(sim, pid),
-        seconds: respawnSeconds(sim.bunRespawn[pid]),
-        label: viewerPid < 0 ? `${teamOf(sim, pid) === 0 ? '蓝' : '红'}${pid + 1}`
-          : teamOf(sim, pid) === teamOf(sim, viewerPid)
-            ? `${playerLabel(sim, pid, viewerPid, teamOf(sim, viewerPid))}${pid + 1}`
-            : playerLabel(sim, pid, viewerPid, teamOf(sim, viewerPid)) });
-    }
-    return markers;
+    if (!sim?.selfRespawnPreview || sim.done || !Number.isInteger(viewerPid) || viewerPid < 0 ||
+        viewerPid >= playerCount(sim) || sim.alive[viewerPid]) return [];
+    const ticks = sim.killMode ? sim.killRespawn?.[viewerPid] : sim.isBun ? sim.bunRespawn?.[viewerPid] : 0;
+    const point = (sim.killMode ? sim.killRespawnPos : sim.bunSpawnPos)?.[viewerPid];
+    if (!(ticks > 0) || !point || !Number.isFinite(point[0]) || !Number.isFinite(point[1]) ||
+        point[0] < 0 || point[0] >= 13 || point[1] < 0 || point[1] >= 15) return [];
+    return [{pid:viewerPid, row:point[0], col:point[1], team:teamOf(sim,viewerPid), seconds:respawnSeconds(ticks)}];
   }
 
   function bunTokens(sim) {
@@ -634,6 +628,7 @@
         for (let row = 0; row < 13; row++) for (let column = 0; column < 15; column++) {
           const index = row * 15 + column, value = layer[index];
           if (!value || value < 0) continue;
+          if (sim.killMode && Math.abs(value) === 6003) continue;
           if (layerIndex === 1 && !sim.wall[index] && !sim.brick[index] && !sim.cover[index]) continue;
           if (layerIndex === 1 && !sim.wall[index] && brickDebris(sim, index)) continue;
           const id = Math.abs(value), meta = assets.elements[String(id)] || assets.elements[id], image = assets.elementImages.get(id);
@@ -849,7 +844,7 @@
           ctx.fillRect(0, 0, canvas.width, BOARD_H);
         }
         ctx.filter = 'none';
-        if (sim.isBun && !sim.done) drawRespawnCountdowns(sim, motion ? motion.humanPid : 0, motion?.playerLabels);
+        for (const marker of respawnMarkers(sim, motion?.humanPid ?? -1)) drawSelfRespawn(marker);
       } finally { ctx.restore(); }
       // Only the playfield was dimmed; HUD/result rendering remains legible.
       ctx.filter = 'none';
@@ -885,6 +880,20 @@
       }
       ctx.restore();
     }
+    function drawSelfRespawn(marker) {
+      const x = marker.col * CELL, y = marker.row * CELL;
+      ctx.save();
+      ctx.strokeStyle = marker.team === 0 ? '#8ee9ff' : '#ffa6bf';
+      ctx.fillStyle = marker.team === 0 ? '#8ee9ff33' : '#ffa6bf33';
+      ctx.lineWidth = 3; ctx.beginPath();
+      ctx.ellipse(x, y, CELL * .35, CELL * .22, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = 'bold 22px sans-serif';
+      const text = `自己 · ${marker.seconds}秒复活`;
+      const labelX = Math.max(90, Math.min(canvas.width - 90, x));
+      const labelY = Math.max(16, Math.min(BOARD_H - 16, y - CELL * .4));
+      ctx.lineWidth = 5; ctx.strokeStyle = '#000d'; ctx.fillStyle = '#fff1a3';
+      ctx.strokeText(text, labelX, labelY); ctx.fillText(text, labelX, labelY); ctx.restore();
+    }
     function drawResult(result, settlement = null) {
       if (!result) return;
       const cx = canvas.width / 2, cy = (BOARD_OFFSET + BOARD_H) / 2;
@@ -914,24 +923,6 @@
       const ax = Math.round(anchor.x - image.width / 2);
       const ay = Math.max(-BOARD_OFFSET, Math.round(anchor.y - 3 - image.height * POINT_TIP_FRAC + bob));
       ctx.drawImage(image, ax, ay);
-    }
-    // Compact spawn markers keep paths visible, including in spectator/replay views.
-    function drawRespawnCountdowns(sim, humanPid, labels) {
-      for (const marker of respawnMarkers(sim, humanPid)) {
-        const x = marker.col * CELL, y = marker.row * CELL;
-        ctx.save();
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = marker.team === 0 ? '#8ee9ff' : '#ffa6bf'; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.ellipse(x, y + CELL * .2, CELL * .36, CELL * .16, 0, 0, Math.PI * 2); ctx.stroke();
-        const text = `${labels?.[marker.pid] || marker.label} · ${marker.seconds}秒复活`;
-        const labelX = Math.max(96, Math.min(canvas.width - 96, x));
-        const labelY = Math.max(16, y - CELL * .35);
-        ctx.font = 'bold 24px sans-serif'; ctx.lineWidth = 5;
-        ctx.strokeStyle = 'rgba(0,0,0,.85)'; ctx.fillStyle = marker.pid === humanPid ? '#ffe477' : '#ffffff';
-        ctx.strokeText(text, labelX, labelY); ctx.fillText(text, labelX, labelY);
-        ctx.restore();
-      }
     }
     return { render, addExplosion, reset };
   }

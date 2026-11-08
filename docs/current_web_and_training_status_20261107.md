@@ -1,20 +1,20 @@
 # 当前网页、模型与暂停状态（20261107）
 
-本页是11月7日状态索引。[在线游戏](https://allwellll.github.io/qqt-RL/)提供以下三个选择；[模型manifest](../web/models.json)固定资产身份，[推理默认](../web/model_inference_defaults.json)固定默认与温度。旧报告中的“当前”“训练中”“下一段”仅代表记录当时，不是继续运行授权。
+本页是11月7日状态索引。[在线游戏](https://allwellll.github.io/qqt-RL/)菜单仅保留SP、G_frozen、DUEL与风险线u9969四个选择；[模型manifest](../web/models.json)固定资产身份，[推理默认](../web/model_inference_defaults.json)固定默认与温度。旧报告中的“当前”“训练中”“下一段”仅代表记录当时，不是继续运行授权。
 
 ## 模型选择与证据
 
 |菜单/温度|长处|短板|
 |---|---|---|
-|G_frozen / τ0.3，默认|保留现有完整局参照与默认身份|没有完整局证据支持此次换默认|
+|G_frozen / τ0.3，均衡|保留现有完整局参照|专项不代表全面领先|
 |DUEL u019902 / τ0.3，近身击杀|v3 近身dev/holdout因果杀8/7，各16局；同批G为1/0。网页五对手40胜0负，交付40|网页自死9次，G为4；完整局可行动静止23.94%，G为18.83%；不称全局更流畅|
-|SP u023302 / τ0.3，猎手对抗与喷泉|v3 网页39胜0负1平，自死1；困难猎手8局因果杀7、交付10；有连续喷泉信号|完整局可行动静止34.08%；近身优势未建立；喷泉串弱于同点argmax|
+|SP u023302 / τ0.3，默认，猎手对抗与喷泉|v3 网页39胜0负1平，自死1；困难猎手8局因果杀7、交付10；有连续喷泉信号|完整局可行动静止34.08%；近身优势未建立；喷泉串弱于同点argmax|
 
 训练侧生产JS评测共856局：筛查216、独立确认320、五对手网页320。网页各对手各方式8局；两个已发布τ0.3组合各有80局证据（近身dev16+holdout16、完整局holdout8、网页40）。argmax与采样分开，专项不等于完整抢包能力；不重复计算8局为更大分母。
 
 原规则是 `bun-native-v3-items`；线上已经是 `bun-native-v4-facing`。独立v4快筛总24局（候选和G各8），关键指标与原v3同seed子集一致，未观察到说明的明显反转，仍只是兼容性与有限能力核查。网页说明卡独立列出原v3证据和v4快筛，不混写数字。[原v3证据](../web/specialists/items-20261107.json)、[v4独立快筛](../web/specialists/v4-screen-20261107.json)、[导出/发布报告](../reports/cx_web_specialists_items_v3_20261107.md)。
 
-只消费 READY 固定checkpoint；CPU独立重导出、37/38维固定mode0投影、JSON/ONNX SHA与JS/ORT parity核对均已完成。源码资产不含权重；JSON/ONNX在OSS与Release。默认变更需有完整局证据并单独说明，专项长处已足够作为可选上架。
+只消费 READY 固定checkpoint；CPU独立重导出、37/38维固定mode0投影、JSON/ONNX SHA与JS/ORT parity核对均已完成。源码资产不含权重；JSON/ONNX在OSS与Release。此次默认按用户最新明确授权改为SP，未新增评测，不将原v3数字称作v4全面优胜。风险线u9969保留为旧规则录像认可点；其余18项只移出菜单，资产和旧Review身份元数据保留于 `web/retired-models-20261107.json`。
 
 ## 当前游戏与手机操作
 
@@ -43,11 +43,11 @@
 
 不把文件名相似当作可互换的入口；历史 `sim-bun-native-v2.js`、v2-face、v3-items 与归档Review仍保留，不通过覆盖旧文件“升级”录像。当前物理由selector和实际加载文件决定，不单凭规则名判断生效。
 
-## OSS与部署
+## Release镜像与部署
 
-浏览器按 **OSS → Release → Pages同源镜像** 下载，逐资产验证大小/SHA256后才实例化；失败明确报错。只对 `web-models/` 前缀对象public-read；bucket private，CORS只含GitHub Pages与本地预览。密钥仅在本机环境使用，不能入Git/前端/报告/日志。当前资产不因整理而删除。
+浏览器按 **Pages同源Release镜像 → Release直链** 下载，逐资产验证大小/SHA256后才实例化；失败明确报错。OSS下载已停用，manifest历史OSS字段仅作元数据保留；不删除旧资产，不使用或公开凭据。
 
-正常push main触发 `.github/workflows/pages.yml`；构建从Release取得manifest资产并SHA核验。只有同一SHA的Actions测试/部署最终成功、Pages build-info.commit和关键文件字节一致、浏览器OSS加载与推理通过才记交付。[当前发布规范](github_pages_model_delivery.md)
+正常push main触发 `.github/workflows/pages.yml`；构建从Release取得manifest资产并SHA核验。只有同一SHA的Actions测试/部署最终成功、Pages build-info.commit和关键文件字节一致、浏览器Pages镜像加载与推理通过、Network无OSS请求才记交付。[当前发布规范](github_pages_model_delivery.md)
 
 排行榜暂缓；后端尚不支持当前ruleset时显示暂不可用，仍能开局、本地结算，不发旧ruleset、不混榜、不删除旧数据。无需Supabase管理凭据或迁移阻塞玩法。
 

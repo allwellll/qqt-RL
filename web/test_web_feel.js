@@ -186,7 +186,8 @@ function fakeSim(opts) {
     fuse: new Uint8Array(N),
     bunCarried: [-1, -1],
     wall: new Uint8Array(N), brick: new Uint8Array(N), cover: new Uint8Array(N),
-    isBun: !!opts.isBun,
+    isBun: !!opts.isBun, killMode: !!opts.killMode, selfRespawnPreview: !!opts.selfRespawnPreview,
+    killRespawn: opts.killRespawn, killRespawnPos: opts.killRespawnPos,
     bunBases: [], bunStored: [], bunLoose: new Uint8Array(N * 2),
     bunRespawn: opts.bunRespawn || [0, 0], bunRespawnTicks: 20,
     bunSpawnPos: [[6.5, 2.5], [6.5, 12.5]],
@@ -333,22 +334,33 @@ function dimRects(rects, canvas) {
   assert(dimRects(rects, canvas).length === 0, '复活倒计时归零瞬间必须恢复亮度');
 }
 
-// 4g) Every dead player gets a compact identity/countdown at the authoritative spawn.
-{
-  const { canvas, texts } = mockCanvas();
-  const r = visual.createRenderer(canvas, level, mockAssets());
-  const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [0, 0], isBun: true, bunRespawn: [15, 42] });
-  r.render(s, 1050, { prevPos: s.pos, curPos: s.pos, lastTickT: 1000, tickMs: 100, humanPid: 0 });
-  assert(texts.some((t) => t.text === '你1 · 2秒复活' && t.x === 2.5 * CELL), 'local player countdown is at its spawn');
-  const bot = texts.find((t) => t.text === '敌1 · 5秒复活');
-  assert(bot && Math.abs(bot.x - 12.5 * CELL) < 1e-6, '对手倒计时(42 tick→5 秒)应画在其复活点');
+// 4g) Dead players stay invisible and never announce a spawn position.
+for (const viewer of [0, 1, -1]) {
+  for (const killMode of [false, true]) {
+    const { canvas, texts, draws } = mockCanvas();
+    const r = visual.createRenderer(canvas, level, mockAssets());
+    const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [0, 0],
+      isBun: !killMode, killMode, bunRespawn: [15, 42],
+      killRespawn: [15, 29], killRespawnPos: [[2.5, 2.5], [10.5, 12.5]] });
+    r.render(s, 1050, { prevPos: s.pos, curPos: s.pos, lastTickT: 1000, tickMs: 100, humanPid: viewer });
+    assert(!texts.some(t => t.text.includes('秒复活')), 'no spatial respawn countdown');
+    assert(!draws.some(d => d.tag === 'p0' || d.tag === 'p1'), 'no dead player sprite at a future spawn');
+    s.alive = [1, 1];
+    r.render(s, 1150, { prevPos: s.pos, curPos: s.pos, lastTickT: 1100, tickMs: 100, humanPid: viewer });
+    assert(draws.some(d => d.tag === 'p0') && draws.some(d => d.tag === 'p1'), 'sprites appear on actual respawn');
+  }
 }
-{
-  const { canvas, texts } = mockCanvas();
-  const r = visual.createRenderer(canvas, level, mockAssets());
-  const s = fakeSim({ pos: [5.0, 3.0, 5.0, 8.0], alive: [1, 1], isBun: true });
-  r.render(s, 1050, null);
-  assert.equal(texts.length, 0, '双方存活时不显示倒计时');
+
+// Opted-in live views render only their own countdown; legacy views above stay hidden.
+for (const viewer of [0, 1, -1]) {
+  const {canvas,texts} = mockCanvas();
+  const r=visual.createRenderer(canvas,level,mockAssets());
+  const s=fakeSim({pos:[5,3,5,8],alive:[0,0],killMode:true,isBun:false,selfRespawnPreview:true,
+    killRespawn:[15,29],killRespawnPos:[[2.5,2.5],[10.5,12.5]]});
+  r.render(s,1050,{prevPos:s.pos,curPos:s.pos,lastTickT:1000,tickMs:100,humanPid:viewer});
+  const labels=texts.filter(t=>t.text.includes('秒复活'));
+  assert.equal(labels.length,viewer<0?0:1);
+  if(viewer>=0){assert(labels[0].text.startsWith('自己'));assert(labels[0].y<780,'marker does not cover HUD');}
 }
 
 // 4h) 朝向跟随移动意图：顶墙不动时按上也必须面朝上（精灵行 3），松手后保持朝向。
@@ -434,7 +446,7 @@ function dimRects(rects, canvas) {
   assert(!one.texts.some((t) => t.text === '你'), '1v1 不画名牌');
 }
 const appTeamSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
-assert(/teams: teamLayout\(\)/.test(appTeamSource) && /'2v2': \[0, 1, 0, 1\]/.test(appTeamSource), 'app.js 按队伍模式创建多人对局');
+assert(appTeamSource.includes('teams: [0, 1]') && !appTeamSource.includes('teamLayout()'), 'live app is fixed human/model 1v1; multiplayer renderer stays compatible');
 
 // 4j3) 携带包子贴在头顶：包子底边落在帧顶透明留白以下，而不是悬在帧顶上方。
 {

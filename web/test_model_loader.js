@@ -52,23 +52,25 @@ const loader = require('./model_loader.js');
  const bytes=Uint8Array.from([9,8,7,6]);
  const a={file:'test.json',bytes:4,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),oss_url:'https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/test.json',url:'https://github.com/example/repo/releases/download/v1/test.json'};
  const reply=(data,status=200)=>new Response(data,{status,headers:{'Content-Length':data.length}});
- for(const scenario of ['healthy','network','http','size','hash','mirror','all-fail']){
+ for(const scenario of ['healthy','network','http','size','hash','all-fail']){
   const calls=[],events=[],progress=[];
+  const mirror=`models/${a.file}`;
   const fetch=async(url,opts)=>{calls.push(url);
-   if(url===a.oss_url){assert.equal(opts.credentials,'omit');assert.equal(opts.headers,undefined);
-    if(scenario==='network'||scenario==='mirror'||scenario==='all-fail')throw new TypeError('unavailable');
+   assert.notEqual(url,a.oss_url,'OSS must never be requested');
+   if(url.startsWith(mirror+'?range=')){assert.equal(opts.cache,'no-store');assert(opts.headers.Range);
+    if(scenario==='network'||scenario==='all-fail')throw new TypeError('unavailable');
     if(scenario==='http')return reply(bytes,403);if(scenario==='size')return reply(bytes.slice(1));if(scenario==='hash')return reply(Uint8Array.from([0,0,0,0]));return reply(bytes);}
-   if(scenario==='all-fail'||(scenario==='mirror'&&url.startsWith(a.url)))throw new TypeError('CORS blocked');
+   assert(url.startsWith(a.url+'?range='),'only Release can be the fallback');
+   if(scenario==='all-fail')throw new TypeError('CORS blocked');
    return reply(bytes);
   };
   const promise=L.downloadModelAsset(a,(n,t)=>progress.push([n,t]),{fetch,cryptoApi:crypto.webcrypto,pause:async()=>{},onSource:e=>events.push(e)});
   if(scenario==='all-fail'){await assert.rejects(promise,/所有模型下载来源/);assert(!events.some(e=>e.status==='verified'));continue;}
   assert.deepEqual(Array.from(new Uint8Array(await promise)),Array.from(bytes));
-  assert.equal(calls[0],a.oss_url);assert.deepEqual(progress.at(-1),[4,4]);
+  assert.equal(calls[0],mirror+'?range=0');assert.deepEqual(progress.at(-1),[4,4]);
   const success=events.find(e=>e.status==='verified').url;
-  if(scenario==='healthy'){assert.equal(calls.length,1);assert.equal(success,a.oss_url);}
-  else if(scenario==='mirror'){assert(success.startsWith('models/test.json'));assert(calls.some(u=>u.startsWith(a.url)));}
-  else {assert(success.startsWith(a.url));assert(!calls.some(u=>u.startsWith('models/')));}
+  if(scenario==='healthy'){assert.equal(calls.length,1);assert.equal(success,mirror);assert.deepEqual(events.map(e=>e.status),['loading','verifying','verified']);assert(events.every(e=>e.index===0));}
+  else {assert.equal(success,a.url);assert.deepEqual(events.filter(e=>e.status==='loading').map(e=>e.url),[mirror,a.url]);}
  }
- console.log('OSS preference and verified fallbacks PASS: network/HTTP/size/SHA rejection, Release ordering, CORS mirror, progress and exhausted sources');
+ console.log('Release mirror preference PASS: no OSS requests, verified Release fallback after network/HTTP/size/SHA failures, progress and exhausted sources');
 })().catch(e=>{console.error(e);process.exitCode=1;});

@@ -14,7 +14,10 @@ select, input { width: 100%; margin-top: 7px; padding: 8px; color: #eafcff; back
 .stage { position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; height: 100vh; background: #000; }
 .loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: radial-gradient(circle at 50% 40%, #1b3d33, #07141a 75%); color: #eafcff; font-weight: 700; transition: opacity .35s ease; }
 .loading.done { opacity: 0; pointer-events: none; }
-.loading p { margin: 0; }
+.loading { z-index: 3; padding: 20px; text-align: center; }
+.loading p { margin: 0; max-width: 100%; overflow-wrap: anywhere; }
+.loading [hidden] { display: none; }
+.loading #loading-source { min-height: 1.6em; }
 .loading progress { width: min(320px, 60%); height: 10px; accent-color: #ffd54a; }
 .loading-bubble { width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff8 0 14%, #ffd54a 15% 60%, #e09a1a 100%); box-shadow: 0 0 22px #ffd54a88; animation: bubble-bob 0.9s ease-in-out infinite alternate; }
 @keyframes bubble-bob { from { transform: translateY(-8px) scale(1.04, .96); } to { transform: translateY(8px) scale(.96, 1.04); } }
@@ -144,7 +147,7 @@ button:disabled { cursor: default; opacity: .6; }
 @media (max-width: 900px) {
   .settlement { position: relative; top: auto; left: auto; transform: none; margin: 8px 0 12px; width: 94%; }
 }
-/* Native input buttons share the authoritative keyboard/item path. */
+/* Touch geometry stays inside the game stage; inputs below remain editable. */
 .touch-controls { display: none; }
 .touch-controls[hidden], .touch-controls [hidden] { display: none; }
 .touch-controls, .touch-controls * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-user-drag: none; }
@@ -152,27 +155,34 @@ button:disabled { cursor: default; opacity: .6; }
   body { overflow: auto; height: auto; }
   main { height: auto; }
   .arena { grid-template-columns: minmax(0, 1fr); height: auto; }
-  .stage { flex-direction: column; height: auto; }
-  .stage > #game { width: 100%; }
-  .touch-controls { --touch-size: clamp(56px, 16vw, 64px); box-sizing: border-box; flex: none; width: 100%; max-width: 600px; padding: 8px max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); display: flex; justify-content: space-between; align-items: end; gap: 8px; background: #09171e; touch-action: none; }
-  .touch-directions { display: grid; grid-template-columns: repeat(3, var(--touch-size)); grid-template-rows: repeat(2, var(--touch-size)); gap: 4px; }
-  .touch-up { grid-column: 2; }
-  .touch-left { grid-column: 1; grid-row: 2; }
-  .touch-down { grid-column: 2; grid-row: 2; }
-  .touch-right { grid-column: 3; grid-row: 2; }
-  .touch-actions { display: grid; grid-template-columns: repeat(2, var(--touch-size)); gap: 4px; }
-  .touch-controls button { box-sizing: border-box; height: var(--touch-size); min-height: 56px; width: var(--touch-size); min-width: 56px; margin: 0; padding: 4px; touch-action: none; font-size: 20px; font-weight: bold; background: #132234; color: white; border: 2px solid #b6c9dd; border-radius: 12px; }
+  .stage { height: 100svh; min-height: 360px; justify-content: flex-start; flex-direction: column; }
+  .stage > #game { width: min(100%, calc((100svh - 240px) * 900 / 880)); }
+  .touch-controls { --touch-size: clamp(48px, 14vmin, 64px); --bomb-size: clamp(88px, 25vmin, 104px); --stick-size: clamp(80px, 25vmin, 112px); display: block; position: absolute; inset: 0; pointer-events: none; }
+  .touch-directions { position: absolute; left: env(safe-area-inset-left, 0px); bottom: env(safe-area-inset-bottom, 0px); width: 45%; height: 60%; pointer-events: auto; touch-action: none; overflow: visible; }
+  .touch-stick { position: absolute; left: 50%; top: 65%; width: var(--stick-size); height: var(--stick-size); transform: translate(-50%, -50%); border: 2px solid #9fd7df66; border-radius: 50%; background: #10252d66; opacity: .45; pointer-events: none; }
+  .touch-directions[data-active="true"] .touch-stick { opacity: .9; }
+  .touch-stick span { position: absolute; font-size: 24px; color: #c0dce0; }
+  [data-arrow="ArrowUp"] { top: 0; left: calc(50% - 10px); }
+  [data-arrow="ArrowDown"] { bottom: 0; left: calc(50% - 10px); }
+  [data-arrow="ArrowLeft"] { left: 3px; top: calc(50% - 16px); }
+  [data-arrow="ArrowRight"] { right: 3px; top: calc(50% - 16px); }
+  [data-direction="ArrowUp"] [data-arrow="ArrowUp"], [data-direction="ArrowDown"] [data-arrow="ArrowDown"], [data-direction="ArrowLeft"] [data-arrow="ArrowLeft"], [data-direction="ArrowRight"] [data-arrow="ArrowRight"] { color: #63ffe0; text-shadow: 0 0 8px #63ffe0; }
+  .touch-actions { position: absolute; right: max(8px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(3, var(--touch-size)); gap: 10px 4px; justify-items: center; pointer-events: none; }
+  .touch-controls button { box-sizing: border-box; height: var(--touch-size); min-height: 48px; width: var(--touch-size); min-width: 48px; margin: 0; padding: 4px; touch-action: none; font-size: 20px; font-weight: bold; background: #132234; color: white; border: 2px solid #b6c9dd; border-radius: 12px; pointer-events: auto; }
   .touch-controls button:active { background: #245c68; }
-  .touch-controls .touch-item { position: relative; }
+  .touch-bomb-hit { grid-column: span 3; width: calc(var(--bomb-size) * 1.25); height: calc(var(--bomb-size) * 1.25); display: grid; place-items: center; border-radius: 50%; pointer-events: auto; touch-action: none; }
+  .touch-bomb-hit button { width: var(--bomb-size); height: var(--bomb-size); border-radius: 50%; }
+  .touch-bomb-hit:active button { background: #245c68; }
+  .touch-controls .touch-item { position: relative; z-index: 1; }
   .touch-item canvas { width: 32px; height: 32px; background: transparent; margin: 0 auto; }
   .touch-slot-number { position: absolute; top: 2px; left: 4px; font-size: 15px; text-shadow: 0 1px 3px #000; }
   .touch-slot-count { position: absolute; bottom: 1px; right: 3px; font-size: 13px; color: #ffe27e; text-shadow: 0 1px 3px #000; }
   .touch-item[aria-disabled="true"] { border-color: #647581; color: #a8b7c0; }
-  .touch-controls .touch-item-page { grid-column: span 2; width: auto; font-size: 13px; }
+  .touch-controls .touch-item-page { grid-column: span 3; width: 100%; min-height: 32px; height: 32px; font-size: 13px; }
+  .stage .settlement { z-index: 2; position: absolute; top: 15%; left: 50%; transform: translateX(-50%); margin: 0; }
   aside { height: auto; }
 }
 @media (max-width: 900px) and (orientation: landscape), (pointer: coarse) and (orientation: landscape) {
-  .stage { flex-direction: row; align-items: center; justify-content: space-evenly; gap: 8px; }
-  .stage > #game { width: min(calc(100% - 364px), calc((100svh - 16px) * 900 / 880)); }
-  .touch-controls { width: 356px; }
+  .stage { justify-content: center; }
+  .stage > #game { width: min(100%, calc(100svh * 900 / 880)); }
 }
