@@ -178,7 +178,8 @@
     return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1, intents,
       settlement: QQTLeaderboard.settlementText(leaderboard.state().settlement),
       hideResult: localHumanControls() && !!leaderboard.state().settlement?.closed,
-      characters: localHumanControls() ? [characterSelect.value] : [] };
+      characters: localHumanControls() ? [characterSelect.value, 'magician'] : [],
+      teamRings: localHumanControls() };
   }
 
   // rAF 逐帧推进本地人类 pid0：sim.frameStep 内走原版像素移动（含 6px 拐角修正、泡泡 3px 入口带），

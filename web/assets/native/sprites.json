@@ -40,6 +40,26 @@
           "directions": 4
         }
       }
+    },
+    "magician": {
+      "roleId": 55,
+      "label": "礼帽魔术师",
+      "actions": {
+        "stand": {
+          "file": "assets/native/magician_stand.png",
+          "w": 85,
+          "h": 85,
+          "frames": 6,
+          "directions": 4
+        },
+        "walk": {
+          "file": "assets/native/magician_walk.png",
+          "w": 85,
+          "h": 85,
+          "frames": 6,
+          "directions": 4
+        }
+      }
     }
   },
   "effects": {

@@ -138,6 +138,12 @@ for (const x of [4.999, 5]) {
 }
 const manifest = require('./assets/native/sprites.json');
 assert.equal(manifest.actors.maomao.roleId, 9);
+assert.equal(manifest.actors.magician.roleId,55);
+for(const sprite of Object.values(manifest.actors.magician.actions)){
+  const png=fs.readFileSync(path.join(__dirname,sprite.file));
+  assert.equal(sprite.w,85);assert.equal(sprite.h,85);assert.equal(sprite.frames,6);
+  assert.equal(png.readUInt32BE(16),85*sprite.frames);assert.equal(png.readUInt32BE(20),85*4);
+}
 assert.equal(manifest.effects.trap.source, 'object/misc/misc111_trigger.img');
 assert.equal(manifest.sound.source, 'sound/X12_01.wav');
 for (const actor of Object.values(manifest.actors)) for (const sprite of Object.values(actor.actions)) {

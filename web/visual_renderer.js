@@ -757,7 +757,7 @@
           const z = Math.floor(gy) * Z_ROW_STRIDE + (onWall ? 23 : 18);
           items.push([z - 1, assets.shadow, pixel(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
           // 多人时同队共用精灵：脚下队伍色光圈 + 头顶名牌区分。
-          if (playerCount(sim) > 2 || motion?.playerLabels) {
+          if (playerCount(sim) > 2 || motion?.playerLabels || motion?.teamRings) {
             items.push([z - 1, () => drawTeamRing(gx * CELL, y + image.height - 6, team)]);
             // 真人只靠箭头标识，不另画名牌。
             if (!motion?.playerLabels && pid !== (motion ? motion.humanPid : 0)) {
