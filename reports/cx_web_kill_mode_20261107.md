@@ -33,7 +33,9 @@
 ## 发布回执
 
 - 首次实现提交 `186ffff` 的 Actions 在既有训练源码闭包审计处失败；本地复现为 v4-facing 依赖清单尚未刷新，训练停止单元测试通过。未改训练代码，使用审计工具刷新清单后正常追加提交。
-- 最终 main/Pages SHA：`7fb8074d35db48779652e6c982250b1cc9117376`。
+- 最终代码发布 SHA：`7fb8074d35db48779652e6c982250b1cc9117376`；本报告回执提交后最终 main/Pages SHA 见下方。
 - [Actions 42440101549](https://github.com/allwellll/qqt-RL/actions/runs/42440101549) 的 `test-and-build` 与 `deploy` 均 success；两者 head SHA 相同。
-- Pages 回读 `build-info.json` 与源码确认 commit 同为 `7fb8074d35db48779652e6c982250b1cc9117376`，线上包含 `纯击杀（默认）`、`正常运包`、30 tick 复活、8 个死亡恢复道具、击杀计数及默认模型启动选择。
+- Pages 回读 `build-info.json` 与源码确认代码发布 commit 为 `7fb8074d35db48779652e6c982250b1cc9117376`，线上包含 `纯击杀（默认）`、`正常运包`、30 tick 复活、8 个死亡恢复道具、击杀计数及默认模型启动选择。
 - 训练闭包清单仅更新网页变更后的 SHA；没有启动、恢复或修改训练。
+
+- 本报告回执更新后的最终 main/Pages SHA：待本次文档提交部署完成后回读确认。
