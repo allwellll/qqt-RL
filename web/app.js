@@ -288,6 +288,7 @@
     const native = localHumanControls();
     sim.reset(level, { nativeItems: true, nativeTrap: true, killMode: gameMode.value === 'kill', teams: teamLayout(),
       bananaSlideSpeedPx: native ? 480 : undefined });
+    if (native) QQTSelfRespawnPreview.attach(sim);
     sim.maxSteps = gameMode.value === 'kill' ? 1800 : 2400;
     QQTModelSampling.watch(sim);
     const [opponent, difficulty] = opponentSelect.value.split('@');

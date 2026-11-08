@@ -193,9 +193,17 @@
     try { return draw(); } finally { ctx.restore(); }
   }
 
-  // Kept as a compatibility helper for renderer consumers. Neither live games
-  // nor Review/spectator views expose a future spawn location for any player.
-  function respawnMarkers() { return []; }
+  // A viewer must be explicitly local and the live match must opt in.
+  // Review/spectators have humanPid=-1 and never expose future positions.
+  function respawnMarkers(sim, viewerPid = -1) {
+    if (!sim?.selfRespawnPreview || sim.done || !Number.isInteger(viewerPid) || viewerPid < 0 ||
+        viewerPid >= playerCount(sim) || sim.alive[viewerPid]) return [];
+    const ticks = sim.killMode ? sim.killRespawn?.[viewerPid] : sim.isBun ? sim.bunRespawn?.[viewerPid] : 0;
+    const point = (sim.killMode ? sim.killRespawnPos : sim.bunSpawnPos)?.[viewerPid];
+    if (!(ticks > 0) || !point || !Number.isFinite(point[0]) || !Number.isFinite(point[1]) ||
+        point[0] < 0 || point[0] >= 13 || point[1] < 0 || point[1] >= 15) return [];
+    return [{pid:viewerPid, row:point[0], col:point[1], team:teamOf(sim,viewerPid), seconds:respawnSeconds(ticks)}];
+  }
 
   function bunTokens(sim) {
     const tokens = [];
@@ -836,6 +844,7 @@
           ctx.fillRect(0, 0, canvas.width, BOARD_H);
         }
         ctx.filter = 'none';
+        for (const marker of respawnMarkers(sim, motion?.humanPid ?? -1)) drawSelfRespawn(marker);
       } finally { ctx.restore(); }
       // Only the playfield was dimmed; HUD/result rendering remains legible.
       ctx.filter = 'none';
@@ -870,6 +879,20 @@
         ctx.beginPath(); ctx.moveTo(x - 6, y - 1); ctx.lineTo(x - 1, y + 4); ctx.lineTo(x + 8, y - 6); ctx.stroke();
       }
       ctx.restore();
+    }
+    function drawSelfRespawn(marker) {
+      const x = marker.col * CELL, y = marker.row * CELL;
+      ctx.save();
+      ctx.strokeStyle = marker.team === 0 ? '#8ee9ff' : '#ffa6bf';
+      ctx.fillStyle = marker.team === 0 ? '#8ee9ff33' : '#ffa6bf33';
+      ctx.lineWidth = 3; ctx.beginPath();
+      ctx.ellipse(x, y, CELL * .35, CELL * .22, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = 'bold 22px sans-serif';
+      const text = `自己 · ${marker.seconds}秒复活`;
+      const labelX = Math.max(90, Math.min(canvas.width - 90, x));
+      const labelY = Math.max(16, Math.min(BOARD_H - 16, y - CELL * .4));
+      ctx.lineWidth = 5; ctx.strokeStyle = '#000d'; ctx.fillStyle = '#fff1a3';
+      ctx.strokeText(text, labelX, labelY); ctx.fillText(text, labelX, labelY); ctx.restore();
     }
     function drawResult(result, settlement = null) {
       if (!result) return;

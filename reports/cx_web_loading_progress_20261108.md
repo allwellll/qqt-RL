@@ -23,3 +23,5 @@
 隐私扫描边界为Git追踪文件及本次报告；零发现后正常提交、push main。等同SHA Actions/Pages成功后交付，最终SHA、Actions和线上收据保存在忽略目录并在消息回报，不为回写最终自身SHA额外发布。
 
 没有新模型评测、资产SHA回读、训练或体积优化。若后续要减体积，fp16/int8需单独转换及评测，未在本次上线。
+
+加载进度版本已以 `638efbd43e90ae8e330f2829a4ac06ca97467306` 发布，[同SHA Actions/Pages](https://github.com/allwellll/qqt-RL/actions/runs/42482626848)成功。线上不拦截请求的390×900 Chromium两次开局通过，二次只显示校验/初始化，无百分比闪现；CDP没有明确磁盘/内存缓存命中回执，故仅确认快速二次读取及正确提示，不声称已证明HTTP缓存命中。详细收据在 `.hermes/loading-public.json`。

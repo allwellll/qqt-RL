@@ -186,7 +186,8 @@ function fakeSim(opts) {
     fuse: new Uint8Array(N),
     bunCarried: [-1, -1],
     wall: new Uint8Array(N), brick: new Uint8Array(N), cover: new Uint8Array(N),
-    isBun: !!opts.isBun,
+    isBun: !!opts.isBun, killMode: !!opts.killMode, selfRespawnPreview: !!opts.selfRespawnPreview,
+    killRespawn: opts.killRespawn, killRespawnPos: opts.killRespawnPos,
     bunBases: [], bunStored: [], bunLoose: new Uint8Array(N * 2),
     bunRespawn: opts.bunRespawn || [0, 0], bunRespawnTicks: 20,
     bunSpawnPos: [[6.5, 2.5], [6.5, 12.5]],
@@ -348,6 +349,18 @@ for (const viewer of [0, 1, -1]) {
     r.render(s, 1150, { prevPos: s.pos, curPos: s.pos, lastTickT: 1100, tickMs: 100, humanPid: viewer });
     assert(draws.some(d => d.tag === 'p0') && draws.some(d => d.tag === 'p1'), 'sprites appear on actual respawn');
   }
+}
+
+// Opted-in live views render only their own countdown; legacy views above stay hidden.
+for (const viewer of [0, 1, -1]) {
+  const {canvas,texts} = mockCanvas();
+  const r=visual.createRenderer(canvas,level,mockAssets());
+  const s=fakeSim({pos:[5,3,5,8],alive:[0,0],killMode:true,isBun:false,selfRespawnPreview:true,
+    killRespawn:[15,29],killRespawnPos:[[2.5,2.5],[10.5,12.5]]});
+  r.render(s,1050,{prevPos:s.pos,curPos:s.pos,lastTickT:1000,tickMs:100,humanPid:viewer});
+  const labels=texts.filter(t=>t.text.includes('秒复活'));
+  assert.equal(labels.length,viewer<0?0:1);
+  if(viewer>=0){assert(labels[0].text.startsWith('自己'));assert(labels[0].y<780,'marker does not cover HUD');}
 }
 
 // 4h) 朝向跟随移动意图：顶墙不动时按上也必须面朝上（精灵行 3），松手后保持朝向。
