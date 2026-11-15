@@ -103,15 +103,22 @@ for (const id of ['bun-tf-it4000','bun-kill-mlp4','safe-high-c16','safe-medium-c
 }
 for (const row of [...catalog.validateManifest(production),...catalog.validateManifest(retired)]) {
   assert.strictEqual(catalog.modelUrl(row), `models/${row.file}`, 'Pages Release mirror is preferred; OSS metadata is unused');
-  for(const asset of [row,...(row.onnx?[row.onnx]:[])]){assert(asset.oss_url.startsWith('https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/'));assert(asset.oss_url.includes(asset.sha256));assert(asset.url.startsWith('https://github.com/'));}
+  for(const asset of [row,...(row.onnx?[row.onnx]:[])]){
+    if(asset.oss_url){assert(asset.oss_url.startsWith('https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/'));assert(asset.oss_url.includes(asset.sha256));}
+    assert(asset.url.startsWith('https://github.com/'));
+  }
   assert.throws(()=>catalog.validateManifest({...production,models:[{...row,oss_url:'https://example.org/'+row.file}]}),/sources/);
 }
 assert.strictEqual(catalog.matchLabel('model-vs-rule'), '模型 vs 规则Bot');
 console.log('网页模型目录与观战模式契约通过');
 
-assert.deepEqual(production.models.map(r=>r.id),['items-l2-sp-u023302-tau03','bun392-g-frozen','items-l2-duel-u019902-tau03','bun392-v2-risk-u9969']);
+assert.deepEqual(production.models.map(r=>r.id),['items-l2-sp-u023302-tau03','bun392-g-frozen','items-l2-duel-u019902-tau03','bun392-v2-risk-u9969','dcu-kill-u000840-tau03']);
 assert.equal(retired.models.length,18);
 for(const row of production.models)assert.equal(catalog.optionLabel(row),row.menu_label);
 for(const value of ['model:bun392-v2-risk-u9809','model:missing',''])assert.equal(catalog.resolveSelection(value,production.models,defaults.default_model_id),'model:items-l2-sp-u023302-tau03');
 assert.equal(catalog.resolveSelection('model:bun392-g-frozen',production.models,defaults.default_model_id),'model:bun392-g-frozen');
 assert.equal(catalog.resolveSelection('bun.hunter@hard',production.models,defaults.default_model_id),'bun.hunter@hard');
+assert.equal(catalog.modeDefault('kill',production.models,defaults.default_model_id,defaults.mode_defaults),'dcu-kill-u000840-tau03');
+assert.equal(catalog.modeDefault('carry',production.models,defaults.default_model_id,defaults.mode_defaults),'items-l2-sp-u023302-tau03');
+assert.equal(catalog.modeDefault('kill',production.models,defaults.default_model_id),defaults.default_model_id);
+assert.throws(()=>catalog.modeDefault('kill',production.models,defaults.default_model_id,{kill:'missing'}),/mode default/);

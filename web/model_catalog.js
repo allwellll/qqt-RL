@@ -68,6 +68,11 @@
   }
 
   function modelUrl(row) { return `models/${row.file}`; }
+  function modeDefault(mode, rows, fallback, modeDefaults = {}) {
+    const id = Object.hasOwn(modeDefaults, mode) ? modeDefaults[mode] : fallback;
+    if (!rows.some(row => row.id === id)) throw Error('invalid mode default model');
+    return id;
+  }
   function optionLabel(row) {
     return row.menu_label || (row.specialist ? `${row.display_name} · 专项：${row.specialist.label}` : row.display_name);
   }
@@ -85,5 +90,5 @@
       ...(card.compatibility ? [`当前规则快筛：${card.compatibility.ruleset} · ${card.compatibility.games} 局；${card.compatibility.summary}`] : [])] : [];
   }
   function matchLabel(mode) { return mode === 'model-vs-rule' ? '模型 vs 规则Bot' : '真人 vs 对手'; }
-  return { validateManifest, modelUrl, optionLabel, resolveSelection, specialistLines, matchLabel };
+  return { validateManifest, modelUrl, modeDefault, optionLabel, resolveSelection, specialistLines, matchLabel };
 });
