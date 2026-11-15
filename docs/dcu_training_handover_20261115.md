@@ -237,6 +237,27 @@ DUEL 12 胜 1 平 3 负（纯胜率 75%），SP 16 胜，G 16 胜。
 小样本不保证长期胜率，SP/G 也参与训练；与 u000330 的种子和样本量不同，不能直接量化前后提升。
 
 结果与动作在 `runs/kill-eval-u000840-20261115-v2`，离线 `watch.html` 保留全部 48 局，
-此次没有更新公开 Pages 入口。详情见 [固定老模型评估](../reports/dcu_fixed_opponent_eval_20261115.json)。
+2026-11-15 11:30 UTC 应用户要求将该 48 局发布到原 Pages 录像目录，旧录像保留：
+<https://allwellll.github.io/qqt-RL/dcu-replays/u000840-20261115.html>。
+发布及部署验收状态看本轮的 `PAGES_PUBLISH.json`；
+详情见 [固定老模型评估](../reports/dcu_fixed_opponent_eval_20261115.json)。
 首轮导出在对局结束后因相对路径处理失败；已修复为绝对检查点路径，并在展示导出前保存
 `COMPLETED_GAMES.json`，同一协议已重跑成功。训练源码指纹覆盖文件未改动。
+
+## 10. 本轮自然结束与网页对拼默认（2026-11-15）
+
+原定截止后已自然结束，`runs/kill-jax-8card-e512-20261115/RESULT.json` 为
+`PASS_FUSED_JAX_DCU_UPDATE`，1030 updates、270008320 环境步、训练循环 15385.76 秒
+（含循环内开销约 17549 环境步/秒）。`STOPPED.json` 已落盘，未自动启动后继训练。
+Actor 与 Critic 独立保存，不保存优化器；u001030 是结束点，不代表已评测最优。
+
+用户明确要求网页对拼默认换为较好新模型，因此选择有完整评测与重放证据的 u000840，
+不是未经评估的最后一步。其 48 局为 44 胜 1 平 3 负；限制见第 9 节。
+网页默认、导出复现、资产身份、验收与回执见
+[网页对拼模型发布说明](dcu_web_default_20261115.md)。
+
+网页最终验收：main `1989d4fbb86449d91833ac17b18231642c59a72a` 已部署成功，
+桌面/手机的真实 worker-wasm 推理、玩法切换与刷新均通过；
+纯击杀默认 u840、运包默认 SP。
+[发布回执](../reports/dcu_web_default_20261115.json)，
+[Actions](https://github.com/allwellll/qqt-RL/actions/runs/43711444819)。

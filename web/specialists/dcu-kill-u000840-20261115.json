@@ -1,0 +1,207 @@
+{
+  "schema": "qqt.dcu-kill-publication/v1",
+  "model_id": "dcu-kill-u000840-tau03",
+  "source_update": 840,
+  "actor_sha256": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5",
+  "ruleset": "bun-native-v4-facing",
+  "training_environment_steps": 220200960,
+  "export": {
+    "status": "PASS",
+    "ruleset": "bun-native-v4-facing",
+    "checkpoint_sha256": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5",
+    "source_global_dim": 38,
+    "state_dim": 37,
+    "ability_actions": 3,
+    "fixed_mode": 0,
+    "projection_max_abs": 0.0,
+    "files": {
+      "model.json": {
+        "sha256": "9775533cc1cef3d08648d7ece1119c856483d03fc1fd394c96dcce208dfad799",
+        "bytes": 40340915
+      },
+      "model.onnx": {
+        "sha256": "69665c6112487a22c253410cd4f508759ce7add3c74df7f12fda73be16141e21",
+        "bytes": 30276774
+      }
+    },
+    "source_update": 840,
+    "evaluation_games": 48,
+    "packed_weights_exact": true,
+    "full_source_fp32_onnx_max_abs": 1.621246337890625e-05,
+    "scope": "Exact fp32 weights and constant-zero mode projection; browser fp32 is not bit-identical to training bf16"
+  },
+  "parity": {
+    "status": "PASS",
+    "ruleset": "bun-native-v4-facing",
+    "samples": 17,
+    "max_abs": 1.3388144253667633e-05,
+    "masked_greedy_exact": true,
+    "reference_zero": {
+      "move": [
+        0.17089393182095516,
+        1.1515834670808416,
+        0.7422206038326892,
+        0.7698408591337792,
+        1.2093688792499138
+      ],
+      "bomb": [
+        0.04862027616553888,
+        0.07191288873009061,
+        0.06986493325962678
+      ],
+      "value": 2.7298607302821374
+    },
+    "errors": [
+      {
+        "map": "zero",
+        "seat": null,
+        "tick": 0,
+        "max_abs": 2.200834611498781e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 0,
+        "max_abs": 5.451596372108014e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 0,
+        "max_abs": 4.8232054230545884e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 12,
+        "max_abs": 1.912677894289061e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 12,
+        "max_abs": 3.0107795723210984e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 36,
+        "max_abs": 3.948054686953029e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 36,
+        "max_abs": 5.594934672892293e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 60,
+        "max_abs": 1.457006536975669e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 60,
+        "max_abs": 3.956156731099725e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 0,
+        "max_abs": 5.472206674461688e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 0,
+        "max_abs": 5.541771383121841e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 12,
+        "max_abs": 1.3388144253667633e-05
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 12,
+        "max_abs": 4.5220259146105946e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 36,
+        "max_abs": 2.3286716894777015e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 36,
+        "max_abs": 3.5187077093712382e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 60,
+        "max_abs": 5.275826038264597e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 60,
+        "max_abs": 3.098346257113249e-06
+      }
+    ],
+    "scope": "fp32 CPU JS/ONNX integration; not a win-rate or training-bf16 claim"
+  },
+  "evaluation": {
+    "games": 48,
+    "ticks_per_game": 1800,
+    "statistics": [
+      {
+        "version": "current",
+        "opponent": "DUEL_latest",
+        "games": 16,
+        "wins": 12,
+        "draws": 1,
+        "losses": 3,
+        "kills": 76,
+        "deaths": 36,
+        "self_deaths": 4,
+        "win_rate": 0.75,
+        "score_rate": 0.78125
+      },
+      {
+        "version": "current",
+        "opponent": "G_frozen",
+        "games": 16,
+        "wins": 16,
+        "draws": 0,
+        "losses": 0,
+        "kills": 135,
+        "deaths": 23,
+        "self_deaths": 5,
+        "win_rate": 1.0,
+        "score_rate": 1.0
+      },
+      {
+        "version": "current",
+        "opponent": "SP_latest",
+        "games": 16,
+        "wins": 16,
+        "draws": 0,
+        "losses": 0,
+        "kills": 166,
+        "deaths": 15,
+        "self_deaths": 3,
+        "win_rate": 1.0,
+        "score_rate": 1.0
+      }
+    ],
+    "protocol": "8 seeds x both seats x 3 frozen opponents; temperature .3; JAX BF16; SP/G also training opponents; small sample, not browser FP32 win-rate claim"
+  },
+  "replays": "../dcu-replays/u000840-20261115.html"
+}

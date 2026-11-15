@@ -22,5 +22,5 @@ assert.notEqual(sim.centerCell(0).join(','), deathCell, 'respawn is a determinis
 const html = fs.readFileSync(`${__dirname}/index.html`, 'utf8');
 assert.match(html, /id="game-mode"/);
 assert.match(html, /value="kill" selected>纯击杀/);
-assert.match(fs.readFileSync(`${__dirname}/app.js`, 'utf8'), /opponentSelect\.value = `\$\{MODEL_PREFIX\}\$\{defaultModelId\}`/);
+assert.match(fs.readFileSync(`${__dirname}/app.js`, 'utf8'), /opponentSelect\.value = `\$\{MODEL_PREFIX\}\$\{modeDefaultModelId\(\)\}`/);
 console.log('kill mode: clear-map, model-default UI, 3s safe respawn, 1s protection, 8 drops PASS');

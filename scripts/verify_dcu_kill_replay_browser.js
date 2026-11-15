@@ -22,7 +22,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.resolve('.tools/rep
   const page=await browser.newPage({viewport:{width:1280,height:1000}});
   await transport(page);
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>requests.push(r.url()));
-  await page.goto(target);await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('验证通过'),null,{timeout:60000});
+  await page.goto(target,{timeout:120000});await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('验证通过'),null,{timeout:60000});
   const games=await page.locator('#match option').count();assert(games>0);
   assert.equal(games,await page.evaluate(()=>PAYLOAD.document.replays.length));
   assert.deepEqual(await page.locator('canvas').evaluate(c=>[c.width,c.height]),[900,880]);
@@ -38,7 +38,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.resolve('.tools/rep
   await page.screenshot({path:path.join(out,'preview-desktop.png'),fullPage:true});
   const phone=await browser.newPage({viewport:{width:390,height:844},isMobile:true,deviceScaleFactor:1});
   await transport(phone);
-  phone.on('pageerror',e=>errors.push(e.message));await phone.goto(target);await phone.waitForFunction(()=>document.querySelector('#status').textContent.includes('验证通过'),null,{timeout:60000});
+  phone.on('pageerror',e=>errors.push(e.message));await phone.goto(target,{timeout:120000});await phone.waitForFunction(()=>document.querySelector('#status').textContent.includes('验证通过'),null,{timeout:60000});
   assert(await phone.evaluate(()=>document.querySelector('canvas').getBoundingClientRect().right<=innerWidth));
   assert(await phone.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await phone.screenshot({path:path.join(out,'preview-mobile.png'),fullPage:true});

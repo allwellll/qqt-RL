@@ -1,7 +1,22 @@
 # 新模型对弈录像（2026-11-15）
 
 观看入口：<https://allwellll.github.io/qqt-RL/dcu-replays/>。
-本次固定录像：<https://allwellll.github.io/qqt-RL/dcu-replays/u000330-20261115.html>。
+最新固定录像：<https://allwellll.github.io/qqt-RL/dcu-replays/u000840-20261115.html>。
+历史固定录像：<https://allwellll.github.io/qqt-RL/dcu-replays/u000330-20261115.html>。
+
+## 11:30 UTC 更新：u000840 的 48 局
+
+最新入口切换至 u000840，8 个固定种子、双方座位，对 DUEL/SP/G 各 16 个完整 1800 tick 对局。
+对 DUEL 为 12 胜 1 平 3 负，对 SP/G 各 16 胜，合计 44 胜 1 平 3 负。
+每个对手样本仍小，SP/G 也参与训练；不把此次全胜解释为长期胜率保证。
+状态哈希和逐事件统计已独立重放通过；桌面、手机播放/暂停/跳转/换局检查通过。
+公开单文件约 2 MB，训练权重仍留在私有项目目录。
+
+新增文件 `web/dcu-replays/u000840-20261115.html`，更新目录入口，旧 u000330 文件保留。
+发布提交 `fccad012bf9892be6a0048d6b305bed6e0d9b0cf`；运行与发布验收产物在
+`runs/kill-eval-u000840-20261115-v2`，评估详情见
+[u000840 固定对手报告](../reports/dcu_fixed_opponent_eval_20261115.json)。
+下方保留初次 u000330 录像导出的记录。
 
 按用户要求只展示新模型，不做训练前后对照。页面可选对局、暂停、逐 tick 前后移动、
 拖动进度、0.25–8 倍速，以及跳到下一次击杀/死亡。手机也可查看。
