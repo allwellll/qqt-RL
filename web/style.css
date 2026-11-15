@@ -148,11 +148,12 @@ button:disabled { cursor: default; opacity: .6; }
   .settlement { position: relative; top: auto; left: auto; transform: none; margin: 8px 0 12px; width: 94%; }
 }
 /* Touch geometry stays inside the game stage; inputs below remain editable. */
-.stage { touch-action: manipulation; }
+.stage { touch-action: manipulation; overscroll-behavior: none; }
 .stage > #game { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .game-toolbar { display: none; position: absolute; z-index: 4; top: max(8px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); gap: 6px; }
-.game-toolbar button { min-height: 44px; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
-body.game-immersive { overflow: hidden; }
+.game-toolbar button { min-height: 44px; touch-action: none; -webkit-user-select: none; user-select: none; }
+html.game-immersive { overflow: hidden; overscroll-behavior: none; height: 100%; }
+body.game-immersive { position: fixed; top: var(--game-scroll-top, 0px); left: 0; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; }
 .stage.game-immersive { position: fixed; inset: 0; z-index: 20; width: 100%; height: 100dvh; }
 .touch-controls { display: none; }
 .touch-controls[hidden], .touch-controls [hidden] { display: none; }

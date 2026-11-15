@@ -128,9 +128,29 @@ const {createServer} = require('../web/server');
       // Exercise browser-generated rapid double taps on both board and screen actions.
       for(let i=0;i<6;i++) await page.touchscreen.tap(layout.canvas.x+layout.canvas.width/2,layout.canvas.y+layout.canvas.height/2);
       assert.equal(await page.evaluate(()=>visualViewport.scale),1,'rapid taps do not zoom the viewport');
+      const cancellation=await page.evaluate(()=>{
+        const stage=document.querySelector('.stage'),canvas=document.querySelector('#game');
+        const probe=(target,type)=>{
+          const e=new Event(type,{bubbles:true,cancelable:true});
+          Object.defineProperties(e,{changedTouches:{value:[{identifier:99,target,clientX:20,clientY:80}]},touches:{value:type==='touchend'?[]:[{identifier:99,target,clientX:20,clientY:80}]}});
+          target.dispatchEvent(e);return e.defaultPrevented;
+        };
+        const result={};
+        for(const [name,target] of [['blank',stage],['board',canvas]])result[name]=['touchstart','touchmove','touchend'].map(type=>probe(target,type));
+        result.safariPinch=['gesturestart','gesturechange','gestureend'].map(type=>probe(stage,type));
+        result.form=probe(document.querySelector('#player-nickname'),'touchstart');
+        result.aside=probe(document.querySelector('aside'),'touchmove');
+        return result;
+      });
+      assert.deepEqual(cancellation,{blank:[true,true,true],board:[true,true,true],safariPinch:[true,true,true],form:false,aside:false},'non-passive guards cancel Safari gestures only in gameplay');
       await page.locator('#game-fullscreen').tap();
       await page.waitForFunction(()=>document.querySelector('#game-fullscreen').getAttribute('aria-pressed')==='true');
       const nativeFullscreen=await page.evaluate(()=>document.fullscreenElement===document.querySelector('.stage'));
+      if(nativeFullscreen) {
+        await page.evaluate(()=>document.exitFullscreen());
+        await page.waitForFunction(()=>!document.fullscreenElement);
+        assert(await page.locator('.stage').evaluate(e=>e.classList.contains('game-immersive')),'browser escape retains immersion and scroll lock');
+      }
       await page.locator('#game-fullscreen').tap();
       await page.waitForFunction(()=>!document.querySelector('.stage').classList.contains('game-immersive'));
       assert.equal(await page.evaluate(()=>document.body.classList.contains('game-immersive')),false);
@@ -141,6 +161,22 @@ const {createServer} = require('../web/server');
         await page.waitForFunction(()=>document.querySelector('.stage').classList.contains('game-immersive'));
         assert(await page.locator('#game-screen-status').textContent().then(s=>s.includes('沉浸模式')));
         const screen=await page.locator('.stage').boundingBox();assert.equal(screen.width,viewport.width);assert.equal(screen.height,viewport.height);
+        assert.equal(await page.evaluate(()=>getComputedStyle(document.body).position),'fixed','body scroll locked');
+        assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).overflowY),'hidden','root scroll locked');
+        const beforeScroll=await page.evaluate(()=>scrollY);
+        // Swipe both directions across empty stage space, then pinch and rapidly tap.
+        const blank={id:7,x:8,y:75};
+        for(const down of [true,false]) {
+          await touch('touchStart',[{...blank,y:down?75:200}]);
+          for(let i=1;i<=5;i++)await touch('touchMove',[{...blank,y:down?75+i*25:200-i*25}]);
+          await touch('touchEnd');
+        }
+        await touch('touchStart',[{id:7,x:viewport.width/2-15,y:80},{id:8,x:viewport.width/2+15,y:80}]);
+        await touch('touchMove',[{id:7,x:viewport.width/2-70,y:110},{id:8,x:viewport.width/2+70,y:110}]);await touch('touchEnd');
+        for(let i=0;i<8;i++)await page.touchscreen.tap(viewport.width/2,80);
+        assert.equal(await page.evaluate(()=>visualViewport.scale),1,'swipes, pinch and repeated taps cannot zoom');
+        assert.equal(await page.evaluate(()=>scrollY),beforeScroll,'swipes cannot scroll the underlying page');
+        assert(await page.locator('.stage').evaluate(e=>e.classList.contains('game-immersive')),'swipes cannot leave immersion');
         // End the match, then restart while still immersed; hidden pad must not hide toolbar.
         await page.evaluate(()=>{window.finishedTouchSim=touchSim;touchSim.done=true;touchSim.winner=null;});
         await page.waitForFunction(()=>document.querySelector('#touch-controls').hidden);
@@ -163,7 +199,7 @@ const {createServer} = require('../web/server');
       await page.setViewportSize(viewport);
       await page.evaluate(()=>{const e=document.createElement('input');e.id='touch-typing-probe';document.body.append(e);});
       await page.locator('#touch-typing-probe').fill('昵称');await page.locator('#touch-typing-probe').focus();await page.keyboard.type('abc');await page.keyboard.press('ArrowRight');assert.equal((await state()).move,4);assert.equal(await page.locator('#touch-typing-probe').inputValue(),'昵称abc');
-      assert.deepEqual(errors,[]);results.push({viewport,layout,resumed,longHold,multiBomb,itemCases,seventh,cleanup:true,keyboardIsolation:true,typing:true,nativeFullscreen,immersiveFallback:true,finishedRestart:true,rapidTapScale:1,rotation:true,errors});
+      assert.deepEqual(errors,[]);results.push({viewport,layout,resumed,longHold,multiBomb,itemCases,seventh,cleanup:true,keyboardIsolation:true,typing:true,nativeFullscreen,immersiveFallback:true,finishedRestart:true,rapidTapScale:1,rotation:true,cancellation,swipePinchLock:true,errors});
       await context.close();console.log('touch tolerance PASS',viewport.width,viewport.height);
     }
     fs.writeFileSync(`.hermes/touch-tolerance-${tag}.json`,JSON.stringify({status:'PASS',scope:'Chromium CDP touch, not physical iOS',sha:process.env.EXPECTED_SHA||null,results},null,2)+'\n');
