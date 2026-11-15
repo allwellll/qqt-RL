@@ -106,7 +106,9 @@ bash scripts/launch_dcu_kill_8card.sh runs/kill-8card-5h-001
 ```
 
 配置、准备步骤与约5小时预算见[空笼击杀训练说明](docs/dcu_kill_training.md)。
-当前单卡结果及虚拟8分片校验不代表物理8卡已验证。
+2026-11-15 已通过物理8卡通信、同步 PPO 和模型保存预检，并启动约5小时正式轮次。
+[八卡启动记录](reports/dcu_8card_launch_20261115.json)包含运行目录、时间预算与4 GiB检查点上限；
+任务完成情况以运行目录内的结果文件为准。
 
 ## 目录
 

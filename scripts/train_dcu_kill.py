@@ -24,7 +24,8 @@ RULE_FILES=('web/sim-bun-native-v4-facing.js','web/kill_opening_items.js',
     'web/self_respawn_preview.js','web/r3_model_inputs.js','web/assets/maps/levels.json',
     'scripts/kill_mode_bridge.js','qqt_rl/training/kill_ppo.py','scripts/train_dcu_kill.py',
     'scripts/r4_k4_observation.py','scripts/r3_items_observation.py',
-    'scripts/retention_phase_conditioning.py','jax_bomb/jax_net.py','qqt_rl/training/dcu.py')
+    'scripts/retention_phase_conditioning.py','jax_bomb/jax_net.py','qqt_rl/training/dcu.py',
+    'qqt_rl/training/checkpoints.py')
 
 
 def sha(path):
@@ -46,7 +47,11 @@ def arguments(argv=None):
     p.add_argument('--hours',type=float,default=5)
     p.add_argument('--max-updates',type=int,default=100000)
     p.add_argument('--critic-warmup',type=int,default=10)
-    p.add_argument('--save-every',type=int,default=20)
+    p.add_argument('--save-every',type=int,default=5)
+    p.add_argument('--save-seconds',type=float,default=120,help='save at next completed update after this interval')
+    p.add_argument('--keep-checkpoints',type=int,default=64)
+    p.add_argument('--checkpoint-budget-gib',type=float,default=4)
+    p.add_argument('--min-free-gib',type=float,default=8)
     p.add_argument('--eval-every',type=int,default=1800,help='seconds between evaluations; 0 disables')
     p.add_argument('--eval-ticks',type=int,default=1800)
     p.add_argument('--seed',type=int,default=2026110801)
@@ -66,6 +71,9 @@ def arguments(argv=None):
     if min(a.max_updates,a.save_every,a.eval_ticks)<1 or min(a.critic_warmup,a.eval_every)<0:p.error('invalid update/evaluation budget')
     if a.eval_ticks>1800:p.error('--eval-ticks cannot exceed a full 1800-tick game')
     if not 0<=a.seed<=0xffffffff:p.error('--seed must be uint32')
+    if a.keep_checkpoints<2 or not 0<a.save_seconds<float('inf'):p.error('invalid checkpoint retention/interval')
+    if not 0<a.checkpoint_budget_gib<=4 or not 0<=a.min_free_gib<float('inf'):
+        p.error('checkpoint budget must be in (0,4] GiB; free-space reserve must be finite and nonnegative')
     if a.mode=='smoke' and (len(ids)!=1 or a.envs>4 or a.ticks>8 or a.max_updates>2):
         p.error('smoke requires one device, <=4 envs, <=8 ticks and --max-updates <=2')
     if a.mode=='train' and not a.acknowledge_training:p.error('train requires --acknowledge-training')
@@ -84,6 +92,9 @@ def plan(args):
         simulator='live bun-native-v4-facing + opening items + safe respawn',
         gradient_aggregation='pmean before clipping/Adam; globally weighted live policy samples',
         initial_actor=args.initial,checkpoint=str(args.checkpoint) if args.checkpoint else None,
+        checkpoint_policy=dict(save_every_updates=args.save_every,save_after_seconds=args.save_seconds,
+            keep=args.keep_checkpoints,budget_gib=args.checkpoint_budget_gib,
+            min_free_gib=args.min_free_gib,optimizer_saved=False,initial_and_latest_preserved=True),
         precise_resume=False,source_sha256={f:sha(ROOT/f) for f in RULE_FILES})
 
 
@@ -144,6 +155,7 @@ def run(args,started):
     from scripts import portable_training as portable
     from scripts.r4_k4_observation import actor_critic_forward
     from qqt_rl.training.kill_ppo import build
+    from qqt_rl.training.checkpoints import CheckpointStore
     require_local_launch(args)
     devices=jax.local_devices()
     if len(devices)!=len(args.device_ids) or any(d.platform!='gpu' for d in devices):
@@ -193,7 +205,10 @@ def run(args,started):
         if args.mode=='train':require_local_launch(args)
         return False
     workers=[]
-    last_saved=None;completed=0;total_ticks=0
+    last_saved=None;last_save_time=time.monotonic();completed=0;total_ticks=0
+    store=CheckpointStore(out,args.keep_checkpoints,args.checkpoint_budget_gib,args.min_free_gib)
+    replica_summary=jax.pmap(lambda q:j.stack([j.stack([j.sum(x),j.sum(j.square(x))])
+        for x in jax.tree.leaves(q)]),devices=devices)
     history=[initial]
     timings=[]
     pool=ThreadPoolExecutor(max_workers=count)
@@ -230,19 +245,19 @@ def run(args,started):
         actors=[choices[(d+episode)%8] for d in range(count)]
         return jax.device_put_sharded(actors,devices)
     def checkpoint(index):
-        nonlocal last_saved
+        nonlocal last_saved,last_save_time
         if last_saved==index:return
-        target=out/f'u{index:06d}';target.mkdir(exist_ok=False)
+        summaries=np.asarray(replica_summary(p))
+        if not np.isfinite(summaries).all() or not np.array_equal(summaries,np.broadcast_to(summaries[0],summaries.shape)):
+            raise RuntimeError('Parameter replica summaries differ across DCUs')
         host=jax.tree.map(lambda x:np.asarray(x[0]),p)
-        for branch in ('actor','critic'):
-            tmp=target/(branch+'.pt.tmp');tmp.write_bytes(pickle.dumps(host[branch],protocol=5));tmp.replace(target/(branch+'.pt'))
         meta=dict(schema='qqt.kill-actor-critic/v1',update=index,source_sha256=config['source_sha256'],
-            actor_sha256=sha(target/'actor.pt'),critic_sha256=sha(target/'critic.pt'),
             global_environment_steps=total_ticks*count*args.envs,
             optimizer_saved=False,precise_resume=False,source_actor=args.initial,
-            rule='bun-native-v4-facing-kill-live',mode_row=0)
-        atomic_json(target/'CHECKPOINT.json',meta)
-        atomic_json(out/'LATEST.json',dict(checkpoint=target.name,**meta));last_saved=index
+            rule='bun-native-v4-facing-kill-live',mode_row=0,replica_summaries_equal=True,cards=count)
+        receipt=store.publish(index,host,meta)
+        last_saved=index;last_save_time=time.monotonic()
+        print(json.dumps(dict(event='checkpoint',update=index,**receipt)),flush=True)
     def evaluate(label):
         began=time.monotonic();anchors=[]
         # All anchors on every card; same disjoint seeds and sampling keys for
@@ -277,6 +292,7 @@ def run(args,started):
     try:
         print(json.dumps(dict(event='ready',**config)),flush=True)
         if args.mode=='eval':evaluate('only');return
+        checkpoint(0)
         final_reserve=0
         if args.mode=='train' and args.eval_every:
             baseline=evaluate('baseline')
@@ -333,7 +349,8 @@ def run(args,started):
                 loss=np.asarray(loss).mean((0,1)).tolist(),remaining_seconds=max(0,deadline-time.monotonic()))
             with (out/'updates.jsonl').open('a') as f:f.write(json.dumps(row)+'\n')
             print(json.dumps(dict(event='update',**row)),flush=True)
-            if index%args.save_every==0:checkpoint(index)
+            if index==1 or index==args.critic_warmup or index%args.save_every==0 or time.monotonic()-last_save_time>=args.save_seconds:
+                checkpoint(index)
             if time.monotonic()>=next_eval and time.monotonic()+final_reserve<training_deadline:
                 checkpoint(index);evaluate(f'u{index:06d}');next_eval=time.monotonic()+args.eval_every
         checkpoint(completed)

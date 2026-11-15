@@ -17,5 +17,6 @@ ulimit -c 0
 exec timeout --signal=TERM --kill-after=90s 5h \
   python -u -m scripts.train_dcu_kill train \
   --devices 0,1,2,3,4,5,6,7 --envs 8 --ticks 64 --minibatch 64 \
-  --hours 4.95 --critic-warmup 10 --save-every 20 --eval-every 1800 \
+  --hours 4.95 --critic-warmup 10 --save-every 5 --save-seconds 120 \
+  --keep-checkpoints 64 --checkpoint-budget-gib 4 --min-free-gib 8 --eval-every 1800 \
   --out "$qqt_output" --acknowledge-training "$@"

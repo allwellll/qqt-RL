@@ -1,0 +1,115 @@
+{
+  "schema": "qqt.physical-dcu-8card-launch/v1",
+  "date": "2026-11-15",
+  "status": "TRAINING_LAUNCHED_NOT_COMPLETED",
+  "physical_collectives": {
+    "status": "PASS_PHYSICAL_DCU_COLLECTIVES",
+    "cards": 8,
+    "device_kinds": [
+      "BW",
+      "BW",
+      "BW",
+      "BW",
+      "BW",
+      "BW",
+      "BW",
+      "BW"
+    ],
+    "psum": true,
+    "all_gather": true
+  },
+  "physical_ppo_preflight": {
+    "status": "PASS_DCU_KILL_UPDATE",
+    "updates": 2,
+    "parameter_delta_l2": {
+      "actor": 0.1079723984003067,
+      "critic": 0.6225771307945251
+    },
+    "cards": 8,
+    "environment_steps": 128,
+    "elapsed_seconds": 119.62964433524758,
+    "automatic_successor": false,
+    "median_update_seconds": 0.33232585713267326
+  },
+  "verified_checkpoints": [
+    "u000000",
+    "u000001",
+    "u000002"
+  ],
+  "all_preflight_actor_critic_hashes_verified": true,
+  "replica_summaries_equal": true,
+  "source_sha256": {
+    "web/sim-bun-native-v4-facing.js": "89165636ba43b667e68e03bd2985410a2fe2c808c63b11aa692b050468ae2c45",
+    "web/kill_opening_items.js": "d1b99520ba42ff4eb8347ed1953c33a190269b44e28eec6eaa924582d97fdff4",
+    "web/self_respawn_preview.js": "663339572b0393cb7a3e2e35bec8bec32a1fe85851f47584c0e06472d5096468",
+    "web/r3_model_inputs.js": "b2b265c78b7836f08a6eed5fe81af2fb48cff6ff20c1d5457d9342199b6fd09e",
+    "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+    "scripts/kill_mode_bridge.js": "6f5a64d45ec7e172ad6e5c3cec10c71c07b7888bd127eaeaaa89c90475e8dade",
+    "qqt_rl/training/kill_ppo.py": "0541fd958d804cb3662dac6d6804d3f4228b10b444c06c9d1d8a56b48e9c925d",
+    "scripts/train_dcu_kill.py": "8e7b2b697e131de633209ace6a09bd1fd000471229d2292ca4cd371236d9133c",
+    "scripts/r4_k4_observation.py": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+    "scripts/r3_items_observation.py": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+    "scripts/retention_phase_conditioning.py": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+    "jax_bomb/jax_net.py": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+    "qqt_rl/training/dcu.py": "176d69d3fc099c811fc282993b32b1408eb194608de1f766d1cc958ae4db7d55",
+    "qqt_rl/training/checkpoints.py": "dc6baed91518d7739bdcc9d85b131097f3af3cdb0ca5cf843e81479f55d11a19"
+  },
+  "tests_passed": 43,
+  "checkpoint_tests": [
+    "count retention preserves initial/latest",
+    "byte budget prunes before count limit",
+    "failed write and low-space preserve prior checkpoint",
+    "optimizer tree excluded; unrelated directories preserved"
+  ],
+  "launch": {
+    "status": "LAUNCHED",
+    "pid": 17275,
+    "process_group": 17275,
+    "command": [
+      "bash",
+      "/root/private_data/qqt_rl/scripts/launch_dcu_kill_8card.sh",
+      "/root/private_data/qqt_rl/runs/kill-8card-5h-20261115"
+    ],
+    "started_utc": "2026-11-15T06:47:03.689096+00:00",
+    "internal_deadline_utc": "2026-11-15T11:44:03.689096+00:00",
+    "watchdog_deadline_utc": "2026-11-15T11:47:03.689096+00:00",
+    "cleanup_grace_seconds": 90,
+    "out": "/root/private_data/qqt_rl/runs/kill-8card-5h-20261115",
+    "log": "/root/private_data/qqt_rl/runs/kill-8card-5h-20261115.log",
+    "devices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "checkpoint_policy": {
+      "actor": true,
+      "critic": true,
+      "optimizer": false,
+      "every_updates": 5,
+      "every_seconds_at_update_boundary": 120,
+      "max_count": 64,
+      "max_gib": 4,
+      "min_free_gib": 8
+    },
+    "user_available_disk_gb": 40,
+    "automatic_successor": false
+  },
+  "global_environments": 64,
+  "global_samples_per_update": 4096,
+  "global_minibatch": 512,
+  "critic_warmup_updates": 10,
+  "initial_actor": "DUEL_latest",
+  "checkpoint_size_bytes": 60516826,
+  "storage_scope": "Only this new run; prior runs and shared directories preserved",
+  "limitations": [
+    "five-hour outcome and combat gains are not yet known",
+    "df reports shared filesystem capacity, not individual 40 GB quota",
+    "120 second save interval triggers at next completed update",
+    "no Adam/environment/RNG state saved; restart is a warm start"
+  ]
+}

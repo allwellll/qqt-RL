@@ -10,6 +10,8 @@ from scripts.train_dcu_kill import arguments,plan
     ['--devices','0,0'],['--devices','-1'],['--envs','3'],['--ticks','0'],
     ['--minibatch','0'],['--minibatch','3'],['--hours','6'],['--critic-warmup','-1'],
     ['--seed','-1'],['--seed','4294967296'],
+    ['--keep-checkpoints','1'],['--checkpoint-budget-gib','5'],
+    ['--checkpoint-budget-gib','nan'],['--save-seconds','0'],['--min-free-gib','-1'],
 ])
 def test_invalid_geometry_rejected(options):
     with pytest.raises(SystemExit):arguments(['plan',*options])
@@ -21,6 +23,8 @@ def test_five_hour_eight_card_plan():
     assert row['global_envs']==64 and row['global_samples']==4096
     assert row['global_minibatch']==512
     assert row['includes_compilation_and_evaluation']
+    assert row['checkpoint_policy']['optimizer_saved'] is False
+    assert row['checkpoint_policy']['budget_gib']==4
 
 
 def test_smoke_is_bounded_and_training_is_explicit(tmp_path):
