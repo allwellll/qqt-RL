@@ -44,7 +44,7 @@ with open_retry(url, headers, 'GET' if is_range else 'HEAD') as response:
 # Reuse bytes fetched from this same public URL earlier in this validation.
 # Revalidate HTTP shape; browser model SHA verification still runs every load.
 if not (target.exists() and size and target.stat().st_size == size):
-    if url.split('?')[0].endswith('.wasm') and size > 1048576 and not headers:
+    if status == 200 and size > 1048576 and not headers:
         step = 262144
 
         def chunk(start):
@@ -54,10 +54,10 @@ if not (target.exists() and size and target.stat().st_size == size):
                     address = url + ('&' if '?' in url else '?') + 'dcu-range=' + str(start)
                     with open_retry(address, {'Range': f'bytes={start}-{end}'}) as response:
                         if response.status != 206 or response.headers.get('Content-Range') != f'bytes {start}-{end}/{size}':
-                            raise ValueError('Public WASM range mismatch')
+                            raise ValueError('Public response range mismatch')
                         data = response.read(end - start + 1)
                         if len(data) != end - start + 1:
-                            raise ValueError('Public WASM chunk truncated')
+                            raise ValueError('Public response chunk truncated')
                         return data
                 except Exception:
                     if attempt == 3:
@@ -66,7 +66,7 @@ if not (target.exists() and size and target.stat().st_size == size):
         with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
             data = b''.join(pool.map(chunk, range(0, size, step)))
         if len(data) != size:
-            raise ValueError('Public WASM size mismatch')
+            raise ValueError('Public response size mismatch')
     else:
         with open_retry(url, headers) as response:
             if response.status != status:

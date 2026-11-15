@@ -6,6 +6,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.resolve('.tools/rep
 (async()=>{
  const target=process.argv[2]||'file://'+path.resolve('runs/kill-replays-20261115-01/watch.html');
  const out=path.resolve(process.argv[3]||'runs/kill-replays-20261115-01');
+ fs.mkdirSync(out,{recursive:true});
  const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-gpu']});
  const errors=[],requests=[];
  async function transport(page){
@@ -13,9 +14,9 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||path.resolve('.tools/rep
   // Use the container's ordinary HTTP transport without reading its proxy
   // credentials. Preserve production security headers and the actual bytes.
   await page.route('https://allwellll.github.io/qqt-RL/dcu-replays/**',async route=>{
-   const code='import base64,json,sys,urllib.request; r=urllib.request.urlopen(sys.argv[1],timeout=30); print(json.dumps(dict(status=r.status,headers={k.lower():v for k,v in r.headers.items() if k.lower() in ("content-type","content-security-policy","x-content-type-options","cache-control")},body=base64.b64encode(r.read()).decode())))';
-   const raw=await new Promise((resolve,reject)=>execFile('python',['-c',code,route.request().url()],{maxBuffer:5000000},(error,stdout)=>error?reject(error):resolve(stdout)));
-   const response=JSON.parse(raw);await route.fulfill({status:response.status,headers:response.headers,body:Buffer.from(response.body,'base64')});
+   const cache=path.join(out,'http-cache');fs.mkdirSync(cache,{recursive:true});
+   const raw=await new Promise((resolve,reject)=>execFile('python',[path.resolve('scripts/dcu_public_http_bridge.py'),route.request().url(),cache,'{}'],{maxBuffer:100000,timeout:300000},(error,stdout)=>error?reject(error):resolve(stdout)));
+   const response=JSON.parse(raw);await route.fulfill({status:response.status,headers:response.headers,body:fs.readFileSync(response.file)});
   });
  }
  try{

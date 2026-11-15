@@ -278,4 +278,7 @@ python scripts/benchmark_v2_pipeline.py \
 
 排行榜按用户要求暂缓整理。当前 v4 后端未支持时明确显示暂不可用，游戏照常开局和本地结算；不提交旧 ruleset、不混榜、不删旧数据。[历史部署文档](supabase/README.md)保留，SQL迁移不是当前发布前置。
 
-网页对拼默认模型与发布复现：[u000840 发布说明](docs/dcu_web_default_20261115.md)。
+历史网页模型与发布复现：[u000840 发布说明](docs/dcu_web_default_20261115.md)。
+
+最新对拼模型与录像：u930 为三点复核推荐点；u1030 末段退步，详见
+[收敛复核及最新发布说明](docs/dcu_convergence_and_latest_20261115.md)。
