@@ -85,7 +85,8 @@ JAX/JAXlib `0.6.0+das.opt1.dtk2604`；不替换驱动或系统训练依赖。
 | [DCU 迁移与训练方法](docs/dcu_migration.md) | 环境安装、模型数据下载与校验、单卡检查、正式训练入口和编译缓存 |
 | [单卡验证记录](reports/dcu_validation_20261108.json) | DUEL 真实采样、GAE、PPO/Adam 更新结果，以及 SP 前向验证范围 |
 | [模型迁移与续训语义](docs/continue_training_on_new_machine.md) | Release 权重来源、Actor 热启动、Critic/Adam 重建及模型保存边界 |
-| [空笼击杀：8卡约5小时训练](docs/dcu_kill_training.md) | 已合入 main 新模式；原生规则采样、对拼奖励、同步 PPO、启动和停止方法 |
+| [JAX 空笼击杀：8卡训练](docs/dcu_jax_kill_training.md) | 当前入口：DCU 环境、规则 bot、自对弈与 GAE，保存 Actor/Critic |
+| [网页规则对照与旧 JS 训练](docs/dcu_kill_training.md) | Node/CPU 模拟器参考实现、规则归因、旧轮次与评估记录 |
 | [空笼击杀验证记录](reports/dcu_kill_validation_20261109.json) | 单卡真实更新与评估、8分片数学校验，以及物理8卡待验证范围 |
 
 按迁移文档配置环境和下载数据后，在分配给自己的空闲 DCU 上验证：
@@ -102,13 +103,16 @@ python -u -m scripts.dcu_smoke --line DUEL --device 0 --update
 不解锁历史训练入口。新机器就绪后先验收物理8卡通信和短更新，再按文档启动：
 
 ```bash
-bash scripts/launch_dcu_kill_8card.sh runs/kill-8card-5h-001
+bash scripts/launch_dcu_jax_kill_8card.sh runs/kill-jax-8card-001
 ```
 
-配置、准备步骤与约5小时预算见[空笼击杀训练说明](docs/dcu_kill_training.md)。
+配置、准备步骤与约5小时预算见[JAX 空笼击杀训练说明](docs/dcu_jax_kill_training.md)。
 2026-11-15 已通过物理8卡通信、同步 PPO 和模型保存预检，并启动约5小时正式轮次。
 [八卡启动记录](reports/dcu_8card_launch_20261115.json)包含运行目录、时间预算与4 GiB检查点上限；
-任务完成情况以运行目录内的结果文件为准。
+任务完成情况以运行目录内的结果文件为准。原 CPU 模拟轮次已在 u000173 安全停止，
+八卡 JAX 验证完成 30 次更新和 1024 个完整对局，随后增大批量续训于
+`runs/kill-jax-8card-e512-20261115`，保持原始截止时间。
+规则、网页轨迹对照和实测吞吐见 [JAX 八卡验证记录](reports/dcu_jax_kill_validation_20261115.json)。
 
 ## 目录
 
