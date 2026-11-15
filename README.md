@@ -82,6 +82,7 @@ JAX/JAXlib `0.6.0+das.opt1.dtk2604`；不替换驱动或系统训练依赖。
 
 | 文档 | 内容 |
 |---|---|
+| [2026-11-15 训练交接](docs/dcu_training_handover_20261115.md) | 接手优先阅读：当前任务、截止时间、实时检查命令、权重与待办 |
 | [DCU 迁移与训练方法](docs/dcu_migration.md) | 环境安装、模型数据下载与校验、单卡检查、正式训练入口和编译缓存 |
 | [单卡验证记录](reports/dcu_validation_20261108.json) | DUEL 真实采样、GAE、PPO/Adam 更新结果，以及 SP 前向验证范围 |
 | [模型迁移与续训语义](docs/continue_training_on_new_machine.md) | Release 权重来源、Actor 热启动、Critic/Adam 重建及模型保存边界 |
