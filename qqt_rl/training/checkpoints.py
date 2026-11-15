@@ -27,11 +27,14 @@ def durable_json(path,value):
 
 
 class CheckpointStore:
-    def __init__(self,out,keep=64,budget_gib=4,min_free_gib=8):
+    def __init__(self,out,keep=64,budget_gib=4,min_free_gib=8,*,schema='qqt.kill-actor-critic/v1'):
         self.out=Path(out);self.keep=keep
+        self.schema=schema
         self.budget=int(budget_gib*1024**3);self.min_free=int(min_free_gib*1024**3)
 
     def publish(self,index,weights,metadata):
+        if metadata.get('schema') != self.schema:
+            raise ValueError('Checkpoint schema does not match this store')
         # Only the two explicitly named model trees can enter the payload.
         payload={b:pickle.dumps(weights[b],protocol=5) for b in ('actor','critic')}
         size=sum(map(len,payload.values()))+16384
@@ -58,7 +61,7 @@ class CheckpointStore:
             marker=path/'CHECKPOINT.json'
             if not marker.is_file():continue
             record=json.loads(marker.read_text())
-            if record.get('schema')!='qqt.kill-actor-critic/v1':continue
+            if record.get('schema')!=self.schema:continue
             nbytes=sum(p.stat().st_size for p in path.iterdir() if p.is_file())
             entries.append((int(path.name[1:]),path,nbytes))
         entries.sort();total=sum(e[2] for e in entries)

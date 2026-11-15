@@ -1,0 +1,24 @@
+{
+  "schema": "qqt.carry-training-inputs/v1",
+  "release": "https://github.com/allwellll/qqt-RL/releases/tag/dcu-carry-training-20261115",
+  "files": [
+    {
+      "path": "data/carry-training-20261115/u930_actor.pt",
+      "asset": "u930_actor.pt",
+      "bytes": 30257447,
+      "sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+      "purpose": "Initial interceptor actor and frozen courier interceptor baseline"
+    }
+  ],
+  "existing_bundle": {
+    "release": "https://github.com/allwellll/qqt-RL/releases/tag/training-bundle-20261107",
+    "fetch": "python -m scripts.fetch_training_bundle",
+    "verification": "scripts.portable_training.verify_bundle",
+    "SP_web_sha256": "39b0dea7327221891bdd4cfba93ab917c897aa86fd78d83401241ad945a982cf"
+  },
+  "prepare": "python -m scripts.fetch_dcu_carry_assets",
+  "check": "python -m scripts.fetch_dcu_carry_assets --check",
+  "optimizer_included": false,
+  "critic_initialization": "Independent fresh Critic for each new training objective",
+  "training_started": false
+}

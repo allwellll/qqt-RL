@@ -1,0 +1,77 @@
+{
+  "schema": "qqt.single-dcu-carry-summary/v1",
+  "date": "2026-11-15",
+  "devices": 1,
+  "device_kind": "BW",
+  "training_enabled_changed": false,
+  "persistent_training_started": false,
+  "checkpoint_writes": 0,
+  "results": [
+    {
+      "report": "reports/dcu_carry_bench_baseline_e128_20261115.json",
+      "stage": "courier",
+      "envs": 128,
+      "inference_admitted": false,
+      "sampling_steps_per_second": 1860.0445451106334,
+      "estimated_combined_steps_per_second": 1517.8837293033118,
+      "measured_combined_steps_per_second": null,
+      "pool_gib": 3.998046875
+    },
+    {
+      "report": "reports/dcu_carry_bench_chunked_e2048_20261115.json",
+      "stage": "courier",
+      "envs": 2048,
+      "inference_admitted": true,
+      "sampling_steps_per_second": 26513.924461560244,
+      "estimated_combined_steps_per_second": 9043.171688052435,
+      "measured_combined_steps_per_second": 9212.614484724745,
+      "pool_gib": 16.498046875
+    },
+    {
+      "report": "reports/dcu_carry_bench_chunked_e4096_20261115.json",
+      "stage": "courier",
+      "envs": 4096,
+      "inference_admitted": true,
+      "sampling_steps_per_second": 31888.77559299405,
+      "estimated_combined_steps_per_second": 9606.800156466312,
+      "measured_combined_steps_per_second": 9690.58947112395,
+      "pool_gib": 32.498046875
+    },
+    {
+      "report": "reports/dcu_carry_bench_interceptor_e2048_20261115.json",
+      "stage": "interceptor",
+      "envs": 2048,
+      "inference_admitted": true,
+      "sampling_steps_per_second": 26902.941820205793,
+      "estimated_combined_steps_per_second": 9106.118495444582,
+      "measured_combined_steps_per_second": 9337.169832805683,
+      "pool_gib": 16.498046875
+    }
+  ],
+  "recommended_single_card_courier": {
+    "envs": 4096,
+    "ticks": 64,
+    "minibatch": 512,
+    "policy_chunk": 512,
+    "value_chunk": 512,
+    "collector": "fused",
+    "compiler_profile": "throughput"
+  },
+  "recommended_single_card_interceptor": {
+    "envs": 2048,
+    "ticks": 64,
+    "minibatch": 512,
+    "policy_chunk": 512,
+    "value_chunk": 512,
+    "collector": "fused",
+    "compiler_profile": "throughput"
+  },
+  "cpu_validation": "reports/dcu_carry_performance_validation_20261115.json",
+  "limitations": [
+    "Baseline failed numerical admission and is a timing reference only",
+    "Best measured within this sweep; not a theoretical hardware maximum",
+    "Short diagnostics exclude startup compilation, checkpoints and periodic model evaluation",
+    "Combined CPU regression has two old-collector failures; see validation report",
+    "No eight-card scaling or training quality claim"
+  ]
+}

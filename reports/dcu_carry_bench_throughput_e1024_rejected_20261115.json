@@ -1,0 +1,42 @@
+{
+  "schema": "qqt.single-dcu-carry-benchmark-rejection/v1",
+  "stage": "courier",
+  "devices": 1,
+  "envs": 1024,
+  "ticks": 64,
+  "minibatch": 512,
+  "collector": "fused",
+  "compiler_profile": "throughput",
+  "policy_chunk": 1024,
+  "inference_admitted": false,
+  "reason": "Consecutive inference mismatch; original 0.03 threshold retained",
+  "first_inference_errors": [
+    [
+      0.021429061889648438,
+      0.0
+    ]
+  ],
+  "consecutive_inference_errors": [
+    [
+      0.03914952,
+      0.0
+    ]
+  ],
+  "rollout_seconds": [
+    3.164620100520551,
+    3.099509233608842,
+    3.1002602400258183
+  ],
+  "ppo_seconds": [
+    4.7676141653209925,
+    4.766204074956477
+  ],
+  "rollout_environment_steps_per_second": 21138.87058702344,
+  "pipeline_seconds": [
+    7.709039892069995
+  ],
+  "training_environment_steps_per_second": null,
+  "checkpoint_writes": 0,
+  "log": "runs/carry-bench-throughput-e1024-20261115.log",
+  "notes": "Extracted from completed failed benchmark log; do not treat raw timing as admitted training throughput"
+}

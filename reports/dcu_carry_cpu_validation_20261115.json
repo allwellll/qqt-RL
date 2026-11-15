@@ -1,0 +1,78 @@
+{
+  "schema": "qqt.carry-development-validation/v1",
+  "recorded_at": "2026-11-15T14:19:06.139134+00:00",
+  "status": "PASS_CPU_REGRESSIONS_NOT_DCU",
+  "training_started": false,
+  "dcu_used": false,
+  "dependency_changes": false,
+  "test_command": "taskset -c 112-119 python -m pytest tests/test_dcu_jax_carry.py tests/test_kill_checkpoints.py tests/test_dcu_jax_kill.py -x",
+  "environment": {
+    "HIP_VISIBLE_DEVICES": "",
+    "CUDA_VISIBLE_DEVICES": "",
+    "JAX_PLATFORMS": "cpu",
+    "JAX_PLATFORM_NAME": "cpu",
+    "JAXBOMB_RULE": "bun",
+    "JAX_ENABLE_COMPILATION_CACHE": "false"
+  },
+  "tests_passed": 36,
+  "test_seconds": 152.41,
+  "warnings": [
+    "Existing jaxlib.hlo_helpers deprecation"
+  ],
+  "stages_tested": [
+    "interceptor",
+    "courier"
+  ],
+  "collector_execution": "separate device observation, model inference, simulation, GAE",
+  "checked": [
+    "full native Bun observations",
+    "both-seat custody restrictions",
+    "contact transfer and bun conservation",
+    "delivery termination",
+    "cargo 72 px/s movement",
+    "independent reset",
+    "rollout inference consistency",
+    "learner Actor/Critic update",
+    "frozen opponent bank",
+    "retention and optimizer omission",
+    "pre-JAX stop gate"
+  ],
+  "verified_model_cpu_forward": {
+    "SP_web_sha256": "39b0dea7327221891bdd4cfba93ab917c897aa86fd78d83401241ad945a982cf",
+    "u930_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+    "movement_dim": 5,
+    "ability_dim": 3,
+    "finite": true
+  },
+  "source_sha256": {
+    "scripts/train_dcu_jax_carry.py": "91857cdcf4af7795726d8ffc19b00ae9ee5d5d9c9b04df97a0b9f60ed08925f0",
+    "qqt_rl/training/jax_carry_env.py": "a6af1e08c518c4ba55d5bf75a18f86f47d7054bc2b085f425178fae5ac501ef7",
+    "qqt_rl/training/jax_carry_collect.py": "a891bef9d3d283bb40a46d07f19a986486b906908125e6bc7b4b5310fc1bf6b3",
+    "qqt_rl/training/kill_ppo.py": "0541fd958d804cb3662dac6d6804d3f4228b10b444c06c9d1d8a56b48e9c925d",
+    "qqt_rl/training/checkpoints.py": "35f173031b513c60ecf0c449dfbd3560aff209b4fe10af372fef8eb123a10fd1",
+    "qqt_rl/training/dcu.py": "176d69d3fc099c811fc282993b32b1408eb194608de1f766d1cc958ae4db7d55",
+    "scripts/portable_training.py": "fea8266e7c8072713e5034ee9144eeb595c80ad4e09d9634a68fa68a97333e13",
+    "scripts/r4_kill_arena.py": "476ff7dc01a87a8f961e0f60e276f4a9bf2bca92e11b402a2efc01310b89ef9b",
+    "qqt_rl/training/jax_kill_env.py": "0632b723fb2aa15bd464e3adbc1cd2e1f50d57ef725a76cc9dae81fdd32a49a5",
+    "scripts/r4_k4_observation.py": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+    "scripts/r3_items_observation.py": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+    "scripts/retention_phase_conditioning.py": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+    "scripts/je05_bun_transport.py": "a7ca207e7f8cb471442e3f5ab0f247c6ad14284a3e843c4dad14edd9af05634f",
+    "scripts/je10_causal_init.py": "d35d369fd961190f6ce067cda4974f078269087c225e97b74a56a196718baa84",
+    "jax_bomb/jax_net.py": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+    "jax_bomb/levels.py": "dd7932e33500383055c24b5d9e4f183b9da85b061821db82f8b217975f864444",
+    "jax_bomb/je07_bun_env_r1_items.py": "f95aa6cefd09858665074d968be926a77c87f3279303bd05fbfa193f1c2d4e52",
+    "jax_bomb/je05_core_env_r1_items.py": "4591c138dbfc0520148f63fa68dccf40caeb09f6e196e29e0c86f2a2a33c82a2",
+    "jax_bomb/je07_native_items.py": "0245aad1b6b9577ff5396e57f23d7f0a2e393d4edf1acdaf860975129c35219b",
+    "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+    "jax_bomb/maps/kill_maps.json": "bbb3742c11430a2d2c76e6fb655fd42aaa7b709df8b7b7b9eaac3ec18bb62bac",
+    "tests/test_dcu_jax_carry.py": "00904f367fc4505983a9b9b6e05fd1401481b9ff1777607f746ab2451be1097a",
+    "scripts/summarize_dcu_carry.py": "34a39689db52f667a1dbb85deb88eb14f2d7a1f994b636306599f7115b7d7436",
+    "scripts/launch_dcu_jax_carry_8card.sh": "85654a89e02b78aaa4e42622e0cb56158c4a493faa2a7d5391d35c0230267202"
+  },
+  "limitations": [
+    "No DCU training or throughput measurement",
+    "No independent match evaluation or replay export added",
+    "Large combined graph CPU inference inconsistencies observed; segmented collector plus runtime admission checks used"
+  ]
+}
