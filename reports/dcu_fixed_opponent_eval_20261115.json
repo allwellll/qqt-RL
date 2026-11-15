@@ -1,0 +1,241 @@
+{
+  "schema": "qqt.dcu-fixed-opponent-evaluation/v1",
+  "recorded_utc": "2026-11-15T11:11:56.107473+00:00",
+  "status": "PASS_FULL_GAME_EVALUATION",
+  "training": {
+    "run": "runs/kill-jax-8card-e512-20261115",
+    "update_snapshot": 899,
+    "environment_steps_snapshot": 235667456,
+    "early": {
+      "update_range": [
+        3,
+        32
+      ],
+      "metrics": [
+        [
+          19252.0,
+          10185.0,
+          1609.0,
+          1117870.0,
+          366839.0,
+          3239.0
+        ],
+        [
+          6489.0,
+          20768.0,
+          669.0,
+          565538.0,
+          429990.0,
+          857.0
+        ]
+      ],
+      "kills_per_death": 1.8902307314678448,
+      "self_death_fraction": 0.1579774177712322,
+      "mixed_opponent_score_rate": 0.790771484375,
+      "envsteps_per_second": 20305.196953518698,
+      "mean_loss": [
+        1.5423290729522705,
+        -0.0020048850992073616,
+        3.0886678377787273,
+        0.588978773355484,
+        0.04636601108747224,
+        0.026672999064127605,
+        0.6324661582708359,
+        0.9206330974896749
+      ]
+    },
+    "recent": {
+      "update_range": [
+        870,
+        899
+      ],
+      "metrics": [
+        [
+          45326.0,
+          11560.0,
+          1479.0,
+          1389981.0,
+          329042.0,
+          3310.0
+        ],
+        [
+          8128.0,
+          46857.0,
+          426.0,
+          560627.0,
+          519432.0,
+          786.0
+        ]
+      ],
+      "kills_per_death": 3.9209342560553635,
+      "self_death_fraction": 0.12794117647058822,
+      "mixed_opponent_score_rate": 0.80810546875,
+      "envsteps_per_second": 18164.79256152218,
+      "mean_loss": [
+        1.5371975501378377,
+        0.0032794657396152615,
+        3.0678364117940267,
+        0.5975186189015707,
+        0.5397427399953206,
+        0.02322222391764323,
+        0.5149757961432139,
+        0.850406265258789
+      ]
+    },
+    "all_recorded_losses_finite": true,
+    "deadline_utc": "2026-11-15T11:44:03.689096+00:00"
+  },
+  "candidate": {
+    "update": "u000840",
+    "actor_sha256": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5",
+    "source_checkpoint": "runs/kill-jax-8card-e512-20261115/u000840",
+    "training_environment_steps": 220200960
+  },
+  "protocol": {
+    "schema": "qqt.kill-fixed-eval/v1",
+    "simulator": "live web bun-native-v4-facing",
+    "recorded_during_training": false,
+    "evaluation_replay": true,
+    "game_ticks": 1800,
+    "temperature": 0.3,
+    "seeds": [
+      2026111601,
+      2026111602,
+      2026111603,
+      2026111604,
+      2026111605,
+      2026111606,
+      2026111607,
+      2026111608
+    ],
+    "opponents": [
+      "DUEL_latest",
+      "SP_latest",
+      "G_frozen"
+    ],
+    "balanced_seats": true,
+    "versions": [
+      "current"
+    ],
+    "cpu_only": true,
+    "cpu_affinity": [
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127
+    ]
+  },
+  "evaluation": {
+    "status": "PASS_CPU_FULL_GAME_EXPORT",
+    "games": 48,
+    "ticks_per_game": 1800,
+    "cpu_only": true,
+    "elapsed_seconds": 343.7298666695133,
+    "statistics": [
+      {
+        "version": "current",
+        "opponent": "DUEL_latest",
+        "games": 16,
+        "wins": 12,
+        "draws": 1,
+        "losses": 3,
+        "kills": 76,
+        "deaths": 36,
+        "self_deaths": 4,
+        "win_rate": 0.75,
+        "score_rate": 0.78125,
+        "win_rate_wilson95": [
+          0.5050168346449122,
+          0.8981793250878696
+        ]
+      },
+      {
+        "version": "current",
+        "opponent": "G_frozen",
+        "games": 16,
+        "wins": 16,
+        "draws": 0,
+        "losses": 0,
+        "kills": 135,
+        "deaths": 23,
+        "self_deaths": 5,
+        "win_rate": 1.0,
+        "score_rate": 1.0,
+        "win_rate_wilson95": [
+          0.8063923194655637,
+          1.0000000000000002
+        ]
+      },
+      {
+        "version": "current",
+        "opponent": "SP_latest",
+        "games": 16,
+        "wins": 16,
+        "draws": 0,
+        "losses": 0,
+        "kills": 166,
+        "deaths": 15,
+        "self_deaths": 3,
+        "win_rate": 1.0,
+        "score_rate": 1.0,
+        "win_rate_wilson95": [
+          0.8063923194655637,
+          1.0000000000000002
+        ]
+      }
+    ],
+    "files": {
+      "replays.json": {
+        "bytes": 942159,
+        "sha256": "722e618682046aaeadc3864ca91bd9e6ab78436c642ec7c3d125f2ccfca00be7"
+      },
+      "watch.html": {
+        "bytes": 1997885,
+        "sha256": "5d97cc0df36bdd3f7d9f5a083f6e421d17b68cec553b8058be38a51f760bf569"
+      }
+    }
+  },
+  "independent_replay": {
+    "status": "PASS_INDEPENDENT_REPLAY",
+    "games": 48,
+    "ticks": 86400,
+    "state_sha256": true,
+    "final_scores_and_metrics": true
+  },
+  "model_sha256": {
+    "DUEL_latest": "f90f87aa9bbb2ec9bd0df876ee35a658d4bcf731b63cd8c69916a666b0206dac",
+    "G_frozen": "48e5697a9b99fad340d03a96453941253242cb27c7253d0842e45d441313e7a0",
+    "SP_latest": "32d481647638301a779ef979e06f4991af9a246b7bd1005c2a0b7bc23fe4790b",
+    "candidate": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5"
+  },
+  "source_sha256": {
+    "scripts/export_dcu_kill_replays.py": "3e320e4a759d748b2336adb5e993ac4d7396d75b615687de24452a651814fb84",
+    "scripts/dcu_kill_replay_bridge.js": "2bd173c195b5b3dcdc3b781bff92bbf317df80e7efc96ebb62228beafa06b670",
+    "scripts/kill_mode_bridge.js": "6f5a64d45ec7e172ad6e5c3cec10c71c07b7888bd127eaeaaa89c90475e8dade",
+    "web/sim-bun-native-v4-facing.js": "89165636ba43b667e68e03bd2985410a2fe2c808c63b11aa692b050468ae2c45",
+    "web/kill_opening_items.js": "d1b99520ba42ff4eb8347ed1953c33a190269b44e28eec6eaa924582d97fdff4",
+    "web/self_respawn_preview.js": "663339572b0393cb7a3e2e35bec8bec32a1fe85851f47584c0e06472d5096468",
+    "web/r3_model_inputs.js": "b2b265c78b7836f08a6eed5fe81af2fb48cff6ff20c1d5457d9342199b6fd09e",
+    "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+    "scripts/r4_k4_observation.py": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+    "scripts/r3_items_observation.py": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+    "scripts/retention_phase_conditioning.py": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+    "jax_bomb/jax_net.py": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e"
+  },
+  "local_artifacts": {
+    "run": "runs/kill-eval-u000840-20261115-v2",
+    "html": "runs/kill-eval-u000840-20261115-v2/watch.html",
+    "published_to_pages": false
+  },
+  "limits": [
+    "16 full games per fixed opponent, 8 seeds and both seats, temperature 0.3.",
+    "SP/G are also fixed training opponents, so this is not a held-out generalization test.",
+    "Pure win rate excludes draws; score_rate counts draws as half.",
+    "Earlier u000330 pilot used different seeds and fewer games; cannot directly quantify before/after improvement."
+  ],
+  "exporter_fix": "First attempt completed games but failed to write presentation due to relative checkpoint path. Resolved checkpoint paths and saved COMPLETED_GAMES.json before optional bundling; reran the same predeclared protocol successfully."
+}

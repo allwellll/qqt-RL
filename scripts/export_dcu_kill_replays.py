@@ -64,7 +64,7 @@ def main():
     from scripts.dcu_kill_replay_html import bundle
     assert jax.default_backend()=='cpu' and all(d.platform=='cpu' for d in jax.devices())
     started=time.monotonic();a.out.mkdir(parents=True,exist_ok=False)
-    checkpoint=a.checkpoint or a.run/json.loads((a.run/'LATEST.json').read_text())['checkpoint']
+    checkpoint=(a.checkpoint or a.run/json.loads((a.run/'LATEST.json').read_text())['checkpoint']).resolve()
     meta=json.loads((checkpoint/'CHECKPOINT.json').read_text())
     for file,expected in meta['source_sha256'].items():
         if sha(ROOT/file)!=expected:raise ValueError('Checkpoint source mismatch: '+file)
@@ -126,6 +126,8 @@ def main():
             if tick%180==179:print(json.dumps(dict(event='cpu_eval_progress',tick=tick+1,elapsed_seconds=time.monotonic()-started)),flush=True)
         if not np.all(row['done']):raise ValueError('Incomplete evaluation')
         records=bridge.call(dict(command='finish'))['replays']
+        # Preserve completed games before optional presentation/export work.
+        (a.out/'COMPLETED_GAMES.json').write_text(json.dumps(records,separators=(',',':'))+'\n')
     finally:bridge.close()
     document=dict(schema='qqt.kill-checkpoint-replays/v1',generated_utc=datetime.now(timezone.utc).isoformat(),
         candidate=dict(update=checkpoint.name,actor_sha256=meta['actor_sha256'],source_checkpoint=str(checkpoint.relative_to(ROOT)),training_environment_steps=meta['global_environment_steps']),
