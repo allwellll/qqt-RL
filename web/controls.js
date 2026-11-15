@@ -61,8 +61,9 @@
   }
 
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
-  // Geometry in CSS pixels, separate from DOM events and keyboard holds.
-  function createFloatingStick({radius = 48, deadzone = 10, resumeMs = 250, hysteresis = 15} = {}) {
+  // Responsive four-way input: fixed 5px deadzone, 49-degree turn threshold,
+  // no direction carry-over on re-touch, and a center fixed for each gesture.
+  function createFloatingStick({radius = 48, deadzone = 5, resumeMs = 0, hysteresis = 4} = {}) {
     let center = null, habit = null, direction = null, previous = null, released = -Infinity;
     const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction});
     return {
@@ -82,10 +83,6 @@
           const delta = old < 0 ? Infinity : Math.abs(Math.atan2(Math.sin(angle - old * Math.PI / 2), Math.cos(angle - old * Math.PI / 2)));
           if (delta > (45 + hysteresis) * Math.PI / 180)
             direction = STICK_KEYS[(Math.round(angle / (Math.PI / 2)) + 4) % 4];
-          if (distance > radius) {
-            const follow = Math.min((distance - radius) * .18, radius * .25) / distance;
-            center.x += dx * follow; center.y += dy * follow;
-          }
         }
         return snapshot();
       },
@@ -118,7 +115,7 @@
       event.preventDefault(); pointer = event.pointerId;
       if (!stick) {
         const radius = dial.getBoundingClientRect().width / 2 || 48;
-        stick = createFloatingStick({radius, deadzone: radius * 10 / 48});
+        stick = createFloatingStick({radius});
       }
       zone.setPointerCapture(pointer);
       paint(stick.start(event.clientX, event.clientY, performance.now()));
