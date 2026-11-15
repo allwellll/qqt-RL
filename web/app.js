@@ -4,8 +4,10 @@
   performance.mark('qqt:startup');
   QQTPanels.mount(document);
   const canvas = document.getElementById('game');
+  QQTGameScreen.mount(canvas.parentElement, document.getElementById('game-fullscreen'), document.getElementById('game-screen-status'));
   const status = document.getElementById('status');
   const restart = document.getElementById('restart');
+  const touchRestart = document.getElementById('touch-restart');
   const opponentSelect = document.getElementById('opponent');
   const gameMode = document.getElementById('game-mode');
   const characterSelect = document.getElementById('character');
@@ -499,6 +501,7 @@
   function render(now = performance.now()) {
     if (!sim) return;
     touchControls.hidden = !localHumanControls() || sim.done;
+    touchRestart.disabled = assetsPending || modelPending || modelFailed || leaderboard.state().submitting || leaderboard.state().profileSubmitting;
     if (!touchControls.hidden) updateTouchItems();
     if (sim.done && localHumanControls() && leaderboardMatch) {
       const match = { ...leaderboardMatch, client_version: clientVersion };
@@ -509,7 +512,7 @@
     renderer.render(sim, now, motionState());
     QQTLeaderboard.renderSettlement(document, leaderboard.state());
     const rect = canvas.getBoundingClientRect(), stage = canvas.parentElement.getBoundingClientRect();
-    document.getElementById('settlement').style.top = window.matchMedia('(max-width: 820px)').matches
+    document.getElementById('settlement').style.top = window.matchMedia('(max-width: 900px), (pointer: coarse)').matches
       ? '' : `${rect.top - stage.top + rect.height * .65}px`;
     hideLoading();
   }
@@ -595,6 +598,7 @@
   window.addEventListener('blur', clearHeldControls);
   document.addEventListener('visibilitychange', () => { if (document.hidden) clearHeldControls(); });
   restart.addEventListener('click', () => requestRestart());
+  touchRestart.addEventListener('click', () => requestRestart());
   soundToggle.addEventListener('change', () => sound.setEnabled(soundToggle.checked));
   characterSelect.addEventListener('change', () => {
     updateCharacterPortrait();
