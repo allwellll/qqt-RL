@@ -1,0 +1,58 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DCU 新模型 · 对弈录像</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101722;color:#e8eef5;font:15px system-ui,sans-serif}main{max-width:1400px;margin:auto;padding:22px}h1{font-size:24px;margin:0 0 10px}p{line-height:1.65;color:#b8c5d6}.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0}button,select{background:#23344a;color:#fff;border:1px solid #496078;border-radius:7px;padding:9px;font:inherit}button{cursor:pointer}input{flex:1;min-width:150px}.boards{display:grid;grid-template-columns:1fr 1fr;gap:16px}article{background:#1b2738;border-radius:12px;padding:12px;min-width:0}h2{font-size:18px;margin:0 0 8px}canvas{width:100%;height:auto;display:block;border-radius:8px}.score{font-variant-numeric:tabular-nums;margin:10px 0}.status{color:#88ddbd}table{border-collapse:collapse;width:100%;margin-top:12px}td,th{border-bottom:1px solid #354459;padding:9px;text-align:left}summary{cursor:pointer;margin-top:14px}pre{white-space:pre-wrap;font-size:12px}a{color:#8ed8fb}@media(max-width:800px){.boards{grid-template-columns:1fr}main{padding:12px}table{font-size:12px}td,th{padding:5px}}
+</style>
+<main><h1>DCU 新模型 · 对弈录像</h1>
+<p id="intro"></p><p>新模型对战固定 DUEL / SP / G，包含双方座位。每局完整保留，可暂停、倍速和跳到击杀片段。以下为检查点重新对弈的录像；小样本统计用于了解当前表现。</p>
+<div class="tools"><label>对弈局 <select id="match"></select></label><button id="play">播放</button><button id="back">−1 tick</button><button id="next">+1 tick</button><select id="speed" aria-label="播放速度"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option><option value="8">8×</option></select></div>
+<div class="tools"><input id="seek" type="range" min="0" max="1800" value="0" aria-label="进度"><output id="clock">0 / 1800 tick</output><button id="event">下次击杀/死亡</button></div>
+<article style="max-width:920px;margin:auto"><h2 id="current">当前检查点</h2><div class="score" id="score0"></div><canvas id="board0" width="900" height="880"></canvas></article>
+<p id="status" class="status">正在载入内嵌素材……</p><h2>固定对手整局统计</h2><div id="stats"></div>
+<details><summary>模型来源、固定协议与复核信息</summary><pre id="provenance"></pre></details>
+</main>
+<script>
+const PAYLOAD=/*__PAYLOAD__*/null;
+window.QQT_EMBED_IMAGES=PAYLOAD.images;
+window.fetch=async url=>{const data=PAYLOAD.metadata[String(url)];if(!data)throw Error('缺少内嵌素材 '+url);return{ok:true,json:async()=>data};};
+for(const encoded of PAYLOAD.sources){const script=document.createElement('script');script.text=new TextDecoder().decode(Uint8Array.from(atob(encoded),x=>x.charCodeAt(0)));document.head.appendChild(script);}
+</script>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),doc=PAYLOAD.document;
+QQTR3Inputs.installSim(QQT);
+function fresh(seed){const s=new QQT.Sim(seed>>>0);s.reset(PAYLOAD.level,{nativeItems:true,nativeTrap:true,killMode:true,teams:[0,1],bananaSlideSpeedPx:480});QQTSelfRespawnPreview.attach(s);QQTKillOpeningItems.apply(s);s.maxSteps=1800;return s;}
+function act(row){return[[row[0],+(row[1]===1),+(row[1]===2)],[row[2],+(row[3]===1),+(row[3]===2)]];}
+let pair=[],sims=[],renderers=[],tick=0,playing=false,last=0,acc=0,assets=null;
+const pairs=new Map();for(const replay of doc.replays){const key=[replay.spec.opponent,replay.spec.seed,replay.spec.seat].join('/');pairs.set(key,{current:replay});}
+const options=[...pairs.entries()];for(let i=0;i<options.length;i++){const [key]=options[i],o=document.createElement('option');o.value=i;o.textContent=key.replaceAll('/',' · ');$('match').appendChild(o);}
+function labels(record){return record.spec.seat===0?['新模型','固定 '+record.spec.opponent]:['固定 '+record.spec.opponent,'新模型'];}
+function draw(){
+ sims.forEach((sim,i)=>{renderers[i].render(sim,tick*100,{humanPid:-1,visualPos:sim.pos,intents:pair[i].actions[Math.max(0,tick-1)]?.filter((_,k)=>k%2===0)||[4,4],playerLabels:labels(pair[i])});const p=pair[i].spec.seat;$('score'+i).textContent=`模型 ${p===0?'蓝方':'红方'} · 击杀 ${sim.killCount[p]} : ${sim.killCount[1-p]} · ${sim.done?(sim.winner===p?'胜':sim.winner===null?'平':'负'):'进行中'}`;});
+ $('seek').value=tick;$('clock').textContent=`${(tick/10).toFixed(1)} 秒 · ${tick} / 1800 tick`;$('play').textContent=playing?'暂停':'播放';
+}
+function advance(){if(tick>=1800){playing=false;return;}sims.forEach((s,i)=>renderers[i].addExplosion(s.step(act(pair[i].actions[tick])),(tick+1)*100));tick++;draw();}
+function seek(target){playing=false;acc=0;sims=pair.map(r=>fresh(r.spec.seed));renderers.forEach(r=>r.reset());tick=0;while(tick<target){sims.forEach((s,i)=>{const info=s.step(act(pair[i].actions[tick]));if(tick>=target-5)renderers[i].addExplosion(info,(tick+1)*100);});tick++;}draw();}
+async function verify(record){const s=fresh(record.spec.seed),expected=new Map(record.state_sha256);let checked=0;
+ for(let t=0;t<=record.actions.length;t++){
+  if(t>0)s.step(act(record.actions[t-1]));
+  if(expected.has(t)&&globalThis.crypto?.subtle){const b=new TextEncoder().encode(JSON.stringify(s.snapshotReplay())),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),x=>x.toString(16).padStart(2,'0')).join('');if(hash!==expected.get(t))throw Error('状态 SHA256 不一致：tick '+t);checked++;}
+ }
+ if(JSON.stringify(s.killCount)!==JSON.stringify(record.summary.kill_count)||s.winner!==record.summary.winner||!s.done)throw Error('终局复核不一致');
+ return checked;
+}
+let token=0;
+async function load(){const own=++token;playing=false;const row=options[+$('match').value][1];pair=[row.current];$('status').textContent='正在独立重放并核对状态……';
+ const counts=await Promise.all(pair.map(verify));if(own!==token)return;
+ sims=pair.map(r=>fresh(r.spec.seed));renderers=pair.map((_,i)=>QQTVisual.createRenderer($('board'+i),PAYLOAD.level,assets));tick=0;acc=0;draw();$('status').textContent=counts.every(n=>n>0)?`状态 SHA256 验证通过（${counts[0]} 个检查点）；可离线播放，无需模型或网络。`:'终局比分复核通过；本浏览器未提供状态 SHA256 校验接口。';
+}
+function fail(e){playing=false;$('status').textContent='回放不可用：'+e.message;console.error(e);}
+$('play').onclick=()=>{if(!sims.length)return;if(tick===1800)seek(0);playing=!playing;acc=0;draw();};$('next').onclick=()=>{playing=false;advance();};$('back').onclick=()=>seek(Math.max(0,tick-1));$('seek').oninput=e=>seek(+e.target.value);$('match').onchange=()=>load().catch(fail);
+$('event').onclick=()=>{const next=pair.flatMap(r=>r.events.filter(x=>x[0]>tick+3&&(x[2]==='kill'||x[2]==='death')).map(x=>x[0]));if(next.length)seek(Math.max(0,Math.min(...next)-3));};
+function frame(now){if(last&&playing){acc+=Math.min(500,now-last)*+$('speed').value;while(acc>=100&&playing){acc-=100;advance();}}last=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);
+$('intro').textContent=`检查点 ${doc.candidate.update} · ${doc.replays.length} 个完整对局 · 每局 180 秒 · 温度 ${doc.protocol.temperature} · 地图 806`;$('current').textContent='当前模型 · '+doc.candidate.update;
+const table=document.createElement('table');table.innerHTML='<thead><tr><th>对手</th><th>局数</th><th>新模型 胜 / 平 / 负</th><th>击杀 / 死亡</th><th>自死</th></tr></thead>';const body=document.createElement('tbody');for(const row of doc.statistics){const tr=document.createElement('tr');for(const value of [row.opponent,row.games,`${row.wins} / ${row.draws} / ${row.losses}`,`${row.kills} / ${row.deaths}`,row.self_deaths]){const td=document.createElement('td');td.textContent=value;tr.appendChild(td);}body.appendChild(tr);}table.appendChild(body);$('stats').appendChild(table);
+$('provenance').textContent=JSON.stringify({generated_utc:doc.generated_utc,candidate:doc.candidate,protocol:doc.protocol,source_sha256:doc.source_sha256,model_sha256:doc.model_sha256,limitation:doc.limitation},null,2);
+QQTVisual.loadAssets(PAYLOAD.level).then(a=>{assets=a;return load();}).catch(fail);
+})();
+</script></html>

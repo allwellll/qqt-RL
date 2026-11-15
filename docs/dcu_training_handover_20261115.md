@@ -210,3 +210,20 @@ bash scripts/launch_dcu_jax_kill_8card.sh runs/kill-jax-next-NEW \
 进一步说明：[JAX 训练方法](dcu_jax_kill_training.md)、
 [八卡验证报告](../reports/dcu_jax_kill_validation_20261115.json)、
 [环境迁移](dcu_migration.md)。接手本轮时，优先使用本文第 2、3、7 节与实时产物。
+
+## 8. 后续补充：新模型录像导出
+
+2026-11-15 08:52 UTC 左右冻结 u000330，已在 CPU 上完成 12 局固定 DUEL/SP/G 对战，
+双方座位、每局 1800 tick，7 胜、3 平、2 负；每对手 4 局是展示样本，不是大规模棋力结论。
+按用户最新要求只展示新模型，没有训练前后对照。这是检查点重新对弈录像，非训练现场轨迹。
+
+观看入口：<https://allwellll.github.io/qqt-RL/dcu-replays/>。
+离线文件：`runs/kill-replays-20261115-01/watch.html`；
+动作、统计与验收在同目录 `replays.json` / `RESULT.json` / `BROWSER_CHECK.json`。
+Pages 实时发布状态看 `PAGES_PUBLISH.json`，不要把仅提交状态当成部署完成。
+
+新增 `scripts/export_dcu_kill_replays.py` 和 `scripts/verify_dcu_kill_replays.js`，
+可直接读取已验证的新 JAX 检查点，不用旧 JS 训练入口，也不跳过源码/权重校验。
+因此第 7 节的“尚需评估适配”已完成本次 CPU 回放适配；大样本固定对手正式评估仍待做。
+导出不会改变当前八卡训练、截止或检查点策略。复现、统计与发布说明见
+[新模型录像说明](dcu_kill_replays_20261115.md)。
