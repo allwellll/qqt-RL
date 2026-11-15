@@ -378,8 +378,8 @@
     },
     {
       "id": "dcu-kill-u000840-tau03",
-      "display_name": "对拼强化 · u840（对拼默认）",
-      "menu_label": "对拼强化 · u840（对拼默认）",
+      "display_name": "对拼强化 · u840（历史）",
+      "menu_label": "对拼强化 · u840（历史）",
       "cycle": 840,
       "candidate": "DCU kill u000840 tau0.3",
       "strategy": "raw",
@@ -457,6 +457,98 @@
         }
       },
       "description": "无包子纯击杀专项，8卡DCU训练u840；固定对手48局44胜1平3负，其中对DUEL_latest为12胜1平3负。8个seed双席小样本，SP/G也是训练对手。成绩基于JAX BF16评测，网页采用同权重FP32推理，非逐位一致；不作为运包胜率结论。录像见 dcu-replays/u000840-20261115.html。"
+    },
+    {
+      "id": "dcu-kill-u000930-tau03",
+      "display_name": "对拼强化 · u930（对拼默认）",
+      "menu_label": "对拼强化 · u930（对拼默认）",
+      "cycle": 930,
+      "candidate": "DCU kill u000930 tau0.3",
+      "strategy": "raw",
+      "source_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+      "full_source_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+      "rule_version": "bun-native-v4-facing",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "dcu-kill-u000930-051ef609f84dab77796d0414a632b4e66c1641ae76d819bb0e3c1dc47c378792.json",
+      "sha256": "051ef609f84dab77796d0414a632b4e66c1641ae76d819bb0e3c1dc47c378792",
+      "bytes": 40340915,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000930-20261115/dcu-kill-u000930-051ef609f84dab77796d0414a632b4e66c1641ae76d819bb0e3c1dc47c378792.json",
+      "onnx": {
+        "file": "dcu-kill-u000930-923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0.onnx",
+        "sha256": "923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000930-20261115/dcu-kill-u000930-923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0.onnx",
+        "meta": {
+          "name": "dcu-kill-u000930",
+          "display_name": "对拼强化 · u930",
+          "arch": "transformer",
+          "rule": "bun",
+          "rule_version": "bun-native-v4-facing",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "value_min": -20,
+          "value_max": 20,
+          "checkpoint_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+          "source_global_dim": 38,
+          "fixed_mode": 0,
+          "projection": "drop final mode input row only",
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "onnx_sha256": "923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0",
+          "onnx_file": "model.onnx",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI",
+          "training_mode": "map806-kill",
+          "evaluation_games": 48
+        },
+        "reference_zero": {
+          "move": [
+            -0.07029487337532467,
+            1.1980720644225056,
+            0.9439841977928504,
+            0.9507946555568387,
+            1.2032140742254718
+          ],
+          "bomb": [
+            0.4346482556418707,
+            -0.44997333509437265,
+            0.3999936795617567
+          ],
+          "value": 2.34497636163155
+        }
+      },
+      "description": "纯击杀专项；u840/u930/u1030同协议三点复核中推荐u930。48局45胜1平2负；对DUEL_latest 15胜1平。479击杀/47死亡/11次自死；SP/G也参与训练。8个seed双席的选型小样本，非独立泛化证明；评测为JAX BF16，网页同权重FP32不逐位一致。录像 dcu-replays/u000930-20261115.html。",
+      "selection_review": {
+        "evidence": "specialists/dcu-convergence-20261115.json",
+        "evaluated_updates": [
+          840,
+          930,
+          1030
+        ],
+        "games_per_checkpoint": 48,
+        "held_out": false
+      }
     }
   ]
 }
