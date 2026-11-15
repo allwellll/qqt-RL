@@ -8,12 +8,14 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.error
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 TAG = 'dcu-carry-training-20261115'
 ASSET = 'u930_actor.pt'
 URL = f'https://github.com/allwellll/qqt-RL/releases/download/{TAG}/{ASSET}'
+API_URL = 'https://api.github.com/repos/allwellll/qqt-RL/releases/assets/751461110?download=1'
 DESTINATION = ROOT / 'data/carry-training-20261115' / ASSET
 EXPECTED_SHA = '1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27'
 EXPECTED_BYTES = 30257447
@@ -26,6 +28,31 @@ def verify(path):
     with path.open('rb') as stream:
         if hashlib.file_digest(stream, 'sha256').hexdigest() != EXPECTED_SHA:
             raise ValueError('u930 SHA256 mismatch: ' + str(path))
+
+
+def download(output):
+    # Some platform proxies fail github.com downloads but allow the public
+    # asset API. Both transports must return the exact same pinned bytes.
+    for index, url in enumerate((URL, API_URL)):
+        output.seek(0)
+        output.truncate(0)
+        request = urllib.request.Request(url, headers={
+            'Accept': 'application/octet-stream', 'User-Agent': 'qqt-carry-training'})
+        try:
+            total, digest = 0, hashlib.sha256()
+            with urllib.request.urlopen(request, timeout=30 if index == 0 else 120) as incoming:
+                while chunk := incoming.read(1024 * 1024):
+                    total += len(chunk)
+                    if total > EXPECTED_BYTES:
+                        raise ValueError('u930 download exceeds expected size')
+                    digest.update(chunk)
+                    output.write(chunk)
+            if total != EXPECTED_BYTES or digest.hexdigest() != EXPECTED_SHA:
+                raise ValueError('u930 downloaded size/SHA256 mismatch')
+            return
+        except (urllib.error.URLError, TimeoutError, ValueError):
+            if index:
+                raise
 
 
 def install(source=None, destination=None):
@@ -46,13 +73,7 @@ def install(source=None, destination=None):
                 with Path(source).open('rb') as incoming:
                     shutil.copyfileobj(incoming, output)
             else:
-                with urllib.request.urlopen(URL, timeout=120) as incoming:
-                    total = 0
-                    while chunk := incoming.read(1024 * 1024):
-                        total += len(chunk)
-                        if total > EXPECTED_BYTES:
-                            raise ValueError('u930 download exceeds expected size')
-                        output.write(chunk)
+                download(output)
             output.flush()
             os.fsync(output.fileno())
         verify(temporary)

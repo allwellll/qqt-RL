@@ -1,5 +1,7 @@
 """Input installation must reject wrong weights before they can be loaded."""
 import hashlib
+import io
+import urllib.error
 
 import pytest
 
@@ -48,3 +50,27 @@ def test_destination_symlink_is_rejected(payload):
     with pytest.raises(ValueError, match='linked'):
         assets.install(source, destination)
     assert destination.is_symlink()
+
+
+def test_download_falls_back_after_proxy_failure(payload, monkeypatch):
+    source, destination = payload
+    calls = []
+    def incoming(request, timeout):
+        calls.append(request.full_url)
+        if len(calls) == 1:
+            raise urllib.error.URLError('proxy unavailable')
+        return io.BytesIO(source.read_bytes())
+    monkeypatch.setattr(assets.urllib.request, 'urlopen', incoming)
+    assert assets.install(destination=destination) == 'installed'
+    assert destination.read_bytes() == source.read_bytes()
+    assert calls == [assets.URL, assets.API_URL]
+
+
+def test_bad_downloads_never_publish(payload, monkeypatch):
+    _, destination = payload
+    monkeypatch.setattr(assets.urllib.request, 'urlopen',
+                        lambda *a, **k: io.BytesIO(b'invalid response'))
+    with pytest.raises(ValueError, match='SHA256'):
+        assets.install(destination=destination)
+    assert not destination.exists()
+    assert not list(destination.parent.glob('.u930-*'))

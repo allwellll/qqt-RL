@@ -1,9 +1,9 @@
 {
   "schema": "qqt.carry-publication-validation/v1",
   "tests": {
-    "passed": 23,
+    "passed": 25,
     "deselected": 1,
-    "seconds": 3.54,
+    "seconds": 5.91,
     "command": "python -m pytest -o addopts= -q tests/test_dcu_carry_fast.py tests/test_fetch_dcu_carry_assets.py tests/test_kill_checkpoints.py tests/test_dcu_jax_carry.py::test_read_only_plan_and_pre_jax_stop -k 'not fast_reset'"
   },
   "default_plan": {
@@ -23,7 +23,10 @@
     "u930_bytes": 30257447,
     "portable_bundle_verified": true,
     "pickle_loaded": false,
-    "jax_imported": false
+    "jax_imported": false,
+    "release_api_digest_verified": true,
+    "release": "https://github.com/allwellll/qqt-RL/releases/tag/dcu-carry-training-20261115",
+    "download_fallback": "Public GitHub asset API; fixed size and SHA256 verified before installation"
   },
   "shell_syntax": "PASS",
   "training_started": false,
