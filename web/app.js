@@ -195,7 +195,7 @@
     if (sim.done) return;
     const move = releaseTouchControls.moveFor(sim, 0, now);
     intents[0] = sim.alive[0] ? sim.playerMoveDirection(0, move) : QQT.MOVE_IDLE;
-    sim.frameStep(0, move, dt);
+    sim.frameStep(0, move, releaseTouchControls.frameSeconds(dt));
   }
 
   function instantiateModel(document, row) {

@@ -31,6 +31,7 @@ const controls = require('./controls.js');
 }
 {
   require('./test_mobile_stick.js');
+  require('./test_mobile_tap_move.js');
   const held = new Set(['ArrowRight', 'touch:ArrowRight']);
   held.delete('touch:ArrowRight'); assert.equal(controls.moveForHeld(held), 3, 'touch release preserves keyboard');
   assert(!controls.MOVEMENT_KEYS.includes('touch:ArrowRight'), 'touch keys are not keyboard input');

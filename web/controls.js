@@ -79,7 +79,8 @@
         if(length>=deadzone){
           const angle=Math.atan2(dy,dx), index=STICK_KEYS.indexOf(old);
           const delta=index<0?Infinity:Math.abs(Math.atan2(Math.sin(angle-index*Math.PI/2),Math.cos(angle-index*Math.PI/2)));
-          direction=delta<=hysteresis*Math.PI/180?old:STICK_KEYS[(Math.round(angle/(Math.PI/2))+4)%4];
+          const nearest=Math.abs(dx)>=Math.abs(dy) ? (dx<0?'ArrowLeft':'ArrowRight') : (dy<0?'ArrowUp':'ArrowDown');
+          direction=delta<=hysteresis*Math.PI/180?old:nearest;
           const diagonal=Math.atan2(Math.abs(dy),Math.abs(dx))*180/Math.PI;
           if(diagonal>=25&&diagonal<=65){
             const horizontal=dx<0?'ArrowLeft':'ArrowRight',vertical=dy<0?'ArrowUp':'ArrowDown';
@@ -135,6 +136,7 @@
 
   function bindFloatingDirection(zone, held) {
     let pointer = null, stick = null, lastDirection = null, current = null;
+    let sampled = false, pendingTap = null, tapSeconds = null;
     const steering=createTouchSteering();
     const dial = zone.querySelector('.touch-stick');
     const paint = state => {
@@ -142,7 +144,7 @@
       if(!state.direction)steering.clear();
       for (const key of STICK_KEYS) held.delete('touch:' + key);
       if (state.direction) held.add('touch:' + state.direction);
-      const rect = zone.getBoundingClientRect(), p = state.center || state.habit;
+      const rect = zone.getBoundingClientRect(), p = state.center;
       if (p) { dial.style.left = (p.x - rect.left) + 'px'; dial.style.top = (p.y - rect.top) + 'px'; }
       else { dial.style.left = ''; dial.style.top = ''; }
       zone.dataset.direction = state.direction || '';
@@ -156,13 +158,19 @@
     };
     zone.addEventListener('pointerdown', event => {
       if (event.button !== 0 || pointer != null) return;
+      const rect=zone.getBoundingClientRect(), x=event.clientX, y=event.clientY;
+      // A narrow outer guard rejects incidental contacts at the screen/zone edge.
+      if(x<rect.left+8 || x>rect.right-8 || y<rect.top+8 || y>rect.bottom-8)return;
       event.preventDefault(); pointer = event.pointerId;
-      if (!stick) {
-        const radius = dial.getBoundingClientRect().width / 2 || 48;
-        stick = createFloatingStick({radius});
-      }
+      const radius=dial.getBoundingClientRect().width/2||48;
+      if(!stick)stick=createFloatingStick({radius});
+      const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+      const length=Math.hypot(x-cx,y-cy), tapSector=length>=radius*.18&&length<=radius;
+      sampled=false;pendingTap=null;steering.clear();
       zone.setPointerCapture(pointer);
-      paint(stick.start(event.clientX, event.clientY));
+      // Visible sectors use a stable reference. Centre/outside starts remain floating drags.
+      stick.start(tapSector?cx:x,tapSector?cy:y);
+      paint(stick.move(x,y));
     });
     zone.addEventListener('pointermove', event => {
       if (event.pointerId !== pointer) return;
@@ -176,25 +184,42 @@
     });
     const release = event => {
       if (event.pointerId !== pointer) return;
-      pointer = null; paint(stick.end());
+      pendingTap=event.type==='pointerup'&&!sampled&&current?.direction
+        ? {state:{...current},expires:performance.now()+100} : null;
+      pointer = null; paint(stick.reset());
     };
     for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) zone.addEventListener(name, release);
     const clear = () => {
       const id = pointer; pointer = null;
+      pendingTap=null;tapSeconds=null;sampled=false;
       if (stick) paint(stick.reset());
       stick = null; // Re-read the scaled radius after rotation or viewport resize.
       if (id != null && zone.hasPointerCapture?.(id)) zone.releasePointerCapture(id);
     };
     globalThis.addEventListener?.('resize', clear);
     clear.moveFor=(sim,pid,now)=>{
+      tapSeconds=null;
       let last=null;for(const key of held)if(Object.hasOwn(MOVEMENT_DIRECTIONS,key.startsWith('touch:')?key.slice(6):key))last=key;
-      if(!last?.startsWith('touch:')){steering.clear();zone.dataset.resolved='';return moveForHeld(held);}
+      const forced=!sim.alive[pid]||sim.trapped?.[pid]>0||sim.playerMoveDirection(pid,4)!==4;
+      if(!last && pendingTap){
+        const tap=pendingTap;pendingTap=null;
+        if(now<=tap.expires&&!forced){
+          steering.clear();
+          const key=steering.select(tap.state,now,mv=>nativeDirectionReachable(sim,pid,mv));
+          steering.clear();tapSeconds=1/60;
+          zone.dataset.resolved=key||'';
+          return key?MOVEMENT_DIRECTIONS[key]:4;
+        }
+      }
+      if(!last?.startsWith('touch:')){pendingTap=null;steering.clear();zone.dataset.resolved='';return moveForHeld(held);}
+      sampled=true;
       // Forced movement stays owned by the simulator and cannot queue a delayed turn.
-      if(!sim.alive[pid]||sim.trapped?.[pid]>0||sim.playerMoveDirection(pid,4)!==4){steering.clear();return moveForHeld(held);}
+      if(forced){pendingTap=null;steering.clear();return moveForHeld(held);}
       const key=steering.select(current,now,mv=>nativeDirectionReachable(sim,pid,mv));
       zone.dataset.resolved=key||'';
       return key?MOVEMENT_DIRECTIONS[key]:4;
     };
+    clear.frameSeconds=dt=>{const seconds=tapSeconds;tapSeconds=null;return seconds??dt;};
     return clear;
   }
 
@@ -225,6 +250,7 @@
     }
     const clear=() => { clearDirection(); for (const key of active.values()) held.delete(key); active.clear(); };
     clear.moveFor=clearDirection.moveFor||(()=>moveForHeld(held));
+    clear.frameSeconds=clearDirection.frameSeconds||(dt=>dt);
     return clear;
   }
 

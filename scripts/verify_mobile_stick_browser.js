@@ -13,6 +13,9 @@ const fs=require('node:fs'),assert=require('node:assert/strict');
   if(staged)for(const file of ['controls.js','app.js','style.css'])await context.route(base+file,r=>r.fulfill({path:'web/'+file,contentType:file.endsWith('css')?'text/css':'application/javascript'}));
   page.on('pageerror',e=>errors.push(e.message));
   await page.addInitScript(()=>{
+   const raf=requestAnimationFrame.bind(window),paused=[];window.tapPause=false;
+   window.requestAnimationFrame=callback=>raf(t=>{if(tapPause)paused.push(callback);else callback(t);});
+   window.resumeTapFrames=()=>{tapPause=false;for(const cb of paused.splice(0))requestAnimationFrame(cb);};
    window.addEventListener('pointerdown',e=>{if(e.target.closest?.('[data-floating-direction]'))window.lastStickPointer=e.pointerId;},true);
    window.stickFrames=[];window.stickPresses=[];window.stickSteps=[];window.stickPending=0;window.stickDelay=0;
    let controls,visual,worker;
@@ -33,6 +36,19 @@ const fs=require('node:fs'),assert=require('node:assert/strict');
   const fixture=async()=>{await page.evaluate(()=>{dispatchEvent(new Event('blur'));const s=stickSim;for(const k of ['wall','brick','cover','pushable','crate','fuse','fieldItem','blastLinger','brickLinger'])s[k].fill(0);s.owner.fill(-1);s.done=false;s.alive.fill(1);s.trapped.fill(0);s.invuln.fill(1000);s.spawnProtection.fill(0);s.movementStatus.fill(0);s.bunCarried.fill(-1);s.pos.set([6.5,4.5,11.5,13.5]);s.nativeMove=null;s.spdG[0]=1.3;s.spdG[1]=0;s.bombsCap[0]=10;s.bombsCap[1]=0;s.itemSlots[0]=[{item:1,count:3},{item:2,count:4},{item:1,count:5}];s._syncHeldItem(0);stickPresses=[];stickSteps=[];stickFrames=[];});await page.waitForTimeout(40);};
   const layout=await page.evaluate(()=>{const rect=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height};};return {zone:rect(document.querySelector('[data-floating-direction]')),dial:rect(document.querySelector('.touch-stick')),bomb:rect(document.querySelector('.touch-bomb-hit')),items:[...document.querySelectorAll('[data-touch-item]')].map(rect)};});
   const start={id:1,x:layout.zone.x+layout.zone.w*.5,y:layout.zone.y+layout.zone.h*.5},right={...start,x:start.x+30};
+  const tapCases=[];
+  for(const [dx,dy,mv,name]of [[0,-30,0,'ArrowUp'],[0,30,1,'ArrowDown'],[-30,0,2,'ArrowLeft'],[30,0,3,'ArrowRight']]){
+   await fixture();const p={...start,x:start.x+dx,y:start.y+dy};await touch('touchStart',[p]);
+   assert.equal((await state()).direction,name,'pointerdown immediately selects a visible sector');
+   await page.waitForTimeout(60);const moving=await state();await touch('touchEnd');await page.waitForTimeout(40);const stopped=await state();await page.waitForTimeout(50);
+   assert.deepEqual((await state()).pos,stopped.pos,'release does not leave continuous movement');
+   assert((mv<2?moving.pos[0]!==6.5:moving.pos[1]!==4.5),'held sector actually moves');tapCases.push(name);
+  }
+  await fixture();const beforeShort=(await state()).pos;await page.evaluate(()=>{tapPause=true;});await page.waitForTimeout(40);
+  await touch('touchStart',[right]);assert.equal((await state()).direction,'ArrowRight');await touch('touchEnd');
+  assert.deepEqual((await state()).pos,beforeShort,'down/up occurs with game rAF paused');await page.evaluate(()=>resumeTapFrames());await page.waitForTimeout(50);
+  const shortTap=await state();assert(shortTap.pos[1]>beforeShort[1]&&shortTap.pos[1]-beforeShort[1]<.15,'quick tap commits only a bounded human frame');await page.waitForTimeout(80);assert.deepEqual((await state()).pos,shortTap.pos,'quick tap cannot auto-walk');
+  await fixture();await touch('touchStart',[{...start,x:layout.zone.x+2}]);assert.equal((await state()).direction,'','edge guard rejects accidental contact');await touch('touchEnd');
   await fixture();await touch('touchStart',[start]);assert.equal((await state()).direction,'');
   await touch('touchMove',[{...start,x:start.x+3}]);assert.equal((await state()).direction,'');
   await touch('touchMove',[right]);assert.equal((await state()).direction,'ArrowRight');
@@ -66,11 +82,12 @@ const fs=require('node:fs'),assert=require('node:assert/strict');
   }
   await fixture();await page.keyboard.down('Numpad5');assert.equal(await page.evaluate(()=>QQTControls.moveForHeld(stickHeld)),0);await page.keyboard.up('Numpad5');assert.deepEqual((await state()).presses,[]);
   await page.evaluate(()=>{const e=document.createElement('input');e.id='stick-typing';document.body.append(e);});await page.locator('#stick-typing').fill('abc');await page.keyboard.press('ArrowRight');assert.equal(await page.evaluate(()=>QQTControls.moveForHeld(stickHeld)),4);
-  await page.locator('#stick-typing').evaluate(e=>e.remove());
+  await page.locator('#stick-typing').evaluate(e=>e.remove());await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(50);
   await fixture();await touch('touchStart',[start]);await touch('touchMove',[right]);await page.waitForTimeout(100);
   assert.equal(await page.evaluate(()=>getSelection().toString()),'');assert(await page.locator('[data-floating-direction]').evaluate(e=>!e.dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,cancelable:true}))));
+  assert.equal((await state()).direction,'ArrowRight');
   fs.mkdirSync('.hermes',{recursive:true});await page.screenshot({path:`.hermes/mobile-stick-${staged?'staged':'public'}.png`});await touch('touchEnd');
-  assert.deepEqual(errors,[]);const result={status:'PASS',sha:process.env.EXPECTED_SHA||null,staged,layout,responsiveness,corner,itemCases,cleanup:true,typing:true,numpad:true,errors,scope:'390x900 mobile Chromium/CDP; controlled live native scene; artificial 300ms inference delay; no physical iPhone claim; Supabase intercepted'};
+  assert.deepEqual(errors,[]);const result={status:'PASS',sha:process.env.EXPECTED_SHA||null,staged,layout,tapCases,shortTap,responsiveness,corner,itemCases,cleanup:true,typing:true,numpad:true,errors,scope:'390x900 mobile Chromium/CDP; controlled live native scene; artificial 300ms inference delay; no physical iPhone claim; Supabase intercepted'};
   fs.writeFileSync(`.hermes/mobile-stick-${staged?'staged':'public'}.json`,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

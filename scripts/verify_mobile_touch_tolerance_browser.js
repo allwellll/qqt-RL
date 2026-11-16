@@ -72,9 +72,9 @@ const {createServer} = require('../web/server');
         assert(r.y>=0 && r.y+r.height<=viewport.height,'controls fit the screen');
       }
       assert(!overlaps(layout.toolbar,layout.bombHit),'toolbar does not cover action targets');
-      const start={x:layout.zone.x+layout.zone.width*.3,y:layout.zone.y+layout.zone.height*.6,id:1};
+      const start={x:layout.zone.x+layout.zone.width*.5,y:layout.zone.y+layout.zone.height*.5,id:1};
       const moved={...start,x:start.x+32};
-      await touch('touchStart',[start]);assert.equal((await state()).move,4,'off-center down defines a new center');
+      await touch('touchStart',[start]);assert.equal((await state()).move,4,'centre down starts a neutral floating drag');
       await touch('touchMove',[{...start,x:start.x+3}]);assert.equal((await state()).move,4,'3px stays below activation distance');
       await touch('touchMove',[{...start,x:start.x+layout.deadzone+1}]);assert.equal((await state()).move,3,'18% radial deadzone activates');
       await touch('touchMove',[moved]);assert.equal((await state()).move,3);
