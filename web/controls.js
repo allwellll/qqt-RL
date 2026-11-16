@@ -61,67 +61,93 @@
   }
 
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
-  // A short stroke expresses intent, independent of the displayed dial center.
-  // Forget completed travel so a small turn/reversal works anywhere on screen.
-  function createFloatingStick({radius = 48, deadzone = 4, turnDistance = 3, hysteresis = 4} = {}) {
-    let center = null, habit = null, direction = null, last = null, stroke = null;
-    const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction});
-    const heading = (dx, dy) => {
-      const angle = Math.atan2(dy, dx), old = STICK_KEYS.indexOf(direction);
-      const delta = old < 0 ? Infinity : Math.abs(Math.atan2(
-        Math.sin(angle - old * Math.PI / 2), Math.cos(angle - old * Math.PI / 2)));
-      return delta <= (45 + hysteresis) * Math.PI / 180 ? direction :
-        STICK_KEYS[(Math.round(angle / (Math.PI / 2)) + 4) % 4];
-    };
+  // Radial intent is measured from the real floating centre, never event deltas.
+  function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58} = {}) {
+    let center = null, habit = null, direction = null, secondary = null, changedAt = 0;
+    const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction, secondary, changedAt});
     return {
-      start(x, y) {
-        center = {x, y}; habit = {x, y}; direction = null; stroke = null;
-        last = {x, y};
+      start(x, y, now = performance.now()) {
+        center = habit = {x,y}; direction = secondary = null; changedAt = now;
         return snapshot();
       },
-      move(x, y) {
-        if (!last) return snapshot();
-        const dx = x - last.x, dy = y - last.y;
-        if (dx || dy) {
-          const next = heading(dx, dy);
-          if (next === direction) stroke = null;
-          else {
-            // Only coherent displacement accumulates. Reversing jitter resets it;
-            // a slow deliberate stroke still works at any pointer event rate.
-            if (!stroke || stroke.direction !== next)
-              stroke = {x: last.x, y: last.y, direction: next};
-            const sx = x - stroke.x, sy = y - stroke.y;
-            if (Math.hypot(sx, sy) >= (direction ? turnDistance : deadzone) && heading(sx, sy) === next) {
-              direction = next; stroke = null;
-            }
+      move(x, y, now = performance.now()) {
+        if (!center) return snapshot();
+        let dx=x-center.x, dy=y-center.y, length=Math.hypot(dx,dy);
+        if(length>radius){center={x:x-dx*radius/length,y:y-dy*radius/length};dx=x-center.x;dy=y-center.y;length=radius;}
+        const old=direction, oldSecondary=secondary;
+        direction=secondary=null;
+        if(length>=deadzone){
+          const angle=Math.atan2(dy,dx), index=STICK_KEYS.indexOf(old);
+          const delta=index<0?Infinity:Math.abs(Math.atan2(Math.sin(angle-index*Math.PI/2),Math.cos(angle-index*Math.PI/2)));
+          direction=delta<=hysteresis*Math.PI/180?old:STICK_KEYS[(Math.round(angle/(Math.PI/2))+4)%4];
+          const diagonal=Math.atan2(Math.abs(dy),Math.abs(dx))*180/Math.PI;
+          if(diagonal>=25&&diagonal<=65){
+            const horizontal=dx<0?'ArrowLeft':'ArrowRight',vertical=dy<0?'ArrowUp':'ArrowDown';
+            secondary=direction===horizontal?vertical:horizontal;
           }
-          last = {x, y};
         }
-        // Feedback follows the finger, slightly behind the accepted direction.
-        // Its position never feeds back into input or character movement.
-        const offset = Math.min(radius * .35, 16);
-        center = {x: x - (direction === 'ArrowRight' ? offset : direction === 'ArrowLeft' ? -offset : 0),
-          y: y - (direction === 'ArrowDown' ? offset : direction === 'ArrowUp' ? -offset : 0)};
+        if(old!==direction||oldSecondary!==secondary)changedAt=now;
         return snapshot();
       },
-      end() {
-        habit = center && {...center}; center = null; direction = null; last = stroke = null;
-        return snapshot();
-      },
-      reset() { center = habit = direction = last = stroke = null; return snapshot(); },
+      end(now = performance.now()) { habit=center&&{...center};center=null;direction=secondary=null;changedAt=now;return snapshot(); },
+      reset(now = performance.now()) { center=habit=direction=secondary=null;changedAt=now;return snapshot(); },
     };
   }
 
+  // Read-only native projection-step probe. _nativeResolve may edit its state argument,
+  // so give it a private copy. No step, touch clock, RNG, push or field contact.
+  function nativeDirectionReachable(sim, pid, move) {
+    if(!sim.alive[pid] || sim.trapped?.[pid]>0 || typeof sim._nativeResolve!=='function')return false;
+    const original=sim.nativeMove?.[pid];
+    const state={...original,wallExit:original?.wallExit?{...original.wallExit}:null};
+    const x=Math.round(sim.pos[pid*2+1]*40),y=Math.round(sim.pos[pid*2]*40);
+    const distance=Math.max(1,Math.min(40,Math.ceil(sim._nativeSpeedPx(pid)*.025)));
+    const [nx,ny]=sim._nativeResolve(state,x,y,move,distance,true);
+    // Existing corner alignment counts as reachable; actual frameStep owns the move.
+    return nx!==x||ny!==y;
+  }
+
+  function createTouchSteering({bufferMs=160}={}) {
+    let signature=null, travel=null, pending=null, until=0;
+    const clear=()=>{signature=travel=pending=null;until=0;};
+    return {clear, select(state,now,reachable) {
+      if(!state?.direction){clear();return null;}
+      const candidates=[state.direction,state.secondary].filter(Boolean);
+      const perpendicular=(a,b)=>a&&b&&((MOVEMENT_DIRECTIONS[a]<2)!==(MOVEMENT_DIRECTIONS[b]<2));
+      const next=candidates.join(':');
+      if(signature!==next){
+        signature=next;
+        const target=candidates.find(key=>perpendicular(travel,key));
+        pending=target||null;until=(state.changedAt??now)+bufferMs;
+        if(!target)travel=state.direction; // Includes immediate opposite-direction input.
+      }
+      if(pending&&now<=until){
+        if(reachable(MOVEMENT_DIRECTIONS[pending])){travel=pending;pending=null;return travel;}
+        if(travel&&reachable(MOVEMENT_DIRECTIONS[travel]))return travel;
+      } else pending=null;
+      // A completed diagonal turn stays chosen until intent changes, not alternate every frame.
+      if(travel&&candidates.includes(travel)&&reachable(MOVEMENT_DIRECTIONS[travel]))return travel;
+      if(reachable(MOVEMENT_DIRECTIONS[state.direction]))return travel=state.direction;
+      if(state.secondary&&reachable(MOVEMENT_DIRECTIONS[state.secondary]))return travel=state.secondary;
+      return state.direction; // Still face a wall/bubble; never fabricate movement.
+    }};
+  }
+
   function bindFloatingDirection(zone, held) {
-    let pointer = null, stick = null, lastDirection = null;
+    let pointer = null, stick = null, lastDirection = null, current = null;
+    const steering=createTouchSteering();
     const dial = zone.querySelector('.touch-stick');
     const paint = state => {
+      current=state;
+      if(!state.direction)steering.clear();
       for (const key of STICK_KEYS) held.delete('touch:' + key);
       if (state.direction) held.add('touch:' + state.direction);
       const rect = zone.getBoundingClientRect(), p = state.center || state.habit;
       if (p) { dial.style.left = (p.x - rect.left) + 'px'; dial.style.top = (p.y - rect.top) + 'px'; }
       else { dial.style.left = ''; dial.style.top = ''; }
       zone.dataset.direction = state.direction || '';
+      zone.dataset.secondary = state.secondary || '';
+      zone.dataset.resolved = '';
       zone.dataset.active = pointer == null ? 'false' : 'true';
       if (state.direction && state.direction !== lastDirection) {
         try { globalThis.navigator?.vibrate?.(8); } catch (_) { /* Optional feedback. */ }
@@ -160,6 +186,15 @@
       if (id != null && zone.hasPointerCapture?.(id)) zone.releasePointerCapture(id);
     };
     globalThis.addEventListener?.('resize', clear);
+    clear.moveFor=(sim,pid,now)=>{
+      let last=null;for(const key of held)if(Object.hasOwn(MOVEMENT_DIRECTIONS,key.startsWith('touch:')?key.slice(6):key))last=key;
+      if(!last?.startsWith('touch:')){steering.clear();zone.dataset.resolved='';return moveForHeld(held);}
+      // Forced movement stays owned by the simulator and cannot queue a delayed turn.
+      if(!sim.alive[pid]||sim.trapped?.[pid]>0||sim.playerMoveDirection(pid,4)!==4){steering.clear();return moveForHeld(held);}
+      const key=steering.select(current,now,mv=>nativeDirectionReachable(sim,pid,mv));
+      zone.dataset.resolved=key||'';
+      return key?MOVEMENT_DIRECTIONS[key]:4;
+    };
     return clear;
   }
 
@@ -188,9 +223,11 @@
       });
       for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) button.addEventListener(name, release);
     }
-    return () => { clearDirection(); for (const key of active.values()) held.delete(key); active.clear(); };
+    const clear=() => { clearDirection(); for (const key of active.values()) held.delete(key); active.clear(); };
+    clear.moveFor=clearDirection.moveFor||(()=>moveForHeld(held));
+    return clear;
   }
 
   return { MOVEMENT_KEYS, MOVEMENT_DIRECTIONS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld,
-    isTypingTarget, isRestartKey, createRestartGate, touchItemPage, createFloatingStick, bindTouchControls };
+    isTypingTarget, isRestartKey, createRestartGate, touchItemPage, createFloatingStick, nativeDirectionReachable, createTouchSteering, bindTouchControls };
 });

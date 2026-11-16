@@ -193,7 +193,7 @@
     const dt = Math.min((now - prevFrame) / 1000 || 0, 0.25);
     prevFrame = now;
     if (sim.done) return;
-    const move = QQTControls.moveForHeld(held);
+    const move = releaseTouchControls.moveFor(sim, 0, now);
     intents[0] = sim.alive[0] ? sim.playerMoveDirection(0, move) : QQT.MOVE_IDLE;
     sim.frameStep(0, move, dt);
   }

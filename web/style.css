@@ -176,6 +176,8 @@ body.game-immersive { position: fixed; top: var(--game-scroll-top, 0px); left: 0
   [data-arrow="ArrowLeft"] { left: 3px; top: calc(50% - 16px); }
   [data-arrow="ArrowRight"] { right: 3px; top: calc(50% - 16px); }
   [data-direction="ArrowUp"] [data-arrow="ArrowUp"], [data-direction="ArrowDown"] [data-arrow="ArrowDown"], [data-direction="ArrowLeft"] [data-arrow="ArrowLeft"], [data-direction="ArrowRight"] [data-arrow="ArrowRight"] { color: #63ffe0; text-shadow: 0 0 8px #63ffe0; }
+  .touch-directions[data-secondary="ArrowUp"] [data-arrow="ArrowUp"], .touch-directions[data-secondary="ArrowDown"] [data-arrow="ArrowDown"], .touch-directions[data-secondary="ArrowLeft"] [data-arrow="ArrowLeft"], .touch-directions[data-secondary="ArrowRight"] [data-arrow="ArrowRight"] { color: #e8ca76; }
+  .touch-directions[data-resolved="ArrowUp"] [data-arrow="ArrowUp"], .touch-directions[data-resolved="ArrowDown"] [data-arrow="ArrowDown"], .touch-directions[data-resolved="ArrowLeft"] [data-arrow="ArrowLeft"], .touch-directions[data-resolved="ArrowRight"] [data-arrow="ArrowRight"] { color: #63ffe0; text-shadow: 0 0 8px #63ffe0; }
   .touch-actions { position: absolute; right: max(8px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(3, var(--touch-size)); gap: 10px 4px; justify-items: center; pointer-events: none; }
   .touch-controls button { box-sizing: border-box; height: var(--touch-size); min-height: 48px; width: var(--touch-size); min-width: 48px; margin: 0; padding: 4px; touch-action: none; font-size: 20px; font-weight: bold; background: #132234; color: white; border: 2px solid #b6c9dd; border-radius: 12px; pointer-events: auto; }
   .touch-controls button:active { background: #245c68; }

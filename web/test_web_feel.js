@@ -596,7 +596,7 @@ assert(!/steerReduced/.test(appSource), 'app.js 必须已移除 steerReduced 接
 assert(/\[QQT\.MOVE_IDLE, bombCell >= 0 \? 1 : 0, itemCell >= 0 \? 1 : 0, 1, bombCell, itemCell, itemSlot\]/.test(appSource),
   'humanAction 必须返回第4位=1（跳过 10Hz 移动，改由 rAF frameStep）');
 assert(!/autoTurn|turnSlide/.test(appSource), 'app.js 必须移除 autoTurn（拐角修正由原版物理负责）');
-assert(/const move = QQTControls\.moveForHeld\(held\);[\s\S]*?sim\.frameStep\(0, move, dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
+assert(/const move = releaseTouchControls\.moveFor\(sim, 0, now\);[\s\S]*?sim\.frameStep\(0, move, dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
 assert(/intents\[0\] = sim\.alive\[0\] \? sim\.playerMoveDirection\(0, move\)/.test(appSource), 'rAF 必须把按键意图交给渲染器定朝向');
 assert(/humanPid: localHumanControls\(\) \? 0 : -1/.test(appSource),
   'motionState 必须传 humanPid（本地人类 raw / 观战回放插值）');
