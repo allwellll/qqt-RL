@@ -66,8 +66,8 @@
     let center = null, habit = null, direction = null, secondary = null, changedAt = 0;
     const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction, secondary, changedAt});
     return {
-      start(x, y, now = performance.now()) {
-        center = habit = {x,y}; direction = secondary = null; changedAt = now;
+      start(x, y, now = performance.now(), initialDirection = null) {
+        center = habit = {x,y}; direction = initialDirection; secondary = null; changedAt = now;
         return snapshot();
       },
       move(x, y, now = performance.now()) {
@@ -137,6 +137,8 @@
   function bindFloatingDirection(zone, held) {
     let pointer = null, stick = null, lastDirection = null, current = null;
     let sampled = false, pendingTap = null, tapSeconds = null;
+    const pointers=new Map();
+    let visibleCenter=null, lastTouch=null;
     const steering=createTouchSteering();
     const dial = zone.querySelector('.touch-stick');
     const paint = state => {
@@ -144,7 +146,8 @@
       if(!state.direction)steering.clear();
       for (const key of STICK_KEYS) held.delete('touch:' + key);
       if (state.direction) held.add('touch:' + state.direction);
-      const rect = zone.getBoundingClientRect(), p = state.center;
+      const rect = zone.getBoundingClientRect(), p = state.center || visibleCenter;
+      if(state.center)visibleCenter={...state.center};
       if (p) { dial.style.left = (p.x - rect.left) + 'px'; dial.style.top = (p.y - rect.top) + 'px'; }
       else { dial.style.left = ''; dial.style.top = ''; }
       zone.dataset.direction = state.direction || '';
@@ -156,46 +159,91 @@
       }
       lastDirection = state.direction;
     };
+    const stale=(event,record)=>Number.isFinite(event.timeStamp)&&event.timeStamp<record.since;
+    const relativeHeading=(x,y,center,previous,direction)=>{
+      const dx=x-center.x,dy=y-center.y,angle=Math.atan2(Math.abs(dy),Math.abs(dx))*180/Math.PI;
+      const horizontal=dx<0?'ArrowLeft':'ArrowRight',vertical=dy<0?'ArrowUp':'ArrowDown';
+      if(angle<35)return horizontal;
+      if(angle>55)return vertical;
+      // Only an ambiguous diagonal uses a clear inter-touch displacement or
+      // the active direction. Strong cardinal positions always win afresh.
+      if(previous){
+        const px=x-previous.x,py=y-previous.y;
+        if(Math.hypot(px,py)>=8){
+          if(Math.abs(px)>=Math.abs(py)*1.5&&(px<0?'ArrowLeft':'ArrowRight')===horizontal)return horizontal;
+          if(Math.abs(py)>=Math.abs(px)*1.5&&(py<0?'ArrowUp':'ArrowDown')===vertical)return vertical;
+        }
+      }
+      if(direction===horizontal||direction===vertical)return direction;
+      return Math.abs(dx)>=Math.abs(dy)?horizontal:vertical;
+    };
+    const take=(id,record,center,hint=null)=>{
+      const old=pointers.get(pointer);
+      if(old){old.anchorX=old.x;old.anchorY=old.y;}
+      pointer=id;sampled=false;pendingTap=null;steering.clear();
+      stick.start(center.x,center.y,performance.now(),hint);
+      paint(stick.move(record.x,record.y));
+    };
     zone.addEventListener('pointerdown', event => {
-      if (event.button !== 0 || pointer != null) return;
-      const rect=zone.getBoundingClientRect(), x=event.clientX, y=event.clientY;
-      // A narrow outer guard rejects incidental contacts at the screen/zone edge.
-      if(x<rect.left+8 || x>rect.right-8 || y<rect.top+8 || y>rect.bottom-8)return;
-      event.preventDefault(); pointer = event.pointerId;
+      if(event.button!==0||pointers.has(event.pointerId))return;
+      const rect=zone.getBoundingClientRect(),x=event.clientX,y=event.clientY;
+      if(x<rect.left+8||x>rect.right-8||y<rect.top+8||y>rect.bottom-8)return;
+      event.preventDefault();
       const radius=dial.getBoundingClientRect().width/2||48;
       if(!stick)stick=createFloatingStick({radius});
-      const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
-      const length=Math.hypot(x-cx,y-cy), tapSector=length>=radius*.18&&length<=radius;
-      sampled=false;pendingTap=null;steering.clear();
-      zone.setPointerCapture(pointer);
-      // Visible sectors use a stable reference. Centre/outside starts remain floating drags.
-      stick.start(tapSector?cx:x,tapSector?cy:y);
-      paint(stick.move(x,y));
+      const center=visibleCenter||{x:rect.left+rect.width/2,y:rect.top+rect.height/2};
+      const record={x,y,anchorX:x,anchorY:y,since:event.timeStamp??0};
+      const old=pointers.get(pointer),previous=old||(lastTouch&&performance.now()-lastTouch.time<=200?lastTouch:null);
+      pointers.set(event.pointerId,record);zone.setPointerCapture(event.pointerId);
+      if(Math.hypot(x-center.x,y-center.y)<radius*.18){
+        // Neutral new finger can start a drag, but cannot interrupt an owner.
+        if(pointer==null&&!current?.direction)take(event.pointerId,record,center);
+        return;
+      }
+      take(event.pointerId,record,center,relativeHeading(x,y,center,previous,current?.direction));
     });
     zone.addEventListener('pointermove', event => {
-      if (event.pointerId !== pointer) return;
+      const record=pointers.get(event.pointerId);
+      if(!record||stale(event,record))return;
       event.preventDefault();
-      // Preserve short turns that the browser bundled into one pointer event.
-      const samples = event.getCoalescedEvents?.();
+      const samples=event.getCoalescedEvents?.();
       let state;
-      for (const sample of samples?.length ? samples : [event])
-        state = stick.move(sample.clientX, sample.clientY);
-      paint(state);
+      for(const sample of samples?.length?samples:[event]){
+        record.x=sample.clientX;record.y=sample.clientY;
+        if(event.pointerId!==pointer){
+          const radius=dial.getBoundingClientRect().width/2||48;
+          if(Math.hypot(record.x-record.anchorX,record.y-record.anchorY)<Math.max(12,radius*.25))continue;
+          // A suspended finger must deliberately drag; rebase at its suspension
+          // point so its old absolute offset cannot pull the direction back.
+          take(event.pointerId,record,{x:record.anchorX,y:record.anchorY});
+        }
+        state=stick.move(record.x,record.y);
+      }
+      if(state)paint(state);
     });
-    const release = event => {
-      if (event.pointerId !== pointer) return;
-      pendingTap=event.type==='pointerup'&&!sampled&&current?.direction
-        ? {state:{...current},expires:performance.now()+100} : null;
-      pointer = null; paint(stick.reset());
-    };
-    for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) zone.addEventListener(name, release);
     const clear = () => {
-      const id = pointer; pointer = null;
-      pendingTap=null;tapSeconds=null;sampled=false;
-      if (stick) paint(stick.reset());
-      stick = null; // Re-read the scaled radius after rotation or viewport resize.
-      if (id != null && zone.hasPointerCapture?.(id)) zone.releasePointerCapture(id);
+      const ids=[...pointers.keys()];pointers.clear();pointer=null;
+      pendingTap=null;tapSeconds=null;sampled=false;visibleCenter=lastTouch=null;
+      if(stick)paint(stick.reset());
+      stick=null;
+      for(const id of ids)if(zone.hasPointerCapture?.(id))zone.releasePointerCapture(id);
     };
+    const release=event=>{
+      const record=pointers.get(event.pointerId);
+      if(!record||stale(event,record))return;
+      if(event.type==='pointercancel'){clear();return;}
+      if(event.type==='lostpointercapture'){
+        if(event.pointerId===pointer)clear();else pointers.delete(event.pointerId);
+        return;
+      }
+      pointers.delete(event.pointerId);
+      if(event.pointerId!==pointer)return;
+      pendingTap=!sampled&&current?.direction?{state:{...current},expires:performance.now()+100}:null;
+      lastTouch={x:record.x,y:record.y,time:performance.now()};
+      pointer=null;paint(stick.reset());
+      // Other fingers stay suspended. Releasing the newest finger never restores them.
+    };
+    for(const name of ['pointerup','pointercancel','lostpointercapture'])zone.addEventListener(name,release);
     globalThis.addEventListener?.('resize', clear);
     clear.moveFor=(sim,pid,now)=>{
       tapSeconds=null;

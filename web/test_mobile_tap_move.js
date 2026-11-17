@@ -16,14 +16,14 @@ for(const [x,y,mv]of [[110,100,0],[110,180,1],[70,140,2],[150,140,3]]){
  assert.equal(C.moveForHeld(held),mv,'down chooses the visible sector synchronously');
  assert.equal(input.moveFor(sim,0,performance.now()),mv);sim.frameStep(0,mv,input.frameSeconds(.016));
  event('pointerup',x,y);assert.equal(C.moveForHeld(held),4);assert.equal(input.moveFor(sim,0,performance.now()),4,'sampled holds do not queue release movement');
- assert.equal(dial.style.left,'');assert.equal(dial.style.top,'','released dial returns to stable reference');
+ assert.equal(dial.style.left,'100px');assert.equal(dial.style.top,'120px','released dial retains the visible reference');
 }
 {
  const f=fixture();for(const [x,y]of [[110,140],[112,142],[12,140],[110,22],[208,140],[110,258]]){
-  f.event('pointerdown',x,y);assert.equal(C.moveForHeld(f.held),4,'centre/edge contacts do not start movement');f.event('pointerup',x,y);assert.equal(f.input.moveFor(f.sim,0,performance.now()),4);
+  f.event('pointerdown',x,y);assert.equal(C.moveForHeld(f.held),4,'centre/edge contacts do not start movement');f.event('pointerup',x,y);assert.equal(f.input.moveFor(f.sim,0,performance.now()),4);f.input();
  }
- f.event('pointerdown',50,80);assert.equal(C.moveForHeld(f.held),4,'outside visible disc starts a neutral floating drag');
- f.event('pointermove',80,80);assert.equal(C.moveForHeld(f.held),3);f.event('pointermove',170,80);assert.equal(f.dial.style.left,'112px','drag centre follows beyond radius');f.input();
+ f.event('pointerdown',110,140);assert.equal(C.moveForHeld(f.held),4,'centre touch starts a neutral floating drag');
+ f.event('pointermove',140,140);assert.equal(C.moveForHeld(f.held),3);f.event('pointermove',200,140);assert.equal(f.dial.style.left,'142px','drag centre follows beyond radius');f.input();
 }
 {
  const f=fixture();f.event('pointerdown');f.event('pointerup');const t=f.sim.t,x=f.sim.pos[1];
