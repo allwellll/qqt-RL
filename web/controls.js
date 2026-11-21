@@ -277,7 +277,7 @@
 
   function bindTouchControls(root, held, onPress, options = {}) {
     const active = new Map();
-    const zone = root.querySelector?.('[data-floating-direction]');
+    const zone = root.matches?.('[data-floating-direction]') ? root : root.querySelector?.('[data-floating-direction]');
     const clearDirection = zone ? bindFloatingDirection(zone, held, options) : () => {};
     const release = event => {
       const key = active.get(event.pointerId);
@@ -287,6 +287,10 @@
     // Restrict browser gesture suppression to the game controls.
     for (const name of ['contextmenu', 'selectstart', 'dragstart'])
       root.addEventListener?.(name, event => event.preventDefault());
+    if (zone && zone !== root) {
+      for (const name of ['contextmenu', 'selectstart', 'dragstart'])
+        zone.addEventListener?.(name, event => event.preventDefault());
+    }
     for (const button of root.querySelectorAll('[data-control-key]')) {
       button.addEventListener('pointerdown', event => {
         if (event.button != null && event.button !== 0) return;
