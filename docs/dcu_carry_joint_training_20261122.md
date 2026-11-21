@@ -1,0 +1,18 @@
+# 运包者与拦截者交替协同训练（2026-11-22）
+
+固定 u104 会让运包者只适应单一防守策略。本轮改为交替更新：先更新运包 Actor，冻结当前拦截检查点；再更新拦截 Actor，冻结刚保存的运包检查点；如此循环。每个 PPO 段内对手保持不变，段与段之间刷新，因此仍可复现每段指标，同时避免长期固定对手。
+
+起点是运包 `u000587` 和拦截 `u000104`。每段 20 次更新，6 个运包段与 6 个拦截段交替，共 12 段。每段使用 8 卡、每卡 2048 环境、64 tick、前向分块 2048、PPO minibatch 2048、fused collector；每段最多 45 分钟。每个段只保存 Actor、Critic 和元数据，不保存优化器。新任务目录下的 `courier-s01`、`interceptor-s01` 等分别记录阶段；下一个段只读取上一段的 Actor/Critic，Adam 重新初始化。
+
+启动：
+
+```bash
+bash scripts/launch_dcu_jax_carry_joint_8card.sh \
+  runs/carry-joint-u587-u104-20261122
+```
+
+`interceptor` 阶段使用 `--courier-opponent` 接收上一段运包检查点；该对手在当前段冻结。`courier` 阶段使用 `--interceptor` 接收上一段拦截检查点。每段完成后才切换下一方，任何一段异常都会停止整个流程，不会自动跳过坏检查点。
+
+本次已启动的任务目录为 `runs/carry-joint-u587-u104-20261122b`（8 卡 DCU，首段 `courier-s01`）。实际启动参数固定为 `--envs 2048 --minibatch 2048 --policy-chunk 2048 --value-chunk 2048`；首个更新包含一次性编译开销，后续实测约 48k 全局环境步/秒。检查点目录只保存 `actor.pt`、`critic.pt` 和 `CHECKPOINT.json`，不保存优化器状态；`LATEST.json`、`updates.jsonl` 是接手和监控入口。
+
+主要观察指标是交付胜率、携包者击杀、掉包和自死。最终评估必须使用没有进入交替训练的冻结拦截模型和新种子，且只有把对方包子交回己方笼子才算运包胜利；包子掉在外面或超时未交付都算平局。

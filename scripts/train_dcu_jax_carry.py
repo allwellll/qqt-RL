@@ -43,6 +43,10 @@ LEGACY_SOURCES = {
     'qqt_rl/training/jax_carry_collect.py': 'a891bef9d3d283bb40a46d07f19a986486b906908125e6bc7b4b5310fc1bf6b3',
     'qqt_rl/training/jax_carry_fast.py': '67fae084167f2cb71cd42c49b5edd3c8c653dcbb5a8c6506af149b3e408d412f',
 }
+TRUSTED_TRAIN_SOURCE_SHAS = {
+    # Checkpoints created before the joint alternating trainer was added.
+    '9e63c3946920f645b72f131a83124488aacec359476a237224fb3f17970c4748',
+}
 
 
 def seed_path(a):
@@ -74,6 +78,8 @@ def arguments(argv=None):
     p.add_argument('--interceptor-start', choices=DUEL_SEEDS, help='stage A duel Actor (default: u930)')
     p.add_argument('--interceptor-actor', type=Path, help='alternate path for the pinned stage A Actor')
     p.add_argument('--interceptor', type=Path, help='chosen stage-A checkpoint directory; omitted uses original u930')
+    p.add_argument('--courier-opponent', type=Path,
+                   help='stage A: frozen courier checkpoint used while updating an interceptor')
     p.add_argument('--defender', type=Path, action='append', default=[], metavar='CHECKPOINT',
                    help='stage B: repeat to mix trained stage-A checkpoints from distinct duel seeds')
     p.add_argument('--checkpoint', type=Path, help='Actor/Critic warm start from the SAME stage')
@@ -107,6 +113,8 @@ def arguments(argv=None):
         p.error('invalid hours/seed')
     if a.stage == 'interceptor' and (a.interceptor or a.defender):
         p.error('--interceptor and --defender apply only to stage B (courier)')
+    if a.stage == 'courier' and a.courier_opponent:
+        p.error('--courier-opponent applies only to stage A (interceptor)')
     if a.stage == 'courier' and (a.interceptor_start or a.interceptor_actor):
         p.error('--interceptor-start and --interceptor-actor apply only to stage A (interceptor)')
     if a.interceptor and a.defender:
@@ -158,6 +166,7 @@ def plan(a):
                 opponent_fractions={row['id']: row['envs_per_device']/a.envs for row in pool},
                 opponent_pool=pool, critic_warmup_updates=a.critic_warmup,
                 opponents_frozen=True, online_selfplay=False,
+                alternating_segment=True,
                 interceptor=(str(a.interceptor) if a.interceptor else
                              'league' if a.defender else 'original_u930'),
                 interceptor_transport_allowed=False, normal_opponent_transport_allowed=True,
@@ -213,12 +222,23 @@ def read_checkpoint(path, stage):
         raise ValueError('Checkpoint source list mismatch')
     for f, expected in sources.items():
         actual = LEGACY_SOURCES[f] if legacy and f in LEGACY_SOURCES else sha(ROOT/f)
+        if f == 'scripts/train_dcu_jax_carry.py' and expected in TRUSTED_TRAIN_SOURCE_SHAS:
+            continue
         if actual != expected:
             raise ValueError('Checkpoint source mismatch: ' + f)
     return meta
 
 
 def opponent_pool(a):
+    if a.stage == 'interceptor':
+        if a.courier_opponent:
+            meta = read_checkpoint(a.courier_opponent, 'courier')
+            return [dict(id='courier:u' + f'{int(meta["update"]):06d}',
+                         envs_per_device=a.envs, can_transport=True,
+                         checkpoint=str(a.courier_opponent), seed='courier',
+                         actor_sha256=meta['actor_sha256'])]
+        return [dict(id='SP_web', envs_per_device=a.envs, can_transport=True,
+                     actor_sha256=SP_SHA, checkpoint=None)]
     counts = opponent_counts(a.envs, a.stage, a.interceptor_fraction, max(1, len(a.defender)))
     pool = []
     for position, path in enumerate(a.defender or [a.interceptor]):
@@ -269,9 +289,8 @@ def run(a, started):
             raise ValueError('SP_web identity changed')
         sp = portable.load_actor(protocol, 'SP_web')
         pool = config['opponent_pool']
-        opponents = [load_verified(Path(row['checkpoint'])/'actor.pt' if row['checkpoint'] else a.u930,
-                                   row['actor_sha256'], sp) if row['envs_per_device'] else sp
-                     for row in pool[:-1]] + [sp]
+        opponents = [load_verified(Path(row['checkpoint'])/'actor.pt', row['actor_sha256'], sp)
+                     if row.get('checkpoint') else sp for row in pool]
         seed_actor = (load_verified(seed_path(a), config['initial_actor_sha256'], sp)
                       if a.stage == 'interceptor' else sp)
         params = portable.fresh_parameters(seed_actor, a.seed)
@@ -286,14 +305,15 @@ def run(a, started):
                       warm_start=str(a.checkpoint) if a.checkpoint else None,
                       fresh_adam=True, fresh_critic=not bool(a.checkpoint), jax=jax.__version__)
         init_opt, _, update = build(actor_critic_forward, devices, a.minibatch)
+        collector_defenders = 1 if a.stage == 'interceptor' else len(pool) - 1
         if a.collector == 'baseline':
             init_world, collect = collector(devices, a.envs, a.ticks, stage=a.stage,
-                                            interceptor_fraction=a.interceptor_fraction, defenders=len(pool)-1)
+                                            interceptor_fraction=a.interceptor_fraction, defenders=collector_defenders)
         else:
             from qqt_rl.training.jax_carry_fast import build as fast_collector
             init_world, collect = fast_collector(devices, a.envs, a.ticks, stage=a.stage,
                 interceptor_fraction=a.interceptor_fraction, fused=a.collector=='fused',
-                value_chunk=a.value_chunk, policy_chunk=a.policy_chunk, defenders=len(pool)-1)
+                value_chunk=a.value_chunk, policy_chunk=a.policy_chunk, defenders=collector_defenders)
         adam_host = init_opt(params)
         bank_host = jax.tree.map(lambda *models: j.stack(models), *opponents)
     rep = lambda x: jax.device_put_replicated(x, devices)

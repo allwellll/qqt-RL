@@ -61,39 +61,54 @@
   }
 
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
-  // Geometry in CSS pixels, separate from DOM events and keyboard holds.
-  function createFloatingStick({radius = 48, deadzone = 10, resumeMs = 250, hysteresis = 15} = {}) {
-    let center = null, habit = null, direction = null, previous = null, released = -Infinity;
+  // A short stroke expresses intent, independent of the displayed dial center.
+  // Forget completed travel so a small turn/reversal works anywhere on screen.
+  function createFloatingStick({radius = 48, deadzone = 4, turnDistance = 3, hysteresis = 4} = {}) {
+    let center = null, habit = null, direction = null, last = null, stroke = null;
     const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction});
+    const heading = (dx, dy) => {
+      const angle = Math.atan2(dy, dx), old = STICK_KEYS.indexOf(direction);
+      const delta = old < 0 ? Infinity : Math.abs(Math.atan2(
+        Math.sin(angle - old * Math.PI / 2), Math.cos(angle - old * Math.PI / 2)));
+      return delta <= (45 + hysteresis) * Math.PI / 180 ? direction :
+        STICK_KEYS[(Math.round(angle / (Math.PI / 2)) + 4) % 4];
+    };
     return {
-      start(x, y, now) {
-        center = {x, y};
-        const distant = !habit || Math.hypot(x - habit.x, y - habit.y) > 1.5 * radius;
-        habit = distant ? {x, y} : {x: habit.x * .75 + x * .25, y: habit.y * .75 + y * .25};
-        direction = now - released < resumeMs ? previous : null;
+      start(x, y) {
+        center = {x, y}; habit = {x, y}; direction = null; stroke = null;
+        last = {x, y};
         return snapshot();
       },
       move(x, y) {
-        if (!center) return snapshot();
-        const dx = x - center.x, dy = y - center.y, distance = Math.hypot(dx, dy);
-        if (distance < deadzone) direction = null;
-        else {
-          const angle = Math.atan2(dy, dx), old = STICK_KEYS.indexOf(direction);
-          const delta = old < 0 ? Infinity : Math.abs(Math.atan2(Math.sin(angle - old * Math.PI / 2), Math.cos(angle - old * Math.PI / 2)));
-          if (delta > (45 + hysteresis) * Math.PI / 180)
-            direction = STICK_KEYS[(Math.round(angle / (Math.PI / 2)) + 4) % 4];
-          if (distance > radius) {
-            const follow = Math.min((distance - radius) * .18, radius * .25) / distance;
-            center.x += dx * follow; center.y += dy * follow;
+        if (!last) return snapshot();
+        const dx = x - last.x, dy = y - last.y;
+        if (dx || dy) {
+          const next = heading(dx, dy);
+          if (next === direction) stroke = null;
+          else {
+            // Only coherent displacement accumulates. Reversing jitter resets it;
+            // a slow deliberate stroke still works at any pointer event rate.
+            if (!stroke || stroke.direction !== next)
+              stroke = {x: last.x, y: last.y, direction: next};
+            const sx = x - stroke.x, sy = y - stroke.y;
+            if (Math.hypot(sx, sy) >= (direction ? turnDistance : deadzone) && heading(sx, sy) === next) {
+              direction = next; stroke = null;
+            }
           }
+          last = {x, y};
         }
+        // Feedback follows the finger, slightly behind the accepted direction.
+        // Its position never feeds back into input or character movement.
+        const offset = Math.min(radius * .35, 16);
+        center = {x: x - (direction === 'ArrowRight' ? offset : direction === 'ArrowLeft' ? -offset : 0),
+          y: y - (direction === 'ArrowDown' ? offset : direction === 'ArrowUp' ? -offset : 0)};
         return snapshot();
       },
-      end(now, cancelled = false) {
-        previous = cancelled ? null : direction; released = cancelled ? -Infinity : now;
-        center = null; direction = null; return snapshot();
+      end() {
+        habit = center && {...center}; center = null; direction = null; last = stroke = null;
+        return snapshot();
       },
-      reset() { center = habit = direction = previous = null; released = -Infinity; return snapshot(); },
+      reset() { center = habit = direction = last = stroke = null; return snapshot(); },
     };
   }
 
@@ -118,18 +133,24 @@
       event.preventDefault(); pointer = event.pointerId;
       if (!stick) {
         const radius = dial.getBoundingClientRect().width / 2 || 48;
-        stick = createFloatingStick({radius, deadzone: radius * 10 / 48});
+        stick = createFloatingStick({radius});
       }
       zone.setPointerCapture(pointer);
-      paint(stick.start(event.clientX, event.clientY, performance.now()));
+      paint(stick.start(event.clientX, event.clientY));
     });
     zone.addEventListener('pointermove', event => {
       if (event.pointerId !== pointer) return;
-      event.preventDefault(); paint(stick.move(event.clientX, event.clientY));
+      event.preventDefault();
+      // Preserve short turns that the browser bundled into one pointer event.
+      const samples = event.getCoalescedEvents?.();
+      let state;
+      for (const sample of samples?.length ? samples : [event])
+        state = stick.move(sample.clientX, sample.clientY);
+      paint(state);
     });
     const release = event => {
       if (event.pointerId !== pointer) return;
-      pointer = null; paint(stick.end(performance.now(), event.type !== 'pointerup'));
+      pointer = null; paint(stick.end());
     };
     for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) zone.addEventListener(name, release);
     const clear = () => {

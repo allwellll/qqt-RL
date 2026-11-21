@@ -11,6 +11,11 @@
     <section class="arena">
       <div class="stage">
         <canvas id="game" width="900" height="880" aria-label="抢包子对战画面"></canvas>
+        <div class="game-toolbar" role="group" aria-label="对局操作">
+          <button id="game-fullscreen" type="button" aria-pressed="false">全屏</button>
+          <button id="touch-restart" type="button" disabled>重启一局</button>
+        </div>
+        <p id="game-screen-status" class="sr-only" role="status" aria-live="polite"></p>
         <nav id="touch-controls" class="touch-controls" aria-label="触屏游戏操作">
           <div class="touch-directions" data-floating-direction aria-label="浮动方向区：按住滑动移动">
             <div class="touch-stick" aria-hidden="true"><span data-arrow="ArrowUp">↑</span><span data-arrow="ArrowLeft">←</span><span data-arrow="ArrowDown">↓</span><span data-arrow="ArrowRight">→</span></div>
@@ -143,6 +148,7 @@
   <script src="boundary-recovery-v1.js"></script>
   <script src="ruleset_selector.js"></script>
   <script src="controls.js"></script>
+  <script src="game_screen.js"></script>
   <script src="model_catalog.js"></script>
   <script src="model_loader.js"></script>
   <script src="model_sampling_v1.js"></script>
