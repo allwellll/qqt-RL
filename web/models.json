@@ -2,32 +2,32 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
-      "id": "dcu-courier-u000560",
-      "display_name": "DCU 运包强化 · u560",
-      "menu_label": "DCU 运包强化 · u560（新）",
-      "cycle": 560,
-      "candidate": "carry courier u000560",
+      "id": "dcu-courier-u000587",
+      "display_name": "DCU 运包强化 · u587",
+      "menu_label": "DCU 运包强化 · u587（新）",
+      "cycle": 587,
+      "candidate": "carry courier u000587",
       "strategy": "raw",
-      "source_sha256": "457a83bd5db1fd0f39b9531881847fc82153b11161378055e53f362a84155b42",
-      "full_source_sha256": "457a83bd5db1fd0f39b9531881847fc82153b11161378055e53f362a84155b42",
+      "source_sha256": "5990fa8befb53c8be66558b4c193ea9361740394cf1199d37e624b1da348e343",
+      "full_source_sha256": "5990fa8befb53c8be66558b4c193ea9361740394cf1199d37e624b1da348e343",
       "rule_version": "bun-native-v3-items",
       "inference": {
         "greedy": false,
         "temperature": 0.3,
         "seed": 5329236
       },
-      "file": "dcu-courier-u000560-6c29786caf38be523bae43a7e3303df8eb7bbc3e2075eb431a1e9e359cc115b3.json",
-      "sha256": "6c29786caf38be523bae43a7e3303df8eb7bbc3e2075eb431a1e9e359cc115b3",
+      "file": "dcu-courier-u000587-95aebaf9df3beedb253972e59c7066af8b957353b56b94017ddec11703b8e89c.json",
+      "sha256": "95aebaf9df3beedb253972e59c7066af8b957353b56b94017ddec11703b8e89c",
       "bytes": 40340648,
-      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000560-20261122/dcu-courier-u000560-6c29786caf38be523bae43a7e3303df8eb7bbc3e2075eb431a1e9e359cc115b3.json",
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000587-20261122/dcu-courier-u000587-95aebaf9df3beedb253972e59c7066af8b957353b56b94017ddec11703b8e89c.json",
       "onnx": {
-        "file": "dcu-courier-u000560-e15c5e45c538264ea15f6d1f417b2b3beed3ba1de5d5cc4b637319c1d763350b.onnx",
-        "sha256": "e15c5e45c538264ea15f6d1f417b2b3beed3ba1de5d5cc4b637319c1d763350b",
+        "file": "dcu-courier-u000587-3db670ff98d130ef660dd419664fa3d307f982cc27e08488f55658809c632039.onnx",
+        "sha256": "3db670ff98d130ef660dd419664fa3d307f982cc27e08488f55658809c632039",
         "bytes": 30276774,
-        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000560-20261122/dcu-courier-u000560-e15c5e45c538264ea15f6d1f417b2b3beed3ba1de5d5cc4b637319c1d763350b.onnx",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000587-20261122/dcu-courier-u000587-3db670ff98d130ef660dd419664fa3d307f982cc27e08488f55658809c632039.onnx",
         "meta": {
-          "name": "dcu-courier-u000560",
-          "display_name": "DCU courier u000560",
+          "name": "dcu-courier-u000587",
+          "display_name": "DCU courier u000587",
           "rule": "bun",
           "rule_version": "bun-native-v3-items",
           "qqt_map_id": 806,
@@ -44,23 +44,23 @@
           "patch": 3,
           "depth": 4,
           "r3_input_encoding": "r3-items-route-chain-visible-v1",
-          "checkpoint_sha256": "457a83bd5db1fd0f39b9531881847fc82153b11161378055e53f362a84155b42",
+          "checkpoint_sha256": "5990fa8befb53c8be66558b4c193ea9361740394cf1199d37e624b1da348e343",
           "source_global_dim": 38,
           "fixed_mode": 0,
           "projection": "drop final mode input row only",
-          "onnx_sha256": "e15c5e45c538264ea15f6d1f417b2b3beed3ba1de5d5cc4b637319c1d763350b",
+          "onnx_sha256": "3db670ff98d130ef660dd419664fa3d307f982cc27e08488f55658809c632039",
           "r4_mode": 0,
-          "r4_full_checkpoint_sha256": "457a83bd5db1fd0f39b9531881847fc82153b11161378055e53f362a84155b42",
+          "r4_full_checkpoint_sha256": "5990fa8befb53c8be66558b4c193ea9361740394cf1199d37e624b1da348e343",
           "r4_full_input_abi": "obs25-global38",
           "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI"
         },
         "reference_zero": {
-          "move": [1.656796932220459, 2.4955103397369385, 2.111783742904663, 2.796816110610962, 0.7039728164672852],
-          "bomb": [0.6300157904624939, 1.6023306846618652, 0.5119616985321045],
-          "value": 1.6757594347000122
+          "move": [1.78476083278656, 2.3284990787506104, 2.038991689682007, 2.749509811401367, 0.7214480638504028],
+          "bomb": [0.3507906198501587, 2.729663610458374, -0.5404897928237915],
+          "value": 1.7867710590362549
         }
       },
-      "description": "完整运包地图训练 u560；最近80轮对u104交付约88.2%，对普通SP_web约70.3%。训练聚合统计，网页为固定mode=0的FP32导出；作为可选模型，不替换当前默认。"
+      "description": "完整运包地图训练 u587；网页为固定mode=0的FP32导出。训练聚合统计，作为可选模型，不替换当前默认。"
     },
     {
       "id": "items-l2-sp-u023302-tau03",
