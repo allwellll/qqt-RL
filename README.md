@@ -87,6 +87,7 @@ JAX/JAXlib `0.6.0+das.opt1.dtk2604`；不替换驱动或系统训练依赖。
 | [对拼强历史对手池建议（2026-11-15）](docs/dcu_duel_opponent_pool_proposal_20261115.md) | 后期退化的证据、80% 自身历史对手的建议与评测晋级；尚未实现 |
 | [单卡运包效率实测（2026-11-15）](docs/dcu_single_card_performance_20261115.md) | 原配置与融合采样的吞吐、数值门槛、复测命令及推荐配置 |
 | [运包抗拦截：两阶段训练（2026-11-15）](docs/dcu_carry_interceptor_training_20261115.md) | 先适应 u930 拦截者，再强化 SP 运包；八卡默认每卡 2048；含权重下载、冻结语义、存盘预算与单卡实测 |
+| [运包抗拦截：冻结防守池（2026-11-21）](docs/dcu_carry_defender_league_20261121.md) | u244/u220/u153 热启拦截者，冻结后分槽强化 SP 运包；含阶段启动、监控与选型方法 |
 | [2026-11-15 训练交接](docs/dcu_training_handover_20261115.md) | 接手优先阅读：当前任务、截止时间、实时检查命令、权重与待办 |
 | [新模型对弈录像](https://allwellll.github.io/qqt-RL/dcu-replays/) | u000840 的 48 局完整对战，保留历史录像；[导出方法与记录](docs/dcu_kill_replays_20261115.md) |
 | [DCU 迁移与训练方法](docs/dcu_migration.md) | 环境安装、模型数据下载与校验、单卡检查、正式训练入口和编译缓存 |

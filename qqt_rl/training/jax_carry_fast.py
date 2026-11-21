@@ -39,10 +39,10 @@ def fresh_factory():
 
 
 def build(devices, count, ticks, *, stage, interceptor_fraction=.75,
-          fused=False, value_chunk=512, policy_chunk=512):
+          fused=False, value_chunk=512, policy_chunk=512, defenders=1):
     E.prepare()
-    seats, kinds, permissions = allocation(count, stage, interceptor_fraction)
-    groups = [np.flatnonzero(kinds == i) for i in range(2)]
+    seats, kinds, permissions = allocation(count, stage, interceptor_fraction, defenders)
+    groups = [np.flatnonzero(kinds == i) for i in range(defenders + 1)]
     ids, seats, permissions = j.arange(count), j.asarray(seats), j.asarray(permissions)
     fresh = fresh_factory()
     total = count*ticks
@@ -71,6 +71,7 @@ def build(devices, count, ticks, *, stage, interceptor_fraction=.75,
                 obs.reshape((-1, policy_chunk) + obs.shape[1:]),
                 gv.reshape((-1, policy_chunk, gv.shape[-1]))))
             mv, ab = mv.reshape((count, -1)), ab.reshape((count, -1))
+        bad_logits = ~(j.isfinite(mv).all() & j.isfinite(ab).all())
         lm, la = masked_logits(mv, ab, mm, bm)
         own = j.stack([jax.random.categorical(km, lm), jax.random.categorical(ka, la)], -1)
         logp = lm[ids, own[:, 0]] + la[ids, own[:, 1]]
@@ -81,13 +82,14 @@ def build(devices, count, ticks, *, stage, interceptor_fraction=.75,
                 continue
             ix = j.asarray(indices)
             mv, ab, _, _ = forward(jax.tree.map(lambda x: x[kind], bank), eo[ix], eg[ix])
+            bad_logits |= ~(j.isfinite(mv).all() & j.isfinite(ab).all())
             olm, ola = masked_logits(mv, ab, emm[ix], ebm[ix])
             k0, k1 = jax.random.split(jax.random.fold_in(kb, kind))
             enemy = enemy.at[ix].set(j.stack([jax.random.categorical(k0, olm),
                                              jax.random.categorical(k1, ola)], -1))
         actions = j.zeros((count, 2, 2), j.int32).at[ids, seats].set(own).at[ids, 1-seats].set(enemy)
         data = dict(obs=obs, state=gv, mm=mm, bm=bm, live=live,
-                    action=own, logp=logp)
+                    action=own, logp=logp, bad_logits=bad_logits)
         return actions, data, key
 
     def evolve(world, actions, key):
@@ -125,7 +127,7 @@ def build(devices, count, ticks, *, stage, interceptor_fraction=.75,
         batch = {k: v.reshape((-1,) + v.shape[2:]) for k, v in batch.items()}
         health = dict(item_overflow=j.max(data['overflow']), nonfinite=sum(
             (~j.isfinite(batch[k])).sum() for k in ('value', 'logp', 'reward', 'adv', 'returns'))
-            + (~j.isfinite(bootstrap)).sum())
+            + (~j.isfinite(bootstrap)).sum() + data['bad_logits'].sum())
         return batch, data['metric'].sum(0), health
 
     if fused:

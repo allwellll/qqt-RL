@@ -8,23 +8,19 @@ import numpy as np
 from scripts.r4_k4_observation import actor_critic_forward, forward
 from qqt_rl.training.kill_ppo import masked_logits, gae
 from qqt_rl.training import jax_carry_env as E
+from qqt_rl.training.carry_league import opponent_counts
 
 
-def allocation(count, stage, interceptor_fraction=.75):
-    if count < 2 or count % 2:
-        raise ValueError('Even environment count required for balanced seats')
-    if stage not in ('interceptor', 'courier') or not 0 <= interceptor_fraction <= 1:
-        raise ValueError('Invalid stage/fraction')
-    # Round in pairs so BOTH sides get exactly the same opponent distribution.
-    n = 0 if stage == 'interceptor' else 2 * round(count * interceptor_fraction / 2)
-    kinds = np.ones(count, np.int32)  # slot1: fixed normal SP actor
-    kinds[:n] = 0                    # slot0: fixed interceptor
+def allocation(count, stage, interceptor_fraction=.75, defenders=1):
+    counts = opponent_counts(count, stage, interceptor_fraction, defenders)
+    kinds = np.repeat(np.arange(len(counts), dtype=np.int32), counts)
     seats = np.arange(count, dtype=np.int32) % 2
     permissions = np.ones((count, 2), bool)
     if stage == 'interceptor':
         permissions[np.arange(count), seats] = False
     else:
-        permissions[np.arange(n), 1 - seats[:n]] = False
+        lanes = np.flatnonzero(kinds < defenders)
+        permissions[lanes, 1 - seats[lanes]] = False
     return seats, kinds, permissions
 
 
@@ -60,7 +56,7 @@ def consistency_check(devices, minibatch):
     return check
 
 
-def build(devices, count, ticks, *, stage, interceptor_fraction=.75):
+def build(devices, count, ticks, *, stage, interceptor_fraction=.75, defenders=1):
     """Separate inference and simulation executables; tensors remain on device.
 
     A Python loop dispatches ticks asynchronously. It never reads actions,
@@ -68,8 +64,8 @@ def build(devices, count, ticks, *, stage, interceptor_fraction=.75):
     model executable allows inference to be verified independently.
     """
     E.prepare()
-    seats, kinds, permissions = allocation(count, stage, interceptor_fraction)
-    groups = [np.flatnonzero(kinds == i) for i in range(2)]
+    seats, kinds, permissions = allocation(count, stage, interceptor_fraction, defenders)
+    groups = [np.flatnonzero(kinds == i) for i in range(defenders + 1)]
     ids, seats, permissions = j.arange(count), j.asarray(seats), j.asarray(permissions)
 
     @partial(jax.pmap, devices=devices)
@@ -94,7 +90,7 @@ def build(devices, count, ticks, *, stage, interceptor_fraction=.75):
         lm, la = masked_logits(mv, ab, mm, bm)
         own = j.stack([jax.random.categorical(km, lm), jax.random.categorical(ka, la)], -1)
         ix = j.arange(len(mv))
-        return own, lm[ix, own[:, 0]] + la[ix, own[:, 1]], key
+        return own, lm[ix, own[:, 0]] + la[ix, own[:, 1]], key, ~(j.isfinite(mv).all() & j.isfinite(ab).all())
 
     @partial(jax.pmap, devices=devices)
     def join_actions(own, enemy):
@@ -103,6 +99,8 @@ def build(devices, count, ticks, *, stage, interceptor_fraction=.75):
     @partial(jax.pmap, devices=devices)
     def empty_actions(own):
         return j.zeros_like(own)
+
+    merge_bad_logits = jax.pmap(j.logical_or, devices=devices)
 
     @partial(jax.pmap, devices=devices)
     def stack_rows(*rows):
@@ -148,7 +146,7 @@ def build(devices, count, ticks, *, stage, interceptor_fraction=.75):
         batch = {k: v.reshape((-1,) + v.shape[2:]) for k, v in batch.items()}
         health = dict(item_overflow=j.max(data['overflow']), nonfinite=sum(
             (~j.isfinite(data[k])).sum() for k in ('value', 'logp', 'reward'))
-            + (~j.isfinite(bootstrap)).sum())
+            + (~j.isfinite(bootstrap)).sum() + data['bad_logits'].sum())
         return batch, data['metric'].sum(0), health
 
     def collect(p, world, bank, key):
@@ -157,7 +155,7 @@ def build(devices, count, ticks, *, stage, interceptor_fraction=.75):
             own_input, enemy_input = observe(world)
             obs, gv, mm, bm, live = own_input
             mv, ab, value = predict(p, obs, gv)
-            own, logp, key = sample(mv, ab, mm, bm, key)
+            own, logp, key, bad_logits = sample(mv, ab, mm, bm, key)
             enemy = empty_actions(own)
             for kind, indices in enumerate(groups):
                 if not len(indices):
@@ -165,12 +163,13 @@ def build(devices, count, ticks, *, stage, interceptor_fraction=.75):
                 gather, scatter = selectors[kind]
                 actor, eo, eg, emm, ebm = gather(bank, enemy_input)
                 mv, ab = predict_enemy(actor, eo, eg)
-                action, _, key = sample(mv, ab, emm, ebm, key)
+                action, _, key, bad_enemy = sample(mv, ab, emm, ebm, key)
+                bad_logits = merge_bad_logits(bad_logits, bad_enemy)
                 enemy = scatter(enemy, action)
             actions = join_actions(own, enemy)
             world, transition, key = evolve(world, actions, key)
             inference = dict(obs=obs, state=gv, mm=mm, bm=bm, live=live,
-                             action=own, logp=logp, value=value)
+                             action=own, logp=logp, value=value, bad_logits=bad_logits)
             rows.append(dict(inference, **transition))
         # Device arrays are stacked without materializing NumPy/host values.
         data = stack_rows(*rows)
