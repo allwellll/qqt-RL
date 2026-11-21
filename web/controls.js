@@ -62,7 +62,7 @@
 
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
   // Radial intent is measured from the real floating centre, never event deltas.
-  function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58} = {}) {
+  function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58, diagonalMin = 25, diagonalMax = 65} = {}) {
     let center = null, habit = null, direction = null, secondary = null, changedAt = 0;
     const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction, secondary, changedAt});
     return {
@@ -82,7 +82,7 @@
           const nearest=Math.abs(dx)>=Math.abs(dy) ? (dx<0?'ArrowLeft':'ArrowRight') : (dy<0?'ArrowUp':'ArrowDown');
           direction=delta<=hysteresis*Math.PI/180?old:nearest;
           const diagonal=Math.atan2(Math.abs(dy),Math.abs(dx))*180/Math.PI;
-          if(diagonal>=25&&diagonal<=65){
+          if(diagonal>=diagonalMin&&diagonal<=diagonalMax){
             const horizontal=dx<0?'ArrowLeft':'ArrowRight',vertical=dy<0?'ArrowUp':'ArrowDown';
             secondary=direction===horizontal?vertical:horizontal;
           }
@@ -134,12 +134,12 @@
     }};
   }
 
-  function bindFloatingDirection(zone, held) {
+  function bindFloatingDirection(zone, held, options = {}) {
     let pointer = null, stick = null, lastDirection = null, current = null;
     let sampled = false, pendingTap = null, tapSeconds = null;
     const pointers=new Map();
     let visibleCenter=null, lastTouch=null;
-    const steering=createTouchSteering();
+    let steering=createTouchSteering({bufferMs: options.bufferMs ?? 160});
     const dial = zone.querySelector('.touch-stick');
     const paint = state => {
       current=state;
@@ -154,6 +154,9 @@
       zone.dataset.secondary = state.secondary || '';
       zone.dataset.resolved = '';
       zone.dataset.active = pointer == null ? 'false' : 'true';
+      const vector=state.center;
+      zone.dataset.rawAngle=vector?String(Math.round(Math.atan2(vector.y,vector.x)*180/Math.PI)):'';
+      zone.dataset.rawRadius=vector?String(Math.round(Math.hypot(vector.x,vector.y))):'';
       if (state.direction && state.direction !== lastDirection) {
         try { globalThis.navigator?.vibrate?.(8); } catch (_) { /* Optional feedback. */ }
       }
@@ -190,12 +193,12 @@
       if(x<rect.left+8||x>rect.right-8||y<rect.top+8||y>rect.bottom-8)return;
       event.preventDefault();
       const radius=dial.getBoundingClientRect().width/2||48;
-      if(!stick)stick=createFloatingStick({radius});
+      if(!stick)stick=createFloatingStick({radius, deadzone: radius * (options.deadzoneRatio ?? .18), hysteresis: options.hysteresisDeg ?? 58, diagonalMin: options.diagonalMin ?? 25, diagonalMax: options.diagonalMax ?? 65});
       const center=visibleCenter||{x:rect.left+rect.width/2,y:rect.top+rect.height/2};
       const record={x,y,anchorX:x,anchorY:y,since:event.timeStamp??0};
       const old=pointers.get(pointer),previous=old||(lastTouch&&performance.now()-lastTouch.time<=200?lastTouch:null);
       pointers.set(event.pointerId,record);zone.setPointerCapture(event.pointerId);
-      if(Math.hypot(x-center.x,y-center.y)<radius*.18){
+      if(Math.hypot(x-center.x,y-center.y)<radius*(options.deadzoneRatio ?? .18)){
         // Neutral new finger can start a drag, but cannot interrupt an owner.
         if(pointer==null&&!current?.direction)take(event.pointerId,record,center);
         return;
@@ -226,6 +229,7 @@
       pendingTap=null;tapSeconds=null;sampled=false;visibleCenter=lastTouch=null;
       if(stick)paint(stick.reset());
       stick=null;
+      steering=createTouchSteering({bufferMs: options.bufferMs ?? 160});
       for(const id of ids)if(zone.hasPointerCapture?.(id))zone.releasePointerCapture(id);
     };
     const release=event=>{
@@ -271,10 +275,10 @@
     return clear;
   }
 
-  function bindTouchControls(root, held, onPress) {
+  function bindTouchControls(root, held, onPress, options = {}) {
     const active = new Map();
     const zone = root.querySelector?.('[data-floating-direction]');
-    const clearDirection = zone ? bindFloatingDirection(zone, held) : () => {};
+    const clearDirection = zone ? bindFloatingDirection(zone, held, options) : () => {};
     const release = event => {
       const key = active.get(event.pointerId);
       active.delete(event.pointerId);
