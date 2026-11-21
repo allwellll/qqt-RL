@@ -13,6 +13,6 @@ source scripts/dcu_env.sh
 ulimit -c 0
 exec timeout --signal=TERM --kill-after=90s 5h \
   python -u -m scripts.train_dcu_jax_kill train \
-  --devices 0,1,2,3,4,5,6,7 --envs 512 --ticks 64 --minibatch 512 \
+  --devices 0,1,2,3,4,5,6,7 --ticks 64 \
   --hours 4.95 --critic-warmup 10 \
   --out "$qqt_output" --acknowledge-training "$@"

@@ -7,7 +7,8 @@
 
 ## 设备上的训练流程
 
-推荐启动器每卡 512 个环境，8 卡共 4096 个；一次 rollout 64 tick，共 262144 个环境步。
+训练入口和八卡启动器默认每卡 2048 个环境，8 卡共 16384 个；一次 rollout 64 tick，共 1048576 个环境步。
+2026-11-21 起统一采用此默认值；历史 512 的实测记录保留，不代表新配置吞吐。
 `pmap` 分配到八卡，`lax.scan` 在设备内步进，不逐 tick 调用 Node 或传回 CPU。
 GAE 和训练批次保持在设备上。每轮仅将小型统计传回主机；保存时传回 Actor/Critic。
 地图、模型文件读取与静态 schema 初始化在 CPU 上完成一次；XLA 首次编译也使用 CPU，
@@ -15,16 +16,17 @@ GAE 和训练批次保持在设备上。每轮仅将小型统计传回主机；�
 
 | 对手 | 环境占比 |
 |---|---:|
-| JAX hunter / hunter_hard 规则 bot | 各 25% |
-| 当前 Actor 的整局冻结副本 | 25% |
-| 上一次整局边界的 Actor 副本 | 12.5% |
-| 固定 SP / G 模型 | 各 6.25% |
+| JAX hunter / hunter_hard 规则 bot | 合计 10% |
+| 当前 Actor 的整局冻结副本 | 9% |
+| 上一次整局边界的 Actor 副本 | 9% |
+| 固定强历史 u930 / u840 模型 | 各 31.5% |
+| 固定 SP / G 模型 | 各 4.5% |
 
 双方座位均衡；模型对手只在整局边界刷新，整局内参数固定。
 八卡梯度先平均再裁剪/Adam，策略项按全局有效动作数归一化。
-Actor/Critic 学习率分别为 3e-5 / 1e-4；每卡 minibatch 512，全局 4096，
-每轮遍历一次，共 64 个优化步。PPO clip=.15，gamma=.997，lambda=.95。
-底层 Python 命令默认每卡 128 环境；启动器显式传入已经实测吞吐更高的 512。
+Actor/Critic 学习率分别为 3e-5 / 1e-4。学习方前向和 PPO minibatch 均为每卡 2048，
+全局 minibatch 为 16384，每轮遍历一次，共 64 个优化步。PPO clip=.15，gamma=.997，lambda=.95。
+`--envs` 表示每卡环境数，`--minibatch` 表示每卡每次优化的样本数。
 
 击杀 +5，死亡 -5，自死额外 -2，新困敌/被困 ±.25，整局胜负 ±2。
 死亡后继续同局 GAE，只有 1800 tick 整局结束切断。
@@ -60,9 +62,9 @@ JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu JAX_ENABLE_COMPILATION_CACHE=false \
 ```bash
 cd /root/private_data/qqt_rl
 source scripts/dcu_env.sh
-python -m scripts.train_dcu_jax_kill plan --envs 512
+python -m scripts.train_dcu_jax_kill plan
 python -u -m scripts.check_dcu_collectives --devices 0,1,2,3,4,5,6,7
-# 新输出目录，默认从 DUEL Actor 初始化，Critic 预热 10 次
+# 新输出目录，默认从 u930 Actor 初始化，Critic 预热 10 次
 bash scripts/launch_dcu_jax_kill_8card.sh runs/kill-jax-new-001 \
   2>&1 | tee runs/kill-jax-new-001.log
 ```
@@ -78,7 +80,7 @@ bash scripts/launch_dcu_jax_kill_8card.sh runs/kill-jax-next-001 \
 加载前验证检查点记录的源文件哈希、权重哈希、参数树、形状、类型与有限性。
 优化器、环境和 RNG 重新初始化，这属于热启动。源文件发生变化时需要审查迁移，不能直接跳过校验。
 首次完整编译可能较长，稳定吞吐应取后续更新的中位数：
-`global_samples / seconds` 为全链路环境步/秒（推荐配置的分子为 262144），
+`global_samples / seconds` 为全链路环境步/秒（推荐配置的分子为 1048576），
 `collect_seconds` 与 `ppo_seconds` 区分采样和优化，不含周期保存等少量主机开销。
 
 外层 watchdog 为 5 小时，内部 4.95 小时，包含初始化和编译；清理最多额外 90 秒。
