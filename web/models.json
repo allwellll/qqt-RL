@@ -460,8 +460,8 @@
     },
     {
       "id": "dcu-kill-u000930-tau03",
-      "display_name": "对拼强化 · u930（对拼默认）",
-      "menu_label": "对拼强化 · u930（对拼默认）",
+      "display_name": "对拼强化 · u930（历史）",
+      "menu_label": "对拼强化 · u930（历史）",
       "cycle": 930,
       "candidate": "DCU kill u000930 tau0.3",
       "strategy": "raw",
@@ -547,6 +547,96 @@
           1030
         ],
         "games_per_checkpoint": 48,
+        "held_out": false
+      }
+    },
+    {
+      "id": "dcu-kill-u000153-tau03",
+      "display_name": "对拼强化 · u153（对拼默认）",
+      "menu_label": "对拼强化 · u153（对拼默认）",
+      "cycle": 153,
+      "candidate": "DCU kill u000153 tau0.3",
+      "strategy": "raw",
+      "source_sha256": "c22aefaece05b7073ed2fec90c72e08178d9982dcca45e5e45d641cf935c55fe",
+      "full_source_sha256": "c22aefaece05b7073ed2fec90c72e08178d9982dcca45e5e45d641cf935c55fe",
+      "rule_version": "bun-native-v4-facing",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "dcu-kill-u000153-2cf596653a5dd8d905c758a2d030ec60284c4e7528e5ae92e951cbd5404d0435.json",
+      "sha256": "2cf596653a5dd8d905c758a2d030ec60284c4e7528e5ae92e951cbd5404d0435",
+      "bytes": 40340991,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000153-20261121/dcu-kill-u000153-2cf596653a5dd8d905c758a2d030ec60284c4e7528e5ae92e951cbd5404d0435.json",
+      "onnx": {
+        "file": "dcu-kill-u000153-d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b.onnx",
+        "sha256": "d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000153-20261121/dcu-kill-u000153-d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b.onnx",
+        "meta": {
+          "name": "dcu-kill-u000153",
+          "display_name": "对拼强化 · u153",
+          "arch": "transformer",
+          "rule": "bun",
+          "rule_version": "bun-native-v4-facing",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "value_min": -20,
+          "value_max": 20,
+          "checkpoint_sha256": "c22aefaece05b7073ed2fec90c72e08178d9982dcca45e5e45d641cf935c55fe",
+          "source_global_dim": 38,
+          "fixed_mode": 0,
+          "projection": "drop final mode input row only",
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "onnx_sha256": "d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b",
+          "onnx_file": "dcu-kill-u000153-d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b.onnx",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "c22aefaece05b7073ed2fec90c72e08178d9982dcca45e5e45d641cf935c55fe",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI",
+          "training_mode": "map806-kill",
+          "evaluation_games": 12
+        },
+        "reference_zero": {
+          "move": [
+            -0.03278591805541278,
+            1.2349360513070289,
+            1.8554159272382316,
+            0.7193946392989305,
+            1.2744923941156494
+          ],
+          "bomb": [
+            1.40770246429455,
+            -1.2524290075425588,
+            -0.14419651129668895
+          ],
+          "value": 2.4670018238291513
+        }
+      },
+      "description": "无包子纯击杀专项，八卡 DCU 训练 u153。固定对手 12 局：DUEL、SP、G 各 4 局，双座覆盖，12 胜；145 次击杀、16 次死亡、3 次自死。小样本且对手属于训练池，不是稳定胜率证明；训练使用 JAX BF16，网页使用同权重 FP32。录像见 dcu-replays/training-u000153-20261121.html。",
+      "selection_review": {
+        "evidence": "specialists/dcu-kill-u000153-20261121.json",
+        "evaluated_updates": [
+          153
+        ],
+        "games_per_checkpoint": 12,
         "held_out": false
       }
     }
