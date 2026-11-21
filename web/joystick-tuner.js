@@ -1,0 +1,29 @@
+'use strict';
+(() => {
+  const $ = id => document.getElementById(id);
+  const defaults = {deadzoneRatio:.18, hysteresisDeg:58, bufferMs:160, diagonalMin:25, diagonalMax:65};
+  const controls = {deadzone:$('deadzone'),hysteresis:$('hysteresis'),buffer:$('buffer'),diagMin:$('diagMin'),diagMax:$('diagMax')};
+  const labels = {deadzone:'deadzoneRatio',hysteresis:'hysteresisDeg',buffer:'bufferMs',diagMin:'diagonalMin',diagMax:'diagonalMax'};
+  const read=()=>({deadzoneRatio:+controls.deadzone.value,hysteresisDeg:+controls.hysteresis.value,bufferMs:+controls.buffer.value,diagonalMin:+controls.diagMin.value,diagonalMax:+controls.diagMax.value});
+  const save=c=>localStorage.setItem('qqt.joystick.tuner.v1',JSON.stringify(c));
+  const load=()=>{try{return {...defaults,...JSON.parse(localStorage.getItem('qqt.joystick.tuner.v1')||'{}')}}catch(_){return {...defaults}}};
+  const updateLabels=()=>{$('deadzoneValue').textContent=(+controls.deadzone.value*100).toFixed(0)+'%';$('hysteresisValue').textContent=controls.hysteresis.value+'°';$('bufferValue').textContent=controls.buffer.value+'ms';$('diagMinValue').textContent=controls.diagMin.value+'°';$('diagMaxValue').textContent=controls.diagMax.value+'°'};
+  const apply=c=>{for(const [id,key] of Object.entries(labels))controls[id].value=c[key];updateLabels();save(c)};
+  let config=load();
+  const engine=globalThis.QQTBunNativeV5FacingWindow||globalThis.QQT;
+  const createSim=()=>{const instance=new engine.Sim(3);instance.reset('open',{nativeItems:true,nativeTrap:true});for(const key of ['wall','brick','cover','crate','fuse','pushable','fieldItem'])instance[key].fill(0);for(let r=0;r<13;r++)for(let c=0;c<15;c++)if(r===0||r===12||c===0||c===14)instance.wall[r*15+c]=1;for(let c=1;c<7;c++)instance.wall[6*15+c]=1;instance.pos[0]=6.5;instance.pos[1]=3.5;instance.invuln.fill(100);instance.spdG[0]=2/3;return instance};
+  let sim=createSim();
+  const zone=$('direction-zone'),held=new Set();
+  const render=()=>{const canvas=$('board'),ctx=canvas.getContext('2d'),cell=40;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#11191d';ctx.fillRect(0,0,canvas.width,canvas.height);for(let r=0;r<13;r++)for(let c=0;c<15;c++){ctx.strokeStyle='#24373d';ctx.strokeRect(c*cell,r*cell,cell,cell);if(sim.wall[r*15+c]){ctx.fillStyle='#43616a';ctx.fillRect(c*cell+1,r*cell+1,cell-2,cell-2)}}ctx.fillStyle='#64e0bc';ctx.beginPath();ctx.arc((sim.pos[1]+.5)*cell,(sim.pos[0]+.5)*cell,11,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffd166';ctx.font='13px system-ui';ctx.fillText('起点',cell*2,cell*9);ctx.fillStyle='#ef6c7b';ctx.fillText('转角开口',cell*7,cell*5.5);$('position').textContent=`${sim.pos[1].toFixed(2)}, ${sim.pos[0].toFixed(2)}`};
+  let bind;
+  const bindControls=()=>{if(bind)bind();held.clear();bind=QQTControls.bindTouchControls(zone,held,()=>{},config);};
+  const restart=()=>{sim=createSim();render()};
+  const log=s=>{$('log').textContent=(new Date().toLocaleTimeString()+' '+s+'\n'+$('log').textContent).slice(0,5000)};
+  const keyName=k=>({ArrowUp:'上',ArrowDown:'下',ArrowLeft:'左',ArrowRight:'右'})[k]||'无';
+  function update(){if(zone.dataset.active==='true'){const selected=zone.dataset.direction;const secondary=zone.dataset.secondary;$('primary').textContent=keyName(selected);$('secondary').textContent=keyName(secondary);$('resolved').textContent=keyName(zone.dataset.resolved);$('angle').textContent=zone.dataset.rawAngle+'°';$('radius').textContent=zone.dataset.rawRadius+' / 48';}const move=bind.moveFor(sim,0,performance.now());sim.frameStep(0,move,1/60);if(move!==4){const direction=Object.entries(QQTControls.MOVEMENT_DIRECTIONS).find(([,value])=>value===move)?.[0];$('resolved').textContent=keyName(direction);if(direction!==$('resolved').dataset.last){log('角色移动 '+keyName(direction));$('resolved').dataset.last=direction;}}render();requestAnimationFrame(update)}
+  for(const input of Object.values(controls))input.addEventListener('input',()=>{config=read();updateLabels();save(config);bindControls();restart()});
+  $('restart').addEventListener('click',restart);$('reset').addEventListener('click',()=>{apply(defaults);config=read();bindControls();restart();log('恢复默认')});
+  $('copy').addEventListener('click',async()=>{const text=JSON.stringify(read(),null,2);try{await navigator.clipboard.writeText(text);$('status').textContent='配置已复制'}catch(_){$('status').textContent=text}});
+  $('download').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(read(),null,2)+'\n'],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qqt-joystick-profile.json';a.click();URL.revokeObjectURL(a.href);$('status').textContent='配置文件已下载'});
+  apply(config);bindControls();restart();log('调试台就绪');requestAnimationFrame(update);
+})();
