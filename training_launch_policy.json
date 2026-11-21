@@ -1,7 +1,7 @@
 {
   "schema": "qqt.training-launch-policy/v1",
-  "training_enabled": false,
+  "training_enabled": true,
   "gpu_diagnostics_enabled": false,
   "resume_requires_explicit_user_authorization": true,
-  "reason": "User requested training stop. Preserve checkpoints; CPU evaluation, export and code review remain allowed."
+  "reason": "User explicitly authorized DCU carry-defender training on 2026-11-21; bounded training only, no automatic stage chaining."
 }

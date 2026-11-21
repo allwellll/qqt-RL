@@ -49,6 +49,15 @@ bash scripts/launch_dcu_jax_carry_8card.sh courier runs/carry-sp-defender-league
 
 `PLAN.json` / `CHECKPOINT.json` 记录池中每槽的来源、SHA 和席位预算；`updates.jsonl` 按槽输出交付、死亡、自死、携包者击杀和掉包。A 看同一冻结运包对手的交付率是否比面对原始对拼模型时下降，辅以携包者击杀和自死；拦截成功通常表现为平局。B 分别看对各防守槽的交付改善，同时检查普通 SP 对战是否退步。正式选型用固定新种子、双席及完整局重跑，比较父模型 SP、各候选，以及未入训练池的对手；同时看交付耗时和携包者死亡。训练累计值混有不同 Actor 版本，不能用来证明泛化提升。
 
+### 已授权运行
+
+用户于 2026-11-21 明确授权开训。先执行 `runs/carry-defender-u244-smoke-20261121` 单更新检查，通过后继续 u244 拦截训练；不自动接续 u220、u153 或运包阶段。训练门禁仅为本轮开启，GPU 诊断门禁仍关闭。
+
+- smoke：1 次更新、1,048,576 环境步，`INFERENCE_CHECK.json` logp/value 误差均为 0；u000001 已保存，Adam 未保存。
+- 正式 u244：`runs/carry-defender-u244-20261121`，8 卡、每卡 2048、计划 45 分钟，启动时间约 2026-11-21 18:38 UTC。首轮误差均为 0，u000001 已保存；首轮约 4,605 环境步/秒，含该阶段首次采样编译，后续稳定速度待更新。
+- 截至更新 4，正式训练仍在运行。第 2–4 轮端到端约 42.6k–44.6k 环境步/秒，采样约 7.2 秒、PPO 约 16–17 秒；这是含 Critic warmup 的短暂稳态，Actor 前 10 次更新仍冻结，尚未开始实际拦截策略学习。
+- 第 1–10 次 Critic warmup 后才开始更新 Actor；阶段结束后先评估拦截效果，不自动启动其他阶段。
+
 ### 本次验证
 
 隐藏 DCU，并用 `JAX_DISABLE_MOST_OPTIMIZATIONS=true` 和 `XLA_FLAGS=--xla_cpu_enable_fast_math=false` 跑 CPU 回归，共 39 项通过。覆盖座位平衡、禁运权限、融合采样、PPO 更新和冻结对手；真实 u244、u220、u153、u930 也通过了双席开局前向。真实 u244 的 CPU 短 rollout 未通过数值门槛：融合路径出现非有限值，分段路径虽有限，但重推理不一致。回执在 `runs/carry-defender-cpu-validation-20261121.log` 和 `runs/carry-defender-preflight-20261121/`。这不是 DCU 实测，不能据此认定八卡通过或失败；实机首轮必须通过现有 logp/value 门槛才能训练。
