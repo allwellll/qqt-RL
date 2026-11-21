@@ -1,0 +1,82 @@
+{
+  "schema": "qqt.dcu-kill-model-evidence/v1",
+  "model_id": "dcu-kill-u000244-tau03",
+  "checkpoint": {
+    "update": 244,
+    "global_environment_steps": 255852544,
+    "actor_sha256": "7c4a4bb0fb1cb1ef3777d819033593d6be99bb36fce71122501ca543c8383b59",
+    "replay_url": "https://allwellll.github.io/qqt-RL/dcu-replays/training-u000244-20261121.html"
+  },
+  "evaluation": {
+    "ruleset": "bun-native-v4-facing",
+    "simulator": "live web bun-native-v4-facing",
+    "recorded_during_training": false,
+    "temperature": 0.3,
+    "seeds": [
+      2026111501,
+      2026111502
+    ],
+    "opponents": [
+      "DUEL_latest",
+      "SP_latest",
+      "G_frozen"
+    ],
+    "balanced_seats": true,
+    "games": 12,
+    "statistics": [
+      {
+        "version": "current",
+        "opponent": "DUEL_latest",
+        "games": 4,
+        "wins": 4,
+        "draws": 0,
+        "losses": 0,
+        "kills": 49,
+        "deaths": 5,
+        "self_deaths": 0,
+        "win_rate": 1.0,
+        "score_rate": 1.0
+      },
+      {
+        "version": "current",
+        "opponent": "G_frozen",
+        "games": 4,
+        "wins": 4,
+        "draws": 0,
+        "losses": 0,
+        "kills": 56,
+        "deaths": 5,
+        "self_deaths": 1,
+        "win_rate": 1.0,
+        "score_rate": 1.0
+      },
+      {
+        "version": "current",
+        "opponent": "SP_latest",
+        "games": 4,
+        "wins": 4,
+        "draws": 0,
+        "losses": 0,
+        "kills": 65,
+        "deaths": 2,
+        "self_deaths": 0,
+        "win_rate": 1.0,
+        "score_rate": 1.0
+      }
+    ]
+  },
+  "export": {
+    "packed_weights_exact": true,
+    "fixed_mode_projection_max_abs": 0.0,
+    "fp32_onnx_max_abs": 2.2113323211669922e-05,
+    "js_onnx_samples": 17,
+    "js_onnx_max_abs": 9.603905613886354e-06,
+    "masked_greedy_exact": true
+  },
+  "limitations": [
+    "12 fixed-seed games are a small behavioral sample, not a stable win-rate estimate.",
+    "The opponent pool overlaps the training pool; this is not a held-out evaluation.",
+    "Training used JAX BF16; the browser runs the exact projected weights in FP32.",
+    "Replay is a CPU rerun of a checkpoint, not a recording of live training trajectories."
+  ]
+}
