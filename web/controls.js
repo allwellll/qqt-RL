@@ -62,7 +62,7 @@
 
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
   // Radial intent is measured from the real floating centre, never event deltas.
-  function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58, diagonalMin = 25, diagonalMax = 65} = {}) {
+  function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58, diagonalMin = 25, diagonalMax = 65, diagonalMode = 'secondary'} = {}) {
     let center = null, habit = null, direction = null, secondary = null, changedAt = 0;
     const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction, secondary, changedAt});
     return {
@@ -82,7 +82,11 @@
           const nearest=Math.abs(dx)>=Math.abs(dy) ? (dx<0?'ArrowLeft':'ArrowRight') : (dy<0?'ArrowUp':'ArrowDown');
           direction=delta<=hysteresis*Math.PI/180?old:nearest;
           const diagonal=Math.atan2(Math.abs(dy),Math.abs(dx))*180/Math.PI;
-          if(diagonal>=diagonalMin&&diagonal<=diagonalMax){
+          if(diagonalMode==='preserve' && diagonal>=diagonalMin && diagonal<=diagonalMax){
+            const previous=old;
+            if(previous==='ArrowLeft'||previous==='ArrowRight'||previous==='ArrowUp'||previous==='ArrowDown')direction=previous;
+            else direction=nearest;
+          } else if(diagonal>=diagonalMin&&diagonal<=diagonalMax){
             const horizontal=dx<0?'ArrowLeft':'ArrowRight',vertical=dy<0?'ArrowUp':'ArrowDown';
             secondary=direction===horizontal?vertical:horizontal;
           }
@@ -193,7 +197,7 @@
       if(x<rect.left+8||x>rect.right-8||y<rect.top+8||y>rect.bottom-8)return;
       event.preventDefault();
       const radius=dial.getBoundingClientRect().width/2||48;
-      if(!stick)stick=createFloatingStick({radius, deadzone: radius * (options.deadzoneRatio ?? .18), hysteresis: options.hysteresisDeg ?? 58, diagonalMin: options.diagonalMin ?? 25, diagonalMax: options.diagonalMax ?? 65});
+      if(!stick)stick=createFloatingStick({radius, deadzone: radius * (options.deadzoneRatio ?? .18), hysteresis: options.hysteresisDeg ?? 58, diagonalMin: options.diagonalMin ?? 25, diagonalMax: options.diagonalMax ?? 65, diagonalMode: options.diagonalMode ?? 'secondary'});
       const center=visibleCenter||{x:rect.left+rect.width/2,y:rect.top+rect.height/2};
       const record={x,y,anchorX:x,anchorY:y,since:event.timeStamp??0};
       const old=pointers.get(pointer),previous=old||(lastTouch&&performance.now()-lastTouch.time<=200?lastTouch:null);
