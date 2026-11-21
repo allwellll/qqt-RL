@@ -46,6 +46,8 @@ LEGACY_SOURCES = {
 TRUSTED_TRAIN_SOURCE_SHAS = {
     # Checkpoints created before the joint alternating trainer was added.
     '9e63c3946920f645b72f131a83124488aacec359476a237224fb3f17970c4748',
+    # Checkpoints from the first joint-training launch before metric-shape fix.
+    'aa9c7e4585601e998739bfdbff043d1748d87dbbfd67291fd0a39ab0a15823e7',
 }
 
 
@@ -363,7 +365,11 @@ def run(a, started):
         return stop[0] or time.monotonic() >= deadline or (out/'USER_STOP').exists()
 
     opponent_ids = [row['id'] for row in pool]
-    cumulative = np.zeros((len(pool), 2, len(METRICS)), np.float64)
+    # The collector reports one metric row per allocation group. Courier
+    # stages have one row per frozen opponent; interceptor stages also include
+    # the learner group, so derive the shape from the first rollout instead of
+    # assuming it matches the opponent pool length.
+    cumulative = None
     try:
         checkpoint(0)
         print(json.dumps(dict(event='initializing_full_bun_worlds', **config)), flush=True)
@@ -401,7 +407,10 @@ def run(a, started):
             healthy = True
             elapsed = time.monotonic() - begin
             completed, steps = index, steps + cards*a.envs*a.ticks
-            cumulative += np.asarray(metrics).sum(0)
+            metric_delta = np.asarray(metrics).sum(0)
+            if cumulative is None:
+                cumulative = np.zeros_like(metric_delta, dtype=np.float64)
+            cumulative += metric_delta
             row = dict(update=index, stage=a.stage, environment_steps=steps,
                        seconds=elapsed, environment_steps_per_second=cards*a.envs*a.ticks/elapsed,
                        collect_seconds=collected-begin, ppo_seconds=time.monotonic()-collected,
@@ -409,7 +418,7 @@ def run(a, started):
                        critic_only=index <= a.critic_warmup,
                        metric_names=METRICS, opponent_ids=opponent_ids,
                        metric_axes=['opponent:' + ','.join(opponent_ids), 'learner,opponent', 'metric'],
-                       metrics=np.asarray(metrics).sum(0).tolist(), cumulative_metrics=cumulative.tolist(),
+                       metrics=metric_delta.tolist(), cumulative_metrics=cumulative.tolist(),
                        loss=np.asarray(loss).mean((0, 1)).tolist())
             with (out/'updates.jsonl').open('a') as f:
                 f.write(json.dumps(row)+'\n')
