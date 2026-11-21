@@ -15,4 +15,6 @@ bash scripts/launch_dcu_jax_carry_joint_8card.sh \
 
 本次已启动的任务目录为 `runs/carry-joint-u587-u104-20261122b`（8 卡 DCU，首段 `courier-s01`）。实际启动参数固定为 `--envs 2048 --minibatch 2048 --policy-chunk 2048 --value-chunk 2048`；首个更新包含一次性编译开销，后续实测约 48k 全局环境步/秒。检查点目录只保存 `actor.pt`、`critic.pt` 和 `CHECKPOINT.json`，不保存优化器状态；`LATEST.json`、`updates.jsonl` 是接手和监控入口。
 
+当前执行状态：`courier-s01` 已完成 20 次更新（20,971,520 环境步）；拦截者使用其 `u000020` 作为冻结运包对手，正在 `interceptor-s01e` 续跑剩余 19 次更新，已完成 8 次，稳定约 49k 全局环境步/秒。拦截者指标包含学习方和对手两组，训练器已按 rollout 实际形状初始化累计指标，避免单对手池的维度错误。
+
 主要观察指标是交付胜率、携包者击杀、掉包和自死。最终评估必须使用没有进入交替训练的冻结拦截模型和新种子，且只有把对方包子交回己方笼子才算运包胜利；包子掉在外面或超时未交付都算平局。
