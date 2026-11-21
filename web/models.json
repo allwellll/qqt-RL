@@ -2,6 +2,67 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "dcu-courier-u000560",
+      "display_name": "DCU 运包强化 · u560",
+      "menu_label": "DCU 运包强化 · u560（新）",
+      "cycle": 560,
+      "candidate": "carry courier u000560",
+      "strategy": "raw",
+      "source_sha256": "457a83bd5db1fd0f39b9531881847fc82153b11161378055e53f362a84155b42",
+      "full_source_sha256": "457a83bd5db1fd0f39b9531881847fc82153b11161378055e53f362a84155b42",
+      "rule_version": "bun-native-v3-items",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "dcu-courier-u000560-6c29786caf38be523bae43a7e3303df8eb7bbc3e2075eb431a1e9e359cc115b3.json",
+      "sha256": "6c29786caf38be523bae43a7e3303df8eb7bbc3e2075eb431a1e9e359cc115b3",
+      "bytes": 40340648,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000560-20261122/dcu-courier-u000560-6c29786caf38be523bae43a7e3303df8eb7bbc3e2075eb431a1e9e359cc115b3.json",
+      "onnx": {
+        "file": "dcu-courier-u000560-e15c5e45c538264ea15f6d1f417b2b3beed3ba1de5d5cc4b637319c1d763350b.onnx",
+        "sha256": "e15c5e45c538264ea15f6d1f417b2b3beed3ba1de5d5cc4b637319c1d763350b",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000560-20261122/dcu-courier-u000560-e15c5e45c538264ea15f6d1f417b2b3beed3ba1de5d5cc4b637319c1d763350b.onnx",
+        "meta": {
+          "name": "dcu-courier-u000560",
+          "display_name": "DCU courier u000560",
+          "rule": "bun",
+          "rule_version": "bun-native-v3-items",
+          "qqt_map_id": 806,
+          "arch": "transformer",
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": ["none", "bomb", "use_item"],
+          "value_min": -20,
+          "value_max": 20,
+          "obs_shape": [25, 13, 15],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "checkpoint_sha256": "457a83bd5db1fd0f39b9531881847fc82153b11161378055e53f362a84155b42",
+          "source_global_dim": 38,
+          "fixed_mode": 0,
+          "projection": "drop final mode input row only",
+          "onnx_sha256": "e15c5e45c538264ea15f6d1f417b2b3beed3ba1de5d5cc4b637319c1d763350b",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "457a83bd5db1fd0f39b9531881847fc82153b11161378055e53f362a84155b42",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI"
+        },
+        "reference_zero": {
+          "move": [1.656796932220459, 2.4955103397369385, 2.111783742904663, 2.796816110610962, 0.7039728164672852],
+          "bomb": [0.6300157904624939, 1.6023306846618652, 0.5119616985321045],
+          "value": 1.6757594347000122
+        }
+      },
+      "description": "完整运包地图训练 u560；最近80轮对u104交付约88.2%，对普通SP_web约70.3%。训练聚合统计，网页为固定mode=0的FP32导出；作为可选模型，不替换当前默认。"
+    },
+    {
       "id": "items-l2-sp-u023302-tau03",
       "display_name": "SP · 少自死/猎手强/偶停（运包默认）",
       "cycle": 23302,
