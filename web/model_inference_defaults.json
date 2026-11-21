@@ -28,6 +28,11 @@
       "greedy": false,
       "temperature": 0.3,
       "seed": 5329236
+    },
+    "dcu-kill-u000244-tau03": {
+      "greedy": false,
+      "temperature": 0.3,
+      "seed": 5329236
     }
   },
   "mode_defaults": {
