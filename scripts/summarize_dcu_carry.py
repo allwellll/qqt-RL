@@ -7,7 +7,10 @@ from pathlib import Path
 def summarize(out):
     config = json.loads((out/'PLAN.json').read_text())
     last = None
-    with (out/'updates.jsonl').open() as f:
+    updates = out/'updates.jsonl'
+    if not updates.is_file():
+        return dict(stage=config['stage'], status='no completed update')
+    with updates.open() as f:
         for line in f:
             # A writer may currently be appending the last JSONL record.
             if line.endswith('\n') and line.strip():
@@ -16,7 +19,8 @@ def summarize(out):
         return dict(stage=config['stage'], status='no completed update')
     names = last['metric_names']
     groups = []
-    for kind, pair in zip(('interceptor', 'SP_web'), last['cumulative_metrics']):
+    for kind, pair in zip(last.get('opponent_ids', ('interceptor', 'SP_web')),
+                          last['cumulative_metrics'], strict=True):
         a, b = [dict(zip(names, row)) for row in pair]
         games = a['games']
         if games == 0:
@@ -30,7 +34,8 @@ def summarize(out):
             learner_kills_per_game=ratio(a['kills'], games),
             learner_deaths_per_game=ratio(a['deaths'], games),
             learner_carrier_kills=a['carrier_kills'],
-            learner_drops=a['drops'], opponent_drops=b['drops']))
+            opponent_carrier_kills=b['carrier_kills'], learner_self_deaths=a['self_deaths'],
+            opponent_self_deaths=b['self_deaths'], learner_drops=a['drops'], opponent_drops=b['drops']))
     return dict(stage=config['stage'], update=last['update'],
                 environment_steps=last['environment_steps'],
                 recent_environment_steps_per_second=last['environment_steps_per_second'],

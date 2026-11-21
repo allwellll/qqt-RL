@@ -26,3 +26,11 @@ ONNX 对源 FP32 的最大误差 `2.10e-5`。17 个 JS/ONNX 输入最大误差 `
 `LOCAL_BROWSER.json` 和 `PUBLIC_BROWSER.json`。
 模型 JSON/ONNX 只放在带内容哈希的 GitHub Release 资产；仓库只提交目录与模型证据，
 Pages CI 下载后按大小和 SHA256 校验。
+
+## u244 可选模型
+
+纯击杀默认仍为 u153。在「高阶设置 → 对手 → 策略」可切换到「对拼强化 · u244」，也可切回 u153。
+u244 来自本轮最终检查点，固定对手 12 局全胜、170 次击杀、12 次死亡；没有与 u153 直接对战。
+[u244 录像](https://allwellll.github.io/qqt-RL/dcu-replays/training-u000244-20261121.html)和
+[模型资产](https://github.com/allwellll/qqt-RL/releases/tag/dcu-kill-u000244-20261121)单独保留。
+导出及验收回执位于 `runs/dcu-web-u000244-20261121-v1/`。

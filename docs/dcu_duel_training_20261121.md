@@ -66,3 +66,53 @@ cat runs/duel-pool-8card-e2048-mb2048-20261121/LATEST.json
 每批固定种子，使用双方席位对战 DUEL、SP、G，共 12 局。
 观看入口为 [GitHub Pages 回放](https://allwellll.github.io/qqt-RL/dcu-replays/)，
 发布状态见 `runs/duel-replays-publish-20261121/publisher.log`。
+已完成版本横向评测见[检查点评测报告](dcu_duel_checkpoint_evaluation_20261121.md)。
+
+## 最终训练结果（2026-11-21）
+
+本轮已按预算正常完成，GPU 当前空闲；训练 PID 和回放发布进程均已退出。
+结果文件 `runs/duel-pool-8card-e2048-mb2048-20261121/RESULT.json` 状态为
+`PASS_FUSED_JAX_DCU_UPDATE`，244 次 PPO 更新，新增 255,852,544 环境步，运行
+13,187 秒（约 3 小时 40 分的训练计时；含初始化后的训练计时口径以 RESULT 为准）。
+最新 Actor/Critic 为 `u000244`，位于同一 run 目录；Adam 未保存。该检查点是最后检查点，
+不是经过固定评测筛选的“最佳模型”，发布网页前仍须用固定规则和席位评测。
+
+末尾 50 轮每轮全局环境步数为 1,048,576，中位耗时 52.47 秒，折合约
+19,986 环境步/秒；均值约 19,948。首次编译不在这 50 轮内。不要把单卡运包基准
+或纯采样速度与这个“rollout + 完整 PPO 更新”的口径混用。
+
+## 吞吐分析与下一轮提速
+
+末尾 50 轮每轮采样中位数 20.71 秒，PPO 中位数 31.73 秒，总计 52.47 秒。
+因此约 39.5% 时间用于采样、60.5% 用于 PPO 更新。8 卡每卡 2048、64 tick，
+采样约 50.6k 全局环境步/秒，完成完整更新后的端到端速度约 20.0k 步/秒。
+PPO 是当前首要瓶颈；继续增加环境数可能放大 PPO 的 batch 与优化成本，不应仅凭
+纯 rollout 速度推断总训练吞吐会变快。
+
+建议下一轮按以下顺序做短时 A/B，每次只改变一个因素，先通过首轮 logp/value
+一致性检查，再比较 10–20 次稳定更新的中位数，同时记录利用率、显存峰值和模型质量：
+
+1. **PPO minibatch 扫描。** 当前 rollout 每卡有 131,072 样本，每轮 64 个
+minibatch 更新，minibatch=2048。测试 4096、8192 是否能缩短 Python/XLA scan 与
+调度成本；同时核对优化步数和梯度统计没有因扫描形状变化而被意外改变。大 minibatch
+会改变 PPO 更新轨迹，因此即使更快也需要固定对手评测，不可直接认定等价。
+2. **参考策略前向复用。** `kill_ppo.py` 每个 minibatch 在损失中对冻结 reference
+再做一次网络前向来算 KL。可在 rollout 后预计算固定 reference 的动作 logits，再让
+PPO scan 读取缓存，减少重复网络计算。需测 logits 缓存的显存占用，并保持同一 KL
+定义、mask 和数值容差；先小规模验证数值与梯度，再测吞吐。
+3. **更新器调度和设备驻留。** 检查每轮 host 到 device 的参数/Adam 复制、pmap
+collective 和指标同步成本。当前实现 `lax.scan` 已编译完整 PPO 更新，修改前先用
+ROCm profiler 或分段计时定位，不要盲目改并行策略。
+4. **优化 rollout 约 20.7 秒的路径。** `jax_kill_collect.py` 每 tick 包含 learner
+前向、最多 5 组冻结模型前向、原生环境 step 与指标聚合。用 profiler 判断是网络、
+环境转移、随机采样还是 opponent bank 分组散射占时；只有证据显示某段占比高时再定向
+融合或减少中间数组。
+5. **最后再扫描每卡环境数。** 固定每卡 2048 的 PPO minibatch 形状先做好基准，
+再对比每卡 1024/2048/4096 的端到端吞吐和质量。当前八卡每卡 2048 已达到约
+20k 步/秒，先优化 PPO 才能避免把瓶颈随 batch 扩大。
+
+推荐短测验收门槛：启动与编译单独计时；至少 10 轮 warm 稳态；完整 rollout + PPO
+作为主吞吐；记录 `collect_seconds`、`ppo_seconds`、GPU 利用率、显存峰值和有效
+optimizer step 数。每种变体保留独立临时 run 目录，任何计算形状变化都通过 rollout
+重算检查和固定对手评测后，才用于长训。当前机器已有训练结束状态，不要把这些实验
+与正式训练混跑。

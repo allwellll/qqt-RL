@@ -65,3 +65,13 @@ def test_compiler_profile_preserves_explicit_flags():
     with patch.dict(os.environ, {'XLA_FLAGS': '--explicit-user-choice'}, clear=True):
         configure_compiler('throughput')
         assert os.environ['XLA_FLAGS'] == '--explicit-user-choice'
+
+
+def test_kill_plan_uses_frozen_evaluated_history_pool():
+    from scripts.train_dcu_jax_kill import arguments as kill_args, plan
+    row = plan(kill_args(['plan', '--devices', '0,1,2,3,4,5,6,7', '--envs', '512']))
+    assert row['initial_actor'] == 'u930'
+    assert row['rule_bot_fraction'] == .1
+    assert row['opponent_model_fractions'] == dict(
+        current=.09, recent=.09, u930=.315, u840=.315, SP=.045, G=.045)
+    assert row['opponent_pool']['candidate_auto_admission'] is False

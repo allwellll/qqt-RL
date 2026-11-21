@@ -42,6 +42,35 @@ assert 'jax' not in sys.modules
     assert row['opponent_fractions'] == dict(interceptor=.75, SP_web=.25)
 
 
+def test_carry_defender_pool_requires_post_warmup_distinct_actors(tmp_path):
+    from scripts import train_dcu_jax_carry as trainer
+    paths = [tmp_path / seed for seed in ('u244', 'u220', 'u153')]
+    a = arguments(['plan', '--stage', 'interceptor', '--interceptor-start', 'u244'])
+    warmstart = plan(a)
+    assert warmstart['initial_actor_sha256'] == trainer.DUEL_SEEDS['u244']
+    assert warmstart['opponent_fractions']['SP_web'] == 1
+    def write(path, seed, update, actor_sha):
+        path.mkdir(exist_ok=True)
+        (path/'CHECKPOINT.json').write_text(json.dumps(dict(schema=SCHEMA, stage='interceptor',
+            update=update, critic_warmup_updates=5, actor_sha256=actor_sha, initial_actor=seed,
+            initial_actor_sha256=trainer.DUEL_SEEDS[seed], source_sha256=warmstart['source_sha256'],
+            u930_sha256=trainer.U930_SHA, SP_web_sha256=trainer.SP_SHA)))
+    for i, path in enumerate(paths, start=1):
+        write(path, path.name, 10, f'{i:064x}')
+    b = arguments(['plan', '--stage', 'courier', *[x for p in paths for x in ('--defender', str(p))]])
+    courier = plan(b)
+    assert courier['initial_actor_sha256'] == trainer.SP_SHA
+    assert courier['opponent_fractions'] == {k: .25 for k in
+        ('interceptor:u244', 'interceptor:u220', 'interceptor:u153', 'SP_web')}
+    assert [r['can_transport'] for r in courier['opponent_pool']] == [False, False, False, True]
+    write(paths[0], 'u244', 5, f'{1:064x}')
+    with pytest.raises(ValueError, match='trained its Actor'):
+        plan(b)
+    write(paths[0], 'u220', 10, f'{1:064x}')
+    with pytest.raises(ValueError, match='distinct warm-start'):
+        plan(b)
+
+
 @pytest.fixture(scope='module')
 def cpu():
     if os.environ.get('JAX_PLATFORMS') != 'cpu':
@@ -177,6 +206,12 @@ def test_no_kill_no_interceptor_reward_and_independent_resets(cpu):
         for kind in (0, 1):
             assert ((kinds == kind) & (seats == 0)).sum() == ((kinds == kind) & (seats == 1)).sum()
         assert (~permissions).sum() == (128 if stage == 'interceptor' else 96)
+    seats, kinds, permissions = allocation(2048, 'courier', defenders=3)
+    for kind in range(4):
+        lanes = np.flatnonzero(kinds == kind)
+        assert len(lanes) == 512 and (seats[lanes] == 0).sum() == 256
+        assert permissions[lanes, seats[lanes]].all()
+        assert (permissions[lanes, 1-seats[lanes]] == (kind == 3)).all()
 
 
 def test_carry_checkpoint_prunes_only_its_schema(tmp_path):
@@ -203,12 +238,13 @@ def test_read_only_metrics_summary(tmp_path):
     assert result['groups'][0]['learner_carrier_kills'] == 7
 
 
-@pytest.mark.parametrize('stage', ['interceptor', 'courier'])
-def test_device_collector_gae_and_learner_only_update(cpu, stage):
+@pytest.mark.parametrize('stage,defenders', [('interceptor', 1), ('courier', 3)])
+def test_device_collector_gae_and_learner_only_update(cpu, stage, defenders):
     jax, j, np, _, _ = cpu
     from jax_bomb.jax_net import init_transformer
     from scripts.r4_k4_observation import actor_critic_forward
     from qqt_rl.training.jax_carry_collect import build as collector
+    from qqt_rl.training.jax_carry_fast import build as fast_collector
     from qqt_rl.training.kill_ppo import build
     # Tiny random network validates the actual rollout/optimizer interface;
     # no historical weights are trained and no accelerator can be used.
@@ -220,9 +256,12 @@ def test_device_collector_gae_and_learner_only_update(cpu, stage):
     params = dict(actor=actor, critic=critic)
     devices = [jax.devices('cpu')[0]]
     rep = lambda x: jax.device_put_replicated(x, devices)
-    bank = rep(jax.tree.map(lambda a: j.stack([a, a]), actor))
+    bank = rep(jax.tree.map(lambda a: j.stack([a] * (defenders + 1)), actor))
     snapshot = jax.tree.map(np.asarray, bank)
-    init_world, collect = collector(devices, 8, 2, stage=stage)
+    if defenders > 1:
+        init_world, collect = fast_collector(devices, 8, 2, stage=stage, defenders=defenders, fused=True)
+    else:
+        init_world, collect = collector(devices, 8, 2, stage=stage)
     keys = jax.random.split(jax.random.PRNGKey(3), 1)
     world = init_world(keys)
     # A real terminal transition alongside continuing games.
@@ -232,7 +271,7 @@ def test_device_collector_gae_and_learner_only_update(cpu, stage):
     jax.block_until_ready(batch)
     assert batch['obs'].shape == (1, 16, 25, 13, 15)
     assert world.state.t[0, 0] == 1 and world.state.t[0, 1] == 2
-    assert metrics.shape == (1, 2, 2, 12)
+    assert metrics.shape == (1, defenders + 1, 2, 12)
     bad = {k: int((~np.isfinite(np.asarray(v))).sum()) for k, v in batch.items()
            if not np.isfinite(np.asarray(v)).all()}
     assert not bad, bad

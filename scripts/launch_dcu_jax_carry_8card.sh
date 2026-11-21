@@ -20,6 +20,6 @@ ulimit -c 0
 exec timeout --signal=TERM --kill-after=90s 5h \
   python -u -m scripts.train_dcu_jax_carry train \
   --stage "$qqt_stage" --devices 0,1,2,3,4,5,6,7 \
-  --envs 2048 --ticks 64 --minibatch 512 --collector fused \
-  --policy-chunk 512 --value-chunk 512 --compiler-profile throughput --hours "$qqt_hours" \
+  --envs 2048 --ticks 64 --minibatch 2048 --collector fused \
+  --policy-chunk 2048 --value-chunk 2048 --compiler-profile throughput --hours "$qqt_hours" \
   --out "$qqt_output" --acknowledge-training "$@"

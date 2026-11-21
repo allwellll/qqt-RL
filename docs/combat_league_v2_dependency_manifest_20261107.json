@@ -2922,7 +2922,7 @@
       "dependencies": []
     },
     "web/app.js": {
-      "sha256": "bd4c02edcce611b10d9cccbf3ba010ebdc904e0a72e27873a7ff3278cab936f3",
+      "sha256": "b58bb7febd101c4f042865cdcf29d5d11c1eb607843423a953f1f1f29f90d59b",
       "dependencies": []
     },
     "web/assets/maps/levels.json": {

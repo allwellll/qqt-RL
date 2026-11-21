@@ -11,7 +11,11 @@ const {createServer}=require('../web/server');
  const base=publicURL||`http://127.0.0.1:${server.address().port}/`;
  const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-gpu']});
  const id=process.env.DCU_EXPECTED_MODEL_ID||require('../web/model_inference_defaults.json').mode_defaults.kill;
- const name=require('../web/models.json').models.find(row=>row.id===id)?.onnx?.meta?.name;assert(name,'expected model metadata');
+ const catalog=require('../web/models.json').models;
+ const name=catalog.find(row=>row.id===id)?.onnx?.meta?.name;assert(name,'expected model metadata');
+ const alternateId=process.env.DCU_ALTERNATE_MODEL_ID;
+ const alternateName=catalog.find(row=>row.id===alternateId)?.onnx?.meta?.name;
+ if(alternateId)assert(alternateName&&alternateId!==id,'expected alternate model metadata');
  const results=[],responses=new Map();
  try{
   for(const width of [1280,390]){
@@ -32,7 +36,13 @@ const {createServer}=require('../web/server');
    }
    // Leaderboard requests are independent of model inference.
    await context.route('**/*.supabase.co/**',route=>route.fulfill({json:[]}));
-   await page.addInitScript(()=>{
+   await page.addInitScript(({testAdvancedMenu})=>{
+    if(testAdvancedMenu){
+     let panels;
+     Object.defineProperty(window,'QQTPanels',{get:()=>panels,set:value=>{
+      panels={...value,mount:doc=>value.mount(doc,{auth:{authorized:()=>true}})};
+     }});
+    }
     let worker,visual;
     Object.defineProperty(window,'QQTModelWorker',{get:()=>worker,set:value=>{
      worker=value;const load=value.load;value.load=async(...args)=>{const result=await load(...args);window.observedModel=result;return result;};
@@ -42,7 +52,7 @@ const {createServer}=require('../web/server');
       const renderer=create(...args),render=renderer.render;renderer.render=(sim,...rest)=>{window.observedSim=sim;return render(sim,...rest);};return renderer;
      };
     }});
-   });
+   },{testAdvancedMenu:Boolean(alternateId)});
    const ready=async expected=>{
     await page.waitForFunction(name=>window.observedModel?.meta?.name===name && !document.querySelector('#opponent').disabled && document.querySelector('#loading').classList.contains('done'),expected,{timeout:600000});
     await page.waitForFunction(()=>observedModel.inferenceTimes.length>=3 && observedSim.t>0,null,{timeout:60000});
@@ -54,6 +64,20 @@ const {createServer}=require('../web/server');
    assert.equal(first.selected,'model:'+id);assert.equal(first.mode,'kill');assert.equal(first.kill,true);
    assert.equal(first.temperature,.3);assert.equal(first.greedy,false);assert.equal(first.backend,'worker-wasm');assert(first.parity<.001);assert(!first.overflow);
    await page.screenshot({path:path.join(out,`default-${publicURL?'public':'local'}-${width}.png`),fullPage:true});
+   let alternate=null,switchBack=null;
+   if(alternateId){
+    await page.locator('#advanced-open').click();
+    const selector=page.locator('#advanced-settings #opponent');
+    await selector.selectOption('model:'+alternateId);
+    alternate=await ready(alternateName);
+    assert.equal(alternate.selected,'model:'+alternateId);assert.equal(alternate.kill,true);
+    assert.equal(alternate.backend,'worker-wasm');assert.equal(alternate.temperature,.3);
+    assert.equal(alternate.greedy,false);assert(alternate.parity<.001);assert(!alternate.overflow);
+    await selector.selectOption('model:'+id);
+    switchBack=await ready(name);
+    assert.equal(switchBack.selected,'model:'+id);assert.equal(switchBack.kill,true);
+    assert.equal(switchBack.backend,'worker-wasm');
+   }
    await page.locator('#game-mode').selectOption('carry');
    const carry=await ready('L2_SP_u023302');
    assert.equal(carry.selected,'model:items-l2-sp-u023302-tau03');assert.equal(carry.kill,false);assert.equal(carry.backend,'worker-wasm');
@@ -61,7 +85,7 @@ const {createServer}=require('../web/server');
    await page.reload({waitUntil:'domcontentloaded',timeout:120000});const reload=await ready(name);
    assert.equal(reload.selected,'model:'+id);assert.equal(reload.mode,'kill');
    assert(!requests.some(u=>u.includes('aliyuncs.com')));assert.deepEqual(errors,[]);
-   results.push({width,first,carry,reload,errors,model_requests:requests.filter(u=>u.includes('/models/'))});await context.close();
+   results.push({width,first,alternate,switchBack,carry,reload,errors,model_requests:requests.filter(u=>u.includes('/models/'))});await context.close();
   }
   const receipt={status:'PASS_DESKTOP_MOBILE_DEFAULT',url:base,transport:publicURL&&process.env.REPLAY_HTTP_BRIDGE==='1'?'python-stdlib HTTP bridge':'Chromium default',results};
   fs.writeFileSync(path.join(out,publicURL?'PUBLIC_BROWSER.json':'LOCAL_BROWSER.json'),JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));
