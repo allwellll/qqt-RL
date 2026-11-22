@@ -2,6 +2,42 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "dcu-courier-u000168",
+      "display_name": "DCU 运包强化 · u168",
+      "menu_label": "DCU 运包强化 · u168（运包默认）",
+      "cycle": 168,
+      "candidate": "carry courier u000168",
+      "strategy": "raw",
+      "source_sha256": "610f94ae33b15de4fcb8393a74590dc985c482e3eecc225da5e782f7ebf50b97",
+      "full_source_sha256": "610f94ae33b15de4fcb8393a74590dc985c482e3eecc225da5e782f7ebf50b97",
+      "rule_version": "bun-native-v3-items",
+      "inference": {"greedy": false, "temperature": 0.3, "seed": 5329236},
+      "file": "dcu-courier-u000168-57d59ad04deb81f33f5c9ff2bd9053fd07f5dff338ebb56074f2bbece5ff682f.json",
+      "sha256": "57d59ad04deb81f33f5c9ff2bd9053fd07f5dff338ebb56074f2bbece5ff682f",
+      "bytes": 40340648,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000168-20261122/dcu-courier-u000168-57d59ad04deb81f33f5c9ff2bd9053fd07f5dff338ebb56074f2bbece5ff682f.json",
+      "onnx": {
+        "file": "dcu-courier-u000168-09bcfd68ba8fa94429a3bcd4afb8f7caf50fa1bb43dc17bd2def5a9321accd88.onnx",
+        "sha256": "09bcfd68ba8fa94429a3bcd4afb8f7caf50fa1bb43dc17bd2def5a9321accd88",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000168-20261122/dcu-courier-u000168-09bcfd68ba8fa94429a3bcd4afb8f7caf50fa1bb43dc17bd2def5a9321accd88.onnx",
+        "meta": {
+          "name": "dcu-courier-u000168", "display_name": "DCU courier u000168", "rule": "bun", "rule_version": "bun-native-v3-items", "qqt_map_id": 806,
+          "arch": "transformer", "move_actions": 5, "ability_actions": 3, "ability_encoding": ["none", "bomb", "use_item"], "value_min": -20, "value_max": 20,
+          "obs_shape": [25, 13, 15], "state_dim": 37, "n_players": 2, "embed": 392, "patch": 3, "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1", "checkpoint_sha256": "610f94ae33b15de4fcb8393a74590dc985c482e3eecc225da5e782f7ebf50b97", "source_global_dim": 38, "fixed_mode": 0,
+          "projection": "drop final mode input row only", "onnx_sha256": "09bcfd68ba8fa94429a3bcd4afb8f7caf50fa1bb43dc17bd2def5a9321accd88", "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "610f94ae33b15de4fcb8393a74590dc985c482e3eecc225da5e782f7ebf50b97", "r4_full_input_abi": "obs25-global38", "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI"
+        },
+        "reference_zero": {
+          "move": [1.3098636841864304, 2.5230435278374066, 2.634560410780717, 2.43048017711039, -0.32902050082375967],
+          "bomb": [0.3737115273014734, 3.2219405004229933, -1.302666398525338],
+          "value": 1.3827190682785921
+        }
+      },
+      "description": "2026-11-22 联合运包训练 u168；来自已发布运包对拼录像的运包方。网页固定 mode=0 的 FP32 导出，作为当前运包默认；旧 SP/u587 仍可选。"
+    },
+    {
       "id": "items-l2-sp-u023302-tau03",
       "display_name": "SP · 少自死/猎手强/偶停（运包默认）",
       "cycle": 23302,
@@ -100,7 +136,7 @@
           "summary": "近身2胜/1负/1平；两类困难猎手合计4胜/0负、自死0次。与原v3同seed子集关键指标一致；仅兼容性快筛，不是全面优势证明。"
         }
       },
-      "menu_label": "SP · 少自死/猎手强/偶停（运包默认）"
+      "menu_label": "SP · 少自死/猎手强/偶停（可选）"
     },
     {
       "id": "dcu-courier-u000587",
