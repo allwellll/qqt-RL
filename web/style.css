@@ -167,7 +167,7 @@ body.game-immersive { position: fixed; top: var(--game-scroll-top, 0px); left: 0
   .game-toolbar { display: flex; }
   .game-toolbar button { font-size: 13px; padding: 6px 8px; }
   .touch-controls { --touch-size: clamp(48px, 14vmin, 64px); --bomb-size: clamp(88px, 25vmin, 104px); --stick-size: clamp(80px, 25vmin, 112px); display: block; position: absolute; inset: 0; pointer-events: none; }
-  .touch-directions { position: absolute; left: env(safe-area-inset-left, 0px); bottom: max(12px, env(safe-area-inset-bottom, 0px)); width: 45%; height: min(240px, 40%); pointer-events: auto; touch-action: none; overflow: visible; }
+  .touch-directions { position: absolute; right: env(safe-area-inset-right, 0px); bottom: max(12px, env(safe-area-inset-bottom, 0px)); width: 45%; height: min(240px, 40%); pointer-events: auto; touch-action: none; overflow: visible; }
   .touch-stick { position: absolute; left: 50%; top: 50%; width: var(--stick-size); height: var(--stick-size); transform: translate(-50%, -50%); border: 2px solid #9fd7df66; border-radius: 50%; background: #10252d66; opacity: .45; pointer-events: none; }
   .touch-directions[data-active="true"] .touch-stick { opacity: .9; }
   .touch-stick::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: repeating-conic-gradient(from 45deg, #9fd7df55 0deg 1deg, transparent 1deg 90deg); }
@@ -180,7 +180,7 @@ body.game-immersive { position: fixed; top: var(--game-scroll-top, 0px); left: 0
   [data-direction="ArrowUp"] [data-arrow="ArrowUp"], [data-direction="ArrowDown"] [data-arrow="ArrowDown"], [data-direction="ArrowLeft"] [data-arrow="ArrowLeft"], [data-direction="ArrowRight"] [data-arrow="ArrowRight"] { color: #63ffe0; text-shadow: 0 0 8px #63ffe0; }
   .touch-directions[data-secondary="ArrowUp"] [data-arrow="ArrowUp"], .touch-directions[data-secondary="ArrowDown"] [data-arrow="ArrowDown"], .touch-directions[data-secondary="ArrowLeft"] [data-arrow="ArrowLeft"], .touch-directions[data-secondary="ArrowRight"] [data-arrow="ArrowRight"] { color: #e8ca76; }
   .touch-directions[data-resolved="ArrowUp"] [data-arrow="ArrowUp"], .touch-directions[data-resolved="ArrowDown"] [data-arrow="ArrowDown"], .touch-directions[data-resolved="ArrowLeft"] [data-arrow="ArrowLeft"], .touch-directions[data-resolved="ArrowRight"] [data-arrow="ArrowRight"] { color: #63ffe0; text-shadow: 0 0 8px #63ffe0; }
-  .touch-actions { position: absolute; right: max(8px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); display: grid; grid-template-columns: repeat(3, var(--touch-size)); gap: 10px 4px; justify-items: center; pointer-events: none; }
+  .touch-actions { position: absolute; left: max(8px, env(safe-area-inset-left, 0px)); bottom: max(12px, env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: repeat(3, var(--touch-size)); gap: 10px 4px; justify-items: center; pointer-events: none; }
   .touch-controls button { box-sizing: border-box; height: var(--touch-size); min-height: 48px; width: var(--touch-size); min-width: 48px; margin: 0; padding: 4px; touch-action: none; font-size: 20px; font-weight: bold; background: #132234; color: white; border: 2px solid #b6c9dd; border-radius: 12px; pointer-events: auto; }
   .touch-controls button:active { background: #245c68; }
   .touch-bomb-hit { grid-column: span 3; width: calc(var(--bomb-size) * 1.25); height: calc(var(--bomb-size) * 1.25); display: grid; place-items: center; border-radius: 50%; pointer-events: auto; touch-action: none; }
@@ -200,6 +200,6 @@ body.game-immersive { position: fixed; top: var(--game-scroll-top, 0px); left: 0
   .stage > #game { flex: none; width: min(calc(100% - var(--control-rail) * 2), calc((100dvh - max(8px, env(safe-area-inset-top)) - max(8px, env(safe-area-inset-bottom))) * 900 / 880)); }
   .touch-controls { --touch-size: clamp(48px, 12vmin, 64px); }
   .touch-directions { width: var(--control-rail); height: calc(100% - 72px); }
-  .touch-actions { right: calc(env(safe-area-inset-right, 0px) + (var(--control-rail) - 3 * var(--touch-size) - 8px) / 2); }
+  .touch-actions { left: calc(env(safe-area-inset-left, 0px) + (var(--control-rail) - 3 * var(--touch-size) - 8px) / 2); }
   .stage .settlement { width: min(540px, calc(100% - 2 * var(--control-rail))); }
 }
