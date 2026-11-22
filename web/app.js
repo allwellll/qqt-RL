@@ -140,7 +140,7 @@
     if (QQTControls.BOMB_KEYS.includes(key) && bombCell < 0) bombCell = humanCell();
     const slot = QQTControls.ITEM_SLOT_KEYS.indexOf(key);
     if (slot >= 0 && sim.itemSlots?.[0]?.[slot] && itemCell < 0) { itemCell = humanCell(); itemSlot = slot; }
-  });
+  }, QQTControls.TRAJECTORY_TOUCH_PROFILE);
   let loadedModel = null;
   let loadedModelId = null;
   let publishedModels = [];

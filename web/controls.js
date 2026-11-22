@@ -60,6 +60,15 @@
     })};
   }
 
+  const TRAJECTORY_TOUCH_PROFILE = Object.freeze({
+    trajectory: true,
+    deadzoneRatio: 0.01,
+    hysteresisDeg: 19,
+    bufferMs: 10,
+    diagonalMin: 14,
+    diagonalMax: 45,
+    diagonalMode: 'preserve',
+  });
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
   // Radial mode uses a floating centre. Trajectory mode advances the sample origin only after a valid segment.
   function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58, diagonalMin = 25, diagonalMax = 65, diagonalMode = 'secondary', trajectory = false} = {}) {
@@ -74,7 +83,7 @@
         if (!center) return snapshot();
         let dx=x-center.x, dy=y-center.y, length=Math.hypot(dx,dy);
         if(trajectory){
-          if(length<Math.max(2,deadzone))return snapshot();
+          if(length===0||length<deadzone)return snapshot();
           center={x,y};
         } else if(length>radius){center={x:x-dx*radius/length,y:y-dy*radius/length};dx=x-center.x;dy=y-center.y;length=radius;}
         const old=direction, oldSecondary=secondary;
@@ -345,5 +354,5 @@
   }
 
   return { MOVEMENT_KEYS, MOVEMENT_DIRECTIONS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld,
-    isTypingTarget, isRestartKey, createRestartGate, touchItemPage, createFloatingStick, nativeDirectionReachable, createTouchSteering, bindTouchControls };
+    TRAJECTORY_TOUCH_PROFILE, isTypingTarget, isRestartKey, createRestartGate, touchItemPage, createFloatingStick, nativeDirectionReachable, createTouchSteering, bindTouchControls };
 });

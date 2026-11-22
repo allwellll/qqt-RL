@@ -12,7 +12,7 @@ for (const [x, y] of [[45, 65], [180, 180]]) {
   };
   const segments = [];
   const controls = C.bindTouchControls(zone, new Set(), () => {}, {
-    trajectory: true, diagonalMode: 'preserve', onTrajectorySegment: segment => { if (segment) segments.push(segment); },
+    ...C.TRAJECTORY_TOUCH_PROFILE, onTrajectorySegment: segment => segments.push(segment),
   });
   const sim = new Sim(3);
   sim.reset('open', { nativeItems: true, nativeTrap: true });
@@ -21,23 +21,26 @@ for (const [x, y] of [[45, 65], [180, 180]]) {
   const move = () => controls.moveFor(sim, 0, performance.now());
   send('pointerdown', x, y);
   assert.equal(move(), 4, 'off-centre contact starts neutral');
-  send('pointermove', x + 1, y);
+  send('pointermove', x + 0.25, y);
   assert.equal(move(), 4, 'small movement is filtered');
   send('pointermove', x + 24, y);
-  assert.equal(move(), 3);
-  sim.frameStep(0, 3, 1 / 60);
+  const right = move();
+  assert.equal(right, 3);
+  sim.frameStep(0, right, controls.frameSeconds(1 / 60));
   assert(sim.pos[1] > 6.5, 'character actually moves right');
   send('pointermove', x + 36, y - 12);
   assert.equal(move(), 3, 'diagonal retains right');
   send('pointermove', x + 36, y - 36);
-  assert.equal(move(), 0, 'upward segment turns even while finger is still right of its start');
+  const up = move();
+  assert.equal(up, 0, 'upward segment turns even while finger is still right of its start');
   assert.equal(zone.dataset.rawAngle, '90');
   assert.equal(zone.dataset.turnAngle, '45');
-  assert.deepEqual(segments[2].from, {x: x + 36, y: y - 12});
-  assert.deepEqual(segments[2].to, {x: x + 36, y: y - 36});
-  sim.frameStep(0, 0, 1 / 60);
+  assert.deepEqual(segments.at(-1).from, {x: x + 36, y: y - 12});
+  assert.deepEqual(segments.at(-1).to, {x: x + 36, y: y - 36});
+  sim.frameStep(0, up, controls.frameSeconds(1 / 60));
   assert(sim.pos[0] < 6.5, 'character actually turns up');
   send('pointerup', x + 36, y - 36);
+  assert.equal(segments.at(-1), null, 'release clears diagnostics');
   assert.equal(move(), 4);
   send('pointerdown', x, y);
   send('pointermove', x - 12, y - 1);
