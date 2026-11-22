@@ -72,42 +72,53 @@
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
   // Radial mode uses a floating centre. Trajectory mode advances the sample origin only after a valid segment.
   function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58, diagonalMin = 25, diagonalMax = 65, diagonalMode = 'secondary', trajectory = false} = {}) {
-    let center = null, habit = null, direction = null, secondary = null, changedAt = 0;
+    let center = null, habit = null, direction = null, secondary = null, changedAt = 0, previousAngle = null;
     const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction, secondary, changedAt});
+    const nearestDirection = angle => {
+      const normalized=(angle+360)%360;
+      if(normalized<45||normalized>=315)return 'ArrowRight';
+      if(normalized<135)return 'ArrowUp';
+      if(normalized<225)return 'ArrowLeft';
+      return 'ArrowDown';
+    };
     return {
       start(x, y, now = performance.now(), initialDirection = null) {
-        center = habit = {x,y}; direction = initialDirection; secondary = null; changedAt = now;
+        center = habit = {x,y}; direction = initialDirection; secondary = null; previousAngle=null; changedAt = now;
         return snapshot();
       },
       move(x, y, now = performance.now()) {
         if (!center) return snapshot();
-        let dx=x-center.x, dy=y-center.y, length=Math.hypot(dx,dy);
+        const old=direction,oldSecondary=secondary;
+        let dx=x-center.x,dy=y-center.y,length=Math.hypot(dx,dy);
         if(trajectory){
           if(length===0||length<deadzone)return snapshot();
           center={x,y};
-        } else if(length>radius){center={x:x-dx*radius/length,y:y-dy*radius/length};dx=x-center.x;dy=y-center.y;length=radius;}
-        const old=direction, oldSecondary=secondary;
-        direction=secondary=null;
-        if(length>=deadzone){
-          const angle=Math.atan2(dy,dx), index=STICK_KEYS.indexOf(old);
-          const delta=index<0?Infinity:Math.abs(Math.atan2(Math.sin(angle-index*Math.PI/2),Math.cos(angle-index*Math.PI/2)));
-          const nearest=Math.abs(dx)>=Math.abs(dy) ? (dx<0?'ArrowLeft':'ArrowRight') : (dy<0?'ArrowUp':'ArrowDown');
-          direction=delta<=hysteresis*Math.PI/180?old:nearest;
-          const diagonal=Math.atan2(Math.abs(dy),Math.abs(dx))*180/Math.PI;
-          if(diagonalMode==='preserve' && diagonal>=diagonalMin && diagonal<=diagonalMax){
-            const previous=old;
-            if(previous==='ArrowLeft'||previous==='ArrowRight'||previous==='ArrowUp'||previous==='ArrowDown')direction=previous;
-            else direction=nearest;
-          } else if(diagonal>=diagonalMin&&diagonal<=diagonalMax){
-            const horizontal=dx<0?'ArrowLeft':'ArrowRight',vertical=dy<0?'ArrowUp':'ArrowDown';
-            secondary=direction===horizontal?vertical:horizontal;
+          const angle=(Math.atan2(-dy,dx)*180/Math.PI+360)%360;
+          const turn=previousAngle==null?Infinity:Math.abs(((angle-previousAngle+540)%360)-180);
+          const preserve=diagonalMode==='preserve'&&old&&turn>=diagonalMin&&turn<=diagonalMax;
+          direction=preserve?old:nearestDirection(angle);
+          previousAngle=angle;
+          secondary=null;
+        }else{
+          if(length>radius){center={x:x-dx*radius/length,y:y-dy*radius/length};dx=x-center.x;dy=y-center.y;length=radius;}
+          direction=secondary=null;
+          if(length>=deadzone){
+            const angle=Math.atan2(dy,dx),index=STICK_KEYS.indexOf(old);
+            const delta=index<0?Infinity:Math.abs(Math.atan2(Math.sin(angle-index*Math.PI/2),Math.cos(angle-index*Math.PI/2)));
+            const nearest=Math.abs(dx)>=Math.abs(dy)?(dx<0?'ArrowLeft':'ArrowRight'):(dy<0?'ArrowUp':'ArrowDown');
+            direction=delta<=hysteresis*Math.PI/180?old:nearest;
+            const diagonal=Math.atan2(Math.abs(dy),Math.abs(dx))*180/Math.PI;
+            if(diagonalMode!=='preserve'&&diagonal>=diagonalMin&&diagonal<=diagonalMax){
+              const horizontal=dx<0?'ArrowLeft':'ArrowRight',vertical=dy<0?'ArrowUp':'ArrowDown';
+              secondary=direction===horizontal?vertical:horizontal;
+            }
           }
         }
         if(old!==direction||oldSecondary!==secondary)changedAt=now;
         return snapshot();
       },
-      end(now = performance.now()) { habit=center&&{...center};center=null;direction=secondary=null;changedAt=now;return snapshot(); },
-      reset(now = performance.now()) { center=habit=direction=secondary=null;changedAt=now;return snapshot(); },
+      end(now = performance.now()) { habit=center&&{...center};center=null;direction=secondary=null;previousAngle=null;changedAt=now;return snapshot(); },
+      reset(now = performance.now()) { center=habit=direction=secondary=null;previousAngle=null;changedAt=now;return snapshot(); },
     };
   }
 
@@ -251,15 +262,17 @@
           // point so its old absolute offset cannot pull the direction back.
           take(event.pointerId,record,{x:record.anchorX,y:record.anchorY});
         }
-        const from=trajectory?(state||current).center:null;
-        state=stick.move(record.x,record.y);
-        if(trajectory&&(state.center.x!==from.x||state.center.y!==from.y)){
-          const dx=state.center.x-from.x,dy=state.center.y-from.y;
-          const angle=Math.atan2(-dy,dx)*180/Math.PI;
-          const turn=segment?((angle-segment.angle+540)%360)-180:null;
-          segment={from,to:state.center,angle,turn,length:Math.hypot(dx,dy)};
-          onTrajectorySegment?.(segment);
-        }
+          if(trajectory){
+            const from=(state||current).center;
+            state=stick.move(record.x,record.y);
+            if(state.center.x!==from.x||state.center.y!==from.y){
+              const dx=state.center.x-from.x,dy=state.center.y-from.y;
+              const angle=(Math.atan2(-dy,dx)*180/Math.PI+360)%360;
+              const turn=segment?((angle-segment.angle+540)%360)-180:null;
+              segment={from,to:state.center,angle,turn,length:Math.hypot(dx,dy),direction:state.direction};
+              onTrajectorySegment?.(segment);
+            }
+          }else state=stick.move(record.x,record.y);
       }
       if(state)paint(state);
     });

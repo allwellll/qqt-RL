@@ -55,14 +55,14 @@
       label.textContent='滑动手指以查看轨迹角和移动方向';
       return;
     }
-    const {from,to,angle,turn}=latestSegment;
+    const {from,to,angle,turn,direction}=latestSegment;
     ctx.strokeStyle='#71caff';ctx.lineWidth=2;ctx.beginPath();
     trail.forEach((p,i)=>i?ctx.lineTo(p.x-rect.left,p.y-rect.top):ctx.moveTo(p.x-rect.left,p.y-rect.top));
     ctx.stroke();
     ctx.strokeStyle='#64e0bc';ctx.lineWidth=4;ctx.beginPath();
     ctx.moveTo(from.x-rect.left,from.y-rect.top);ctx.lineTo(to.x-rect.left,to.y-rect.top);ctx.stroke();
     const turnText=turn==null?'—':`${Math.round(turn)}°`;
-    label.textContent=`轨迹 ${Math.round(angle)}° · 转角 ${turnText} · 控制方向 ${keyName(zone.dataset.resolved)}`;
+    label.textContent=`轨迹 ${Math.round(angle)}° · 转角 ${turnText} · 控制方向 ${keyName(direction)}`;
   }
   const render=()=>{const canvas=$('board'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,cw=w/W,ch=h/H;ctx.clearRect(0,0,w,h);ctx.fillStyle='#152b30';ctx.fillRect(0,0,w,h);for(let r=0;r<H;r++)for(let c=0;c<W;c++){const x=c*cw,y=r*ch;ctx.fillStyle=(r+c)%2?'#1b3739':'#193235';ctx.fillRect(x,y,cw,ch);ctx.strokeStyle='#25484a';ctx.strokeRect(x+.5,y+.5,cw-1,ch-1);const i=r*W+c;if(sim.wall[i]){ctx.fillStyle='#315862';ctx.fillRect(x,y,cw,ch);ctx.fillStyle='#4c7880';ctx.fillRect(x+6,y+6,cw-12,5);ctx.fillStyle='#203e45';ctx.fillRect(x+6,y+ch-11,cw-12,5)}else if(sim.brick[i]){ctx.fillStyle='#8a5540';ctx.fillRect(x,y,cw,ch);ctx.strokeStyle='#c47a55';ctx.beginPath();ctx.moveTo(x+4,y+ch*.52);ctx.lineTo(x+cw-4,y+ch*.52);ctx.moveTo(x+cw*.5,y+5);ctx.lineTo(x+cw*.5,y+ch*.5);ctx.stroke()}if(sim.fuse[i]>0){ctx.fillStyle='#edbd58';ctx.beginPath();ctx.arc(x+cw/2,y+ch/2,Math.min(cw,ch)*.2,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff0a0';ctx.fillRect(x+cw*.67,y+ch*.15,4,10)}}const px=sim.pos[1]*cw,py=sim.pos[0]*ch;ctx.fillStyle='#0a1719aa';ctx.beginPath();ctx.ellipse(px,py+14,16,6,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#64e0bc';ctx.beginPath();ctx.arc(px,py,15,0,Math.PI*2);ctx.fill();ctx.fillStyle='#e8ffff';ctx.beginPath();ctx.arc(px-5,py-4,3,0,Math.PI*2);ctx.arc(px+5,py-4,3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#193b40';ctx.fillRect(px-9,py+5,18,4);const half=NATIVE_HALF_PX/NATIVE_CELL_PX;ctx.strokeStyle='#a0ffdc';ctx.lineWidth=1;ctx.strokeRect((sim.pos[1]-half)*cw,(sim.pos[0]-half)*ch,2*half*cw,2*half*ch);$('position').textContent=`${sim.pos[1].toFixed(2)}, ${sim.pos[0].toFixed(2)}`};
   const bindControls=()=>{if(bind){bind();listenerScope.abort();}held.clear();listenerScope=new AbortController();bind=QQTControls.bindTouchControls(zone,held,()=>{},{...config,trajectory,signal:listenerScope.signal,onTrajectorySegment:collectSegment})};const restart=()=>{sim=createSim();render()};const keyName=k=>({ArrowUp:'上',ArrowDown:'下',ArrowLeft:'左',ArrowRight:'右'})[k]||'无';const log=s=>{$('log').textContent=(new Date().toLocaleTimeString()+' '+s+'\n'+$('log').textContent).slice(0,4000)};
