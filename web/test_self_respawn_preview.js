@@ -12,6 +12,13 @@ function game(seed=73,killMode=true) {
 }
 function cell(point) { return Math.floor(point[0])*15+Math.floor(point[1]); }
 const a=game(),b=game();a._killPlayer(0);b._killPlayer(0);
+for (const [player, team] of [[0, 0], [1, 1]]) {
+  const s=game(73,false);s.team[player]=team;s._killPlayer(player);
+  const target=s.bunSpawnPos[player];
+  assert(team===0?target[1]<7.5:target[1]>=7.5,'bun respawn stays on its home side');
+  s.lastDied.fill(false);s.alive[player]=false;s.bunRespawn[player]=1;s._bunRespawnStep();
+  assert.deepEqual(Array.from(s.pos.slice(player*2,player*2+2)),target,'respawn arrives at the previewed home-side cell');
+}
 assert.deepEqual(a.killRespawnPos,b.killRespawnPos,'same match seed yields same selected point');
 assert.equal(a.killRespawn[0],30);assert.deepEqual(visual.respawnMarkers(a,0).map(m=>[m.row,m.col]),[a.killRespawnPos[0]]);
 assert.deepEqual(visual.respawnMarkers(a,1),[]);assert.deepEqual(visual.respawnMarkers(a,-1),[]);
