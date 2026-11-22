@@ -12,6 +12,7 @@
   let config=load();
   const engine=globalThis.QQTBunNativeV5FacingWindow||globalThis.QQT;
   const {H, W, NATIVE_CELL_PX, NATIVE_HALF_PX} = engine;
+  const level={qqt_id:806,bg:'assets/bg/抢包子.png',layers:[new Int16Array(W*H),new Int16Array(W*H)]};
   const createSim = () => {
     const s = new engine.Sim(3);
     s.reset('open', {nativeItems:true, nativeTrap:true});
@@ -32,7 +33,7 @@
   };
   let sim=createSim();const zone=$('direction-zone'),held=new Set();let bind,listenerScope;const angleSamples=[];let lastAngleSample=0;const angleCanvas=$('angle-chart'),angleCtx=angleCanvas.getContext('2d');
   let gameRenderer=null;
-  const visualAssetsPromise=QQTVisual.loadAssets(level).then(assets=>{gameRenderer=QQTVisual.createRenderer($('board'),level,assets);render();return assets});
+  let visualAssetsPromise=QQTVisual.loadAssets(level).then(assets=>{gameRenderer=QQTVisual.createRenderer($('board'),level,assets);render();return assets}).catch(error=>{console.error('tuner visual assets failed',error);return null});
   const drawAngle=now=>{const rect=angleCanvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1,w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));if(angleCanvas.width!==w||angleCanvas.height!==h){angleCanvas.width=w;angleCanvas.height=h}angleCtx.setTransform(dpr,0,0,dpr,0,0);const cw=rect.width,ch=rect.height;angleCtx.clearRect(0,0,cw,ch);const pad={l:34,r:8,t:9,b:20},pw=cw-pad.l-pad.r,ph=ch-pad.t-pad.b;angleCtx.font='10px system-ui';angleCtx.textAlign='right';for(const deg of [-180,-90,0,90,180]){const y=pad.t+(180-deg)/360*ph;angleCtx.strokeStyle=deg===0?'#47666b':'#263c42';angleCtx.lineWidth=1;angleCtx.beginPath();angleCtx.moveTo(pad.l,y);angleCtx.lineTo(cw-pad.r,y);angleCtx.stroke();angleCtx.fillStyle='#99afb4';angleCtx.fillText(deg+'°',pad.l-5,y+3)}for(const [deg,label] of [[0,'右'],[90,'上'],[-90,'下'],[180,'左']]){const y=pad.t+(180-deg)/360*ph;angleCtx.fillStyle='#d6e4e5';angleCtx.textAlign='left';angleCtx.fillText(label,cw-pad.r-17,y-3)}const start=now-8000;while(angleSamples.length&&angleSamples[0].t<start)angleSamples.shift();const x=t=>pad.l+(t-start)/8000*pw,y=a=>pad.t+(180-a)/360*ph;angleCtx.strokeStyle='#64e0bc';angleCtx.lineWidth=2;angleCtx.beginPath();let pen=false;for(const p of angleSamples){if(p.a==null){pen=false;continue}if(!pen){angleCtx.moveTo(x(p.t),y(p.a));pen=true}else angleCtx.lineTo(x(p.t),y(p.a))}angleCtx.stroke();const current=angleSamples.at(-1);if(current&&current.a!=null){angleCtx.fillStyle='#ffd166';angleCtx.beginPath();angleCtx.arc(x(current.t),y(current.a),3,0,Math.PI*2);angleCtx.fill()}};
   const sampleAngle=now=>{if(now-lastAngleSample<40)return;lastAngleSample=now;const active=zone.dataset.active==='true';const raw=active?latestSegment?.angle:null;angleSamples.push({t:now,a:Number.isFinite(raw)?((raw+180)%360+360)%360-180:null});drawAngle(now)};window.addEventListener('resize',()=>drawAngle(performance.now()),{passive:true});
 
