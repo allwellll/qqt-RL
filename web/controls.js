@@ -95,7 +95,7 @@
           center={x,y};
           const angle=(Math.atan2(-dy,dx)*180/Math.PI+360)%360;
           const turn=previousAngle==null?Infinity:Math.abs(((angle-previousAngle+540)%360)-180);
-          const diagonal=((angle%90)+90)%90; const distance=Math.min(diagonal,90-diagonal); const preserve=diagonalMode==='preserve'&&old&&distance>=diagonalMin&&distance<diagonalMax;
+          const preserve=diagonalMode==='preserve'&&old&&turn>=diagonalMin&&turn<=diagonalMax;
           direction=preserve?old:nearestDirection(angle);
           previousAngle=angle;
           secondary=null;
