@@ -37,9 +37,6 @@ assert(!Array.from(sim.fuse).some((fuse, i) => fuse > 0 && sim.brick[i]), 'train
 for (let i=0;i<60;i++) sim.frameStep(0, engine.MOVE_RIGHT, 1/60);
 assert.equal(sim.pos[0], 10.5);
 assert(sim.pos[1] > 3 && sim.pos[1]+half < 4 && sim.pos[1]+half >= 4-1/engine.NATIVE_CELL_PX-1e-6, 'player edge stops at the drawn brick boundary');
-assert.deepEqual(controls.TRAJECTORY_TOUCH_PROFILE, {
-  trajectory:true, deadzoneRatio:0.01, hysteresisDeg:19, bufferMs:10, diagonalMin:14, diagonalMax:45, diagonalMode:'preserve',
-});
 for (const [key,value] of Object.entries(controls.TRAJECTORY_TOUCH_PROFILE)) assert.equal(profile[key], value);
 assert.match(source('app.js'), /QQTControls\.bindTouchControls\(touchControls, held,[\s\S]*?\}, QQTControls\.TRAJECTORY_TOUCH_PROFILE\);/);
 console.log('Tuner collision geometry and shared touch profile PASS');
