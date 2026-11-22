@@ -37,7 +37,7 @@ const { createServer } = require('./server.js');
     const defaults = await (await fetch(`http://127.0.0.1:${port}/model_inference_defaults.json`)).json();
     assert.strictEqual(manifest.models[0].id, defaults.default_model_id);
     assert.strictEqual(defaults.ruleset, 'bun-native-v2');
-    assert.strictEqual(defaults.default_model_id,'items-l2-sp-u023302-tau03');
+    assert.strictEqual(defaults.default_model_id,'dcu-courier-u000168');
     assert.strictEqual(defaults.mode_defaults.kill,'dcu-kill-u000153-tau03');
     assert(manifest.models.some(row=>row.id==='dcu-kill-u000153-tau03'));
     assert(manifest.models.some(row=>row.id==='dcu-kill-u000244-tau03'));
