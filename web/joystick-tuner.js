@@ -29,6 +29,7 @@
     s.pos[1] = 2.5;
     s.invuln.fill(100);
     s.spdG[0] = 1.25;
+    level.layers[1] = Array.from({length:W*H},(_,i)=>s.wall[i]?8001:s.brick[i]?8002:0);
     return s;
   };
   let sim=createSim();const zone=$('direction-zone'),held=new Set();let bind,listenerScope;const angleSamples=[];let lastAngleSample=0;const angleCanvas=$('angle-chart'),angleCtx=angleCanvas.getContext('2d');
