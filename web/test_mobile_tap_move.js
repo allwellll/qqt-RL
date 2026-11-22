@@ -11,6 +11,9 @@ function fixture(){
  sim.pos.set([6.5,6.5,11.5,12.5]);sim.nativeMove=null;
  return {held,zone,dial,event,input,sim};
 }
+for(const [x,y,a] of [[150,140,0],[110,100,90],[70,140,-180],[110,180,-90]]){
+ const f=fixture();f.event('pointerdown',x,y);assert.equal(+f.zone.dataset.rawAngle,a,'angle uses finger relative to floating centre');assert.equal(+f.zone.dataset.rawRadius,40);f.input();
+}
 for(const [x,y,mv]of [[110,100,0],[110,180,1],[70,140,2],[150,140,3]]){
  const {held,event,input,sim,dial}=fixture();event('pointerdown',x,y);
  assert.equal(C.moveForHeld(held),mv,'down chooses the visible sector synchronously');

@@ -158,9 +158,13 @@
       zone.dataset.secondary = state.secondary || '';
       zone.dataset.resolved = '';
       zone.dataset.active = pointer == null ? 'false' : 'true';
-      const vector=state.center;
-      zone.dataset.rawAngle=vector?String(Math.round(Math.atan2(vector.y,vector.x)*180/Math.PI)):'';
-      zone.dataset.rawRadius=vector?String(Math.round(Math.hypot(vector.x,vector.y))):'';
+      const contact=pointers.get(pointer), center=state.center;
+      const dx=contact&&center?contact.x-center.x:0, dy=contact&&center?contact.y-center.y:0;
+      zone.dataset.rawAngle=contact&&center?String(Math.round(Math.atan2(-dy,dx)*180/Math.PI)):'';
+      zone.dataset.rawRadius=contact&&center?String(Math.round(Math.hypot(dx,dy))):'';
+      zone.dataset.centerX=center?String(center.x-rect.left):'';
+      zone.dataset.centerY=center?String(center.y-rect.top):'';
+      zone.dataset.inputX=String(dx);zone.dataset.inputY=String(dy);
       if (state.direction && state.direction !== lastDirection) {
         try { globalThis.navigator?.vibrate?.(8); } catch (_) { /* Optional feedback. */ }
       }
