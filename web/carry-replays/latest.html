@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>运包训练录像 · 拦截 u000055 vs 运包 u000168</title>
+<title>运包模型对弈 · 运包 u000168 vs 运包 u000170</title>
 <style>
 :root {
   color-scheme: dark;
@@ -53,7 +53,7 @@ small { color: #9dabb1; overflow-wrap: anywhere; }
 }
 </style>
 <main>
-<h1>运包训练录像 · 拦截 u000055 vs 运包 u000168</h1>
+<h1>运包模型对弈 · 运包 u000168 vs 运包 u000170</h1>
 <p>map806 完整运包规则 · CPU FP32 推理 · 固定种子并交换双方座位</p>
 <p id="summary">将对方包子运回己方笼子即获胜。全局无交付时判平。</p>
 <div class="controls"><label>对局 <select id="game"></select></label><button id="toggle" aria-label="播放或暂停">播放</button><select id="speed" aria-label="播放速度"><option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option><option value="8">8×</option></select></div>
@@ -122,7 +122,7 @@ function draw() {
   }
   for (let seat = 0; seat < 2; seat++) {
     const [y, x] = frame.p[seat].map(value => value * cell);
-    const role = seat === game.defender_seat ? '拦' : '运';
+    const role = data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? '运' : (seat === game.defender_seat ? '拦' : '运');
     ctx.globalAlpha = frame.alive[seat] ? 1 : .35;
     ctx.beginPath();
     ctx.arc(x, y, frame.trapped[seat] > 0 ? 24 : 19, 0, 2 * Math.PI);
@@ -139,12 +139,12 @@ function draw() {
   $('score').textContent = tick === end ? `${result(game)} · 交付 ${game.result.captures} 次` : '';
   const recent = game.events.filter(([at]) => at <= tick && at > tick - 25);
   $('status').textContent = recent.map(([, seat, name]) => sides[seat] + eventNames[name]).join(' · ')
-    || `${sides[game.defender_seat]}拦截 · ${sides[1-game.defender_seat]}运包`;
+    || (data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? `${sides[game.defender_seat]}运包 · ${sides[1-game.defender_seat]}运包` : `${sides[game.defender_seat]}拦截 · ${sides[1-game.defender_seat]}运包`);
 }
 
 function selectGame() {
   game = data.replays[+$('game').value];
-  $('title').textContent = `种子 ${game.seed} · ${sides[game.defender_seat]}拦截`;
+  $('title').textContent = data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? `种子 ${game.seed} · 运包对弈` : `种子 ${game.seed} · ${sides[game.defender_seat]}拦截`;
   $('seek').max = game.result.tick;
   seek(0);
 }
@@ -206,13 +206,13 @@ async function load() {
   const games = replay.replays.length;
   $('summary').textContent = `运包方 ${wins} 胜 ${games - wins} 平 · 交付胜率 ${wins / games * 100}% · 全局无交付判平`;
   for (const [index, row] of data.replays.entries()) {
-    $('game').add(new Option(`种子 ${row.seed} · ${sides[row.defender_seat]}拦截`, index));
+    $('game').add(new Option(data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? `种子 ${row.seed} · 运包对弈` : `种子 ${row.seed} · ${sides[row.defender_seat]}拦截`, index));
     const tr = $('results').insertRow();
-    const values = [row.seed, sides[1-row.defender_seat], sides[row.defender_seat],
+    const values = [row.seed, sides[1-row.defender_seat], data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? '运包' : sides[row.defender_seat],
       row.result.defender_kills, row.frames.at(-1).stored.map(x => x.reduce((a,b)=>a+b,0)).join(' : '), result(row)];
     for (const value of values) tr.insertCell().textContent = value;
   }
-  $('source').textContent = `拦截者 u${String(data.models.defender.update).padStart(6, '0')} · ${data.models.defender.sha256} | 运包 u${String(data.models.courier.update).padStart(6, '0')} · ${data.models.courier.sha256}`;
+  $('source').textContent = (data.models.defender.role === 'courier' && data.models.courier.role === 'courier') ? `运包 u${String(data.models.defender.update).padStart(6, '0')} · ${data.models.defender.sha256} | 运包 u${String(data.models.courier.update).padStart(6, '0')} · ${data.models.courier.sha256}` : `拦截者 u${String(data.models.defender.update).padStart(6, '0')} · ${data.models.defender.sha256} | 运包 u${String(data.models.courier.update).padStart(6, '0')} · ${data.models.courier.sha256}`;
   selectGame();
   requestAnimationFrame(animate);
 }
