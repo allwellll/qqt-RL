@@ -1,0 +1,39 @@
+{
+  "schema": "qqt.carry-publication-validation/v1",
+  "tests": {
+    "passed": 25,
+    "deselected": 1,
+    "seconds": 5.91,
+    "command": "python -m pytest -o addopts= -q tests/test_dcu_carry_fast.py tests/test_fetch_dcu_carry_assets.py tests/test_kill_checkpoints.py tests/test_dcu_jax_carry.py::test_read_only_plan_and_pre_jax_stop -k 'not fast_reset'"
+  },
+  "default_plan": {
+    "cards": 8,
+    "envs_per_device": 2048,
+    "global_environments": 16384,
+    "ticks": 64,
+    "global_samples": 1048576,
+    "global_minibatch": 4096,
+    "policy_chunk": 512,
+    "value_chunk": 512,
+    "collector": "fused",
+    "compiler_profile": "throughput"
+  },
+  "inputs": {
+    "u930_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+    "u930_bytes": 30257447,
+    "portable_bundle_verified": true,
+    "pickle_loaded": false,
+    "jax_imported": false,
+    "release_api_digest_verified": true,
+    "release": "https://github.com/allwellll/qqt-RL/releases/tag/dcu-carry-training-20261115",
+    "download_fallback": "Public GitHub asset API; fixed size and SHA256 verified before installation"
+  },
+  "shell_syntax": "PASS",
+  "training_started": false,
+  "dependency_changes": false,
+  "limitations": [
+    "Eight-card execution remains untested for these new defaults",
+    "Earlier combined CPU suite has two old segmented collector inference failures; see performance validation",
+    "Opponent pool is a documented proposal, not implemented"
+  ]
+}

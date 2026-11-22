@@ -1,0 +1,43 @@
+{
+  "schema": "qqt.carry-performance-validation/v1",
+  "dependency_changes": false,
+  "training_started": false,
+  "diagnostic_ppo_only": true,
+  "optimizer_saved": false,
+  "checkpoint_writes": 0,
+  "tests": [
+    {
+      "name": "fast reset, defaults, compiler profile, bounded benchmark arguments",
+      "passed": 16,
+      "failed": 0,
+      "backend": "cpu",
+      "affinity": "120-123",
+      "log": "runs/carry-performance-fast-tests-20261115.log"
+    },
+    {
+      "name": "original carry, checkpoint and kill regressions in separate process",
+      "passed": 36,
+      "failed": 0,
+      "backend": "cpu",
+      "affinity": "112-119",
+      "log": "runs/carry-performance-cpu-isolated-20261115.log"
+    },
+    {
+      "name": "combined old and new tests",
+      "passed": 50,
+      "failed": 2,
+      "backend": "cpu",
+      "affinity": "112-115",
+      "log": "runs/carry-performance-cpu-final-20261115.log",
+      "failures": [
+        "old segmented tiny-model rollout inference consistency: interceptor",
+        "old segmented tiny-model rollout inference consistency: courier"
+      ]
+    }
+  ],
+  "limitations": [
+    "Combined CPU old-collector inference instability is unresolved; isolated passing result does not supersede it",
+    "DCU acceptance uses real-model measurements, not a claim that all CPU tests pass",
+    "Single-card short diagnostics cannot establish learning quality or eight-card scaling"
+  ]
+}

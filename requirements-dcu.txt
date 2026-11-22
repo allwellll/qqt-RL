@@ -1,0 +1,7 @@
+# Keep the image's Hygon DTK 26.04 JAX build; never resolve a public CUDA wheel.
+jax==0.6.0+das.opt1.dtk2604
+jaxlib==0.6.0+das.opt1.dtk2604
+optax==0.2.4
+chex==0.1.89
+numpy==2.4.4
+scipy==1.17.1

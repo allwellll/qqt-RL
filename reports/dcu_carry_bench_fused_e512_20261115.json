@@ -1,0 +1,77 @@
+{
+  "schema": "qqt.single-dcu-carry-benchmark/v1",
+  "recorded_at": "2026-11-15T14:38:16.837964+00:00",
+  "stage": "courier",
+  "collector": "fused",
+  "device_kind": "BW",
+  "jax": "0.6.0",
+  "devices": 1,
+  "envs": 512,
+  "ticks": 64,
+  "minibatch": 512,
+  "samples": 32768,
+  "initial_seconds": 13.34889302123338,
+  "warmup_seconds": [
+    123.3728214353323
+  ],
+  "rollout_seconds": [
+    5.448219486512244,
+    5.398585078306496,
+    5.402268987149
+  ],
+  "median_rollout_seconds": 5.402268987149,
+  "rollout_environment_steps_per_second": 6065.599487539221,
+  "ppo_seconds": [
+    3.9367564814165235,
+    3.9374911058694124
+  ],
+  "timed_pipeline_environment_steps_per_second": 3508.5792801640064,
+  "inference_errors": [
+    [
+      1.3589859008789062e-05,
+      0.0
+    ]
+  ],
+  "memory_stats": {
+    "num_allocs": 3094,
+    "bytes_in_use": 1125616640,
+    "peak_bytes_in_use": 2382372352,
+    "largest_alloc_size": 1073741824,
+    "bytes_limit": 50721718272,
+    "bytes_reserved": 0,
+    "peak_bytes_reserved": 0,
+    "largest_free_block_bytes": 0,
+    "pool_bytes": 4829741056,
+    "peak_pool_bytes": 4829741056
+  },
+  "inference_admitted": true,
+  "optimizer_updates_discarded": 3,
+  "checkpoint_writes": 0,
+  "automatic_successor": false,
+  "XLA_FLAGS": "--xla_gpu_autotune_level=0 --xla_disable_hlo_passes=constant_folding,multi_output_fusion --xla_backend_optimization_level=0 --xla_llvm_disable_expensive_passes=true",
+  "source_sha256": {
+    "scripts/train_dcu_jax_carry.py": "91857cdcf4af7795726d8ffc19b00ae9ee5d5d9c9b04df97a0b9f60ed08925f0",
+    "qqt_rl/training/jax_carry_env.py": "a6af1e08c518c4ba55d5bf75a18f86f47d7054bc2b085f425178fae5ac501ef7",
+    "qqt_rl/training/jax_carry_collect.py": "a891bef9d3d283bb40a46d07f19a986486b906908125e6bc7b4b5310fc1bf6b3",
+    "qqt_rl/training/kill_ppo.py": "0541fd958d804cb3662dac6d6804d3f4228b10b444c06c9d1d8a56b48e9c925d",
+    "qqt_rl/training/checkpoints.py": "35f173031b513c60ecf0c449dfbd3560aff209b4fe10af372fef8eb123a10fd1",
+    "qqt_rl/training/dcu.py": "176d69d3fc099c811fc282993b32b1408eb194608de1f766d1cc958ae4db7d55",
+    "scripts/portable_training.py": "fea8266e7c8072713e5034ee9144eeb595c80ad4e09d9634a68fa68a97333e13",
+    "scripts/r4_kill_arena.py": "476ff7dc01a87a8f961e0f60e276f4a9bf2bca92e11b402a2efc01310b89ef9b",
+    "qqt_rl/training/jax_kill_env.py": "0632b723fb2aa15bd464e3adbc1cd2e1f50d57ef725a76cc9dae81fdd32a49a5",
+    "scripts/r4_k4_observation.py": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+    "scripts/r3_items_observation.py": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+    "scripts/retention_phase_conditioning.py": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+    "scripts/je05_bun_transport.py": "a7ca207e7f8cb471442e3f5ab0f247c6ad14284a3e843c4dad14edd9af05634f",
+    "scripts/je10_causal_init.py": "d35d369fd961190f6ce067cda4974f078269087c225e97b74a56a196718baa84",
+    "jax_bomb/jax_net.py": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+    "jax_bomb/levels.py": "dd7932e33500383055c24b5d9e4f183b9da85b061821db82f8b217975f864444",
+    "jax_bomb/je07_bun_env_r1_items.py": "f95aa6cefd09858665074d968be926a77c87f3279303bd05fbfa193f1c2d4e52",
+    "jax_bomb/je05_core_env_r1_items.py": "4591c138dbfc0520148f63fa68dccf40caeb09f6e196e29e0c86f2a2a33c82a2",
+    "jax_bomb/je07_native_items.py": "0245aad1b6b9577ff5396e57f23d7f0a2e393d4edf1acdaf860975129c35219b",
+    "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+    "jax_bomb/maps/kill_maps.json": "bbb3742c11430a2d2c76e6fb655fd42aaa7b709df8b7b7b9eaac3ec18bb62bac",
+    "qqt_rl/training/jax_carry_fast.py": "cccd91a4b1bf9121d10dad2c6e1d3a176dc19d68c37b22bdf09e767acf782c64"
+  },
+  "training_environment_steps_per_second": 3508.5792801640064
+}

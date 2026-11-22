@@ -4,8 +4,10 @@
   performance.mark('qqt:startup');
   QQTPanels.mount(document);
   const canvas = document.getElementById('game');
+  QQTGameScreen.mount(canvas.parentElement, document.getElementById('game-fullscreen'), document.getElementById('game-screen-status'));
   const status = document.getElementById('status');
   const restart = document.getElementById('restart');
+  const touchRestart = document.getElementById('touch-restart');
   const opponentSelect = document.getElementById('opponent');
   const gameMode = document.getElementById('game-mode');
   const characterSelect = document.getElementById('character');
@@ -143,6 +145,8 @@
   let loadedModelId = null;
   let publishedModels = [];
   let defaultModelId = 'items-l2-sp-u023302-tau03';
+  let modeModelDefaults = {};
+  const modeDefaultModelId = () => QQTModelCatalog.modeDefault(gameMode.value, publishedModels, defaultModelId, modeModelDefaults);
   let activeBot = null;
   let ticking = false;
   let sessionRevision = 0;
@@ -348,6 +352,7 @@
     loadingProgress.removeAttribute('value');
     clearHeldControls();
     opponentSelect.disabled = true;
+    gameMode.disabled = true;
     modelProgressWrap.hidden = false;
     modelProgress.removeAttribute('value');
     modelStatus.textContent = `正在加载：${row.display_name}`;
@@ -420,6 +425,7 @@
     loadingProgress.value = 100;
     modelPending = false;
     opponentSelect.disabled = false;
+    gameMode.disabled = false;
     modelStatus.textContent = '';
 
   }
@@ -435,6 +441,8 @@
       if (defaults.schema !== 'qqt.model-inference-defaults/v1' || defaults.ruleset !== 'bun-native-v2' || defaults.max_ticks !== 2400 || !publishedModels.some(row=>row.id===defaults.default_model_id)) throw new Error('模型推理配置无效');
       if (!defaults.policies || Object.keys(defaults.policies).some(id=>!publishedModels.some(row=>row.id===id))) throw new Error('模型推理策略无效');
       defaultModelId = defaults.default_model_id;
+      modeModelDefaults = defaults.mode_defaults || {};
+      for (const mode of Object.keys(modeModelDefaults)) QQTModelCatalog.modeDefault(mode, publishedModels, defaultModelId, modeModelDefaults);
       publishedModels = publishedModels.map(row => defaults.policies[row.id]
         ? {...row,inference:QQTModelSampling.profile({inference:defaults.policies[row.id]})} : row);
       publishedModels.sort((a,b) => Number(b.id===defaults.default_model_id)-Number(a.id===defaults.default_model_id));
@@ -492,6 +500,7 @@
   function render(now = performance.now()) {
     if (!sim) return;
     touchControls.hidden = !localHumanControls() || sim.done;
+    touchRestart.disabled = assetsPending || modelPending || modelFailed || leaderboard.state().submitting || leaderboard.state().profileSubmitting;
     if (!touchControls.hidden) updateTouchItems();
     if (sim.done && localHumanControls() && leaderboardMatch) {
       const match = { ...leaderboardMatch, client_version: clientVersion };
@@ -502,7 +511,7 @@
     renderer.render(sim, now, motionState());
     QQTLeaderboard.renderSettlement(document, leaderboard.state());
     const rect = canvas.getBoundingClientRect(), stage = canvas.parentElement.getBoundingClientRect();
-    document.getElementById('settlement').style.top = window.matchMedia('(max-width: 820px)').matches
+    document.getElementById('settlement').style.top = window.matchMedia('(max-width: 900px), (pointer: coarse)').matches
       ? '' : `${rect.top - stage.top + rect.height * .65}px`;
     hideLoading();
   }
@@ -588,6 +597,7 @@
   window.addEventListener('blur', clearHeldControls);
   document.addEventListener('visibilitychange', () => { if (document.hidden) clearHeldControls(); });
   restart.addEventListener('click', () => requestRestart());
+  touchRestart.addEventListener('click', () => requestRestart());
   soundToggle.addEventListener('change', () => sound.setEnabled(soundToggle.checked));
   characterSelect.addEventListener('change', () => {
     updateCharacterPortrait();
@@ -611,7 +621,7 @@
   replaySeek.addEventListener('input', () => { if (replayDocument) seekReplay(Number(replaySeek.value)); });
   async function onStrategyChange() {
     if (modelPending) return;
-    const value = QQTModelCatalog.resolveSelection(opponentSelect.value, publishedModels, defaultModelId);
+    const value = QQTModelCatalog.resolveSelection(opponentSelect.value, publishedModels, modeDefaultModelId());
     opponentSelect.value = value;
     const row = isModelChoice(value) ? publishedModels.find((item) => MODEL_PREFIX + item.id === value) : null;
     if (row && loadedModelId !== row.id) {
@@ -622,6 +632,7 @@
         loadingProgress.removeAttribute('value');
         loadingRetry.hidden = false;
         opponentSelect.disabled = false;
+        gameMode.disabled = false;
         modelProgressWrap.hidden = false;
         modelProgress.removeAttribute('value');
         modelProgressText.textContent = `加载失败：${error.message}`;
@@ -634,12 +645,13 @@
   }
   gameMode.addEventListener('change', async () => {
     try { localStorage.setItem('qqt.game-mode', gameMode.value); } catch (_) {}
-    await reset();
+    opponentSelect.value = `${MODEL_PREFIX}${modeDefaultModelId()}`;
+    await onStrategyChange();
   });
   opponentSelect.addEventListener('change', onStrategyChange);
   await loadCatalog();
   if (publishedModels.length) {
-    opponentSelect.value = `${MODEL_PREFIX}${defaultModelId}`;
+    opponentSelect.value = `${MODEL_PREFIX}${modeDefaultModelId()}`;
     await onStrategyChange();
   } else reset(true);
   void loadReplayCatalog();

@@ -8,23 +8,24 @@ const {createServer} = require('../web/server');
   const server = createServer(); await new Promise(r => server.listen(0, '127.0.0.1', r));
   const base = process.env.MOBILE_PUBLIC_URL || `http://127.0.0.1:${server.address().port}/`;
   const tag = process.env.MOBILE_PUBLIC_URL ? 'public' : 'local';
-  const opts = {headless:true, executablePath:chromium.executablePath(), args:['--no-sandbox', '--disable-gpu']};
+  const opts = {headless:true, args:['--no-sandbox', '--disable-gpu']};
   const proxy = process.env.HTTPS_PROXY || process.env.https_proxy;
   if (proxy) { const u = new URL(proxy); opts.proxy = {server:u.protocol+'//'+u.host, bypass:'127.0.0.1,localhost'}; }
   let browser;
   const results = [];
   try {
     browser = await chromium.launch(opts);
-    for (const viewport of [{width:390,height:900}, {width:844,height:390}]) {
+    for (const viewport of [{width:390,height:900}, {width:844,height:390}, {width:568,height:320}]) {
       const context = await browser.newContext({viewport, hasTouch:true, isMobile:true});
       const page = await context.newPage(), errors = [];
       page.on('pageerror', e => errors.push(e.message));
+      await context.route('**/*.supabase.co/**', r => r.fulfill({json:[]}));
       if (tag === 'local') await context.route('http://127.0.0.1:*/**', async r => {
         const x = await fetch(r.request().url());
         await r.fulfill({status:x.status, headers:Object.fromEntries(x.headers), body:Buffer.from(await x.arrayBuffer())});
       });
       await page.addInitScript(() => {
-        window.touchPresses = []; window.touchEvents = []; window.pointerTrace=[]; for(const name of ['pointerdown','pointerup','pointermove','lostpointercapture','gotpointercapture','pointercancel'])window.addEventListener(name,e=>pointerTrace.push({name,id:e.pointerId,target:e.target.className}),true);
+        window.touchPresses = []; window.touchEvents = []; window.pointerTrace=[]; for(const name of ['pointerdown','pointerup','pointermove','lostpointercapture','gotpointercapture','pointercancel'])window.addEventListener(name,e=>pointerTrace.push({name,id:e.pointerId,target:e.target.className,x:e.clientX,y:e.clientY,time:e.timeStamp}),true);
         let controls, visual;
         Object.defineProperty(window, 'QQTControls', {get:()=>controls, set:v=>{
           controls=v; const bind=v.bindTouchControls;
@@ -58,21 +59,33 @@ const {createServer} = require('../web/server');
       const layout = await page.evaluate(()=>{
         const rect = e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};};
         const zone=document.querySelector('[data-floating-direction]'),bomb=document.querySelector('.touch-bomb-hit');
-        return {zone:rect(zone),bombHit:rect(bomb),bomb:rect(bomb.querySelector('button')),items:[...document.querySelectorAll('[data-touch-item]')].map(rect),overflow:document.documentElement.scrollWidth>innerWidth,deadzone:document.querySelector('.touch-stick').getBoundingClientRect().width/2*10/48};
+        return {canvas:rect(document.querySelector('#game')),toolbar:rect(document.querySelector('.game-toolbar')),zone:rect(zone),bombHit:rect(bomb),bomb:rect(bomb.querySelector('button')),items:[...document.querySelectorAll('[data-touch-item]')].map(rect),overflow:document.documentElement.scrollWidth>innerWidth,deadzone:4};
       });
       assert(!layout.overflow); assert(layout.bomb.width>=88);assert(Math.abs(layout.bombHit.width/layout.bomb.width-1.25)<.01);
       assert(layout.items.every(r=>r.width>=48&&r.x>=0&&r.x+r.width<=viewport.width));
       assert.equal(new Set(layout.items.map(r=>r.y)).size,1,'three slots share one row');
       assert(layout.bombHit.y+layout.bombHit.height<layout.items[0].y,'item row is outside extended bomb target');
-      assert(Math.abs(layout.zone.width/viewport.width-.45)<.01);assert(Math.abs(layout.zone.height/viewport.height-.6)<.01);
+      const overlaps=(a,b)=>a.x<b.x+b.width && a.x+a.width>b.x && a.y<b.y+b.height && a.y+a.height>b.y;
+      assert(Math.abs(layout.canvas.x+layout.canvas.width/2-viewport.width/2)<1,'board centered horizontally');
+      for(const r of [layout.zone,layout.bombHit,...layout.items,layout.toolbar]) {
+        assert(!overlaps(layout.canvas,r),'controls do not cover the board');
+        assert(r.y>=0 && r.y+r.height<=viewport.height,'controls fit the screen');
+      }
+      assert(!overlaps(layout.toolbar,layout.bombHit),'toolbar does not cover action targets');
       const start={x:layout.zone.x+layout.zone.width*.3,y:layout.zone.y+layout.zone.height*.6,id:1};
       const moved={...start,x:start.x+32};
       await touch('touchStart',[start]);assert.equal((await state()).move,4,'off-center down defines a new center');
-      await touch('touchMove',[{...start,x:start.x+8}]);assert.equal((await state()).move,4,'deadzone');
+      await touch('touchMove',[{...start,x:start.x+3}]);assert.equal((await state()).move,4,'3px stays below activation distance');
+      await touch('touchMove',[{...start,x:start.x+5}]);assert.equal((await state()).move,3,'5px activates movement');
       await touch('touchMove',[moved]);assert.equal((await state()).move,3);
-      await touch('touchMove',[{...start,x:start.x+20,y:start.y+25}]);assert.equal((await state()).move,3,'51-degree diagonal keeps right');
-      await touch('touchMove',[{...start,x:start.x+10,y:start.y+30}]);assert.equal((await state()).move,1,'72-degree diagonal switches down');
-      await touch('touchEnd'); await touch('touchStart',[start]); const resumed=await state(); assert.equal(resumed.move,1,'short tap resumes down');
+      const low = {...start,x:moved.x,y:start.y+48};
+      await touch('touchMove',[low]);assert.equal((await state()).move,1,'downward stroke turns down');
+      await touch('touchMove',[{...low,x:low.x+2}]);assert.equal((await state()).move,1,'2px sideways jitter retains down');
+      await touch('touchMove',[{...low,x:low.x+4}]);assert.equal((await state()).move,3,'short horizontal stroke turns right while below old center: '+JSON.stringify(await page.evaluate(()=>pointerTrace.slice(-12))));
+      await touch('touchMove',[low]);assert.equal((await state()).move,2,'short reversal turns left while still right of old center');
+      await touch('touchMove',[{...low,y:low.y-4}]);assert.equal((await state()).move,0,'short upward stroke turns up while below old center');
+      await page.waitForTimeout(100);assert.equal((await state()).move,0,'stationary finger keeps current direction');
+      await touch('touchEnd'); await touch('touchStart',[start]); const resumed=await state(); assert.equal(resumed.move,4,'short tap starts idle without restoring the previous direction');
       await touch('touchEnd');await page.waitForTimeout(300);await touch('touchStart',[start]);assert.equal((await state()).move,4,'late tap idles');
       const outside={...start,x:layout.zone.x+layout.zone.width+80};
       await touch('touchMove',[outside]);const beforeHold=await state();assert.equal(beforeHold.move,3);
@@ -118,9 +131,81 @@ const {createServer} = require('../web/server');
         await cdp.send('Input.dispatchKeyEvent',{type:'keyDown',code,key,location:3});assert.notEqual((await state()).move,4);await cdp.send('Input.dispatchKeyEvent',{type:'keyUp',code,key,location:3});assert.equal((await state()).move,4);
       }
       assert.deepEqual((await state()).slots,[{item:1,count:3},{item:2,count:5},{item:1,count:7}]);
+      // Exercise browser-generated rapid double taps on both board and screen actions.
+      for(let i=0;i<6;i++) await page.touchscreen.tap(layout.canvas.x+layout.canvas.width/2,layout.canvas.y+layout.canvas.height/2);
+      assert.equal(await page.evaluate(()=>visualViewport.scale),1,'rapid taps do not zoom the viewport');
+      const cancellation=await page.evaluate(()=>{
+        const stage=document.querySelector('.stage'),canvas=document.querySelector('#game');
+        const probe=(target,type)=>{
+          const e=new Event(type,{bubbles:true,cancelable:true});
+          Object.defineProperties(e,{changedTouches:{value:[{identifier:99,target,clientX:20,clientY:80}]},touches:{value:type==='touchend'?[]:[{identifier:99,target,clientX:20,clientY:80}]}});
+          target.dispatchEvent(e);return e.defaultPrevented;
+        };
+        const result={};
+        for(const [name,target] of [['blank',stage],['board',canvas]])result[name]=['touchstart','touchmove','touchend'].map(type=>probe(target,type));
+        result.safariPinch=['gesturestart','gesturechange','gestureend'].map(type=>probe(stage,type));
+        result.form=probe(document.querySelector('#player-nickname'),'touchstart');
+        result.aside=probe(document.querySelector('aside'),'touchmove');
+        return result;
+      });
+      assert.deepEqual(cancellation,{blank:[true,true,true],board:[true,true,true],safariPinch:[true,true,true],form:false,aside:false},'non-passive guards cancel Safari gestures only in gameplay');
+      await page.locator('#game-fullscreen').tap();
+      await page.waitForFunction(()=>document.querySelector('#game-fullscreen').getAttribute('aria-pressed')==='true');
+      const nativeFullscreen=await page.evaluate(()=>document.fullscreenElement===document.querySelector('.stage'));
+      if(nativeFullscreen) {
+        await page.evaluate(()=>document.exitFullscreen());
+        await page.waitForFunction(()=>!document.fullscreenElement);
+        assert(await page.locator('.stage').evaluate(e=>e.classList.contains('game-immersive')),'browser escape retains immersion and scroll lock');
+      }
+      await page.locator('#game-fullscreen').tap();
+      await page.waitForFunction(()=>!document.querySelector('.stage').classList.contains('game-immersive'));
+      assert.equal(await page.evaluate(()=>document.body.classList.contains('game-immersive')),false);
+      // iOS/unavailable and permission-denied fullscreen must both leave a usable exit.
+      for(const denied of [false,true]) {
+        await page.evaluate(denied=>{const stage=document.querySelector('.stage');stage.webkitRequestFullscreen=undefined;stage.requestFullscreen=denied?()=>Promise.reject(Error('Denied')):undefined;},denied);
+        await page.locator('#game-fullscreen').tap();
+        await page.waitForFunction(()=>document.querySelector('.stage').classList.contains('game-immersive'));
+        assert(await page.locator('#game-screen-status').textContent().then(s=>s.includes('沉浸模式')));
+        const screen=await page.locator('.stage').boundingBox();assert.equal(screen.width,viewport.width);assert.equal(screen.height,viewport.height);
+        assert.equal(await page.evaluate(()=>getComputedStyle(document.body).position),'fixed','body scroll locked');
+        assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).overflowY),'hidden','root scroll locked');
+        const beforeScroll=await page.evaluate(()=>scrollY);
+        // Swipe both directions across empty stage space, then pinch and rapidly tap.
+        const blank={id:7,x:8,y:75};
+        for(const down of [true,false]) {
+          await touch('touchStart',[{...blank,y:down?75:200}]);
+          for(let i=1;i<=5;i++)await touch('touchMove',[{...blank,y:down?75+i*25:200-i*25}]);
+          await touch('touchEnd');
+        }
+        await touch('touchStart',[{id:7,x:viewport.width/2-15,y:80},{id:8,x:viewport.width/2+15,y:80}]);
+        await touch('touchMove',[{id:7,x:viewport.width/2-70,y:110},{id:8,x:viewport.width/2+70,y:110}]);await touch('touchEnd');
+        for(let i=0;i<8;i++)await page.touchscreen.tap(viewport.width/2,80);
+        assert.equal(await page.evaluate(()=>visualViewport.scale),1,'swipes, pinch and repeated taps cannot zoom');
+        assert.equal(await page.evaluate(()=>scrollY),beforeScroll,'swipes cannot scroll the underlying page');
+        assert(await page.locator('.stage').evaluate(e=>e.classList.contains('game-immersive')),'swipes cannot leave immersion');
+        // End the match, then restart while still immersed; hidden pad must not hide toolbar.
+        await page.evaluate(()=>{window.finishedTouchSim=touchSim;touchSim.done=true;touchSim.winner=null;});
+        await page.waitForFunction(()=>document.querySelector('#touch-controls').hidden);
+        await page.locator('#touch-restart').tap();
+        await page.waitForFunction(()=>touchSim!==finishedTouchSim && !touchSim.done && !document.querySelector('#touch-controls').hidden);
+        assert(await page.locator('.stage').evaluate(e=>e.classList.contains('game-immersive')),'restart preserves immersion');
+        await page.locator('#game-fullscreen').tap();
+        assert.equal(await page.locator('#game-fullscreen').getAttribute('aria-pressed'),'false');
+      }
+      // Exercise a rotation during immersion; pointer state clears and the board stays centered.
+      await fixture();await touch('touchStart',[start]);await touch('touchMove',[moved]);
+      await page.locator('#game-fullscreen').evaluate(e=>e.click());
+      await page.setViewportSize({width:viewport.height,height:viewport.width});
+      await page.waitForFunction(()=>QQTControls.moveForHeld(touchHeld)===4);
+      assert.equal((await state()).move,4,'rotation releases joystick');
+      await touch('touchEnd');
+      const rotated=await page.locator('#game').boundingBox();
+      assert(Math.abs(rotated.x+rotated.width/2-viewport.height/2)<1,'rotation centers board');
+      await page.locator('#game-fullscreen').tap();
+      await page.setViewportSize(viewport);
       await page.evaluate(()=>{const e=document.createElement('input');e.id='touch-typing-probe';document.body.append(e);});
       await page.locator('#touch-typing-probe').fill('昵称');await page.locator('#touch-typing-probe').focus();await page.keyboard.type('abc');await page.keyboard.press('ArrowRight');assert.equal((await state()).move,4);assert.equal(await page.locator('#touch-typing-probe').inputValue(),'昵称abc');
-      assert.deepEqual(errors,[]);results.push({viewport,layout,resumed,longHold,multiBomb,itemCases,seventh,cleanup:true,keyboardIsolation:true,typing:true,errors});
+      assert.deepEqual(errors,[]);results.push({viewport,layout,resumed,longHold,multiBomb,itemCases,seventh,cleanup:true,keyboardIsolation:true,typing:true,nativeFullscreen,immersiveFallback:true,finishedRestart:true,rapidTapScale:1,rotation:true,cancellation,swipePinchLock:true,errors});
       await context.close();console.log('touch tolerance PASS',viewport.width,viewport.height);
     }
     fs.writeFileSync(`.hermes/touch-tolerance-${tag}.json`,JSON.stringify({status:'PASS',scope:'Chromium CDP touch, not physical iOS',sha:process.env.EXPECTED_SHA||null,results},null,2)+'\n');

@@ -1,0 +1,131 @@
+{
+  "schema": "qqt.dcu-validation/v1",
+  "date": "2026-11-08",
+  "base_commit": "335d209f77738a85c70b85b3fb0ee37896413551",
+  "environment": {
+    "python": "3.11.9",
+    "dtk": "26.04",
+    "packages": {
+      "jax": "0.6.0+das.opt1.dtk2604",
+      "jaxlib": "0.6.0+das.opt1.dtk2604",
+      "jax-rocm60-plugin": "0.6.0+das.opt1.dtk2604",
+      "jax-rocm60-pjrt": "0.6.0+das.opt1.dtk2604",
+      "optax": "0.2.4",
+      "chex": "0.1.89",
+      "numpy": "2.4.4",
+      "scipy": "1.17.1"
+    },
+    "compiler_flags": "--xla_gpu_autotune_level=0 --xla_disable_hlo_passes=constant_folding,multi_output_fusion --xla_backend_optimization_level=0 --xla_llvm_disable_expensive_passes=true",
+    "system_dependencies_modified": false
+  },
+  "bundle": {
+    "release": "training-bundle-20261107",
+    "assets_verified": 19,
+    "pinned_sources_verified": 12
+  },
+  "duel": {
+    "status": "PASS_DCU_UPDATE",
+    "line": "DUEL",
+    "ruleset": "bun-native-v3-items",
+    "jax": "0.6.0",
+    "jaxlib": "0.6.0",
+    "device_kind": "BW",
+    "envs": 4,
+    "obs_shape": [
+      4,
+      25,
+      13,
+      15
+    ],
+    "global_shape": [
+      4,
+      38
+    ],
+    "forward_seconds": 56.17878872901201,
+    "rollout_calls": 1,
+    "optimizer_updates": 1,
+    "checkpoint_writes": 0,
+    "automatic_successor": false,
+    "rollout_seconds": 865.1848722617142,
+    "ticks": 2,
+    "minibatch": 8,
+    "update_seconds": 30.29668304603547,
+    "parameter_delta_l2": {
+      "actor": 0.1685694307088852,
+      "critic": 0.19361136853694916
+    },
+    "loss": [
+      3.6333835124969482,
+      -0.012297645211219788,
+      7.17487907409668,
+      0.9576807618141174,
+      -0.001225688960403204,
+      0.0,
+      35.14382553100586,
+      8.032959938049316,
+      4.0,
+      4.0,
+      0.9205886721611023,
+      0.8797261714935303,
+      2.0,
+      -0.21285805106163025,
+      -0.042345985770225525,
+      2.0,
+      -0.18878668546676636,
+      0.04234594106674194,
+      4.0,
+      0.1357835829257965,
+      4.470348358154297e-08,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "memory_stats": {
+      "num_allocs": 7903,
+      "bytes_in_use": 741404928,
+      "peak_bytes_in_use": 747601664,
+      "largest_alloc_size": 6192384,
+      "bytes_limit": 50721718272,
+      "bytes_reserved": 0,
+      "peak_bytes_reserved": 0,
+      "largest_free_block_bytes": 0,
+      "pool_bytes": 1071644672,
+      "peak_pool_bytes": 1071644672
+    }
+  },
+  "sp": {
+    "status": "PASS_DCU_FORWARD",
+    "line": "SP",
+    "ruleset": "bun-native-v3-items",
+    "jax": "0.6.0",
+    "jaxlib": "0.6.0",
+    "device_kind": "BW",
+    "envs": 4,
+    "obs_shape": [
+      4,
+      25,
+      13,
+      15
+    ],
+    "global_shape": [
+      4,
+      38
+    ],
+    "forward_seconds": 101.28008326794952,
+    "rollout_calls": 0,
+    "optimizer_updates": 0,
+    "checkpoint_writes": 0,
+    "automatic_successor": false,
+    "note": "Only environment initialization and actor/critic inference validated; PPO update not validated."
+  },
+  "cpu_tests": {
+    "passed": 22,
+    "subtests_passed": 3
+  },
+  "limits": [
+    "Single DCU only; 8-card data parallel training is not implemented or validated.",
+    "128-tick production rollout, large batches, long-run stability and H200 performance comparisons are unverified.",
+    "Actor-only warm start; critic, Adam, environments and RNG are initialized afresh.",
+    "No model checkpoints published; no long training started."
+  ]
+}

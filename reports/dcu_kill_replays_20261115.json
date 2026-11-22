@@ -1,0 +1,151 @@
+{
+  "schema": "qqt.dcu-kill-replay-delivery/v1",
+  "status": "PASS_PUBLISHED_REPLAY_VIEWER",
+  "candidate": {
+    "update": "u000330",
+    "actor_sha256": "5705d33bf6472c83b3cfcc8e6214f2898fcab53e05fc5b719653069ceb8f4dc8",
+    "source_checkpoint": "runs/kill-jax-8card-e512-20261115/u000330",
+    "training_environment_steps": 86507520
+  },
+  "evaluation": {
+    "status": "PASS_CPU_FULL_GAME_EXPORT",
+    "games": 12,
+    "ticks_per_game": 1800,
+    "cpu_only": true,
+    "elapsed_seconds": 132.21855580434203,
+    "statistics": [
+      {
+        "version": "current",
+        "opponent": "DUEL_latest",
+        "games": 4,
+        "wins": 2,
+        "draws": 1,
+        "losses": 1,
+        "kills": 22,
+        "deaths": 14,
+        "self_deaths": 0,
+        "win_rate": 0.5,
+        "score_rate": 0.625
+      },
+      {
+        "version": "current",
+        "opponent": "G_frozen",
+        "games": 4,
+        "wins": 3,
+        "draws": 1,
+        "losses": 0,
+        "kills": 29,
+        "deaths": 6,
+        "self_deaths": 2,
+        "win_rate": 0.75,
+        "score_rate": 0.875
+      },
+      {
+        "version": "current",
+        "opponent": "SP_latest",
+        "games": 4,
+        "wins": 2,
+        "draws": 1,
+        "losses": 1,
+        "kills": 14,
+        "deaths": 5,
+        "self_deaths": 0,
+        "win_rate": 0.5,
+        "score_rate": 0.625
+      }
+    ],
+    "files": {
+      "replays.json": {
+        "bytes": 236496,
+        "sha256": "ee3b94ee6af335e855a860b9bdaeb9cca32a8a88e8002cff10a5e4883a40141c"
+      },
+      "watch.html": {
+        "bytes": 1292222,
+        "sha256": "46162de905e3414267dfb37a2fc95f63eeaf156b0f30988f634a2ec21a6fd82a"
+      }
+    }
+  },
+  "browser": {
+    "status": "PASS_DESKTOP_MOBILE_REPLAY",
+    "games": 12,
+    "state_sha256_verified": true,
+    "stepping": true,
+    "seeking_terminal": true,
+    "next_combat_event": "37.0 秒 · 370 / 1800 tick",
+    "switching_games": true,
+    "play_pause": true,
+    "mobile_layout": true,
+    "errors": []
+  },
+  "pages": {
+    "status": "PASS_PAGES_DEPLOYED_FILES_VERIFIED",
+    "parent": "64eb579af03de007cb59a4bab71aaf740a8458de",
+    "commit": "ce1cb3fbeff79782e607f7c6c3631ad569dc5d2c",
+    "created_utc": "2026-11-15T09:03:59.237501+00:00",
+    "url": "https://allwellll.github.io/qqt-RL/dcu-replays/",
+    "viewer_url": "https://allwellll.github.io/qqt-RL/dcu-replays/u000330-20261115.html",
+    "files": {
+      "web/dcu-replays/index.html": {
+        "bytes": 955,
+        "sha256": "3a4c5ddec6998fcc3f34eb243d5a76eac8bc2b903d40120a3c16ae8b37ed802d"
+      },
+      "web/dcu-replays/u000330-20261115.html": {
+        "bytes": 1292222,
+        "sha256": "46162de905e3414267dfb37a2fc95f63eeaf156b0f30988f634a2ec21a6fd82a"
+      }
+    },
+    "build_info": {
+      "version": "leaderboard-v1",
+      "ruleset_version": "bun-native-v4-facing",
+      "commit": "ce1cb3fbeff79782e607f7c6c3631ad569dc5d2c"
+    },
+    "workflow": {
+      "id": 43697420291,
+      "url": "https://github.com/allwellll/qqt-RL/actions/runs/43697420291",
+      "conclusion": "success"
+    }
+  },
+  "source_sha256": {
+    "scripts/export_dcu_kill_replays.py": "65691425ebbe7567ca23c9de4ae090320ee9ffd166d0151306759fd4bfbba6e2",
+    "scripts/dcu_kill_replay_bridge.js": "2bd173c195b5b3dcdc3b781bff92bbf317df80e7efc96ebb62228beafa06b670",
+    "scripts/kill_mode_bridge.js": "6f5a64d45ec7e172ad6e5c3cec10c71c07b7888bd127eaeaaa89c90475e8dade",
+    "web/sim-bun-native-v4-facing.js": "89165636ba43b667e68e03bd2985410a2fe2c808c63b11aa692b050468ae2c45",
+    "web/kill_opening_items.js": "d1b99520ba42ff4eb8347ed1953c33a190269b44e28eec6eaa924582d97fdff4",
+    "web/self_respawn_preview.js": "663339572b0393cb7a3e2e35bec8bec32a1fe85851f47584c0e06472d5096468",
+    "web/r3_model_inputs.js": "b2b265c78b7836f08a6eed5fe81af2fb48cff6ff20c1d5457d9342199b6fd09e",
+    "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+    "scripts/r4_k4_observation.py": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+    "scripts/r3_items_observation.py": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+    "scripts/retention_phase_conditioning.py": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+    "jax_bomb/jax_net.py": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e"
+  },
+  "model_sha256": {
+    "DUEL_latest": "f90f87aa9bbb2ec9bd0df876ee35a658d4bcf731b63cd8c69916a666b0206dac",
+    "G_frozen": "48e5697a9b99fad340d03a96453941253242cb27c7253d0842e45d441313e7a0",
+    "SP_latest": "32d481647638301a779ef979e06f4991af9a246b7bd1005c2a0b7bc23fe4790b",
+    "candidate": "5705d33bf6472c83b3cfcc8e6214f2898fcab53e05fc5b719653069ceb8f4dc8"
+  },
+  "limitations": [
+    "New-model-only fixed-opponent pilot, 4 full games per opponent; no baseline comparison.",
+    "Checkpoint replay generated separately on CPU, not an extraction of live training trajectories.",
+    "No model weights or optimizer published."
+  ],
+  "online_browser": {
+    "status": "PASS_DESKTOP_MOBILE_REPLAY",
+    "url": "https://allwellll.github.io/qqt-RL/dcu-replays/u000330-20261115.html",
+    "games": 12,
+    "state_sha256_verified": true,
+    "transport": "python-stdlib HTTP bridge",
+    "stepping": true,
+    "seeking_terminal": true,
+    "next_combat_event": "37.0 秒 · 370 / 1800 tick",
+    "switching_games": true,
+    "play_pause": true,
+    "mobile_layout": true,
+    "requests": [
+      "https://allwellll.github.io/qqt-RL/dcu-replays/u000330-20261115.html"
+    ],
+    "errors": [],
+    "direct_navigation": "Chromium default transport timed out at 30 seconds; public response rendering verified via the container standard HTTP transport bridge, preserving security headers."
+  }
+}

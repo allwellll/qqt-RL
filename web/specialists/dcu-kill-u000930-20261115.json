@@ -1,0 +1,157 @@
+{
+  "model_id": "dcu-kill-u000930-tau03",
+  "export": {
+    "status": "PASS",
+    "ruleset": "bun-native-v4-facing",
+    "checkpoint_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+    "source_global_dim": 38,
+    "state_dim": 37,
+    "ability_actions": 3,
+    "fixed_mode": 0,
+    "projection_max_abs": 0.0,
+    "files": {
+      "model.json": {
+        "sha256": "051ef609f84dab77796d0414a632b4e66c1641ae76d819bb0e3c1dc47c378792",
+        "bytes": 40340915
+      },
+      "model.onnx": {
+        "sha256": "923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0",
+        "bytes": 30276774
+      }
+    },
+    "source_update": 930,
+    "evaluation_games": 48,
+    "packed_weights_exact": true,
+    "full_source_fp32_onnx_max_abs": 1.52587890625e-05,
+    "scope": "Exact fp32 weights and constant-zero mode projection; browser fp32 is not bit-identical to training bf16"
+  },
+  "parity": {
+    "status": "PASS",
+    "ruleset": "bun-native-v4-facing",
+    "samples": 17,
+    "max_abs": 1.8585345555877097e-05,
+    "masked_greedy_exact": true,
+    "reference_zero": {
+      "move": [
+        -0.07029487337532467,
+        1.1980720644225056,
+        0.9439841977928504,
+        0.9507946555568387,
+        1.2032140742254718
+      ],
+      "bomb": [
+        0.4346482556418707,
+        -0.44997333509437265,
+        0.3999936795617567
+      ],
+      "value": 2.34497636163155
+    },
+    "errors": [
+      {
+        "map": "zero",
+        "seat": null,
+        "tick": 0,
+        "max_abs": 2.316274784641692e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 0,
+        "max_abs": 6.312544236664053e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 0,
+        "max_abs": 3.2781122216718472e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 12,
+        "max_abs": 4.703074767853366e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 12,
+        "max_abs": 7.541863804583215e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 36,
+        "max_abs": 1.6621869096677955e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 36,
+        "max_abs": 3.8303946992002125e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 60,
+        "max_abs": 2.476788673710928e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 60,
+        "max_abs": 4.531772628713071e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 0,
+        "max_abs": 3.0739583833927497e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 0,
+        "max_abs": 2.5095835725075233e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 12,
+        "max_abs": 1.8585345555877097e-05
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 12,
+        "max_abs": 1.5667067615465768e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 36,
+        "max_abs": 5.0084362026581175e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 36,
+        "max_abs": 2.2890984907597556e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 60,
+        "max_abs": 5.914431570275269e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 60,
+        "max_abs": 2.417656584707828e-06
+      }
+    ],
+    "scope": "fp32 CPU JS/ONNX integration; not a win-rate or training-bf16 claim"
+  },
+  "selection_review": "dcu-convergence-20261115.json",
+  "replays": "../dcu-replays/u000930-20261115.html"
+}

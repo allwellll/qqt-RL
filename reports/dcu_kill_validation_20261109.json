@@ -1,0 +1,425 @@
+{
+  "schema": "qqt.dcu-kill-validation/v1",
+  "date": "2026-11-09",
+  "status": "PASS_SINGLE_DCU_AND_CPU_8WAY",
+  "branch": "dcu",
+  "merged_main": "f5868656e067486147f1cef1aa7c8e3ab0288138",
+  "hardware": {
+    "physical_dcu_count": 1,
+    "device_kind": "BW",
+    "physical_8card_validated": false
+  },
+  "packages": {
+    "jax": "0.6.0+das.opt1.dtk2604",
+    "jaxlib": "0.6.0+das.opt1.dtk2604",
+    "optax": "0.2.4",
+    "numpy": "2.4.4"
+  },
+  "source_sha256": {
+    "web/sim-bun-native-v4-facing.js": "89165636ba43b667e68e03bd2985410a2fe2c808c63b11aa692b050468ae2c45",
+    "web/kill_opening_items.js": "d1b99520ba42ff4eb8347ed1953c33a190269b44e28eec6eaa924582d97fdff4",
+    "web/self_respawn_preview.js": "663339572b0393cb7a3e2e35bec8bec32a1fe85851f47584c0e06472d5096468",
+    "web/r3_model_inputs.js": "b2b265c78b7836f08a6eed5fe81af2fb48cff6ff20c1d5457d9342199b6fd09e",
+    "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+    "scripts/kill_mode_bridge.js": "6f5a64d45ec7e172ad6e5c3cec10c71c07b7888bd127eaeaaa89c90475e8dade",
+    "qqt_rl/training/kill_ppo.py": "0541fd958d804cb3662dac6d6804d3f4228b10b444c06c9d1d8a56b48e9c925d",
+    "scripts/train_dcu_kill.py": "2ba2c245e5a0eee30d7e9841432c1b39ae56874876af81953d54fcb87ab52e6a",
+    "scripts/r4_k4_observation.py": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+    "scripts/r3_items_observation.py": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+    "scripts/retention_phase_conditioning.py": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+    "jax_bomb/jax_net.py": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+    "qqt_rl/training/dcu.py": "176d69d3fc099c811fc282993b32b1408eb194608de1f766d1cc958ae4db7d55"
+  },
+  "single_dcu_smoke": {
+    "status": "PASS_DCU_KILL_UPDATE",
+    "updates": 2,
+    "parameter_delta_l2": {
+      "actor": 0.09342653304338455,
+      "critic": 0.612572968006134
+    },
+    "cards": 1,
+    "environment_steps": 16,
+    "elapsed_seconds": 46.43313226196915,
+    "automatic_successor": false,
+    "median_update_seconds": 0.10320499213412404
+  },
+  "single_dcu_checkpoint": {
+    "schema": "qqt.kill-actor-critic/v1",
+    "update": 2,
+    "source_sha256": {
+      "web/sim-bun-native-v4-facing.js": "89165636ba43b667e68e03bd2985410a2fe2c808c63b11aa692b050468ae2c45",
+      "web/kill_opening_items.js": "d1b99520ba42ff4eb8347ed1953c33a190269b44e28eec6eaa924582d97fdff4",
+      "web/self_respawn_preview.js": "663339572b0393cb7a3e2e35bec8bec32a1fe85851f47584c0e06472d5096468",
+      "web/r3_model_inputs.js": "b2b265c78b7836f08a6eed5fe81af2fb48cff6ff20c1d5457d9342199b6fd09e",
+      "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+      "scripts/kill_mode_bridge.js": "6f5a64d45ec7e172ad6e5c3cec10c71c07b7888bd127eaeaaa89c90475e8dade",
+      "qqt_rl/training/kill_ppo.py": "0541fd958d804cb3662dac6d6804d3f4228b10b444c06c9d1d8a56b48e9c925d",
+      "scripts/train_dcu_kill.py": "2ba2c245e5a0eee30d7e9841432c1b39ae56874876af81953d54fcb87ab52e6a",
+      "scripts/r4_k4_observation.py": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+      "scripts/r3_items_observation.py": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+      "scripts/retention_phase_conditioning.py": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+      "jax_bomb/jax_net.py": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+      "qqt_rl/training/dcu.py": "176d69d3fc099c811fc282993b32b1408eb194608de1f766d1cc958ae4db7d55"
+    },
+    "actor_sha256": "e891006c7087e1d12e8a0fc4f9bebdcadfa2dc173342fa96554c77744913c1bb",
+    "critic_sha256": "27951a3570cf4eb600c2745e922476aa4e7d32a2e04584b7018821d251bde0a0",
+    "global_environment_steps": 16,
+    "optimizer_saved": false,
+    "precise_resume": false,
+    "source_actor": "DUEL_latest",
+    "rule": "bun-native-v4-facing-kill-live",
+    "mode_row": 0
+  },
+  "warm_start_actor_critic_and_baseline_final_evaluation": {
+    "checkpoint_loaded": "runs/dcu-kill-credit-smoke/u000002",
+    "precise_resume": false,
+    "result": {
+      "status": "PASS_DCU_KILL_UPDATE",
+      "updates": 2,
+      "parameter_delta_l2": {
+        "actor": 0.0926692932844162,
+        "critic": 0.47879692912101746
+      },
+      "cards": 1,
+      "environment_steps": 16,
+      "elapsed_seconds": 48.034801450092345,
+      "automatic_successor": false,
+      "median_update_seconds": 0.09655841113999486
+    },
+    "baseline": {
+      "label": "baseline",
+      "anchors": [
+        {
+          "opponent": "DUEL_latest",
+          "ticks": 8,
+          "full_game": false,
+          "completed_games": 0,
+          "learner_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ],
+          "opponent_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "opponent": "SP_latest",
+          "ticks": 8,
+          "full_game": false,
+          "completed_games": 0,
+          "learner_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ],
+          "opponent_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "opponent": "G_frozen",
+          "ticks": 8,
+          "full_game": false,
+          "completed_games": 0,
+          "learner_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ],
+          "opponent_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "full_game": false,
+      "metric_names": [
+        "kills",
+        "deaths",
+        "self_defeats",
+        "placed",
+        "trapped_ticks",
+        "game_score"
+      ],
+      "seeds_namespace": "eval",
+      "temperature": 0.3,
+      "seconds": 5.034920729696751
+    },
+    "final": {
+      "label": "final",
+      "anchors": [
+        {
+          "opponent": "DUEL_latest",
+          "ticks": 8,
+          "full_game": false,
+          "completed_games": 0,
+          "learner_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0
+          ],
+          "opponent_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "opponent": "SP_latest",
+          "ticks": 8,
+          "full_game": false,
+          "completed_games": 0,
+          "learner_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ],
+          "opponent_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "opponent": "G_frozen",
+          "ticks": 8,
+          "full_game": false,
+          "completed_games": 0,
+          "learner_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ],
+          "opponent_metrics": [
+            0.0,
+            0.0,
+            0.0,
+            4.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "full_game": false,
+      "metric_names": [
+        "kills",
+        "deaths",
+        "self_defeats",
+        "placed",
+        "trapped_ticks",
+        "game_score"
+      ],
+      "seeds_namespace": "eval",
+      "temperature": 0.3,
+      "seconds": 0.6338789383880794
+    },
+    "note": "8 ticks per anchor are protocol checks, not a strength evaluation"
+  },
+  "native_full_game_evaluation": {
+    "label": "only",
+    "anchors": [
+      {
+        "opponent": "DUEL_latest",
+        "ticks": 1800,
+        "full_game": true,
+        "completed_games": 2,
+        "learner_metrics": [
+          0.0,
+          0.0,
+          0.0,
+          467.0,
+          0.0,
+          1.0
+        ],
+        "opponent_metrics": [
+          0.0,
+          0.0,
+          0.0,
+          335.0,
+          0.0,
+          1.0
+        ]
+      },
+      {
+        "opponent": "SP_latest",
+        "ticks": 1800,
+        "full_game": true,
+        "completed_games": 2,
+        "learner_metrics": [
+          1.0,
+          2.0,
+          1.0,
+          418.0,
+          70.0,
+          1.0
+        ],
+        "opponent_metrics": [
+          1.0,
+          4.0,
+          3.0,
+          312.0,
+          228.0,
+          1.0
+        ]
+      },
+      {
+        "opponent": "G_frozen",
+        "ticks": 1800,
+        "full_game": true,
+        "completed_games": 2,
+        "learner_metrics": [
+          1.0,
+          2.0,
+          1.0,
+          380.0,
+          111.0,
+          1.0
+        ],
+        "opponent_metrics": [
+          1.0,
+          3.0,
+          1.0,
+          235.0,
+          180.0,
+          1.0
+        ]
+      }
+    ],
+    "full_game": true,
+    "metric_names": [
+      "kills",
+      "deaths",
+      "self_defeats",
+      "placed",
+      "trapped_ticks",
+      "game_score"
+    ],
+    "seeds_namespace": "eval",
+    "temperature": 0.3,
+    "seconds": 46.06052237609401
+  },
+  "native_scoring_fix": {
+    "reproduced": "main loses explosion provenance before delayed native trap death; observed deaths with zero credited kills/self defeats",
+    "fixed": [
+      "persist trap physical/causal source across ticks and replay",
+      "enemy contact finisher gets credit; timeout retains unique trap source",
+      "self defeat tracked; kill-mode trades score for both sides",
+      "last tick kill included before winner; clear provenance after death/rescue/respawn"
+    ],
+    "regression": "tests/test_kill_credit.js: real blast, delayed expiry, self defeat, contact, final tick, trade, replay and legacy behavior passed"
+  },
+  "cpu_eight_way_collectives": {
+    "status": "PASS_CPU_8WAY_COLLECTIVES",
+    "virtual_devices": 8,
+    "touches_dcu": false,
+    "checks": [
+      "global gradient and Adam equal one global batch despite unequal live counts",
+      "all eight replicas match",
+      "critic warmup freezes actor and actor Adam",
+      "terminal GAE excludes next-game bootstrap"
+    ],
+    "command": "source scripts/dcu_env.sh; JAX_PLATFORMS=cpu JAX_PLATFORM_NAME=cpu XLA_FLAGS=--xla_force_host_platform_device_count=8 python -m tests.check_kill_collectives",
+    "compilation_cache": "disabled: initial CPU reference runs using shared persistent artifacts were inconsistent; all final reference and production entry points use fresh compilation"
+  },
+  "physical_collective_preflight": {
+    "cards": 1,
+    "psum": "PASS",
+    "all_gather": "PASS",
+    "command": "python -m scripts.check_dcu_collectives --devices 0"
+  },
+  "other_validation": {
+    "pytest": {
+      "passed": 35,
+      "files": [
+        "tests/test_dcu_kill.py",
+        "tests/test_dcu_runtime.py",
+        "tests/test_portable_training.py",
+        "tests/test_training_stop_gate.py"
+      ]
+    },
+    "node_passed": [
+      "tests/test_kill_credit.js",
+      "tests/test_kill_mode_bridge.js",
+      "web/test_kill_mode.js",
+      "web/test_kill_opening_items.js",
+      "web/test_self_respawn_preview.js",
+      "web/test_bun_native_v2.js",
+      "web/test_airdrop_death.js",
+      "web/test_bun06.js",
+      "web/test_r3_model_inputs.js",
+      "web/test_boundary_recovery.js"
+    ],
+    "bridge_parity": "75 ticks of exact native snapshots and byte-identical web obs25/global37 plus zero mode row",
+    "setup_dcu_kill_sh": "PASS on current existing project environment; system dependencies preserved",
+    "static": [
+      "bash -n launch/setup scripts",
+      "Python compile",
+      "node --check bridge",
+      "git diff --check"
+    ],
+    "portable_bundle": "19 assets and 12 pinned source hashes verified by runtime and portable tests"
+  },
+  "recommended_8card_budget": {
+    "global_environments": 64,
+    "ticks": 64,
+    "global_samples_per_update": 4096,
+    "global_minibatch": 512,
+    "hours_internal": 4.95,
+    "external_watchdog_hours": 5,
+    "termination_grace_seconds": 90,
+    "includes_compilation_and_evaluation": true,
+    "automatic_successor": false
+  },
+  "limits": [
+    "physical 8-DCU RCCL, VRAM and throughput await the new machine",
+    "no five-hour training was started on this single-card machine",
+    "six full evaluation games validate execution and scoring, not improved combat strength",
+    "tiny single-card timings cannot predict eight-card five-hour sample count",
+    "checkpoints save actor and critic, not Adam/environment/RNG; loading is warm start"
+  ],
+  "local_artifacts": [
+    "runs/dcu-kill-credit-smoke",
+    "runs/dcu-kill-credit-load-eval",
+    "runs/dcu-kill-credit-fullgame-eval",
+    "runs/dcu-kill-cpu-collectives-final.log"
+  ]
+}

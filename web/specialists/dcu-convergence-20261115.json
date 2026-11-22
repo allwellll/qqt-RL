@@ -1,0 +1,367 @@
+{
+  "schema": "qqt.dcu-convergence-review/v1",
+  "status": "PASS_FULL_GAME_CHECKPOINT_REVIEW",
+  "recorded_utc": "2026-11-15T12:38:24.231640+00:00",
+  "training_stopped": true,
+  "training_finish": {
+    "status": "PASS_FUSED_JAX_DCU_UPDATE",
+    "updates": 1030,
+    "cards": 8,
+    "environment_steps": 270008320,
+    "elapsed_seconds": 15385.757102949545,
+    "optimizer_saved": false,
+    "automatic_successor": false
+  },
+  "protocol": {
+    "schema": "qqt.kill-fixed-eval/v1",
+    "simulator": "live web bun-native-v4-facing",
+    "recorded_during_training": false,
+    "evaluation_replay": true,
+    "game_ticks": 1800,
+    "temperature": 0.3,
+    "seeds": [
+      2026111601,
+      2026111602,
+      2026111603,
+      2026111604,
+      2026111605,
+      2026111606,
+      2026111607,
+      2026111608
+    ],
+    "opponents": [
+      "DUEL_latest",
+      "SP_latest",
+      "G_frozen"
+    ],
+    "balanced_seats": true,
+    "versions": [
+      "current"
+    ],
+    "cpu_only": true,
+    "cpu_affinity": [
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127
+    ]
+  },
+  "source_sha256": {
+    "scripts/export_dcu_kill_replays.py": "3e320e4a759d748b2336adb5e993ac4d7396d75b615687de24452a651814fb84",
+    "scripts/dcu_kill_replay_bridge.js": "2bd173c195b5b3dcdc3b781bff92bbf317df80e7efc96ebb62228beafa06b670",
+    "scripts/kill_mode_bridge.js": "6f5a64d45ec7e172ad6e5c3cec10c71c07b7888bd127eaeaaa89c90475e8dade",
+    "web/sim-bun-native-v4-facing.js": "89165636ba43b667e68e03bd2985410a2fe2c808c63b11aa692b050468ae2c45",
+    "web/kill_opening_items.js": "d1b99520ba42ff4eb8347ed1953c33a190269b44e28eec6eaa924582d97fdff4",
+    "web/self_respawn_preview.js": "663339572b0393cb7a3e2e35bec8bec32a1fe85851f47584c0e06472d5096468",
+    "web/r3_model_inputs.js": "b2b265c78b7836f08a6eed5fe81af2fb48cff6ff20c1d5457d9342199b6fd09e",
+    "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459",
+    "scripts/r4_k4_observation.py": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+    "scripts/r3_items_observation.py": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+    "scripts/retention_phase_conditioning.py": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+    "jax_bomb/jax_net.py": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e"
+  },
+  "baseline_repeat": {
+    "games": 48,
+    "actor_sha_matches": true,
+    "identical_actions": 48,
+    "identical_state_hashes": 48,
+    "identical_summary": 48
+  },
+  "training_windows": [
+    {
+      "updates": [
+        3,
+        102
+      ],
+      "updates_count": 100,
+      "kills_per_death": 2.250892527391358,
+      "self_death_fraction": 0.14892896713037054,
+      "mixed_score_rate": 0.8096923828125,
+      "entropy": 0.5703606098890305,
+      "critic_loss": 3.0945530366897582,
+      "value_mse": 0.6858362469077111,
+      "clip_fraction": 0.025847434997558594
+    },
+    {
+      "updates": [
+        301,
+        400
+      ],
+      "updates_count": 100,
+      "kills_per_death": 3.337260595231448,
+      "self_death_fraction": 0.12588642581942042,
+      "mixed_score_rate": 0.81787109375,
+      "entropy": 0.5425600922107696,
+      "critic_loss": 3.070381076335907,
+      "value_mse": 0.5128675392270088,
+      "clip_fraction": 0.023310089111328126
+    },
+    {
+      "updates": [
+        601,
+        700
+      ],
+      "updates_count": 100,
+      "kills_per_death": 3.5823283858998143,
+      "self_death_fraction": 0.12304164089878375,
+      "mixed_score_rate": 0.8051350911458334,
+      "entropy": 0.5530807617306709,
+      "critic_loss": 3.060969398021698,
+      "value_mse": 0.46113143175840376,
+      "clip_fraction": 0.022975807189941407
+    },
+    {
+      "updates": [
+        741,
+        840
+      ],
+      "updates_count": 100,
+      "kills_per_death": 3.6369296723486784,
+      "self_death_fraction": 0.12621210574665714,
+      "mixed_score_rate": 0.8057861328125,
+      "entropy": 0.578275617659092,
+      "critic_loss": 3.059812214374542,
+      "value_mse": 0.45076333403587343,
+      "clip_fraction": 0.02342933654785156
+    },
+    {
+      "updates": [
+        931,
+        1030
+      ],
+      "updates_count": 100,
+      "kills_per_death": 4.283468054479017,
+      "self_death_fraction": 0.1278651312147049,
+      "mixed_score_rate": 0.8174641927083334,
+      "entropy": 0.6029532232880592,
+      "critic_loss": 3.068879179954529,
+      "value_mse": 0.5213064989447593,
+      "clip_fraction": 0.023711166381835937
+    },
+    {
+      "updates": [
+        1001,
+        1030
+      ],
+      "updates_count": 30,
+      "kills_per_death": 4.438266871165644,
+      "self_death_fraction": 0.14158358895705522,
+      "mixed_score_rate": 0.8282470703125,
+      "entropy": 0.5944500158230464,
+      "critic_loss": 3.0634414672851564,
+      "value_mse": 0.48261692126592,
+      "clip_fraction": 0.024333063761393228
+    }
+  ],
+  "candidates": [
+    {
+      "update": 840,
+      "actor_sha256": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5",
+      "environment_steps": 220200960,
+      "statistics": [
+        {
+          "version": "current",
+          "opponent": "DUEL_latest",
+          "games": 16,
+          "wins": 12,
+          "draws": 1,
+          "losses": 3,
+          "kills": 76,
+          "deaths": 36,
+          "self_deaths": 4,
+          "win_rate": 0.75,
+          "score_rate": 0.78125
+        },
+        {
+          "version": "current",
+          "opponent": "G_frozen",
+          "games": 16,
+          "wins": 16,
+          "draws": 0,
+          "losses": 0,
+          "kills": 135,
+          "deaths": 23,
+          "self_deaths": 5,
+          "win_rate": 1.0,
+          "score_rate": 1.0
+        },
+        {
+          "version": "current",
+          "opponent": "SP_latest",
+          "games": 16,
+          "wins": 16,
+          "draws": 0,
+          "losses": 0,
+          "kills": 166,
+          "deaths": 15,
+          "self_deaths": 3,
+          "win_rate": 1.0,
+          "score_rate": 1.0
+        }
+      ],
+      "totals": {
+        "games": 48,
+        "wins": 44,
+        "draws": 1,
+        "losses": 3,
+        "kills": 377,
+        "deaths": 74,
+        "self_deaths": 12,
+        "score_rate": 0.9270833333333334,
+        "kills_per_death": 5.094594594594595,
+        "self_death_fraction": 0.16216216216216217
+      },
+      "paired_vs_u840": {
+        "better": 0,
+        "same": 48,
+        "worse": 0,
+        "total_score_delta": 0.0
+      },
+      "local_artifacts": "runs/kill-eval-u000840-20261115-repeat"
+    },
+    {
+      "update": 930,
+      "actor_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+      "environment_steps": 243793920,
+      "statistics": [
+        {
+          "version": "current",
+          "opponent": "DUEL_latest",
+          "games": 16,
+          "wins": 15,
+          "draws": 1,
+          "losses": 0,
+          "kills": 117,
+          "deaths": 24,
+          "self_deaths": 4,
+          "win_rate": 0.9375,
+          "score_rate": 0.96875
+        },
+        {
+          "version": "current",
+          "opponent": "G_frozen",
+          "games": 16,
+          "wins": 15,
+          "draws": 0,
+          "losses": 1,
+          "kills": 175,
+          "deaths": 11,
+          "self_deaths": 1,
+          "win_rate": 0.9375,
+          "score_rate": 0.9375
+        },
+        {
+          "version": "current",
+          "opponent": "SP_latest",
+          "games": 16,
+          "wins": 15,
+          "draws": 0,
+          "losses": 1,
+          "kills": 187,
+          "deaths": 12,
+          "self_deaths": 6,
+          "win_rate": 0.9375,
+          "score_rate": 0.9375
+        }
+      ],
+      "totals": {
+        "games": 48,
+        "wins": 45,
+        "draws": 1,
+        "losses": 2,
+        "kills": 479,
+        "deaths": 47,
+        "self_deaths": 11,
+        "score_rate": 0.9479166666666666,
+        "kills_per_death": 10.191489361702128,
+        "self_death_fraction": 0.23404255319148937
+      },
+      "paired_vs_u840": {
+        "better": 4,
+        "same": 41,
+        "worse": 3,
+        "total_score_delta": 1.0
+      },
+      "local_artifacts": "runs/kill-eval-u000930-20261115-convergence"
+    },
+    {
+      "update": 1030,
+      "actor_sha256": "0c1ae0e115ebccee532804d90dd38e6440b481f4c4e93b0bde4a87ad405d3833",
+      "environment_steps": 270008320,
+      "statistics": [
+        {
+          "version": "current",
+          "opponent": "DUEL_latest",
+          "games": 16,
+          "wins": 9,
+          "draws": 4,
+          "losses": 3,
+          "kills": 18,
+          "deaths": 96,
+          "self_deaths": 88,
+          "win_rate": 0.5625,
+          "score_rate": 0.6875
+        },
+        {
+          "version": "current",
+          "opponent": "G_frozen",
+          "games": 16,
+          "wins": 4,
+          "draws": 8,
+          "losses": 4,
+          "kills": 8,
+          "deaths": 98,
+          "self_deaths": 86,
+          "win_rate": 0.25,
+          "score_rate": 0.5
+        },
+        {
+          "version": "current",
+          "opponent": "SP_latest",
+          "games": 16,
+          "wins": 6,
+          "draws": 6,
+          "losses": 4,
+          "kills": 22,
+          "deaths": 102,
+          "self_deaths": 84,
+          "win_rate": 0.375,
+          "score_rate": 0.5625
+        }
+      ],
+      "totals": {
+        "games": 48,
+        "wins": 19,
+        "draws": 18,
+        "losses": 11,
+        "kills": 48,
+        "deaths": 296,
+        "self_deaths": 258,
+        "score_rate": 0.5833333333333334,
+        "kills_per_death": 0.16216216216216217,
+        "self_death_fraction": 0.8716216216216216
+      },
+      "paired_vs_u840": {
+        "better": 3,
+        "same": 18,
+        "worse": 27,
+        "total_score_delta": -16.5
+      },
+      "local_artifacts": "runs/kill-eval-u001030-20261115-convergence"
+    }
+  ],
+  "selected_update": 930,
+  "selected_actor_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+  "selection_rule": "Aggregate full-game score rate, DUEL score rate, fewer self deaths, net kills; keep current default on a complete tie",
+  "limits": [
+    "Three selected checkpoints, not an exhaustive search or proof of global optimum.",
+    "Eight seeds, both seats, 16 games per opponent; seeds reused for checkpoint selection, not a held-out final test.",
+    "SP/G also participate in training; training mixed-opponent K/D is not web-model strength.",
+    "Evaluation JAX BF16 with frozen opponents on JS v4; browser same-weight FP32 is a separate integration protocol.",
+    "Regression does not identify its cause; investigate JAX versus JS semantics and optimization before further training."
+  ]
+}

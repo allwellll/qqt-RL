@@ -1,0 +1,182 @@
+{
+  "schema": "qqt.dcu-native-jax-validation/v1",
+  "recorded_utc": "2026-11-15T07:34:40.339843+00:00",
+  "status": "PASS_FUSED_NATIVE_JAX_8CARD_TRAINING_CONTINUES",
+  "branch": "dcu",
+  "runtime": {
+    "devices": 8,
+    "kind": "BW",
+    "jax": "0.6.0+das.opt1.dtk2604",
+    "dependencies_replaced": false
+  },
+  "native_rules": {
+    "status": "PASS_NATIVE_JAX_KILL",
+    "opening_seeds": 32,
+    "opening_items": 24,
+    "initial_web_obs25_global37_parity": true,
+    "delayed_kill": true,
+    "self_defeat": true,
+    "death_extra_drops": 8,
+    "respawn_ticks": 30,
+    "protection_ticks": 10,
+    "initial_and_respawn_hp": 5
+  },
+  "trajectory": {
+    "status": "PASS_NATIVE_JAX_TRAJECTORY",
+    "ticks": 60,
+    "fields": [
+      "alive",
+      "blastCap",
+      "bombBlast",
+      "bombsCap",
+      "fuse",
+      "hp",
+      "owner",
+      "pos",
+      "spdG",
+      "trapped"
+    ],
+    "position_atol": 0.0003,
+    "random_death_drop_positions_bitwise_parity": false
+  },
+  "python_checks": {
+    "passed": 44,
+    "files": [
+      "tests/test_dcu_jax_kill.py",
+      "tests/test_dcu_kill.py",
+      "tests/test_kill_checkpoints.py",
+      "tests/test_dcu_runtime.py"
+    ]
+  },
+  "e128_run": {
+    "path": "runs/kill-jax-8card-v2-20261115",
+    "status": "PASS_FUSED_JAX_DCU_UPDATE",
+    "updates": 30,
+    "cards": 8,
+    "environment_steps": 1966080,
+    "elapsed_seconds": 527.5010906737298,
+    "optimizer_saved": false,
+    "automatic_successor": false,
+    "full_games": 1024,
+    "median_update_seconds": 8.151195495389402,
+    "median_collect_seconds": 6.91852240357548,
+    "median_ppo_seconds": 1.225102324038744,
+    "stable_envsteps_per_second": 8040.04762700998,
+    "measurement_updates": [
+      3,
+      30
+    ],
+    "first_rollout_compile_and_execution_seconds": 178.3813370242715,
+    "first_ppo_compile_and_execution_seconds": 43.3786312835291,
+    "verified_checkpoint": {
+      "actor_l2_delta": 0.5658899326032872,
+      "critic_l2_delta": 1.5306621282056179,
+      "checkpoint": "runs/kill-jax-8card-v2-20261115/u000005",
+      "eight_card_replica_summaries_equal": true,
+      "optimizer_saved": false
+    },
+    "device_utilization_sample": {
+      "samples": 12,
+      "interval_seconds": 3,
+      "mean_percent": 16.35
+    }
+  },
+  "native_rollout": {
+    "pmap": true,
+    "lax_scan": true,
+    "host_callbacks": false,
+    "environment_on_dcu": true,
+    "rule_bots_on_dcu": true,
+    "selfplay_on_dcu": true,
+    "gae_on_dcu": true,
+    "rule_bot_fraction": 0.5,
+    "opponent_model_fractions": {
+      "current": 0.25,
+      "history": 0.125,
+      "SP": 0.0625,
+      "G": 0.0625
+    }
+  },
+  "current_run": "runs/kill-jax-8card-e512-20261115",
+  "original_deadline_utc": "2026-11-15T11:44:03.689096+00:00",
+  "optimizer_saved": false,
+  "checkpoint_budget_gib_per_new_run": 4,
+  "old_cpu_run_checkpoint": "runs/kill-8card-5h-20261115/u000173",
+  "limits": [
+    "Rule and 60-tick trajectory checks are not exhaustive live-engine parity proof.",
+    "JAX runner has no periodic fixed-opponent evaluation; training metrics do not establish combat gains.",
+    "CPU and JAX workload geometries and opponent mixes differ; throughput is operational comparison."
+  ],
+  "training_completed": false,
+  "e512_run": {
+    "status": "RUNNING_VERIFIED_FUSED_NATIVE_JAX",
+    "path": "runs/kill-jax-8card-e512-20261115",
+    "devices": 8,
+    "envs_per_device": 512,
+    "global_environments": 4096,
+    "global_samples_per_update": 262144,
+    "verified_update_snapshot": 11,
+    "environment_steps_snapshot": 2883584,
+    "measurement_updates": [
+      3,
+      11
+    ],
+    "median_update_seconds": 12.927908348850906,
+    "median_collect_seconds": 8.247303853742778,
+    "median_ppo_seconds": 4.650726737454534,
+    "stable_envsteps_per_second": 20277.371476206405,
+    "first_rollout_compile_and_execution_seconds": 188.76175443269312,
+    "first_ppo_compile_and_execution_seconds": 45.008967471309006,
+    "verified_checkpoint": {
+      "actor_l2_delta": 1.0141654469165007,
+      "critic_l2_delta": 4.347024558129185,
+      "checkpoint": "runs/kill-jax-8card-e512-20261115/u000005",
+      "eight_card_replica_summaries_equal": true,
+      "optimizer_saved": false,
+      "source_fingerprints_verified": true
+    },
+    "device_utilization_sample": {
+      "samples": 16,
+      "interval_seconds": 3,
+      "mean_percent": 42.69453125,
+      "per_card_mean_percent": {
+        "0": 40.3125,
+        "1": 43.44375,
+        "2": 62.025,
+        "3": 40.31875,
+        "4": 30.23125,
+        "5": 40.85625,
+        "6": 38.9,
+        "7": 45.46875
+      },
+      "last_vram_mib": {
+        "0": 8434,
+        "1": 8352,
+        "2": 8352,
+        "3": 8352,
+        "4": 8352,
+        "5": 8352,
+        "6": 8352,
+        "7": 8256
+      }
+    },
+    "source_sha256": {
+      "qqt_rl/training/jax_kill_env.py": "0632b723fb2aa15bd464e3adbc1cd2e1f50d57ef725a76cc9dae81fdd32a49a5",
+      "qqt_rl/training/jax_kill_collect.py": "37f6d0c71b8ad6a874c0a82cc3c6cd5c9dc1c2bc77a2e59c4f9e6f8a969e5564",
+      "qqt_rl/training/kill_ppo.py": "0541fd958d804cb3662dac6d6804d3f4228b10b444c06c9d1d8a56b48e9c925d",
+      "qqt_rl/training/checkpoints.py": "dc6baed91518d7739bdcc9d85b131097f3af3cdb0ca5cf843e81479f55d11a19",
+      "scripts/train_dcu_jax_kill.py": "f3d036fe2b26045fbb885f0572890d5b5454b9beb57feb8f34c247751587a3b4",
+      "scripts/r4_kill_arena.py": "476ff7dc01a87a8f961e0f60e276f4a9bf2bca92e11b402a2efc01310b89ef9b",
+      "scripts/r4_k4_observation.py": "e3b8205790190dd0470e5e9c58e63a82b537e3e3e345d180e6c9273a8923c06a",
+      "scripts/r3_items_observation.py": "f988f015245f935a527b5f3aaca6edd03622d6d6806529499d567982620acf95",
+      "scripts/retention_phase_conditioning.py": "2aec96e23ada5c432a954c677df098dadf359775050d0d97270afa4462414fd3",
+      "jax_bomb/jax_net.py": "98ec412b5083cdddc9c77baaf6c5fc809059ecb2689356c6628d0ee7675ed40e",
+      "jax_bomb/bun_jax_bots.py": "fc9ac9a8a3bb2537a54fe84b67dee51ee98fe6b8183e09e642611baf8c15cdc8",
+      "jax_bomb/je07_bun_env_r1_items.py": "f95aa6cefd09858665074d968be926a77c87f3279303bd05fbfa193f1c2d4e52",
+      "jax_bomb/je05_core_env_r1_items.py": "4591c138dbfc0520148f63fa68dccf40caeb09f6e196e29e0c86f2a2a33c82a2",
+      "jax_bomb/je07_native_items.py": "0245aad1b6b9577ff5396e57f23d7f0a2e393d4edf1acdaf860975129c35219b",
+      "web/assets/maps/levels.json": "54584a603430a5763a6edc733f91ab87beeb43ba97a196c47ee3d4cbdcd90459"
+    }
+  },
+  "operational_speedup_vs_cpu_approx": 15.597978058620312
+}

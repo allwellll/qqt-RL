@@ -1,0 +1,473 @@
+{
+  "schema": "qqt.dcu-web-default-publication/v1",
+  "status": "PASS",
+  "verified_utc": "2026-11-15T12:15:26.229540+00:00",
+  "url": "https://allwellll.github.io/qqt-RL/",
+  "model_id": "dcu-kill-u000840-tau03",
+  "mode_defaults": {
+    "kill": "dcu-kill-u000840-tau03",
+    "carry": "items-l2-sp-u023302-tau03"
+  },
+  "temperature": 0.3,
+  "source_update": 840,
+  "export": {
+    "status": "PASS",
+    "ruleset": "bun-native-v4-facing",
+    "checkpoint_sha256": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5",
+    "source_global_dim": 38,
+    "state_dim": 37,
+    "ability_actions": 3,
+    "fixed_mode": 0,
+    "projection_max_abs": 0.0,
+    "files": {
+      "model.json": {
+        "sha256": "9775533cc1cef3d08648d7ece1119c856483d03fc1fd394c96dcce208dfad799",
+        "bytes": 40340915
+      },
+      "model.onnx": {
+        "sha256": "69665c6112487a22c253410cd4f508759ce7add3c74df7f12fda73be16141e21",
+        "bytes": 30276774
+      }
+    },
+    "source_update": 840,
+    "evaluation_games": 48,
+    "packed_weights_exact": true,
+    "full_source_fp32_onnx_max_abs": 1.621246337890625e-05,
+    "scope": "Exact fp32 weights and constant-zero mode projection; browser fp32 is not bit-identical to training bf16"
+  },
+  "parity": {
+    "status": "PASS",
+    "ruleset": "bun-native-v4-facing",
+    "samples": 17,
+    "max_abs": 1.3388144253667633e-05,
+    "masked_greedy_exact": true,
+    "reference_zero": {
+      "move": [
+        0.17089393182095516,
+        1.1515834670808416,
+        0.7422206038326892,
+        0.7698408591337792,
+        1.2093688792499138
+      ],
+      "bomb": [
+        0.04862027616553888,
+        0.07191288873009061,
+        0.06986493325962678
+      ],
+      "value": 2.7298607302821374
+    },
+    "errors": [
+      {
+        "map": "zero",
+        "seat": null,
+        "tick": 0,
+        "max_abs": 2.200834611498781e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 0,
+        "max_abs": 5.451596372108014e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 0,
+        "max_abs": 4.8232054230545884e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 12,
+        "max_abs": 1.912677894289061e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 12,
+        "max_abs": 3.0107795723210984e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 36,
+        "max_abs": 3.948054686953029e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 36,
+        "max_abs": 5.594934672892293e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 60,
+        "max_abs": 1.457006536975669e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 60,
+        "max_abs": 3.956156731099725e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 0,
+        "max_abs": 5.472206674461688e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 0,
+        "max_abs": 5.541771383121841e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 12,
+        "max_abs": 1.3388144253667633e-05
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 12,
+        "max_abs": 4.5220259146105946e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 36,
+        "max_abs": 2.3286716894777015e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 36,
+        "max_abs": 3.5187077093712382e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 60,
+        "max_abs": 5.275826038264597e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 60,
+        "max_abs": 3.098346257113249e-06
+      }
+    ],
+    "scope": "fp32 CPU JS/ONNX integration; not a win-rate or training-bf16 claim"
+  },
+  "release": {
+    "status": "PASS_RELEASE_CI_DOWNLOAD_SHA_VERIFIED",
+    "release_url": "https://github.com/allwellll/qqt-RL/releases/tag/dcu-kill-u000840-20261115",
+    "assets": [
+      {
+        "id": 750818629,
+        "file": "dcu-kill-u000840-9775533cc1cef3d08648d7ece1119c856483d03fc1fd394c96dcce208dfad799.json",
+        "bytes": 40340915,
+        "sha256": "9775533cc1cef3d08648d7ece1119c856483d03fc1fd394c96dcce208dfad799",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000840-20261115/dcu-kill-u000840-9775533cc1cef3d08648d7ece1119c856483d03fc1fd394c96dcce208dfad799.json"
+      },
+      {
+        "id": 750818825,
+        "file": "dcu-kill-u000840-69665c6112487a22c253410cd4f508759ce7add3c74df7f12fda73be16141e21.onnx",
+        "bytes": 30276774,
+        "sha256": "69665c6112487a22c253410cd4f508759ce7add3c74df7f12fda73be16141e21",
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000840-20261115/dcu-kill-u000840-69665c6112487a22c253410cd4f508759ce7add3c74df7f12fda73be16141e21.onnx"
+      }
+    ],
+    "workflow_url": "https://github.com/allwellll/qqt-RL/actions/runs/43711444819"
+  },
+  "pages": {
+    "status": "PASS_PAGES_DEPLOYED_FILES_BROWSER_VERIFIED",
+    "parent": "fccad012bf9892be6a0048d6b305bed6e0d9b0cf",
+    "commit": "1989d4fbb86449d91833ac17b18231642c59a72a",
+    "created_utc": "2026-11-15T11:57:59.629952+00:00",
+    "url": "https://allwellll.github.io/qqt-RL/",
+    "files": {
+      "web/app.js": {
+        "bytes": 33237,
+        "sha256": "8cdca532767daa92671e0f035dadbd171fc021dde51d8fd492bc27d2bfb0115d"
+      },
+      "web/model_catalog.js": {
+        "bytes": 5724,
+        "sha256": "621274480f5372f6d57695676df0c4624335442d228e4b27fed73d2e3a7c1df1"
+      },
+      "web/model_inference_defaults.json": {
+        "bytes": 561,
+        "sha256": "0d330b8ef67f9aebb51b329d0efc498dabc87a540925c95ed327fbd73dec3938"
+      },
+      "web/models.json": {
+        "bytes": 22111,
+        "sha256": "cf0b22d6010ad941bba5a3cb3ecd63084c8c596664c5c6a905af99cc1ef699d7"
+      },
+      "web/test_http.js": {
+        "bytes": 5395,
+        "sha256": "b25f53490e480bbc7f408cc44e23a7a47f56753ddfe09f567d821bf917cb9805"
+      },
+      "web/test_kill_mode.js": {
+        "bytes": 1670,
+        "sha256": "803448e9b96b1655add39bd31b8185ddfc14f5e8a5e98874ef00c30fb8ef6892"
+      },
+      "web/test_model_catalog.js": {
+        "bytes": 9066,
+        "sha256": "5f3577950a49909e5f8966b8875cc9eab2b60da7f165b03acfbf4d15211e5e31"
+      },
+      "web/specialists/dcu-kill-u000840-20261115.json": {
+        "bytes": 5025,
+        "sha256": "819951f6b9956bde4df5d45b415a8fcbc8deeb6f2fd409a8ecab0bbfb109a404"
+      },
+      "docs/combat_league_v2_dependency_manifest_20261107.json": {
+        "bytes": 113236,
+        "sha256": "5bdb1be92a5b9f3fd8be0d6479945fe7ee8d8fa2253ce6d35dcc333ee28a399f"
+      }
+    },
+    "workflow_run": 43711444819,
+    "workflow_url": "https://github.com/allwellll/qqt-RL/actions/runs/43711444819",
+    "workflow_conclusion": "success",
+    "build_info": {
+      "version": "leaderboard-v1",
+      "ruleset_version": "bun-native-v4-facing",
+      "commit": "1989d4fbb86449d91833ac17b18231642c59a72a"
+    },
+    "verified_files": {
+      "app.js": {
+        "bytes": 33237,
+        "sha256": "8cdca532767daa92671e0f035dadbd171fc021dde51d8fd492bc27d2bfb0115d"
+      },
+      "model_catalog.js": {
+        "bytes": 5724,
+        "sha256": "621274480f5372f6d57695676df0c4624335442d228e4b27fed73d2e3a7c1df1"
+      },
+      "model_inference_defaults.json": {
+        "bytes": 561,
+        "sha256": "0d330b8ef67f9aebb51b329d0efc498dabc87a540925c95ed327fbd73dec3938"
+      },
+      "models.json": {
+        "bytes": 22111,
+        "sha256": "cf0b22d6010ad941bba5a3cb3ecd63084c8c596664c5c6a905af99cc1ef699d7"
+      },
+      "test_http.js": {
+        "bytes": 5395,
+        "sha256": "b25f53490e480bbc7f408cc44e23a7a47f56753ddfe09f567d821bf917cb9805"
+      },
+      "test_kill_mode.js": {
+        "bytes": 1670,
+        "sha256": "803448e9b96b1655add39bd31b8185ddfc14f5e8a5e98874ef00c30fb8ef6892"
+      },
+      "test_model_catalog.js": {
+        "bytes": 9066,
+        "sha256": "5f3577950a49909e5f8966b8875cc9eab2b60da7f165b03acfbf4d15211e5e31"
+      },
+      "specialists/dcu-kill-u000840-20261115.json": {
+        "bytes": 5025,
+        "sha256": "819951f6b9956bde4df5d45b415a8fcbc8deeb6f2fd409a8ecab0bbfb109a404"
+      }
+    },
+    "browser_status": "PASS_DESKTOP_MOBILE_DEFAULT",
+    "browser_transport": "python-stdlib HTTP bridge",
+    "verified_utc": "2026-11-15T12:15:26.229540+00:00"
+  },
+  "local_browser": {
+    "status": "PASS_DESKTOP_MOBILE_DEFAULT",
+    "url": "http://127.0.0.1:41019/",
+    "transport": "Chromium default",
+    "results": [
+      {
+        "width": 1280,
+        "first": {
+          "model": "dcu-kill-u000840",
+          "backend": "worker-wasm",
+          "parity": 2.090180438507616e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000840-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "carry": {
+          "model": "L2_SP_u023302",
+          "backend": "worker-wasm",
+          "parity": 1.4348368120309374e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": false,
+          "tick": 3,
+          "selected": "model:items-l2-sp-u023302-tau03",
+          "mode": "carry",
+          "overflow": false
+        },
+        "reload": {
+          "model": "dcu-kill-u000840",
+          "backend": "worker-wasm",
+          "parity": 2.090180438507616e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000840-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "errors": []
+      },
+      {
+        "width": 390,
+        "first": {
+          "model": "dcu-kill-u000840",
+          "backend": "worker-wasm",
+          "parity": 2.090180438507616e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000840-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "carry": {
+          "model": "L2_SP_u023302",
+          "backend": "worker-wasm",
+          "parity": 1.4348368120309374e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": false,
+          "tick": 3,
+          "selected": "model:items-l2-sp-u023302-tau03",
+          "mode": "carry",
+          "overflow": false
+        },
+        "reload": {
+          "model": "dcu-kill-u000840",
+          "backend": "worker-wasm",
+          "parity": 2.090180438507616e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000840-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "errors": []
+      }
+    ]
+  },
+  "public_browser": {
+    "status": "PASS_DESKTOP_MOBILE_DEFAULT",
+    "url": "https://allwellll.github.io/qqt-RL/",
+    "transport": "python-stdlib HTTP bridge",
+    "results": [
+      {
+        "width": 1280,
+        "first": {
+          "model": "dcu-kill-u000840",
+          "backend": "worker-wasm",
+          "parity": 2.090180438507616e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000840-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "carry": {
+          "model": "L2_SP_u023302",
+          "backend": "worker-wasm",
+          "parity": 1.4348368120309374e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": false,
+          "tick": 3,
+          "selected": "model:items-l2-sp-u023302-tau03",
+          "mode": "carry",
+          "overflow": false
+        },
+        "reload": {
+          "model": "dcu-kill-u000840",
+          "backend": "worker-wasm",
+          "parity": 2.090180438507616e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000840-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "errors": []
+      },
+      {
+        "width": 390,
+        "first": {
+          "model": "dcu-kill-u000840",
+          "backend": "worker-wasm",
+          "parity": 2.090180438507616e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000840-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "carry": {
+          "model": "L2_SP_u023302",
+          "backend": "worker-wasm",
+          "parity": 1.4348368120309374e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": false,
+          "tick": 3,
+          "selected": "model:items-l2-sp-u023302-tau03",
+          "mode": "carry",
+          "overflow": false
+        },
+        "reload": {
+          "model": "dcu-kill-u000840",
+          "backend": "worker-wasm",
+          "parity": 2.090180438507616e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000840-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "errors": []
+      }
+    ]
+  },
+  "replay_url": "https://allwellll.github.io/qqt-RL/dcu-replays/u000840-20261115.html",
+  "training_finish": {
+    "status": "PASS_FUSED_JAX_DCU_UPDATE",
+    "updates": 1030,
+    "cards": 8,
+    "environment_steps": 270008320,
+    "elapsed_seconds": 15385.757102949545,
+    "optimizer_saved": false,
+    "automatic_successor": false
+  },
+  "scope": "Verified fp32 browser export/integration; 48-game JAX bf16 evaluation remains a separate protocol, not a browser fp32 win-rate claim"
+}

@@ -2,8 +2,44 @@
   "schema": "qqt.web-models/v1",
   "models": [
     {
+      "id": "dcu-courier-u000168",
+      "display_name": "DCU 运包强化 · u168",
+      "menu_label": "DCU 运包强化 · u168（运包默认）",
+      "cycle": 168,
+      "candidate": "carry courier u000168",
+      "strategy": "raw",
+      "source_sha256": "610f94ae33b15de4fcb8393a74590dc985c482e3eecc225da5e782f7ebf50b97",
+      "full_source_sha256": "610f94ae33b15de4fcb8393a74590dc985c482e3eecc225da5e782f7ebf50b97",
+      "rule_version": "bun-native-v3-items",
+      "inference": {"greedy": false, "temperature": 0.3, "seed": 5329236},
+      "file": "dcu-courier-u000168-57d59ad04deb81f33f5c9ff2bd9053fd07f5dff338ebb56074f2bbece5ff682f.json",
+      "sha256": "57d59ad04deb81f33f5c9ff2bd9053fd07f5dff338ebb56074f2bbece5ff682f",
+      "bytes": 40340648,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000168-20261122/dcu-courier-u000168-57d59ad04deb81f33f5c9ff2bd9053fd07f5dff338ebb56074f2bbece5ff682f.json",
+      "onnx": {
+        "file": "dcu-courier-u000168-09bcfd68ba8fa94429a3bcd4afb8f7caf50fa1bb43dc17bd2def5a9321accd88.onnx",
+        "sha256": "09bcfd68ba8fa94429a3bcd4afb8f7caf50fa1bb43dc17bd2def5a9321accd88",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000168-20261122/dcu-courier-u000168-09bcfd68ba8fa94429a3bcd4afb8f7caf50fa1bb43dc17bd2def5a9321accd88.onnx",
+        "meta": {
+          "name": "dcu-courier-u000168", "display_name": "DCU courier u000168", "rule": "bun", "rule_version": "bun-native-v3-items", "qqt_map_id": 806,
+          "arch": "transformer", "move_actions": 5, "ability_actions": 3, "ability_encoding": ["none", "bomb", "use_item"], "value_min": -20, "value_max": 20,
+          "obs_shape": [25, 13, 15], "state_dim": 37, "n_players": 2, "embed": 392, "patch": 3, "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1", "checkpoint_sha256": "610f94ae33b15de4fcb8393a74590dc985c482e3eecc225da5e782f7ebf50b97", "source_global_dim": 38, "fixed_mode": 0,
+          "projection": "drop final mode input row only", "onnx_sha256": "09bcfd68ba8fa94429a3bcd4afb8f7caf50fa1bb43dc17bd2def5a9321accd88", "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "610f94ae33b15de4fcb8393a74590dc985c482e3eecc225da5e782f7ebf50b97", "r4_full_input_abi": "obs25-global38", "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI"
+        },
+        "reference_zero": {
+          "move": [1.3098636841864304, 2.5230435278374066, 2.634560410780717, 2.43048017711039, -0.32902050082375967],
+          "bomb": [0.3737115273014734, 3.2219405004229933, -1.302666398525338],
+          "value": 1.3827190682785921
+        }
+      },
+      "description": "2026-11-22 联合运包训练 u168；来自已发布运包对拼录像的运包方。网页固定 mode=0 的 FP32 导出，作为当前运包默认；旧 SP/u587 仍可选。"
+    },
+    {
       "id": "items-l2-sp-u023302-tau03",
-      "display_name": "SP · 少自死/猎手强/偶停（默认）",
+      "display_name": "SP · 少自死/猎手强/偶停（运包默认）",
       "cycle": 23302,
       "candidate": "L2_SP_u023302 tau0.3",
       "strategy": "raw",
@@ -100,7 +136,39 @@
           "summary": "近身2胜/1负/1平；两类困难猎手合计4胜/0负、自死0次。与原v3同seed子集关键指标一致；仅兼容性快筛，不是全面优势证明。"
         }
       },
-      "menu_label": "SP · 少自死/猎手强/偶停（默认）"
+      "menu_label": "SP · 少自死/猎手强/偶停（可选）"
+    },
+    {
+      "id": "dcu-courier-u000587",
+      "display_name": "DCU 运包强化 · u587",
+      "menu_label": "DCU 运包强化 · u587（新）",
+      "cycle": 587,
+      "candidate": "carry courier u000587",
+      "strategy": "raw",
+      "source_sha256": "5990fa8befb53c8be66558b4c193ea9361740394cf1199d37e624b1da348e343",
+      "full_source_sha256": "5990fa8befb53c8be66558b4c193ea9361740394cf1199d37e624b1da348e343",
+      "rule_version": "bun-native-v3-items",
+      "inference": {"greedy": false, "temperature": 0.3, "seed": 5329236},
+      "file": "dcu-courier-u000587-95aebaf9df3beedb253972e59c7066af8b957353b56b94017ddec11703b8e89c.json",
+      "sha256": "95aebaf9df3beedb253972e59c7066af8b957353b56b94017ddec11703b8e89c",
+      "bytes": 40340648,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000587-20261122/dcu-courier-u000587-95aebaf9df3beedb253972e59c7066af8b957353b56b94017ddec11703b8e89c.json",
+      "onnx": {
+        "file": "dcu-courier-u000587-3db670ff98d130ef660dd419664fa3d307f982cc27e08488f55658809c632039.onnx",
+        "sha256": "3db670ff98d130ef660dd419664fa3d307f982cc27e08488f55658809c632039",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-courier-u000587-20261122/dcu-courier-u000587-3db670ff98d130ef660dd419664fa3d307f982cc27e08488f55658809c632039.onnx",
+        "meta": {
+          "name": "dcu-courier-u000587", "display_name": "DCU courier u000587", "rule": "bun", "rule_version": "bun-native-v3-items", "qqt_map_id": 806,
+          "arch": "transformer", "move_actions": 5, "ability_actions": 3, "ability_encoding": ["none", "bomb", "use_item"], "value_min": -20, "value_max": 20,
+          "obs_shape": [25, 13, 15], "state_dim": 37, "n_players": 2, "embed": 392, "patch": 3, "depth": 4,
+          "r3_input_encoding": "r3-items-route-chain-visible-v1", "checkpoint_sha256": "5990fa8befb53c8be66558b4c193ea9361740394cf1199d37e624b1da348e343", "source_global_dim": 38, "fixed_mode": 0,
+          "projection": "drop final mode input row only", "onnx_sha256": "3db670ff98d130ef660dd419664fa3d307f982cc27e08488f55658809c632039", "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "5990fa8befb53c8be66558b4c193ea9361740394cf1199d37e624b1da348e343", "r4_full_input_abi": "obs25-global38", "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI"
+        },
+        "reference_zero": {"move": [1.78476083278656, 2.3284990787506104, 2.038991689682007, 2.749509811401367, 0.7214480638504028], "bomb": [0.3507906198501587, 2.729663610458374, -0.5404897928237915], "value": 1.7867710590362549}
+      },
+      "description": "完整运包地图训练 u587；网页为固定mode=0的FP32导出。作为可选模型，不替换当前默认。"
     },
     {
       "id": "bun392-g-frozen",
@@ -375,6 +443,360 @@
       "score": 0.9166666666666666,
       "oss_url": "https://qqt-model.oss-cn-beijing.aliyuncs.com/web-models/bun392-v2-risk-u9969-a68f3fcc71d07e9da922c22b9187ad21f4c37279f734a1e18d5c03e73950f278.json",
       "menu_label": "风险线 u9969 · 旧规则录像认可点"
+    },
+    {
+      "id": "dcu-kill-u000840-tau03",
+      "display_name": "对拼强化 · u840（历史）",
+      "menu_label": "对拼强化 · u840（历史）",
+      "cycle": 840,
+      "candidate": "DCU kill u000840 tau0.3",
+      "strategy": "raw",
+      "source_sha256": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5",
+      "full_source_sha256": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5",
+      "rule_version": "bun-native-v4-facing",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "dcu-kill-u000840-9775533cc1cef3d08648d7ece1119c856483d03fc1fd394c96dcce208dfad799.json",
+      "sha256": "9775533cc1cef3d08648d7ece1119c856483d03fc1fd394c96dcce208dfad799",
+      "bytes": 40340915,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000840-20261115/dcu-kill-u000840-9775533cc1cef3d08648d7ece1119c856483d03fc1fd394c96dcce208dfad799.json",
+      "onnx": {
+        "file": "dcu-kill-u000840-69665c6112487a22c253410cd4f508759ce7add3c74df7f12fda73be16141e21.onnx",
+        "sha256": "69665c6112487a22c253410cd4f508759ce7add3c74df7f12fda73be16141e21",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000840-20261115/dcu-kill-u000840-69665c6112487a22c253410cd4f508759ce7add3c74df7f12fda73be16141e21.onnx",
+        "meta": {
+          "name": "dcu-kill-u000840",
+          "display_name": "对拼强化 · u840",
+          "arch": "transformer",
+          "rule": "bun",
+          "rule_version": "bun-native-v4-facing",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "value_min": -20,
+          "value_max": 20,
+          "checkpoint_sha256": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5",
+          "source_global_dim": 38,
+          "fixed_mode": 0,
+          "projection": "drop final mode input row only",
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "onnx_sha256": "69665c6112487a22c253410cd4f508759ce7add3c74df7f12fda73be16141e21",
+          "onnx_file": "model.onnx",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "dcc148a17acea599555c468c4295c8578bd515ff584035397b9920d684bda7f5",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI",
+          "training_mode": "map806-kill",
+          "evaluation_games": 48
+        },
+        "reference_zero": {
+          "move": [
+            0.17089393182095516,
+            1.1515834670808416,
+            0.7422206038326892,
+            0.7698408591337792,
+            1.2093688792499138
+          ],
+          "bomb": [
+            0.04862027616553888,
+            0.07191288873009061,
+            0.06986493325962678
+          ],
+          "value": 2.7298607302821374
+        }
+      },
+      "description": "无包子纯击杀专项，8卡DCU训练u840；固定对手48局44胜1平3负，其中对DUEL_latest为12胜1平3负。8个seed双席小样本，SP/G也是训练对手。成绩基于JAX BF16评测，网页采用同权重FP32推理，非逐位一致；不作为运包胜率结论。录像见 dcu-replays/u000840-20261115.html。"
+    },
+    {
+      "id": "dcu-kill-u000930-tau03",
+      "display_name": "对拼强化 · u930（历史）",
+      "menu_label": "对拼强化 · u930（历史）",
+      "cycle": 930,
+      "candidate": "DCU kill u000930 tau0.3",
+      "strategy": "raw",
+      "source_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+      "full_source_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+      "rule_version": "bun-native-v4-facing",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "dcu-kill-u000930-051ef609f84dab77796d0414a632b4e66c1641ae76d819bb0e3c1dc47c378792.json",
+      "sha256": "051ef609f84dab77796d0414a632b4e66c1641ae76d819bb0e3c1dc47c378792",
+      "bytes": 40340915,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000930-20261115/dcu-kill-u000930-051ef609f84dab77796d0414a632b4e66c1641ae76d819bb0e3c1dc47c378792.json",
+      "onnx": {
+        "file": "dcu-kill-u000930-923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0.onnx",
+        "sha256": "923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000930-20261115/dcu-kill-u000930-923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0.onnx",
+        "meta": {
+          "name": "dcu-kill-u000930",
+          "display_name": "对拼强化 · u930",
+          "arch": "transformer",
+          "rule": "bun",
+          "rule_version": "bun-native-v4-facing",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "value_min": -20,
+          "value_max": 20,
+          "checkpoint_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+          "source_global_dim": 38,
+          "fixed_mode": 0,
+          "projection": "drop final mode input row only",
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "onnx_sha256": "923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0",
+          "onnx_file": "model.onnx",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI",
+          "training_mode": "map806-kill",
+          "evaluation_games": 48
+        },
+        "reference_zero": {
+          "move": [
+            -0.07029487337532467,
+            1.1980720644225056,
+            0.9439841977928504,
+            0.9507946555568387,
+            1.2032140742254718
+          ],
+          "bomb": [
+            0.4346482556418707,
+            -0.44997333509437265,
+            0.3999936795617567
+          ],
+          "value": 2.34497636163155
+        }
+      },
+      "description": "纯击杀专项；u840/u930/u1030同协议三点复核中推荐u930。48局45胜1平2负；对DUEL_latest 15胜1平。479击杀/47死亡/11次自死；SP/G也参与训练。8个seed双席的选型小样本，非独立泛化证明；评测为JAX BF16，网页同权重FP32不逐位一致。录像 dcu-replays/u000930-20261115.html。",
+      "selection_review": {
+        "evidence": "specialists/dcu-convergence-20261115.json",
+        "evaluated_updates": [
+          840,
+          930,
+          1030
+        ],
+        "games_per_checkpoint": 48,
+        "held_out": false
+      }
+    },
+    {
+      "id": "dcu-kill-u000153-tau03",
+      "display_name": "对拼强化 · u153（对拼默认）",
+      "menu_label": "对拼强化 · u153（对拼默认）",
+      "cycle": 153,
+      "candidate": "DCU kill u000153 tau0.3",
+      "strategy": "raw",
+      "source_sha256": "c22aefaece05b7073ed2fec90c72e08178d9982dcca45e5e45d641cf935c55fe",
+      "full_source_sha256": "c22aefaece05b7073ed2fec90c72e08178d9982dcca45e5e45d641cf935c55fe",
+      "rule_version": "bun-native-v4-facing",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "dcu-kill-u000153-2cf596653a5dd8d905c758a2d030ec60284c4e7528e5ae92e951cbd5404d0435.json",
+      "sha256": "2cf596653a5dd8d905c758a2d030ec60284c4e7528e5ae92e951cbd5404d0435",
+      "bytes": 40340991,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000153-20261121/dcu-kill-u000153-2cf596653a5dd8d905c758a2d030ec60284c4e7528e5ae92e951cbd5404d0435.json",
+      "onnx": {
+        "file": "dcu-kill-u000153-d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b.onnx",
+        "sha256": "d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000153-20261121/dcu-kill-u000153-d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b.onnx",
+        "meta": {
+          "name": "dcu-kill-u000153",
+          "display_name": "对拼强化 · u153",
+          "arch": "transformer",
+          "rule": "bun",
+          "rule_version": "bun-native-v4-facing",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "value_min": -20,
+          "value_max": 20,
+          "checkpoint_sha256": "c22aefaece05b7073ed2fec90c72e08178d9982dcca45e5e45d641cf935c55fe",
+          "source_global_dim": 38,
+          "fixed_mode": 0,
+          "projection": "drop final mode input row only",
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "onnx_sha256": "d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b",
+          "onnx_file": "dcu-kill-u000153-d25a665d4fa52520e45efccd4acb340afdb40d40bcb6ce1c1c16bb9c94e0dc4b.onnx",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "c22aefaece05b7073ed2fec90c72e08178d9982dcca45e5e45d641cf935c55fe",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI",
+          "training_mode": "map806-kill",
+          "evaluation_games": 12
+        },
+        "reference_zero": {
+          "move": [
+            -0.03278591805541278,
+            1.2349360513070289,
+            1.8554159272382316,
+            0.7193946392989305,
+            1.2744923941156494
+          ],
+          "bomb": [
+            1.40770246429455,
+            -1.2524290075425588,
+            -0.14419651129668895
+          ],
+          "value": 2.4670018238291513
+        }
+      },
+      "description": "无包子纯击杀专项，八卡 DCU 训练 u153。固定对手 12 局：DUEL、SP、G 各 4 局，双座覆盖，12 胜；145 次击杀、16 次死亡、3 次自死。小样本且对手属于训练池，不是稳定胜率证明；训练使用 JAX BF16，网页使用同权重 FP32。录像见 dcu-replays/training-u000153-20261121.html。",
+      "selection_review": {
+        "evidence": "specialists/dcu-kill-u000153-20261121.json",
+        "evaluated_updates": [
+          153
+        ],
+        "games_per_checkpoint": 12,
+        "held_out": false
+      }
+    },
+    {
+      "id": "dcu-kill-u000244-tau03",
+      "display_name": "对拼强化 · u244",
+      "menu_label": "对拼强化 · u244",
+      "cycle": 244,
+      "candidate": "DCU kill u000244 tau0.3",
+      "strategy": "raw",
+      "source_sha256": "7c4a4bb0fb1cb1ef3777d819033593d6be99bb36fce71122501ca543c8383b59",
+      "full_source_sha256": "7c4a4bb0fb1cb1ef3777d819033593d6be99bb36fce71122501ca543c8383b59",
+      "rule_version": "bun-native-v4-facing",
+      "inference": {
+        "greedy": false,
+        "temperature": 0.3,
+        "seed": 5329236
+      },
+      "file": "dcu-kill-u000244-c0801cc4a469749e2fbc3daac119311793142cfb4c8ce2863e0e1539f7c76439.json",
+      "sha256": "c0801cc4a469749e2fbc3daac119311793142cfb4c8ce2863e0e1539f7c76439",
+      "bytes": 40340991,
+      "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000244-20261121/dcu-kill-u000244-c0801cc4a469749e2fbc3daac119311793142cfb4c8ce2863e0e1539f7c76439.json",
+      "onnx": {
+        "file": "dcu-kill-u000244-0f4efbb074fc0b126a992fde54ace7abc00dbf9acf51c6a0f7ae377e043ee256.onnx",
+        "sha256": "0f4efbb074fc0b126a992fde54ace7abc00dbf9acf51c6a0f7ae377e043ee256",
+        "bytes": 30276774,
+        "url": "https://github.com/allwellll/qqt-RL/releases/download/dcu-kill-u000244-20261121/dcu-kill-u000244-0f4efbb074fc0b126a992fde54ace7abc00dbf9acf51c6a0f7ae377e043ee256.onnx",
+        "meta": {
+          "name": "dcu-kill-u000244",
+          "display_name": "对拼强化 · u244",
+          "arch": "transformer",
+          "rule": "bun",
+          "rule_version": "bun-native-v4-facing",
+          "qqt_map_id": 806,
+          "move_actions": 5,
+          "ability_actions": 3,
+          "ability_encoding": [
+            "none",
+            "bomb",
+            "use_item"
+          ],
+          "obs_shape": [
+            25,
+            13,
+            15
+          ],
+          "state_dim": 37,
+          "n_players": 2,
+          "embed": 392,
+          "patch": 3,
+          "depth": 4,
+          "value_min": -20,
+          "value_max": 20,
+          "checkpoint_sha256": "7c4a4bb0fb1cb1ef3777d819033593d6be99bb36fce71122501ca543c8383b59",
+          "source_global_dim": 38,
+          "fixed_mode": 0,
+          "projection": "drop final mode input row only",
+          "r3_input_encoding": "r3-items-route-chain-visible-v1",
+          "onnx_sha256": "0f4efbb074fc0b126a992fde54ace7abc00dbf9acf51c6a0f7ae377e043ee256",
+          "onnx_file": "dcu-kill-u000244-0f4efbb074fc0b126a992fde54ace7abc00dbf9acf51c6a0f7ae377e043ee256.onnx",
+          "r4_mode": 0,
+          "r4_full_checkpoint_sha256": "7c4a4bb0fb1cb1ef3777d819033593d6be99bb36fce71122501ca543c8383b59",
+          "r4_full_input_abi": "obs25-global38",
+          "r4_export": "exact constant-mode0 derivative, existing R3 global37 ABI",
+          "training_mode": "map806-kill",
+          "evaluation_games": 12
+        },
+        "reference_zero": {
+          "move": [
+            -0.46753741666352,
+            1.619206209687675,
+            2.0088041523375058,
+            0.8851584801289445,
+            1.0950226143862756
+          ],
+          "bomb": [
+            1.3151582317734567,
+            -1.3740158075304532,
+            0.365148193182378
+          ],
+          "value": 2.3682380934400658
+        }
+      },
+      "description": "无包子纯击杀专项，八卡 DCU 训练 u244。固定对手 12 局：DUEL、SP、G 各 4 局，双席，12 胜；170 次击杀、12 次死亡、1 次自死。小样本且对手属于训练池；训练使用 JAX BF16，网页使用同权重 FP32。录像见 dcu-replays/training-u000244-20261121.html。",
+      "selection_review": {
+        "evidence": "specialists/dcu-kill-u000244-20261121.json",
+        "evaluated_updates": [
+          244
+        ],
+        "games_per_checkpoint": 12,
+        "held_out": false
+      }
     }
   ]
 }

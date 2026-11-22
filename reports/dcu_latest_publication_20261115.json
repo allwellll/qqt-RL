@@ -1,0 +1,392 @@
+{
+  "status": "PASS_MODEL_AND_REPLAYS_DEPLOYED_SCORE_FIX_DEFERRED_BY_USER",
+  "saved_utc": "2026-11-15T12:58:58.918775+00:00",
+  "selected_update": 930,
+  "pages": {
+    "status": "PASS_PAGES_DEPLOYED_FILES_VERIFIED",
+    "parent": "1989d4fbb86449d91833ac17b18231642c59a72a",
+    "commit": "6d2157fa679b526cce5ece6bf3ec01f4cb9a612d",
+    "created_utc": "2026-11-15T12:44:00.301403+00:00",
+    "url": "https://allwellll.github.io/qqt-RL/",
+    "files": {
+      "web/model_inference_defaults.json": {
+        "bytes": 671,
+        "sha256": "0542a693c4fa578639eeadcb6244bfda4ca3f583d296f230a9c53aa647ee3788"
+      },
+      "web/models.json": {
+        "bytes": 25975,
+        "sha256": "eb08df5902002cb9b17c32cb50fc90f4a6017a733c713d25c05b4400886e219a"
+      },
+      "web/test_http.js": {
+        "bytes": 5395,
+        "sha256": "2ccb5221055e4677edaa864b540fe5c7eeee7df421cfb1b4c5af83614656c6b6"
+      },
+      "web/test_model_catalog.js": {
+        "bytes": 9091,
+        "sha256": "8722b799a8eb4893eb584e351c747d1baf9e05357844bf0f3af6e30b9adffb41"
+      },
+      "web/dcu-replays/index.html": {
+        "bytes": 1640,
+        "sha256": "df3431fce0c8e2c5aaac755d36f2ca00b47106aec7df8233fd2ff5351d84d7c2"
+      },
+      "web/dcu-replays/u000930-20261115.html": {
+        "bytes": 2001701,
+        "sha256": "1783caa63c0bb003fa677bec38c8107c6bc2a30f7dfa5d36c33d92b52402fed8"
+      },
+      "web/dcu-replays/u001030-20261115.html": {
+        "bytes": 2015775,
+        "sha256": "dab7876873a076066b9ccc085d723037bc0acfd5748d3ce772a194995c2db001"
+      },
+      "web/specialists/dcu-kill-u000930-20261115.json": {
+        "bytes": 3733,
+        "sha256": "bab5b5909b62e3ced0f23fa0531fa794e90a2d79c27efd7a31a7e56c1d003028"
+      },
+      "web/specialists/dcu-convergence-20261115.json": {
+        "bytes": 10743,
+        "sha256": "2772c8543956720691b78c819d42947865b48a08f785942f31712e276c41d278"
+      }
+    },
+    "workflow_run": 43715340219,
+    "workflow_url": "https://github.com/allwellll/qqt-RL/actions/runs/43715340219",
+    "workflow_conclusion": "success",
+    "build_info": {
+      "version": "leaderboard-v1",
+      "ruleset_version": "bun-native-v4-facing",
+      "commit": "6d2157fa679b526cce5ece6bf3ec01f4cb9a612d"
+    },
+    "verified_files": {
+      "model_inference_defaults.json": {
+        "bytes": 671,
+        "sha256": "0542a693c4fa578639eeadcb6244bfda4ca3f583d296f230a9c53aa647ee3788"
+      },
+      "models.json": {
+        "bytes": 25975,
+        "sha256": "eb08df5902002cb9b17c32cb50fc90f4a6017a733c713d25c05b4400886e219a"
+      },
+      "test_http.js": {
+        "bytes": 5395,
+        "sha256": "2ccb5221055e4677edaa864b540fe5c7eeee7df421cfb1b4c5af83614656c6b6"
+      },
+      "test_model_catalog.js": {
+        "bytes": 9091,
+        "sha256": "8722b799a8eb4893eb584e351c747d1baf9e05357844bf0f3af6e30b9adffb41"
+      },
+      "dcu-replays/index.html": {
+        "bytes": 1640,
+        "sha256": "df3431fce0c8e2c5aaac755d36f2ca00b47106aec7df8233fd2ff5351d84d7c2"
+      },
+      "dcu-replays/u000930-20261115.html": {
+        "bytes": 2001701,
+        "sha256": "1783caa63c0bb003fa677bec38c8107c6bc2a30f7dfa5d36c33d92b52402fed8"
+      },
+      "dcu-replays/u001030-20261115.html": {
+        "bytes": 2015775,
+        "sha256": "dab7876873a076066b9ccc085d723037bc0acfd5748d3ce772a194995c2db001"
+      },
+      "specialists/dcu-kill-u000930-20261115.json": {
+        "bytes": 3733,
+        "sha256": "bab5b5909b62e3ced0f23fa0531fa794e90a2d79c27efd7a31a7e56c1d003028"
+      },
+      "specialists/dcu-convergence-20261115.json": {
+        "bytes": 10743,
+        "sha256": "2772c8543956720691b78c819d42947865b48a08f785942f31712e276c41d278"
+      }
+    }
+  },
+  "public_browser": {
+    "status": "PASS_DESKTOP_MOBILE_DEFAULT",
+    "url": "https://allwellll.github.io/qqt-RL/",
+    "transport": "python-stdlib HTTP bridge",
+    "results": [
+      {
+        "width": 1280,
+        "first": {
+          "model": "dcu-kill-u000930",
+          "backend": "worker-wasm",
+          "parity": 1.0172136648556318e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000930-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "carry": {
+          "model": "L2_SP_u023302",
+          "backend": "worker-wasm",
+          "parity": 1.4348368120309374e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": false,
+          "tick": 3,
+          "selected": "model:items-l2-sp-u023302-tau03",
+          "mode": "carry",
+          "overflow": false
+        },
+        "reload": {
+          "model": "dcu-kill-u000930",
+          "backend": "worker-wasm",
+          "parity": 1.0172136648556318e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000930-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "errors": []
+      },
+      {
+        "width": 390,
+        "first": {
+          "model": "dcu-kill-u000930",
+          "backend": "worker-wasm",
+          "parity": 1.0172136648556318e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000930-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "carry": {
+          "model": "L2_SP_u023302",
+          "backend": "worker-wasm",
+          "parity": 1.4348368120309374e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": false,
+          "tick": 3,
+          "selected": "model:items-l2-sp-u023302-tau03",
+          "mode": "carry",
+          "overflow": false
+        },
+        "reload": {
+          "model": "dcu-kill-u000930",
+          "backend": "worker-wasm",
+          "parity": 1.0172136648556318e-06,
+          "calls": 3,
+          "temperature": 0.3,
+          "greedy": false,
+          "kill": true,
+          "tick": 3,
+          "selected": "model:dcu-kill-u000930-tau03",
+          "mode": "kill",
+          "overflow": false
+        },
+        "errors": []
+      }
+    ]
+  },
+  "online_replays": {
+    "930": {
+      "status": "PASS_DESKTOP_MOBILE_REPLAY",
+      "url": "https://allwellll.github.io/qqt-RL/dcu-replays/u000930-20261115.html",
+      "games": 48,
+      "state_sha256_verified": true,
+      "transport": "python-stdlib HTTP bridge",
+      "stepping": true,
+      "seeking_terminal": true,
+      "next_combat_event": "26.3 秒 · 263 / 1800 tick",
+      "switching_games": true,
+      "play_pause": true,
+      "mobile_layout": true,
+      "requests": [
+        "https://allwellll.github.io/qqt-RL/dcu-replays/u000930-20261115.html"
+      ],
+      "errors": []
+    },
+    "1030": {
+      "status": "PASS_DESKTOP_MOBILE_REPLAY",
+      "url": "https://allwellll.github.io/qqt-RL/dcu-replays/u001030-20261115.html",
+      "games": 48,
+      "state_sha256_verified": true,
+      "transport": "python-stdlib HTTP bridge",
+      "stepping": true,
+      "seeking_terminal": true,
+      "next_combat_event": "9.3 秒 · 93 / 1800 tick",
+      "switching_games": true,
+      "play_pause": true,
+      "mobile_layout": true,
+      "requests": [
+        "https://allwellll.github.io/qqt-RL/dcu-replays/u001030-20261115.html"
+      ],
+      "errors": []
+    }
+  },
+  "export": {
+    "status": "PASS",
+    "ruleset": "bun-native-v4-facing",
+    "checkpoint_sha256": "1b1079d213a971ed7013739868d3b9848484ecf48ade25418142e16fb3a06d27",
+    "source_global_dim": 38,
+    "state_dim": 37,
+    "ability_actions": 3,
+    "fixed_mode": 0,
+    "projection_max_abs": 0.0,
+    "files": {
+      "model.json": {
+        "sha256": "051ef609f84dab77796d0414a632b4e66c1641ae76d819bb0e3c1dc47c378792",
+        "bytes": 40340915
+      },
+      "model.onnx": {
+        "sha256": "923293a78c45fd53b26eb437f5d2359743591352e0f65e927ee6ff6016a71ee0",
+        "bytes": 30276774
+      }
+    },
+    "source_update": 930,
+    "evaluation_games": 48,
+    "packed_weights_exact": true,
+    "full_source_fp32_onnx_max_abs": 1.52587890625e-05,
+    "scope": "Exact fp32 weights and constant-zero mode projection; browser fp32 is not bit-identical to training bf16"
+  },
+  "parity": {
+    "status": "PASS",
+    "ruleset": "bun-native-v4-facing",
+    "samples": 17,
+    "max_abs": 1.8585345555877097e-05,
+    "masked_greedy_exact": true,
+    "reference_zero": {
+      "move": [
+        -0.07029487337532467,
+        1.1980720644225056,
+        0.9439841977928504,
+        0.9507946555568387,
+        1.2032140742254718
+      ],
+      "bomb": [
+        0.4346482556418707,
+        -0.44997333509437265,
+        0.3999936795617567
+      ],
+      "value": 2.34497636163155
+    },
+    "errors": [
+      {
+        "map": "zero",
+        "seat": null,
+        "tick": 0,
+        "max_abs": 2.316274784641692e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 0,
+        "max_abs": 6.312544236664053e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 0,
+        "max_abs": 3.2781122216718472e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 12,
+        "max_abs": 4.703074767853366e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 12,
+        "max_abs": 7.541863804583215e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 36,
+        "max_abs": 1.6621869096677955e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 36,
+        "max_abs": 3.8303946992002125e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 60,
+        "max_abs": 2.476788673710928e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 60,
+        "max_abs": 4.531772628713071e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 0,
+        "max_abs": 3.0739583833927497e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 0,
+        "max_abs": 2.5095835725075233e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 12,
+        "max_abs": 1.8585345555877097e-05
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 12,
+        "max_abs": 1.5667067615465768e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 36,
+        "max_abs": 5.0084362026581175e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 36,
+        "max_abs": 2.2890984907597556e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 0,
+        "tick": 60,
+        "max_abs": 5.914431570275269e-06
+      },
+      {
+        "map": "kill806",
+        "seat": 1,
+        "tick": 60,
+        "max_abs": 2.417656584707828e-06
+      }
+    ],
+    "scope": "fp32 CPU JS/ONNX integration; not a win-rate or training-bf16 claim"
+  },
+  "score_regression": {
+    "status": "PASS_RED_GREEN",
+    "old_production": {
+      "name": "AssertionError",
+      "message": "The expression evaluated to a falsy value:\n\n  assert(a.creditedKill[0])\n"
+    },
+    "corrected_local_test": "tests/test_kill_credit.js passed",
+    "scope": "kill-mode attribution and terminal scoring; native movement/combat physics unchanged"
+  },
+  "remaining": [
+    "User requested stop because machine time is expiring. Do not continue automatically.",
+    "Production native-trap kill credit still old. No score-fix commit was published; GitHub helper was interrupted before token entry.",
+    "Local package.json includes existing kill-credit regression test; test passed locally.",
+    "Changes are saved locally on dcu; this latest local checkpoint is not pushed to origin/dcu."
+  ]
+}
