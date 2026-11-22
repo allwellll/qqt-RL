@@ -25,6 +25,10 @@ DUEL_SEEDS = {
     'u930': U930_SHA,
 }
 SCHEMA = 'qqt.carry-actor-critic/v1'
+CHECKPOINT_EVERY_UPDATES = 20
+CHECKPOINT_EVERY_SECONDS = 600
+CHECKPOINT_KEEP = 8
+CHECKPOINT_BUDGET_GIB = 1
 SOURCES = ('scripts/train_dcu_jax_carry.py', 'qqt_rl/training/jax_carry_env.py',
            'qqt_rl/training/jax_carry_collect.py', 'qqt_rl/training/jax_carry_fast.py',
            'qqt_rl/training/carry_league.py',
@@ -48,6 +52,10 @@ TRUSTED_TRAIN_SOURCE_SHAS = {
     '9e63c3946920f645b72f131a83124488aacec359476a237224fb3f17970c4748',
     # Checkpoints from the first joint-training launch before metric-shape fix.
     'aa9c7e4585601e998739bfdbff043d1748d87dbbfd67291fd0a39ab0a15823e7',
+    # Checkpoints from the long four-stage continuation run.
+    '3bfda01c3fc9250173e311aa73f8b79106ba8d213434bf83de7a4c4ed317e37b',
+    # Checkpoints from the current long continuation before retention tuning.
+    '594c51ba91a9d1a42e26cc153e2568220159d48f31a6027e8f8351373f453652',
 }
 
 
@@ -82,6 +90,8 @@ def arguments(argv=None):
     p.add_argument('--interceptor', type=Path, help='chosen stage-A checkpoint directory; omitted uses original u930')
     p.add_argument('--courier-opponent', type=Path,
                    help='stage A: frozen courier checkpoint used while updating an interceptor')
+    p.add_argument('--courier-self-opponent', type=Path,
+                   help='stage B: frozen latest courier checkpoint mixed into courier training')
     p.add_argument('--defender', type=Path, action='append', default=[], metavar='CHECKPOINT',
                    help='stage B: repeat to mix trained stage-A checkpoints from distinct duel seeds')
     p.add_argument('--checkpoint', type=Path, help='Actor/Critic warm start from the SAME stage')
@@ -113,8 +123,8 @@ def arguments(argv=None):
         p.error('invalid interceptor fraction')
     if not math.isfinite(a.hours) or not 0 <= a.seed <= 0xffffffff:
         p.error('invalid hours/seed')
-    if a.stage == 'interceptor' and (a.interceptor or a.defender):
-        p.error('--interceptor and --defender apply only to stage B (courier)')
+    if a.stage == 'interceptor' and (a.interceptor or a.defender or a.courier_self_opponent):
+        p.error('--interceptor, --defender and --courier-self-opponent apply only to stage B (courier)')
     if a.stage == 'courier' and a.courier_opponent:
         p.error('--courier-opponent applies only to stage A (interceptor)')
     if a.stage == 'courier' and (a.interceptor_start or a.interceptor_actor):
@@ -183,8 +193,11 @@ def plan(a):
                 hours=a.hours, deadline_utc=a.deadline_utc,
                 source_sha256={f: sha(ROOT/f) for f in SOURCES},
                 optimizer_saved=False, precise_resume=False, automatic_successor=False,
-                checkpoint_policy=dict(every_updates=5, seconds=120, keep=32,
-                                       budget_gib=2, min_free_gib=8))
+                checkpoint_policy=dict(every_updates=CHECKPOINT_EVERY_UPDATES,
+                                       seconds=CHECKPOINT_EVERY_SECONDS,
+                                       keep=CHECKPOINT_KEEP,
+                                       budget_gib=CHECKPOINT_BUDGET_GIB,
+                                       min_free_gib=8))
 
 
 def load_verified(path, expected, template):
@@ -263,8 +276,16 @@ def opponent_pool(a):
         pool.append(row)
     if len({row['seed'] for row in pool}) != len(pool) or len({row['actor_sha256'] for row in pool}) != len(pool):
         raise ValueError('Defender pool must use distinct warm-start seeds and Actor weights')
-    return pool + [dict(id='SP_web', envs_per_device=counts[-1], can_transport=True,
-                        actor_sha256=SP_SHA, checkpoint=None)]
+    if a.courier_self_opponent:
+        meta = read_checkpoint(a.courier_self_opponent, 'courier')
+        courier_row = dict(id='courier:u' + f'{int(meta["update"]):06d}',
+                           envs_per_device=counts[-1], can_transport=True,
+                           actor_sha256=meta['actor_sha256'],
+                           checkpoint=str(a.courier_self_opponent), seed='courier')
+    else:
+        courier_row = dict(id='SP_web', envs_per_device=counts[-1], can_transport=True,
+                           actor_sha256=SP_SHA, checkpoint=None)
+    return pool + [courier_row]
 
 
 def run(a, started):
@@ -324,7 +345,9 @@ def run(a, started):
     out = a.out
     out.mkdir(parents=True, exist_ok=False)
     durable_json(out/'PLAN.json', config)
-    store = CheckpointStore(out, keep=32, budget_gib=2, min_free_gib=8, schema=SCHEMA)
+    store = CheckpointStore(out, keep=CHECKPOINT_KEEP,
+                            budget_gib=CHECKPOINT_BUDGET_GIB, min_free_gib=8,
+                            schema=SCHEMA)
     stop = [False]
     for sig in (signal.SIGTERM, signal.SIGINT):
         signal.signal(sig, lambda *_: stop.__setitem__(0, True))
@@ -423,7 +446,9 @@ def run(a, started):
             with (out/'updates.jsonl').open('a') as f:
                 f.write(json.dumps(row)+'\n')
             print(json.dumps(dict(event='update', **row)), flush=True)
-            if index == 1 or index == a.critic_warmup or index % 5 == 0 or time.monotonic()-last_save >= 120:
+            if (index == 1 or index == a.critic_warmup
+                    or index % CHECKPOINT_EVERY_UPDATES == 0
+                    or time.monotonic()-last_save >= CHECKPOINT_EVERY_SECONDS):
                 checkpoint(index)
         checkpoint(completed)
         durable_json(out/'RESULT.json', dict(status='UPDATES_COMPLETED' if completed else 'NO_UPDATE',

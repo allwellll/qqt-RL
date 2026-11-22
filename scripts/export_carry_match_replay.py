@@ -1,4 +1,4 @@
-"""Export complete map806 games with a frozen carry defender and SP_web."""
+"""Export complete map806 games with a frozen carry defender or courier opponent."""
 
 import argparse
 from datetime import datetime, timezone
@@ -20,9 +20,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--checkpoint', type=Path, default=DEFAULT_CHECKPOINT)
     parser.add_argument('--courier-checkpoint', type=Path, help='Use a trained courier Actor instead of SP_web')
+    parser.add_argument('--opponent-courier-checkpoint', type=Path,
+                        help='Use a trained courier Actor as the left-side opponent too')
     parser.add_argument('--out', type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
-    meta = read_checkpoint(args.checkpoint, 'interceptor')
+    left_stage = 'courier' if args.opponent_courier_checkpoint else 'interceptor'
+    meta = read_checkpoint(args.checkpoint, left_stage)
     os.environ['JAX_PLATFORMS'] = 'cpu'
     os.environ['JAX_PLATFORM_NAME'] = 'cpu'
     os.environ['JAX_ENABLE_COMPILATION_CACHE'] = 'false'
@@ -31,32 +34,37 @@ def main():
                           '--xla_disable_hlo_passes=constant_folding')
 
     import jax
+    jax.config.update('jax_enable_x64', True)
     import jax.numpy as j
     import numpy as np
-    import torch
+    from scripts.retention_phase_conditioning import features
     from qqt_rl.training import jax_carry_env as env
     from scripts import portable_training as portable
-    from scripts.je03_native_vit_export_20261011 import NativeViT
-    from scripts.retention_phase_conditioning import features
-
-    torch.set_num_threads(2)
 
     protocol = portable.read(portable.BUNDLE / 'protocols/SP.json')
     if protocol['models']['SP_web']['sha256'] != SP_SHA:
         raise ValueError('Unexpected SP_web model')
     courier = portable.load_actor(protocol, 'SP_web')
     defender = load_verified(args.checkpoint / 'actor.pt', meta['actor_sha256'], courier)
-    courier_model = dict(sha256=SP_SHA, update=23302, name='SP_web')
+    defender_model = dict(sha256=meta['actor_sha256'], update=meta['update'],
+                          name='courier' if left_stage == 'courier' else 'interceptor',
+                          role=left_stage)
+    courier_model = dict(sha256=SP_SHA, update=23302, name='SP_web', role='courier')
     if args.courier_checkpoint:
         courier_meta = read_checkpoint(args.courier_checkpoint, 'courier')
         digest = courier_meta['actor_sha256']
         courier = load_verified(args.courier_checkpoint / 'actor.pt', digest, courier)
-        courier_model = dict(sha256=digest, update=courier_meta['update'], name='courier',
+        courier_model = dict(sha256=digest, update=courier_meta['update'], name='courier', role='courier',
                              environment_steps=courier_meta['global_environment_steps'])
+    if args.opponent_courier_checkpoint:
+        opponent_meta = read_checkpoint(args.opponent_courier_checkpoint, 'courier')
+        digest = opponent_meta['actor_sha256']
+        courier = load_verified(args.opponent_courier_checkpoint / 'actor.pt', digest, courier)
+        courier_model = dict(sha256=digest, update=opponent_meta['update'], name='courier', role='courier',
+                             environment_steps=opponent_meta['global_environment_steps'])
     global_rows = courier['state_w'].shape[-2]
     if global_rows not in (38, 43) or courier['tok'][0].shape[0] != 25 * 9:
         raise ValueError('Replay inference requires the map806 ViT observation ABI')
-    defender, courier = NativeViT(defender).eval(), NativeViT(courier).eval()
     env.prepare()
 
     specs = [(seed, seat) for seed in SEEDS for seat in (0, 1)]
@@ -64,7 +72,8 @@ def main():
                for seed, seat in specs]
     seats = j.array([seat for _, seat in specs])
     rows = j.arange(len(specs))
-    can_transport = j.arange(2)[None, :] != seats[:, None]
+    can_transport = (j.ones((len(specs), 2), dtype=bool) if args.opponent_courier_checkpoint
+                     else j.arange(2)[None, :] != seats[:, None])
     worlds = jax.vmap(env.fresh)(j.stack([jax.random.PRNGKey(seed) for seed, _ in specs]))
     max_ticks = int(env.E.LESSON_MAX_STEPS[env.E.LESSON_FULL])
     tick_hz = env.native.C.TICK_HZ
@@ -75,8 +84,6 @@ def main():
     @jax.jit
     def inputs(world, player):
         obs, gv, mm, bm, _ = env.inputs(world, player)
-        if global_rows == 43:
-            gv = j.concatenate([gv[:, :24], features(obs[:, :24], gv[:, :24]), gv[:, 24:]], -1)
         return obs, gv, mm, bm
 
     @jax.jit
@@ -86,6 +93,46 @@ def main():
         return after, finished, metrics, info['winner'], {
             name: info[name] for name in EVENTS
         }
+
+    def linear(x, pair):
+        return x @ pair[0].astype(j.float64) + pair[1].astype(j.float64)
+
+    def fp64_forward(params, obs, state):
+        n, channels = obs.shape[:2]
+        embed = params['tok'][0].shape[1]
+        x = j.pad(obs.astype(j.float64), ((0, 0), (0, 0), (0, 2), (0, 0)))
+        x = x.reshape(n, channels, 5, 3, 5, 3).transpose(0, 2, 4, 1, 3, 5)
+        x = x.reshape(n, 25, channels * 9)
+        x = linear(x, params['tok']) + params['pos'][:, :25].astype(j.float64)
+        token = state.astype(j.float64) @ params['state_w'].astype(j.float64)
+        token = token + params['state_b'].astype(j.float64) + params['pos'][:, -1].astype(j.float64)
+        x = j.concatenate([x, token[:, None]], axis=1)
+        for block in params['blocks']:
+            mean = x.mean(-1, keepdims=True)
+            variance = ((x - mean) ** 2).mean(-1, keepdims=True)
+            z = (x - mean) * jax.lax.rsqrt(variance + 1e-6)
+            z = z * block['ln1_g'].astype(j.float64) + block['ln1_b'].astype(j.float64)
+            q, k, v = [linear(z, block[key]).reshape(n, 26, 4, embed // 4).transpose(0, 2, 1, 3)
+                        for key in ('q', 'k', 'v')]
+            scores = q @ k.transpose(0, 1, 3, 2) / (embed // 4) ** .5
+            attention = (jax.nn.softmax(scores, axis=-1) @ v).transpose(0, 2, 1, 3)
+            x = x + linear(attention.reshape(n, 26, embed), block['proj'])
+            mean = x.mean(-1, keepdims=True)
+            variance = ((x - mean) ** 2).mean(-1, keepdims=True)
+            z = (x - mean) * jax.lax.rsqrt(variance + 1e-6)
+            z = z * block['ln2_g'].astype(j.float64) + block['ln2_b'].astype(j.float64)
+            hidden = jax.nn.relu(linear(z, block['ff1']))
+            x = x + linear(hidden, block['ff2'])
+        pooled = x[:, :25].mean(1)
+        move = linear(pooled, params['heads']['wm'])
+        ability = linear(pooled, params['heads']['wb'])
+        return move, ability
+
+    @jax.jit
+    def infer(actor, obs, gv):
+        if actor['state_w'].shape[-2] == 43:
+            gv = j.concatenate([gv[:, :24], features(obs[:, :24], gv[:, :24]), gv[:, 24:]], -1)
+        return fp64_forward(actor, obs, gv)
 
     def sample(logits, mask):
         if not mask.any(axis=-1).all():
@@ -100,9 +147,8 @@ def main():
 
     def observe(actor, player):
         obs, gv, mm, bm = jax.device_get(inputs(worlds, player))
-        with torch.inference_mode():
-            move, ability, _ = actor(torch.from_numpy(obs.copy()), torch.from_numpy(gv.copy()))
-        return j.asarray(np.stack([sample(move.numpy(), mm), sample(ability.numpy(), bm)], -1), j.int32)
+        move, ability = jax.device_get(infer(actor, j.asarray(obs), j.asarray(gv)))
+        return j.asarray(np.stack([sample(move, mm), sample(ability, bm)], -1), j.int32)
 
     def snapshot(world):
         st = world.state
@@ -117,7 +163,7 @@ def main():
         for i, record in enumerate(records):
             if done[i]:
                 continue
-            if carry[i, record['defender_seat']] >= 0:
+            if not args.opponent_courier_checkpoint and carry[i, record['defender_seat']] >= 0:
                 raise ValueError('Defender acquired a bun')
             record['frames'].append(dict(
                 tick=int(ticks[i]), p=np.round(pos[i], 3).tolist(),
@@ -155,7 +201,10 @@ def main():
                 courier_seat = 1 - defender_seat
                 by_seat = [dict(zip(env.METRICS, map(int, totals[i, p]))) for p in (0, 1)]
                 record['result'] = dict(
-                    tick=tick, winner=int(winners[i]), captures=by_seat[courier_seat]['captures'],
+                    tick=tick, winner=int(winners[i]),
+                    captures=(sum(row['captures'] for row in by_seat)
+                              if args.opponent_courier_checkpoint
+                              else by_seat[courier_seat]['captures']),
                     defender_kills=by_seat[defender_seat]['kills'],
                     courier_kills=by_seat[courier_seat]['kills'], by_seat=by_seat,
                 )
@@ -179,9 +228,8 @@ def main():
         map=dict(id=806, width=level['w'], height=level['h'], bases=level['bun_bases'],
                  walls=[i for i, wall in enumerate(level['wall']) if wall]),
         protocol=dict(tick_hz=tick_hz, max_ticks=max_ticks, seeds=SEEDS,
-                      backend=jax.default_backend(), precision='float32', temperature=1.0),
-        models=dict(defender=dict(sha256=meta['actor_sha256'], update=meta['update'],
-                                  parent=meta['initial_actor']),
+                      backend=jax.default_backend(), precision='float64', temperature=1.0),
+        models=dict(defender=dict(**defender_model, parent=meta['initial_actor']),
                     courier=courier_model),
         replays=records,
     )

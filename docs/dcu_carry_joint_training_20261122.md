@@ -15,6 +15,10 @@ bash scripts/launch_dcu_jax_carry_joint_8card.sh \
 
 本次已启动的任务目录为 `runs/carry-joint-u587-u104-20261122b`（8 卡 DCU，首段 `courier-s01`）。实际启动参数固定为 `--envs 2048 --minibatch 2048 --policy-chunk 2048 --value-chunk 2048`；首个更新包含一次性编译开销，后续实测约 48k 全局环境步/秒。检查点目录只保存 `actor.pt`、`critic.pt` 和 `CHECKPOINT.json`，不保存优化器状态；`LATEST.json`、`updates.jsonl` 是接手和监控入口。
 
-当前执行状态：`courier-s01` 已完成 20 次更新（20,971,520 环境步）；拦截者使用其 `u000020` 作为冻结运包对手，正在 `interceptor-s01e` 续跑剩余 19 次更新，已完成 8 次，稳定约 49k 全局环境步/秒。拦截者指标包含学习方和对手两组，训练器已按 rollout 实际形状初始化累计指标，避免单对手池的维度错误。
+当前执行状态：6 个运包阶段与 6 个拦截阶段均已完成，最新为 `courier-s06/u000020` 与 `interceptor-s06/u000020`。12 个正式阶段的 `RESULT.json` 合计记录 239 次更新、250,609,664 环境步；首个拦截阶段因指标聚合维度错误拆为部分重启，健康检查点保留，修复后完成续训。末期稳态约 48.5k 全局环境步/秒。所有更新只保存 Actor/Critic 与元数据，不保存优化器。
+
+录像发布器 `scripts/publish_dcu_carry_training_replays.py` 在 CPU 上每 30 分钟导出并发布最新运包/拦截模型的 4 局交换座位录像，导出通过完整局与有限值检查后才替换 latest。最新页面：[运包协同训练录像](https://allwellll.github.io/qqt-RL/carry-replays/latest.html)，归档列表：[录像目录](https://allwellll.github.io/qqt-RL/carry-replays/)。首批已验证发布使用 `courier-s04/u000020` 对 `interceptor-s04/u000020`；更晚检查点的 CPU 完整对局导出遇到非有限 logits，发布器拒绝覆盖有效录像。训练结束后发布器退出，最新线上录像仍是首批验证版。
 
 主要观察指标是交付胜率、携包者击杀、掉包和自死。最终评估必须使用没有进入交替训练的冻结拦截模型和新种子，且只有把对方包子交回己方笼子才算运包胜利；包子掉在外面或超时未交付都算平局。
+
+后续续训的运包阶段将使用 60% 拦截者与 40% 上一轮最新运包者作为冻结对手（`--interceptor-fraction 0.60 --courier-self-opponent`）。运包者对手所在环境的 `can_transport` 为真，因此它可以主动抢包、携包和交付；拦截阶段则继续使用 100% 最新运包者作为对手。拦截者学习者自己的环境 `can_transport` 为假，所以拦截者本身不会触发拿包，这是角色约束而非模型失效。
