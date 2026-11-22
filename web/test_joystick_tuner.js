@@ -8,6 +8,7 @@ const nodes = new Map();
 const fills = [], boxes = [];
 const ctx = {
   clearRect() {}, beginPath() {}, moveTo() {}, lineTo() {}, stroke() {}, arc() {}, ellipse() {}, fill() {},
+  save() {}, restore() {}, translate() {},
   fillRect(...rect) { fills.push([this.fillStyle, ...rect]); },
   strokeRect(...rect) { boxes.push([this.strokeStyle, ...rect]); },
 };
