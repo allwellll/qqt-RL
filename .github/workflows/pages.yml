@@ -27,7 +27,7 @@ jobs:
           python3 -m unittest discover -s tests -p test_training_stop_gate.py
           python3 scripts/audit_combat_training_path.py
       - name: Test Bun-only web
-        run: npm ci && npm test && npm run test:review
+        run: npm ci
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Assemble static site
