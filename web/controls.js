@@ -62,9 +62,9 @@
 
   const TRAJECTORY_TOUCH_PROFILE = Object.freeze({
     trajectory: true,
-    deadzoneRatio: 0.01,
+    deadzoneRatio: 0.03,
     hysteresisDeg: 19,
-    bufferMs: 10,
+    bufferMs: 0,
     diagonalMin: 14,
     diagonalMax: 45,
     diagonalMode: 'preserve',
