@@ -60,113 +60,281 @@
     })};
   }
 
+  const TRAJECTORY_TOUCH_PROFILE = Object.freeze({
+    trajectory: true,
+    deadzoneRatio: 0.03,
+    hysteresisDeg: 19,
+    bufferMs: 0,
+    diagonalMin: 14,
+    diagonalMax: 45,
+    diagonalMode: 'preserve',
+  });
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
-  // A short stroke expresses intent, independent of the displayed dial center.
-  // Forget completed travel so a small turn/reversal works anywhere on screen.
-  function createFloatingStick({radius = 48, deadzone = 4, turnDistance = 3, hysteresis = 4} = {}) {
-    let center = null, habit = null, direction = null, last = null, stroke = null;
-    const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction});
-    const heading = (dx, dy) => {
-      const angle = Math.atan2(dy, dx), old = STICK_KEYS.indexOf(direction);
-      const delta = old < 0 ? Infinity : Math.abs(Math.atan2(
-        Math.sin(angle - old * Math.PI / 2), Math.cos(angle - old * Math.PI / 2)));
-      return delta <= (45 + hysteresis) * Math.PI / 180 ? direction :
-        STICK_KEYS[(Math.round(angle / (Math.PI / 2)) + 4) % 4];
+  // Radial mode uses a floating centre. Trajectory mode advances the sample origin only after a valid segment.
+  function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58, diagonalMin = 25, diagonalMax = 65, diagonalMode = 'secondary', trajectory = false} = {}) {
+    let center = null, habit = null, direction = null, secondary = null, changedAt = 0, previousAngle = null;
+    const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction, secondary, changedAt});
+    const nearestDirection = angle => {
+      const normalized=(angle+360)%360;
+      if(normalized<45||normalized>=315)return 'ArrowRight';
+      if(normalized<135)return 'ArrowUp';
+      if(normalized<225)return 'ArrowLeft';
+      return 'ArrowDown';
     };
     return {
-      start(x, y) {
-        center = {x, y}; habit = {x, y}; direction = null; stroke = null;
-        last = {x, y};
+      start(x, y, now = performance.now(), initialDirection = null) {
+        center = habit = {x,y}; direction = initialDirection; secondary = null; previousAngle=null; changedAt = now;
         return snapshot();
       },
-      move(x, y) {
-        if (!last) return snapshot();
-        const dx = x - last.x, dy = y - last.y;
-        if (dx || dy) {
-          const next = heading(dx, dy);
-          if (next === direction) stroke = null;
-          else {
-            // Only coherent displacement accumulates. Reversing jitter resets it;
-            // a slow deliberate stroke still works at any pointer event rate.
-            if (!stroke || stroke.direction !== next)
-              stroke = {x: last.x, y: last.y, direction: next};
-            const sx = x - stroke.x, sy = y - stroke.y;
-            if (Math.hypot(sx, sy) >= (direction ? turnDistance : deadzone) && heading(sx, sy) === next) {
-              direction = next; stroke = null;
+      move(x, y, now = performance.now()) {
+        if (!center) return snapshot();
+        const old=direction,oldSecondary=secondary;
+        let dx=x-center.x,dy=y-center.y,length=Math.hypot(dx,dy);
+        if(trajectory){
+          if(length===0||length<deadzone)return snapshot();
+          center={x,y};
+          const angle=(Math.atan2(-dy,dx)*180/Math.PI+360)%360;
+          const turn=previousAngle==null?Infinity:Math.abs(((angle-previousAngle+540)%360)-180);
+          const diagonal=((angle%90)+90)%90; const distance=Math.min(diagonal,90-diagonal); const preserve=diagonalMode==='preserve'&&old&&distance>=diagonalMin&&distance<diagonalMax;
+          direction=preserve?old:nearestDirection(angle);
+          previousAngle=angle;
+          secondary=null;
+        }else{
+          if(length>radius){center={x:x-dx*radius/length,y:y-dy*radius/length};dx=x-center.x;dy=y-center.y;length=radius;}
+          direction=secondary=null;
+          if(length>=deadzone){
+            const angle=Math.atan2(dy,dx),index=STICK_KEYS.indexOf(old);
+            const delta=index<0?Infinity:Math.abs(Math.atan2(Math.sin(angle-index*Math.PI/2),Math.cos(angle-index*Math.PI/2)));
+            const nearest=Math.abs(dx)>=Math.abs(dy)?(dx<0?'ArrowLeft':'ArrowRight'):(dy<0?'ArrowUp':'ArrowDown');
+            direction=delta<=hysteresis*Math.PI/180?old:nearest;
+            const diagonal=Math.atan2(Math.abs(dy),Math.abs(dx))*180/Math.PI;
+            if(diagonalMode!=='preserve'&&diagonal>=diagonalMin&&diagonal<=diagonalMax){
+              const horizontal=dx<0?'ArrowLeft':'ArrowRight',vertical=dy<0?'ArrowUp':'ArrowDown';
+              secondary=direction===horizontal?vertical:horizontal;
             }
           }
-          last = {x, y};
         }
-        // Feedback follows the finger, slightly behind the accepted direction.
-        // Its position never feeds back into input or character movement.
-        const offset = Math.min(radius * .35, 16);
-        center = {x: x - (direction === 'ArrowRight' ? offset : direction === 'ArrowLeft' ? -offset : 0),
-          y: y - (direction === 'ArrowDown' ? offset : direction === 'ArrowUp' ? -offset : 0)};
+        if(old!==direction||oldSecondary!==secondary)changedAt=now;
         return snapshot();
       },
-      end() {
-        habit = center && {...center}; center = null; direction = null; last = stroke = null;
-        return snapshot();
-      },
-      reset() { center = habit = direction = last = stroke = null; return snapshot(); },
+      end(now = performance.now()) { habit=center&&{...center};center=null;direction=secondary=null;previousAngle=null;changedAt=now;return snapshot(); },
+      reset(now = performance.now()) { center=habit=direction=secondary=null;previousAngle=null;changedAt=now;return snapshot(); },
     };
   }
 
-  function bindFloatingDirection(zone, held) {
-    let pointer = null, stick = null, lastDirection = null;
+  // Read-only native projection-step probe. _nativeResolve may edit its state argument,
+  // so give it a private copy. No step, touch clock, RNG, push or field contact.
+  function nativeDirectionReachable(sim, pid, move) {
+    if(!sim.alive[pid] || sim.trapped?.[pid]>0 || typeof sim._nativeResolve!=='function')return false;
+    const original=sim.nativeMove?.[pid];
+    const state={...original,wallExit:original?.wallExit?{...original.wallExit}:null};
+    const x=Math.round(sim.pos[pid*2+1]*40),y=Math.round(sim.pos[pid*2]*40);
+    const distance=Math.max(1,Math.min(40,Math.ceil(sim._nativeSpeedPx(pid)*.025)));
+    const [nx,ny]=sim._nativeResolve(state,x,y,move,distance,true);
+    // Existing corner alignment counts as reachable; actual frameStep owns the move.
+    return nx!==x||ny!==y;
+  }
+
+  function createTouchSteering({bufferMs=160}={}) {
+    let signature=null, travel=null, pending=null, until=0;
+    const clear=()=>{signature=travel=pending=null;until=0;};
+    return {clear, select(state,now,reachable) {
+      if(!state?.direction){clear();return null;}
+      const candidates=[state.direction,state.secondary].filter(Boolean);
+      const perpendicular=(a,b)=>a&&b&&((MOVEMENT_DIRECTIONS[a]<2)!==(MOVEMENT_DIRECTIONS[b]<2));
+      const next=candidates.join(':');
+      if(signature!==next){
+        signature=next;
+        const target=candidates.find(key=>perpendicular(travel,key));
+        pending=target||null;until=(state.changedAt??now)+bufferMs;
+        if(!target)travel=state.direction; // Includes immediate opposite-direction input.
+      }
+      if(pending&&now<=until){
+        if(reachable(MOVEMENT_DIRECTIONS[pending])){travel=pending;pending=null;return travel;}
+        if(travel&&reachable(MOVEMENT_DIRECTIONS[travel]))return travel;
+      } else pending=null;
+      // A completed diagonal turn stays chosen until intent changes, not alternate every frame.
+      if(travel&&candidates.includes(travel)&&reachable(MOVEMENT_DIRECTIONS[travel]))return travel;
+      if(reachable(MOVEMENT_DIRECTIONS[state.direction]))return travel=state.direction;
+      if(state.secondary&&reachable(MOVEMENT_DIRECTIONS[state.secondary]))return travel=state.secondary;
+      return state.direction; // Still face a wall/bubble; never fabricate movement.
+    }};
+  }
+
+  function bindFloatingDirection(zone, held, options = {}) {
+    let pointer = null, stick = null, lastDirection = null, current = null;
+    let sampled = false, pendingTap = null, tapSeconds = null;
+    const pointers=new Map();
+    const {trajectory, signal, onTrajectorySegment}=options;
+    const listen=(name,fn)=>zone.addEventListener(name,fn,{signal});
+    let segment=null;
+    let visibleCenter=null, lastTouch=null;
+    let steering=createTouchSteering({bufferMs: options.bufferMs ?? 160});
     const dial = zone.querySelector('.touch-stick');
     const paint = state => {
+      current=state;
+      if(!state.direction)steering.clear();
       for (const key of STICK_KEYS) held.delete('touch:' + key);
       if (state.direction) held.add('touch:' + state.direction);
-      const rect = zone.getBoundingClientRect(), p = state.center || state.habit;
+      const rect = zone.getBoundingClientRect(), p = state.center || visibleCenter;
+      if(state.center)visibleCenter={...state.center};
       if (p) { dial.style.left = (p.x - rect.left) + 'px'; dial.style.top = (p.y - rect.top) + 'px'; }
       else { dial.style.left = ''; dial.style.top = ''; }
       zone.dataset.direction = state.direction || '';
+      zone.dataset.secondary = state.secondary || '';
+      zone.dataset.resolved = '';
       zone.dataset.active = pointer == null ? 'false' : 'true';
+      const contact=pointers.get(pointer), center=state.center;
+      const dx=contact&&center?contact.x-center.x:0, dy=contact&&center?contact.y-center.y:0;
+      const rawAngle=trajectory?segment?.angle:contact&&center?Math.atan2(-dy,dx)*180/Math.PI:null;
+      zone.dataset.rawAngle=rawAngle==null?'':String(Math.round(rawAngle));
+      zone.dataset.turnAngle=segment?.turn==null?'':String(Math.round(segment.turn));
+      zone.dataset.rawRadius=trajectory?(segment?String(Math.round(segment.length)):''):contact&&center?String(Math.round(Math.hypot(dx,dy))):'';
+      zone.dataset.centerX=center?String(center.x-rect.left):'';
+      zone.dataset.centerY=center?String(center.y-rect.top):'';
+      zone.dataset.inputX=String(dx);zone.dataset.inputY=String(dy);
       if (state.direction && state.direction !== lastDirection) {
         try { globalThis.navigator?.vibrate?.(8); } catch (_) { /* Optional feedback. */ }
       }
       lastDirection = state.direction;
     };
-    zone.addEventListener('pointerdown', event => {
-      if (event.button !== 0 || pointer != null) return;
-      event.preventDefault(); pointer = event.pointerId;
-      if (!stick) {
-        const radius = dial.getBoundingClientRect().width / 2 || 48;
-        stick = createFloatingStick({radius});
+    const stale=(event,record)=>Number.isFinite(event.timeStamp)&&event.timeStamp<record.since;
+    const relativeHeading=(x,y,center,previous,direction)=>{
+      const dx=x-center.x,dy=y-center.y,angle=Math.atan2(Math.abs(dy),Math.abs(dx))*180/Math.PI;
+      const horizontal=dx<0?'ArrowLeft':'ArrowRight',vertical=dy<0?'ArrowUp':'ArrowDown';
+      if(angle<35)return horizontal;
+      if(angle>55)return vertical;
+      // Only an ambiguous diagonal uses a clear inter-touch displacement or
+      // the active direction. Strong cardinal positions always win afresh.
+      if(previous){
+        const px=x-previous.x,py=y-previous.y;
+        if(Math.hypot(px,py)>=8){
+          if(Math.abs(px)>=Math.abs(py)*1.5&&(px<0?'ArrowLeft':'ArrowRight')===horizontal)return horizontal;
+          if(Math.abs(py)>=Math.abs(px)*1.5&&(py<0?'ArrowUp':'ArrowDown')===vertical)return vertical;
+        }
       }
-      zone.setPointerCapture(pointer);
-      paint(stick.start(event.clientX, event.clientY));
-    });
-    zone.addEventListener('pointermove', event => {
-      if (event.pointerId !== pointer) return;
+      if(direction===horizontal||direction===vertical)return direction;
+      return Math.abs(dx)>=Math.abs(dy)?horizontal:vertical;
+    };
+    const take=(id,record,center,hint=null)=>{
+      const old=pointers.get(pointer);
+      if(old){old.anchorX=old.x;old.anchorY=old.y;}
+      pointer=id;sampled=false;pendingTap=null;steering.clear();
+      segment=null;
+      const started=stick.start(center.x,center.y,performance.now(),hint);
+      paint(trajectory?started:stick.move(record.x,record.y));
+      if(trajectory)onTrajectorySegment?.(null);
+    };
+    listen('pointerdown', event => {
+      if(event.button!==0||pointers.has(event.pointerId))return;
+      const rect=zone.getBoundingClientRect(),x=event.clientX,y=event.clientY;
+      if(x<rect.left+8||x>rect.right-8||y<rect.top+8||y>rect.bottom-8)return;
       event.preventDefault();
-      // Preserve short turns that the browser bundled into one pointer event.
-      const samples = event.getCoalescedEvents?.();
-      let state;
-      for (const sample of samples?.length ? samples : [event])
-        state = stick.move(sample.clientX, sample.clientY);
-      paint(state);
+      const radius=dial.getBoundingClientRect().width/2||48;
+      if(!stick)stick=createFloatingStick({radius, deadzone: radius * (options.deadzoneRatio ?? .18), hysteresis: options.hysteresisDeg ?? 58, diagonalMin: options.diagonalMin ?? 25, diagonalMax: options.diagonalMax ?? 65, diagonalMode: options.diagonalMode ?? 'secondary', trajectory});
+      const center=visibleCenter||{x:rect.left+rect.width/2,y:rect.top+rect.height/2};
+      const record={x,y,anchorX:x,anchorY:y,since:event.timeStamp??0};
+      const old=pointers.get(pointer),previous=old||(lastTouch&&performance.now()-lastTouch.time<=200?lastTouch:null);
+      pointers.set(event.pointerId,record);zone.setPointerCapture(event.pointerId);
+      if(trajectory){
+        if(pointer==null)take(event.pointerId,record,{x,y});
+        return;
+      }
+      if(Math.hypot(x-center.x,y-center.y)<radius*(options.deadzoneRatio ?? .18)){
+        // Neutral new finger can start a drag, but cannot interrupt an owner.
+        if(pointer==null&&!current?.direction)take(event.pointerId,record,center);
+        return;
+      }
+      take(event.pointerId,record,center,relativeHeading(x,y,center,previous,current?.direction));
     });
-    const release = event => {
-      if (event.pointerId !== pointer) return;
-      pointer = null; paint(stick.end());
-    };
-    for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) zone.addEventListener(name, release);
+    listen('pointermove', event => {
+      const record=pointers.get(event.pointerId);
+      if(!record||stale(event,record))return;
+      event.preventDefault();
+      const samples=event.getCoalescedEvents?.();
+      let state;
+      for(const sample of samples?.length?samples:[event]){
+        record.x=sample.clientX;record.y=sample.clientY;
+        if(event.pointerId!==pointer){
+          const radius=dial.getBoundingClientRect().width/2||48;
+          if(Math.hypot(record.x-record.anchorX,record.y-record.anchorY)<Math.max(12,radius*.25))continue;
+          // A suspended finger must deliberately drag; rebase at its suspension
+          // point so its old absolute offset cannot pull the direction back.
+          take(event.pointerId,record,{x:record.anchorX,y:record.anchorY});
+        }
+          if(trajectory){
+            const from=(state||current).center;
+            state=stick.move(record.x,record.y);
+            if(state.center.x!==from.x||state.center.y!==from.y){
+              const dx=state.center.x-from.x,dy=state.center.y-from.y;
+              const angle=(Math.atan2(-dy,dx)*180/Math.PI+360)%360;
+              const turn=segment?((angle-segment.angle+540)%360)-180:null;
+              segment={from,to:state.center,angle,turn,length:Math.hypot(dx,dy),direction:state.direction};
+              onTrajectorySegment?.(segment);
+            }
+          }else state=stick.move(record.x,record.y);
+      }
+      if(state)paint(state);
+    });
     const clear = () => {
-      const id = pointer; pointer = null;
-      if (stick) paint(stick.reset());
-      stick = null; // Re-read the scaled radius after rotation or viewport resize.
-      if (id != null && zone.hasPointerCapture?.(id)) zone.releasePointerCapture(id);
+      const ids=[...pointers.keys()];pointers.clear();pointer=null;
+      pendingTap=null;tapSeconds=null;sampled=false;visibleCenter=lastTouch=null;
+      segment=null;
+      if(trajectory)onTrajectorySegment?.(null);
+      if(stick)paint(stick.reset());
+      stick=null;
+      steering=createTouchSteering({bufferMs: options.bufferMs ?? 160});
+      for(const id of ids)if(zone.hasPointerCapture?.(id))zone.releasePointerCapture(id);
     };
-    globalThis.addEventListener?.('resize', clear);
+    const release=event=>{
+      const record=pointers.get(event.pointerId);
+      if(!record||stale(event,record))return;
+      if(event.type==='pointercancel'){clear();return;}
+      if(event.type==='lostpointercapture'){
+        if(event.pointerId===pointer)clear();else pointers.delete(event.pointerId);
+        return;
+      }
+      pointers.delete(event.pointerId);
+      if(event.pointerId!==pointer)return;
+      pendingTap=!sampled&&current?.direction?{state:{...current},expires:performance.now()+100}:null;
+      lastTouch={x:record.x,y:record.y,time:performance.now()};
+      segment=null;
+      pointer=null;paint(stick.reset());
+      if(trajectory)onTrajectorySegment?.(null);
+      // Other fingers stay suspended. Releasing the newest finger never restores them.
+    };
+    for(const name of ['pointerup','pointercancel','lostpointercapture'])listen(name,release);
+    globalThis.addEventListener?.('resize',clear,{signal});
+    clear.moveFor=(sim,pid,now)=>{
+      tapSeconds=null;
+      let last=null;for(const key of held)if(Object.hasOwn(MOVEMENT_DIRECTIONS,key.startsWith('touch:')?key.slice(6):key))last=key;
+      const forced=!sim.alive[pid]||sim.trapped?.[pid]>0||sim.playerMoveDirection(pid,4)!==4;
+      if(!last && pendingTap){
+        const tap=pendingTap;pendingTap=null;
+        if(now<=tap.expires&&!forced){
+          steering.clear();
+          const key=steering.select(tap.state,now,mv=>nativeDirectionReachable(sim,pid,mv));
+          steering.clear();tapSeconds=1/60;
+          zone.dataset.resolved=key||'';
+          return key?MOVEMENT_DIRECTIONS[key]:4;
+        }
+      }
+      if(!last?.startsWith('touch:')){pendingTap=null;steering.clear();zone.dataset.resolved='';return moveForHeld(held);}
+      sampled=true;
+      // Forced movement stays owned by the simulator and cannot queue a delayed turn.
+      if(forced){pendingTap=null;steering.clear();return moveForHeld(held);}
+      const key=steering.select(current,now,mv=>nativeDirectionReachable(sim,pid,mv));
+      zone.dataset.resolved=key||'';
+      return key?MOVEMENT_DIRECTIONS[key]:4;
+    };
+    clear.frameSeconds=dt=>{const seconds=tapSeconds;tapSeconds=null;return seconds??dt;};
     return clear;
   }
 
-  function bindTouchControls(root, held, onPress) {
+  function bindTouchControls(root, held, onPress, options = {}) {
     const active = new Map();
-    const zone = root.querySelector?.('[data-floating-direction]');
-    const clearDirection = zone ? bindFloatingDirection(zone, held) : () => {};
+    const zone = root.matches?.('[data-floating-direction]') ? root : root.querySelector?.('[data-floating-direction]');
+    const clearDirection = zone ? bindFloatingDirection(zone, held, options) : () => {};
     const release = event => {
       const key = active.get(event.pointerId);
       active.delete(event.pointerId);
@@ -174,7 +342,11 @@
     };
     // Restrict browser gesture suppression to the game controls.
     for (const name of ['contextmenu', 'selectstart', 'dragstart'])
-      root.addEventListener?.(name, event => event.preventDefault());
+      root.addEventListener?.(name,event=>event.preventDefault(),{signal:options.signal});
+    if (zone && zone !== root) {
+      for (const name of ['contextmenu', 'selectstart', 'dragstart'])
+        zone.addEventListener?.(name, event => event.preventDefault());
+    }
     for (const button of root.querySelectorAll('[data-control-key]')) {
       button.addEventListener('pointerdown', event => {
         if (event.button != null && event.button !== 0) return;
@@ -188,9 +360,12 @@
       });
       for (const name of ['pointerup', 'pointercancel', 'lostpointercapture']) button.addEventListener(name, release);
     }
-    return () => { clearDirection(); for (const key of active.values()) held.delete(key); active.clear(); };
+    const clear=() => { clearDirection(); for (const key of active.values()) held.delete(key); active.clear(); };
+    clear.moveFor=clearDirection.moveFor||(()=>moveForHeld(held));
+    clear.frameSeconds=clearDirection.frameSeconds||(dt=>dt);
+    return clear;
   }
 
   return { MOVEMENT_KEYS, MOVEMENT_DIRECTIONS, ITEM_KEYS, ITEM_SLOT_KEYS, BOMB_KEYS, moveForHeld,
-    isTypingTarget, isRestartKey, createRestartGate, touchItemPage, createFloatingStick, bindTouchControls };
+    TRAJECTORY_TOUCH_PROFILE, isTypingTarget, isRestartKey, createRestartGate, touchItemPage, createFloatingStick, nativeDirectionReachable, createTouchSteering, bindTouchControls };
 });
