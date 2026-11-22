@@ -2918,7 +2918,7 @@
       ]
     },
     "training_launch_policy.json": {
-      "sha256": "d33de02d4400fe687b988cafd3675e145fd06297c066934aa44cec757414c271",
+      "sha256": "59c227405a3c79e48fa560116b39933f27be7a15e99aa6745c0c302a35235c81",
       "dependencies": []
     },
     "web/app.js": {
@@ -3038,7 +3038,7 @@
       ]
     },
     "web/sim-bun-native-v4-facing.js": {
-      "sha256": "442176b87da4b8a7a3f399efe9fa586dcc67395d9211fdfa4c9120b346cedc09",
+      "sha256": "89165636ba43b667e68e03bd2985410a2fe2c808c63b11aa692b050468ae2c45",
       "dependencies": [
         "jax_bomb/jax_env.py",
         "jax_bomb/jax_net.py"
