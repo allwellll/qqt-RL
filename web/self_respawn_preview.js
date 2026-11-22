@@ -9,17 +9,22 @@
   function attach(sim) {
     if (sim.selfRespawnPreview) return sim;
     sim.selfRespawnPreview = true;
-    function safeCells() {
+    function safeCells(player) {
       const bombs = Uint8Array.from(sim.fuse, fuse => Number(fuse > 0));
       const blast = Int16Array.from(sim.bombBlast, n => n || 3);
       const covered = sim._rays(bombs, blast, sim.brick).covered;
-      return sim._itemSupplyCells().filter(cell => !covered[cell]);
+      return sim._itemSupplyCells().filter(cell => {
+        if (covered[cell]) return false;
+        if (!sim.isBun) return true;
+        const column = cell % 15;
+        return sim.team[player] === 0 ? column < 7.5 : column >= 7.5;
+      });
     }
     function select(player, preferExisting = true) {
       const positions = sim.killMode ? sim.killRespawnPos : sim.bunSpawnPos;
       const previous = positions[player];
       const cell = previous ? Math.floor(previous[0]) * 15 + Math.floor(previous[1]) : -1;
-      const cells = safeCells();
+      const cells = safeCells(player);
       if (preferExisting && previous?.every(x => x >= 0) && cells.includes(cell)) return previous;
       if (!cells.length) return positions[player] = [-1, -1];
       const selected = cells[Math.floor(sim.rng() * cells.length)];

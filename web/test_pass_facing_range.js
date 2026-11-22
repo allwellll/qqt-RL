@@ -1,9 +1,9 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),crypto=require('node:crypto');
-const Q=require('./sim-bun-native-v4-facing'),Old=require('./sim-bun-native-v3-items'),V=require('./visual_renderer');
+const Q=require('./sim-bun-native-v5-facing-window'),Old=require('./sim-bun-native-v3-items'),V=require('./visual_renderer');
 const front=81;
 function scene(Api=Q){const s=new Api.Sim(77);s.reset('open',{nativeItems:true,nativeTrap:true});for(const k of ['wall','brick','cover','crate','fuse','pushable','fieldItem'])s[k].fill(0);s.pos.set([5.5,4.5,10.5,10.5]);s.spawnProtection.fill(0);s.invuln.fill(100);s.spdG[0]=80/120;s.lastMoveDir[0]=Q.MOVE_RIGHT;s.fuse[front]=30;s.owner[front]=1;s.bombsCap[0]=5;return s;}
-function charge(s,time=550){s.frameStep(0,Q.MOVE_IDLE,.016);const start=s.nativeMove[0].touchStart;while(s.nativeMove[0].clock<start+time-1e-6)s.frameStep(0,Q.MOVE_IDLE,Math.min(.016,(start+time-s.nativeMove[0].clock)/1000));}
+function charge(s,time=500){s.frameStep(0,Q.MOVE_IDLE,.016);const start=s.nativeMove[0].touchStart;while(s.nativeMove[0].clock<start+time-1e-6)s.frameStep(0,Q.MOVE_IDLE,Math.min(.016,(start+time-s.nativeMove[0].clock)/1000));}
 const place=s=>s.step([[Q.MOVE_IDLE,1,0,1],[Q.MOVE_IDLE,0,0,1]]);
 for(const x of [5,4.5,3.5]){
  const s=scene();s.pos[1]=x;const before=Array.from(s.pos);let collisionCalls=0;const segment=s._nativeSegmentCollision,collisions=s._nativeCollisions;
@@ -26,7 +26,8 @@ for(const [direction,position,target] of [[0,[7.5,6.5],81],[1,[3.5,6.5],81],[2,[
 {
  const s=scene();charge(s,200);const start=s.nativeMove[0].touchStart;s.lastMoveDir[0]=Q.MOVE_UP;s.frameStep(0,Q.MOVE_IDLE,.1);assert(!V.bubblePassageHints(s,0)[0].contact);s.lastMoveDir[0]=Q.MOVE_RIGHT;s.frameStep(0,Q.MOVE_IDLE,.1);assert.equal(s.nativeMove[0].touchStart,start);s.fuse[78]=30;s.lastMoveDir[0]=Q.MOVE_LEFT;s.frameStep(0,Q.MOVE_IDLE,.016);assert.equal(s.nativeMove[0].touchCell,78);assert.equal(s.nativeMove[0].touchStart,s.nativeMove[0].clock);
 }
-for(const ms of [500,600,650]){const s=scene();charge(s,ms);assert(!V.bubblePassageHints(s,0)[0]?.ready);place(s);assert(!s.nativeMove[0].passActive);}
+for(const ms of [401,450,500,550,599]){const s=scene();charge(s,ms);const hint=V.bubblePassageHints(s,0)[0];assert(hint?.ready);assert.equal(hint.progress,Math.min(1,ms/500));place(s);assert(s.nativeMove[0].passActive);}
+for(const ms of [399,400,600,601]){const s=scene();charge(s,ms);assert(!V.bubblePassageHints(s,0)[0]?.ready);place(s);assert(!s.nativeMove[0].passActive);}
 {
  const s=scene();charge(s);s.lastMoveDir[0]=Q.MOVE_LEFT;assert(!s._nativePassReady(0));assert(!V.bubblePassageHints(s,0)[0].ready);place(s);assert(!s.nativeMove[0].passActive);
  const block=scene();charge(block);block.wall[80]=1;assert(!block._nativePassReady(0));assert(!V.bubblePassageHints(block,0)[0].ready);place(block);assert(!block.nativeMove[0].passActive);

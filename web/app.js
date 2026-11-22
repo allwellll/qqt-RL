@@ -140,7 +140,7 @@
     if (QQTControls.BOMB_KEYS.includes(key) && bombCell < 0) bombCell = humanCell();
     const slot = QQTControls.ITEM_SLOT_KEYS.indexOf(key);
     if (slot >= 0 && sim.itemSlots?.[0]?.[slot] && itemCell < 0) { itemCell = humanCell(); itemSlot = slot; }
-  });
+  }, QQTControls.TRAJECTORY_TOUCH_PROFILE);
   let loadedModel = null;
   let loadedModelId = null;
   let publishedModels = [];
@@ -182,7 +182,8 @@
     return { prevPos, curPos, lastTickT, tickMs: TICK_MS, humanPid: localHumanControls() ? 0 : -1, intents,
       settlement: QQTLeaderboard.settlementText(leaderboard.state().settlement),
       hideResult: localHumanControls() && !!leaderboard.state().settlement?.closed,
-      characters: localHumanControls() ? [characterSelect.value] : [] };
+      characters: localHumanControls() ? [characterSelect.value, 'magician'] : [],
+      teamRings: localHumanControls() };
   }
 
   // rAF 逐帧推进本地人类 pid0：sim.frameStep 内走原版像素移动（含 6px 拐角修正、泡泡 3px 入口带），
@@ -192,9 +193,9 @@
     const dt = Math.min((now - prevFrame) / 1000 || 0, 0.25);
     prevFrame = now;
     if (sim.done) return;
-    const move = QQTControls.moveForHeld(held);
+    const move = releaseTouchControls.moveFor(sim, 0, now);
     intents[0] = sim.alive[0] ? sim.playerMoveDirection(0, move) : QQT.MOVE_IDLE;
-    sim.frameStep(0, move, dt);
+    sim.frameStep(0, move, releaseTouchControls.frameSeconds(dt));
   }
 
   function instantiateModel(document, row) {

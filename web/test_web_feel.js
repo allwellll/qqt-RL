@@ -219,6 +219,28 @@ function playerGx(draws, pid) {
   assert(draws.some((d) => d.tag === 'native-right'), 'banana slide faces its forced direction even with opposite input');
 }
 
+// Live model skin uses the native four-direction actor; replay without a skin stays legacy.
+{
+  const { canvas, draws } = mockCanvas(), assets = mockAssets();
+  assets.characters = { magician: Object.fromEntries(['stand','walk'].map(action=>[action,
+    ['down','left','right','up'].map(face=>Array.from({length:6},(_,i)=>tagImg(`magician-${action}-${face}-${i}`,127,127)))])) };
+  const r=visual.createRenderer(canvas,level,assets),s=fakeSim({pos:[5.5,3.5,5.5,8.5]});
+  const motion={characters:[null,'magician'],humanPid:0,teamRings:true,intents:[MOVE_IDLE,MOVE_IDLE],
+    prevPos:s.pos,curPos:s.pos,lastTickT:1000,tickMs:100};
+  for(const [move,face] of [[QQT.MOVE_DOWN,'down'],[QQT.MOVE_LEFT,'left'],[QQT.MOVE_RIGHT,'right'],[QQT.MOVE_UP,'up']]) {
+    draws.length=0;motion.intents[1]=move;r.render(s,1000,motion);
+    assert(draws.some(d=>d.tag.startsWith(`magician-walk-${face}-`)),'model native walk direction');
+    draws.length=0;motion.intents[1]=MOVE_IDLE;r.render(s,1200,motion);
+    assert(draws.some(d=>d.tag.startsWith(`magician-stand-${face}-`)),'model retains last facing while standing');
+  }
+  s.alive[1]=0;draws.length=0;r.render(s,1300,motion);
+  assert(!draws.some(d=>d.tag.startsWith('magician-')),'dead model actor is hidden');
+  s.alive[1]=1;draws.length=0;r.render(s,1400,motion);
+  assert(draws.some(d=>d.tag.startsWith('magician-')),'respawned model actor returns');
+  draws.length=0;r.render(s,1500,null);
+  assert(draws.some(d=>d.tag==='p1'),'read-only replay without explicit characters retains old skin');
+}
+
 // 4a) 本地人类(humanPid=0)raw 不插值；对手(pid1)按 alpha 插值。
 {
   const { canvas, draws } = mockCanvas();
@@ -574,7 +596,7 @@ assert(!/steerReduced/.test(appSource), 'app.js 必须已移除 steerReduced 接
 assert(/\[QQT\.MOVE_IDLE, bombCell >= 0 \? 1 : 0, itemCell >= 0 \? 1 : 0, 1, bombCell, itemCell, itemSlot\]/.test(appSource),
   'humanAction 必须返回第4位=1（跳过 10Hz 移动，改由 rAF frameStep）');
 assert(!/autoTurn|turnSlide/.test(appSource), 'app.js 必须移除 autoTurn（拐角修正由原版物理负责）');
-assert(/const move = QQTControls\.moveForHeld\(held\);[\s\S]*?sim\.frameStep\(0, move, dt\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
+assert(/const move = releaseTouchControls\.moveFor\(sim, 0, now\);[\s\S]*?sim\.frameStep\(0, move, releaseTouchControls\.frameSeconds\(dt\)\)/.test(appSource), 'rAF 必须逐帧调用 sim.frameStep(0, ...) 连续移动本地人类');
 assert(/intents\[0\] = sim\.alive\[0\] \? sim\.playerMoveDirection\(0, move\)/.test(appSource), 'rAF 必须把按键意图交给渲染器定朝向');
 assert(/humanPid: localHumanControls\(\) \? 0 : -1/.test(appSource),
   'motionState 必须传 humanPid（本地人类 raw / 观战回放插值）');

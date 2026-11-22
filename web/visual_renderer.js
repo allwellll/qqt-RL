@@ -67,7 +67,7 @@
 
   // Visual mirrors of the native solver's open charge window; physics stays
   // authoritative (the regression places a real bomb at both boundaries).
-  const PASS_MIN_MS = 500, PASS_MAX_MS = 600, PASS_FRESH_MS = 100;
+  const PASS_FRESH_MS = 100;
   // frameStep advances st.clock on every rAF, independently of the 10Hz tick.
   // Never initialize native state or expire permissions on the live state.
   function bubblePassageHints(sim, humanPid) {
@@ -81,16 +81,17 @@
     const charged = state.clock - state.touchStart;
     if (state.passActive) return [{ cell: activeCell, kind: 'active', progress: 1,
       ready: false, contact: false }];
-    if (charged < 0 || charged >= PASS_MAX_MS) return [];
+    const minMs = sim.constructor.FACING_RULE_CONFIG?.chargeMinMs ?? 500, maxMs = sim.constructor.FACING_RULE_CONFIG?.chargeMaxMs ?? 600;
+    if (charged < 0 || charged >= maxMs) return [];
     // Native touchCell owns the ring until replacement/expiry. Releasing keys
     // or walking away never resets its clock. Only freshness affects readiness.
     const contact = typeof sim._nativeFacingCell === 'function'
       ? sim._nativeFacingCell(humanPid) === state.touchCell
       : state.clock - state.touchLast < PASS_FRESH_MS;
-    return [{ cell: state.touchCell, kind: charged > PASS_MIN_MS ? 'window' : 'charging',
-      chargedMs: charged, progress: Math.min(1, charged / ((PASS_MIN_MS + PASS_MAX_MS) / 2)), contact,
+    return [{ cell: state.touchCell, kind: charged > minMs ? 'window' : 'charging',
+      chargedMs: charged, progress: Math.min(1, charged / ((minMs + maxMs) / 2)), contact,
       ready: typeof sim._nativePassReady === 'function' ? sim._nativePassReady(humanPid, state)
-        : charged > PASS_MIN_MS && contact && state.clock - state.touchLast < PASS_FRESH_MS }];
+        : charged > minMs && contact && state.clock - state.touchLast < PASS_FRESH_MS }];
   }
 
   // Tick motion stays one tick behind the authoritative solver. A 480px/s
@@ -757,7 +758,7 @@
           const z = Math.floor(gy) * Z_ROW_STRIDE + (onWall ? 23 : 18);
           items.push([z - 1, assets.shadow, pixel(gx * CELL - assets.shadow.width / 2), y + image.height - assets.shadow.height + 16]);
           // 多人时同队共用精灵：脚下队伍色光圈 + 头顶名牌区分。
-          if (playerCount(sim) > 2 || motion?.playerLabels) {
+          if (playerCount(sim) > 2 || motion?.playerLabels || motion?.teamRings) {
             items.push([z - 1, () => drawTeamRing(gx * CELL, y + image.height - 6, team)]);
             // 真人只靠箭头标识，不另画名牌。
             if (!motion?.playerLabels && pid !== (motion ? motion.humanPid : 0)) {

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Export native layered actors and syrup effects from the v1.3.2 client."""
+import argparse
 import configparser
 import hashlib
 import json
 import struct
-import sys
 import zlib
 from pathlib import Path
 
@@ -14,11 +14,19 @@ from export_client_item_sprites import decode_dimg, read_archive
 
 
 def main():
-    root = Path(sys.argv[1])
+    roles = {1: ('pipi', '皮皮'), 9: ('maomao', '毛毛'), 55: ('magician', '礼帽魔术师')}
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('client_root', type=Path)
+    parser.add_argument('--roles', nargs='+', type=int, choices=roles, default=list(roles))
+    parser.add_argument('--actors-only', action='store_true', help='Preserve existing effects and sound')
+    args = parser.parse_args()
+    root = args.client_root
     out = Path(__file__).resolve().parents[1] / 'web/assets/native'
     out.mkdir(parents=True, exist_ok=True)
     entries = read_archive(root)
-    manifest = {'source': 'kuuhaku1314/qqtang v1.3.2 QQTang-Local.zip', 'actors': {}, 'effects': {}}
+    manifest_file = out / 'sprites.json'
+    manifest = json.loads(manifest_file.read_text()) if manifest_file.exists() else {
+        'source': 'kuuhaku1314/qqtang v1.3.2 QQTang-Local.zip', 'actors': {}, 'effects': {}}
     zorder = configparser.ConfigParser()
     zorder.read(root / 'object/player/player_z.ini', encoding='gb18030')
     with (root / 'data/object.pkg').open('rb') as pkg:
@@ -31,9 +39,11 @@ def main():
             directions = struct.unpack_from('<I', data, 20)[0]
             return decode_dimg(data, all_directions=True), directions
 
-        for role, key, label in [(1, 'pipi', '皮皮'), (9, 'maomao', '毛毛')]:
+        player_configs = {p.name.lower(): p for p in (root / 'object/player').iterdir()}
+        for role in args.roles:
+            key, label = roles[role]
             config = configparser.ConfigParser()
-            config.read(root / f'object/player/player{role}.ini', encoding='gb18030')
+            config.read(player_configs[f'player{role}.ini'], encoding='gb18030')
             actor = {'roleId': role, 'label': label, 'actions': {}}
             for action in ('stand', 'walk'):
                 layers = {}
@@ -42,8 +52,8 @@ def main():
                     if name.lower() not in entries:
                         continue
                     (w, h, cx, cy, frames), dirs = decode(name)
-                    layers[part] = (frames, len(frames) // dirs)
-                count = max(n for _, n in layers.values())
+                    layers[part] = (frames, len(frames) // dirs, dirs)
+                count = max(n for _, n, _ in layers.values())
                 strip = Image.new('RGBA', (85 * count, 340))
                 # Native frames face right/up/left/down; renderer rows are down/left/right/up.
                 for direction, suffix in enumerate(('down', 'left', 'right', 'up')):
@@ -52,8 +62,9 @@ def main():
                     for frame in range(count):
                         canvas = Image.new('RGBA', (100, 100))
                         for part in order:
-                            frames, n = layers[part]
-                            x, y, image = frames[source_direction * n + frame % n]
+                            frames, n, dirs = layers[part]
+                            # One-direction shared layers (e.g. leg1) are reused for every facing.
+                            x, y, image = frames[(source_direction % dirs) * n + frame % n]
                             if image is not None:
                                 canvas.alpha_composite(image, (x, y))
                         strip.alpha_composite(canvas.crop((7, -2, 92, 83)), (frame * 85, direction * 85))
@@ -66,29 +77,30 @@ def main():
                     portrait = portrait.crop(portrait.getbbox())
                     portrait.save(out / f'{key}_portrait.png', optimize=True)
             manifest['actors'][key] = actor
-        for key, name in [('trap', 'misc111_trigger'), ('pop', 'misc111_die'), ('bird', 'misc101_stand')]:
-            (w, h, cx, cy, frames), _ = decode(f'object\\misc\\{name}.img')
+        if not args.actors_only:
+            for key, name in [('trap', 'misc111_trigger'), ('pop', 'misc111_die'), ('bird', 'misc101_stand')]:
+                (w, h, cx, cy, frames), _ = decode(f'object\\misc\\{name}.img')
+                strip = Image.new('RGBA', (w * len(frames), h))
+                for i, (x, y, image) in enumerate(frames):
+                    if image is not None:
+                        strip.alpha_composite(image, (i * w + x - cx, y - cy))
+                strip.save(out / f'{key}.png', optimize=True)
+                manifest['effects'][key] = {'file': f'assets/native/{key}.png', 'w': w, 'h': h,
+                                            'frames': len(frames), 'source': f'object/misc/{name}.img'}
+            (w, h, cx, cy, frames), _ = decode('object\\magic\\magic0139.img')
             strip = Image.new('RGBA', (w * len(frames), h))
             for i, (x, y, image) in enumerate(frames):
                 if image is not None:
                     strip.alpha_composite(image, (i * w + x - cx, y - cy))
-            strip.save(out / f'{key}.png', optimize=True)
-            manifest['effects'][key] = {'file': f'assets/native/{key}.png', 'w': w, 'h': h,
-                                        'frames': len(frames), 'source': f'object/misc/{name}.img'}
-        (w, h, cx, cy, frames), _ = decode('object\\magic\\magic0139.img')
-        strip = Image.new('RGBA', (w * len(frames), h))
-        for i, (x, y, image) in enumerate(frames):
-            if image is not None:
-                strip.alpha_composite(image, (i * w + x - cx, y - cy))
-        strip.save(out / 'protection.png', optimize=True)
-        manifest['effects']['protection'] = {'file': 'assets/native/protection.png',
-            'w': w, 'h': h, 'ox': cx, 'oy': cy, 'frames': len(frames), 'frameMs': 100,
-            'cycleMs': 1500, 'protectionMs': 3000, 'source': 'object/magic/magic0139.img',
-            'effect': 'effect/flash2.eff'}
-        sound = root / 'sound/X12_01.wav'
-        (out / 'syrup_pop.wav').write_bytes(sound.read_bytes())
-        manifest['sound'] = {'file': 'assets/native/syrup_pop.wav', 'source': 'sound/X12_01.wav',
-                             'sha256': hashlib.sha256(sound.read_bytes()).hexdigest()}
+            strip.save(out / 'protection.png', optimize=True)
+            manifest['effects']['protection'] = {'file': 'assets/native/protection.png',
+                'w': w, 'h': h, 'ox': cx, 'oy': cy, 'frames': len(frames), 'frameMs': 100,
+                'cycleMs': 1500, 'protectionMs': 3000, 'source': 'object/magic/magic0139.img',
+                'effect': 'effect/flash2.eff'}
+            sound = root / 'sound/X12_01.wav'
+            (out / 'syrup_pop.wav').write_bytes(sound.read_bytes())
+            manifest['sound'] = {'file': 'assets/native/syrup_pop.wav', 'source': 'sound/X12_01.wav',
+                                 'sha256': hashlib.sha256(sound.read_bytes()).hexdigest()}
     (out / 'sprites.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
 
 
