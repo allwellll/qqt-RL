@@ -61,8 +61,8 @@
   }
 
   const STICK_KEYS = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
-  // Radial intent is measured from the real floating centre, never event deltas.
-  function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58, diagonalMin = 25, diagonalMax = 65, diagonalMode = 'secondary'} = {}) {
+  // Radial mode uses a floating centre. Trajectory mode advances the sample origin only after a valid segment.
+  function createFloatingStick({radius = 48, deadzone = radius * .18, hysteresis = 58, diagonalMin = 25, diagonalMax = 65, diagonalMode = 'secondary', trajectory = false} = {}) {
     let center = null, habit = null, direction = null, secondary = null, changedAt = 0;
     const snapshot = () => ({center: center && {...center}, habit: habit && {...habit}, direction, secondary, changedAt});
     return {
@@ -73,7 +73,10 @@
       move(x, y, now = performance.now()) {
         if (!center) return snapshot();
         let dx=x-center.x, dy=y-center.y, length=Math.hypot(dx,dy);
-        if(length>radius){center={x:x-dx*radius/length,y:y-dy*radius/length};dx=x-center.x;dy=y-center.y;length=radius;}
+        if(trajectory){
+          if(length<Math.max(2,deadzone))return snapshot();
+          center={x,y};
+        } else if(length>radius){center={x:x-dx*radius/length,y:y-dy*radius/length};dx=x-center.x;dy=y-center.y;length=radius;}
         const old=direction, oldSecondary=secondary;
         direction=secondary=null;
         if(length>=deadzone){
@@ -142,6 +145,9 @@
     let pointer = null, stick = null, lastDirection = null, current = null;
     let sampled = false, pendingTap = null, tapSeconds = null;
     const pointers=new Map();
+    const {trajectory, signal, onTrajectorySegment}=options;
+    const listen=(name,fn)=>zone.addEventListener(name,fn,{signal});
+    let segment=null;
     let visibleCenter=null, lastTouch=null;
     let steering=createTouchSteering({bufferMs: options.bufferMs ?? 160});
     const dial = zone.querySelector('.touch-stick');
@@ -160,8 +166,10 @@
       zone.dataset.active = pointer == null ? 'false' : 'true';
       const contact=pointers.get(pointer), center=state.center;
       const dx=contact&&center?contact.x-center.x:0, dy=contact&&center?contact.y-center.y:0;
-      zone.dataset.rawAngle=contact&&center?String(Math.round(Math.atan2(-dy,dx)*180/Math.PI)):'';
-      zone.dataset.rawRadius=contact&&center?String(Math.round(Math.hypot(dx,dy))):'';
+      const rawAngle=trajectory?segment?.angle:contact&&center?Math.atan2(-dy,dx)*180/Math.PI:null;
+      zone.dataset.rawAngle=rawAngle==null?'':String(Math.round(rawAngle));
+      zone.dataset.turnAngle=segment?.turn==null?'':String(Math.round(segment.turn));
+      zone.dataset.rawRadius=trajectory?(segment?String(Math.round(segment.length)):''):contact&&center?String(Math.round(Math.hypot(dx,dy))):'';
       zone.dataset.centerX=center?String(center.x-rect.left):'';
       zone.dataset.centerY=center?String(center.y-rect.top):'';
       zone.dataset.inputX=String(dx);zone.dataset.inputY=String(dy);
@@ -192,20 +200,26 @@
       const old=pointers.get(pointer);
       if(old){old.anchorX=old.x;old.anchorY=old.y;}
       pointer=id;sampled=false;pendingTap=null;steering.clear();
-      stick.start(center.x,center.y,performance.now(),hint);
-      paint(stick.move(record.x,record.y));
+      segment=null;
+      const started=stick.start(center.x,center.y,performance.now(),hint);
+      paint(trajectory?started:stick.move(record.x,record.y));
+      if(trajectory)onTrajectorySegment?.(null);
     };
-    zone.addEventListener('pointerdown', event => {
+    listen('pointerdown', event => {
       if(event.button!==0||pointers.has(event.pointerId))return;
       const rect=zone.getBoundingClientRect(),x=event.clientX,y=event.clientY;
       if(x<rect.left+8||x>rect.right-8||y<rect.top+8||y>rect.bottom-8)return;
       event.preventDefault();
       const radius=dial.getBoundingClientRect().width/2||48;
-      if(!stick)stick=createFloatingStick({radius, deadzone: radius * (options.deadzoneRatio ?? .18), hysteresis: options.hysteresisDeg ?? 58, diagonalMin: options.diagonalMin ?? 25, diagonalMax: options.diagonalMax ?? 65, diagonalMode: options.diagonalMode ?? 'secondary'});
+      if(!stick)stick=createFloatingStick({radius, deadzone: radius * (options.deadzoneRatio ?? .18), hysteresis: options.hysteresisDeg ?? 58, diagonalMin: options.diagonalMin ?? 25, diagonalMax: options.diagonalMax ?? 65, diagonalMode: options.diagonalMode ?? 'secondary', trajectory});
       const center=visibleCenter||{x:rect.left+rect.width/2,y:rect.top+rect.height/2};
       const record={x,y,anchorX:x,anchorY:y,since:event.timeStamp??0};
       const old=pointers.get(pointer),previous=old||(lastTouch&&performance.now()-lastTouch.time<=200?lastTouch:null);
       pointers.set(event.pointerId,record);zone.setPointerCapture(event.pointerId);
+      if(trajectory){
+        if(pointer==null)take(event.pointerId,record,{x,y});
+        return;
+      }
       if(Math.hypot(x-center.x,y-center.y)<radius*(options.deadzoneRatio ?? .18)){
         // Neutral new finger can start a drag, but cannot interrupt an owner.
         if(pointer==null&&!current?.direction)take(event.pointerId,record,center);
@@ -213,7 +227,7 @@
       }
       take(event.pointerId,record,center,relativeHeading(x,y,center,previous,current?.direction));
     });
-    zone.addEventListener('pointermove', event => {
+    listen('pointermove', event => {
       const record=pointers.get(event.pointerId);
       if(!record||stale(event,record))return;
       event.preventDefault();
@@ -228,13 +242,23 @@
           // point so its old absolute offset cannot pull the direction back.
           take(event.pointerId,record,{x:record.anchorX,y:record.anchorY});
         }
+        const from=trajectory?(state||current).center:null;
         state=stick.move(record.x,record.y);
+        if(trajectory&&(state.center.x!==from.x||state.center.y!==from.y)){
+          const dx=state.center.x-from.x,dy=state.center.y-from.y;
+          const angle=Math.atan2(-dy,dx)*180/Math.PI;
+          const turn=segment?((angle-segment.angle+540)%360)-180:null;
+          segment={from,to:state.center,angle,turn,length:Math.hypot(dx,dy)};
+          onTrajectorySegment?.(segment);
+        }
       }
       if(state)paint(state);
     });
     const clear = () => {
       const ids=[...pointers.keys()];pointers.clear();pointer=null;
       pendingTap=null;tapSeconds=null;sampled=false;visibleCenter=lastTouch=null;
+      segment=null;
+      if(trajectory)onTrajectorySegment?.(null);
       if(stick)paint(stick.reset());
       stick=null;
       steering=createTouchSteering({bufferMs: options.bufferMs ?? 160});
@@ -252,11 +276,13 @@
       if(event.pointerId!==pointer)return;
       pendingTap=!sampled&&current?.direction?{state:{...current},expires:performance.now()+100}:null;
       lastTouch={x:record.x,y:record.y,time:performance.now()};
+      segment=null;
       pointer=null;paint(stick.reset());
+      if(trajectory)onTrajectorySegment?.(null);
       // Other fingers stay suspended. Releasing the newest finger never restores them.
     };
-    for(const name of ['pointerup','pointercancel','lostpointercapture'])zone.addEventListener(name,release);
-    globalThis.addEventListener?.('resize', clear);
+    for(const name of ['pointerup','pointercancel','lostpointercapture'])listen(name,release);
+    globalThis.addEventListener?.('resize',clear,{signal});
     clear.moveFor=(sim,pid,now)=>{
       tapSeconds=null;
       let last=null;for(const key of held)if(Object.hasOwn(MOVEMENT_DIRECTIONS,key.startsWith('touch:')?key.slice(6):key))last=key;
@@ -294,7 +320,7 @@
     };
     // Restrict browser gesture suppression to the game controls.
     for (const name of ['contextmenu', 'selectstart', 'dragstart'])
-      root.addEventListener?.(name, event => event.preventDefault());
+      root.addEventListener?.(name,event=>event.preventDefault(),{signal:options.signal});
     if (zone && zone !== root) {
       for (const name of ['contextmenu', 'selectstart', 'dragstart'])
         zone.addEventListener?.(name, event => event.preventDefault());
