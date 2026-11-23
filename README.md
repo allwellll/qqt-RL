@@ -1,290 +1,67 @@
-# qqt-RL
+# QQT-RL：用强化学习训练抢包子 AI
 
-新机器继续 DUEL / SP：见[正式迁移与续训说明](docs/continue_training_on_new_machine.md)（Release 权重与必要数据、安装/校验/开训命令；当前仍停训，恢复需重新授权；仅 DUEL 本机 CPU 加载检查通过，SP 与干净目录未验证）。
+这个项目训练两类能力：**对拼**，学会主动进攻、击杀并活下来；**运包**，学会创造取包机会、拿到敌方包子、带回己方笼子。训练既有早期 CUDA 实验，也有近期海光 DCU 实践。
 
-纯 Bun（抢包子）强化学习仓库，覆盖 JAX 环境仿真、PPO/GAE 训练、独立 Critic/Target Critic、模型评估与浏览器真人测试。
+[在线游戏](https://allwellll.github.io/qqt-RL/) · [训练实验总账](docs/training_experiment_ledger.md) · [评测与录像报告](reports/README.md)
 
-早期 safe-aggression r6 与 cycle 9 的 runner 保留用于历史复现；现行 R1–R4 主线、网页规则和实验边界见本页现行索引。历史训练命令不表示旧队列获准恢复。
+## 用了哪些训练方法？
 
-训练实验的权威索引见[实验总账](docs/training_experiment_ledger.md)；CX-01 至 CX-30 可检索的负结果、诊断和复现限制见[CX 实验经验](docs/cx_experiment_lessons.md)。本轮 CX-01 至 CX-29 的精炼复现经验与 trap16 长训门控见[CX-01 至 CX-29 经验索引](docs/cx01_29_reproduction_lessons_20261003.md)，详细实验实现、逐轮报告和审计工具保留在 `agent/cx-eval-bot-8gpu-opt` 分支。CX-35 至 CX-45 的主动击杀阶段结论见[主动击杀研究结论](docs/active_kill_experiment_conclusions_20261004.md)，详细实验代码和逐局证据保留在 `agent/cx-active-kill-v2-20261003` 分支。
-
-JE10 v38 的击杀信用、搬包路线方法、逐轮固定评估与当前能力边界见[长期训练总结](docs/je10_control_route_training_summary.md)及[20261019 固定评估报告](reports/je10_training_20261019.md)。r19 已在 g58 按用户指令安全暂停；[线上结果页](https://allwellll.github.io/qqt-RL/training.html)保留全部 61 个完成固定点。
-
-## 当前网页与训练状态（2026-11-07）
-
-[在线游戏](https://allwellll.github.io/qqt-RL/) · [当前使用与代码入口](docs/current_web_and_training_status_20261107.md) · [报告索引](reports/README.md)
-
-网页物理为 **`bun-native-v4-facing`**，继承 v3 的道具供给与全图死亡掉落。面朝同一行/列、前方最多 3 格且无遮挡的首个泡即可原地起计，不需要按键或碰撞；圆环与真实放泡权限共用原生判定。旧 Review 按记录版本与 SHA 使用冻结物理，不套用新规则。
-
-|模型菜单|适合尝试的长处|明确短板与证据范围|
+| 方法 | 怎么做 | 解决什么问题 |
 |---|---|---|
-|**G_frozen τ0.3 · 均衡**|保留完整局参照|专项不代表全面领先|
-|**DUEL u019902 τ0.3 · 近身击杀**|v3 人工近身 dev/holdout 因果杀 8/7（各16局），同批 G 为1/0；网页40局40胜|v3 网页自死9次，同批G为4；完整局可行动静止23.94%，G为18.83%|
-|**SP u023302 τ0.3 · 猎手对抗与喷泉**|v3 网页40局39胜0负1平、自死1次；困难猎手8局因果杀7、交付10|完整局可行动静止34.08%；近身优势未建立，喷泉串弱于同点argmax|
+| 按真实事件给奖励 | 给击杀、存活、取包、返程和交付分别记账；完成交付是运包的主要得分 | 只等终局奖惩，模型难以知道前面哪些动作有用；只奖过程，又可能学会刷分 |
+| 把击杀、自爆和换命分开 | 奖有效击杀，死亡扣分，己方糖泡导致的自爆额外扣分 | 防止无脑放泡换命，也避免把躲开所有对战误判成变强 |
+| 按道具的实际用途训练 | 香蕉看持包自踩后省了多少返程时间，慢慢胶看命中后有没有创造击杀或取包机会 | 同样是用道具，对运包和对拼的作用不一样，不能按使用次数统一给分 |
+| 用场景课程和专家纠偏补探索 | 多练近身攻防、连锁、掉包回收等关键场景；专家给模型自己走到的状态补标下一步 | 模型可能很少遇到关键局面，也可能遇到了却几乎没试对过 |
+| 专练对拼，再用来训练运包 | 先练纯对拼，把会主动追击的模型带回完整地图，训练成拦截者，再让运包者和它打 | 运包者如果只跟弱对手练，可能会走路线，却不会在压力下交付 |
+| 轮换对手和自博弈 | 混合不同难度的规则对手、历史模型和近期模型；在阶段边界换对手或调整比例 | 单一对手容易被摸透；双方一直变化又会让训练目标漂移 |
+| 用 JAX 批量仿真 | 一张卡同时推进大量对局，把整段采样和多卡更新尽可能留在设备上 | 减少 Python 逐帧调度，缩短收集新对局和更新模型所需的时间 |
+| 用固定协议评估 | 固定规则、对手和随机种子，交换席位，最后换新种子和未见对手确认 | 排除对手强弱、出生位置、采样方式和选点带来的噪声 |
 
-原生产 JS 选模总计 **856 局**，网页每对手每方式 **8 局**；表中是 v3 证据。当前 v4 另做每模型8局的针对快筛与桌面/手机加载复核，未见所标长处明显反转；不把 v3 数字称作 v4 成绩，不宣称全面胜出。[模型交付与 SHA](reports/cx_web_specialists_items_v3_20261107.md)
+## 这些方法具体怎么用？
 
-手机左侧为**相对点按＋拖动方向盘**：方向区内相对当前可见圆心点下即走，拖动超半径时圆心跟随，松手保留可见位置。拖动期间第二指可即时点按接管；接管指松开即停，旧指微抖不抢回，需明确再拖动至少max(12px,半径25%)才接管。中心18%死区、方向区外沿8px防误触保留；58°拖动滞回、次方向和160ms路口缓冲保持。极短点按只保留最后一次，100ms内最多补1/60秒，不自动走路。右侧放泡和三槽独立，多指/取消/失焦/旋转清理、库存换页与昵称编辑保留。[相对接管交互及验收](reports/cx_relative_tap_takeover_20261117.md) 仅移动Chromium/CDP，未做iPhone真机测试。
+### 轻重分明的奖励，防止策略学会钻空子
 
-开局遮罩会显示模型下载量、百分比、备用线路与校验/初始化阶段，失败可直接重试。[加载进度说明](reports/cx_web_loading_progress_20261108.md)。真人对局死亡后只预告**自己的**复活点；危险或占用时重选，实际复活位置与预告一致。对方、观战及旧 Review 不显示预告。[复活预览说明](reports/cx_web_self_respawn_preview_20261108.md)
+对拼优先学习能活下来的击杀。以近期拦截训练为例，有效击杀给 5 分，自己死亡扣 5 分，自爆再扣 2 分。换一条命拿一个击杀通常没有收益。另一方面，早期实验也发现，过度惩罚自爆会让模型少放泡、不敢接敌，所以评估同时看主动击杀、死亡和整局胜负。
 
-主对局侧栏仅保留功能控件及必要状态/错误提示，已去掉规则Bot、观战、队伍模式、旧物理和空场地图选项。香蕉边界辅助保持原默认开启并隐藏开关；旧录像目录后台加载，不阻塞首帧。[开局耗时与精简报告](reports/cx_web_startup_sidebar_cleanup_20261108.md)。
+运包主奖给真实交付，取包、回收和返程进展提供较小的途中信号。旧库存窗口曾让模型学会放对手先拿包、再反复夺回刷分。早期改用自由取包规则，并按包子在家、被携带或掉落的状态变化结算辅助分：绕一圈回到原状，不应凭空多拿一份奖励。
 
-|操作|键位|
-|---|---|
-|移动|方向键；小键盘 **5上、1左、2下、3右**（NumLock开关均支持）|
-|放泡|Space / W；手机“放泡”|
-|道具|主键盘1–7直接对应槽位；E / Shift为首槽；手机当前页三个槽位按钮|
-|重开|R（输入框内不劫持）|
+早期道具专项训练给实际效果单独结算：携包自踩香蕉走得更快才有运输收益，慢慢胶命中后造成击杀或取包才有更高收益。炸砖首次改善通路、真实引爆旧泡也分别归因；部分正奖励要等后续结果确认，发生自伤等情况可作废。近期 DCU 保留道具物理，但没有沿用这套逐道具奖励；道具收益主要通过逃脱、击杀和交付体现。
 
-小键盘移动不触发道具。模型按需下载，**Pages 同源 Release 镜像 → GitHub Release 直链** 回退，所有资产先校验大小和 SHA256；浏览器已停用 OSS 下载，历史资产保留，凭据不进入仓库或前端。[当前模型交付规范](docs/github_pages_model_delivery.md)
+参考：[早期奖励和课程实验](docs/training_methods_summary_20261006.md) · [运包、防刷与道具设计](docs/r1_r4_training_guide_20261101.md) · [近期奖励实现](qqt_rl/training/jax_carry_env.py)
 
-**训练已按用户指令立即暂停，所有自动后继及续跑授权撤销；保留已有 COMMITTED，不再等待固定预算终点。** 训练owner已核实训练worker为0、八卡计算进程为空且锁释放，七臂最后COMMITTED的state/policy SHA已核对；[停训报告](reports/cx_training_stopped_20261107.md)。可版本管理的 `training_launch_policy.json` 默认关闭训练，即使缺少私有状态也阻止通用训练/GPU入口；[训练代码与封存索引](docs/training_code_map_20261107.md)。main 的文档、历史命令或代码合入均不是恢复授权。只能读取已完成 checkpoint/READY 做不触发训练的评估，未来恢复必须重新获得用户明确授权。历史 runs、checkpoint、旧录像与秘密文件全部保留。
+### 把难遇到的场景和难试对的动作分开解决
 
-网页模型菜单现仅保留 SP u023302（默认）、G_frozen、DUEL u019902 和风险线 u9969；默认变更依据用户最新明确授权，未新增评测。下架模型资产保留，历史身份见 `web/retired-models-20261107.json`。
+场景课程让模型更常遇到关键局面，例如走廊逃生、近身对拼、掉包回收；同时混入原生完整对局，保留真实取包、掉包拾取和接触转移的过程。诊断时沿“创造取包窗口 → 窗内拿包 → 持包返程 → 同一次交付”找断点，而不是只看总得分。
 
-## 训练路线与历史证据
+专家纠偏（DAgger）解决另一件事：模型已经走到关键局面，却很少自己试对下一步。早期训练让模型照常行动，再由路线专家给它走到的部分状态标注一组合法、安全、能推进目标的动作，作为额外的模仿信号。专家不接管对局，也可以拒绝给不确定的状态贴标签。早期有些场景练得很好，却没有稳定提升真实网页对抗；近期 DCU 主线没有使用这套模仿流程。
 
-R1 道具/进攻 → R2 原生搬包 → R3 事件奖励/可见观测 → R4 对拼课程 → G 多区域联赛 → 联赛v2。旧规则下 L2_S05g u019302 argmax 新seed双座复测95胜/44负/37平（176局）；这是历史训练参照，不能替代当前 v3/v4 选模。
+参考：[早期场景与模仿实验](docs/training_methods_summary_20261006.md) · [专家纠偏与路线实验记录](docs/training_experiment_ledger.md)
 
-![截至20261106的主线优化与发布轨迹](docs/assets/mainline_timeline_20261106.svg)
+### 让运包者面对会主动拦截的对手
 
-[HTML详细版](https://allwellll.github.io/qqt-RL/reports/mainline_timeline_20261106.html) · [数字来源与SHA](reports/mainline_timeline_evidence_20261106.json) · [历史训练代码闭包](docs/combat_league_v2_training_path_20261106.md)
+早期对拼课程把近身交火、多区域出生和自然对局混在一起，提高接敌、起攻和撤离的练习密度。近期 DCU 先在不运包的对拼任务里练击杀，再把选出的策略拿到完整运包地图，继续适应追击和拦截。专职拦截者不能拿包或交付；运包训练同时保留能正常拿包的对手，避免模型只学会对付一种防守。
 
-图保留截至11月6日的快照；当前模型、规则与停训状态以上方11月7日说明为准。历史 run、完整状态及大模型不入 Git，旧队列不恢复。
+早期自博弈试过按比赛表现提高强对手的抽样比例，并保留历史模型防止遗忘。近期运包训练采用另一种更新节奏：每段只训练一方，对手权重冻结，到下一段再换入新版本。这既能保持一段内的训练目标稳定，也能逐步加大压力。按单个对手胜率实时改抽样比例，不是近期 DCU 使用的方案。
 
-## 快速开始
+参考：[多区域对拼与历史联赛](docs/combat_league_v2_training_path_20261106.md) · [近期冻结拦截池](docs/dcu_carry_defender_league_20261121.md) · [运包与拦截交替训练](docs/dcu_carry_joint_training_20261122.md)
 
-网页预览只需Node依赖，不会启动训练：
+### 用 JAX 提速，用完整对局判断有没有变强
+
+早期 CUDA 训练就用 JAX 在设备上批量运行环境和规则对手，部分数据流程还用常驻进程和编译缓存减少重复开销。DCU 延续这条路，把双方模型推理、环境推进和奖励合在整段采样循环里；价值网络不决定动作，可以等轨迹收集完再分批计算。多卡各跑一批对局，更新时同步梯度。
+
+仓库记录的一次单卡完整运包实测中，4096 个并行环境的纯采样约为每秒 3.19 万环境步，计入 PPO 策略更新后约为每秒 9691 步。这些是排除首次编译、模型加载和存盘的稳定吞吐；一个环境步指双人对局推进一帧。放大并行规模还要重算采样时的动作概率和价值，检查数值一致性，不能为了提速接受错误更新。
+
+选模型时，固定同一套规则、对手、随机种子和推理方式，交换座位，并分开报告随机采样和选最高概率动作的成绩。小样本用于挑候选点，独立局用于确认。历史上曾出现训练击杀比上升，固定对手的完整局战绩却明显下降，因此不靠训练分数或最后一个保存点选模型。
+
+参考：[采样实现](qqt_rl/training/jax_carry_fast.py) · [策略更新实现](qqt_rl/training/kill_ppo.py) · [单卡吞吐实测](docs/dcu_single_card_performance_20261115.md) · [固定对手复核](docs/dcu_convergence_and_latest_20261115.md)
+
+## 本地试玩与复现
 
 ```bash
 npm ci
 npm run serve
 ```
 
-需要Python源码检查或CPU评估时再安装Python环境：
+打开终端打印的地址即可试玩，这不会启动训练。浏览器使用方向键移动、Space 放泡、数字键使用道具、R 重开。网页模型、规则与发布说明见[网页运包默认配置](docs/web_carry_default_20261122.md)和[模型交付规范](docs/github_pages_model_delivery.md)。
 
-```bash
-cd /path/to/qqt-RL
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -U pip
-python -m pip install -e '.[test]'
-```
-
-GPU 环境请按机器 CUDA/JAX 版本安装匹配的 JAX wheel；仓库不固定设备专属 wheel。正式训练默认拒绝静默回退到 CPU。
-
-## 海光 DCU 训练（`dcu` 分支）
-
-`dcu` 分支用于从 H200/CUDA 迁移至海光 DCU/ROCm，复用容器预装的海光 JAX，
-通过项目 `.venv` 补充依赖。当前验证环境为 DTK 26.04、Python 3.11.9、
-JAX/JAXlib `0.6.0+das.opt1.dtk2604`；不替换驱动或系统训练依赖。
-
-| 文档 | 内容 |
-|---|---|
-| [八卡对拼训练（2026-11-21）](docs/dcu_duel_training_20261121.md) | u930 起步、冻结 u930/u840 强历史对手、数值门禁与检查点位置 |
-| [u153 网页对拼默认发布（2026-11-21）](docs/dcu_web_default_u153_20261121.md) | u153 模型哈希、导出验证、固定对局范围和网页发布记录 |
-| [对拼强历史对手池建议（2026-11-15）](docs/dcu_duel_opponent_pool_proposal_20261115.md) | 后期退化的证据、80% 自身历史对手的建议与评测晋级；尚未实现 |
-| [单卡运包效率实测（2026-11-15）](docs/dcu_single_card_performance_20261115.md) | 原配置与融合采样的吞吐、数值门槛、复测命令及推荐配置 |
-| [运包抗拦截：两阶段训练（2026-11-15）](docs/dcu_carry_interceptor_training_20261115.md) | 先适应 u930 拦截者，再强化 SP 运包；八卡默认每卡 2048；含权重下载、冻结语义、存盘预算与单卡实测 |
-| [运包抗拦截：冻结防守池（2026-11-21）](docs/dcu_carry_defender_league_20261121.md) | u244/u220/u153 热启拦截者，冻结后分槽强化 SP 运包；含阶段启动、监控与选型方法 |
-| [2026-11-15 训练交接](docs/dcu_training_handover_20261115.md) | 接手优先阅读：当前任务、截止时间、实时检查命令、权重与待办 |
-| [新模型对弈录像](https://allwellll.github.io/qqt-RL/dcu-replays/) | u000840 的 48 局完整对战，保留历史录像；[导出方法与记录](docs/dcu_kill_replays_20261115.md) |
-| [DCU 迁移与训练方法](docs/dcu_migration.md) | 环境安装、模型数据下载与校验、单卡检查、正式训练入口和编译缓存 |
-| [单卡验证记录](reports/dcu_validation_20261108.json) | DUEL 真实采样、GAE、PPO/Adam 更新结果，以及 SP 前向验证范围 |
-| [模型迁移与续训语义](docs/continue_training_on_new_machine.md) | Release 权重来源、Actor 热启动、Critic/Adam 重建及模型保存边界 |
-| [JAX 空笼击杀：8卡训练](docs/dcu_jax_kill_training.md) | 当前入口：DCU 环境、规则 bot、自对弈与 GAE，保存 Actor/Critic |
-| [网页规则对照与旧 JS 训练](docs/dcu_kill_training.md) | Node/CPU 模拟器参考实现、规则归因、旧轮次与评估记录 |
-| [空笼击杀验证记录](reports/dcu_kill_validation_20261109.json) | 单卡真实更新与评估、8分片数学校验，以及物理8卡待验证范围 |
-
-按迁移文档配置环境和下载数据后，在分配给自己的空闲 DCU 上验证：
-
-```bash
-source scripts/dcu_env.sh
-python -u -m scripts.dcu_smoke --line DUEL --device 0 --update
-```
-
-已通过单卡 DUEL 的4 env × 2 tick、minibatch 8 完整更新，SP 已通过前向检查。
-首次 DUEL 采样图编译约12分钟，缓存位于项目 `.jax_cache/dcu/`。
-正式单卡入口为 `python -m scripts.dcu_training`，用法见迁移文档；当前保留停训设置，
-本机不启动长训。针对用户本轮明确授权的空笼击杀训练，已新增独立入口和同步8卡实现，
-不解锁历史训练入口。新机器就绪后先验收物理8卡通信和短更新，再按文档启动：
-
-```bash
-bash scripts/launch_dcu_jax_kill_8card.sh runs/kill-jax-8card-001
-```
-
-配置、准备步骤与约5小时预算见[JAX 空笼击杀训练说明](docs/dcu_jax_kill_training.md)。
-2026-11-15 已通过物理8卡通信、同步 PPO 和模型保存预检，并启动约5小时正式轮次。
-[八卡启动记录](reports/dcu_8card_launch_20261115.json)包含运行目录、时间预算与4 GiB检查点上限；
-任务完成情况以运行目录内的结果文件为准。原 CPU 模拟轮次已在 u000173 安全停止，
-八卡 JAX 验证完成 30 次更新和 1024 个完整对局，随后增大批量续训于
-`runs/kill-jax-8card-e512-20261115`，保持原始截止时间。
-规则、网页轨迹对照和实测吞吐见 [JAX 八卡验证记录](reports/dcu_jax_kill_validation_20261115.json)。
-
-## 目录
-
-- `jax_bomb/`：Bun 环境、网络、PPO/GAE、安全动作分析、规则 Bot 与 Critic 核心。
-- `qqt_rl/training/`：配置、seed、持久 JAX cache、常驻 worker、进程日志和原子 checkpoint 发布辅助层。
-- `qqt_rl/bots/`：Python/浏览器共享语义的 Bot schema、生命周期和显式注册表。
-- `scripts/`：数据生成、Critic/Actor 训练、评估、单 candidate runner 与四卡 supervisor。
-- `tests/`：环境、奖励归因、安全性、Critic、seed namespace 和模块化回归测试。
-- `web/`：只含 Bun06 真人测试、规则 Bot、HTTP server 与 Node 测试。
-- `runs/`、`data/`、`checkpoints/`：默认运行产物，全部被 `.gitignore` 排除。
-
-## 验证与 Smoke
-
-```bash
-python -m compileall -q jax_bomb qqt_rl scripts tests
-pytest -q
-npm test
-```
-
-以上为静态检查和测试，不包含训练。下方训练命令是历史复现资料，在用户重新授权前不执行，包括 CPU training smoke。
-
-## 历史 1..360 Cycle 训练（已暂停，仅供代码追溯）
-
-训练 bootstrap 不进入 Git。将以下文件放到任意外部目录，例如 `/path/to/bootstrap`：
-
-```text
-base_actor.pt
-base_critic.pkl
-base_target_critic.pkl
-reference_actor.pt
-bc_v2_escape_selective_bc.npz
-generic_critic_replay_aux.npz
-weak_actor.pt
-old_actor.pt
-```
-
-准备单 cycle smoke：
-
-```bash
-python scripts/prepare_bun_safe_aggression_v7.py \
-  --bootstrap-dir /path/to/bootstrap \
-  --run-name smoke-1cycle \
-  --cycles 1 \
-  --segment-size 1 \
-  --gpus 0,1,2,3
-```
-
-准备正式 360-cycle 运行：
-
-```bash
-python scripts/prepare_bun_safe_aggression_v7.py \
-  --bootstrap-dir /path/to/bootstrap \
-  --run-name safe-aggression-360 \
-  --cycles 360 \
-  --segment-size 90 \
-  --gpus 0,1,2,3
-
-python scripts/launch_bun_safe_aggression_v7.py \
-  --manifest runs/safe-aggression-360/manifest.json
-```
-
-新 run 默认使用固定 shape 的 `--counterfactual-state-batch-size 4`、Critic batch `64`、每阶段常驻 worker，以及 candidate 级稳定 JAX 编译缓存。可用 `--jax-cache-dir /shared/path` 指定显式共享根目录；缓存目录始终不提交 Git。
-
-runner 保留全局 cycle `1..360`、90-cycle 可恢复分段、固定 milestone 评估、strict train/validation/test seed 泄漏检查，以及 Actor/Critic/Target Critic 的有限值与哈希校验。checkpoint 使用同目录临时文件后 `os.replace` 原子发布。
-
-## 模型评估
-
-```bash
-python scripts/eval_bun_tactical_opponent.py checkpoints/model.pt \
-  --games 64 \
-  --seed 202609280000 \
-  --max-steps 300 \
-  --json-out runs/eval/model-vs-tactical.json
-```
-
-评估结果写入 `runs/`。加 `--per-episode` 会额外保存逐局结果与出生格（用于配对比较）；`--host-workers N` 把规则 Bot 决策与漏斗标签分到 N 个进程，结果与串行逐位一致。如需导出浏览器模型，应将生成文件放入被忽略的 `web/models/`；本仓库不提交大模型权重。
-
-## Transformer checkpoint 对战能力评估
-
-目的：沿训练进程扫描 checkpoint，看战斗能力（安全击杀、自炸、被杀、危险处理）是在提升还是回退。这是 danger_arena 近身战斗探针，**不代表完整抢包子能力**（不含偷包/运包/回家）。
-
-固定协议（与历史 `runs/eval_v2/*.json` 同口径，schema `bun_tactical_opponent_eval_v1`）：
-
-- 课程 `danger_arena=1`，清空可破坏砖块，HP=1，最长 300 tick。
-- Actor 固定为玩家 0、argmax 动作、无安全屏蔽；对手固定为玩家 1 的冻结 `bun.tactical_v2`（哈希校验）。
-- 出生点由 seed 决定，环境内部随机交换两侧出生位置；同一 seed 下所有 checkpoint 的出生格完全相同（`spawns_identical_across_checkpoints` 核验），因此可做逐局配对比较。
-
-```bash
-# 64 局探索性全曲线（phase1 + 全部 phase2_itN + phase2.pt）
-python scripts/eval_transformer_checkpoint_sweep.py \
-  --run-dir runs/overnight_tf_v2 \
-  --out-dir runs/transformer_sweep/overnight_tf_v2/seed20260930_g64 \
-  --seed 20260930 --games 64 --device 0 \
-  --teacher-json runs/eval_v2/rulebot_baseline.json
-
-# 大样本确认：换 seed，只挑关键点
-python scripts/eval_transformer_checkpoint_sweep.py \
-  --run-dir runs/overnight_tf_v2 \
-  --out-dir runs/transformer_sweep/overnight_tf_v2/confirm_seed20261001_g1024 \
-  --checkpoints phase1,3500,4000,6000,final \
-  --seed 20261001 --games 1024 --host-workers 48 --device 0
-```
-
-`--checkpoints` 支持 `all`、`phase1`、`final`、文件名、单个 iter（`4000`）和区间（`5500-8000`），可组合。所有 checkpoint 在同一进程串行评估，`env.step` 只编译一次；持久 JAX 编译缓存默认放在 `<out-dir>/../.jax_cache`，重跑时跳过编译。已存在且 checkpoint sha256、seed、局数、步数全匹配的 JSON 会被复用（`--reuse-dir` 可指向旧结果目录，`--force` 强制重跑），`--plot-only` 只重画图。参考耗时（单卡 H200）：64 局约 28 秒/点，1024 局约 60 秒/点；首个点多约 70 秒编译。
-
-输出目录：
-
-- `checkpoints/<name>.json`：逐 checkpoint 完整结果（含 `per_episode` 逐局结果与出生格、`runtime` 耗时拆分）。
-- `summary.json` / `summary.csv`：汇总指标、Wilson 95% 区间，以及相对 `--reference`（默认 phase1）的逐局配对差值。
-- `capability_curves.png`：9 宫格曲线，包括存活安全击杀、安全引爆比、自炸、被对手击杀（物理或因果，取并集）、可避免危险死亡、danger→death、场均放泡、战术解决率、策略熵。红色虚线是规则 Bot 自对弈基线。
-- 可选 `--flee-probe`：另在 GPU 上整局跑对 JAX flee bot（阶段 1 训练对手，以逃跑/静止为主）的补充探针，输出 `flee_probe/`、`flee_probe_summary.json`、`flee_probe_curves.png`。它只测追击补刀，params 以 jit 参数传入，数值与主口径不同，不能与主曲线混比。
-
-横轴：阶段 2 iteration。phase1 终点记为 0，`phase2_itN` 记为 N，`phase2.pt` 记为 `phase2.json` 中的 `ppo_iterations`（本次为 8000）。
-
-解读：
-
-- 误差线是局级二元比率的 Wilson 95% 区间。64 局时区间半宽约 ±0.10 到 0.12，相邻点差 0.1 以内基本是噪声，全曲线只用于找候选点和趋势。
-- 安全引爆比、战术解决率按事件汇总，场均放泡和熵是均值，这几项不画区间。
-- 结论以大样本确认为准：换一个未用于挑点的 seed，局数 ≥1024（区间半宽约 ±0.03）。比较两个 checkpoint 时看 `paired_vs_reference` 的配对差值区间，它扣除了出生格带来的方差，比两个独立区间是否重叠更灵敏。
-- 如果某个点只在 64 局扫描里高，大样本下不再高，就是挑点偏差，不能称为提升。
-
-导出一份可信的本地 Transformer checkpoint：
-
-```bash
-python scripts/export_bun_web_model.py checkpoints/model.pt \
-  --output web/models/model.json \
-  --name safe-aggression-model
-```
-
-checkpoint 使用 Python pickle 格式，只能加载本机训练并已核对哈希的可信文件，禁止导入来源不明的 pickle。
-
-## Web 真人测试
-
-```bash
-npm run serve
-```
-
-浏览器访问终端打印的本地地址。本地人类使用方向键或小键盘5123移动、`Space/W`放泡、主键盘1–7使用对应库存槽、`R`重开；手机提供方向、放泡及三槽快捷键。对手只可选择四个已发布模型，主对局固定为真人1v1和v4-facing；旧Review保持只读。服务健康检查为 `/healthz`。
-
-Bot 扩展契约和 Python/JavaScript 最小插件见 `docs/bot_plugins_zh.md`。
-
-## v2 性能基准
-
-```bash
-python scripts/benchmark_v2_pipeline.py \
-  --output-dir runs/benchmarks/v2-pipeline
-```
-
-基准输出 `benchmark.json`，包含持久缓存冷/热启动、legacy 与固定 shape 反事实 states/s、Critic batch 64/128/256 samples/s、真实 PPO smoke steps/s、逐字段 replay 等价报告和 GPU 利用率采样状态。默认使用 CPU，避免争抢仍在旧仓库运行的四卡任务。
-
-## 训练语义
-
-- 环境 observation 主布局为 `[batch, channel, height, width]`，rollout 再增加 time 维。
-- 奖励从 reset 前事件归因，避免跨局污染；安全放泡分 placement 与 resolution 两阶段结算。
-- PPO 使用 clipped policy objective、GAE return 与 entropy；独立 Critic 和 Target Critic 不复用 Actor 参数树。
-- seed namespace 同时保证原始整数与 JAX `uint32` 表示在 candidate/cycle/split 间不碰撞。
-
-详见 `docs/migration_report.md`。
-
-## 用户排行榜
-
-排行榜按用户要求暂缓整理。当前 v4 后端未支持时明确显示暂不可用，游戏照常开局和本地结算；不提交旧 ruleset、不混榜、不删旧数据。[历史部署文档](supabase/README.md)保留，SQL迁移不是当前发布前置。
-
-历史网页模型与发布复现：[u000840 发布说明](docs/dcu_web_default_20261115.md)。
-
-最新对拼模型与录像：u930 为三点复核推荐点；u1030 末段退步，详见
-[收敛复核及最新发布说明](docs/dcu_convergence_and_latest_20261115.md)。
+训练复现见[早期 CUDA 训练指南](docs/r1_r4_training_guide_20261101.md)、[DCU 迁移说明](docs/dcu_migration.md)和[权重与续训说明](docs/continue_training_on_new_machine.md)。加载已有策略重新训练，与恢复包含优化器和环境状态的完整检查点不同。训练命令仅供复现参考，是否启用以 `training_launch_policy.json` 和明确授权为准。
