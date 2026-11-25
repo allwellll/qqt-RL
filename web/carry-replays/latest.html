@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>运包模型对弈 · 运包 u000074 vs 运包 u000074</title>
+<title>运包模型对弈 · 运包 u000075 vs 运包 u000075</title>
 <style>
 :root {
   color-scheme: dark;
@@ -53,7 +53,7 @@ small { color: #9dabb1; overflow-wrap: anywhere; }
 }
 </style>
 <main>
-<h1>运包模型对弈 · 运包 u000074 vs 运包 u000074</h1>
+<h1>运包模型对弈 · 运包 u000075 vs 运包 u000075</h1>
 
 <p>map806 完整运包规则 · CPU float64 推理 · 固定种子并交换双方座位</p>
 <p id="summary">将对方包子运回己方笼子即获胜。全局无交付时判平。</p>
@@ -97,7 +97,7 @@ function label(text, x, y, color, size = 22) {
 }
 
 function result(record) {
-  return record.result.winner >= 0 ? sides[record.result.winner] + '运包胜 · 交付' : '平局 · 未交付';
+  return record.result.captures > 0 ? '运包方胜 · 交付' : '平局 · 未交付';
 }
 
 function draw() {
@@ -205,7 +205,7 @@ async function load() {
   data = replay;
   const wins = replay.replays.filter(record => record.result.captures > 0).length;
   const games = replay.replays.length;
-  $('summary').textContent = `蓝方 ${replay.replays.filter(r => r.result.winner === 0).length} 胜 · 红方 ${replay.replays.filter(r => r.result.winner === 1).length} 胜 · ${replay.replays.filter(r => r.result.winner < 0).length} 平 · 双方均可运包`;
+  $('summary').textContent = `运包方 ${wins} 胜 ${games - wins} 平 · 交付胜率 ${wins / games * 100}% · 全局无交付判平`;
   for (const [index, row] of data.replays.entries()) {
     $('game').add(new Option(data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? `种子 ${row.seed} · 运包对弈` : `种子 ${row.seed} · ${sides[row.defender_seat]}拦截`, index));
     const tr = $('results').insertRow();
