@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>运包模型对弈 · 运包 u000156 vs 运包 u000156</title>
+<style>
+:root {
+  color-scheme: dark;
+  font: 15px system-ui, sans-serif;
+  background: #10171d;
+  color: #e6edf0;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 980px; margin: auto; padding: 20px; }
+h1 { font-size: 23px; margin: 0 0 8px; }
+p { color: #aab8be; line-height: 1.5; }
+.controls, .meta {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+.meta { justify-content: space-between; font-variant-numeric: tabular-nums; }
+button, select {
+  font: inherit;
+  color: #f2f5f6;
+  background: #27353b;
+  border: 1px solid #586a70;
+  border-radius: 5px;
+  padding: 8px 10px;
+}
+button { cursor: pointer; }
+input[type=range] { flex: 1; min-width: 120px; accent-color: #4fbd91; }
+canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #202d2c;
+  border: 1px solid #485852;
+}
+article { background: #182328; border: 1px solid #344449; padding: 12px; }
+.status { color: #7bd2a8; }
+.results { overflow-x: auto; margin: 16px 0; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 9px; border-bottom: 1px solid #344449; }
+small { color: #9dabb1; overflow-wrap: anywhere; }
+@media (max-width: 650px) {
+  main { padding: 12px; }
+  h1 { font-size: 20px; }
+  button, select { padding: 7px; }
+}
+</style>
+<main>
+<h1>运包模型对弈 · 运包 u000156 vs 运包 u000156</h1>
+
+<p>map806 完整运包规则 · CPU float64 推理 · 固定种子并交换双方座位</p>
+<p id="summary">将对方包子运回己方笼子即获胜。全局无交付时判平。</p>
+<div class="controls"><label>对局 <select id="game"></select></label><button id="toggle" aria-label="播放或暂停">播放</button><select id="speed" aria-label="播放速度"><option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option><option value="8">8×</option></select></div>
+<div class="controls"><input id="seek" type="range" min="0" max="0" value="0" aria-label="录像进度"><output id="clock">0 tick</output><button id="event">下一事件</button></div>
+<article><div class="meta"><strong id="title">加载录像…</strong><span id="score"></span></div><canvas id="board" width="900" height="780" aria-label="运包对弈俯视图"></canvas><p id="status" class="status" role="status">正在载入对局轨迹…</p></article>
+<div class="results"><table><thead><tr><th>对局</th><th>运包方 2</th><th>运包方 1</th><th>方 1 击杀</th><th>最终库存</th><th>结果</th></tr></thead><tbody id="results"></tbody></table></div>
+<small id="source"></small>
+</main>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const canvas = $('board');
+const ctx = canvas.getContext('2d');
+const cell = 60;
+const colors = ['#64b8ff', '#ff807d'];
+const sides = ['蓝方', '红方'];
+const eventNames = {
+  steal: '取包', capture: '交付', drop: '掉包',
+  death: '阵亡', recover: '拾包', return_bun: '归还包子'
+};
+let data, game, tick = 0, playing = false, last = 0, elapsed = 0;
+
+function square(row, column, color, inset = 0) {
+  ctx.fillStyle = color;
+  ctx.fillRect(column * cell + inset, row * cell + inset, cell - 2 * inset, cell - 2 * inset);
+}
+
+function cells(indices, color, inset) {
+  for (const index of indices) {
+    square(Math.floor(index / data.map.width), index % data.map.width, color, inset);
+  }
+}
+
+function label(text, x, y, color, size = 22) {
+  ctx.fillStyle = color;
+  ctx.font = `bold ${size}px system-ui`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y);
+}
+
+function result(record) {
+  return record.result.captures > 0 ? '运包方胜 · 交付' : '平局 · 未交付';
+}
+
+function draw() {
+  if (!game) return;
+  const frame = game.frames[tick];
+  ctx.fillStyle = '#202c30';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  for (let r = 0; r < data.map.height; r++) {
+    for (let c = 0; c < data.map.width; c++) {
+      square(r, c, (r + c) % 2 ? '#24343a' : '#293a40', 1);
+    }
+  }
+  cells(data.map.walls, '#58676e', 1);
+  cells(frame.bricks, '#97775d', 3);
+  cells(frame.blasts, '#d99835', 3);
+  data.map.bases.forEach(([r,c], seat) => {
+    square(r,c,colors[seat],3);
+    label(`笼 ${frame.stored[seat].reduce((a,b)=>a+b,0)}`, (c+.5)*cell, (r+.5)*cell, '#17222a', 17);
+  });
+  for (const [r,c] of frame.loose) label('包', (c+.5)*cell, (r+.5)*cell, '#ffd769');
+  for (const [r,c,fuse,owner] of frame.bombs) {
+    label(String(fuse), (c+.5)*cell, (r+.5)*cell, colors[owner] || '#efcc6c', 19);
+  }
+  for (let seat = 0; seat < 2; seat++) {
+    const [y, x] = frame.p[seat].map(value => value * cell);
+    const role = data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? '运' : (seat === game.defender_seat ? '拦' : '运');
+    ctx.globalAlpha = frame.alive[seat] ? 1 : .35;
+    ctx.beginPath();
+    ctx.arc(x, y, frame.trapped[seat] > 0 ? 24 : 19, 0, 2 * Math.PI);
+    ctx.fillStyle = colors[seat];
+    ctx.fill();
+    label(role, x, y, '#17222a', 20);
+    if (frame.carry[seat] >= 0) label('包', x, y - 27, '#ffd769', 19);
+    ctx.globalAlpha = 1;
+  }
+  const end = game.result.tick;
+  const seconds = count => (count / data.protocol.tick_hz).toFixed(1);
+  $('seek').value = tick;
+  $('clock').textContent = `${seconds(tick)} / ${seconds(end)} 秒`;
+  $('score').textContent = tick === end ? `${result(game)} · 交付 ${game.result.captures} 次` : '';
+  const recent = game.events.filter(([at]) => at <= tick && at > tick - 25);
+  $('status').textContent = recent.map(([, seat, name]) => sides[seat] + eventNames[name]).join(' · ')
+    || (data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? `${sides[game.defender_seat]}运包 · ${sides[1-game.defender_seat]}运包` : `${sides[game.defender_seat]}拦截 · ${sides[1-game.defender_seat]}运包`);
+}
+
+function selectGame() {
+  game = data.replays[+$('game').value];
+  $('title').textContent = data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? `种子 ${game.seed} · 运包对弈` : `种子 ${game.seed} · ${sides[game.defender_seat]}拦截`;
+  $('seek').max = game.result.tick;
+  seek(0);
+}
+
+function setPlaying(value) {
+  playing = value;
+  last = 0;
+  elapsed = 0;
+  $('toggle').textContent = value ? '暂停' : '播放';
+}
+
+function seek(value) {
+  if (!game) return;
+  tick = value;
+  setPlaying(false);
+  draw();
+}
+
+function animate(now) {
+  if (playing && last) {
+    elapsed += Math.min(250, now - last) * Number($('speed').value);
+    const ms = 1000 / data.protocol.tick_hz;
+    const advance = Math.floor(elapsed / ms);
+    if (advance > 0) {
+      elapsed -= advance * ms;
+      tick = Math.min(game.result.tick, tick + advance);
+      if (tick === game.result.tick) setPlaying(false);
+      draw();
+    }
+  }
+  last = now;
+  requestAnimationFrame(animate);
+}
+
+$('toggle').onclick = () => {
+  if (!game) return;
+  if (tick === game.result.tick) tick = 0;
+  setPlaying(!playing);
+  draw();
+};
+$('game').onchange = selectGame;
+$('seek').oninput = event => seek(Number(event.target.value));
+$('event').onclick = () => {
+  if (!game) return;
+  const next = game.events.find(([at]) => at > tick);
+  if (next) seek(next[0]);
+};
+
+async function load() {
+  const response = await fetch('carry-courier-1378fd3f1e9586b9418b.json');
+  if (!response.ok) throw Error('录像文件加载失败');
+  const replay = await response.json();
+  if (replay.schema !== 'qqt.full-jax-carry-replay/v1' || replay.replays.length !== 4
+      || replay.replays.some(row => row.frames.length !== row.result.tick + 1)) {
+    throw Error('录像轨迹不完整');
+  }
+  data = replay;
+  const wins = replay.replays.filter(record => record.result.captures > 0).length;
+  const games = replay.replays.length;
+  $('summary').textContent = `运包方 ${wins} 胜 ${games - wins} 平 · 交付胜率 ${wins / games * 100}% · 全局无交付判平`;
+  for (const [index, row] of data.replays.entries()) {
+    $('game').add(new Option(data.models.defender.role === 'courier' && data.models.courier.role === 'courier' ? `种子 ${row.seed} · 运包对弈` : `种子 ${row.seed} · ${sides[row.defender_seat]}拦截`, index));
+    const tr = $('results').insertRow();
+    const values = [row.seed, sides[1-row.defender_seat], sides[row.defender_seat],
+      row.result.defender_kills, row.frames.at(-1).stored.map(x => x.reduce((a,b)=>a+b,0)).join(' : '), result(row)];
+    for (const value of values) tr.insertCell().textContent = value;
+  }
+  $('source').textContent = (data.models.defender.role === 'courier' && data.models.courier.role === 'courier') ? `运包 u${String(data.models.defender.update).padStart(6, '0')} · ${data.models.defender.sha256} | 运包 u${String(data.models.courier.update).padStart(6, '0')} · ${data.models.courier.sha256}` : `拦截者 u${String(data.models.defender.update).padStart(6, '0')} · ${data.models.defender.sha256} | 运包 u${String(data.models.courier.update).padStart(6, '0')} · ${data.models.courier.sha256}`;
+  selectGame();
+  requestAnimationFrame(animate);
+}
+
+load().catch(error => { $('status').textContent = error.message; });
+</script>
+</html>
